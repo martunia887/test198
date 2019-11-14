@@ -11,7 +11,7 @@ const access = {
 
 export const getAuthFromContextProvider = async () => {
   const url =
-    'https://api-private.dev.atlassian.com/media-playground/api/token/tenant?environment=asap';
+    'https://api-private.stg.atlassian.com/media-playground/api/token/tenant?environment=asap';
   const body = JSON.stringify({
     access,
   });

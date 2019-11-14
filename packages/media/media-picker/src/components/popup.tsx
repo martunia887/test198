@@ -3,6 +3,11 @@ import { Store } from 'redux';
 import * as React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import * as exenv from 'exenv';
+import {
+  AuthProvider,
+  ClientBasedAuth,
+  AuthContext,
+} from '@atlaskit/media-core';
 import App, { AppProxyReactContext } from '../popup/components/app';
 import { cancelUpload } from '../popup/actions/cancelUpload';
 import { showPopup } from '../popup/actions/showPopup';
@@ -21,6 +26,17 @@ import {
   PopupConfig,
 } from '../types';
 import { PopupUploadEventEmitter } from './types';
+
+export interface EdgeData {
+  data: {
+    client: {
+      id: string;
+      token: string;
+    };
+    expiresIn: number;
+    iat: number;
+  };
+}
 
 export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
   implements PopupUploadEventEmitter, Popup {
@@ -41,12 +57,36 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
     super();
     this.proxyReactContext = proxyReactContext;
 
-    const { userAuthProvider } = tenantMediaClient.config;
-    if (!userAuthProvider) {
-      throw new Error(
-        'When using Popup media picker userAuthProvider must be provided in the context',
-      );
-    }
+    const userAuthProvider: AuthProvider = async (context?: AuthContext) => {
+      try {
+        // TODO: use current location.host instead
+        const { data }: EdgeData = await (
+          await fetch(
+            'https://api-private.stg.atlassian.com/media/auth/smartedge/auth/edge',
+            { credentials: 'include' },
+          )
+        ).json();
+        const baseUrl = (await tenantMediaClient.config.authProvider(context))
+          .baseUrl;
+        // TODO: handle token expiry
+        const auth: ClientBasedAuth = {
+          clientId: data.client.id,
+          token: data.client.token,
+          baseUrl,
+        };
+
+        return auth;
+      } catch (e) {
+        const { userAuthProvider } = tenantMediaClient.config;
+        if (!userAuthProvider) {
+          throw new Error(
+            'When using Popup media picker userAuthProvider must be provided in the context',
+          );
+        }
+
+        return userAuthProvider(context);
+      }
+    };
 
     const userMediaClient = new MediaClient({
       authProvider: userAuthProvider,

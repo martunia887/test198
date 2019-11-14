@@ -54,5 +54,5 @@ export const createUploadMediaClient = () =>
 
 export const createUploadMediaClientConfig = (): MediaClientConfig => ({
   authProvider: mediaPickerAuthProvider('asap'),
-  userAuthProvider,
+  // userAuthProvider,
 });

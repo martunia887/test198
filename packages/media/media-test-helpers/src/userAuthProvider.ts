@@ -19,7 +19,7 @@ export const userAuthProvider = (): Promise<ClientBasedAuth> => {
   }
 
   const url =
-    'https://api-private.dev.atlassian.com/media-playground/api/token/user/impersonation';
+    'https://api-private.stg.atlassian.com/media-playground/api/token/user/impersonation';
 
   userAuthProviderPromiseCache = fetch(url, {
     method: 'GET',

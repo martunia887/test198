@@ -4,7 +4,7 @@ import { userAuthProvider } from '../database';
 export function createMediaPlaygroundRouter(): Router {
   const router = new Router(
     {
-      host: 'https://api-private.dev.atlassian.com',
+      host: 'https://api-private.stg.atlassian.com',
       requestDelay: 10,
     },
     { strategies: ['fetch'] },

@@ -3,7 +3,7 @@ import { defaultCollectionName } from './collectionNames';
 
 const cachedAuths: { [key: string]: Promise<Auth> } = {};
 const authProviderBaseURL =
-  'https://api-private.dev.atlassian.com/media-playground/api';
+  'https://api-private.stg.atlassian.com/media-playground/api';
 
 export class StoryBookAuthProvider {
   static create(
