@@ -18,7 +18,7 @@ import {
 
 const wrapperCSS = {
   width: 380,
-  'max-height': 'calc(100vh - 200px)',
+  maxHeight: 'calc(100vh - 200px)',
   overflow: 'scroll',
   padding: '18px',
 };

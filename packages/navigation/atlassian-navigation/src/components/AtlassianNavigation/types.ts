@@ -13,6 +13,7 @@ export type AtlassianNavigationProps = {
   renderSearch?: React.ComponentType<{}>;
   renderSignIn?: React.ComponentType<{}>;
   renderSettings?: React.ComponentType<{}>;
+  renderWhatIsNew?: React.ComponentType<{}>;
   moreLabel?: ReactNode;
   theme?: NavigationTheme;
 };

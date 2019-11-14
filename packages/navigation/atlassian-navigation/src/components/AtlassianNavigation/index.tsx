@@ -26,6 +26,7 @@ export const AtlassianNavigation = (
     renderSearch: Search,
     renderSignIn: SignIn,
     renderSettings: Settings,
+    renderWhatIsNew: WhatIsNew,
     moreLabel,
     theme,
   } = props;
@@ -46,8 +47,9 @@ export const AtlassianNavigation = (
           <div css={rightCSS}>
             {Search && <Search />}
             {Notifications && <Notifications />}
-            {Settings && <Settings />}
+            {WhatIsNew && <WhatIsNew />}
             {Help && <Help />}
+            {Settings && <Settings />}
             {SignIn && <SignIn />}
             {Profile && <Profile />}
           </div>

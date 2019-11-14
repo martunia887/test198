@@ -2,15 +2,7 @@ import React from 'react';
 import { WhatIsNew } from '../src';
 import { createWhatIsNewProviderFromJson } from '../src/clients/what-is-new-from-json';
 import { Feature } from '../src/types';
-
-const feature: Feature = {
-  id: '1',
-  date: 1573700033538,
-  title: 'Feature 1 - Wow!',
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  link: 'https://google.com/',
-};
+import { getFeatures } from './assets/features';
 
 export default function Example() {
   return (
@@ -21,7 +13,7 @@ export default function Example() {
       }}
     >
       <WhatIsNew
-        whatIsNewProvider={createWhatIsNewProviderFromJson(new Array(10).fill(feature))}
+        whatIsNewProvider={createWhatIsNewProviderFromJson(getFeatures(10))}
       />
     </div>
   );
