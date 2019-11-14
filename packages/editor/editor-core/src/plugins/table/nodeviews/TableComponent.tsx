@@ -40,6 +40,8 @@ import {
   isActiveTable,
   getMergedCellsPositions,
   onBeforeCapture,
+  enableGlobalDraggingStyles,
+  disableGlobalDraggingStyles,
 } from '../utils';
 import {
   autoSizeTable,
@@ -341,6 +343,8 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
 
   private onDragStart = ({ draggableId, source, type }: DragStart) => {
     const { state } = this.props.view;
+    enableGlobalDraggingStyles();
+
     if (isActiveTable(state, this.table) && type === 'rows') {
       const { tableWidth, rowHeights } = getPluginState(state);
       addRowPlaceholder(
@@ -358,6 +362,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
       view: { state, dispatch },
       node,
     } = this.props;
+    disableGlobalDraggingStyles();
     if (isActiveTable(state, this.table)) {
       const tableStart = this.props.getPos() + 1;
       const { multiReorderIndexes } = getPluginState(state);

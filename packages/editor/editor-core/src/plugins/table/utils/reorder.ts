@@ -339,3 +339,19 @@ export const onReorderingColumns = (
     });
   }
 };
+
+const scrollParentClass: string = `.fabric-editor-popup-scroll-parent`;
+
+export const enableGlobalDraggingStyles = () => {
+  const el: HTMLElement | null = document.querySelector(scrollParentClass);
+  if (el) {
+    el.style.scrollBehavior = 'auto';
+  }
+};
+
+export const disableGlobalDraggingStyles = () => {
+  const el: HTMLElement | null = document.querySelector(scrollParentClass);
+  if (el) {
+    el.style.removeProperty('scrollBehavior');
+  }
+};

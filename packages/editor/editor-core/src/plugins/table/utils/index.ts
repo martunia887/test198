@@ -77,4 +77,6 @@ export {
   onReorderingColumns,
   addStylesToCellsBeforeReordering,
   onBeforeCapture,
+  enableGlobalDraggingStyles,
+  disableGlobalDraggingStyles,
 } from './reorder';
