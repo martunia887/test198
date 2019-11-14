@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
-import { colors } from '@atlaskit/theme';
+import { N900, N20, N40 } from '@atlaskit/theme/colors';
 import { Feature } from '../types';
 
 export type FeatureCardProps = {
@@ -8,11 +8,12 @@ export type FeatureCardProps = {
   seen: boolean;
 };
 
-const CardWrapper = styled.div`
-  background-color: ${colors.N20};
+const CardWrapper: React.ComponentClass<React.HTMLAttributes<{}> &
+  Pick<FeatureCardProps, 'seen'>> = styled.div`
+  background-color: ${props => (props.seen ? N40 : N20)};;
   transition: background-color 0.2s;
 
-  color: ${colors.N900};
+  color: ${N900}
   font-weight: 400;
   min-height: 40px;
   padding: 12px 8px;
@@ -20,13 +21,13 @@ const CardWrapper = styled.div`
   border-radius: 4px;
 
   :hover {
-    background-color: ${colors.N40};
+    background-color: ${N40};
   }
 `;
 
 export const FeatureCard = (props: FeatureCardProps) => {
   return (
-    <CardWrapper>
+    <CardWrapper seen={props.seen}>
       <h5>{props.feature.title}</h5>
       <p>{props.feature.description}</p>
       <a href={props.feature.link}>Learn more...</a>
