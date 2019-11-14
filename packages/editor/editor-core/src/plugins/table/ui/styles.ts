@@ -442,6 +442,23 @@ const resizeHandle = `
   }
 `;
 
+const stickyHeaders = css`
+  .${ClassName.TABLE_NODE_WRAPPER} > table {
+    position: relative;
+
+    th.${ClassName.TABLE_HEADER_CELL} {
+      box-shadow: 1px 1px #C1C7D0;
+      z-index: 10000;
+      position: sticky;
+      top: 0;
+    }
+  }
+
+  .${ClassName.TABLE_NODE_WRAPPER} {
+    overflow: visible !important;
+  }
+`;
+
 export const tableStyles = css`
   .${ClassName.LAYOUT_BUTTON} button {
     background: ${N20A};
@@ -463,6 +480,7 @@ export const tableStyles = css`
     ${hoveredCell};
     ${hoveredWarningCell};
     ${resizeHandle};
+    ${stickyHeaders};
 
     .${ClassName.LAST_ITEM_IN_CELL} {
       margin-bottom: 0;
