@@ -1,3 +1,4 @@
+import { CSSObject } from '@emotion/core';
 import { Transaction } from 'prosemirror-state';
 import { TableMap } from 'prosemirror-tables';
 import { Node as PMNode } from 'prosemirror-model';
@@ -390,17 +391,23 @@ export const onReorderingColumns = (
 };
 
 const scrollParentClass: string = `.fabric-editor-popup-scroll-parent`;
+const isDraggingStyles: CSSObject = {
+  userSelect: 'none',
+  scrollBehavior: 'auto',
+};
 
 export const enableGlobalDraggingStyles = () => {
   const el: HTMLElement | null = document.querySelector(scrollParentClass);
-  if (el) {
-    el.style.scrollBehavior = 'auto';
+  if (!el) {
+    return;
   }
+  Object.assign(el.style, isDraggingStyles);
 };
 
 export const disableGlobalDraggingStyles = () => {
   const el: HTMLElement | null = document.querySelector(scrollParentClass);
-  if (el) {
-    el.style.removeProperty('scrollBehavior');
+  if (!el) {
+    return;
   }
+  el.removeAttribute('style');
 };
