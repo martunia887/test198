@@ -5,6 +5,7 @@ import { Feature } from '../types';
 
 export type FeatureCardProps = {
   feature: Feature;
+  seen: boolean;
 };
 
 const CardWrapper = styled.div`

@@ -1,5 +1,6 @@
 import React from 'react';
 import { WhatIsNew } from '../src';
+import { createWhatIsNewProviderFromJson } from '../src/clients/what-is-new-from-json';
 import { Feature } from '../src/types';
 
 const feature: Feature = {
@@ -19,7 +20,9 @@ export default function Example() {
         paddingTop: '40px',
       }}
     >
-      <WhatIsNew features={new Array(10).fill(feature)} />
+      <WhatIsNew
+        whatIsNewProvider={createWhatIsNewProviderFromJson(new Array(10).fill(feature))}
+      />
     </div>
   );
 }

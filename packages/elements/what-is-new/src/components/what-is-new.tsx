@@ -1,11 +1,20 @@
-import React, { forwardRef, FunctionComponent, Ref, useState } from 'react';
+import React, {
+  forwardRef,
+  FunctionComponent,
+  Ref,
+  useEffect,
+  useState,
+} from 'react';
 import Popup from '@atlaskit/popup';
 
 import PremiumIcon from '@atlaskit/icon/glyph/premium';
 import Button, { ButtonProps } from '@atlaskit/button';
 import Tooltip from '@atlaskit/tooltip';
-import { Feature } from '../types';
 import { FeatureCard } from './feature-card';
+import {
+  LastFeatureResponse,
+  WhatIsNewProvider,
+} from '../clients/what-is-new-from-json';
 
 const wrapperCSS = {
   width: 380,
@@ -16,14 +25,37 @@ const wrapperCSS = {
 
 const NotificationsContent: FunctionComponent<Pick<
   WhatIsNewProps,
-  'features'
->> = ({ features }) => (
-  <div style={wrapperCSS}>
-    {features.map(feature => {
-      return <FeatureCard feature={feature} key={feature.id} />;
-    })}
-  </div>
-);
+  'whatIsNewProvider'
+>> = ({ whatIsNewProvider }) => {
+  const [response, setResponse] = useState<LastFeatureResponse | null>(null);
+
+  useEffect(() => {
+    async function getFeatures() {
+      setResponse(await whatIsNewProvider.getLastFeatures());
+    }
+    getFeatures();
+  }, [whatIsNewProvider]);
+
+  if (!response) {
+    return null;
+  }
+
+  const { features, lastSeen } = response;
+
+  return (
+    <div style={wrapperCSS}>
+      {features.map(feature => {
+        return (
+          <FeatureCard
+            feature={feature}
+            key={feature.id}
+            seen={lastSeen ? feature.date < lastSeen : false}
+          />
+        );
+      })}
+    </div>
+  );
+};
 
 export const WhatIsNewButton = forwardRef(
   (props: ButtonProps, ref: Ref<any>) => {
@@ -41,10 +73,12 @@ export const WhatIsNewButton = forwardRef(
 );
 
 interface WhatIsNewProps {
-  features: Feature[];
+  whatIsNewProvider: WhatIsNewProvider;
 }
 
-export const WhatIsNew: FunctionComponent<WhatIsNewProps> = ({ features }) => {
+export const WhatIsNew: FunctionComponent<WhatIsNewProps> = ({
+  whatIsNewProvider,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onClick = () => {
@@ -58,7 +92,9 @@ export const WhatIsNew: FunctionComponent<WhatIsNewProps> = ({ features }) => {
   return (
     <Popup
       placement="bottom-start"
-      content={() => <NotificationsContent features={features} />}
+      content={() => (
+        <NotificationsContent whatIsNewProvider={whatIsNewProvider} />
+      )}
       isOpen={isOpen}
       onClose={onClose}
       trigger={triggerProps => (
