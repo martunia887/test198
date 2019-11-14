@@ -2,8 +2,17 @@
     "name": "@atlaskit/website-constellation",
     "version": "0.0.0",
     "private": true,
+    "scripts": {
+        "build": "gatsby build",
+        "develop": "gatsby develop",
+        "clean": "gatsby clean"
+    },
     "dependencies": {
+        "@atlaskit/gatsby-theme-brisk": "*",
         "@atlaskit/multi-entry-tools": "^0.0.3",
-        "fs-extra": "^4.0.2"
+        "fs-extra": "^4.0.2",
+        "gatsby": "^2.17.11",
+        "react": "^16.8.0",
+        "react-dom": "^16.8.0"
     }
 }

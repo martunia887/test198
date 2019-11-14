@@ -1,0 +1,11 @@
+{
+    "name": "@atlaskit/gatsby-theme-brisk",
+    "version": "0.0.0",
+    "private": true,
+    "main": "index.js",
+    "dependencies": {},
+    "peerDependencies": {
+        "react": "^16.8.0",
+        "react-dom": "^16.8.0"
+    }
+}
