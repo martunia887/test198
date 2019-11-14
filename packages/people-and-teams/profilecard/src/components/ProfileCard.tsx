@@ -27,6 +27,8 @@ import {
   CardElevationWrapper,
   LozengeWrapper,
   SpinnerContainer,
+  ProfileBadges,
+  Badge,
 } from '../styled/Card';
 import { AnalyticsName } from '../internal/analytics';
 
@@ -295,6 +297,11 @@ export default class Profilecard extends React.PureComponent<ProfilecardProps> {
               borderColor={colors.N0}
             />
           </ProfileImage>
+          <ProfileBadges>
+            <Badge />
+            <Badge />
+            <Badge />
+          </ProfileBadges>
           <CardContent>
             {this.renderCardDetails()}
             {actions ? (

@@ -56,6 +56,20 @@ export const ProfileImage = styled.div`
   left: ${math.multiply(gridSize, 3)}px;
 `;
 
+export const ProfileBadges = styled.div`
+  position: absolute;
+  bottom: ${math.multiply(gridSize, 3)}px;
+  left: ${math.multiply(gridSize, 3)}px;
+`;
+
+export const Badge = styled.div`
+  background-color: red;
+  width: ${math.multiply(gridSize, 3)}px;
+  height: ${math.multiply(gridSize, 3)}px;
+  border-radius: 50%;
+  margin: ${math.multiply(gridSize, 0.5)}px;
+`;
+
 export const ActionsFlexSpacer = styled.div`
   flex: 1 0 auto;
 `;
