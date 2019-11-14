@@ -77,4 +77,5 @@ export {
   onReorderingColumns,
   addStylesToCellsBeforeReordering,
   onBeforeCapture,
+  bringBackControlsDimensions,
 } from './reorder';
