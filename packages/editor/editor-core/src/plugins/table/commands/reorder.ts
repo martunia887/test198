@@ -84,7 +84,7 @@ const endReordering = (tr: Transaction) =>
     {
       type: 'ON_REORDERING_END',
     },
-    () => tr.setMeta('addToHistory', false),
+    () => tr,
   );
 
 // returns new indexes of the dropped columns/rows
