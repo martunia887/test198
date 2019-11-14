@@ -30,6 +30,7 @@ import {
   isIsolating,
   updatePluginStateDecorations,
   createColumnControlsDecoration,
+  createRowControlsDecoration,
 } from '../utils';
 import { Command } from '../../../types';
 import { analyticsService } from '../../../analytics';
@@ -85,10 +86,19 @@ export const setTableRef = (ref?: HTMLElement | null) =>
       let decorationSet = DecorationSet.empty;
 
       if (allowControls && tableRef) {
-        decorationSet = updatePluginStateDecorations(
-          state,
-          createColumnControlsDecoration(state.selection),
+        const { tr } = state;
+        decorationSet = updateNodeDecorations(
+          tr.doc,
+          decorationSet,
+          createColumnControlsDecoration(tr.selection),
           TableDecorations.COLUMN_CONTROLS_DECORATIONS,
+        );
+
+        decorationSet = updateNodeDecorations(
+          tr.doc,
+          decorationSet,
+          createRowControlsDecoration(tr.selection),
+          TableDecorations.ROW_CONTROLS_DECORATIONS,
         );
       }
 

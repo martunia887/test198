@@ -1,4 +1,5 @@
 import { EditorView } from 'prosemirror-view';
+
 import {
   EditorState,
   Transaction,
@@ -33,6 +34,7 @@ import {
   isCell,
   isInsertRowButton,
   isColumnControlsDecorations,
+  isRowControlsDecorations,
   isTableControlsButton,
   isRowControlsButton,
   isCornerButton,
@@ -48,7 +50,9 @@ import {
   hideInsertColumnOrRowButton,
   addResizeHandleDecorations,
   selectColumn,
+  selectRow,
   hoverColumns,
+  hoverRows,
   clearHoverSelection,
   showResizeHandleLine,
   hideResizeHandleLine,
@@ -85,6 +89,13 @@ export const handleClick = (view: EditorView, event: Event): boolean => {
     const { state, dispatch } = view;
 
     return selectColumn(startIndex, event.shiftKey)(state, dispatch);
+  }
+
+  if (event instanceof MouseEvent && isRowControlsDecorations(element)) {
+    const [startIndex] = getColumnOrRowIndex(element);
+    const { state, dispatch } = view;
+
+    return selectRow(startIndex, event.shiftKey)(state, dispatch);
   }
   /**
    * Check if the table cell with an image is clicked
@@ -157,6 +168,13 @@ export const handleMouseOver = (
     return hoverColumns([startIndex], false)(state, dispatch);
   }
 
+  if (isRowControlsDecorations(target)) {
+    const [startIndex] = getColumnOrRowIndex(target);
+    const { state, dispatch } = view;
+
+    return hoverRows([startIndex], false)(state, dispatch);
+  }
+
   if (
     (isCell(target) || isCornerButton(target)) &&
     (typeof insertColumnButtonIndex === 'number' ||
@@ -183,7 +201,7 @@ export const handleMouseDown = (_: EditorView, event: Event) => {
     event.target &&
     event.target instanceof HTMLElement &&
     (isColumnControlsDecorations(event.target) ||
-      isRowControlsButton(event.target))
+      isRowControlsDecorations(event.target))
   );
 
   if (isControl) {
@@ -199,7 +217,7 @@ export const handleMouseOut = (
 ): boolean => {
   const target = mouseEvent.target as HTMLElement;
 
-  if (isColumnControlsDecorations(target)) {
+  if (isColumnControlsDecorations(target) || isRowControlsDecorations(target)) {
     const { state, dispatch } = view;
     return clearHoverSelection()(state, dispatch);
   }
@@ -253,7 +271,7 @@ export const handleMouseMove = (view: EditorView, event: Event) => {
     }
   }
 
-  if (isRowControlsButton(element)) {
+  if (isRowControlsDecorations(element)) {
     const { state, dispatch } = view;
     const { insertRowButtonIndex } = getPluginState(state);
     const [startIndex, endIndex] = getColumnOrRowIndex(element);

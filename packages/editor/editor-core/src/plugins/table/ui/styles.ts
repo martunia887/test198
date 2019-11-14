@@ -376,6 +376,57 @@ const columnControlsDecoration = `
   }
 `;
 
+
+const rowControlsDecoration = `
+  .${ClassName.ROW_CONTROLS_DECORATIONS} {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    width: 25px;
+    left: -25px;
+    top: -1px;
+    height: 100%;
+
+    &::after {
+      content: ' ';
+
+      ${columnHeaderButton(`
+        border-right: ${tableCellBorderWidth}px solid ${tableBorderColor};
+        border-bottom: none;
+        height: calc(100% + 1px);;
+        width: 12px;
+        position: absolute;
+        top: 0;
+        right: 0px;
+        z-index: -1;
+      `)}
+    }
+  }
+
+  .${ClassName.WITH_CONTROLS} .${ClassName.ROW_CONTROLS_DECORATIONS} {
+    display: block;
+  }
+
+  table tr td.${ClassName.TABLE_CELL}:first-child,
+  table tr th.${ClassName.TABLE_HEADER_CELL}:first-child {
+    &.${ClassName.ROW_SELECTED},
+    &.${ClassName.HOVERED_ROW},
+    &.${ClassName.HOVERED_TABLE} {
+      .${ClassName.ROW_CONTROLS_DECORATIONS}::after {
+        ${columnHeaderButtonSelected};
+        border-bottom: none;
+      }
+
+      &.${ClassName.HOVERED_CELL_IN_DANGER} .${ClassName.ROW_CONTROLS_DECORATIONS}::after {
+        background-color: ${tableToolbarDeleteColor};
+        border: 1px solid ${tableBorderDeleteColor};
+        border-bottom: none;
+        z-index: ${akEditorUnitZIndex * 100};
+      }
+    }
+  }
+`;
+
 const hoveredDeleteButton = `
   .${ClassName.TABLE_CONTAINER}.${ClassName.HOVERED_DELETE_BUTTON} {
     .${ClassName.SELECTED_CELL},
@@ -484,6 +535,7 @@ export const tableStyles = css`
     ${hoveredWarningCell};
     ${resizeHandle};
     ${stickyHeaders};
+    ${rowControlsDecoration};
 
     .${ClassName.LAST_ITEM_IN_CELL} {
       margin-bottom: 0;
@@ -730,6 +782,10 @@ export const tableStyles = css`
       table-layout: fixed;
 
       .${ClassName.COLUMN_CONTROLS_DECORATIONS} + * {
+        margin-top: 0;
+      }
+
+      .${ClassName.ROW_CONTROLS_DECORATIONS} + * {
         margin-top: 0;
       }
 

@@ -28,6 +28,9 @@ export const getColumnOrRowIndex = (target: HTMLElement): [number, number] => [
 export const isColumnControlsDecorations = (node: HTMLElement): boolean =>
   containsClassName(node, ClassName.COLUMN_CONTROLS_DECORATIONS);
 
+export const isRowControlsDecorations = (node: HTMLElement): boolean =>
+  containsClassName(node, ClassName.ROW_CONTROLS_DECORATIONS);
+
 export const isRowControlsButton = (node: HTMLElement): boolean =>
   containsClassName(node, ClassName.ROW_CONTROLS_BUTTON) ||
   containsClassName(node, ClassName.NUMBERED_COLUMN_BUTTON);

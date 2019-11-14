@@ -15,6 +15,8 @@ import {
   updateNodeDecorations,
   createColumnControlsDecoration,
   createColumnSelectedDecorations,
+  createRowSelectedDecorations,
+  createRowControlsDecoration,
   TableSortStep,
 } from './utils';
 import { findColumnControlSelectedDecoration } from './utils/decoration';
@@ -34,6 +36,13 @@ const getDecorationSet = (
       createColumnControlsDecoration(tr.selection),
       TableDecorations.COLUMN_CONTROLS_DECORATIONS,
     );
+
+    decorationSet = updateNodeDecorations(
+      tr.doc,
+      decorationSet,
+      createRowControlsDecoration(tr.selection),
+      TableDecorations.ROW_CONTROLS_DECORATIONS,
+    );
   }
 
   if (tr.selection instanceof CellSelection && tr.selection.isColSelection()) {
@@ -42,6 +51,15 @@ const getDecorationSet = (
       decorationSet,
       createColumnSelectedDecorations(tr),
       TableDecorations.COLUMN_SELECTED,
+    );
+  }
+
+  if (tr.selection instanceof CellSelection && tr.selection.isRowSelection()) {
+    decorationSet = updateNodeDecorations(
+      tr.doc,
+      decorationSet,
+      createRowSelectedDecorations(tr),
+      TableDecorations.ROW_SELECTED,
     );
   }
 

@@ -7,8 +7,10 @@ export {
 export {
   findControlsHoverDecoration,
   createControlsHoverDecoration,
+  createRowControlsDecoration,
   createColumnControlsDecoration,
   createColumnSelectedDecorations,
+  createRowSelectedDecorations,
   createCellHoverDecoration,
   updatePluginStateDecorations,
   updateNodeDecorations,
@@ -40,6 +42,7 @@ export {
   isCornerButton,
   isInsertRowButton,
   isColumnControlsDecorations,
+  isRowControlsDecorations,
   isTableControlsButton,
   isRowControlsButton,
   getColumnOrRowIndex,

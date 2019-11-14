@@ -196,6 +196,9 @@ export enum TableDecorations {
   COLUMN_RESIZING_HANDLE = 'COLUMN_RESIZING_HANDLE',
   COLUMN_RESIZING_HANDLE_LINE = 'COLUMN_RESIZING_HANDLE_LINE',
 
+  ROW_CONTROLS_DECORATIONS = 'ROW_CONTROLS_DECORATIONS',
+  ROW_SELECTED = 'ROW_SELECTED',
+
   LAST_CELL_ELEMENT = 'LAST_CELL_ELEMENT',
 }
 
@@ -206,11 +209,13 @@ export const TableCssClassName = {
   COLUMN_CONTROLS_DECORATIONS: `${tablePrefixSelector}-column-controls-decoration`,
   COLUMN_SELECTED: `${tablePrefixSelector}-column__selected`,
 
+  ROW_CONTROLS_DECORATIONS: `${tablePrefixSelector}-row-controls-decoration`,
   ROW_CONTROLS_WRAPPER: `${tablePrefixSelector}-row-controls-wrapper`,
   ROW_CONTROLS: `${tablePrefixSelector}-row-controls`,
   ROW_CONTROLS_INNER: `${tablePrefixSelector}-row-controls__inner`,
   ROW_CONTROLS_BUTTON_WRAP: `${tablePrefixSelector}-row-controls__button-wrap`,
   ROW_CONTROLS_BUTTON: `${tablePrefixSelector}-row-controls__button`,
+  ROW_SELECTED: `${tablePrefixSelector}-row__selected`,
 
   CONTROLS_BUTTON: `${tablePrefixSelector}-controls__button`,
   CONTROLS_BUTTON_ICON: `${tablePrefixSelector}-controls__button-icon`,
