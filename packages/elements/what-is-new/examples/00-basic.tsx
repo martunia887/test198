@@ -1,6 +1,26 @@
 import React from 'react';
 import { WhatIsNew } from '../src';
+import { FeatureCard } from '../src/components/feature-card';
+import { Feature } from '../src/types';
+
+const feature: Feature = {
+  date: 1573700033538,
+  title: 'Feature 1 - Wow!',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  link: 'https://google.com/',
+};
 
 export default function Example() {
-  return <WhatIsNew />;
+  return (
+    <div
+      style={{
+        paddingLeft: '250px',
+        paddingTop: '40px',
+      }}
+    >
+      <WhatIsNew />
+      <FeatureCard feature={feature} />
+    </div>
+  );
 }
