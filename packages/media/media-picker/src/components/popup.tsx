@@ -29,10 +29,9 @@ import { PopupUploadEventEmitter } from './types';
 
 export interface EdgeData {
   data: {
-    client: {
-      id: string;
-      token: string;
-    };
+    clientId: string;
+    token: string;
+    baseUrl: string;
     expiresIn: number;
     iat: number;
   };
@@ -57,22 +56,20 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
     super();
     this.proxyReactContext = proxyReactContext;
 
+    // TODO: move this into external method
     const userAuthProvider: AuthProvider = async (context?: AuthContext) => {
       try {
         // TODO: use current location.host instead
-        const { data }: EdgeData = await (
-          await fetch(
-            'https://api-private.stg.atlassian.com/media/auth/smartedge/auth/edge',
-            { credentials: 'include' },
-          )
-        ).json();
-        const baseUrl = (await tenantMediaClient.config.authProvider(context))
-          .baseUrl;
+        const { data }: EdgeData = await (await fetch(
+          'https://api-private.stg.atlassian.com/media/auth/smartedge/auth/edge',
+          { credentials: 'include' },
+        )).json();
         // TODO: handle token expiry
+        // TODO: cache token hehehe
         const auth: ClientBasedAuth = {
-          clientId: data.client.id,
-          token: data.client.token,
-          baseUrl,
+          clientId: data.clientId,
+          token: data.token,
+          baseUrl: data.baseUrl,
         };
 
         return auth;
