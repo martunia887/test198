@@ -233,7 +233,9 @@ export const cleanupAfterReordering = () => {
 
     const cells = row.querySelectorAll('th, td');
     Array.prototype.slice.call(cells).forEach(cell => {
+      const { backgroundColor } = cell.style;
       cell.removeAttribute('style');
+      cell.style.backgroundColor = backgroundColor;
       cell.removeAttribute(ClassName.RBD_DRAGGABLE);
       cell.classList.remove(ClassName.MULTI_REORDERING);
     });

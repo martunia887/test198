@@ -48,7 +48,11 @@ const getDraggableCells = (
     const row = tableRef.lastChild.childNodes[i];
     const cell = row.childNodes[columnIndex] as HTMLElement;
     const nodeNade = cell.nodeName.toLowerCase();
-    const style = `height:${rowHeights[i] - 1}px`;
+    const { backgroundColor } = cell.style;
+    let style = `height:${rowHeights[i] - 1}px;`;
+    if (backgroundColor) {
+      style += `background:${backgroundColor};`;
+    }
     html += `<tr><${nodeNade} style="${style}" class="${cell.className} ${cl.SELECTED_CELL}">${cell.innerHTML}</${nodeNade}></tr>`;
   }
 
