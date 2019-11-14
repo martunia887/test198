@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo, useRef, useState, useCallback, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import classnames from 'classnames';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
@@ -96,61 +96,52 @@ const RowControlButton = ({
     });
   }, [state, startIndex, provided]);
 
-  const onMouseOver = useCallback(
-    () => hoverRows([startIndex])(state, dispatch),
-    [state, dispatch, startIndex],
-  );
+  const onMouseOver = () => hoverRows([startIndex])(editorView.state, dispatch);
 
-  const onMouseOut = useCallback(() => {
-    clearHoverSelection()(state, dispatch);
+  const onMouseOut = () => {
+    clearHoverSelection()(editorView.state, dispatch);
     if (showMergedCells) {
       setShowMergedCells(false);
     }
-  }, [state, dispatch, showMergedCells]);
+  };
 
-  const onClick = useCallback(
-    (event: React.MouseEvent) => {
-      if (showMergedCells) {
-        return;
-      }
-      // fix for issue ED-4665
-      if (browser.ie_version === 11) {
-        (editorView.dom as HTMLElement).blur();
-      }
-      selectRow(startIndex, event.shiftKey)(state, dispatch);
-    },
-    [state, dispatch, showMergedCells, startIndex],
-  );
+  const onClick = (event: React.MouseEvent) => {
+    if (showMergedCells) {
+      return;
+    }
+    // fix for issue ED-4665
+    if (browser.ie_version === 11) {
+      (editorView.dom as HTMLElement).blur();
+    }
+    selectRow(startIndex, event.shiftKey)(editorView.state, dispatch);
+  };
 
-  const onMouseDown = useCallback(
-    (event: React.MouseEvent) => {
-      if (!hasMergedCells) {
-        return;
-      }
-      dragStart.current = event.clientY;
+  const onMouseDown = (event: React.MouseEvent) => {
+    if (!hasMergedCells) {
+      return;
+    }
+    dragStart.current = event.clientY;
 
-      function move(moveEvent: MouseEvent) {
-        if (
-          dragStart.current !== null &&
-          !showMergedCells &&
-          Math.abs(dragStart.current - moveEvent.clientY) > 5
-        ) {
-          clearHoverSelection()(editorView.state, dispatch);
-          hoverMergedCells()(editorView.state, dispatch);
-          setShowMergedCells(true);
-        }
+    function move(moveEvent: MouseEvent) {
+      if (
+        dragStart.current !== null &&
+        !showMergedCells &&
+        Math.abs(dragStart.current - moveEvent.clientY) > 5
+      ) {
+        clearHoverSelection()(editorView.state, dispatch);
+        hoverMergedCells()(editorView.state, dispatch);
+        setShowMergedCells(true);
       }
+    }
 
-      function finish(event: MouseEvent) {
-        window.removeEventListener('mouseup', finish);
-        window.removeEventListener('mousemove', move);
-        dragStart.current = null;
-      }
-      window.addEventListener('mouseup', finish);
-      window.addEventListener('mousemove', move);
-    },
-    [editorView, state, dispatch, dragStart, hasMergedCells, showMergedCells],
-  );
+    function finish(event: MouseEvent) {
+      window.removeEventListener('mouseup', finish);
+      window.removeEventListener('mousemove', move);
+      dragStart.current = null;
+    }
+    window.addEventListener('mouseup', finish);
+    window.addEventListener('mousemove', move);
+  };
 
   let portalWidth;
   if (isPortal) {
