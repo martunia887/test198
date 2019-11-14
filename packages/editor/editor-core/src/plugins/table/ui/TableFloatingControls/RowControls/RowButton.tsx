@@ -216,9 +216,11 @@ const RowControlButton = ({
     >
       {isPortal ? (
         <>
-          <div className={cl.REORDERING_INDICATOR}>
-            {multiReorderIndexes.length || 1}
-          </div>
+          {multiReorderIndexes.length > 1 && (
+            <div className={cl.REORDERING_INDICATOR}>
+              {multiReorderIndexes.length}
+            </div>
+          )}
           <div className={cl.ROW_CONTROLS_PORTAL_CONTENT_WRAP}>
             <div className={cl.ROW_CONTROLS}>
               <div
