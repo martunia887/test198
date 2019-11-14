@@ -288,25 +288,23 @@ export async function importFiles(
     config.uploadParams && config.uploadParams.collection;
   store.dispatch(hidePopup());
 
-  const selectedUploadFiles = selectedItems
-    .filter(isKnowServiceName)
-    .map(item => mapSelectedItemToSelectedUploadFile(item, tenantCollection));
   const selectedPluginItems = selectedItems.filter(
     item => !isKnowServiceName(item),
   );
+  const userAuth = await userMediaClient.config.authProvider();
+  const selectedUploadFiles = selectedItems
+    .filter(isKnowServiceName)
+    .map(item => {
+      const tenantFileId = uuid();
+      return mapSelectedItemToSelectedUploadFile(
+        item,
+        tenantFileId,
+        tenantCollection,
+      );
+    });
 
   touchSelectedFiles(selectedUploadFiles, store);
   eventEmitter.emitPluginItemsInserted(selectedPluginItems);
-  const userAuth = await userMediaClient.config.authProvider();
-
-  // const selectedUploadFiles = selectedItems.map(item => {
-  //   const tenantFileId = uuid();
-  //   return mapSelectedItemToSelectedUploadFile(
-  //     item,
-  //     tenantFileId,
-  //     tenantCollection,
-  //   );
-  // });
 
   await Promise.all(
     selectedUploadFiles.map(async selectedUploadFile => {
