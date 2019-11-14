@@ -1,16 +1,24 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Pagination from '../../..';
+import { Pagination as PaginationWithoutAnalytics } from '../../../components/Pagination';
 import Page from '../../../components/Page';
 import { LeftNavigator } from '../../../components/Navigators';
 import { name } from '../../../version.json';
 
 describe(`${name} - Pagination component`, () => {
+  describe('exports', () => {
+    it('should export a base component without analytics-next wrapper', () => {
+      expect(PaginationWithoutAnalytics).toBeInstanceOf(Object);
+    });
+  });
+
   it('should not throw error on mount', () => {
     expect(() => {
       mount(<Pagination pages={[1, 2, 3]} />);
     }).not.toThrow();
   });
+
   describe('defaultSelectedIndex prop', () => {
     it('should select the passed in default selected index page', () => {
       const wrapper = mount(
@@ -99,6 +107,7 @@ describe(`${name} - Pagination component`, () => {
       expect(customComponentCount.length).toBe(3);
     });
   });
+
   describe('previousPageComponent prop', () => {
     it('should display this new component instead of the default page component', () => {
       const customComponent = () => <div>Previous</div>;

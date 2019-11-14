@@ -18,7 +18,7 @@ interface State {
   selectedIndex: number;
 }
 
-class Pagination extends Component<PaginationPropTypes, State> {
+export class Pagination extends Component<PaginationPropTypes, State> {
   static defaultProps = {
     collapseRange: collapseRangeHelper,
     components: {},
