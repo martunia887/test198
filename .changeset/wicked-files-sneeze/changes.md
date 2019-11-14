@@ -1,0 +1,1 @@
+export base pagination component (without analytics-next wrapper)
