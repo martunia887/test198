@@ -226,7 +226,7 @@ const insertRowButtonWrapper = `
 const columnControlsLineMarker = `
   .${ClassName.TABLE_CONTAINER}.${ClassName.WITH_CONTROLS} table tr:first-child td,
   .${ClassName.TABLE_CONTAINER}.${ClassName.WITH_CONTROLS} table tr:first-child th {
-    position: relative;
+    position: sticky;
 
     &::before {
       content: ' ';
@@ -447,10 +447,13 @@ const stickyHeaders = css`
     position: relative;
 
     th.${ClassName.TABLE_HEADER_CELL} {
-      box-shadow: 1px 1px #C1C7D0;
       z-index: 10000;
       position: sticky;
       top: 0;
+
+      &:not(.${ClassName.SELECTED_CELL}):not(.${ClassName.HOVERED_CELL}) {
+        box-shadow: 1px 1px #C1C7D0;
+      }
     }
   }
 
