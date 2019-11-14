@@ -220,7 +220,7 @@ const ColumnControlButton = ({
   if (showMergedCells) {
     return (
       <Tooltip
-        content={formatMessage(messages.canNotReorderTable)}
+        content={formatMessage(messages.canNotReorderColumns)}
         position="top"
       >
         {control}

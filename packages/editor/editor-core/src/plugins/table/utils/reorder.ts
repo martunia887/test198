@@ -130,6 +130,33 @@ export const addStylesToCellsBeforeReordering = (
   }
 };
 
+export const onBeforeCapture = (tableRef?: HTMLTableElement | null) => {
+  if (!tableRef) {
+    return;
+  }
+  const tbody = tableRef.querySelector('tbody');
+  if (!tbody) {
+    return;
+  }
+  const tableWidth = tbody.offsetWidth;
+  const tableHeight = tbody.offsetHeight;
+
+  const rowControls = document.querySelectorAll(
+    `.${ClassName.ROW_CONTROLS_INNER}`,
+  );
+  const columnControls = document.querySelectorAll(
+    `.${ClassName.COLUMN_CONTROLS_INNER}`,
+  );
+  Array.prototype.slice.call(rowControls).forEach(control => {
+    control.style.width = `${tableWidth}px`;
+    control.style.height = `${tableHeight}px`;
+  });
+  Array.prototype.slice.call(columnControls).forEach(control => {
+    control.style.width = `${tableWidth}px`;
+    control.style.height = `${tableHeight}px`;
+  });
+};
+
 export const addRowPlaceholder = (
   draggableId: string,
   rowIndex: number,
@@ -149,17 +176,30 @@ export const addRowPlaceholder = (
 
 export const cleanupAfterReordering = () => {
   const rows = document.querySelectorAll(`.${ClassName.TABLE_CONTAINER} tr`);
-  rows.forEach(row => {
+  Array.prototype.slice.call(rows).forEach(row => {
     row.removeAttribute('style');
     row.removeAttribute(ClassName.RBD_DRAGGABLE);
     row.classList.remove(ClassName.MULTI_REORDERING);
 
     const cells = row.querySelectorAll('th, td');
-    cells.forEach(cell => {
+    Array.prototype.slice.call(cells).forEach(cell => {
       cell.removeAttribute('style');
       cell.removeAttribute(ClassName.RBD_DRAGGABLE);
       cell.classList.remove(ClassName.MULTI_REORDERING);
     });
+  });
+
+  const rowControls = document.querySelectorAll(
+    `.${ClassName.ROW_CONTROLS_INNER}`,
+  );
+  const columnControls = document.querySelectorAll(
+    `.${ClassName.COLUMN_CONTROLS_INNER}`,
+  );
+  Array.prototype.slice.call(rowControls).forEach(control => {
+    control.removeAttribute('style');
+  });
+  Array.prototype.slice.call(columnControls).forEach(control => {
+    control.removeAttribute('style');
   });
 
   // editor blows up if we do it synchronously

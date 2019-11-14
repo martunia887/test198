@@ -243,7 +243,7 @@ const RowControlButton = ({
   if (showMergedCells) {
     return (
       <Tooltip
-        content={formatMessage(messages.canNotReorderTable)}
+        content={formatMessage(messages.canNotReorderRows)}
         position="top"
       >
         {control}

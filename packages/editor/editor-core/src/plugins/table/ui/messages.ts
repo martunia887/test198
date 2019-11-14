@@ -26,9 +26,14 @@ export default defineMessages({
     defaultMessage: 'Cell options',
     description: 'Opens a menu with options for the current table cell.',
   },
-  canNotReorderTable: {
+  canNotReorderColumns: {
     id: 'fabric.editor.canNotReorderTable',
-    defaultMessage: `⚠️ You can't reorder a table with merged cells`,
+    defaultMessage: `⚠️ You can’t move columns with merged cells`,
+    description: 'Split your cells to enable this feature',
+  },
+  canNotReorderRows: {
+    id: 'fabric.editor.canNotReorderTable',
+    defaultMessage: `⚠️ You can’t move rows with merged cells`,
     description: 'Split your cells to enable this feature',
   },
 });

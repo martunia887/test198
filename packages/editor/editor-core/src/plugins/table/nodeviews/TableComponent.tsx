@@ -39,6 +39,7 @@ import {
   onReorderingColumns,
   isActiveTable,
   getMergedCellsPositions,
+  onBeforeCapture,
 } from '../utils';
 import {
   autoSizeTable,
@@ -119,22 +120,6 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     requestAnimationFrame(() => {
       this.setState({ isLoading: false });
     });
-    // document.body.dispatchEvent(new CustomEvent("rbd-lift"));
-
-    // document.body.addEventListener('rbd-lift', () => {
-    //   const rowsDroppable = document.querySelector(
-    //     '.pm-table-row-controls__inner',
-    //   ) as HTMLElement;
-    //   if (rowsDroppable) {
-    //     rowsDroppable.style.width = '760px';
-    //   }
-    //   const columnsDroppable = document.querySelector(
-    //     '.pm-table-column-controls__inner',
-    //   ) as HTMLElement;
-    //   if (columnsDroppable) {
-    //     columnsDroppable.style.height = '500px';
-    //   }
-    // });
   }
 
   componentDidMount() {
@@ -234,7 +219,9 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     ) as HTMLElement;
 
     return (
+      // @ts-ignore
       <DragDropContext
+        onBeforeCapture={this.onBeforeCapture}
         onBeforeDragStart={this.onBeforeDragStart}
         onDragStart={this.onDragStart}
         onDragEnd={this.onDragEnd}
@@ -331,6 +318,13 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
       </DragDropContext>
     );
   }
+
+  private onBeforeCapture = () => {
+    const { view } = this.props;
+    if (this.table && isActiveTable(view.state, this.table)) {
+      onBeforeCapture(this.table);
+    }
+  };
 
   private onBeforeDragStart = ({ type, source }: DragStart) => {
     const { view } = this.props;

@@ -411,7 +411,7 @@ const reordering = `
     font-size: ${fontSize()}px;
     color: ${N200};
 
-    .${ClassName.ROW_CONTROLS} {
+    .${ClassName.ROW_CONTROLS} .${ClassName.ROW_CONTROLS_BUTTON} {
       width: ${akEditorTableToolbarSize + akEditorTableNumberColumnWidth}px;
     }
     .${ClassName.TABLE_CONTAINER} {
@@ -463,7 +463,7 @@ const reordering = `
     }
   }
   .${ClassName.REORDERING_INDICATOR} {
-    background: ${colors.B300};
+    background: ${colors.R300};
     border-radius: 50%;
     position: absolute;
     color: white;
@@ -695,25 +695,6 @@ export const tableStyles = css`
         display: flex;
         flex-direction: column;
       }
-      .${ClassName.ROW_CONTROLS_BUTTON}:last-child {
-        border-bottom-left-radius: ${tableBorderRadiusSize}px;
-      }
-      .${ClassName.ROW_CONTROLS_BUTTON} {
-        position: relative;
-        margin-top: -1px;
-      }
-      .${ClassName.ROW_CONTROLS_BUTTON}:hover,
-      .${ClassName.ROW_CONTROLS_BUTTON}.active,
-      .${ClassName.CONTROLS_BUTTON}:hover {
-        z-index: ${akEditorUnitZIndex};
-      }
-      .${ClassName.ROW_CONTROLS_BUTTON}::before {
-        content: ' ';
-        ${Marker};
-        bottom: -${lineMarkerSize / 2}px;
-        left: -${lineMarkerOffsetFromControls}px;
-      }
-
       ${HeaderButton(`
         border-bottom: 1px solid ${tableBorderColor};
         border-right: 1px solid ${tableBorderColor};
@@ -735,6 +716,25 @@ export const tableStyles = css`
           top: 0;
         }
       `)}
+      .${ClassName.ROW_CONTROLS_BUTTON}:last-child {
+        border-bottom-left-radius: ${tableBorderRadiusSize}px;
+      }
+      .${ClassName.ROW_CONTROLS_BUTTON} {
+        width: ${tableToolbarSize + 1}px;
+        position: relative;
+        margin-top: -1px;
+      }
+      .${ClassName.ROW_CONTROLS_BUTTON}:hover,
+      .${ClassName.ROW_CONTROLS_BUTTON}.active,
+      .${ClassName.CONTROLS_BUTTON}:hover {
+        z-index: ${akEditorUnitZIndex};
+      }
+      .${ClassName.ROW_CONTROLS_BUTTON}::before {
+        content: ' ';
+        ${Marker};
+        bottom: -${lineMarkerSize / 2}px;
+        left: -${lineMarkerOffsetFromControls}px;
+      }
     }
     :not(.${ClassName.IS_RESIZING}) .${ClassName.ROW_CONTROLS} {
       ${HeaderButtonHover()}
@@ -745,6 +745,7 @@ export const tableStyles = css`
       text-align: center;
       font-size: ${fontSize()}px;
       color: ${N200};
+      width: ${akEditorTableToolbarSize + akEditorTableNumberColumnWidth}px;
     }
     .${ClassName.TABLE_CONTAINER}[data-number-column='true'] {
       .${ClassName.CORNER_CONTROLS},
