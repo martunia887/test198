@@ -26,7 +26,9 @@ import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 
 addGlobalEventEmitterListeners();
 
-const userMediaClientConfig = createUploadMediaClientConfig();
+const userMediaClientConfig = createUploadMediaClientConfig(
+  'https://api-private.stg.atlassian.com',
+);
 const tenantMediaClientConfig = createStorybookMediaClientConfig();
 
 interface DataSourceOption {

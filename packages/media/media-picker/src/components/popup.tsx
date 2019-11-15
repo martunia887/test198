@@ -7,6 +7,7 @@ import {
   AuthProvider,
   ClientBasedAuth,
   AuthContext,
+  MediaClientConfig,
 } from '@atlaskit/media-core';
 import App, { AppProxyReactContext } from '../popup/components/app';
 import { cancelUpload } from '../popup/actions/cancelUpload';
@@ -37,6 +38,47 @@ export interface EdgeData {
   };
 }
 
+const getAuthFromEdgeData = (response: EdgeData): ClientBasedAuth => ({
+  clientId: response.data.clientId,
+  token: response.data.token,
+  baseUrl: response.data.baseUrl,
+});
+
+const createPopupUserAuthProvider = (
+  mediaClientConfig: MediaClientConfig,
+): AuthProvider => {
+  let tokenData: EdgeData | undefined;
+
+  return async (context?: AuthContext) => {
+    if (tokenData) {
+      return getAuthFromEdgeData(tokenData);
+    }
+
+    try {
+      const stargateUrl = mediaClientConfig.stargateBaseUrl || location.origin;
+      const freshTokenData: EdgeData = await (await fetch(
+        `${stargateUrl}/media/auth/smartedge/auth/edge`,
+        { credentials: 'include' },
+      )).json();
+
+      tokenData = freshTokenData;
+      // TODO: handle token expiry
+      const auth = getAuthFromEdgeData(freshTokenData);
+
+      return auth;
+    } catch (e) {
+      const { userAuthProvider } = mediaClientConfig;
+      if (!userAuthProvider) {
+        throw new Error(
+          'When using Popup media picker userAuthProvider must be provided in the context',
+        );
+      }
+
+      return userAuthProvider(context);
+    }
+  };
+};
+
 export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
   implements PopupUploadEventEmitter, Popup {
   private readonly container?: HTMLElement;
@@ -56,35 +98,9 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
     super();
     this.proxyReactContext = proxyReactContext;
 
-    // TODO: move this into external method
-    const userAuthProvider: AuthProvider = async (context?: AuthContext) => {
-      try {
-        // TODO: use current location.host instead
-        const { data }: EdgeData = await (await fetch(
-          'https://api-private.stg.atlassian.com/media/auth/smartedge/auth/edge',
-          { credentials: 'include' },
-        )).json();
-        // TODO: handle token expiry
-        // TODO: cache token hehehe
-        const auth: ClientBasedAuth = {
-          clientId: data.clientId,
-          token: data.token,
-          baseUrl: data.baseUrl,
-        };
-
-        return auth;
-      } catch (e) {
-        const { userAuthProvider } = tenantMediaClient.config;
-        if (!userAuthProvider) {
-          throw new Error(
-            'When using Popup media picker userAuthProvider must be provided in the context',
-          );
-        }
-
-        return userAuthProvider(context);
-      }
-    };
-
+    const userAuthProvider = createPopupUserAuthProvider(
+      tenantMediaClient.config,
+    );
     const userMediaClient = new MediaClient({
       authProvider: userAuthProvider,
     });

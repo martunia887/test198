@@ -52,7 +52,10 @@ export const createStorybookMediaClientConfig = (
 export const createUploadMediaClient = () =>
   new MediaClient(createUploadMediaClientConfig());
 
-export const createUploadMediaClientConfig = (): MediaClientConfig => ({
+export const createUploadMediaClientConfig = (
+  stargateBaseUrl?: string,
+): MediaClientConfig => ({
   authProvider: mediaPickerAuthProvider('asap'),
+  stargateBaseUrl,
   // userAuthProvider,
 });
