@@ -2,6 +2,7 @@ import { Node } from 'prosemirror-model';
 import { UploadParams } from '@atlaskit/media-picker/types';
 import { MediaClientConfig } from '@atlaskit/media-core';
 import { EmojiProvider } from '@atlaskit/emoji/types';
+import { ExtensionProvider } from 'src/extensions';
 
 export interface Transformer<T> {
   encode(node: Node): T;
@@ -12,6 +13,7 @@ export interface Transformer<T> {
 export interface Providers {
   mediaProvider?: Promise<MediaProvider>;
   emojiProvider?: Promise<EmojiProvider>;
+  extensionProvider?: Promise<ExtensionProvider>;
   [key: string]: Promise<any> | undefined;
 }
 
