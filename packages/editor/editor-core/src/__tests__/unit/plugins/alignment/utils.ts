@@ -1,17 +1,14 @@
 import {
+  alignment as alignmentMark,
   doc,
   p,
-  createEditorFactory,
-  alignment as alignmentMark,
-} from '@atlaskit/editor-test-helpers';
-import {
-  AlignmentPluginState,
-  pluginKey as alignmentPluginKey,
-} from '../../../../plugins/alignment/pm-plugins/main';
+} from '@atlaskit/editor-test-helpers/schema-builder';
+import { createProsemirrorEditorFactory } from '@atlaskit/editor-test-helpers/create-prosemirror-editor';
+import { pluginKey as alignmentPluginKey } from '../../../../plugins/alignment/pm-plugins/main';
 import { removeBlockMarks } from '../../../../utils/mark';
 
 describe('alignment utils', () => {
-  const createEditor = createEditorFactory<AlignmentPluginState>();
+  const createEditor = createProsemirrorEditorFactory();
 
   const editor = (doc: any) =>
     createEditor({
@@ -22,8 +19,8 @@ describe('alignment utils', () => {
       },
     });
 
-  it('removes alignment', () => {
-    const { editorView } = editor(
+  it('removes alignment', async () => {
+    const { editorView } = await editor(
       doc(alignmentMark({ align: 'end' })(p('{<}hello{>}'))),
     );
     const { state, dispatch } = editorView;

@@ -5,7 +5,6 @@ import { EditorView } from 'prosemirror-view';
 import { NodeType } from 'prosemirror-model';
 import { MediaProvider } from '@atlaskit/editor-common';
 
-
 export type MediaStateStatus =
   | 'unknown'
   | 'ready'
@@ -91,7 +90,6 @@ export type MediaToolbarBaseConfig = {
   getDomRef?: (view: EditorView) => HTMLElement | undefined;
   nodeType: NodeType | NodeType[];
 };
-
 
 export interface MediaSingleOptions {
   disableLayout?: boolean;

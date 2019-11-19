@@ -4,12 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { Node as PMNode, Node, Schema } from 'prosemirror-model';
 import { insertPoint } from 'prosemirror-transform';
 import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
-import {
-  EditorState,
-  NodeSelection,
-  Plugin,
-  PluginKey,
-} from 'prosemirror-state';
+import { EditorState, NodeSelection, Plugin } from 'prosemirror-state';
 import { findDomRefAtPos } from 'prosemirror-utils';
 import { UploadParams, PopupConfig } from '@atlaskit/media-picker/types';
 import { MediaClientConfig } from '@atlaskit/media-core';
@@ -20,6 +15,7 @@ import {
   ErrorReporter,
 } from '@atlaskit/editor-common';
 
+import { stateKey } from './pluginKey';
 import analyticsService from '../../../analytics/service';
 import { isImage } from '../../../utils';
 import { Dispatch } from '../../../event-dispatcher';
@@ -42,6 +38,7 @@ import {
 import * as helpers from '../commands/helpers';
 import { updateMediaNodeAttrs } from '../commands';
 import { MediaPMPluginOptions } from '..';
+import { LightMediaPluginState } from './types';
 
 export { MediaState, MediaProvider, MediaStateStatus };
 
@@ -52,7 +49,7 @@ export interface MediaNodeWithPosHandler {
   getPos: ProsemirrorGetPosHandler;
 }
 
-export class MediaPluginState {
+export class MediaPluginState implements LightMediaPluginState {
   public allowsUploads: boolean = false;
   public mediaClientConfig?: MediaClientConfig;
   public uploadMediaClientConfig?: MediaClientConfig;
@@ -718,7 +715,7 @@ const createDropPlaceholder = (allowDropLine?: boolean) => {
   return dropPlaceholder;
 };
 
-export const stateKey = new PluginKey('mediaPlugin');
+export { stateKey } from './pluginKey'; // Prevent breaking change
 export const getMediaPluginState = (state: EditorState) =>
   stateKey.getState(state) as MediaPluginState;
 

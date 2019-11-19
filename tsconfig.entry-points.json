@@ -1119,6 +1119,14 @@
         "../../editor/editor-common/src/",
         "./packages/editor/editor-common/src/"
       ],
+      "@atlaskit/editor-common/provider-factory": [
+        "../../editor/editor-common/src/provider-factory",
+        "./packages/editor/editor-common/src/provider-factory"
+      ],
+      "@atlaskit/editor-common/types": [
+        "../../editor/editor-common/src/types",
+        "./packages/editor/editor-common/src/types"
+      ],
       "@atlaskit/editor-common/validator": [
         "../../editor/editor-common/src/validator",
         "./packages/editor/editor-common/src/validator"
@@ -1174,6 +1182,14 @@
       "@atlaskit/editor-core/messages": [
         "../../editor/editor-core/src/messages",
         "./packages/editor/editor-core/src/messages"
+      ],
+      "@atlaskit/editor-core/test-utils": [
+        "../../editor/editor-core/src/test-utils",
+        "./packages/editor/editor-core/src/test-utils"
+      ],
+      "@atlaskit/editor-core/types": [
+        "../../editor/editor-core/src/types",
+        "./packages/editor/editor-core/src/types"
       ],
       "@atlaskit/editor-core/version-wrapper": [
         "../../editor/editor-core/src/version-wrapper",
@@ -1298,6 +1314,10 @@
       "@atlaskit/editor-test-helpers/create-event": [
         "../../editor/editor-test-helpers/src/create-event",
         "./packages/editor/editor-test-helpers/src/create-event"
+      ],
+      "@atlaskit/editor-test-helpers/create-prosemirror-editor": [
+        "../../editor/editor-test-helpers/src/create-prosemirror-editor",
+        "./packages/editor/editor-test-helpers/src/create-prosemirror-editor"
       ],
       "@atlaskit/editor-test-helpers/device": [
         "../../editor/editor-test-helpers/src/device",

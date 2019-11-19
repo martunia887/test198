@@ -2,11 +2,8 @@ import { Node } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import {
-  stateKey as mediaStateKey,
-  MediaPluginState,
-} from '../plugins/media/pm-plugins/main';
-
+import { stateKey as mediaStateKey } from '../plugins/media/pm-plugins/pluginKey';
+import { LightMediaPluginState } from '../plugins/media/pm-plugins/types';
 import { Command, CommandDispatch } from '../types';
 
 export async function getEditorValueWithMedia(
@@ -19,7 +16,7 @@ export async function getEditorValueWithMedia(
   const { state } = editorView;
 
   const mediaPluginState =
-    state && (mediaStateKey.getState(state) as MediaPluginState);
+    state && (mediaStateKey.getState(state) as LightMediaPluginState);
 
   if (mediaPluginState && mediaPluginState.waitForMediaUpload) {
     await mediaPluginState.waitForPendingTasks();

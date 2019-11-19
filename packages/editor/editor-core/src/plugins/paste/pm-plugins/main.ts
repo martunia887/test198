@@ -11,14 +11,14 @@ import { escapeLinks } from '../util';
 import { linkifyContent } from '../../hyperlink/utils';
 import { transformSliceToRemoveOpenBodiedExtension } from '../../extension/actions';
 import { transformSliceToRemoveOpenLayoutNodes } from '../../layout/utils';
-import { getPluginState as getTablePluginState } from '../../table/pm-plugins/main';
+import { getPluginState as getTablePluginState } from '../../table/pm-plugins/pluginKey';
 import { transformSliceNestedExpandToExpand } from '../../expand/utils';
 import {
   transformSliceToRemoveOpenTable,
   transformSliceToCorrectEmptyTableCells,
   transformSliceToFixHardBreakProblemOnCopyFromCell,
 } from '../../table/utils';
-import { transformSliceToAddTableHeaders } from '../../table/commands';
+import { transformSliceToAddTableHeaders } from '../../table/commands/misc';
 import { handleMacroAutoConvert, handleMention } from '../handlers';
 import {
   transformSliceToJoinAdjacentCodeBlocks,

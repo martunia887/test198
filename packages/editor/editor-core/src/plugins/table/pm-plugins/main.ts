@@ -1,7 +1,6 @@
 import {
   EditorState,
   Plugin,
-  PluginKey,
   Transaction,
   TextSelection,
 } from 'prosemirror-state';
@@ -42,9 +41,9 @@ import { findControlsHoverDecoration, updateResizeHandles } from '../utils';
 import { fixTables } from '../transforms';
 import { TableCssClassName as ClassName } from '../types';
 import reducer from '../reducer';
+import { pluginKey } from './pluginKey';
 
-export const pluginKey = new PluginKey('tablePlugin');
-
+export { pluginKey } from './pluginKey'; // reexport
 export const defaultTableSelection = {
   hoveredColumns: [],
   hoveredRows: [],

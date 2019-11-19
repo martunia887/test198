@@ -14,6 +14,7 @@ export {
   CollabSendableSelection,
   CollabEventTelepointerData, // End Collab Types
   MediaProvider,
+  Providers,
 } from './types';
 
 export {
@@ -30,11 +31,7 @@ export * from './extensions';
 
 export * from './contextIdentifier';
 
-export {
-  default as ProviderFactory,
-  WithProviders,
-  Providers,
-} from './providerFactory';
+export { default as ProviderFactory, WithProviders } from './providerFactory';
 
 export { combineProviders } from './provider-helpers';
 
