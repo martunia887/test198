@@ -21130,7 +21130,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prompts@^2.2.1:
+prompts@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.3.0.tgz#a444e968fa4cc7e86689a74050685ac8006c4cc4"
   integrity sha512-NfbbPPg/74fT7wk2XYQ7hAIp9zJyZp5Fu19iRbORqqy1BhtrkZ0fPafBU+7bmn8ie69DpT0R6QpJIN2oisYjJg==
@@ -24701,7 +24701,7 @@ string.prototype.trim@^1.1.2:
     es-abstract "^1.5.0"
     function-bind "^1.0.2"
 
-string.prototype.trimleft@^2.0.0:
+string.prototype.trimleft@^2.0.0, string.prototype.trimleft@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/string.prototype.trimleft/-/string.prototype.trimleft-2.1.0.tgz#6cc47f0d7eb8d62b0f3701611715a3954591d634"
   integrity sha512-FJ6b7EgdKxxbDxc79cOlok6Afd++TTs5szo+zJTUyow3ycrRfJVE2pq3vcN53XexvKZu/DJMDfeI/qMiZTrjTw==
@@ -24709,7 +24709,7 @@ string.prototype.trimleft@^2.0.0:
     define-properties "^1.1.3"
     function-bind "^1.1.1"
 
-string.prototype.trimright@^2.0.0:
+string.prototype.trimright@^2.0.0, string.prototype.trimright@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/string.prototype.trimright/-/string.prototype.trimright-2.1.0.tgz#669d164be9df9b6f7559fa8e89945b168a5a6c58"
   integrity sha512-fXZTSV55dNBwv16uw+hh5jkghxSnc5oHq+5K/gXgizHwAvMetdAJlHqqoFC1FSDVPYWLkAKl2cxpUT41sV7nSg==
