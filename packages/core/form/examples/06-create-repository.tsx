@@ -1,6 +1,5 @@
-// @flow
 import React, { PureComponent } from 'react';
-import Select from '@atlaskit/select';
+import Select, { OptionType, ValueType } from '@atlaskit/select';
 import Textfield from '@atlaskit/textfield';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { RadioGroup } from '@atlaskit/radio';
@@ -8,9 +7,9 @@ import { Checkbox } from '@atlaskit/checkbox';
 
 import Form, { Field, FormHeader, FormSection, FormFooter } from '../src';
 
-type State = {
-  eventResult: string,
-};
+interface State {
+  eventResult: string;
+}
 
 export default class LayoutExample extends PureComponent<void, State> {
   state = {
@@ -73,7 +72,7 @@ export default class LayoutExample extends PureComponent<void, State> {
               <FormHeader title="Create a new repository" />
 
               <FormSection>
-                <Field
+                <Field<ValueType<OptionType>>
                   label="Owner"
                   name="owner"
                   id="owner"
@@ -97,7 +96,12 @@ export default class LayoutExample extends PureComponent<void, State> {
                   )}
                 </Field>
 
-                <Field name="project" id="project" label="Project" isRequired>
+                <Field<ValueType<OptionType>>
+                  name="project"
+                  id="project"
+                  label="Project"
+                  isRequired
+                >
                   {({ fieldProps: { id, ...rest } }) => (
                     <Select
                       id={`${id}-select`}
@@ -114,11 +118,17 @@ export default class LayoutExample extends PureComponent<void, State> {
                   )}
                 </Field>
 
-                <Field name="repo-name" label="Repository name" defaultValue="">
+                <Field<ValueType<OptionType>>
+                  name="repo-name"
+                  label="Repository name"
+                >
                   {({ fieldProps }) => <Textfield {...fieldProps} />}
                 </Field>
 
-                <Field name="access-level" label="Access level">
+                <Field<ValueType<OptionType>>
+                  name="access-level"
+                  label="Access level"
+                >
                   {({ fieldProps: { value, ...others } }) => (
                     <Checkbox
                       label="This is a private repository"
@@ -145,7 +155,7 @@ export default class LayoutExample extends PureComponent<void, State> {
                     />
                   )}
                 </Field>
-                <Field
+                <Field<ValueType<OptionType>>
                   name="include-readme"
                   id="include-readme"
                   label="Include a README?"

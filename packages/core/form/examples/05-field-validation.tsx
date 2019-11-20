@@ -1,4 +1,3 @@
-// @flow
 import React, { Component, Fragment } from 'react';
 import Button from '@atlaskit/button';
 import TextField from '@atlaskit/textfield';
@@ -10,7 +9,7 @@ import Form, {
   ValidMessage,
 } from '../src';
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default class extends Component<{}> {
   getUser = async (value: string) => {
