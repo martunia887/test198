@@ -37,6 +37,7 @@ export {
   NavigationType,
   NavigationRenderUpdater,
   NavigationStatics,
+  LinkProps,
 } from './common/types';
 
 export {
