@@ -26,7 +26,7 @@ import {
 import { EditorView } from 'prosemirror-view';
 import { Fragment, Node, Slice } from 'prosemirror-model';
 
-import { pluginKey } from '../../main';
+import { pluginKey } from '../../pluginKey';
 import { CardPluginState, CardProvider } from '../../../types';
 import { queueCards, setProvider } from '../../actions';
 

@@ -23,7 +23,7 @@ import {
   selectRow as selectRowTransform,
   ContentNodeWithPos,
 } from 'prosemirror-utils';
-import { createCommand, getPluginState } from '../pm-plugins/main';
+import { factoryHelpers } from '../pm-plugins/pluginKey';
 import {
   checkIfHeaderRowEnabled,
   checkIfHeaderColumnEnabled,
@@ -53,11 +53,13 @@ import {
   createResizeHandleDecoration,
   updateNodeDecorations,
 } from '../utils/decoration';
+
 // #endregion
 
 // #region Constants
 const TAB_FORWARD_DIRECTION = 1;
 const TAB_BACKWARD_DIRECTION = -1;
+const { createCommand, getPluginState } = factoryHelpers;
 // #endregion
 
 // #region Commands
@@ -172,77 +174,9 @@ export const triggerUnlessTableHeader = (command: Command): Command => (
   return false;
 };
 
-export const transformSliceRemoveCellBackgroundColor = (
-  slice: Slice,
-  schema: Schema,
-): Slice => {
-  const { tableCell, tableHeader } = schema.nodes;
-  return mapSlice(slice, maybeCell => {
-    if (maybeCell.type === tableCell || maybeCell.type === tableHeader) {
-      const cellAttrs: CellAttributes = { ...maybeCell.attrs };
-      cellAttrs.background = undefined;
-      return maybeCell.type.createChecked(
-        cellAttrs,
-        maybeCell.content,
-        maybeCell.marks,
-      );
-    }
-    return maybeCell;
-  });
-};
-
-export const transformSliceToAddTableHeaders = (
-  slice: Slice,
-  schema: Schema,
-): Slice => {
-  const { table, tableHeader, tableRow } = schema.nodes;
-
-  return mapSlice(slice, maybeTable => {
-    if (maybeTable.type === table) {
-      const firstRow = maybeTable.firstChild;
-      if (firstRow) {
-        const headerCols = [] as PMNode[];
-        firstRow.forEach(oldCol => {
-          headerCols.push(
-            tableHeader.createChecked(
-              oldCol.attrs,
-              oldCol.content,
-              oldCol.marks,
-            ),
-          );
-        });
-        const headerRow = tableRow.createChecked(
-          firstRow.attrs,
-          headerCols,
-          firstRow.marks,
-        );
-        return maybeTable.copy(maybeTable.content.replaceChild(0, headerRow));
-      }
-    }
-    return maybeTable;
-  });
-};
-
-export const transformSliceToRemoveColumnsWidths = (
-  slice: Slice,
-  schema: Schema,
-): Slice => {
-  const { tableHeader, tableCell } = schema.nodes;
-
-  return mapSlice(slice, maybeCell => {
-    if (maybeCell.type === tableCell || maybeCell.type === tableHeader) {
-      if (!maybeCell.attrs.colwidth) {
-        return maybeCell;
-      }
-      return maybeCell.type.createChecked(
-        { ...maybeCell.attrs, colwidth: undefined },
-        maybeCell.content,
-        maybeCell.marks,
-      );
-    }
-    return maybeCell;
-  });
-};
+export { transformSliceRemoveCellBackgroundColor } from './misc/transform-slice-remove-cell-background-color';
+export { transformSliceToAddTableHeaders } from './misc/transform-slice-to-add-table-headers';
+export { transformSliceToRemoveColumnsWidths } from './misc/transform-slice-to-remove-columns-widths';
 
 export const deleteTable: Command = (state, dispatch) => {
   if (dispatch) {

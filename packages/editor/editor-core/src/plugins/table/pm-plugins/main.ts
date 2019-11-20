@@ -14,7 +14,7 @@ import { EditorView, DecorationSet } from 'prosemirror-view';
 import { browser } from '@atlaskit/editor-common';
 import { Dispatch } from '../../../event-dispatcher';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import { pluginFactory } from '../../../utils/plugin-state-factory';
+import { createPluginStateFromFactoryHelpers } from '../../../utils/plugin-state-factory';
 
 import { createTableView } from '../nodeviews/table';
 import {
@@ -41,7 +41,7 @@ import { findControlsHoverDecoration, updateResizeHandles } from '../utils';
 import { fixTables } from '../transforms';
 import { TableCssClassName as ClassName } from '../types';
 import reducer from '../reducer';
-import { pluginKey } from './pluginKey';
+import { factoryHelpers, pluginKey } from './pluginKey';
 
 export { pluginKey } from './pluginKey'; // reexport
 export const defaultTableSelection = {
@@ -55,8 +55,10 @@ let isDynamicTextSizingEnabled: boolean | undefined;
 let isFullWidthModeEnabled: boolean | undefined;
 let wasFullWidthModeEnabled: boolean | undefined;
 
-const { createPluginState, createCommand, getPluginState } = pluginFactory(
-  pluginKey,
+const { getPluginState, createCommand } = factoryHelpers;
+
+const { createPluginState } = createPluginStateFromFactoryHelpers(
+  factoryHelpers,
   reducer,
   {
     mapping: (tr, pluginState) => {

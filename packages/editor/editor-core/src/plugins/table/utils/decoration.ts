@@ -15,7 +15,7 @@ import {
   CellColumnPositioning,
   Cell,
 } from '../types';
-import { getPluginState } from '../pm-plugins/main';
+import { getPluginState } from '../pm-plugins/pluginKey';
 import { nonNullable } from '../../../utils';
 
 const filterDecorationByKey = (

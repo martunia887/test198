@@ -7,6 +7,7 @@ import {
   EventDispatcher,
 } from '@atlaskit/editor-core/test-utils';
 import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
+import { defaultSchema } from '@atlaskit/adf-schema';
 import { EditorView } from 'prosemirror-view';
 import { EditorState, PluginKey } from 'prosemirror-state';
 import { Schema } from 'prosemirror-model';
@@ -59,11 +60,10 @@ export function createProsemirrorEditorFactory() {
   }: CreatePMEditorOptions): Promise<CreatePMEEditorOutput> => {
     const editorPlugins = await asyncCreatePluginList(editorProps);
     const editorConfig = processPluginsList(editorPlugins, editorProps);
-    const schema = createSchema(editorConfig);
     const eventDispatcher = new EventDispatcher();
     const plugins = createPMPlugins({
       editorConfig,
-      schema,
+      schema: defaultSchema,
       props: editorProps,
       providerFactory,
       eventDispatcher,
@@ -74,7 +74,7 @@ export function createProsemirrorEditorFactory() {
       dispatchAnalyticsEvent: jest.fn(),
     });
     const state = EditorState.create({
-      doc: doc(schema),
+      doc: doc(defaultSchema),
       plugins,
     });
 

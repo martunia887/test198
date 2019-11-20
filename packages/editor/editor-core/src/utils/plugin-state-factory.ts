@@ -68,7 +68,7 @@ type MapState<PluginState> = (
   pluginState: PluginState,
 ) => PluginState;
 
-interface PluginStateFactoryHelpers<PluginState, Action> {
+export interface PluginStateFactoryHelpers<PluginState, Action> {
   getPluginKey: () => PluginKey;
   createCommand: (
     action: Action | ((state: Readonly<EditorState>) => Action | false),
@@ -77,7 +77,7 @@ interface PluginStateFactoryHelpers<PluginState, Action> {
   getPluginState: (state: EditorState) => PluginState;
 }
 
-interface PluginStateFactory<PluginState, Action, InitialState>
+export interface PluginStateFactory<PluginState, Action, InitialState>
   extends PluginStateFactoryHelpers<PluginState, Action> {
   createPluginState: (
     dispatch: Dispatch,
@@ -107,7 +107,7 @@ export function pluginFactoryHelpers<PluginState, Action>(
   };
 }
 
-interface PluginStateFactoryOptions<PluginState> {
+export interface PluginStateFactoryOptions<PluginState> {
   mapping?: MapState<PluginState>;
   onDocChanged?: MapState<PluginState>;
   onSelectionChanged?: MapState<PluginState>;
@@ -118,7 +118,7 @@ export function createPluginStateFromFactoryHelpers<
   Action,
   InitialState extends PluginState
 >(
-  factoryHelper: PluginStateFactoryHelpers<Action, PluginState>,
+  factoryHelper: PluginStateFactoryHelpers<PluginState, Action>,
   reducer: Reducer<PluginState, Action>,
   options: PluginStateFactoryOptions<PluginState> = {},
 ): Pick<
@@ -164,47 +164,16 @@ export function pluginFactory<
   reducer: Reducer<PluginState, Action>,
   options: PluginStateFactoryOptions<PluginState> = {},
 ): Omit<PluginStateFactory<PluginState, Action, InitialState>, 'getPluginKey'> {
-  const { mapping, onDocChanged, onSelectionChanged } = options;
-
+  const factoryHelpers = pluginFactoryHelpers<PluginState, Action>(pluginKey);
+  const { createPluginState } = createPluginStateFromFactoryHelpers(
+    factoryHelpers,
+    reducer,
+    options,
+  );
+  const { createCommand, getPluginState } = factoryHelpers;
   return {
-    createPluginState: (dispatch, initialState) => ({
-      init: () => initialState,
-
-      apply(tr, _pluginState) {
-        const oldState = mapping ? mapping(tr, _pluginState) : _pluginState;
-        let newState = oldState;
-
-        const meta = tr.getMeta(pluginKey);
-        if (meta) {
-          newState = reducer(oldState, meta);
-        }
-
-        if (onDocChanged && tr.docChanged) {
-          newState = onDocChanged(tr, newState);
-        } else if (onSelectionChanged && tr.selectionSet) {
-          newState = onSelectionChanged(tr, newState);
-        }
-
-        if (newState !== oldState) {
-          dispatch(pluginKey, newState);
-        }
-        return newState;
-      },
-    }),
-
-    createCommand: (action, transform) => (state, dispatch) => {
-      if (dispatch) {
-        const tr = transform ? transform(state.tr, state) : state.tr;
-        const resolvedAction = isFunction(action) ? action(state) : action;
-        if (tr && resolvedAction) {
-          dispatch(tr.setMeta(pluginKey, resolvedAction));
-        } else {
-          return false;
-        }
-      }
-      return true;
-    },
-
-    getPluginState: state => pluginKey.getState(state),
+    createPluginState,
+    createCommand,
+    getPluginState,
   };
 }

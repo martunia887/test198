@@ -1,6 +1,6 @@
 import { EditorState, NodeSelection, Transaction } from 'prosemirror-state';
 
-import { pluginKey } from './main';
+import { pluginKey } from './pluginKey';
 import {
   CardAppearance,
   CardPluginState,

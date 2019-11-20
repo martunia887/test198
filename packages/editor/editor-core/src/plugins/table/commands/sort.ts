@@ -16,7 +16,7 @@ import { TableSortStep } from '../utils';
 import { getPluginState } from '../pm-plugins/main';
 import { Command } from '../../../types';
 import { TableMap } from 'prosemirror-tables';
-import { pluginKey } from '../../card/pm-plugins/main';
+import { pluginKey } from '../../card/pm-plugins/pluginKey';
 import { CardPluginState } from '../../card/types';
 import { CardAttributes, UrlType } from '@atlaskit/adf-schema';
 

@@ -28,7 +28,7 @@ import { Node } from 'prosemirror-model';
 import { hoverDecoration } from '../base/pm-plugins/decoration';
 import { changeSelectedCardToText } from './pm-plugins/doc';
 import { CardPluginState } from './types';
-import { pluginKey } from './pm-plugins/main';
+import { pluginKey } from './pm-plugins/pluginKey';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   buildEditLinkToolbar,

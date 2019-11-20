@@ -144,35 +144,35 @@ function getScrollGutterOptions(
 async function getDefaultPluginsList(
   props: EditorProps,
 ): Promise<EditorPlugin[]> {
-  const { appearance, textFormatting, placeholder } = props;
+  const { appearance } = props;
   const isFullPage = fullPageCheck(appearance);
 
   const editorPlugins = await Promise.all([
-    getPlugin('paste'),
-    getPlugin('base', {
-      allowInlineCursorTarget: appearance !== 'mobile',
-      addRunTimePerformanceCheck: isFullPage,
-      allowScrollGutter: getScrollGutterOptions(props),
-    }),
-    getPlugin('block-type', {
-      lastNodeMustBeParagraph: appearance === 'comment',
-    }),
+    // getPlugin('paste'),
+    // getPlugin('base', {
+    //   allowInlineCursorTarget: appearance !== 'mobile',
+    //   addRunTimePerformanceCheck: isFullPage,
+    //   allowScrollGutter: getScrollGutterOptions(props),
+    // }),
+    // getPlugin('block-type', {
+    //   lastNodeMustBeParagraph: appearance === 'comment',
+    // }),
 
-    getPlugin('placeholder', { placeholder }),
-    getPlugin('clear-marks-on-change-to-empty-document'),
-    getPlugin('hyperlink'),
-    getPlugin('text-formatting', textFormatting || {}),
-    getPlugin('width'),
-    getPlugin('type-ahead'),
-    getPlugin('unsupported-content'),
-    getPlugin('editor-disabled'),
-    getPlugin('gap-cursor'),
-    getPlugin('grid', { shouldCalcBreakoutGridLines: isFullPage }),
-    getPlugin('submit-editor'),
-    getPlugin('fake-text-cursor'),
-    getPlugin('floating-toolbar'),
-    getPlugin('shared-context'),
-    getPlugin('code-block'),
+    // getPlugin('placeholder', { placeholder }),
+    // getPlugin('clear-marks-on-change-to-empty-document'),
+    // getPlugin('hyperlink'),
+    // getPlugin('text-formatting', textFormatting || {}),
+    // getPlugin('width'),
+    // getPlugin('type-ahead'),
+    // getPlugin('unsupported-content'),
+    // getPlugin('editor-disabled'),
+    // getPlugin('gap-cursor'),
+    // getPlugin('grid', { shouldCalcBreakoutGridLines: isFullPage }),
+    // getPlugin('submit-editor'),
+    // getPlugin('fake-text-cursor'),
+    // getPlugin('floating-toolbar'),
+    // getPlugin('shared-context'),
+    // getPlugin('code-block'),
   ]);
 
   return editorPlugins.filter(

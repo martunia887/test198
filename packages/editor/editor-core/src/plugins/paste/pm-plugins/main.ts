@@ -18,7 +18,6 @@ import {
   transformSliceToCorrectEmptyTableCells,
   transformSliceToFixHardBreakProblemOnCopyFromCell,
 } from '../../table/utils';
-import { transformSliceToAddTableHeaders } from '../../table/commands/misc';
 import { handleMacroAutoConvert, handleMention } from '../handlers';
 import {
   transformSliceToJoinAdjacentCodeBlocks,
@@ -42,10 +41,10 @@ import {
   transformSliceToCorrectMediaWrapper,
   unwrapNestedMediaElements,
 } from '../../media/utils/media-common';
-import {
-  transformSliceToRemoveColumnsWidths,
-  transformSliceRemoveCellBackgroundColor,
-} from '../../table/commands/misc';
+import { transformSliceToAddTableHeaders } from '../../table/commands/misc/transform-slice-to-add-table-headers';
+import { transformSliceToRemoveColumnsWidths } from '../../table/commands/misc/transform-slice-to-remove-columns-widths';
+import { transformSliceRemoveCellBackgroundColor } from '../../table/commands/misc/transform-slice-remove-cell-background-color';
+
 import { upgradeTextToLists, splitParagraphs } from '../../lists/transforms';
 
 export const stateKey = new PluginKey('pastePlugin');

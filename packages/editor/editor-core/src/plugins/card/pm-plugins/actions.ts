@@ -1,4 +1,4 @@
-import { pluginKey } from './main';
+import { pluginKey } from './pluginKey';
 import { CardProvider, CardPluginAction, Request, CardInfo } from '../types';
 import { Transaction } from 'prosemirror-state';
 
