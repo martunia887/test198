@@ -1,3 +1,9 @@
+function printTime(start: any) {
+  const [seconds, miliSeconds] = process.hrtime(start);
+
+  console.info('Execution time (hr): %ds, %dms', seconds, miliSeconds / 1000000)
+}
+const hrstart = process.hrtime();
 /* eslint-disable */
 import { toBeInTheDocument, toHaveFocus } from '@testing-library/jest-dom';
 import { XMLHttpRequest } from 'xmlhttprequest';
@@ -512,3 +518,8 @@ if (process.env.VISUAL_REGRESSION) {
 
 // unmount any components mounted with react-testing-library
 afterEach(cleanup);
+
+afterAll(() => {
+  printTime(hrstart);
+})
+

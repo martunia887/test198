@@ -1,6 +1,31 @@
-import { EditorPlugin, EditorProps } from './editor';
-import { isFullPage as fullPageCheck } from './utils/is-full-page';
-import { ScrollGutterPluginOptions } from './plugins/base/pm-plugins/scroll-gutter';
+import { Plugin, TextSelection } from 'prosemirror-state';
+import { Schema } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
+
+export type PMPluginFactoryParams = {
+  schema: Schema;
+  props: {};
+  prevProps?: {};
+  dispatch: any;
+  eventDispatcher: any;
+  providerFactory: any;
+  portalProviderAPI: any;
+  reactContext: () => { [key: string]: any };
+  dispatchAnalyticsEvent: any;
+};
+
+export type PMPluginFactory = (
+  params: PMPluginFactoryParams,
+) => Plugin | undefined;
+
+export type PMPlugin = {
+  name: string;
+  plugin: PMPluginFactory;
+};
+
+interface LightEditorPlugin {
+  pmPlugins?: (pluginOptions?: any) => Array<PMPlugin>;
+}
 
 type Plugins =
   | 'alignment'
@@ -21,13 +46,15 @@ type Plugins =
   | 'fake-text-cursor'
   | 'floating-toolbar'
   | 'shared-context'
-  | 'code-block';
+  | 'code-block'
+  | 'panel'
+  | 'table';
 
 async function getPlugin(
   name: Plugins,
   options?: any,
-): Promise<EditorPlugin | null> {
-  let pluginModule: { default: (pluginOptions: any) => EditorPlugin };
+): Promise<LightEditorPlugin | null> {
+  let pluginModule: { default: (pluginOptions: any) => LightEditorPlugin };
   switch (name) {
     case 'alignment': {
       pluginModule = await import('./plugins/alignment');
@@ -101,95 +128,43 @@ async function getPlugin(
       pluginModule = await import('./plugins/code-block');
       break;
     }
+    case 'panel': {
+      pluginModule = await import('./plugins/panel');
+      break;
+    }
+    case 'table': {
+      pluginModule = await import('./plugins/table');
+      break;
+    }
     default:
       return null;
   }
   return pluginModule.default(options);
 }
-async function pushPlugin(
-  name: Plugins,
-  plugins: EditorPlugin[],
-  options?: any,
-): Promise<void> {
-  const plugin = await getPlugin(name, options);
-  if (plugin) {
-    plugins.push(plugin);
-  }
-}
 
-function getScrollGutterOptions(
-  props: EditorProps,
-): ScrollGutterPluginOptions | undefined {
-  const { appearance } = props;
-  if (fullPageCheck(appearance)) {
-    // Full Page appearance uses a scrollable div wrapper
-    return {
-      getScrollElement: () =>
-        document.querySelector('.fabric-editor-popup-scroll-parent'),
-    };
-  }
-  if (appearance === 'mobile') {
-    // Mobile appearance uses body scrolling for improved performance on low powered devices.
-    return {
-      getScrollElement: () => document.body,
-      allowCustomScrollHandler: false,
-    };
-  }
-  return undefined;
-}
-
-/**
- * Returns list of plugins that are absolutely necessary for editor to work
- */
-async function getDefaultPluginsList(
-  props: EditorProps,
-): Promise<EditorPlugin[]> {
-  const { appearance } = props;
-  const isFullPage = fullPageCheck(appearance);
-
-  const editorPlugins = await Promise.all([
-    // getPlugin('paste'),
-    // getPlugin('base', {
-    //   allowInlineCursorTarget: appearance !== 'mobile',
-    //   addRunTimePerformanceCheck: isFullPage,
-    //   allowScrollGutter: getScrollGutterOptions(props),
-    // }),
-    // getPlugin('block-type', {
-    //   lastNodeMustBeParagraph: appearance === 'comment',
-    // }),
-
-    // getPlugin('placeholder', { placeholder }),
-    // getPlugin('clear-marks-on-change-to-empty-document'),
-    // getPlugin('hyperlink'),
-    // getPlugin('text-formatting', textFormatting || {}),
-    // getPlugin('width'),
-    // getPlugin('type-ahead'),
-    // getPlugin('unsupported-content'),
-    // getPlugin('editor-disabled'),
-    // getPlugin('gap-cursor'),
-    // getPlugin('grid', { shouldCalcBreakoutGridLines: isFullPage }),
-    // getPlugin('submit-editor'),
-    // getPlugin('fake-text-cursor'),
-    // getPlugin('floating-toolbar'),
-    // getPlugin('shared-context'),
-    // getPlugin('code-block'),
-  ]);
-
-  return editorPlugins.filter(
-    (plugin): plugin is EditorPlugin => plugin != null,
-  );
-}
+export type ArrayConfig = [Plugins, any];
+export type PluginConfig = Plugins | ArrayConfig;
 
 export async function asyncCreatePluginList(
-  props: EditorProps,
-): Promise<EditorPlugin[]> {
-  const plugins = await getDefaultPluginsList(props);
+  pluginsConfig: PluginConfig[],
+): Promise<LightEditorPlugin[]> {
+  const plugins: Array<LightEditorPlugin | null> = await Promise.all(
+    pluginsConfig.map(config => {
+      let pluginName: Plugins;
+      let pluginOptions: any = {};
 
-  if (props.allowTextAlignment) {
-    await pushPlugin('alignment', plugins);
-  }
+      if (typeof config === 'string') {
+        pluginName = config;
+      } else {
+        [pluginName, pluginOptions] = config;
+      }
+      return getPlugin(pluginName, pluginOptions);
+    }),
+  );
 
-  return plugins;
+  return plugins.filter(
+    (maybeAPlugin: any): maybeAPlugin is LightEditorPlugin => maybeAPlugin !== null,
+  );
 }
 
 export {
@@ -200,3 +175,18 @@ export {
 
 export { PortalProviderAPI } from './ui/PortalProvider';
 export { EventDispatcher } from './event-dispatcher';
+
+export { GapCursorSelection, Side as GapCursorSide } from './plugins/gap-cursor/selection';
+
+
+export function setTextSelection(
+  view: EditorView,
+  anchor: number,
+  head?: number,
+) {
+  const { state } = view;
+  const tr = state.tr.setSelection(
+    TextSelection.create(state.doc, anchor, head),
+  );
+  view.dispatch(tr);
+}

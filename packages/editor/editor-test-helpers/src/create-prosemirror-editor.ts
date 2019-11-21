@@ -1,10 +1,10 @@
 import {
   asyncCreatePluginList,
   createPMPlugins,
-  createSchema,
   processPluginsList,
   PortalProviderAPI,
   EventDispatcher,
+  PluginConfig,
 } from '@atlaskit/editor-core/test-utils';
 import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
 import { defaultSchema } from '@atlaskit/adf-schema';
@@ -12,7 +12,7 @@ import { EditorView } from 'prosemirror-view';
 import { EditorState, PluginKey } from 'prosemirror-state';
 import { Schema } from 'prosemirror-model';
 import { RefsNode } from './schema-builder';
-import { EditorProps } from '@atlaskit/editor-core/editor';
+import { setSelection } from './utils/set-selection';
 
 class PortalProviderMock extends EventDispatcher implements PortalProviderAPI {
   portals = new Map();
@@ -23,7 +23,7 @@ class PortalProviderMock extends EventDispatcher implements PortalProviderAPI {
   forceUpdate() {}
   remove() {}
   static create() {
-    return new PortalProviderAPI();
+    return new PortalProviderMock();
   }
 }
 
@@ -32,7 +32,7 @@ type DocBuilder = (schema: Schema) => RefsNode;
 interface CreatePMEditorOptions {
   doc: DocBuilder;
   pluginKey: PluginKey;
-  editorProps: EditorProps;
+  plugins: PluginConfig[];
   providerFactory?: ProviderFactory;
 }
 
@@ -55,16 +55,16 @@ export function createProsemirrorEditorFactory() {
 
   return async ({
     doc,
-    editorProps,
+    plugins: _plugins,
     providerFactory = new ProviderFactory(),
   }: CreatePMEditorOptions): Promise<CreatePMEEditorOutput> => {
-    const editorPlugins = await asyncCreatePluginList(editorProps);
-    const editorConfig = processPluginsList(editorPlugins, editorProps);
+    const editorPlugins = await asyncCreatePluginList(_plugins);
+    const editorConfig = processPluginsList(editorPlugins as any, {});
     const eventDispatcher = new EventDispatcher();
     const plugins = createPMPlugins({
       editorConfig,
       schema: defaultSchema,
-      props: editorProps,
+      props: {},
       providerFactory,
       eventDispatcher,
       // Need to mock (Will only exist on a fully editor experience)
@@ -81,6 +81,8 @@ export function createProsemirrorEditorFactory() {
     editorView = new EditorView(undefined, {
       state,
     });
+
+    setSelection(doc, editorView);
     return { editorView };
   };
 }

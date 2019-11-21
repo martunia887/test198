@@ -7,6 +7,8 @@ import { createProsemirrorEditorFactory } from '@atlaskit/editor-test-helpers/cr
 import { pluginKey as alignmentPluginKey } from '../../../../plugins/alignment/pm-plugins/main';
 import { removeBlockMarks } from '../../../../utils/mark';
 
+
+
 describe('alignment utils', () => {
   const createEditor = createProsemirrorEditorFactory();
 
@@ -14,9 +16,9 @@ describe('alignment utils', () => {
     createEditor({
       doc,
       pluginKey: alignmentPluginKey,
-      editorProps: {
-        allowTextAlignment: true,
-      },
+      plugins: [
+        'alignment',
+      ]
     });
 
   it('removes alignment', async () => {

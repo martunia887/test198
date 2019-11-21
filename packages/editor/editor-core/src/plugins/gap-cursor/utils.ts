@@ -6,18 +6,6 @@ import { TableCssClassName } from '../table/types';
 import { tableInsertColumnButtonSize } from '../table/ui/styles';
 import { closestElement } from '../../utils';
 
-// we don't show gap cursor for those nodes
-const IGNORED_NODES = [
-  'paragraph',
-  'bulletList',
-  'orderedList',
-  'listItem',
-  'taskItem',
-  'decisionItem',
-  'heading',
-  'blockquote',
-];
-
 // Returns DOM node's vertical margin. It descents into the node and reads margins of nested DOM nodes
 const getDomNodeVerticalMargin = (
   ref: HTMLElement | null,
@@ -35,13 +23,9 @@ const getDomNodeVerticalMargin = (
   return margin;
 };
 
-export const isIgnored = (node?: PMNode | null): boolean => {
-  return !!node && IGNORED_NODES.indexOf(node.type.name) !== -1;
-};
+export { isIgnored} from './utils/is-ignored';
+export { isValidTargetNode } from './utils/is-valid-target-node';
 
-export const isValidTargetNode = (node?: PMNode | null): boolean => {
-  return !!node && !isIgnored(node);
-};
 
 export function getMediaNearPos(
   doc: PMNode,
