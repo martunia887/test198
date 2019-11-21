@@ -20,6 +20,7 @@ import { ANALYTICS_MEDIA_CHANNEL } from '../root/media-card-analytics-error-boun
 export interface MediaCardAnalyticsFileAttributes {
   fileSource: string;
   fileMediatype?: MediaType;
+  fileMimeType?: string;
   fileId?: string;
   fileStatus?: FileProcessingStatus;
   fileSize?: number;
@@ -51,6 +52,7 @@ export const getFileAttributes = (
 ): MediaCardAnalyticsFileAttributes => ({
   fileSource: 'mediaCard',
   fileMediatype: metadata && metadata.mediaType,
+  fileMimeType: metadata && metadata.mimeType,
   fileId: metadata && metadata.id,
   fileSize: metadata && metadata.size,
   fileStatus: metadata && metadata.processingStatus,

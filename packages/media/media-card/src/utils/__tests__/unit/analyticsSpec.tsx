@@ -100,6 +100,7 @@ describe('Media Analytics', () => {
     const metadata: FileDetails = {
       id: 'some-id',
       mediaType: 'video',
+      mimeType: 'video/mp4',
       size: 12345,
       processingStatus: 'succeeded',
     };
@@ -113,6 +114,7 @@ describe('Media Analytics', () => {
         fileAttributes: {
           fileSource: 'mediaCard',
           fileMediatype: 'video',
+          fileMimeType: 'video/mp4',
           fileId: 'some-id',
           fileSize: 12345,
           fileStatus: 'succeeded',

@@ -1308,6 +1308,7 @@ describe('Card', () => {
         FabricChannel.media,
       );
 
+      // If there is status error, Media Client does not provide any metadata. Therefore we can't log it or test it
       expect(analyticsHandler).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({
@@ -1503,6 +1504,7 @@ describe('Card', () => {
                   fileMediatype: 'doc',
                   fileId: 'some-random-id',
                   fileSize: 1,
+                  fileMimeType: 'application/pdf',
                 },
               },
             },
