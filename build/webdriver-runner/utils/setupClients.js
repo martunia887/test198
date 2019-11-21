@@ -11,7 +11,7 @@ let BUILD_BRANCH_NAME = process.env.BITBUCKET_BRANCH;
 
 // Safari support only Selenium version above 2.45 on browserstack.
 const seleniumVersion = browser =>
-  browser === 'Safari' ? ' 2.45.0' : '3.14.0';
+  browser === 'Safari' ? ' 2.45.0' : '3.141.0';
 
 if (!process.env.BITBUCKET_BRANCH && process.env.USER) {
   BUILD_BRANCH_NAME = `${process.env.USER}_local_run`;
@@ -97,7 +97,7 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
       options,
     };
   });
-
+  console.log(clients[0].options.capabilities);
   return clients;
 }
 
