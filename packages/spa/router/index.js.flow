@@ -6,7 +6,6 @@ import type { Action, BoundActions } from 'react-sweet-state';
 import type { BrowserHistory, LocationShape } from 'history/createBrowserHistory';
 
 // ./common/types
-
 export type Location = {|
     pathname: string,
     search: string,
@@ -212,7 +211,7 @@ type PrivateRouterActions = {|
     listen: () => RouterAction,
 |};
 
-type PublicRouterActions = {|
+export type RouterActionsType = {|
     push: (path: string | LocationShape, state?: any) => RouterAction,
     replace: (path: string | LocationShape, state?: any) => RouterAction,
     goBack: () => RouterAction,
@@ -222,14 +221,10 @@ type PublicRouterActions = {|
 
 export type AllRouterActions = {|
     ...PrivateRouterActions,
-    ...PublicRouterActions,
+    ...RouterActionsType,
 |};
 
-/**
- * Public API
- */
 type RouterState = PublicStateProperties
-export type RouterActionsType = PublicRouterActions;
 export type RouterActionPush = (path: string | LocationShape, state?: any) => RouterAction;
 export type RouterActionReplace = (path: string | LocationShape, state?: any) => RouterAction;
 export type RouterSubscriberProps = {|
