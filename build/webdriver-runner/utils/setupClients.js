@@ -9,6 +9,9 @@ const commit = process.env.BITBUCKET_COMMIT
 
 let BUILD_BRANCH_NAME = process.env.BITBUCKET_BRANCH;
 
+// Safari does not support Selenium version above 3 >.
+const seleniumVersion = browser => (browser === 'Safari' ? '2.53' : '3.14.0');
+
 if (!process.env.BITBUCKET_BRANCH && process.env.USER) {
   BUILD_BRANCH_NAME = `${process.env.USER}_local_run`;
 }
@@ -77,6 +80,9 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
         'browserstack.debug': true,
         'browserstack.idleTimeout': 300,
         'browserstack.localIdentifier': commit,
+        'browserstack.selenium_version': seleniumVersion(
+          launchers[launchKey].browserName,
+        ),
         resolution: launchers[launchKey].resolution,
         acceptSslCerts: true,
       },
