@@ -240,3 +240,35 @@ export type LinkProps = {
   type?: 'a' | 'button';
   onClick?: (e: any) => void;
 };
+
+export {
+  Router,
+  MemoryRouter,
+  StaticRouter,
+  RouterSubscriber,
+  RouteResourceEnabledSubscriber,
+  Redirect,
+  RouterActions,
+  withRouter,
+  ResourceSubscriber,
+  useResource,
+  useRouter,
+  useResourceStoreContext,
+  createResource,
+  useRouterActions,
+  // $FlowFixMe
+} from './controllers';
+// $FlowFixMe
+export { RouteComponent, Link, noopRouterDecorator } from './ui';
+export {
+  matchRoute,
+  generatePath,
+  createLegacyHistory,
+  getRouteContext,
+  // $FlowFixMe
+} from './common/utils';
+export {
+  mockRouteContextProp,
+  mockRouterStoreContextProp,
+  // $FlowFixMe
+} from './common/mocks';
