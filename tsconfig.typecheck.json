@@ -3,13 +3,30 @@
   "include": [
     "./build/**/*",
     "./packages/**/*",
-    "./website/**/*",
+    "./website/**/*"
   ],
   "exclude": [
+    "./packages/editor/adf-schema",
+    "./packages/editor/editor-core",
+    "./packages/editor/editor-common",
+    "./packages/editor/conversation",
+    "./packages/editor/renderer",
+    "./packages/media/media-avatar-picker",
+    "./packages/media/media-card",
+    "./packages/media/media-client",
+    "./packages/media/media-core",
+    "./packages/media/media-editor",
+    "./packages/media/media-image",
+    "./packages/media/media-picker",
+    "./packages/media/media-filmstrip",
+    "./packages/media/media-test-helpers",
+    "./packages/media/media-ui",
+    "./packages/media/media-viewer",
+    "./packages/media/smart-card",
     "./packages/**/**/dist",
     "**/node_modules",
     "node_modules",
-    "./website/node_modules",
+    "./website/node_modules"
   ],
   "compilerOptions": {
     "baseUrl": "./"

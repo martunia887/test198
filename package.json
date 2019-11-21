@@ -46,7 +46,7 @@
     "format:prettier": "                     yarn run prettier --write --no-editorconfig '**/*.{js,ts,tsx,md}'",
     "typecheck": "                           yarn run typecheck:flow && yarn run typecheck:typescript",
     "typecheck:flow": "                      flow check --max-warnings=0",
-    "typecheck:typescript": "                NODE_OPTIONS=--max-old-space-size=4096 tsc --noEmit --project ./tsconfig.typecheck.json",
+    "typecheck:typescript": "                tsc --noEmit --project ./tsconfig.typecheck.json",
     "measure": "                             measure",
     "measure:dependents:s3": "               CHANGED_MAIN_PACKAGES=$(node build/ci-scripts/get.changed.packages.since.master.js) yarn measure:dependents --s3",
     "measure:changed": "                     node build/ci-scripts/get.changed.packages.since.master.js --spaceDelimited --only='packages' --exclude='monorepo-tooling' | xargs -n1 -P2 yarn measure --lint",
