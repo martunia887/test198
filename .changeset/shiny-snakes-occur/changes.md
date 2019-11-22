@@ -1,0 +1,1 @@
+Collect File MimeYype in Analytics Events
