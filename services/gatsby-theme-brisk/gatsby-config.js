@@ -12,6 +12,7 @@ module.exports = {
       resolve: '@manypkg/gatsby-source-workspace',
       options: {
         workspaceFilter: ws => constellationInitialPackages.includes(ws.name),
+        extraFields: [],
       },
     },
   ],
