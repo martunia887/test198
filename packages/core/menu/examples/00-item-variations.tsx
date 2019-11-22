@@ -1,13 +1,30 @@
 import React from 'react';
+import { HashRouter, Link } from 'react-router-dom';
+import EmojiCustomIcon from '@atlaskit/icon/glyph/emoji/custom';
+import StarIcon from '@atlaskit/icon/glyph/star';
+
 import {
   ButtonItem,
   LinkItem,
+  CustomItem,
   HeadingItem,
   SkeletonItem,
   SkeletonHeadingItem,
 } from '../src';
-import EmojiCustomIcon from '@atlaskit/icon/glyph/emoji/custom';
-import StarIcon from '@atlaskit/icon/glyph/star';
+
+const CustomComponent = ({
+  wrapperClass,
+  ...rest
+}: {
+  wrapperClass: string;
+}) => (
+  <Link
+    to="/my-route"
+    className={wrapperClass}
+    style={{ color: 'currentColor' }}
+    {...rest}
+  />
+);
 
 const ItemVariants = () => {
   return (
@@ -21,22 +38,28 @@ const ItemVariants = () => {
         With elemAfter prop
       </ButtonItem>
       <ButtonItem
-        elemBefore={<EmojiCustomIcon label="Icon before" />}
-        elemAfter={<StarIcon label="Icon after" />}
+        elemBefore={<EmojiCustomIcon label="icon before" />}
+        elemAfter={<StarIcon label="icon after" />}
       >
         With both elemAfter and elemBefore prop
       </ButtonItem>
       <ButtonItem isDisabled>Disabled Item</ButtonItem>
-      <ButtonItem isSelected>Selected Item</ButtonItem>
       <ButtonItem description="Some textual description">
         Disabled Item
       </ButtonItem>
       <LinkItem href="//www.atlassian.com">
         Link item that takes you to atlassian home page
       </LinkItem>
-      <LinkItem href="//www.atlassian.com" isSelected>
-        Selected Link Item
-      </LinkItem>
+      <HashRouter>
+        <CustomItem
+          component={(props: any) => <CustomComponent {...props} />}
+          description="some custom text"
+          elemAfter={<StarIcon label="icon after" />}
+          elemBefore={<EmojiCustomIcon label="icon before" />}
+        >
+          I'm a react-router link rendered using CustomItem
+        </CustomItem>
+      </HashRouter>
       <SkeletonHeadingItem />
       <SkeletonItem />
       <SkeletonItem hasAvatar />
