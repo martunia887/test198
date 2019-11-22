@@ -235,18 +235,7 @@ const PrimaryDropdown = (props: PrimaryDropdownProps) => {
 };
 
 const primaryItems = [
-  <PrimaryButton
-    href="http://www.google.com"
-    onClick={e => {
-      if (e.ctrlKey || e.metaKey) {
-        return;
-      }
-      e.preventDefault();
-      console.log('onClick fired');
-    }}
-  >
-    Home
-  </PrimaryButton>,
+  <PrimaryButton href="#">Home</PrimaryButton>,
   <PrimaryDropdown content={ProjectsContent} text="Projects" />,
   <PrimaryDropdown
     isHighlighted
