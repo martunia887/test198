@@ -21,7 +21,7 @@ const CustomComponent = ({
   <Link
     to="/my-route"
     className={wrapperClass}
-    style={{ color: 'currentColor' }}
+    // style={{ color: 'currentColor' }}
     {...rest}
   />
 );
@@ -54,6 +54,8 @@ const ItemVariants = () => {
         <CustomItem
           component={(props: any) => <CustomComponent {...props} />}
           description="some custom text"
+          isSelected
+          isDisabled
           elemAfter={<StarIcon label="icon after" />}
           elemBefore={<EmojiCustomIcon label="icon before" />}
         >
