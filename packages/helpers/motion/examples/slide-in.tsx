@@ -26,7 +26,14 @@ export default () => {
           </Button>
         </ButtonGroup>
 
-        <Centered css={{ overflow: 'hidden' }}>
+        <Centered
+          css={{
+            overflow: 'hidden',
+            height: '182px',
+            width: '182px',
+            margin: '0 auto',
+          }}
+        >
           <ExitingPersistence>
             {isIn && (
               <SlideIn from={froms[fromIndex]}>
