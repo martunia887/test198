@@ -2,6 +2,8 @@
 .*/node_modules/styled-components/.*
 .*/website/dist/sandbox/.*
 .*/website/.*
+<PROJECT_ROOT>/services/website-constellation
+<PROJECT_ROOT>/services/gatsby-theme-brisk
 .*/docs/templates/.*
 .*/packages/bitbucket/codemod-util-shared-styles-to-theme/__fixtures__/.*
 .*/packages/elements/icon/cjs/.*
