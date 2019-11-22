@@ -20,9 +20,6 @@ const buttonOverrides = {
 const anchorOverrides = {
   color: 'currentColor',
 };
-const customItemOverrides = {
-  color: 'currentColor',
-};
 
 const disabledStyles = {
   cursor: 'not-allowed',
@@ -38,10 +35,7 @@ const selectedStyles = {
   textDecoration: 'none',
 };
 
-const baseItemCSS = (
-  isDisabled: boolean = false,
-  isSelected: boolean = false,
-): CSSObject => ({
+const baseItemCSS = (isDisabled: boolean, isSelected: boolean): CSSObject => ({
   padding: `${gridSize}px ${gridSize * 1.5}px`,
   cursor: 'pointer',
   fontSize: fontSize(),
@@ -65,8 +59,8 @@ const baseItemCSS = (
   '::-moz-focus-inner': {
     border: 0,
   },
-  ...(isSelected && selectedStyles),
   ...(isDisabled && disabledStyles),
+  ...(isSelected && selectedStyles),
 });
 
 export const itemCSS = (
@@ -105,14 +99,11 @@ export const elemAfterCSS = {
   flexShrink: 0,
   marginLeft: gridSize,
 };
-export const descriptionCSS = (
-  isDisabled?: boolean,
-  isSelected?: boolean,
-): CSSObject => ({
+export const descriptionCSS = {
   textAlign: 'left',
-  color: isSelected || isDisabled ? 'currentColor' : '#343434',
+  color: '#343434',
   fontSize: fontSizeSmall(),
-});
+} as CSSObject;
 export const contentCSSWrapper = {
   display: 'flex',
   alignItems: 'center',
@@ -124,14 +115,6 @@ export const linkItemCSS = (
   isSelected: boolean,
 ): CSSObject => ({
   ...anchorOverrides,
-  ...baseItemCSS(isDisabled, isSelected),
-});
-
-export const customItemCSS = (
-  isDisabled?: boolean,
-  isSelected?: boolean,
-): CSSObject => ({
-  ...customItemOverrides,
   ...baseItemCSS(isDisabled, isSelected),
 });
 
