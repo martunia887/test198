@@ -1,10 +1,8 @@
 import {
-  asyncCreatePluginList,
-  createPMPlugins,
-  processPluginsList,
   PortalProviderAPI,
   EventDispatcher,
   PluginConfig,
+  asyncCreatePMPluginList,
 } from '@atlaskit/editor-core/test-utils';
 import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
 import { defaultSchema } from '@atlaskit/adf-schema';
@@ -58,11 +56,8 @@ export function createProsemirrorEditorFactory() {
     plugins: _plugins,
     providerFactory = new ProviderFactory(),
   }: CreatePMEditorOptions): Promise<CreatePMEEditorOutput> => {
-    const editorPlugins = await asyncCreatePluginList(_plugins);
-    const editorConfig = processPluginsList(editorPlugins as any, {});
     const eventDispatcher = new EventDispatcher();
-    const plugins = createPMPlugins({
-      editorConfig,
+    const plugins = await asyncCreatePMPluginList(_plugins, {
       schema: defaultSchema,
       props: {},
       providerFactory,
@@ -73,6 +68,7 @@ export function createProsemirrorEditorFactory() {
       reactContext: jest.fn(),
       dispatchAnalyticsEvent: jest.fn(),
     });
+
     const state = EditorState.create({
       doc: doc(defaultSchema),
       plugins,

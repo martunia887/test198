@@ -1,8 +1,9 @@
 import { Plugin, TextSelection } from 'prosemirror-state';
 import { Schema } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
+import { sortByOrder } from './create-editor/sort-by-order';
 
-export type PMPluginFactoryParams = {
+export type LightPMPluginFactoryParams = {
   schema: Schema;
   props: {};
   prevProps?: {};
@@ -14,17 +15,19 @@ export type PMPluginFactoryParams = {
   dispatchAnalyticsEvent: any;
 };
 
-export type PMPluginFactory = (
-  params: PMPluginFactoryParams,
+export type LightPMPluginFactory = (
+  params: LightPMPluginFactoryParams,
 ) => Plugin | undefined;
 
-export type PMPlugin = {
+export type LightPMPlugin = {
   name: string;
-  plugin: PMPluginFactory;
+  plugin: LightPMPluginFactory;
 };
 
 interface LightEditorPlugin {
-  pmPlugins?: (pluginOptions?: any) => Array<PMPlugin>;
+  name: string;
+  pmPlugins?: (pluginOptions?: any) => Array<LightPMPlugin>;
+  pluginsOptions?: Record<string, any>;
 }
 
 type Plugins =
@@ -145,7 +148,7 @@ async function getPlugin(
 export type ArrayConfig = [Plugins, any];
 export type PluginConfig = Plugins | ArrayConfig;
 
-export async function asyncCreatePluginList(
+async function createEditorPluginList(
   pluginsConfig: PluginConfig[],
 ): Promise<LightEditorPlugin[]> {
   const plugins: Array<LightEditorPlugin | null> = await Promise.all(
@@ -163,21 +166,67 @@ export async function asyncCreatePluginList(
   );
 
   return plugins.filter(
-    (maybeAPlugin: any): maybeAPlugin is LightEditorPlugin => maybeAPlugin !== null,
+    (maybeAPlugin: any): maybeAPlugin is LightEditorPlugin =>
+      maybeAPlugin !== null,
   );
 }
 
-export {
-  processPluginsList,
-  createSchema,
-  createPMPlugins,
-} from './create-editor/create-editor';
+function lightProcessPluginsList(
+  editorPlugins: LightEditorPlugin[],
+): LightPMPlugin[] {
+  /**
+   * First pass to collect pluginsOptions
+   */
+  const pluginsOptions = editorPlugins.reduce((acc, plugin) => {
+    if (plugin.pluginsOptions) {
+      Object.keys(plugin.pluginsOptions).forEach(pluginName => {
+        if (!acc[pluginName]) {
+          acc[pluginName] = [];
+        }
+        acc[pluginName].push(plugin.pluginsOptions![pluginName]);
+      });
+    }
+
+    return acc;
+  }, {} as PluginsOptions);
+
+  /**
+   * Process plugins
+   */
+  return editorPlugins.reduce<LightPMPlugin[]>((acc, editorPlugin) => {
+    if (editorPlugin.pmPlugins) {
+      return [
+        ...acc,
+        ...editorPlugin.pmPlugins(
+          editorPlugin.name ? pluginsOptions[editorPlugin.name] : undefined,
+        ),
+      ];
+    }
+    return acc;
+  }, []);
+}
+
+export async function asyncCreatePMPluginList(
+  pluginsConfig: PluginConfig[],
+  pluginFactoryParams: LightPMPluginFactoryParams,
+): Promise<Plugin[]> {
+  const editorPlugins: LightEditorPlugin[] = await createEditorPluginList(
+    pluginsConfig,
+  );
+  const pmPlugins: LightPMPlugin[] = lightProcessPluginsList(editorPlugins);
+
+  return pmPlugins
+    .sort(sortByOrder('plugins'))
+    .map(({ plugin }) => plugin(pluginFactoryParams))
+    .filter(plugin => !!plugin) as Plugin[];
+}
 
 export { PortalProviderAPI } from './ui/PortalProvider';
 export { EventDispatcher } from './event-dispatcher';
-
-export { GapCursorSelection, Side as GapCursorSide } from './plugins/gap-cursor/selection';
-
+export {
+  GapCursorSelection,
+  Side as GapCursorSide,
+} from './plugins/gap-cursor/selection';
 
 export function setTextSelection(
   view: EditorView,

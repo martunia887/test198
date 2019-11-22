@@ -4,9 +4,10 @@ import {
   p,
 } from '@atlaskit/editor-test-helpers/schema-builder';
 import { createProsemirrorEditorFactory } from '@atlaskit/editor-test-helpers/create-prosemirror-editor';
-import { pluginKey as alignmentPluginKey } from '../../../../plugins/alignment/pm-plugins/main';
+import {
+  pluginKey as alignmentPluginKey,
+} from '../../../../plugins/alignment/pm-plugins/main';
 import { removeBlockMarks } from '../../../../utils/mark';
-
 
 
 describe('alignment utils', () => {
