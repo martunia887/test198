@@ -19,6 +19,9 @@
     "team": "AFP",
     "internal": true
   },
+  "scripts": {
+    "ak-postbuild": "echo \"dist/esm/\" \"dist/cjs\" | xargs -n 1 cp -v src/index.js.flow"
+  },
   "dependencies": {
     "history": "4.10.1",
     "lodash.debounce": "^4.0.8",
