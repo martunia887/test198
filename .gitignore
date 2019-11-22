@@ -24,6 +24,8 @@ browserstack.err
 .masterBundleSize/
 .currentBundleSize/
 imageSnapshotFailures/
+**/.cache
+services/**/public
 
 # created by build-stats tool
 .data/
