@@ -7,7 +7,7 @@ import EnteringMotion, { KeyframesMotionProps } from './keyframes-motion';
 export const fadeInAnimation = (): ObjectInterpolation<undefined> => ({
   from: {
     opacity: 0,
-    transform: 'translate3d(0, 10%, 0)',
+    transform: 'translate3d(0, calc(5% + 4px), 0)',
   },
   '50%': {
     opacity: 1,
@@ -24,7 +24,7 @@ export const fadeOutAnimation = (): ObjectInterpolation<undefined> => ({
   },
   to: {
     opacity: 0,
-    transform: 'translate3d(0, -10%, 0)',
+    transform: 'translate3d(0, calc(-5% + -4px), 0)',
   },
 });
 

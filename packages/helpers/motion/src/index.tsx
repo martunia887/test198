@@ -10,5 +10,9 @@ export { default as FadeIn, fadeInAnimation } from './entering/fade-in';
 export { default as StaggeredEntrance } from './entering/staggered-entrance';
 export { useResizingHeight } from './resizing/height';
 export { default as ExitingPersistence } from './entering/exiting-persistence';
-export { default as ZoomIn, zoomInAnimation } from './entering/zoom-in';
+export {
+  default as ZoomIn,
+  zoomInAnimation,
+  shrinkOutAnimation,
+} from './entering/zoom-in';
 export { default as SlideIn, slideInAnimation } from './entering/slide-in';
