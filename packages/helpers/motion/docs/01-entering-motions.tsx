@@ -25,6 +25,53 @@ export default md`
     />
   )}
 
+  ## \`<SlideIn />\`
+
+  Will slide an element into position,
+  generally used for things that appear from outside of the viewport into view.
+
+  ${(
+    <Example
+      highlight="7,32-34"
+      packageName="@atlaskit/motion"
+      Component={require('../examples/slide-in').default}
+      title="Slide in element"
+      source={require('!!raw-loader!../examples/slide-in')}
+    />
+  )}
+
+  ### Props
+
+  ${(
+    <Props
+      heading=""
+      props={require('!!extract-react-types-loader!../src/entering/fade-in')}
+    />
+  )}
+
+  ## \`<ZoomIn />\`
+
+  Will over zoom an element into position.
+
+  ${(
+    <Example
+      highlight="3,9,10-11"
+      packageName="@atlaskit/motion"
+      Component={require('../examples/zoom-in').default}
+      title="Zoom in elements"
+      source={require('!!raw-loader!../examples/zoom-in')}
+    />
+  )}
+
+  ### Props
+
+  ${(
+    <Props
+      heading=""
+      props={require('!!extract-react-types-loader!../src/entering/fade-in')}
+    />
+  )}
+
   ## \`<StaggeredEntrance />\`
 
   Useful for staggering an entering motion over many elements.
