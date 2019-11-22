@@ -292,7 +292,7 @@
     "@emotion/core": "^10.0.9",
     "@emotion/css": "^10.0.14",
     "@emotion/styled": "^10.0.7",
-    "@manypkg/gatsby-source-workspace": "^0.2.0",
+    "@manypkg/gatsby-source-workspace": "^0.3.0",
     "@mdx-js/react": "^1.5.1",
     "@marionebl/prosemirror-markdown": "^1.4.2",
     "@sentry/browser": "^4.6.3",

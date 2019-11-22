@@ -10,6 +10,19 @@ try {
   );
 }
 
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions;
+
+  const typeDefs = `
+  type ChangelogEntry {
+    version: String
+    md: String
+  }
+  `;
+
+  createTypes(typeDefs);
+};
+
 exports.onCreateWebpackConfig = ({ actions, loaders, getConfig }) => {
   actions.setWebpackConfig({
     resolve: {
