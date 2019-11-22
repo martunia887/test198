@@ -7,7 +7,7 @@ export const zoomInAnimation = (): ObjectInterpolation<undefined> => ({
     opacity: 0,
     transform: 'scale(0.5)',
   },
-  '25': {
+  '50%': {
     opacity: 1,
   },
   '75%': {
@@ -15,6 +15,13 @@ export const zoomInAnimation = (): ObjectInterpolation<undefined> => ({
   },
   '100%': {
     transform: 'scale(1)',
+  },
+});
+
+export const shrinkOutAnimation = (): ObjectInterpolation<undefined> => ({
+  to: {
+    opacity: 0,
+    transform: 'scale(0.75)',
   },
 });
 
@@ -26,6 +33,7 @@ const ZoomIn: React.FC<EnteringMotionProps> = ({
     <EnteringMotion
       duration={duration}
       enteringAnimation={zoomInAnimation()}
+      exitingAnimation={shrinkOutAnimation()}
       animationTimingFunction={() => 'ease-in-out'}
     >
       {children}
