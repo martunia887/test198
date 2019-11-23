@@ -1,12 +1,10 @@
 import React, { Ref, useEffect } from 'react';
 import { ClassNames, keyframes, ObjectInterpolation } from '@emotion/core';
 import { useStaggeredEntrance } from './staggered-entrance';
-import { useExitingPersistence } from './exiting-persistence';
+import { useExitingPersistence, Direction } from './exiting-persistence';
 import { largeDurationMs } from '../utils/durations';
 import { prefersReducedMotion } from '../utils/accessibility';
 import { useSetTimeout } from '../utils/timer-hooks';
-
-export type Direction = 'entering' | 'exiting';
 
 /**
  * These are props that motions should use as their external props for consumers.
@@ -86,6 +84,8 @@ const EXITING_MOTION_MULTIPLIER = 0.5;
  * This is the base INTERNAL component used for all other entering motions.
  * This does not need Javascript to execute on the client so it will run immediately
  * for any SSR rendered React apps before the JS has executed.
+ *
+ * RENAME TO KeyframesMotion!
  */
 const EnteringMotion: React.FC<InternalKeyframesMotionProps> = ({
   children,

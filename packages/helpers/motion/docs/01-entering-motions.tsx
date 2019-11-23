@@ -72,6 +72,30 @@ export default md`
     />
   )}
 
+  ## \`<ShrinkOut />\`
+
+  Will shrink an element down to nothing when exiting.
+  Has no entering motion.
+
+  ${(
+    <Example
+      highlight="3,9,10-11"
+      packageName="@atlaskit/motion"
+      Component={require('../examples/shrink-out').default}
+      title="Shrink out elements"
+      source={require('!!raw-loader!../examples/shrink-out')}
+    />
+  )}
+
+  ### Props
+
+  ${(
+    <Props
+      heading=""
+      props={require('!!extract-react-types-loader!../src/entering/fade-in')}
+    />
+  )}
+
   ## \`<StaggeredEntrance />\`
 
   Useful for staggering an entering motion over many elements.

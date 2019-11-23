@@ -16,3 +16,4 @@ export {
   shrinkOutAnimation,
 } from './entering/zoom-in';
 export { default as SlideIn, slideInAnimation } from './entering/slide-in';
+export { default as ShrinkOut } from './entering/shrink-out';

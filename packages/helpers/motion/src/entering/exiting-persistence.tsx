@@ -23,6 +23,11 @@ type ChildElement = JSX.Element | boolean;
  */
 type ChildNode = ChildElement[] | ChildElement;
 
+/**
+ * Direction the motion is going.
+ */
+export type Direction = 'entering' | 'exiting';
+
 interface ExitingPersistenceProps {
   /**
    * Children can be any valid react node.
