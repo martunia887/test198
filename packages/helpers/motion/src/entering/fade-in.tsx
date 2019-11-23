@@ -31,6 +31,7 @@ export const fadeOutAnimation = (): ObjectInterpolation<undefined> => ({
 const FadeIn: React.FC<KeyframesMotionProps> = ({
   children,
   duration = largeDurationMs,
+  ...props
 }: KeyframesMotionProps) => {
   return (
     <EnteringMotion
@@ -38,6 +39,7 @@ const FadeIn: React.FC<KeyframesMotionProps> = ({
       enteringAnimation={fadeInAnimation()}
       exitingAnimation={fadeOutAnimation()}
       animationTimingFunction={() => easeInOut}
+      {...props}
     >
       {children}
     </EnteringMotion>

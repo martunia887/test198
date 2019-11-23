@@ -1,32 +1,18 @@
 import React, { useLayoutEffect } from 'react';
-import { useExitingPersistence, Direction } from './exiting-persistence';
+import { useExitingPersistence } from './exiting-persistence';
+import { MotionProps } from './types';
 import { useElementRef } from '../utils/use-element-ref';
 import { useRequestAnimationFrame, useSetTimeout } from '../utils/timer-hooks';
 import { smallDurationMs } from '../utils/durations';
 import { easeIn } from '../utils/curves';
 
-interface ActiveMotionProps {
-  /**
-   * Duration in `ms`.
-   * How long the motion will take.
-   */
-  duration?: number;
+interface ShrinkOutProps extends MotionProps<{ ref: React.Ref<any> }> {}
 
-  /**
-   * Children as `function`.
-   * Will be passed `props` for you to hook up.
-   * The `direction` arg can be used to know if the motion is `entering` or `exiting`.
-   */
-  children: (
-    opts: { ref: React.Ref<any> },
-    direction: Direction,
-  ) => React.ReactNode;
-}
-
-const ShrinkOut: React.FC<ActiveMotionProps> = ({
+const ShrinkOut: React.FC<ShrinkOutProps> = ({
   children,
   duration = smallDurationMs,
-}: ActiveMotionProps): any => {
+  onFinish,
+}: ShrinkOutProps): any => {
   const [element, setElementRef] = useElementRef();
   const exiting = useExitingPersistence();
   const requestAnimationFrame = useRequestAnimationFrame();
@@ -48,6 +34,7 @@ const ShrinkOut: React.FC<ActiveMotionProps> = ({
 
           setTimeout(() => {
             exiting.onFinish && exiting.onFinish();
+            onFinish && onFinish('exiting');
           }, duration);
         });
       });

@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import { useState } from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { Block, RetryContainer, Centered } from '../examples-utils';
+import { Block, Centered } from '../examples-utils';
 import { ShrinkOut, StaggeredEntrance, ExitingPersistence } from '../src';
 
 const products = [

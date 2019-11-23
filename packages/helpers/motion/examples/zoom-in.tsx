@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@atlaskit/button';
 import { Block, RetryContainer, Centered } from '../examples-utils';
 import { ZoomIn, StaggeredEntrance, ExitingPersistence } from '../src';
@@ -20,19 +20,17 @@ export default () => {
         <StaggeredEntrance>
           <ExitingPersistence>
             {isIn && (
-              <ZoomIn>
-                {props => <Block {...props} appearance="small" />}
-              </ZoomIn>
-            )}
-            {isIn && (
-              <ZoomIn>
-                {props => <Block {...props} appearance="small" />}
-              </ZoomIn>
-            )}
-            {isIn && (
-              <ZoomIn>
-                {props => <Block {...props} appearance="small" />}
-              </ZoomIn>
+              <React.Fragment>
+                <ZoomIn>
+                  {props => <Block {...props} appearance="small" />}
+                </ZoomIn>
+                <ZoomIn>
+                  {props => <Block {...props} appearance="small" />}
+                </ZoomIn>
+                <ZoomIn>
+                  {props => <Block {...props} appearance="small" />}
+                </ZoomIn>
+              </React.Fragment>
             )}
           </ExitingPersistence>
         </StaggeredEntrance>

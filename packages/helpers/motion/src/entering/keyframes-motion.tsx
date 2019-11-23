@@ -1,7 +1,8 @@
 import React, { Ref, useEffect } from 'react';
 import { ClassNames, keyframes, ObjectInterpolation } from '@emotion/core';
 import { useStaggeredEntrance } from './staggered-entrance';
-import { useExitingPersistence, Direction } from './exiting-persistence';
+import { useExitingPersistence } from './exiting-persistence';
+import { MotionProps, Direction } from './types';
 import { largeDurationMs } from '../utils/durations';
 import { prefersReducedMotion } from '../utils/accessibility';
 import { useSetTimeout } from '../utils/timer-hooks';
@@ -10,34 +11,12 @@ import { useSetTimeout } from '../utils/timer-hooks';
  * These are props that motions should use as their external props for consumers.
  * See [FadeIn](packages/helpers/motion/src/entering/fade-in.tsx) for an example usage.
  */
-export interface KeyframesMotionProps {
+export interface KeyframesMotionProps
+  extends MotionProps<{ className: string; ref: Ref<any> }> {
   /**
-   * Duration in `ms`.
-   * How long the motion will take.
-   */
-  duration?: number;
-
-  /**
-   * Use to pause the animation.
+   * Can be used to pause the animation before it has finished.
    */
   isPaused?: boolean;
-
-  /**
-   * Will callback when the motion has finished in the particular direction.
-   * If it finished entering direction will be `entering`.
-   * And vice versa for `exiting`.
-   */
-  onFinish?: (direction: Direction) => void;
-
-  /**
-   * Children as `function`.
-   * Will be passed `props` for you to hook up.
-   * The `direction` arg can be used to know if the motion is `entering` or `exiting`.
-   */
-  children: (
-    props: { className: string; ref: Ref<any> },
-    direction: Direction,
-  ) => JSX.Element;
 }
 
 interface InternalKeyframesMotionProps extends KeyframesMotionProps {
@@ -63,16 +42,6 @@ interface InternalKeyframesMotionProps extends KeyframesMotionProps {
    * How long the motion will take.
    */
   duration: number;
-
-  /**
-   * Children as function.
-   * Will be passed `props` for you to hook up.
-   * The `direction` arg can be used to know if the motion is entering or exiting.
-   */
-  children: (
-    props: { className: string; ref: Ref<any> },
-    direction: Direction,
-  ) => JSX.Element;
 }
 
 /**
@@ -84,8 +53,6 @@ const EXITING_MOTION_MULTIPLIER = 0.5;
  * This is the base INTERNAL component used for all other entering motions.
  * This does not need Javascript to execute on the client so it will run immediately
  * for any SSR rendered React apps before the JS has executed.
- *
- * RENAME TO KeyframesMotion!
  */
 const EnteringMotion: React.FC<InternalKeyframesMotionProps> = ({
   children,

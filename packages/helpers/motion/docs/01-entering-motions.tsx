@@ -32,7 +32,7 @@ export default md`
 
   ${(
     <Example
-      highlight="7,32-34"
+      highlight="7,37-43"
       packageName="@atlaskit/motion"
       Component={require('../examples/slide-in').default}
       title="Slide in element"
@@ -45,7 +45,7 @@ export default md`
   ${(
     <Props
       heading=""
-      props={require('!!extract-react-types-loader!../src/entering/fade-in')}
+      props={require('!!extract-react-types-loader!../src/entering/slide-in')}
     />
   )}
 
@@ -55,7 +55,7 @@ export default md`
 
   ${(
     <Example
-      highlight="3,9,10-11"
+      highlight="6,20-36"
       packageName="@atlaskit/motion"
       Component={require('../examples/zoom-in').default}
       title="Zoom in elements"
@@ -68,7 +68,7 @@ export default md`
   ${(
     <Props
       heading=""
-      props={require('!!extract-react-types-loader!../src/entering/fade-in')}
+      props={require('!!extract-react-types-loader!../src/entering/zoom-in')}
     />
   )}
 
@@ -79,7 +79,7 @@ export default md`
 
   ${(
     <Example
-      highlight="3,9,10-11"
+      highlight="6,29-57"
       packageName="@atlaskit/motion"
       Component={require('../examples/shrink-out').default}
       title="Shrink out elements"
@@ -92,7 +92,7 @@ export default md`
   ${(
     <Props
       heading=""
-      props={require('!!extract-react-types-loader!../src/entering/fade-in')}
+      props={require('!!extract-react-types-loader!../src/entering/shrink-out')}
     />
   )}
 
