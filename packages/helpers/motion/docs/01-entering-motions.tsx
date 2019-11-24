@@ -8,7 +8,9 @@ const ExitingOnly = () => (
     content={`This motion only has an exiting motion.
 StaggeredEntrance will have no effect.`}
   >
-    <Lozenge appearance="removed">Exiting only</Lozenge>
+    <span tabIndex={0}>
+      <Lozenge appearance="removed">Exiting only</Lozenge>
+    </span>
   </Tooltip>
 );
 
@@ -18,7 +20,7 @@ export default md`
   while some only have an exiting motion and no entering.
 
   For consistency don't try to mix & match,
-  if an element enters with a specific motion it should leave with the same motion.
+  if an element **enters with a specific motion it should leave with the same motion**.
 
   ## \`<FadeIn />\`
 
@@ -95,6 +97,7 @@ export default md`
   ${(<ExitingOnly />)}
 
   Will shrink an element down to nothing when exiting.
+  Works best with flex children as collapsing margins can come with undesired behaviour.
 
   ${(
     <Example
