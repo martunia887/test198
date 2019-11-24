@@ -29,15 +29,24 @@ export default () => {
         <Centered
           css={{
             overflow: 'hidden',
-            height: '182px',
-            width: '182px',
+            height: '300px',
             margin: '0 auto',
+            position: 'relative',
           }}
         >
           <ExitingPersistence>
             {isIn && (
               <SlideIn from={froms[fromIndex]}>
-                {props => <Block {...props} />}
+                {props => (
+                  <Block
+                    {...props}
+                    css={{
+                      height: '95%',
+                      width: '95%',
+                      position: 'absolute',
+                    }}
+                  />
+                )}
               </SlideIn>
             )}
           </ExitingPersistence>

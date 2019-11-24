@@ -3,6 +3,9 @@
  */
 export type Direction = 'entering' | 'exiting';
 
+/**
+ * Common props all entering motions should make available for consumers.
+ */
 export interface MotionProps<TProps extends {}> {
   /**
    * Duration in `ms`.

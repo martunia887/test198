@@ -21,16 +21,28 @@ const ShrinkOut: React.FC<ShrinkOutProps> = ({
 
   useLayoutEffect(() => {
     if (exiting.isExiting && element) {
-      element.style.width = `${element.offsetWidth}px`;
-      element.style.boxSizing = 'border-box';
+      const newStyles: Partial<CSSStyleDeclaration> = {
+        // We fix both width and height because when changing box sizing to border-box.
+        width: `${element.offsetWidth}px`,
+        height: `${element.offsetHeight}px`,
+        boxSizing: 'border-box',
+        willChange: 'width,margin',
+      };
+      Object.assign(element.style, newStyles);
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          element.style.transitionTimingFunction = easeIn;
-          element.style.transitionDuration = `${duration}ms`;
-          element.style.transitionProperty = 'width,margin';
-          element.style.width = '0px';
-          element.style.margin = '0px';
+          const newStyles: Partial<CSSStyleDeclaration> = {
+            width: '0px',
+            // We animate margin down to zero so it doesn't take any space.
+            margin: '0px',
+            boxSizing: 'border-box',
+            willChange: 'width,margin',
+            transitionTimingFunction: easeIn,
+            transitionDuration: `${duration}ms`,
+            transitionProperty: 'width,margin',
+          };
+          Object.assign(element.style, newStyles);
 
           setTimeout(() => {
             exiting.onFinish && exiting.onFinish();

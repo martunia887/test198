@@ -1,7 +1,25 @@
 import React from 'react';
-import { md, Props, Example } from '@atlaskit/docs';
+import { md, Props, Example, code } from '@atlaskit/docs';
+import Lozenge from '@atlaskit/lozenge';
+import Tooltip from '@atlaskit/tooltip';
+
+const ExitingOnly = () => (
+  <Tooltip
+    content={`This motion only has an exiting motion.
+StaggeredEntrance will have no effect.`}
+  >
+    <Lozenge appearance="removed">Exiting only</Lozenge>
+  </Tooltip>
+);
 
 export default md`
+  Motion comes with out of the box entering motions.
+  Most motions have a pairing exiting motion,
+  while some only have an exiting motion and no entering.
+
+  For consistency don't try to mix & match,
+  if an element enters with a specific motion it should leave with the same motion.
+
   ## \`<FadeIn />\`
 
   Useful for fading in one or more elements.
@@ -32,7 +50,7 @@ export default md`
 
   ${(
     <Example
-      highlight="7,37-43"
+      highlight="7,37-52"
       packageName="@atlaskit/motion"
       Component={require('../examples/slide-in').default}
       title="Slide in element"
@@ -74,8 +92,9 @@ export default md`
 
   ## \`<ShrinkOut />\`
 
+  ${(<ExitingOnly />)}
+
   Will shrink an element down to nothing when exiting.
-  Has no entering motion.
 
   ${(
     <Example

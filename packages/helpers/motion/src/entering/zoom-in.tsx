@@ -28,6 +28,7 @@ export const shrinkOutAnimation = (): ObjectInterpolation<undefined> => ({
 const ZoomIn: React.FC<EnteringMotionProps> = ({
   children,
   duration = 125,
+  ...props
 }: EnteringMotionProps) => {
   return (
     <EnteringMotion
@@ -35,6 +36,7 @@ const ZoomIn: React.FC<EnteringMotionProps> = ({
       enteringAnimation={zoomInAnimation()}
       exitingAnimation={shrinkOutAnimation()}
       animationTimingFunction={() => 'ease-in-out'}
+      {...props}
     >
       {children}
     </EnteringMotion>
