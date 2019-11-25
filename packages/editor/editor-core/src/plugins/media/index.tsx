@@ -48,7 +48,7 @@ import { MediaPickerComponents } from './ui/MediaPicker';
 export { MediaState, MediaProvider, CustomMediaPicker };
 export { insertMediaSingleNode } from './utils/media-single';
 
-export { MediaOptions, MediaSingleOptions } from './types'
+export { MediaOptions, MediaSingleOptions } from './types';
 
 export interface MediaPMPluginOptions {
   allowLazyLoading?: boolean;

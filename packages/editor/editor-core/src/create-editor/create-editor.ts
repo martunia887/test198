@@ -3,7 +3,13 @@ import { Plugin } from 'prosemirror-state';
 import { sanitizeNodes } from '@atlaskit/adf-schema';
 import { ErrorReporter, ErrorReportingHandler } from '@atlaskit/editor-common';
 import { AnalyticsHandler, analyticsService } from '../analytics';
-import { EditorConfig, EditorPlugin, EditorProps, PluginsOptions, PMPluginCreateConfig } from '../types';
+import {
+  EditorConfig,
+  EditorPlugin,
+  EditorProps,
+  PluginsOptions,
+  PMPluginCreateConfig,
+} from '../types';
 import { name, version } from '../version-wrapper';
 import { sortByOrder } from './sort-by-order';
 

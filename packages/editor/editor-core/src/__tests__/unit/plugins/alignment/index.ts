@@ -11,9 +11,7 @@ import {
   ul,
   li,
 } from '@atlaskit/editor-test-helpers/schema-builder';
-import {
-  pluginKey as alignmentPluginKey,
-} from '../../../../plugins/alignment/pm-plugins/main';
+import { pluginKey as alignmentPluginKey } from '../../../../plugins/alignment/pm-plugins/main';
 import { changeAlignment } from '../../../../plugins/alignment/commands/index';
 import { insertBlockType } from '../../../../plugins/block-type/commands';
 import { toggleBulletList } from '../../../../plugins/lists/commands';

@@ -21,7 +21,7 @@ import { PlaceholderTextOptions } from './types';
 
 export const pluginKey = new PluginKey('placeholderTextPlugin');
 
-export { PlaceholderTextOptions } from './types'
+export { PlaceholderTextOptions } from './types';
 
 export interface PluginState {
   showInsertPanelAt: number | null;

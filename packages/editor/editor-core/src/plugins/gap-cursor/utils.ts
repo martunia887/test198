@@ -23,9 +23,8 @@ const getDomNodeVerticalMargin = (
   return margin;
 };
 
-export { isIgnored} from './utils/is-ignored';
+export { isIgnored } from './utils/is-ignored';
 export { isValidTargetNode } from './utils/is-valid-target-node';
-
 
 export function getMediaNearPos(
   doc: PMNode,

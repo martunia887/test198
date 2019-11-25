@@ -10,4 +10,3 @@ export const factoryHelpers = pluginFactoryHelpers<
 >(pluginKey);
 
 export const getPluginState = factoryHelpers.getPluginState;
-
