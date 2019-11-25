@@ -274,6 +274,14 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
   return unpublishedCommits;
 }
 
+async function getParentFor(branchName /*: ?string */) {
+  const gitCmd = await spawn('git', ['branch', '--contains', 'develop']);
+  const developBranches = gitCmd.stdout.trim().replace(/"/g, '');
+  const getCurrentBranch = branchName || (await getBranchName());
+
+  return developBranches.includes(getCurrentBranch) ? 'develop' : 'master';
+}
+
 module.exports = {
   getCommitThatAddsFile,
   getCommitsSince,
@@ -293,4 +301,5 @@ module.exports = {
   getAllReleaseCommits,
   getAllChangesetCommits,
   getLastPublishCommit,
+  getParentFor,
 };
