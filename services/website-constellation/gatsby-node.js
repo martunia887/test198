@@ -14,7 +14,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions;
 
   const typeDefs = `
-  type ChangelogEntry {
+  type ChangelogEntry implements Node {
     version: String
     md: String
   }

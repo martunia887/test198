@@ -2,11 +2,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-const constellationInitialPackages = [
-  '@atlaskit/radio',
-  '@atlaskit/button',
-  '@atlaskit/select',
-];
+const constellationInitialPackages = require('./constellation-package-list');
 
 // BC - I have written this function in a bunch of places and it really needs to be a lib
 // sorry for copy-pasting it here again
@@ -41,7 +37,11 @@ module.exports = {
             definition: `[String]`,
           },
           {
-            name: 'docsPages',
+            name: 'description',
+            definition: `String`,
+          },
+          {
+            name: 'docsList',
             definition: `[String]`,
             getFieldInfo: async ws => {
               const docsPath = path.join(ws.dir, 'docs');
@@ -51,6 +51,19 @@ module.exports = {
 
               const docs = await fs.readdir(docsPath);
               return docs;
+            },
+          },
+          {
+            name: 'examplesList',
+            definition: `[String]`,
+            getFieldInfo: async ws => {
+              const examplesPath = path.join(ws.dir, 'examples');
+              if (!(await fs.pathExists(examplesPath))) {
+                return [];
+              }
+
+              const examples = await fs.readdir(examplesPath);
+              return examples;
             },
           },
           {
@@ -64,19 +77,14 @@ module.exports = {
 
               const changelog = await fs.readFile(changelogPath, 'utf-8');
 
-              const a = divideChangelog(changelog);
-              return a;
+              return divideChangelog(changelog);
             },
           },
         ],
       },
     },
-    {
-      resolve: require.resolve('@brisk-docs/gatsby-plugin'),
-    },
+    // {
+    //   resolve: require.resolve('@brisk-docs/gatsby-plugin'),
+    // },
   ],
 };
-
-// paths to all docs files
-// paths to all examples files
-// the parsed changelog
