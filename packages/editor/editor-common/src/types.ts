@@ -6,7 +6,7 @@ export {
   UpdateExtension,
   Extension,
   ExtensionHandlers,
-} from './types/extension-handler';
+} from './extensions/types';
 
 export enum SortOrder {
   ASC = 'asc',
