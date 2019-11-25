@@ -188,7 +188,7 @@ function lightProcessPluginsList(
     }
 
     return acc;
-  }, {} as PluginsOptions);
+  }, {} as Record<string, any>);
 
   /**
    * Process plugins

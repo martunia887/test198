@@ -1,10 +1,7 @@
-function printTime(start: any) {
-  const [seconds, miliSeconds] = process.hrtime(start);
-
-  console.info('Execution time (hr): %ds, %dms', seconds, miliSeconds / 1000000)
-}
-const hrstart = process.hrtime();
 /* eslint-disable */
+import { createProfiler } from './packages/editor/editor-core/src/__tests__/__helpers/profiler';
+const profiler = createProfiler();
+profiler.start('jest-framework-setup');
 import { toBeInTheDocument, toHaveFocus } from '@testing-library/jest-dom';
 import { XMLHttpRequest } from 'xmlhttprequest';
 import 'jest-styled-components';
@@ -520,6 +517,5 @@ if (process.env.VISUAL_REGRESSION) {
 afterEach(cleanup);
 
 afterAll(() => {
-  printTime(hrstart);
-})
-
+  profiler.end('jest-framework-setup');
+});

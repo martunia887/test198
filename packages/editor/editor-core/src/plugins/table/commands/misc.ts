@@ -1,44 +1,43 @@
 // #region Imports
-import { Transaction, TextSelection, Selection } from 'prosemirror-state';
+import { Selection, TextSelection, Transaction } from 'prosemirror-state';
 import {
+  CellSelection,
   goToNextCell as baseGotoNextCell,
   selectionCell,
-  TableMap,
-  CellSelection,
   splitCellWithType,
+  TableMap,
 } from 'prosemirror-tables';
-import { EditorView, DecorationSet } from 'prosemirror-view';
-import { Node as PMNode, Slice, Schema } from 'prosemirror-model';
+import { DecorationSet, EditorView } from 'prosemirror-view';
+import { Node as PMNode, Schema } from 'prosemirror-model';
 import {
+  ContentNodeWithPos,
+  findCellClosestToPos,
+  findParentNodeOfType,
   findTable,
   getCellsInColumn,
   getCellsInRow,
+  getSelectionRect,
   isCellSelection,
   removeTable,
-  findParentNodeOfType,
-  findCellClosestToPos,
-  setCellAttrs,
-  getSelectionRect,
   selectColumn as selectColumnTransform,
   selectRow as selectRowTransform,
-  ContentNodeWithPos,
+  setCellAttrs,
 } from 'prosemirror-utils';
 import { factoryHelpers } from '../pm-plugins/pluginKey';
 import {
-  checkIfHeaderRowEnabled,
   checkIfHeaderColumnEnabled,
+  checkIfHeaderRowEnabled,
+  createColumnControlsDecoration,
   isIsolating,
   updatePluginStateDecorations,
-  createColumnControlsDecoration,
 } from '../utils';
 import { Command } from '../../../types';
 import { analyticsService } from '../../../analytics';
 import { outdentList } from '../../lists/commands';
-import { mapSlice } from '../../../utils/slice';
 import {
   closestElement,
-  isTextSelection,
   isNodeTypeParagraph,
+  isTextSelection,
 } from '../../../utils';
 import { fixAutoSizedTable } from '../transforms';
 import { INPUT_METHOD } from '../../analytics';
@@ -48,7 +47,6 @@ import {
   TableDecorations,
   TablePluginState,
 } from '../types';
-import { CellAttributes } from '@atlaskit/adf-schema';
 import {
   createResizeHandleDecoration,
   updateNodeDecorations,

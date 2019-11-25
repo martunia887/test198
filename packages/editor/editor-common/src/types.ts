@@ -25,4 +25,4 @@ export {
   CollabEventRemoteData,
   CollabSendableSelection,
   CollabEventTelepointerData,
-} from './types/collab';
+} from './collab/types';
