@@ -585,7 +585,7 @@
     "**/expand-range/fill-range": "2.2.3"
   },
   "engines": {
-    "node": "^10.13.0"
+    "node": "^12.13.1"
   },
   "husky": {
     "hooks": {
