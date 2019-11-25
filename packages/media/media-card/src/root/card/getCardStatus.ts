@@ -76,19 +76,20 @@ export const getAnalyticsStatusFromCardStatus = (
     case 'failed-processing':
       return 'failed';
     default:
-      return;
+      return 'succeeded';
   }
 };
 
-export type AnalyticsErrorStateAttributes = {
+export type AnalyticsStateAttributes = {
+  successReason?: 'file-status-success';
   failReason?: 'media-client-error' | 'file-status-error';
   error?: string;
 };
 
-export const getAnalyticsErrorStateAttributes = (
+export const getAnalyticsStateAttributes = (
   fileState?: FileState,
   error?: Error | string,
-): AnalyticsErrorStateAttributes => {
+): AnalyticsStateAttributes => {
   const unknownError = 'unknown error';
   const errorMessage = error instanceof Error ? error.message : error;
 
@@ -107,7 +108,11 @@ export const getAnalyticsErrorStateAttributes = (
       failReason: 'file-status-error',
       error: ('message' in fileState && fileState.message) || unknownError,
     };
+  } else if (
+    fileState &&
+    ['uploading', 'processing', 'processed'].includes(fileState.status)
+  ) {
+    return { successReason: 'file-status-success' };
   }
-
   return {};
 };

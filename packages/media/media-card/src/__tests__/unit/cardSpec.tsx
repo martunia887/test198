@@ -1431,10 +1431,6 @@ describe('Card', () => {
         mediaType: 'doc',
         size: 1,
         mimeType: 'application/pdf',
-        preview: {
-          value: new File([], 'filename', { type: 'text/plain' }),
-        },
-        representations: {},
       };
 
       const subject = new ReplaySubject<FileState>(1);
@@ -1458,7 +1454,7 @@ describe('Card', () => {
       subject.next(commencedFileState);
       await nextTick();
 
-      expect(analyticsHandler).toHaveBeenCalledTimes(2);
+      expect(analyticsHandler).toHaveBeenCalledTimes(3);
 
       expect(analyticsHandler).toHaveBeenNthCalledWith(
         1,
@@ -1479,9 +1475,40 @@ describe('Card', () => {
         2,
         expect.objectContaining({
           payload: expect.objectContaining({
-            eventType: 'operational',
+            ...analyticsBasePayload,
             action: 'succeeded',
-            actionSubject: 'mediaCardRender',
+            actionSubjectId: 'some-random-id',
+            attributes: {
+              successReason: 'file-status-success',
+              fileAttributes: {
+                fileSource: 'mediaCard',
+                fileMediatype: 'doc',
+                fileId: 'some-random-id',
+                fileSize: 1,
+              },
+              packageVersion: '999.9.9',
+              packageName: '@atlaskit/media-card',
+              componentName: 'mediaCard',
+            },
+          }),
+          context: [
+            {
+              packageVersion: '999.9.9',
+              packageName: '@atlaskit/media-card',
+              componentName: 'mediaCard',
+            },
+          ],
+        }),
+        FabricChannel.media,
+      );
+
+      // A second succeeded event is triggered from ImageView down the component tree.
+      expect(analyticsHandler).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            ...analyticsBasePayload,
+            action: 'succeeded',
             attributes: {
               packageName: '@atlaskit/media-card',
             },

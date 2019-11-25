@@ -48,8 +48,8 @@ import {
   getCardStatusFromFileState,
   getAnalyticsStatusFromCardStatus,
   getCardProgressFromFileState,
-  getAnalyticsErrorStateAttributes,
-  AnalyticsErrorStateAttributes,
+  getAnalyticsStateAttributes,
+  AnalyticsStateAttributes,
   AnalyticsLoadingAction,
 } from './getCardStatus';
 import { InlinePlayer, InlinePlayerBase } from '../inlinePlayer';
@@ -57,7 +57,6 @@ import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
   createAndFireCustomMediaEvent,
-  getFileAttributes,
 } from '../../utils/analytics';
 
 export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
@@ -66,8 +65,8 @@ export class CardBase extends Component<
   CardState
 > {
   private hasBeenMounted: boolean = false;
-  private lastAction?: AnalyticsLoadingAction = undefined;
-  private lastErrorState?: AnalyticsErrorStateAttributes = {};
+  private lastAnalyticsAction?: AnalyticsLoadingAction = undefined;
+  private lastAnalyticsState?: AnalyticsStateAttributes = {};
   private resolvedId: string = '';
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
 
@@ -357,20 +356,23 @@ export class CardBase extends Component<
 
   shouldFireAnalyticsEvent = (
     action: AnalyticsLoadingAction,
-    errorState: AnalyticsErrorStateAttributes,
+    analyticsState: AnalyticsStateAttributes,
   ) => {
-    const previousFailReason =
-      this.lastErrorState && this.lastErrorState.failReason;
-    const previousErrorMessage =
-      this.lastErrorState && this.lastErrorState.error;
+    const {
+      failReason: previousFailReason,
+      error: previousErrorMessage,
+      successReason: previousSuccessReason,
+    } = this.lastAnalyticsState || {};
+    const { failReason, error, successReason } = analyticsState;
 
-    const isDifferentErrorState =
-      errorState.failReason !== previousFailReason ||
-      errorState.error !== previousErrorMessage;
+    const isDifferentState =
+      failReason !== previousFailReason ||
+      error !== previousErrorMessage ||
+      successReason !== previousSuccessReason;
 
-    const isDifferentAction = action !== this.lastAction;
+    const isDifferentAction = action !== this.lastAnalyticsAction;
 
-    return isDifferentAction || isDifferentErrorState;
+    return isDifferentAction || isDifferentState;
   };
 
   fireLoadingStatusAnalyticsEvent = ({
@@ -388,11 +390,11 @@ export class CardBase extends Component<
   }) => {
     const { createAnalyticsEvent } = this.props;
     const action = getAnalyticsStatusFromCardStatus(status);
-    const errorState = getAnalyticsErrorStateAttributes(fileState, error);
+    const analyticsState = getAnalyticsStateAttributes(fileState, error);
 
-    if (action && this.shouldFireAnalyticsEvent(action, errorState)) {
-      this.lastAction = action;
-      this.lastErrorState = errorState;
+    if (action && this.shouldFireAnalyticsEvent(action, analyticsState)) {
+      this.lastAnalyticsAction = action;
+      this.lastAnalyticsState = analyticsState;
       createAndFireCustomMediaEvent(
         {
           eventType: 'operational',
@@ -400,8 +402,8 @@ export class CardBase extends Component<
           actionSubject: 'mediaCardRender',
           actionSubjectId: resolvedId,
           attributes: {
-            fileAttributes: getFileAttributes(metadata),
-            ...errorState,
+            ...getUIAnalyticsContext(resolvedId, metadata).attributes,
+            ...analyticsState,
           },
         },
         createAnalyticsEvent,
@@ -426,15 +428,15 @@ export class CardBase extends Component<
     if (this.hasBeenMounted) {
       this.setState({ dataURI: undefined });
     }
-    this.lastAction = undefined;
-    this.lastErrorState = {};
+    this.lastAnalyticsAction = undefined;
+    this.lastAnalyticsState = {};
   };
 
   // This method is called when card fails and user press 'Retry'
   private onRetry = () => {
     const { identifier, mediaClient } = this.props;
-    this.lastAction = undefined;
-    this.lastErrorState = {};
+    this.lastAnalyticsAction = undefined;
+    this.lastAnalyticsState = {};
     this.subscribe(identifier, mediaClient);
   };
 
