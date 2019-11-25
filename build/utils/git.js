@@ -277,6 +277,7 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
 async function getParentFor(branchName /*: ?string */) {
   const gitCmd = await spawn('git', ['branch', '--contains', 'develop']);
   const developBranches = gitCmd.stdout.trim().replace(/"/g, '');
+  console.log(developBranches);
   const getCurrentBranch = branchName || (await getBranchName());
 
   return developBranches.includes(getCurrentBranch) ? 'develop' : 'master';
