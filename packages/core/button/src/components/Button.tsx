@@ -26,6 +26,7 @@ export type ButtonState = {
   isFocus: boolean;
 };
 
+// test
 export class Button extends React.Component<ButtonProps, ButtonState> {
   static defaultProps = {
     appearance: 'default',
