@@ -284,10 +284,10 @@ async function getParentFor(branchName /*: ?string */) {
       '--contains',
       `${defaultParentBranch}`,
     ]);
-    const developBranches = gitCmd.stdout.trim().replace(/"/g, '');
+    const targetBranches = gitCmd.stdout.trim().replace(/"/g, '');
     const getCurrentBranch = branchName || (await getBranchName());
 
-    parentBranch = developBranches.includes(getCurrentBranch)
+    parentBranch = targetBranches.includes(getCurrentBranch)
       ? 'develop'
       : 'master';
   } catch (e /*: Error */) {
