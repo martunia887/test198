@@ -7,8 +7,6 @@ import {
   Content,
   ContentWrapper,
   Error,
-  Action,
-  cardStyles,
   ErrorMessage,
   CardBody,
 } from './styles';
