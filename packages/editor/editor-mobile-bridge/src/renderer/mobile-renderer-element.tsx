@@ -81,8 +81,8 @@ export default class MobileRenderer extends React.Component<
       } catch (e) {}
     }
     this.state = {
-        document,
-        macroWhitelist: null,
+      document,
+      macroWhitelist: null,
     };
 
     const taskDecisionProvider = createTaskDecisionProvider(
@@ -145,7 +145,7 @@ export default class MobileRenderer extends React.Component<
           var resultObj = JSON.parse(JSON.stringify(result));
           console.log(JSON.stringify(result));
           this.setState({
-            macroWhitelist: resultObj,
+            macroWhitelist: resultObj.macroWhitelist,
           });
         });
     });

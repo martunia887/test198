@@ -1,28 +1,18 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
 
-import {
-  MacroCardType,
-  MacroRendererProps,
-  MacroRendererState,
-  CreateMacro,
-} from './types';
+import { MacroRendererProps, MacroRendererState, CreateMacro } from './types';
 import { MacroCard } from './MacroCard';
 import Spinner from '@atlaskit/spinner';
-import ErrorIcon from '@atlaskit/icon/glyph/error';
-import { colors } from '@atlaskit/theme';
+
 import { createPromise } from '../../cross-platform-promise';
+import { Action, cardStyles } from './styles';
 import {
-  Card,
-  Icon,
-  Content,
-  ContentWrapper,
-  Error,
-  Action,
-  cardStyles,
-  ErrorMessage,
-  CardBody,
-} from './styles';
+  TAP_TO_LOAD_TEXT,
+  TAP_TO_RETRY_TEXT,
+  TAP_TO_VIEW_TEXT,
+  TAP_TO_REFRESH_TEXT,
+} from './constants';
 
 // create standard translated error messages here????
 
@@ -75,7 +65,13 @@ export class MacroComponent extends React.Component<
   };
 
   // action can be view/retry/spinner/nothing
-  createCard = ({ action, errorMessage, onClick, isDisabled }: CreateMacro) => {
+  createCard = ({
+    action,
+    errorMessage,
+    onClick,
+    isDisabled,
+    secondaryAction,
+  }: CreateMacro) => {
     const { parameters, extensionKey } = this.props.extension;
     // fallback to the extensionkey while the changes soak for the title to be f
     // title might not be a string??
@@ -104,6 +100,7 @@ export class MacroComponent extends React.Component<
             action={action}
             errorMessage={errorMessage}
             loading={this.state.loading}
+            secondaryAction={secondaryAction}
           />
         </Button>
       );
@@ -117,13 +114,14 @@ export class MacroComponent extends React.Component<
             action={action}
             errorMessage={errorMessage}
             loading={this.state.loading}
+            secondaryAction={secondaryAction}
           />
         </Button>
       );
     }
   };
 
-  setErrorLoadingState = () => {
+  setLoadingErrorState = () => {
     this.setState({
       loaded: false,
       loading: false,
@@ -164,7 +162,7 @@ export class MacroComponent extends React.Component<
         if (isSuccessful) {
           this.setLoadingSuccessState();
         } else {
-          this.setErrorLoadingState();
+          this.setLoadingErrorState();
         }
       })
       .catch(() => {
@@ -208,7 +206,7 @@ export class MacroComponent extends React.Component<
         } else if (this.state.retryCount >= 3) {
           this.setErrorUnableToLoadState();
         } else {
-          this.setErrorLoadingState();
+          this.setLoadingErrorState();
         }
       })
       .catch(() => {
@@ -218,7 +216,7 @@ export class MacroComponent extends React.Component<
 
   getTapToLoadCardProps = (cardProps: CreateMacro): CreateMacro => {
     const newProps = {
-      action: <Action>Tap to load</Action>,
+      action: <Action>{TAP_TO_LOAD_TEXT}</Action>,
       isDisabled: false,
       onClick: this.tapToLoad,
     };
@@ -242,7 +240,7 @@ export class MacroComponent extends React.Component<
 
   getTapToViewCardProps = (cardProps: CreateMacro): CreateMacro => {
     const newProps = {
-      action: <Action callToAction>View</Action>,
+      action: <Action callToAction>{TAP_TO_VIEW_TEXT}</Action>,
       isDisabled: false,
       onClick: this.tapToView,
     };
@@ -252,7 +250,7 @@ export class MacroComponent extends React.Component<
 
   getTapToRetryCardProps = (cardProps: CreateMacro): CreateMacro => {
     const newProps = {
-      action: <Action callToAction>Try again</Action>,
+      action: <Action callToAction>{TAP_TO_RETRY_TEXT}</Action>,
       isDisabled: false,
       onClick: this.tapToRetry,
       errorMessage: this.state.errorMessage,
@@ -285,13 +283,13 @@ export class MacroComponent extends React.Component<
       onClick: null,
       secondaryAction: <></>,
     };
+    const { macroWhitelist, extension } = this.props;
+    const { extensionKey } = extension;
 
-    if (true) {
-      // if (this.props.macroWhitelist) {
+    if (macroWhitelist) {
       // check if macroWhitelist has been passed
-      if (true) {
+      if (!macroWhitelist.includes(extensionKey)) {
         // check if macroname is NOT in macrowhitelist
-        // if(this.props.macroWhitelist.includes("macroName")) {
         if (
           !this.state.loaded &&
           !this.state.loading &&
@@ -325,6 +323,7 @@ export class MacroComponent extends React.Component<
         }
       } else {
         // macro is on whitelist
+        return null; // we don't have any actual component yet to return
       }
     } else {
       // what to show while getting the whitelist is pending

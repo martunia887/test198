@@ -141,7 +141,7 @@ export type MacroConfig = {
 
 export interface MacroRendererProps {
   extension: ExtensionParams<any>;
-  macroWhitelist: object;
+  macroWhitelist: Array<string>;
 }
 
 export interface MacroRendererState {
@@ -161,6 +161,7 @@ export type MacroCardType = {
   action: any;
   errorMessage?: string;
   loading: boolean;
+  secondaryAction: any;
 };
 
 export type CreateMacro = {
@@ -168,6 +169,7 @@ export type CreateMacro = {
   action: any;
   onClick?: ((...args: any[]) => void) | null;
   errorMessage?: string;
+  secondaryAction: any;
 };
 export type ActionProps = {
   callToAction?: boolean;

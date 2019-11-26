@@ -79,11 +79,4 @@ describe('renderer bridge', () => {
     mobileRenderer = initRenderer(invalidDocument);
     expect(onContentRendered).toHaveBeenCalled();
   });
-
-  // mock the bridge responses for functions
-  // test error state
-  // loading state
-  // view state
-  // try again state
-  // tap to load state
 });
