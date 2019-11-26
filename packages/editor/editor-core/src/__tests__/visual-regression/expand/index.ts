@@ -5,6 +5,8 @@ import {
   tableMediaADF,
   nestedExpandOverflowInTable,
   wrappingMediaADF,
+  mediaInExpandADF,
+  mediaInNestedExpandADF,
 } from './__fixtures__/expand-adf';
 import { selectors } from '../../__helpers/page-objects/_expand';
 import { Page } from '../../__helpers/page-objects/_types';
@@ -13,6 +15,7 @@ import {
   clickFirstCell,
   tableSelectors,
 } from '../../__helpers/page-objects/_table';
+import { resizeMediaInPositionWithSnapshot } from '../../__helpers/page-objects/_media';
 
 const hideTooltip = async (page: Page) => {
   // Hide the tooltip
@@ -98,5 +101,54 @@ describe('Expand: Media', () => {
     await page.waitForSelector(selectors.expand);
     await page.click(`${selectors.expand} p`);
     await snapshot(page);
+  });
+
+  it('should not show grid lines when re-sizing inside an expand', async () => {
+    await initFullPageEditorWithAdf(page, mediaInExpandADF, Device.LaptopMDPI);
+    await page.waitForSelector(selectors.expand);
+    await page.click('.media-single .img-wrapper');
+    await resizeMediaInPositionWithSnapshot(page, 0, 50);
+  });
+
+  it('should not show grid lines when re-sizing inside a nested expand', async () => {
+    await initFullPageEditorWithAdf(
+      page,
+      mediaInNestedExpandADF,
+      Device.LaptopMDPI,
+    );
+    await page.waitForSelector(selectors.nestedExpand);
+    await page.click('.media-single .img-wrapper');
+    await resizeMediaInPositionWithSnapshot(page, 0, 50);
+  });
+});
+
+describe('Expand: allowInteractiveExpand', () => {
+  let page: Page;
+
+  beforeAll(async () => {
+    // @ts-ignore
+    page = global.page;
+  });
+
+  afterEach(async () => {
+    await snapshot(page, undefined, selectors.expand);
+  });
+
+  describe('when the flag is false', () => {
+    it('should disable the expand button', async () => {
+      await initFullPageEditorWithAdf(
+        page,
+        expandADF('default'),
+        Device.LaptopMDPI,
+        undefined,
+        {
+          UNSAFE_allowExpand: {
+            allowInteractiveExpand: false,
+          },
+        },
+      );
+      await page.waitForSelector(selectors.expand);
+      await page.click(selectors.expandToggle);
+    });
   });
 });
