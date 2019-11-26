@@ -358,17 +358,12 @@ export class CardBase extends Component<
     action: AnalyticsLoadingAction,
     analyticsState: AnalyticsStateAttributes,
   ) => {
-    const {
-      failReason: previousFailReason,
-      error: previousErrorMessage,
-      successReason: previousSuccessReason,
-    } = this.lastAnalyticsState || {};
-    const { failReason, error, successReason } = analyticsState;
+    const { reason: previousReason, error: previousErrorMessage } =
+      this.lastAnalyticsState || {};
+    const { reason, error } = analyticsState;
 
     const isDifferentState =
-      failReason !== previousFailReason ||
-      error !== previousErrorMessage ||
-      successReason !== previousSuccessReason;
+      reason !== previousReason || error !== previousErrorMessage;
 
     const isDifferentAction = action !== this.lastAnalyticsAction;
 

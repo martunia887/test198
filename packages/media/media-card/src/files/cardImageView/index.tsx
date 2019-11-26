@@ -244,14 +244,15 @@ export class FileCardImageViewBase extends Component<
           eventType: 'operational',
           action,
           actionSubject: 'mediaCardRender',
-          ...(action === 'failed'
-            ? {
-                attributes: {
-                  failReason: 'file-uri-error',
+          attributes:
+            action === 'failed'
+              ? {
+                  reason: 'file-uri-error',
                   error: 'unknown error',
+                }
+              : {
+                  reason: 'preview-render-success',
                 },
-              }
-            : {}),
         },
         createAnalyticsEvent,
       );

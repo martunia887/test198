@@ -1316,7 +1316,7 @@ describe('Card', () => {
             actionSubjectId,
             action: 'failed',
             attributes: expect.objectContaining({
-              failReason: 'file-status-error',
+              reason: 'file-status-error',
               error: 'unknown error',
             }),
           }),
@@ -1404,7 +1404,7 @@ describe('Card', () => {
             ...analyticsBasePayload,
             action: 'failed',
             attributes: expect.objectContaining({
-              failReason: 'file-status-error',
+              reason: 'file-status-error',
               error: 'unknown error',
             }),
           }),
@@ -1479,7 +1479,7 @@ describe('Card', () => {
             action: 'succeeded',
             actionSubjectId: 'some-random-id',
             attributes: {
-              successReason: 'file-status-success',
+              reason: 'file-status-success',
               fileAttributes: {
                 fileSource: 'mediaCard',
                 fileMediatype: 'doc',
@@ -1510,6 +1510,7 @@ describe('Card', () => {
             ...analyticsBasePayload,
             action: 'succeeded',
             attributes: {
+              reason: 'preview-render-success',
               packageName: '@atlaskit/media-card',
             },
           }),

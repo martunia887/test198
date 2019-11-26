@@ -81,8 +81,7 @@ export const getAnalyticsStatusFromCardStatus = (
 };
 
 export type AnalyticsStateAttributes = {
-  successReason?: 'file-status-success';
-  failReason?: 'media-client-error' | 'file-status-error';
+  reason?: 'media-client-error' | 'file-status-error' | 'file-status-success';
   error?: string;
 };
 
@@ -99,20 +98,20 @@ export const getAnalyticsStateAttributes = (
 
   if (!fileState) {
     return {
-      failReason: 'media-client-error',
+      reason: 'media-client-error',
       error: errorMessage,
     };
   }
   if (fileState && ['error', 'failed-processing'].includes(fileState.status)) {
     return {
-      failReason: 'file-status-error',
+      reason: 'file-status-error',
       error: ('message' in fileState && fileState.message) || unknownError,
     };
   } else if (
     fileState &&
     ['uploading', 'processing', 'processed'].includes(fileState.status)
   ) {
-    return { successReason: 'file-status-success' };
+    return { reason: 'file-status-success' };
   }
   return {};
 };
