@@ -275,12 +275,25 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
 }
 
 async function getParentFor(branchName /*: ?string */) {
-  const gitCmd = await spawn('git', ['branch', '--contains', 'develop']);
-  const developBranches = gitCmd.stdout.trim().replace(/"/g, '');
-  console.log(developBranches);
-  const getCurrentBranch = branchName || (await getBranchName());
+  let parentBranch = '';
+  try {
+    const defaultParentBranch = process.env.TARGET_BRANCH || 'develop';
 
-  return developBranches.includes(getCurrentBranch) ? 'develop' : 'master';
+    const gitCmd = await spawn('git', [
+      'branch',
+      '--contains',
+      `${defaultParentBranch}`,
+    ]);
+    const developBranches = gitCmd.stdout.trim().replace(/"/g, '');
+    const getCurrentBranch = branchName || (await getBranchName());
+
+    parentBranch = developBranches.includes(getCurrentBranch)
+      ? 'develop'
+      : 'master';
+  } catch (e /*: Error */) {
+    console.warn(`An error occured: ${e}`);
+  }
+  return parentBranch;
 }
 
 module.exports = {

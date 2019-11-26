@@ -2,8 +2,8 @@
 const { getParentFor } = require('./../../git');
 
 describe('getParentFor >', () => {
-  test('investigate-g-parent should return develop as a parent', async () => {
-    const parent = await getParentFor('investigate-g-parent');
+  test('remove-duplicated-packages should return develop as a parent', async () => {
+    const parent = await getParentFor('remove-duplicated-packages');
     expect(parent).toBe('develop');
   });
   test('follow-up-build should return master as a parent', async () => {
