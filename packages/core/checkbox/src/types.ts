@@ -249,6 +249,7 @@ export interface ComponentTokens {
       active?: TokenValue;
       invalid?: TokenValue;
       focused?: TokenValue;
+      focusedAndChecked?: TokenValue;
       hovered?: TokenValue;
       hoveredAndChecked?: TokenValue;
     };

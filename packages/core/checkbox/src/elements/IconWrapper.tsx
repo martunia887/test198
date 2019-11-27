@@ -32,6 +32,11 @@ const checkedBorder = (iconTokens: ThemeIconTokens) => ({
   strokeWidth: iconTokens.borderWidth,
 });
 
+const focusedAndCheckedBorder = (iconTokens: ThemeIconTokens) => ({
+  stroke: iconTokens.borderColor.focused,
+  strokeWidth: iconTokens.borderWidth,
+});
+
 const focusedBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.focused,
   strokeWidth: iconTokens.borderWidth,
@@ -54,6 +59,9 @@ const getBorderColor = ({ tokens, ...props }: IconWrapperCSSProps) => {
   }
   if (props.isHovered) {
     return hoveredBorder(tokens.icon);
+  }
+  if (props.isFocused && props.isChecked) {
+    return focusedAndCheckedBorder(tokens.icon);
   }
   if (props.isChecked) {
     return checkedBorder(tokens.icon);

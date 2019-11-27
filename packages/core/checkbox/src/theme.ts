@@ -23,6 +23,7 @@ export const componentTokens: ComponentTokens = {
       active: { light: 'currentColor', dark: 'currentColor' },
       invalid: { light: colors.R300, dark: colors.R300 },
       focused: { light: colors.B100, dark: colors.B75 },
+      focusedAndChecked: { light: colors.B100, dark: colors.B75 },
       hovered: { light: colors.N40, dark: colors.DN200 },
       hoveredAndChecked: { light: 'currentColor', dark: 'currentColor' },
     },
