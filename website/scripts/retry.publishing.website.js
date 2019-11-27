@@ -15,12 +15,12 @@ function sleep(ms) {
 
 function deployWebsite() {
   return new Promise((resolve, reject) => {
-    let cmd = `netlify deploy --dir dist/ -a ${token}`;
+    let cmd = `netlify deploy --dir dist/ --auth ${token}`;
 
     if (process.env.STAGING) {
-      cmd = `${cmd} -s ${stagingId}`;
+      cmd = `${cmd} --site ${stagingId}`;
     } else {
-      cmd = `${cmd} -s ${prodId} --prod`;
+      cmd = `${cmd} --site ${prodId} --prod`;
     }
 
     const runningCmd = child.spawn(cmd, process.argv.slice(2), {

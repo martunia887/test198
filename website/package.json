@@ -30,7 +30,7 @@
     "chalk": "^2.1.0",
     "enzyme": "^3.10.0",
     "extract-react-types-loader": "^0.3.9",
-    "netlify-cli": "^2.8.3",
+    "netlify-cli": "^2.21.0",
     "tty-table": "^2.6.8"
   },
   "dependencies": {
