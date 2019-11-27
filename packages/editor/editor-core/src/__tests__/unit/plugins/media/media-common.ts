@@ -2,6 +2,7 @@ import {
   doc,
   createEditorFactory,
   mediaGroup,
+  mediaSingle,
   media,
   p,
   hr,
@@ -11,25 +12,37 @@ import {
 import { undo } from 'prosemirror-history';
 import { NodeSelection, TextSelection } from 'prosemirror-state';
 import { MockMentionResource } from '@atlaskit/util-data-test';
+import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers/fakeMediaClient';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { setNodeSelection } from '../../../../utils';
 import {
   removeMediaNode,
   splitMediaGroup,
+  getMediaNodeFromSelection,
 } from '../../../../plugins/media/utils/media-common';
 
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 
 describe('media-common', () => {
   const createEditor = createEditorFactory();
+  const mediaProvider = Promise.resolve({
+    viewMediaClientConfig: getDefaultMediaClientConfig(),
+  });
+  const providerFactory = ProviderFactory.create({
+    mediaProvider,
+  });
 
   const editor = (doc: any) =>
     createEditor({
       doc,
       editorProps: {
-        media: {},
+        media: {
+          allowMediaSingle: true,
+        },
         mentionProvider: Promise.resolve(new MockMentionResource({})),
         allowRule: true,
       },
+      providerFactory,
     });
 
   describe('removeMediaNode', () => {
@@ -188,7 +201,6 @@ describe('media-common', () => {
             deletingMediaNode(editorView.state.schema),
             () => positionOfDeletingNode,
           );
-
           undo(editorView.state, editorView.dispatch);
 
           expect(editorView.state.doc).toEqualDocument(
@@ -517,6 +529,51 @@ describe('media-common', () => {
             );
           });
         });
+      });
+    });
+  });
+
+  describe('#getMediaNodeFromSelection', () => {
+    describe('when selection is not a  media node', () => {
+      it('returns null', () => {
+        const { editorView } = editor(
+          doc(
+            p('H {<>} i'),
+            mediaSingle({
+              layout: 'align-start',
+            })(
+              media({
+                id: 'abc',
+                type: 'file',
+                collection: 'xyz',
+              })(),
+            ),
+          ),
+        );
+
+        const result = getMediaNodeFromSelection(editorView.state);
+        expect(result).toBeNull();
+      });
+    });
+    describe('when selection is a media node', () => {
+      it('returns the media node', () => {
+        const partialMedia = media({
+          id: 'abc',
+          type: 'file',
+          collection: 'xyz',
+        })();
+        const { editorView } = editor(
+          doc(
+            '{<node>}',
+            mediaSingle({
+              layout: 'align-start',
+            })(partialMedia),
+          ),
+        );
+
+        const result = getMediaNodeFromSelection(editorView.state);
+
+        expect(result).toStrictEqual(partialMedia(editorView.state.schema));
       });
     });
   });

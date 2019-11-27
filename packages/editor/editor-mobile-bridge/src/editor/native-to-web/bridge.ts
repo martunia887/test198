@@ -16,7 +16,7 @@ export default interface NativeToWebBridge {
   clearContent(): void;
   onMediaPicked(eventName: string, payload: string): void;
   onPromiseResolved(uuid: string, paylaod: string): void;
-  onPromiseRejected(uuid: string): void;
+  onPromiseRejected(uuid: string, err?: Error): void;
   onBlockSelected(blockType: string): void;
   onOrderedListSelected(): void;
   onBulletListSelected(): void;
@@ -29,4 +29,5 @@ export default interface NativeToWebBridge {
   scrollToSelection(): void;
   undo(): void;
   redo(): void;
+  setKeyboardControlsHeight(height: string): void;
 }

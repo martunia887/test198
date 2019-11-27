@@ -1,41 +1,66 @@
 import * as React from 'react';
 import { intlShape } from 'react-intl';
 import * as PropTypes from 'prop-types';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { WidthProvider } from '@atlaskit/editor-common';
 import EditorContext from '../../../../ui/EditorContext';
-import { EditorActions } from '../../../../index';
+import EditorActions from '../../../../actions';
 import { PortalProviderAPI } from '../../../../ui/PortalProvider';
 import { EditorProps } from '../editor-props-type';
 import { EditorSharedConfigProvider } from '../context/shared-config';
 import { useEditor } from '../hooks/use-editor';
 import { EditorContentProvider } from './EditorContent';
+import { useProviderFactory } from '@atlaskit/editor-common/provider-factory';
 
-export function EditorInternal(props: EditorPropsExtended, context: any) {
-  const editorActions =
-    ((context || {}).editorActions as EditorActions) || new EditorActions();
-
+export function EditorInternal(
+  {
+    onAnalyticsEvent,
+    disabled,
+    transformer,
+    defaultValue,
+    plugins,
+    portalProviderAPI,
+    popupsMountPoint,
+    popupsBoundariesElement,
+    popupsScrollableElement,
+    onChange,
+    onDestroy,
+    onMount,
+    children,
+  }: EditorPropsExtended,
+  context: any,
+) {
+  // Need to memoize editor actions otherwise in case when editor is not
+  // wrapped with EditorContext every prop change triggers all hooks
+  // that depend on editorActions
+  const maybeEditorActions = (context || {}).editorActions;
+  const editorActions = React.useMemo(
+    () => maybeEditorActions || new EditorActions(),
+    [maybeEditorActions],
+  );
+  // Get the provider factory from context
+  const providerFactory = useProviderFactory();
   const [editorSharedConfig, mountEditor] = useEditor({
     context,
     editorActions,
-    createAnalyticsEvent: props.createAnalyticsEvent,
+    onAnalyticsEvent,
 
-    disabled: props.disabled,
+    disabled,
 
-    transformer: props.transformer,
-    defaultValue: props.defaultValue,
+    transformer,
+    defaultValue,
 
-    plugins: props.plugins,
+    plugins,
 
-    portalProviderAPI: props.portalProviderAPI,
-    popupsMountPoint: props.popupsMountPoint,
-    popupsBoundariesElement: props.popupsBoundariesElement,
-    popupsScrollableElement: props.popupsScrollableElement,
+    portalProviderAPI,
+    popupsMountPoint,
+    popupsBoundariesElement,
+    popupsScrollableElement,
 
-    onChange: props.onChange,
+    onChange,
+    onDestroy,
+
+    providerFactory,
   });
-
-  const onMount = props.onMount;
 
   React.useEffect(() => {
     if (editorSharedConfig) {
@@ -48,9 +73,7 @@ export function EditorInternal(props: EditorPropsExtended, context: any) {
         onMount(editorActions);
       }
 
-      return () => {
-        editorActions._privateUnregisterEditor();
-      };
+      return () => editorActions._privateUnregisterEditor();
     }
   }, [editorSharedConfig, editorActions, onMount]);
 
@@ -59,7 +82,7 @@ export function EditorInternal(props: EditorPropsExtended, context: any) {
       <EditorContext editorActions={editorActions}>
         <EditorSharedConfigProvider value={editorSharedConfig}>
           <EditorContentProvider value={mountEditor}>
-            {props.children}
+            {children}
           </EditorContentProvider>
         </EditorSharedConfigProvider>
       </EditorContext>
@@ -74,5 +97,4 @@ EditorInternal.contextTypes = {
 
 export type EditorPropsExtended = EditorProps & {
   portalProviderAPI: PortalProviderAPI;
-  createAnalyticsEvent?: CreateUIAnalyticsEvent;
 };

@@ -1,5 +1,29 @@
 # @atlaskit/atlassian-switcher
 
+## 4.8.0
+
+### Minor Changes
+
+- [minor][28b8211352](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/28b8211352):
+
+  Allow joinable products to accept a callback. This is required to support migration flow from Trello.
+
+## 4.7.1
+
+### Patch Changes
+
+- [patch][b284a6babd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b284a6babd):
+
+  Pull fresh translations
+
+## 4.7.0
+
+### Minor Changes
+
+- [minor][004b30d3d8](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/004b30d3d8):
+
+  Added Join section, and its data provider, and added createProviderWithCustomFetchData method
+
 ## 4.6.9
 
 ### Patch Changes

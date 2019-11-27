@@ -6,9 +6,10 @@ import MentionWithProviders from './mention-with-providers';
 import { MentionEventHandlers } from '../EventHandlers';
 import { ProfilecardProvider } from './types';
 import {
-  default as ProviderFactory,
+  ProviderFactory,
   WithProviders,
-} from '../../providerFactory';
+  Providers,
+} from '../../provider-factory';
 
 export interface MentionProps {
   id: string;
@@ -40,7 +41,7 @@ export default class Mention extends PureComponent<MentionProps, {}> {
     }
   }
 
-  private renderWithProvider = (providers: Record<string, Promise<any>>) => {
+  private renderWithProvider = (providers: Providers) => {
     const { accessLevel, eventHandlers, id, portal, text } = this.props;
 
     const { mentionProvider, profilecardProvider } = providers;

@@ -3,7 +3,6 @@ import { Component } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import { splitCell, Rect } from 'prosemirror-tables';
-import { colors } from '@atlaskit/theme';
 import { canMergeCells } from '../../transforms';
 import { getPluginState } from '../../pm-plugins/main';
 import {
@@ -89,7 +88,7 @@ export interface Props {
   editorView: EditorView;
   isOpen: boolean;
   selectionRect: Rect;
-  targetCellPosition?: number;
+  targetCellPosition?: number; // We keep this because we need to know when to rerender
   mountPoint?: HTMLElement;
   allowMergeCells?: boolean;
   allowColumnSorting?: boolean;
@@ -158,13 +157,15 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       allowColumnSorting,
       allowBackgroundColor,
       editorView: { state },
-      targetCellPosition,
       isOpen,
       selectionRect,
       intl: { formatMessage },
+      editorView,
     } = this.props;
     const items: any[] = [];
     const { isSubmenuOpen } = this.state;
+    // TargetCellPosition could be outdated: https://product-fabric.atlassian.net/browse/ED-8129
+    const { targetCellPosition } = getPluginState(editorView.state);
     if (allowBackgroundColor) {
       const node =
         isOpen && targetCellPosition
@@ -191,7 +192,6 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
                   palette={cellBackgroundColorPalette}
                   onClick={this.setColor}
                   selectedColor={background}
-                  checkMarkColor={colors.N500}
                 />
               </div>
             )}
@@ -278,7 +278,9 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
   };
 
   private onMenuItemActivated = ({ item }: { item: DropdownItem }) => {
-    const { editorView, selectionRect, targetCellPosition } = this.props;
+    const { editorView, selectionRect } = this.props;
+    // TargetCellPosition could be outdated: https://product-fabric.atlassian.net/browse/ED-8129
+    const { targetCellPosition } = getPluginState(editorView.state);
     const { state, dispatch } = editorView;
 
     switch (item.value.name) {
@@ -425,7 +427,9 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
   };
 
   private setColor = (color: string) => {
-    const { targetCellPosition, editorView } = this.props;
+    const { editorView } = this.props;
+    // TargetCellPosition could be outdated: https://product-fabric.atlassian.net/browse/ED-8129
+    const { targetCellPosition } = getPluginState(editorView.state);
     const { state, dispatch } = editorView;
     setColorWithAnalytics(color, targetCellPosition)(state, dispatch);
     this.toggleOpen();

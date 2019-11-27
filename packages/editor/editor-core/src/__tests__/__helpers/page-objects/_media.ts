@@ -1,5 +1,5 @@
 import { insertMedia as integrationInsertMedia } from '../../integration/_helpers';
-import { Page } from './_types';
+import { Page } from 'puppeteer';
 import { getBoundingRect, scrollToElement } from './_editor';
 
 import { snapshot } from '../../visual-regression/_utils';
@@ -43,7 +43,8 @@ export enum MediaToolbarButton {
 }
 
 // Selectors
-const mediaUploadCardSelector = '.e2e-recent-upload-card';
+const mediaUploadCardSelector =
+  '[data-testid="media-picker-popup"] [data-testid="media-file-card-view"]';
 const mediaImageSelector = `.${mediaSingleClassName} .img-wrapper, .mediaGroupView-content-wrap .img-wrapper`;
 const mediaImageSelected = `.ProseMirror-selectednode .${mediaSingleClassName} .img-wrapper, .ProseMirror-selectednode .mediaGroupView-content-wrap .img-wrapper`;
 const insertMediaFileSelector = 'div[aria-label="%s"]';

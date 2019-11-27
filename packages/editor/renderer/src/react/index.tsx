@@ -44,6 +44,7 @@ export interface ConstructorParams {
   allowColumnSorting?: boolean;
   fireAnalyticsEvent?: (event: AnalyticsEventPayload) => void;
   shouldOpenMediaViewer?: boolean;
+  UNSAFE_allowAltTextOnImages?: boolean;
 }
 
 type MarkWithContent = Partial<Mark<any>> & {
@@ -51,28 +52,25 @@ type MarkWithContent = Partial<Mark<any>> & {
 };
 
 function mergeMarks(marksAndNodes: Array<MarkWithContent | Node>) {
-  return marksAndNodes.reduce(
-    (acc, markOrNode) => {
-      const prev = (acc.length && acc[acc.length - 1]) || null;
+  return marksAndNodes.reduce((acc, markOrNode) => {
+    const prev = (acc.length && acc[acc.length - 1]) || null;
 
-      if (
-        markOrNode.type instanceof MarkType &&
-        prev &&
-        prev.type instanceof MarkType &&
-        Array.isArray(prev.content) &&
-        isSameMark(prev as Mark, markOrNode as Mark)
-      ) {
-        prev.content = mergeMarks(
-          prev.content.concat((markOrNode as MarkWithContent).content),
-        );
-      } else {
-        acc.push(markOrNode);
-      }
+    if (
+      markOrNode.type instanceof MarkType &&
+      prev &&
+      prev.type instanceof MarkType &&
+      Array.isArray(prev.content) &&
+      isSameMark(prev as Mark, markOrNode as Mark)
+    ) {
+      prev.content = mergeMarks(
+        prev.content.concat((markOrNode as MarkWithContent).content),
+      );
+    } else {
+      acc.push(markOrNode);
+    }
 
-      return acc;
-    },
-    [] as Array<MarkWithContent | Node>,
-  );
+    return acc;
+  }, [] as Array<MarkWithContent | Node>);
 }
 
 export default class ReactSerializer implements Serializer<JSX.Element> {
@@ -89,6 +87,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   private allowColumnSorting?: boolean;
   private fireAnalyticsEvent?: (event: AnalyticsEventPayload) => void;
   private shouldOpenMediaViewer?: boolean;
+  private UNSAFE_allowAltTextOnImages?: boolean;
 
   constructor({
     providers,
@@ -103,6 +102,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     allowColumnSorting,
     fireAnalyticsEvent,
     shouldOpenMediaViewer,
+    UNSAFE_allowAltTextOnImages,
   }: ConstructorParams) {
     this.providers = providers;
     this.eventHandlers = eventHandlers;
@@ -116,6 +116,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     this.allowColumnSorting = allowColumnSorting;
     this.fireAnalyticsEvent = fireAnalyticsEvent;
     this.shouldOpenMediaViewer = shouldOpenMediaViewer;
+    this.UNSAFE_allowAltTextOnImages = UNSAFE_allowAltTextOnImages;
   }
 
   private resetState() {
@@ -151,7 +152,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
         } else if (['tableHeader', 'tableRow'].indexOf(node.type.name) > -1) {
           props = this.getTableChildrenProps(node);
         } else if (node.type.name === 'media') {
-          props = this.getMediaProps(node);
+          props = this.getMediaProps(node, parentInfo && parentInfo.path);
         } else {
           props = this.getProps(node);
         }
@@ -206,9 +207,9 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       return (mark as any).text;
     }
 
-    const content = ((mark as any).content || []).map(
-      (child: Mark, index: number) => this.serializeMark(child, index),
-    );
+    const content = (
+      (mark as any).content || []
+    ).map((child: Mark, index: number) => this.serializeMark(child, index));
     return this.renderMark(
       markToReact(mark),
       this.getMarkProps(mark),
@@ -268,10 +269,30 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       parentIsIncompleteTask: parentInfo && parentInfo.parentIsIncompleteTask,
     };
   }
-  private getMediaProps(node: Node) {
+
+  private getMediaProps(node: Node, path: Array<Node> = []) {
+    const {
+      marks: { link },
+      nodes: { mediaSingle },
+    } = node.type.schema;
+
+    const isLinkMark = (mark: Mark) => mark.type.name === link.name;
+
+    const parentMediaNode: Node | null =
+      path.length > 0 ? path[path.length - 1] : null;
+
+    const parentNodeHasLinkMark: boolean =
+      parentMediaNode !== null &&
+      parentMediaNode.type.name === mediaSingle.name &&
+      parentMediaNode.marks.some(isLinkMark);
+
+    const shouldOpenMediaViewer =
+      !parentNodeHasLinkMark && this.shouldOpenMediaViewer;
+
     return {
       ...this.getProps(node),
-      shouldOpenMediaViewer: this.shouldOpenMediaViewer,
+      shouldOpenMediaViewer,
+      UNSAFE_allowAltTextOnImages: this.UNSAFE_allowAltTextOnImages,
     };
   }
 
@@ -289,6 +310,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       allowHeadingAnchorLinks: this.allowHeadingAnchorLinks,
       rendererAppearance: this.appearance,
       fireAnalyticsEvent: this.fireAnalyticsEvent,
+      nodeType: node.type.name,
       ...node.attrs,
     };
   }
@@ -383,18 +405,15 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
           return node;
         }
 
-        return nodeMarks.reverse().reduce(
-          (acc, mark) => {
-            const { eq } = mark;
+        return nodeMarks.reverse().reduce((acc, mark) => {
+          const { eq } = mark;
 
-            return {
-              ...mark,
-              eq,
-              content: [acc],
-            };
-          },
-          node as any,
-        );
+          return {
+            ...mark,
+            eq,
+            content: [acc],
+          };
+        }, node as any);
       }),
     ) as Mark[];
   }
@@ -410,6 +429,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       allowDynamicTextSizing,
       allowHeadingAnchorLinks,
       allowColumnSorting,
+      shouldOpenMediaViewer,
     }: ConstructorParams,
   ): ReactSerializer {
     // TODO: Do we actually need the schema here?
@@ -422,6 +442,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       allowDynamicTextSizing,
       allowHeadingAnchorLinks,
       allowColumnSorting,
+      shouldOpenMediaViewer,
     });
   }
 }

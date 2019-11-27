@@ -3,7 +3,8 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { colors as themeColors } from '@atlaskit/theme';
 
-import { hexToRgba, ProviderFactory } from '@atlaskit/editor-common';
+import { hexToRgba } from '@atlaskit/adf-schema';
+import { ProviderFactory } from '@atlaskit/editor-common';
 
 import { CollabEditOptions } from './types';
 import { processRawValue, ZeroWidthSpace } from '../../utils';
@@ -143,7 +144,7 @@ export const replaceDocument = (
     tr.replaceWith(0, state.doc.nodeSize - 2, content!);
     tr.setSelection(Selection.atStart(tr.doc));
 
-    if (typeof version !== undefined && (options && options.useNativePlugin)) {
+    if (typeof version !== undefined && options && options.useNativePlugin) {
       const collabState = { version, unconfirmed: [] };
       tr.setMeta('collab$', collabState);
     }

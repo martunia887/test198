@@ -14,6 +14,7 @@ export const selectors = {
   layoutDataSection: '[data-layout-section="true"]',
   panelContent: '.ak-editor-panel__content',
   codeContent: '.code-content',
+  actionList: '[data-node-type="actionList"]',
 };
 
 export async function clickEditableContent(page: Page) {
@@ -34,7 +35,7 @@ export const waitForElementWithText = async (
   htmlTag = 'span',
 ) => {
   const elementPath = getElementPathWithText(text, htmlTag);
-  await page.waitForXPath(elementPath, 5000);
+  await page.waitForXPath(elementPath, { timeout: 5000 });
 };
 
 export const clickElementWithText = async ({
@@ -47,7 +48,7 @@ export const clickElementWithText = async ({
   text: string;
 }) => {
   const elementPath = getElementPathWithText(text, tag);
-  await page.waitForXPath(elementPath, 5000);
+  await page.waitForXPath(elementPath, { timeout: 5000 });
   const target = await page.$x(elementPath);
   expect(target.length).toBeGreaterThan(0);
   await target[0].click();
@@ -63,7 +64,7 @@ export const hoverElementWithText = async ({
   text: string;
 }) => {
   const elementPath = getElementPathWithText(text, tag);
-  await page.waitForXPath(elementPath, 5000);
+  await page.waitForXPath(elementPath, { timeout: 5000 });
   const target = await page.$x(elementPath);
   expect(target.length).toBeGreaterThan(0);
   await target[0].hover();
@@ -148,7 +149,7 @@ export async function typeInEditorAtEndOfDocument(
 }
 
 export async function getEditorWidth(page: Page) {
-  return page.$eval(selectors.editor, (el: HTMLElement) => el.clientWidth);
+  return page.$eval(selectors.editor, (el: Element) => el.clientWidth);
 }
 
 export async function scrollToElement(

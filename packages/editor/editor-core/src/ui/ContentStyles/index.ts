@@ -34,10 +34,12 @@ import { placeholderTextStyles } from '../../plugins/placeholder-text/styles';
 import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
 import { extensionStyles } from '../../plugins/extension/ui/styles';
+import { expandStyles } from '../../plugins/expand/ui/styles';
 
-const ContentStyles: ComponentClass<
-  HTMLAttributes<{}> & { theme: any; allowAnnotation?: boolean }
-> = styled.div`
+const ContentStyles: ComponentClass<HTMLAttributes<{}> & {
+  theme: any;
+  allowAnnotation?: boolean;
+}> = styled.div`
   /* Hack for ie11 that is being used in code block.
    * https://bitbucket.org/atlassian/atlaskit/src/ad09f6361109ece1aab316c8cbd8116ffb7963ef/packages/editor-core/src/schema/nodes/code-block.ts?fileviewer=file-view-default#code-block.ts-110
    */
@@ -56,6 +58,11 @@ const ContentStyles: ComponentClass<
     ${indentationSharedStyles};
     ${shadowSharedStyle};
     ${inlineNodeSharedStyle};
+  }
+
+  .ProseMirror[contenteditable=false] .taskItemView-content-wrap {
+    pointer-events: none;
+    opacity: 0.7;
   }
 
   .ProseMirror-hideselection *::selection {
@@ -78,6 +85,7 @@ const ContentStyles: ComponentClass<
     max-width: calc(100% - 20px);
     vertical-align: top;
     word-break: break-all;
+    user-select: none;
   }
 
   .inlineCardView-content-wrap .card {
@@ -87,6 +95,7 @@ const ContentStyles: ComponentClass<
 
   .blockCardView-content-wrap {
     display: inline-block;
+    user-select: none;
   }
 
   /* fix cursor alignment */
@@ -121,6 +130,7 @@ const ContentStyles: ComponentClass<
   ${blockMarksSharedStyles}
   ${dateSharedStyle}
   ${extensionStyles}
+  ${expandStyles}
 
   /** Global selector for extensions, as .danger tag is assigned to root level node which is unaccessible from triggered child node **/
   /* Danger when nested node */
@@ -171,7 +181,7 @@ const ContentStyles: ComponentClass<
     padding: 0;
   }
 
-  /* Link icon in the Atlaskit package 
+  /* Link icon in the Atlaskit package
      is bigger than the others
   */
   .hyperlink-open-link {

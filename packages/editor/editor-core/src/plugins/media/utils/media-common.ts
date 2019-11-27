@@ -47,6 +47,12 @@ export const isSelectionNonMediaBlockNode = (state: EditorState): boolean => {
   return node && node.type !== state.schema.nodes.media && node.isBlock;
 };
 
+export const isSelectionMediaSingleNode = (state: EditorState): boolean => {
+  const { node } = state.selection as NodeSelection;
+
+  return node && node.type === state.schema.nodes.mediaSingle;
+};
+
 export const posOfPrecedingMediaGroup = (
   state: EditorState,
 ): number | undefined => {
@@ -349,4 +355,22 @@ export const unwrapNestedMediaElements = (html: string) => {
   }
 
   return wrapper.innerHTML;
+};
+
+export const getMediaNodeFromSelection = (
+  state: EditorState,
+): PMNode | null => {
+  if (!isSelectionMediaSingleNode(state)) {
+    return null;
+  }
+
+  const tr = state.tr;
+  const pos = tr.selection.from + 1;
+  const mediaNode = tr.doc.nodeAt(pos);
+
+  if (mediaNode && mediaNode.type === state.schema.nodes.media) {
+    return mediaNode;
+  }
+
+  return null;
 };

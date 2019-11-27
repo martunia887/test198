@@ -18,6 +18,9 @@ export type EditorProps = {
   disabled?: boolean;
   placeholder?: string;
 
+  // Set for handling/dispatching analytics events
+  onAnalyticsEvent?: AnalyticsEventHandler;
+
   // Set for an on change callback.
   onChange?: (value: any) => void;
 
@@ -28,4 +31,10 @@ export type EditorProps = {
   onCancel?: (value: any) => void;
 
   onMount?: (actions: EditorActions) => void;
+  onDestroy?: () => void;
 };
+
+export type AnalyticsEventHandler = (data: {
+  payload: Record<string, any>;
+  [key: string]: any;
+}) => void;

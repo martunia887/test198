@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
-import { WithCreateAnalyticsEvent } from '@atlaskit/editor-common';
 import { PortalRenderer, PortalProvider } from '../../ui/PortalProvider';
 import { EditorInternal } from './internal/components/EditorInternal';
 import {
@@ -14,6 +13,20 @@ import {
 import { EditorContent } from './internal/components/EditorContent';
 import { EditorProps } from './internal/editor-props-type';
 
+/**
+ * Main Editor component. Use in combination with `EditorContent` and a `Preset`.
+ * Internally it constructs `ProseMirror View` and mounts it to `EditorContent`.
+ *
+ * `EditorContent` can be wrapped to implement any layout/design requirements.
+ *
+ * ```js
+ * <Preset>
+ *   <Editor>
+ *     <EditorContent/>
+ *   </Editor>
+ * </Preset>
+ * ```
+ */
 function Editor(props: EditorProps) {
   const plugins = usePresetContext();
 
@@ -22,15 +35,11 @@ function Editor(props: EditorProps) {
       <PortalProvider
         render={portalProviderAPI => (
           <>
-            <WithCreateAnalyticsEvent
-              render={createAnalyticsEvent => (
-                <EditorInternal
-                  {...props}
-                  plugins={plugins.length ? plugins : props.plugins}
-                  portalProviderAPI={portalProviderAPI}
-                  createAnalyticsEvent={createAnalyticsEvent}
-                />
-              )}
+            <EditorInternal
+              {...props}
+              plugins={plugins.length ? plugins : props.plugins}
+              portalProviderAPI={portalProviderAPI}
+              onAnalyticsEvent={props.onAnalyticsEvent}
             />
             <PortalRenderer portalProviderAPI={portalProviderAPI} />
           </>

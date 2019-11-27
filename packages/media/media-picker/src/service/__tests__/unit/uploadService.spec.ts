@@ -19,14 +19,15 @@ import { asMock, fakeMediaClient } from '@atlaskit/media-test-helpers';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs';
 import { UploadServiceImpl } from '../../uploadServiceImpl';
-import { MediaFile, UploadParams } from '../../..';
 import * as getPreviewModule from '../../../util/getPreviewFromBlob';
 import * as getPreviewFromImage from '../../../util/getPreviewFromImage';
-import { Preview } from '../../../domain/preview';
 import {
+  Preview,
+  MediaFile,
+  UploadParams,
   UploadPreviewUpdateEventPayload,
   UploadsStartEventPayload,
-} from '../../../domain/uploadEvent';
+} from '../../../types';
 
 const fileStreamCacheSpy = jest.spyOn(getFileStreamsCache(), 'set');
 
@@ -97,9 +98,6 @@ describe('UploadService', () => {
     );
 
     if (mediaClient.config.userAuthProvider) {
-      jest
-        .spyOn((uploadService as any).userMediaStore, 'createFile')
-        .mockResolvedValue({ data: { id: 'some-new-user-file-id' } });
       const userMediaClient: MediaClient = (uploadService as any)[
         'userMediaClient'
       ];
@@ -107,9 +105,9 @@ describe('UploadService', () => {
         .spyOn(userMediaClient.file, 'touchFiles')
         .mockResolvedValue(touchedFiles);
       const userMediaClientUpload = jest.spyOn(userMediaClient.file, 'upload');
-      userMediaClientUpload.mockReturnValue(defaultUploadMock as Observable<
-        FileState
-      >);
+      userMediaClientUpload.mockReturnValue(
+        defaultUploadMock as Observable<FileState>,
+      );
 
       return { uploadService, filesAddedPromise, mediaClient, userMediaClient };
     } else {

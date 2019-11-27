@@ -2,13 +2,7 @@ import React, { PureComponent, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import Select from 'react-select';
 import createFocusTrap, { FocusTrap } from 'focus-trap';
-import {
-  Manager,
-  Reference,
-  Popper,
-  PopperProps,
-  RefHandler,
-} from 'react-popper';
+import { Manager, Reference, Popper, PopperProps } from 'react-popper';
 import NodeResolver from 'react-node-resolver';
 import shallowEqualObjects from 'shallow-equal/objects';
 import { N80 } from '@atlaskit/theme/colors';
@@ -166,13 +160,13 @@ export default class PopupSelect<Option = OptionType> extends PureComponent<
     // NOTE: Why not use the <Blanket /> component to close?
     // We don't want to interupt the user's flow. Taking this approach allows
     // user to click "through" to other elements and close the popout.
-    if (isOpen && (this.menuRef && !this.menuRef.contains(target))) {
+    if (isOpen && this.menuRef && !this.menuRef.contains(target)) {
       this.close();
     }
 
     // open on target click -- we can't trust consumers to spread the onClick
     // property to the target
-    if (!isOpen && (this.targetRef && this.targetRef.contains(target))) {
+    if (!isOpen && this.targetRef && this.targetRef.contains(target)) {
       this.open();
     }
   };
@@ -234,17 +228,31 @@ export default class PopupSelect<Option = OptionType> extends PureComponent<
   // Refs
   // ==============================
 
-  resolveTargetRef = (popperRef: RefHandler) => (ref: HTMLElement) => {
+  resolveTargetRef = (popperRef: React.Ref<HTMLElement>) => (
+    ref: HTMLElement,
+  ) => {
     // avoid thrashing fn calls
     if (!this.targetRef && popperRef && ref) {
       this.targetRef = ref;
-      popperRef(ref);
+
+      if (typeof popperRef === 'function') {
+        popperRef(ref);
+      } else {
+        (popperRef as React.MutableRefObject<HTMLElement>).current = ref;
+      }
     }
   };
 
-  resolveMenuRef = (popperRef: RefHandler) => (ref: HTMLElement) => {
+  resolveMenuRef = (popperRef: React.Ref<HTMLElement>) => (
+    ref: HTMLElement,
+  ) => {
     this.menuRef = ref;
-    popperRef(ref);
+
+    if (typeof popperRef === 'function') {
+      popperRef(ref);
+    } else {
+      (popperRef as React.MutableRefObject<HTMLElement>).current = ref;
+    }
   };
 
   getSelectRef = (ref: Select<Option>) => {

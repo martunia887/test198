@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Schema } from 'prosemirror-model';
-import { defaultSchema } from '@atlaskit/adf-schema';
+import { getSchemaBasedOnStage } from '@atlaskit/adf-schema';
 import { reduce } from '@atlaskit/adf-utils';
 import {
   ADFStage,
@@ -55,10 +55,12 @@ export interface Props {
   allowDynamicTextSizing?: boolean;
   allowHeadingAnchorLinks?: boolean;
   maxHeight?: number;
+  fadeOutHeight?: number;
   truncated?: boolean;
   createAnalyticsEvent?: CreateUIAnalyticsEvent;
   allowColumnSorting?: boolean;
   shouldOpenMediaViewer?: boolean;
+  UNSAFE_allowAltTextOnImages?: boolean;
 }
 
 export class Renderer extends PureComponent<Props, {}> {
@@ -154,6 +156,7 @@ export class Renderer extends PureComponent<Props, {}> {
       allowHeadingAnchorLinks,
       allowColumnSorting,
       shouldOpenMediaViewer,
+      UNSAFE_allowAltTextOnImages,
     } = props;
 
     this.serializer = new ReactSerializer({
@@ -173,6 +176,7 @@ export class Renderer extends PureComponent<Props, {}> {
       allowColumnSorting,
       fireAnalyticsEvent: this.fireAnalyticsEvent,
       shouldOpenMediaViewer,
+      UNSAFE_allowAltTextOnImages,
     });
   }
 
@@ -185,24 +189,33 @@ export class Renderer extends PureComponent<Props, {}> {
     }
   };
 
+  private getSchema = () => {
+    const { schema, adfStage } = this.props;
+    if (schema) {
+      return schema;
+    }
+
+    return getSchemaBasedOnStage(adfStage);
+  };
+
   render() {
     const {
       document,
       onComplete,
       onError,
-      schema,
       appearance,
       adfStage,
       allowDynamicTextSizing,
-      maxHeight,
       truncated,
+      maxHeight,
+      fadeOutHeight,
     } = this.props;
 
     try {
       const { result, stat } = renderDocument(
         document,
         this.serializer!,
-        schema || defaultSchema,
+        this.getSchema(),
         adfStage,
       );
 
@@ -235,7 +248,9 @@ export class Renderer extends PureComponent<Props, {}> {
       );
 
       return truncated ? (
-        <TruncatedWrapper height={maxHeight}>{rendererOutput}</TruncatedWrapper>
+        <TruncatedWrapper height={maxHeight} fadeHeight={fadeOutHeight}>
+          {rendererOutput}
+        </TruncatedWrapper>
       ) : (
         rendererOutput
       );

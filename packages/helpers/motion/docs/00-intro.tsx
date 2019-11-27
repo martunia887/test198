@@ -2,10 +2,11 @@ import React from 'react';
 import { md, code, DevPreviewWarning, Example } from '@atlaskit/docs';
 
 export default md`
-  ${<DevPreviewWarning />}
+  ${(<DevPreviewWarning />)}
 
   ${(
     <Example
+      highlight="16,68,87,72,85"
       packageName="@atlaskit/motion"
       Component={require('../examples/fade-in-grid-of-elements').default}
       title="Staggered entrance with fade in"

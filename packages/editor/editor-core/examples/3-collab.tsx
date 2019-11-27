@@ -216,7 +216,6 @@ const editorProps = ({
   appearance: 'full-page',
   analyticsHandler,
   allowAnalyticsGASV3: true,
-  allowCodeBlocks: true,
   allowBreakout: true,
   allowLayouts: {
     allowBreakout: true,
@@ -224,7 +223,6 @@ const editorProps = ({
   },
   allowRule: true,
   allowStatus: true,
-  allowLists: true,
   allowTextColor: true,
   allowDate: true,
   allowPanel: true,
@@ -234,6 +232,7 @@ const editorProps = ({
   UNSAFE_cards: {
     provider: Promise.resolve(cardProviderStaging),
   },
+  UNSAFE_allowExpand: true,
   allowTemplatePlaceholders: { allowInserting: true },
   media: {
     provider: mediaProvider,
@@ -250,7 +249,7 @@ const editorProps = ({
   ),
   contextIdentifierProvider: storyContextIdentifierProviderFactory(),
   collabEdit: {
-    provider: createCollabEditProvider(sessionId),
+    provider: createCollabEditProvider({ userId: sessionId }),
     inviteToEditHandler: inviteHandler,
     inviteToEditComponent,
   },

@@ -4,7 +4,7 @@ import {
   withAnalyticsEvents,
   withAnalyticsContext,
 } from '@atlaskit/analytics-next';
-import { BrowserConfig } from '../types';
+import { BrowserConfig } from '../../types';
 import {
   LocalUploadComponentReact,
   LocalUploadComponentBaseProps,
@@ -44,7 +44,13 @@ export class BrowserBase extends LocalUploadComponentReact<BrowserProps> {
     }
 
     const filesArray = [].slice.call(event.target.files);
-    this.uploadService.addFiles(filesArray);
+    try {
+      this.uploadService.addFiles(filesArray);
+    } finally {
+      if (this.browserRef.current) {
+        this.browserRef.current.value = '';
+      }
+    }
   };
 
   componentDidMount() {
@@ -94,6 +100,7 @@ export class BrowserBase extends LocalUploadComponentReact<BrowserProps> {
 
     return (
       <input
+        data-testid="media-picker-file-input"
         ref={this.browserRef}
         type="file"
         style={{ display: 'none' }}

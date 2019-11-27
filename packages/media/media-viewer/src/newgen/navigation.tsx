@@ -79,6 +79,7 @@ export class NavigationBase extends Component<NavigationProps, {}> {
             <Arrow className={hideControlsClassName}>
               <Shortcut keyCode={37} handler={prev('keyboard')} />
               <MediaButton
+                testId="media-viewer-navigation-prev"
                 onClick={prev('mouse')}
                 iconBefore={
                   <ArrowLeftCircleIcon
@@ -97,6 +98,7 @@ export class NavigationBase extends Component<NavigationProps, {}> {
             <Arrow className={hideControlsClassName}>
               <Shortcut keyCode={39} handler={next('keyboard')} />
               <MediaButton
+                testId="media-viewer-navigation-next"
                 onClick={next('mouse')}
                 iconBefore={
                   <ArrowRightCircleIcon

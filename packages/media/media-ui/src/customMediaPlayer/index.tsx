@@ -110,9 +110,12 @@ export class CustomMediaPlayer extends Component<
     simultaneousPlayManager.unsubscribe(this);
   }
 
-  onFullScreenChange = () => {
+  onFullScreenChange = (e: Event) => {
+    if (e.target !== this.videoWrapperRef) {
+      return;
+    }
     const { isFullScreenEnabled: currentFullScreenMode } = this.state;
-    const isFullScreenEnabled = getFullscreenElement() ? true : false;
+    const isFullScreenEnabled = !!getFullscreenElement();
 
     if (currentFullScreenMode !== isFullScreenEnabled) {
       this.setState({
@@ -210,6 +213,7 @@ export class CustomMediaPlayer extends Component<
 
     return (
       <MediaButton
+        data-testid="custom-media-player-fullscreen-button"
         appearance={toolbar}
         onClick={this.onFullScreenClick}
         iconBefore={icon}
@@ -225,6 +229,7 @@ export class CustomMediaPlayer extends Component<
 
     return (
       <MediaButton
+        data-testid="custom-media-player-download-button"
         appearance={toolbar}
         onClick={onDownloadClick}
         iconBefore={<DownloadIcon label="download" />}
@@ -275,6 +280,7 @@ export class CustomMediaPlayer extends Component<
       onCanPlay,
       onError,
     } = this.props;
+    const { isFullScreenEnabled } = this.state;
 
     return (
       <CustomVideoWrapper innerRef={this.saveVideoWrapperRef}>
@@ -304,12 +310,14 @@ export class CustomMediaPlayer extends Component<
             const toggleButtonAction = isPlaying ? this.pause : this.play;
             const button = (
               <MediaButton
+                data-testid="custom-media-player-play-toggle-button"
+                data-test-is-playing={isPlaying}
                 appearance={toolbar}
                 iconBefore={toggleButtonIcon}
                 onClick={toggleButtonAction}
               />
             );
-            const shortcuts = isShortcutEnabled && [
+            const shortcuts = (isShortcutEnabled || isFullScreenEnabled) && [
               <Shortcut
                 key="space-shortcut"
                 keyCode={keyCodes.space}

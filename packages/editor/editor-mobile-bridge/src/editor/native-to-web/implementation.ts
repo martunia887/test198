@@ -33,6 +33,7 @@ import {
   setLinkHref,
   setLinkText,
   clearEditorContent,
+  setKeyboardHeight,
 } from '@atlaskit/editor-core';
 import { EditorView } from 'prosemirror-view';
 import { EditorViewWithComposition } from '../../types';
@@ -58,7 +59,7 @@ export default class WebBridgeImpl extends WebBridge
   blockFormatBridgeState: BlockTypeState | null = null;
   listBridgeState: ListsState | null = null;
   mentionsPluginState: MentionPluginState | null = null;
-  editorView: EditorView & EditorViewWithComposition | null = null;
+  editorView: (EditorView & EditorViewWithComposition) | null = null;
   transformer: JSONTransformer = new JSONTransformer();
   editorActions: EditorActions = new EditorActions();
   mediaPicker: CustomMediaPicker | undefined;
@@ -188,11 +189,16 @@ export default class WebBridgeImpl extends WebBridge
   }
 
   onPromiseResolved(uuid: string, payload: string) {
-    resolvePromise(uuid, JSON.parse(payload));
+    try {
+      resolvePromise(uuid, JSON.parse(payload));
+    } catch (err) {
+      err.message = `${err.message}. Payload: ${JSON.stringify(payload)}`;
+      rejectPromise(uuid, err);
+    }
   }
 
-  onPromiseRejected(uuid: string) {
-    rejectPromise(uuid);
+  onPromiseRejected(uuid: string, err?: Error) {
+    rejectPromise(uuid, err);
   }
 
   onBlockSelected(blockType: string) {
@@ -379,6 +385,15 @@ export default class WebBridgeImpl extends WebBridge
   redo() {
     if (this.editorView) {
       pmHistoryRedo(this.editorView.state, this.editorView.dispatch);
+    }
+  }
+
+  setKeyboardControlsHeight(height: string) {
+    if (this.editorView) {
+      setKeyboardHeight(+height)(
+        this.editorView.state,
+        this.editorView.dispatch,
+      );
     }
   }
 
