@@ -45,7 +45,32 @@ async function getChangedPackagesSinceMaster() {
   return getChangedPackagesSinceCommit(masterRef);
 }
 
+// Note: This returns the packages that have changed AND been committed since develop,
+// it wont include staged/unstaged changes
+//
+// Don't use this function in master branch as it returns nothing in that case.
+async function getChangedPackagesSinceDevelop() {
+  const developRef = await git.getDevelopRef();
+  return getChangedPackagesSinceCommit(developRef);
+}
+
+async function getChangedPackages() {
+  const { BITBUCKET_BRANCH } = process.env;
+  const branchName = process.env.CI
+    ? BITBUCKET_BRANCH
+    : await git.getBranchName();
+
+  const parent = await git.getParent(branchName);
+  if (parent) {
+    return parent === 'develop'
+      ? getChangedPackagesSinceDevelop()
+      : getChangedPackagesSinceMaster();
+  }
+  return getChangedPackagesSinceMaster();
+}
+
 module.exports = {
   getChangedPackagesSincePublishCommit,
   getChangedPackagesSinceMaster,
+  getChangedPackages,
 };

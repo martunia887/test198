@@ -6,7 +6,7 @@ const flattenDeep = require('lodash.flattendeep');
 const packages = require('../utils/packages');
 
 // /**
-//  * NOTE: This prints the list of changed packages and dependent packages since master ONLY if they have been commited.
+//  * NOTE: This prints the list of changed packages and dependent packages since master or develop ONLY if they have been commited.
 //  * It will print them all out as a json array of relative paths
 //  * i.e: $ node build/ci-scripts/get.changed.packages.since.master.js
 //  *        ["packages/core/avatar", "packages/core/badge"]
@@ -54,7 +54,7 @@ const displayChangedPackagesSinceMaster = async () => {
   const cwd = process.cwd();
   const allPackages = await bolt.getWorkspaces({ cwd });
   // Changed packages that have been worked on since master.
-  const changedPackages = await packages.getChangedPackagesSinceMaster();
+  const changedPackages = await packages.getChangedPackages();
   let changedPackagesRelativePaths = changedPackages.map(
     pkg => pkg.relativeDir,
   );

@@ -60,6 +60,11 @@ async function getMasterRef() {
   return gitCmd.stdout.trim().split('\n')[0];
 }
 
+async function getDevelopRef() {
+  const gitCmd = await spawn('git', ['rev-parse', 'develop']);
+  return gitCmd.stdout.trim().split('\n')[0];
+}
+
 async function add(pathToFile /*: string */) {
   const gitCmd = await spawn('git', ['add', pathToFile]);
   return gitCmd.code === 0;
@@ -283,7 +288,6 @@ async function getParent(branchName /*: string */) {
     console.warn(`An error occured because of the branch not found in the tree :${e}.
     \n it will default that the branch / commits was tipped off master`);
   }
-
   return branchCommits.includes(lastDevelopCommits) ? 'develop' : 'master';
 }
 
@@ -293,6 +297,7 @@ module.exports = {
   getChangedFilesSince,
   getBranchName,
   getMasterRef,
+  getDevelopRef,
   add,
   branch,
   checkout,
