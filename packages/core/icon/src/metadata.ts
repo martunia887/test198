@@ -1367,22 +1367,22 @@ const metaData: Record<string, Data> = {
     package: '@atlaskit/icon/glyph/people',
   },
   'person-circle': {
-    keywords: ['person-circle', 'personcircle', 'person', 'user', 'icon', 'core'],
+    keywords: ['person-circle', 'personcircle', 'icon', 'core'],
     componentName: 'PersonCircleIcon',
     package: '@atlaskit/icon/glyph/person-circle',
   },
   'person-with-circle': {
-    keywords: ['person-with-circle', 'personwithcircle', 'person', 'user', 'icon', 'core'],
+    keywords: ['person-with-circle', 'personwithcircle', 'icon', 'core'],
     componentName: 'PersonWithCircleIcon',
     package: '@atlaskit/icon/glyph/person-with-circle',
   },
   'person-with-cross': {
-    keywords: ['person-with-cross', 'personwithcross', 'person', 'user', 'icon', 'core'],
+    keywords: ['person-with-cross', 'personwithcross', 'icon', 'core'],
     componentName: 'PersonWithCrossIcon',
     package: '@atlaskit/icon/glyph/person-with-cross',
   },
   'person-with-tick': {
-    keywords: ['person-with-tick', 'personwithtick', 'person', 'user', 'icon', 'core'],
+    keywords: ['person-with-tick', 'personwithtick', 'icon', 'core'],
     componentName: 'PersonWithTickIcon',
     package: '@atlaskit/icon/glyph/person-with-tick',
   },
@@ -1541,6 +1541,11 @@ const metaData: Record<string, Data> = {
     componentName: 'SignOutIcon',
     package: '@atlaskit/icon/glyph/sign-out',
   },
+  sprint: {
+    keywords: ['sprint', 'icon', 'core'],
+    componentName: 'SprintIcon',
+    package: '@atlaskit/icon/glyph/sprint',
+  },
   'star-filled': {
     keywords: ['star-filled', 'starfilled', 'icon', 'core'],
     componentName: 'StarFilledIcon',
@@ -1560,6 +1565,11 @@ const metaData: Record<string, Data> = {
     keywords: ['status', 'icon', 'core'],
     componentName: 'StatusIcon',
     package: '@atlaskit/icon/glyph/status',
+  },
+  stopwatch: {
+    keywords: ['stopwatch', 'icon', 'core'],
+    componentName: 'StopwatchIcon',
+    package: '@atlaskit/icon/glyph/stopwatch',
   },
   subtask: {
     keywords: ['subtask', 'issue', 'task', 'icon', 'core'],
