@@ -52,9 +52,8 @@ BrowserTestCase(
       },
     });
 
-    await page.isVisible('.media-single');
-    await page.waitForSelector('.ProseMirror :nth-child(1) .media-single');
-    await page.click('.ProseMirror :nth-child(1) .media-single');
+    await page.click(editable);
+    await page.click('.ProseMirror .media-single');
     await page.copy();
 
     await page.keys(['ArrowDown']);

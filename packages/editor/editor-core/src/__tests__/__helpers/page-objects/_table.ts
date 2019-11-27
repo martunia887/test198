@@ -24,15 +24,15 @@ export const tableSelectors = {
   contextualMenu: `.${ClassName.CONTEXTUAL_MENU_BUTTON}`,
   hoveredCell: `.ProseMirror table .${ClassName.HOVERED_CELL}`,
   nthRowControl: (n: number) =>
-    `.${ClassName.ROW_CONTROLS_BUTTON_WRAP}:nth-child(${n}) button`,
+    `.${ClassName.ROW_CONTROLS_BUTTON}:nth-child(${n})`,
   nthColumnControl: (n: number) =>
-    `.${ClassName.COLUMN_CONTROLS_DECORATIONS}[data-start-index='${n}']`,
+    `.${ClassName.COLUMN_CONTROLS_BUTTON}[data-start-index='${n}']`,
   nthNumberedColumnRowControl: (n: number) =>
     `.${ClassName.NUMBERED_COLUMN_BUTTON}:nth-child(${n})`,
-  firstRowControl: `.${ClassName.ROW_CONTROLS_BUTTON_WRAP}:nth-child(1) button`,
-  firstColumnControl: `.${ClassName.COLUMN_CONTROLS_DECORATIONS}[data-start-index='0'] `,
-  lastRowControl: `.${ClassName.ROW_CONTROLS_BUTTON_WRAP}:nth-child(3) button`,
-  rowControlSelector: ClassName.ROW_CONTROLS_BUTTON_WRAP,
+  firstRowControl: `.${ClassName.ROW_CONTROLS_BUTTON}:nth-child(1)`,
+  firstColumnControl: `.${ClassName.COLUMN_CONTROLS_BUTTON}[data-start-index='0'] `,
+  lastRowControl: `.${ClassName.ROW_CONTROLS_BUTTON}:nth-child(3)`,
+  rowControlSelector: ClassName.ROW_CONTROLS_BUTTON,
   deleteButtonSelector: `.${ClassName.CONTROLS_DELETE_BUTTON_WRAP} .${ClassName.CONTROLS_DELETE_BUTTON}`,
   rowControls: ClassName.ROW_CONTROLS_WRAPPER,
   insertColumnButton: `.${ClassName.CONTROLS_INSERT_COLUMN}`,
@@ -213,7 +213,7 @@ export const hoverColumnControls = async (
   let offset = bounds.width * (side === 'left' ? 0.5 : 0.55);
 
   const x = bounds.left + offset;
-  const y = bounds.top + bounds.height - 5;
+  const y = bounds.top + bounds.height - 7;
   return await page.mouse.move(x, y);
 };
 
@@ -253,12 +253,12 @@ export const insertColumn = async (
 };
 
 export const deleteRow = async (page: any, atIndex: number) => {
-  const controlSelector = `.${tableSelectors.rowControls} .${ClassName.ROW_CONTROLS_BUTTON_WRAP}:nth-child(${atIndex}) .${ClassName.CONTROLS_BUTTON}`;
+  const controlSelector = `.${tableSelectors.rowControls} .${ClassName.ROW_CONTROLS_BUTTON}:nth-child(${atIndex})`;
   await deleteRowOrColumn(page, controlSelector);
 };
 
 export const deleteColumn = async (page: any, atIndex: number) => {
-  const controlSelector = `.${ClassName.COLUMN_CONTROLS_DECORATIONS}[data-start-index="${atIndex}"]`;
+  const controlSelector = `.${ClassName.COLUMN_CONTROLS_BUTTON}[data-start-index="${atIndex}"]`;
   await deleteRowOrColumn(page, controlSelector);
 };
 
@@ -311,7 +311,7 @@ export const mergeCells = async (
 };
 
 export const getSelectorForTableControl = (type: string, atIndex?: number) => {
-  let selector = `.pm-table-${type}-controls__button-wrap`;
+  let selector = `.pm-table-${type}-controls__button`;
   if (atIndex) {
     selector += `:nth-child(${atIndex})`;
   }

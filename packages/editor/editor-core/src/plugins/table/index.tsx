@@ -135,7 +135,8 @@ const tablesPlugin = (options?: TablePluginOptions): EditorPlugin => ({
           const tableResizingPluginState = tableResizingPluginKey.getState(
             state,
           );
-          const isDragging =
+          const isReordering = pluginState && pluginState.reordering;
+          const isResizing =
             tableResizingPluginState && tableResizingPluginState.dragging;
           const allowControls =
             pluginState &&
@@ -144,9 +145,10 @@ const tablesPlugin = (options?: TablePluginOptions): EditorPlugin => ({
 
           return (
             <>
-              {pluginState.targetCellPosition &&
+              {!isReordering &&
+                !isResizing &&
                 pluginState.tableRef &&
-                !isDragging &&
+                pluginState.targetCellPosition &&
                 options &&
                 options.allowContextualMenu && (
                   <FloatingContextualButton
@@ -158,7 +160,7 @@ const tablesPlugin = (options?: TablePluginOptions): EditorPlugin => ({
                     layout={pluginState.layout}
                   />
                 )}
-              {allowControls && (
+              {!isReordering && allowControls && (
                 <FloatingInsertButton
                   tableNode={pluginState.tableNode}
                   tableRef={pluginState.tableRef}
@@ -172,15 +174,17 @@ const tablesPlugin = (options?: TablePluginOptions): EditorPlugin => ({
                   scrollableElement={popupsScrollableElement}
                 />
               )}
-              <FloatingContextualMenu
-                editorView={editorView}
-                mountPoint={popupsMountPoint}
-                boundariesElement={popupsBoundariesElement}
-                targetCellPosition={pluginState.targetCellPosition}
-                isOpen={Boolean(pluginState.isContextualMenuOpen)}
-                pluginConfig={pluginState.pluginConfig}
-              />
-              {allowControls && (
+              {!isReordering && (
+                <FloatingContextualMenu
+                  editorView={editorView}
+                  mountPoint={popupsMountPoint}
+                  boundariesElement={popupsBoundariesElement}
+                  targetCellPosition={pluginState.targetCellPosition}
+                  isOpen={Boolean(pluginState.isContextualMenuOpen)}
+                  pluginConfig={pluginState.pluginConfig}
+                />
+              )}
+              {!isReordering && allowControls && (
                 <FloatingDeleteButton
                   editorView={editorView}
                   selection={editorView.state.selection}
@@ -190,7 +194,8 @@ const tablesPlugin = (options?: TablePluginOptions): EditorPlugin => ({
                   scrollableElement={popupsScrollableElement}
                 />
               )}
-              {isLayoutSupported(state) &&
+              {!isReordering &&
+                isLayoutSupported(state) &&
                 options &&
                 options.breakoutEnabled && (
                   <LayoutButton

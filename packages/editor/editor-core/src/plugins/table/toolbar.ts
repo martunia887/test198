@@ -53,54 +53,56 @@ export const getToolbarConfig: FloatingToolbarHandler = (
       getDomRef: () => tableState.tableWrapperTarget!,
       nodeType: state.schema.nodes.table,
       offset: [0, 3],
-      items: [
-        {
-          type: 'dropdown',
-          title: formatMessage(messages.tableOptions),
-          hidden: !(
-            pluginConfig.allowHeaderRow && pluginConfig.allowHeaderColumn
-          ),
-          options: [
+      items: tableState.reordering
+        ? []
+        : [
             {
-              title: formatMessage(messages.headerRow),
-              onClick: toggleHeaderRowWithAnalytics(),
-              selected: tableState.isHeaderRowEnabled,
-              hidden: !pluginConfig.allowHeaderRow,
+              type: 'dropdown',
+              title: formatMessage(messages.tableOptions),
+              hidden: !(
+                pluginConfig.allowHeaderRow && pluginConfig.allowHeaderColumn
+              ),
+              options: [
+                {
+                  title: formatMessage(messages.headerRow),
+                  onClick: toggleHeaderRowWithAnalytics(),
+                  selected: tableState.isHeaderRowEnabled,
+                  hidden: !pluginConfig.allowHeaderRow,
+                },
+                {
+                  title: formatMessage(messages.headerColumn),
+                  onClick: toggleHeaderColumnWithAnalytics(),
+                  selected: tableState.isHeaderColumnEnabled,
+                  hidden: !pluginConfig.allowHeaderColumn,
+                },
+                {
+                  title: formatMessage(messages.numberedColumn),
+                  onClick: toggleNumberColumnWithAnalytics(),
+                  selected: checkIfNumberColumnEnabled(state),
+                  hidden: !pluginConfig.allowNumberColumn,
+                },
+              ],
             },
             {
-              title: formatMessage(messages.headerColumn),
-              onClick: toggleHeaderColumnWithAnalytics(),
-              selected: tableState.isHeaderColumnEnabled,
-              hidden: !pluginConfig.allowHeaderColumn,
+              type: 'separator',
+              hidden: !(
+                pluginConfig.allowBackgroundColor &&
+                pluginConfig.allowHeaderRow &&
+                pluginConfig.allowHeaderColumn &&
+                pluginConfig.allowMergeCells
+              ),
             },
             {
-              title: formatMessage(messages.numberedColumn),
-              onClick: toggleNumberColumnWithAnalytics(),
-              selected: checkIfNumberColumnEnabled(state),
-              hidden: !pluginConfig.allowNumberColumn,
+              type: 'button',
+              appearance: 'danger',
+              icon: RemoveIcon,
+              onClick: deleteTableWithAnalytics(),
+              disabled: !!resizeState && !!resizeState.dragging,
+              onMouseEnter: hoverTable(true),
+              onMouseLeave: clearHoverSelection(),
+              title: formatMessage(commonMessages.remove),
             },
           ],
-        },
-        {
-          type: 'separator',
-          hidden: !(
-            pluginConfig.allowBackgroundColor &&
-            pluginConfig.allowHeaderRow &&
-            pluginConfig.allowHeaderColumn &&
-            pluginConfig.allowMergeCells
-          ),
-        },
-        {
-          type: 'button',
-          appearance: 'danger',
-          icon: RemoveIcon,
-          onClick: deleteTableWithAnalytics(),
-          disabled: !!resizeState && !!resizeState.dragging,
-          onMouseEnter: hoverTable(true),
-          onMouseLeave: clearHoverSelection(),
-          title: formatMessage(commonMessages.remove),
-        },
-      ],
     };
   }
   return;

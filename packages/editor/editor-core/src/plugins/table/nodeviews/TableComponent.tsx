@@ -3,6 +3,7 @@ import rafSchedule from 'raf-schd';
 import { Node as PmNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { isTableSelected } from 'prosemirror-utils';
+import { DragDropContext, DropResult, DragStart } from 'react-beautiful-dnd';
 import {
   browser,
   calcTableWidth,
@@ -10,7 +11,7 @@ import {
 } from '@atlaskit/editor-common';
 
 import TableFloatingControls from '../ui/TableFloatingControls';
-
+import ColumnControls from '../ui/TableFloatingControls/ColumnControls';
 import { getPluginState } from '../pm-plugins/main';
 import { scaleTable } from '../pm-plugins/table-resizing';
 import {
@@ -23,6 +24,7 @@ import {
   TablePluginState,
   ColumnResizingPluginState,
   TableCssClassName as ClassName,
+  ReorderingType,
 } from '../types';
 import classnames from 'classnames';
 const isIE11 = browser.ie_version === 11;
@@ -32,8 +34,17 @@ import {
   containsHeaderRow,
   tablesHaveDifferentColumnWidths,
   tablesHaveDifferentNoOfColumns,
+  onReorderingRows,
+  onReorderingColumns,
+  isActiveTable,
+  getMergedCellsPositions,
+  onBeforeCapture,
 } from '../utils';
-import { autoSizeTable } from '../commands';
+import {
+  autoSizeTable,
+  onBeforeReorderingStart,
+  onReorderingEnd,
+} from '../commands';
 import { WidthPluginState } from '../../width';
 import { getParentNodeWidth } from '../../../utils/node-width';
 
@@ -53,6 +64,7 @@ interface TableState {
   scroll: number;
   tableContainerWidth: string;
   parentWidth?: number;
+  isLoading: boolean;
 }
 
 class TableComponent extends React.Component<ComponentProps, TableState> {
@@ -60,6 +72,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     scroll: 0,
     tableContainerWidth: 'inherit',
     parentWidth: undefined,
+    isLoading: true,
   };
 
   private wrapper?: HTMLDivElement | null;
@@ -73,7 +86,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
 
   constructor(props: ComponentProps) {
     super(props);
-    const { options, containerWidth, node } = props;
+    const { options, containerWidth, node, view } = props;
 
     this.node = node;
     this.containerWidth = containerWidth;
@@ -97,6 +110,14 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
         }
       });
     }
+
+    const { eventEmitter } = getPluginState(view.state);
+    eventEmitter.addListener('reordering-rows', this.onReorderingRows);
+    eventEmitter.addListener('reordering-columns', this.onReorderingColumns);
+
+    requestAnimationFrame(() => {
+      this.setState({ isLoading: false });
+    });
   }
 
   componentDidMount() {
@@ -130,6 +151,10 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     if (this.frameId && window) {
       window.cancelAnimationFrame(this.frameId);
     }
+
+    const { eventEmitter } = getPluginState(this.props.view.state);
+    eventEmitter.removeListener('reordering-rows', this.onReorderingRows);
+    eventEmitter.removeListener('reordering-columns', this.onReorderingColumns);
   }
 
   componentDidUpdate(prevProps: ComponentProps) {
@@ -167,80 +192,243 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
       tableResizingPluginState,
       width,
     } = this.props;
+    const { isLoading } = this.state;
 
     const {
-      pluginConfig: { allowControls = true },
+      pluginConfig: {
+        allowControls = true,
+        allowReorderingColumns,
+        allowReorderingRows,
+      },
     } = pluginState;
 
     // doesn't work well with WithPluginState
-    const { isInDanger, hoveredRows } = getPluginState(view.state);
+    const {
+      isInDanger,
+      hoveredRows,
+      hoveredColumns,
+      reordering,
+    } = getPluginState(view.state);
 
     const tableRef = this.table || undefined;
     const tableActive = this.table === pluginState.tableRef;
     const isResizing =
       !!tableResizingPluginState && !!tableResizingPluginState.dragging;
-
-    const rowControls = [
-      <div key={0} className={ClassName.ROW_CONTROLS_WRAPPER}>
-        <TableFloatingControls
-          editorView={view}
-          tableRef={tableRef}
-          tableActive={tableActive}
-          hoveredRows={hoveredRows}
-          isInDanger={isInDanger}
-          isResizing={isResizing}
-          isNumberColumnEnabled={node.attrs.isNumberColumnEnabled}
-          isHeaderRowEnabled={pluginState.isHeaderRowEnabled}
-          ordering={pluginState.ordering}
-          isHeaderColumnEnabled={pluginState.isHeaderColumnEnabled}
-          hasHeaderRow={containsHeaderRow(view.state, node)}
-          // pass `selection` and `tableHeight` to control re-render
-          selection={view.state.selection}
-          tableHeight={tableRef ? tableRef.offsetHeight : undefined}
-        />
-      </div>,
-    ];
+    const hasMergedCells = getMergedCellsPositions(view.state.tr).length > 0;
 
     return (
-      <div
-        style={{
-          width: this.state.tableContainerWidth,
-        }}
-        className={classnames(ClassName.TABLE_CONTAINER, {
-          [ClassName.WITH_CONTROLS]: allowControls && tableActive,
-          [ClassName.HOVERED_DELETE_BUTTON]: isInDanger,
-          [ClassName.TABLE_SELECTED]: isTableSelected(view.state.selection),
-          'less-padding': width < akEditorMobileBreakoutPoint,
-        })}
-        data-number-column={node.attrs.isNumberColumnEnabled}
-        data-layout={node.attrs.layout}
+      // @ts-ignore
+      <DragDropContext
+        onBeforeCapture={this.onBeforeCapture}
+        onBeforeDragStart={this.onBeforeDragStart}
+        onDragEnd={this.onDragEnd}
       >
-        {allowControls && rowControls}
         <div
-          ref={elem => {
-            this.leftShadow = elem;
+          style={{
+            width: this.state.tableContainerWidth,
           }}
-          className={ClassName.TABLE_LEFT_SHADOW}
-        />
-        <div
-          className={classnames(ClassName.TABLE_NODE_WRAPPER)}
-          ref={elem => {
-            this.wrapper = elem;
-            this.props.contentDOM(elem ? elem : undefined);
-            if (elem) {
-              this.table = elem.querySelector('table');
-            }
-          }}
-        />
-        <div
-          ref={elem => {
-            this.rightShadow = elem;
-          }}
-          className={ClassName.TABLE_RIGHT_SHADOW}
-        />
-      </div>
+          className={classnames(ClassName.TABLE_CONTAINER, {
+            [ClassName.WITH_CONTROLS]: allowControls && tableActive,
+            [ClassName.HOVERED_DELETE_BUTTON]: isInDanger,
+            [`${ClassName.REORDERING}-${reordering}`]: !!reordering,
+            [ClassName.TABLE_SELECTED]: isTableSelected(view.state.selection),
+            'less-padding': width < akEditorMobileBreakoutPoint,
+          })}
+          data-number-column={node.attrs.isNumberColumnEnabled}
+          data-layout={node.attrs.layout}
+        >
+          {!isLoading && allowControls && (
+            <div key={0} className={ClassName.ROW_CONTROLS_WRAPPER}>
+              <TableFloatingControls
+                editorView={view}
+                tableRef={tableRef}
+                tableActive={tableActive}
+                hoveredRows={hoveredRows}
+                isInDanger={isInDanger}
+                isResizing={isResizing}
+                isNumberColumnEnabled={node.attrs.isNumberColumnEnabled}
+                isHeaderRowEnabled={pluginState.isHeaderRowEnabled}
+                ordering={pluginState.ordering}
+                isHeaderColumnEnabled={pluginState.isHeaderColumnEnabled}
+                hasHeaderRow={containsHeaderRow(view.state, node)}
+                // pass `selection` and `tableHeight` to control re-render
+                selection={view.state.selection}
+                tableHeight={tableRef ? tableRef.offsetHeight : undefined}
+                hasMergedCells={hasMergedCells}
+                allowReorderingRows={allowReorderingRows}
+                multiReorderIndexes={
+                  reordering === 'rows'
+                    ? pluginState.multiReorderIndexes
+                    : undefined
+                }
+              />
+            </div>
+          )}
+          {!isLoading && reordering !== 'rows' && (
+            <div
+              ref={elem => {
+                this.leftShadow = elem;
+              }}
+              className={ClassName.TABLE_LEFT_SHADOW}
+            />
+          )}
+          <div
+            className={classnames(ClassName.TABLE_NODE_WRAPPER)}
+            ref={elem => {
+              this.wrapper = elem;
+              this.props.contentDOM(elem ? elem : undefined);
+              if (elem) {
+                this.table = elem.querySelector('table');
+              }
+            }}
+          >
+            {!isLoading && allowControls && (
+              <div key={0} className={ClassName.COLUMN_CONTROLS_WRAPPER}>
+                <ColumnControls
+                  editorView={view}
+                  tableRef={tableRef}
+                  hoveredColumns={hoveredColumns}
+                  isInDanger={isInDanger}
+                  isResizing={isResizing}
+                  isHeaderColumnEnabled={pluginState.isHeaderColumnEnabled}
+                  hasMergedCells={hasMergedCells}
+                  allowReorderingColumns={allowReorderingColumns}
+                  multiReorderIndexes={
+                    reordering === 'columns'
+                      ? pluginState.multiReorderIndexes
+                      : undefined
+                  }
+                />
+              </div>
+            )}
+          </div>
+          {!reordering && (
+            <div
+              ref={elem => {
+                this.rightShadow = elem;
+              }}
+              className={ClassName.TABLE_RIGHT_SHADOW}
+            />
+          )}
+        </div>
+      </DragDropContext>
     );
   }
+
+  private onBeforeCapture = ({ draggableId }: DragStart) => {
+    const { view } = this.props;
+    if (this.table && isActiveTable(view.state, this.table)) {
+      const type = draggableId.indexOf('row') > -1 ? 'rows' : 'columns';
+      onBeforeCapture(type as ReorderingType, this.table);
+    }
+  };
+
+  private onBeforeDragStart = ({ source, type }: DragStart) => {
+    const { view } = this.props;
+    const { state, dispatch } = view;
+    if (this.table && isActiveTable(state, this.table)) {
+      onBeforeReorderingStart(
+        this.props.node,
+        type as ReorderingType,
+        source.index,
+        this.table,
+        view,
+      )(state, dispatch);
+    }
+  };
+
+  private onDragEnd = (result: DropResult) => {
+    const {
+      view: { state, dispatch },
+      node,
+    } = this.props;
+
+    const tableStart = this.props.getPos() + 1;
+    const { multiReorderIndexes } = getPluginState(state);
+    onReorderingEnd(
+      node,
+      tableStart,
+      this.table,
+      result,
+      multiReorderIndexes,
+    )(state, dispatch);
+  };
+
+  private onReorderingRows = ({
+    rowIndex,
+    style,
+    draggableId,
+    contextId,
+  }: {
+    rowIndex: number;
+    style: { [key: string]: string };
+    draggableId: string;
+    contextId: string;
+  }) => {
+    const { state } = this.props.view;
+    const {
+      columnWidths,
+      rowHeights,
+      reorderIndex,
+      multiReorderIndexes,
+      reordering,
+      tableWidth,
+    } = getPluginState(state);
+    if (
+      isActiveTable(this.props.view.state, this.table) &&
+      reordering === 'rows'
+    ) {
+      onReorderingRows(
+        rowIndex,
+        style,
+        draggableId,
+        contextId,
+        this.props.node.attrs.isNumberColumnEnabled,
+        this.table,
+        rowHeights,
+        columnWidths,
+        tableWidth,
+        reorderIndex,
+        multiReorderIndexes,
+      );
+    }
+  };
+
+  private onReorderingColumns = ({
+    columnIndex,
+    style,
+    draggableId,
+    contextId,
+  }: {
+    columnIndex: number;
+    style: { [key: string]: string };
+    draggableId: string;
+    contextId: string;
+  }) => {
+    const { state } = this.props.view;
+    const {
+      columnWidths,
+      rowHeights,
+      reorderIndex,
+      multiReorderIndexes,
+      reordering,
+      tableWidth,
+    } = getPluginState(state);
+    if (isActiveTable(state, this.table) && reordering === 'columns') {
+      onReorderingColumns(
+        columnIndex,
+        style,
+        draggableId,
+        contextId,
+        this.table,
+        rowHeights,
+        columnWidths,
+        tableWidth,
+        reorderIndex,
+        multiReorderIndexes,
+      );
+    }
+  };
 
   private handleScroll = (event: Event) => {
     if (!this.wrapper || event.target !== this.wrapper) {

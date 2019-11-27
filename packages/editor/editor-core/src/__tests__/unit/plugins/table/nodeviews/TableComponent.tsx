@@ -68,7 +68,12 @@ describe('table -> nodeviews -> TableComponent.tsx', () => {
         />,
       );
 
-      expect(wrapper.hasClass(ClassName.WITH_CONTROLS)).toBeFalsy();
+      expect(
+        wrapper
+          .find(`.${ClassName.TABLE_CONTAINER}`)
+          .at(0)
+          .hasClass(ClassName.WITH_CONTROLS),
+      ).toBeFalsy();
     });
   });
 
@@ -95,7 +100,12 @@ describe('table -> nodeviews -> TableComponent.tsx', () => {
         />,
       );
 
-      expect(wrapper.hasClass(ClassName.WITH_CONTROLS)).toBeTruthy();
+      expect(
+        wrapper
+          .find(`.${ClassName.TABLE_CONTAINER}`)
+          .at(0)
+          .hasClass(ClassName.WITH_CONTROLS),
+      ).toBeTruthy();
     });
   });
 });

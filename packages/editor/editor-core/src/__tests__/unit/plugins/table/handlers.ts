@@ -1,6 +1,5 @@
 import { DecorationSet } from 'prosemirror-view';
 import { TextSelection } from 'prosemirror-state';
-import { addColumnAt } from 'prosemirror-utils';
 import {
   doc,
   createEditorFactory,
@@ -13,10 +12,7 @@ import {
   pluginKey,
   defaultTableSelection,
 } from '../../../../plugins/table/pm-plugins/main';
-import {
-  TablePluginState,
-  TableDecorations,
-} from '../../../../plugins/table/types';
+import { TablePluginState } from '../../../../plugins/table/types';
 import { handleDocOrSelectionChanged } from '../../../../plugins/table/handlers';
 
 describe('table action handlers', () => {
@@ -97,32 +93,6 @@ describe('table action handlers', () => {
         );
 
         expect(newState.decorationSet).toEqual(oldState.decorationSet);
-      });
-
-      it('should update column controls decorations', () => {
-        const pluginState = {
-          ...defaultPluginState,
-        };
-        const { editorView } = editor(
-          doc(table()(tr(tdCursor, tdEmpty), tr(tdEmpty, tdEmpty))),
-        );
-        const { state } = editorView;
-
-        editorView.dispatch(addColumnAt(2)(state.tr));
-
-        const newState = handleDocOrSelectionChanged(
-          editorView.state.tr,
-          pluginState,
-        );
-        const expectedDecorationSet = newState.decorationSet;
-        const decorations = expectedDecorationSet.find(
-          undefined,
-          undefined,
-          spec =>
-            spec.key.indexOf(TableDecorations.COLUMN_CONTROLS_DECORATIONS) > -1,
-        );
-
-        expect(decorations).toHaveLength(3);
       });
     });
   });

@@ -1,15 +1,12 @@
 import { snapshot, initFullPageEditorWithAdf, Device } from '../_utils';
 import complexTableWithMergedCells from './__fixtures__/complex-table-with-merged-cells.adf.json';
 import lastColumnMergedTable from './__fixtures__/last-column-merged-table.adf.json';
-import tableWithNumberedColumn from './__fixtures__/table-with-numbered-column.adf.json';
 import {
   selectRow,
   selectColumn,
   selectTable,
-  selectNumberedColumnRow,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
-import { selectors } from '../../__helpers/page-objects/_editor';
 import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Snapshot Test: Table selection', () => {
@@ -123,35 +120,6 @@ describe('Snapshot Test: Table selection', () => {
 
     it('should be able select the table', async () => {
       await selectTable(page);
-    });
-  });
-
-  describe('Current selection is outside Table', () => {
-    beforeEach(async () => {
-      // This ADF covers ED-6912
-      await initFullPageEditorWithAdf(
-        page,
-        tableWithNumberedColumn,
-        Device.LaptopMDPI,
-      );
-    });
-
-    it(`should select the clicked row`, async () => {
-      await page.waitForSelector(selectors.lastEditorParagraph);
-      await page.click(selectors.lastEditorParagraph);
-      await selectNumberedColumnRow(1);
-    });
-
-    it(`should select from the clicked row to last row`, async () => {
-      await page.waitForSelector(selectors.lastEditorParagraph);
-      await page.click(selectors.lastEditorParagraph);
-      await selectNumberedColumnRow(1, true);
-    });
-
-    it(`should select from the clicked row to last first`, async () => {
-      await page.waitForSelector(selectors.firstEditorParagraph);
-      await page.click(selectors.firstEditorParagraph);
-      await selectNumberedColumnRow(1, true);
     });
   });
 });

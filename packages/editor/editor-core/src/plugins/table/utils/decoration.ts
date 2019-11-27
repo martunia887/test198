@@ -1,12 +1,7 @@
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { Node as PmNode } from 'prosemirror-model';
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
-import {
-  getCellsInRow,
-  ContentNodeWithPos,
-  getSelectionRect,
-  findTable,
-} from 'prosemirror-utils';
+import { getSelectionRect, findTable } from 'prosemirror-utils';
 import { TableMap } from 'prosemirror-tables';
 import { CellAttributes } from '@atlaskit/adf-schema';
 import {
@@ -120,34 +115,6 @@ export const createColumnSelectedDecorations = (
       },
       {
         key: `${TableDecorations.COLUMN_SELECTED}_${index}`,
-      },
-    );
-  });
-};
-
-export const createColumnControlsDecoration = (
-  selection: Selection,
-): Decoration[] => {
-  const cells: ContentNodeWithPos[] = getCellsInRow(0)(selection) || [];
-  let index = 0;
-  return cells.map(cell => {
-    const colspan = (cell.node.attrs as CellAttributes).colspan || 1;
-    const element = document.createElement('div');
-    element.classList.add(ClassName.COLUMN_CONTROLS_DECORATIONS);
-    element.dataset.startIndex = `${index}`;
-    index += colspan;
-    element.dataset.endIndex = `${index}`;
-
-    return Decoration.widget(
-      cell.pos + 1,
-      // Do not delay the rendering for this Decoration
-      // because we need to always render all controls
-      // to keep the order safe
-      element,
-      {
-        key: `${TableDecorations.COLUMN_CONTROLS_DECORATIONS}_${index}`,
-        // this decoration should be the first one, even before gap cursor.
-        side: -100,
       },
     );
   });
