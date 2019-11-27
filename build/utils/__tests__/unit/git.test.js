@@ -1,13 +1,13 @@
 // @flow
-const { getParentFor } = require('./../../git');
+const { getParent } = require('./../../git');
 
 describe('getParentFor >', () => {
   test('remove-duplicated-packages should return develop as a parent', async () => {
-    const parent = await getParentFor('remove-duplicated-packages');
+    const parent = await getParent('remove-duplicated-packages');
     expect(parent).toBe('develop');
   });
-  test('follow-up-build should return master as a parent', async () => {
-    const parent = await getParentFor('follow-up-build');
+  test('add-stricter-rules should return master as a parent', async () => {
+    const parent = await getParent('add-stricter-rules');
     expect(parent).toBe('master');
   });
 });

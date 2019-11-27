@@ -274,26 +274,17 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
   return unpublishedCommits;
 }
 
-async function getParentFor(branchName /*: ?string */) {
-  let parentBranch = '';
+async function getParent(branchName /*: string */) {
+  const lastDevelopCommits = (await getCommitsSince('develop')).pop();
+  let branchCommits = [];
   try {
-    const defaultParentBranch = process.env.TARGET_BRANCH || 'develop';
-
-    const gitCmd = await spawn('git', [
-      'branch',
-      '--contains',
-      `${defaultParentBranch}`,
-    ]);
-    const targetBranches = gitCmd.stdout.trim().replace(/"/g, '');
-    const getCurrentBranch = branchName || (await getBranchName());
-
-    parentBranch = targetBranches.includes(getCurrentBranch)
-      ? 'develop'
-      : 'master';
-  } catch (e /*: Error */) {
-    console.warn(`An error occured: ${e}`);
+    branchCommits = await getCommitsSince(branchName);
+  } catch (e) {
+    console.warn(`An error occured because of the branch not found in the tree :${e}.
+    \n it will default that the branch / commits was tipped off master`);
   }
-  return parentBranch;
+
+  return branchCommits.includes(lastDevelopCommits) ? 'develop' : 'master';
 }
 
 module.exports = {
@@ -315,5 +306,5 @@ module.exports = {
   getAllReleaseCommits,
   getAllChangesetCommits,
   getLastPublishCommit,
-  getParentFor,
+  getParent,
 };
