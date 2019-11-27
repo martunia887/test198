@@ -19,7 +19,7 @@ pipelines:
             - (cd build/ci-scripts && yarn stop-if-older-build)
             - yarn build
             # Bump all packages and their dependents using saved changesets.
-            - yarn changeset bump
+            - yarn changeset version
             # We push the bumped packages to master now as it's much better to fail whilst BB is
             # ahead of npm, than the other way round.
             - git push
@@ -32,7 +32,7 @@ pipelines:
             # which contains our changeset bump rather than the actual changes.
             - yarn build:editor-mobile-bridge
             # Release all unreleased packages.
-            - yarn changeset release --public
+            - yarn changeset publish
             - git push --tags # Push only the tags.
             - (cd build/ci-scripts && yarn restart-stopped-build)
           after-script:
@@ -386,7 +386,7 @@ pipelines:
                 - echo "We do this so that we know if the repo will be in an inconsistent state when this branch hits master"
                 - echo "If the step below fails, it's because a changeset may be bumping a package that is depended upon by a package that didn't exist when the changeset was created"
                 - echo "Read the very last error message, it will tell you exactly what is wrong (ignore all the first warnings you'll see)"
-                - yarn changeset bump
+                - yarn changeset version
               after-script:
                 - yarn send:stepFailureEvents
           - step:
@@ -567,13 +567,13 @@ pipelines:
                 - source ./build-setup.sh
                 - git fetch origin $BITBUCKET_BRANCH && git checkout $BITBUCKET_BRANCH && git checkout - && git merge $BITBUCKET_BRANCH --no-edit
                 - bolt install --frozen-lockfile
-                - export input=elements,bitbucket,css-packs,growth,help,helpers,home,jira,navigation,people-and-teams,search,teamwork-ecosystem,engagement-platform,server
+                - export input=elements,bitbucket,css-packs,growth,help,helpers,home,jira,navigation,people-and-teams,search,teamwork-ecosystem,engagement-platform,server,spa
                 - node build/ci-scripts/get.pkgs.in.team.js $input| xargs -n1 -P2 yarn measure --updateSnapshot --s3
               after-script:
                 - yarn send:bundleSize
               caches:
                 - node
-                
+
     # A pipeline to update a package's i18n translation messages.
     # Per package, it will push i18n messages and pull translations. This is based on the package.json (i18n:push, i18n:pull)
     # A pull request is created and assigned to defined reviewers.
@@ -621,4 +621,4 @@ pipelines:
             - git merge origin/master
             - git push origin HEAD
           after-script:
-          - yarn send:buildEvents
+            - yarn send:buildEvents

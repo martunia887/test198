@@ -7,6 +7,10 @@ import debounce from 'lodash.debounce';
 export interface Props {
   // Article Content
   body?: string;
+  // Function executed when the article rendering begins
+  onArticleRenderBegin?(): void;
+  // Function executed when the article rendering finishes
+  onArticleRenderDone?(): void;
 }
 
 export const ArticleBody = (props: Props) => {
@@ -16,36 +20,9 @@ export const ArticleBody = (props: Props) => {
   /**
    * Set article height
    */
-  const resizeIframe = (iframeRef: React.RefObject<HTMLIFrameElement>) => {
-    const currentIframe: HTMLIFrameElement | null = iframeRef.current;
-
-    if (!currentIframe) {
-      return;
-    }
-
-    if (currentIframe !== null && currentIframe.contentWindow !== null) {
-      const iframeContent: Element | null =
-        currentIframe.contentWindow.document.body.firstElementChild;
-      // if the iframe has content, set the height of the iframe body
-      // and of the iframe itself
-      if (iframeContent) {
-        const contentHeight: number = iframeContent.scrollHeight;
-        currentIframe.style.height = contentHeight + 'px';
-        setArticleHeight(`${contentHeight}px`);
-      }
-    }
-
-    return 0;
-  };
-
-  /**
-   * Set iframe content
-   * NOTE: I need to inject the content this way because I need to use srcDoc polyfill for IE11 and
-   * old versions of Edge
-   */
-  const setIframeContent = (
+  const resizeIframe = (
     iframeRef: React.RefObject<HTMLIFrameElement>,
-    body: string = '',
+    onArticleRenderDone?: () => void,
   ) => {
     const currentIframe: HTMLIFrameElement | null = iframeRef.current;
 
@@ -55,12 +32,23 @@ export const ArticleBody = (props: Props) => {
 
     if (currentIframe !== null && currentIframe.contentWindow !== null) {
       if (currentIframe.contentWindow.document.body) {
-        srcDoc.set(
-          currentIframe,
-          `<style>${resetCSS}</style><div style="overflow-x: hidden;">${body}</div>`,
-        );
+        const iframeContent: Element | null =
+          currentIframe.contentWindow.document.body.firstElementChild;
+        // if the iframe has content, set the height of the iframe body
+        // and of the iframe itself
+        if (iframeContent) {
+          const contentHeight: number = iframeContent.scrollHeight;
+          currentIframe.style.height = contentHeight + 'px';
+          setArticleHeight(`${contentHeight}px`);
+
+          if (onArticleRenderDone) {
+            onArticleRenderDone();
+          }
+        }
       }
     }
+
+    return 0;
   };
 
   /**
@@ -68,9 +56,39 @@ export const ArticleBody = (props: Props) => {
    * resize the iframe based on the new content
    */
   useEffect(() => {
-    setIframeContent(iframeRef, props.body);
+    /**
+     * Set iframe content
+     * NOTE: I need to inject the content this way because I need to use srcDoc polyfill for IE11 and
+     * old versions of Edge
+     */
+    const setIframeContent = (
+      iframeRef: React.RefObject<HTMLIFrameElement>,
+      body: string = '',
+      onArticleRenderBegin?: () => void,
+    ) => {
+      const currentIframe: HTMLIFrameElement | null = iframeRef.current;
+
+      if (!currentIframe) {
+        return;
+      }
+
+      if (currentIframe !== null && currentIframe.contentWindow !== null) {
+        if (currentIframe.contentWindow.document.body) {
+          srcDoc.set(
+            currentIframe,
+            `<style>${resetCSS}</style><div style="overflow-x: hidden;">${body}</div>`,
+          );
+
+          if (onArticleRenderBegin) {
+            onArticleRenderBegin();
+          }
+        }
+      }
+    };
+
+    setIframeContent(iframeRef, props.body, props.onArticleRenderBegin);
     resizeIframe(iframeRef);
-  }, [props.body]);
+  }, [props.body, props.onArticleRenderBegin]);
 
   /**
    * When the window is resized, resize the iframe
@@ -92,7 +110,7 @@ export const ArticleBody = (props: Props) => {
     if (currentIframe !== null && currentIframe.contentWindow !== null) {
       if (currentIframe.contentWindow.document.body) {
         currentIframe.onload = () => {
-          resizeIframe(iframeRef);
+          resizeIframe(iframeRef, props.onArticleRenderDone);
         };
       }
     }
@@ -100,6 +118,8 @@ export const ArticleBody = (props: Props) => {
     return () => {
       window.removeEventListener('resize', onWindowResize);
     };
+    // We only want this effect to run once - on initial mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return props.body ? (
