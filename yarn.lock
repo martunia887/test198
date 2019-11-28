@@ -9820,15 +9820,6 @@ http-parser-js@>=0.4.0:
   version "0.4.9"
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.4.9.tgz#ea1a04fb64adff0242e9974f297dd4c3cad271e1"
 
-http-proxy-agent@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/http-proxy-agent/-/http-proxy-agent-1.0.0.tgz#cc1ce38e453bf984a0f7702d2dd59c73d081284a"
-  integrity sha1-zBzjjkU7+YSg93AtLdWcc9CBKEo=
-  dependencies:
-    agent-base "2"
-    debug "2"
-    extend "3"
-
 http-proxy-middleware@~0.18.0:
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-0.18.0.tgz#0987e6bb5a5606e5a69168d8f967a87f15dd8aab"
@@ -14224,7 +14215,7 @@ pac-proxy-agent@^2.0.0:
     agent-base "^2.1.1"
     debug "^2.6.8"
     get-uri "^2.0.0"
-    http-proxy-agent "^1.0.0"
+    http-proxy-agent "^2.1.0"
     https-proxy-agent "^1.0.0"
     pac-resolver "^3.0.0"
     raw-body "^2.2.0"
@@ -15451,7 +15442,7 @@ proxy-agent@2:
   dependencies:
     agent-base "^4.2.0"
     debug "^2.6.8"
-    http-proxy-agent "^1.0.0"
+    http-proxy-agent "^2.1.0"
     https-proxy-agent "^1.0.0"
     lru-cache "^2.6.5"
     pac-proxy-agent "^2.0.0"
