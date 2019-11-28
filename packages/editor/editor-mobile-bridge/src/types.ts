@@ -42,7 +42,7 @@ export interface NativeFetchPayload {
   statusText: string;
 }
 
-export type GetAccountIdPayload = string;
+export type GetAccountIdPayload = string | { accountId: string };
 
 export type GetResolvedLinkPayload = ResolveResponse;
 
