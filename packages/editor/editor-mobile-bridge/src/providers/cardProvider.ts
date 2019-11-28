@@ -6,7 +6,10 @@ import {
 } from '@atlaskit/smart-card';
 import { createPromise } from '../cross-platform-promise';
 
-export class EditorMobileCardProvider extends EditorCardProvider {
+export const createCardProvider = async () => new EditorMobileCardProvider();
+export const createCardClient = () => new MobileSmartCardClient();
+
+class EditorMobileCardProvider extends EditorCardProvider {
   async resolve(url: string, appearance: CardAppearance): Promise<any> {
     /*
      * Called when a link is pasted inisde
@@ -30,7 +33,7 @@ export class EditorMobileCardProvider extends EditorCardProvider {
   }
 }
 
-export class MobileSmartCardClient extends Client {
+class MobileSmartCardClient extends Client {
   async fetchData(url: string) {
     /*
      *
@@ -51,6 +54,3 @@ export class MobileSmartCardClient extends Client {
       );
   }
 }
-
-export const cardProvider = new EditorMobileCardProvider();
-export const cardClient = new MobileSmartCardClient();

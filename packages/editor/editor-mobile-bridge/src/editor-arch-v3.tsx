@@ -12,23 +12,41 @@ import FabricAnalyticsListeners, {
 } from '@atlaskit/analytics-listeners';
 import { toNativeBridge } from './editor/web-to-native';
 import WebBridgeImpl from './editor/native-to-web';
-import { cardClient } from './providers/cardProvider';
 import { EditorViewWithComposition } from './types';
 import {
   initPluginListeners,
   destroyPluginListeners,
 } from './editor/plugin-subscription';
-import { providerFactory } from './providers';
+import { createProviders } from './providers';
 import MobilePicker from './editor/MobileMediaPicker';
-import { ProviderFactoryProvider } from '@atlaskit/editor-common/provider-factory';
+import {
+  ProviderFactory,
+  ProviderFactoryProvider,
+} from '@atlaskit/editor-common/provider-factory';
+import { Client as EditorCardClient } from '@atlaskit/smart-card';
 
 // Expose WebBridge instance for use by native side
 const bridge = new WebBridgeImpl();
 window.bridge = bridge;
 
-function main(window: Window, document: Document) {
+async function main(window: Window, document: Document) {
   const params = new URLSearchParams(window.location.search);
   const mode = determineMode(params.get('mode'));
+
+  const {
+    cardClient,
+    mentionProvider,
+    emojiProvider,
+    mediaProvider,
+    taskDecisionProvider,
+  } = await createProviders();
+
+  const providerFactory = ProviderFactory.create({
+    mentionProvider: Promise.resolve(mentionProvider),
+    emojiProvider: Promise.resolve(emojiProvider),
+    mediaProvider: Promise.resolve(mediaProvider),
+    taskAndDecisionProvider: Promise.resolve(taskDecisionProvider),
+  });
 
   const actions = bridge.editorActions;
 
@@ -42,10 +60,12 @@ function main(window: Window, document: Document) {
 
   ReactDOM.render(
     <MobileEditorArchV3
-      editorActions={bridge.editorActions}
-      mode={mode}
-      mediaPicker={mediaPicker}
       analyticsClient={analyticsClient}
+      cardClient={cardClient}
+      editorActions={bridge.editorActions}
+      mediaPicker={mediaPicker}
+      mode={mode}
+      providerFactory={providerFactory}
       onChange={() => {
         toNativeBridge.updateText(bridge.getContent());
       }}
@@ -69,10 +89,12 @@ function main(window: Window, document: Document) {
 }
 
 interface MobileEditorArchV3Props {
+  cardClient: EditorCardClient;
   editorActions: EditorActions;
   mode: 'dark' | 'light';
   mediaPicker: MobilePicker;
   analyticsClient: AnalyticsWebClient;
+  providerFactory: ProviderFactory;
   onDestroy?(): void;
   onChange?(content: any): void;
   onMount?(actions: EditorActions): void;
@@ -80,11 +102,11 @@ interface MobileEditorArchV3Props {
 
 function MobileEditorArchV3(props: MobileEditorArchV3Props): JSX.Element {
   return (
-    <ProviderFactoryProvider value={providerFactory}>
+    <ProviderFactoryProvider value={props.providerFactory}>
       <FabricAnalyticsListeners client={props.analyticsClient}>
         {/* Temporarily opting out of the default oauth2 flow for phase 1 of Smart Links */}
         {/* See https://product-fabric.atlassian.net/browse/FM-2149 for details. */}
-        <SmartCardProvider client={cardClient} authFlow="disabled">
+        <SmartCardProvider client={props.cardClient} authFlow="disabled">
           <AtlaskitThemeProvider mode={props.mode}>
             <EditorPresetMobile
               media={{

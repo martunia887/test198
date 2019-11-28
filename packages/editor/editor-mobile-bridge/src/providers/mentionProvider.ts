@@ -9,31 +9,17 @@ import {
 import { AccountId } from '../types';
 import { createPromise } from '../cross-platform-promise';
 
-function createMentionProvider() {
-  return createPromise<AccountId>('getAccountId')
-    .submit()
-    .then(
-      accountId =>
-        new MentionResource({
-          // Required attrib. Requests will happen natively.
-          url: 'http://',
-          shouldHighlightMention: (mention: MentionDescription) => {
-            if (accountId && accountId === mention.id) {
-              return true;
-            }
-            return false;
-          },
-        }),
-    )
-    .catch(err => {
-      // eslint-disable-next-line no-console
-      console.error(
-        `Could not construct a MentionProvider, the following exception occurred:`,
-        err,
-      );
+export async function createMentionProvider(): Promise<MentionResource> {
+  const accountId = await createPromise<AccountId>('getAccountId').submit();
 
-      return new MentionResource({ url: 'http://' });
-    });
+  return new MentionResource({
+    // Required attrib. Requests will happen natively.
+    url: 'http://',
+    shouldHighlightMention: (mention: MentionDescription) => {
+      if (accountId && accountId === mention.id) {
+        return true;
+      }
+      return false;
+    },
+  });
 }
-
-export default createMentionProvider();

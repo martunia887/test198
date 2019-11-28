@@ -12,34 +12,30 @@ import { mockFetchFor } from './utils';
  */
 const elementsConfigPromise = createPromise<ElementsConfig>('getConfig');
 
-function createEmojiProvider() {
-  return elementsConfigPromise
-    .submit()
-    .then(elementsConfig => {
-      const emojiConfig = createEmojiConfig(elementsConfig);
-
-      /**
-       * iOS has no stable APIs to intercept requests.
-       * So we mock out fetch for specific URLs and send them to native.
-       * This bypasses a number of issues introduced when working via the
-       * file protocol (CORS, cookie support, null origin etc).
-       * TODO: We should send all fetch requests to iOS for processing,
-       *       to be as consistent as possible.
-       */
-      if (window.webkit) {
-        mockFetchFor(emojiConfig.providers.map(p => p.url));
-      }
-
-      return new EmojiResource(emojiConfig);
-    })
-    .catch((error: any) => {
-      // eslint-disable-next-line no-console
-      console.error(
-        'Failed to resolve ElementsConfig via `getConfig`. Please authenticate and try again.',
-        error,
-      );
-      return new EmojiResource(createEmojiConfig());
-    });
+export async function createEmojiProvider() {
+  try {
+    const elementsConfig = await elementsConfigPromise.submit();
+    const emojiConfig = createEmojiConfig(elementsConfig);
+    /**
+     * iOS has no stable APIs to intercept requests.
+     * So we mock out fetch for specific URLs and send them to native.
+     * This bypasses a number of issues introduced when working via the
+     * file protocol (CORS, cookie support, null origin etc).
+     * TODO: We should send all fetch requests to iOS for processing,
+     *       to be as consistent as possible.
+     */
+    if (window.webkit) {
+      mockFetchFor(emojiConfig.providers.map(p => p.url));
+    }
+    return new EmojiResource(emojiConfig);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      'Failed to resolve ElementsConfig via `getConfig`. Please authenticate and try again.',
+      error,
+    );
+    return new EmojiResource(createEmojiConfig());
+  }
 }
 
 function createEmojiConfig(
@@ -60,5 +56,3 @@ function createEmojiConfig(
 
   return { providers };
 }
-
-export default createEmojiProvider();

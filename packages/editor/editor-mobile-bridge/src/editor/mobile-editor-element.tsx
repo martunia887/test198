@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
 import { EditorViewWithComposition } from '../types';
-import {
-  Editor,
-  MediaProvider as MediaProviderType,
-  EditorProps,
-} from '@atlaskit/editor-core';
+import { Editor, EditorProps } from '@atlaskit/editor-core';
 import FabricAnalyticsListeners, {
   AnalyticsWebClient,
 } from '@atlaskit/analytics-listeners';
@@ -21,15 +17,10 @@ import {
   initPluginListeners,
   destroyPluginListeners,
 } from './plugin-subscription';
-import {
-  mediaProvider,
-  mentionProvider,
-  createTaskDecisionProvider,
-  emojiProvider,
-} from '../providers';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
-import { cardClient, cardProvider } from '../providers/cardProvider';
 import { analyticsBridgeClient } from '../analytics-client';
+import { Client as EditorCardClient } from '@atlaskit/smart-card';
+import { MediaProvider } from '@atlaskit/editor-core';
 
 export const bridge: WebBridgeImpl = ((window as any).bridge = new WebBridgeImpl());
 
@@ -74,12 +65,15 @@ class EditorWithState extends Editor {
   }
 }
 
-type Props = EditorProps & {
+type MobileEditorProps = EditorProps & {
   mode?: 'light' | 'dark';
-  mediaProvider?: Promise<MediaProviderType>;
+  cardClient: EditorCardClient;
+  mediaProvider: MediaProvider;
 };
 
-export default function mobileEditor(props: Props) {
+export const MobileEditor: React.FunctionComponent<MobileEditorProps> = (
+  props,
+): JSX.Element => {
   const mode = props.mode || 'light';
 
   // Temporarily opting out of the default oauth2 flow for phase 1 of Smart Links
@@ -91,15 +85,15 @@ export default function mobileEditor(props: Props) {
 
   return (
     <FabricAnalyticsListeners client={analyticsClient}>
-      <SmartCardProvider client={cardClient} authFlow={authFlow}>
+      <SmartCardProvider client={props.cardClient} authFlow={authFlow}>
         <AtlaskitThemeProvider mode={mode}>
           <EditorWithState
             appearance="mobile"
-            mentionProvider={Promise.resolve(mentionProvider)}
-            emojiProvider={Promise.resolve(emojiProvider)}
+            mentionProvider={props.mentionProvider}
+            emojiProvider={props.emojiProvider}
             media={{
               customMediaPicker: new MobilePicker(),
-              provider: props.mediaProvider || mediaProvider,
+              provider: Promise.resolve(props.mediaProvider),
               allowMediaSingle: true,
             }}
             allowConfluenceInlineComment={true}
@@ -111,9 +105,9 @@ export default function mobileEditor(props: Props) {
               allowControls: false,
             }}
             UNSAFE_cards={{
-              provider:
-                (props.UNSAFE_cards && props.UNSAFE_cards.provider) ||
-                Promise.resolve(cardProvider),
+              provider: props.UNSAFE_cards
+                ? props.UNSAFE_cards.provider
+                : undefined,
             }}
             allowExtension={true}
             allowTextColor={true}
@@ -125,11 +119,11 @@ export default function mobileEditor(props: Props) {
             }}
             allowAnalyticsGASV3={true}
             UNSAFE_allowExpand={true}
-            taskDecisionProvider={Promise.resolve(createTaskDecisionProvider())}
+            taskDecisionProvider={props.taskDecisionProvider}
             {...props}
           />
         </AtlaskitThemeProvider>
       </SmartCardProvider>
     </FabricAnalyticsListeners>
   );
-}
+};

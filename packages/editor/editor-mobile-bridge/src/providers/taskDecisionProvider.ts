@@ -9,11 +9,15 @@ import {
 
 type ToggleTaskCallback = (key: ObjectKey, state: TaskState) => void;
 
-export const objectKeyToString = (objectKey: ObjectKey) => {
+export const createTaskDecisionProvider = (
+  handleToggleTask?: ToggleTaskCallback,
+) => new TaskDecisionProviderImpl(handleToggleTask);
+
+const objectKeyToString = (objectKey: ObjectKey) => {
   const { objectAri, localId } = objectKey;
   return `${objectAri}:${localId}`;
 };
-export class TaskDecisionProviderImpl implements TaskDecisionProvider {
+class TaskDecisionProviderImpl implements TaskDecisionProvider {
   _handleToggleTask: ToggleTaskCallback | undefined;
   _handlers: Map<string, Handler>;
 
@@ -49,6 +53,3 @@ export class TaskDecisionProviderImpl implements TaskDecisionProvider {
     handler(state);
   }
 }
-
-export default (handleToggleTask?: ToggleTaskCallback) =>
-  new TaskDecisionProviderImpl(handleToggleTask);

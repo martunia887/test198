@@ -3,6 +3,8 @@
  */
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 
+export const createMockEmojiProvider = () => new EmojiProviderImpl();
+
 class EmojiProviderImpl implements EmojiProvider {
   findByShortName() {
     return undefined;
@@ -57,5 +59,3 @@ class EmojiProviderImpl implements EmojiProvider {
   subscribe() {}
   unsubscribe() {}
 }
-
-export default new EmojiProviderImpl();
