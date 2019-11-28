@@ -616,4 +616,10 @@ export default class Page {
   hasCapabilities() {
     return !!this.browser.capabilities;
   }
+
+  // Uploads local (selenium server) file to the client machine (where browser is running)
+  // Result is client local location
+  async uploadBase64File(base64Content: string): Promise<string> {
+    return this.browser.uploadFile(base64Content);
+  }
 }
