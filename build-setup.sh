@@ -12,6 +12,7 @@ git config --global push.default simple
 echo -e "\e[32m  Fetching master so that we have a reference to it..."
 git fetch origin master
 git checkout master # (master doesn't exist until we do this checkout)
+git checkout develop # (develop doesn't exist until we do this checkout)
 git checkout - # checks out the previous ref
 
 # we rebase at the very top of build so that we'll get any missing release commits.
