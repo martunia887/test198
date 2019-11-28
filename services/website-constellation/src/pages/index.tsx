@@ -14,7 +14,6 @@ const Homepage = () => (
 
     <RadioGroup
       label="Pick a color"
-      onChange={() => console.log('radio!')}
       defaultValue={radioValues[2].value}
       options={radioValues}
     />

@@ -2,7 +2,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-module.exports = ({ packages, ...options }) => {
+module.exports = ({ packages }) => {
   return {
     plugins: [
       `gatsby-plugin-typescript`,
