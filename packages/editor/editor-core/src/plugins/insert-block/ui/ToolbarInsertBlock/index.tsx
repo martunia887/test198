@@ -717,7 +717,6 @@ class ToolbarInsertBlock extends React.PureComponent<
       });
     }
     items.sort((a, b) => (a.content < b.content ? -1 : 1));
-    // console.log('items', items)
     return items;
   };
 
