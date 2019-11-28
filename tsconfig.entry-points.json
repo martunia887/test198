@@ -1167,6 +1167,10 @@
         "../../editor/editor-core/src/labs-next",
         "./packages/editor/editor-core/src/labs-next"
       ],
+      "@atlaskit/editor-core/test-utils": [
+        "../../editor/editor-core/src/test-utils",
+        "./packages/editor/editor-core/src/test-utils"
+      ],
       "@atlaskit/editor-core/messages": [
         "../../editor/editor-core/src/messages",
         "./packages/editor/editor-core/src/messages"
@@ -1290,6 +1294,10 @@
       "@atlaskit/editor-test-helpers/create-editor": [
         "../../editor/editor-test-helpers/src/create-editor",
         "./packages/editor/editor-test-helpers/src/create-editor"
+      ],
+      "@atlaskit/editor-test-helpers/create-prosemirror-editor": [
+        "../../editor/editor-test-helpers/src/create-prosemirror-editor",
+        "./packages/editor/editor-test-helpers/src/create-prosemirror-editor"
       ],
       "@atlaskit/editor-test-helpers/create-event": [
         "../../editor/editor-test-helpers/src/create-event",
