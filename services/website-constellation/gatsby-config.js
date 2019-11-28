@@ -83,8 +83,5 @@ module.exports = {
         ],
       },
     },
-    {
-      resolve: require.resolve('@brisk-docs/gatsby-plugin'),
-    },
   ],
 };
