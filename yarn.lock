@@ -6564,14 +6564,14 @@ debug@2.2.0:
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   integrity sha1-+HBX6ZWxofauaklgZkE3vFbwOdo=
   dependencies:
-    ms "0.7.1"
+    ms "2.0.0"
 
 debug@2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
   integrity sha1-QMRT5n5uE8kB3ewxeviYbNqe/4w=
   dependencies:
-    ms "0.7.2"
+    ms "2.0.0"
 
 debug@2.6.8:
   version "2.6.8"
@@ -15443,7 +15443,7 @@ proxy-agent@2:
     agent-base "^4.2.0"
     debug "^2.6.8"
     http-proxy-agent "^2.1.0"
-    https-proxy-agent "^1.0.0"
+    https-proxy-agent "^2.1.0"
     lru-cache "^2.6.5"
     pac-proxy-agent "^2.0.0"
     socks-proxy-agent "^3.0.0"
