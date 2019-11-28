@@ -104,7 +104,7 @@
     "snake-case": "^2.1.0",
     "styled-components": "^3.2.6",
     "tti-polyfill": "^0.2.2",
-    "uglify-js": "^3.1.7",
+    "uglify-js": "^3.7.0",
     "uuid": "^3.1.0"
   },
   "peerDependencies": {

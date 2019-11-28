@@ -562,7 +562,6 @@
     "tti-polyfill": "^0.2.2",
     "typestyle": "^1.4.4",
     "ua-parser-js": "^0.7.9",
-    "uglify-js": "^3.1.7",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "unescape": "^1.0.1",
     "unstated": "^1.2.0",
