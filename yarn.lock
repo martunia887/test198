@@ -11766,7 +11766,7 @@ landkid@^0.2.10:
     html-webpack-plugin "^3.2.0"
     load-json-file "^4.0.0"
     lockfile "^1.0.3"
-    morgan "^1.9.0"
+    morgan "^1.9.1"
     p-retry "^2.0.0"
     path-exists "^3.0.0"
     qs "^6.5.2"
@@ -13147,7 +13147,7 @@ moment@^2.22.2:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
 morgan@^1.9.0:
-  version "1.9.0"
+  version "1.9.1"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.0.tgz#d01fa6c65859b76fcf31b3cb53a3821a311d8051"
   dependencies:
     basic-auth "~2.0.0"
