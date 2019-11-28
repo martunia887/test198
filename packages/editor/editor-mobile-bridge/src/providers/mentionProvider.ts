@@ -1,15 +1,26 @@
-/**
- * In order to enable mentions in Editor we must set both properties: allowMentions and mentionProvider.
- * So this type is supposed to be a stub version of mention provider. We don't actually need it.
- */
+import * as url from 'url';
 import {
   MentionDescription,
   MentionResource,
 } from '@atlaskit/mention/resource';
 import { createPromise } from '../cross-platform-promise';
+import { mockFetchFor } from './utils';
 
 async function createMentionProvider() {
   try {
+    const { baseUrl, cloudId, productId } = await createPromise(
+      'getConfig',
+    ).submit();
+    let serviceUrl = url.resolve(baseUrl, `mentions/`);
+
+    if (typeof cloudId === 'string') {
+      serviceUrl = url.resolve(serviceUrl, `${cloudId}/`);
+    }
+
+    if (window.webkit) {
+      mockFetchFor([serviceUrl]);
+    }
+
     const accountIdResponse = await createPromise('getAccountId').submit();
 
     const accountId =
@@ -18,8 +29,8 @@ async function createMentionProvider() {
         : accountIdResponse.accountId;
 
     return new MentionResource({
-      // Required attrib. Requests will happen natively.
-      url: 'http://',
+      url: serviceUrl,
+      productId,
       shouldHighlightMention: (mention: MentionDescription) => {
         if (accountId === mention.id) {
           return true;
