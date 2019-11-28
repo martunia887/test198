@@ -15,48 +15,49 @@ export type RecentUploadCard = {
  * Popup Simple Example Page Object
  * @see https://www.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern
  */
-export class PopupSimplePage {
-  constructor(private readonly page: any) {}
-
+export class PopupSimplePage extends Page {
   async clickUploadButton(): Promise<void> {
     const selector = '[data-testid="media-picker-upload-button"]';
-    await this.page.waitForSelector(selector);
-    await this.page.click(selector);
+    await this.waitForSelector(selector);
+    await this.click(selector);
   }
 
   async getRecentUploadCards(): Promise<RecentUploadCard[]> {
     const selector =
-      '[data-testid="media-picker-uploading-media-card"], [data-testid="media-picker-recent-media-card"]';
-    const results = await this.page.getHTML(selector);
-    return results.map((html: string) => {
-      const div = document.createElement('div');
-      div.innerHTML = html.trim();
-      const element = div.querySelector('.title .ellipsed-text');
-      return {
-        filename: element && element.textContent,
-      };
-    });
+      '[data-testid="media-picker-uploading-media-card"] [data-testid="media-card-file-name"], ' +
+      '[data-testid="media-picker-recent-media-card"] [data-testid="media-card-file-name"]';
+    const result = await this.$$(selector);
+    return Promise.all(
+      result.map(async (element: any) => {
+        const filename = await element.getHTML(false);
+        return {
+          filename: filename,
+        };
+      }),
+    );
   }
 
   async getRecentUploadCard(
     filename: string,
   ): Promise<RecentUploadCard | undefined> {
-    await this.page.waitUntil(async () =>
-      (await this.getRecentUploadCards()).some(cardWithFilename(filename)),
-    );
-    return (await this.getRecentUploadCards()).find(cardWithFilename(filename));
+    const targetCard = cardWithFilename(filename);
+    await this.waitUntil(async () => {
+      const cards = await this.getRecentUploadCards();
+      return cards.some(targetCard);
+    });
+    return (await this.getRecentUploadCards()).find(targetCard);
   }
 
   async clickInsertButton(): Promise<void> {
-    await this.page.click('[data-testid="media-picker-insert-button"]');
+    await this.click('[data-testid="media-picker-insert-button"]');
   }
 
   async getEvents(): Promise<Event[]> {
-    return JSON.parse(await this.page.getText('#events'));
+    return JSON.parse(await this.getText('#events'));
   }
 
   async getEvent(name: keyof PopupUploadEventPayloadMap): Promise<Event> {
-    await this.page.waitUntil(async () =>
+    await this.waitUntil(async () =>
       (await this.getEvents()).some(eventWithName(name)),
     );
 
@@ -70,19 +71,33 @@ export class PopupSimplePage {
     }
   }
 
-  async uploadFile(localPath: string) {
-    await this.clickUploadButton();
-    await this.page.chooseFile('input', localPath);
+  async uploadFile(base64File: string) {
+    const filename = await this.uploadBase64File(base64File);
+    const fileInputSelector = '[data-testid="media-picker-file-input"]';
+    await this.waitForSelector(fileInputSelector);
+
+    // We want to make input visible in order to be able to "type" into it.
+    await this.execute(() => {
+      const element = document.querySelector<HTMLInputElement>(
+        '[data-testid="media-picker-file-input"]',
+      );
+      if (element && element.style) {
+        element.style.display = 'block';
+      }
+    });
+
+    await this.type(fileInputSelector, filename);
+    await this.waitForSelector('[data-testid="media-picker-insert-button"]');
   }
 }
 
 export async function gotoPopupSimplePage(
-  client: any,
+  client: BrowserObject,
 ): Promise<PopupSimplePage> {
-  const page = new Page(client);
+  const page = new PopupSimplePage(client);
   const url = getExampleUrl('media', 'media-picker', 'popup-simple');
   await page.goto(url);
-  return new PopupSimplePage(page);
+  return page;
 }
 
 function eventWithName(name: string) {
