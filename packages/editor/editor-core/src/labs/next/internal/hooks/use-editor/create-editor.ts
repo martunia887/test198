@@ -100,7 +100,6 @@ export function createEditor({
     popupsBoundariesElement,
     popupsScrollableElement,
 
-    disabled,
     providerFactory,
     onChange,
     onDestroy,

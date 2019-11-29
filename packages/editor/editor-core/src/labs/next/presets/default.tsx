@@ -28,7 +28,7 @@ interface EditorPresetDefaultProps {
 
 export function useDefaultPreset() {
   const preset: PluginsPreset = [
-    pastePlugin,
+    [pastePlugin, {}],
     basePlugin,
     blockTypePlugin,
     clearMarksOnChangeToEmptyDocumentPlugin,

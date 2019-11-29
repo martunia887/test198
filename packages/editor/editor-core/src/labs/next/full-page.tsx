@@ -9,6 +9,7 @@ import {
 import { BaseTheme, akEditorMenuZIndex } from '@atlaskit/editor-common';
 import ContentStyles from '../../ui/ContentStyles';
 import WidthEmitter from '../../ui/WidthEmitter';
+
 import { ClickAreaBlock } from '../../ui/Addon';
 import { scrollbarStyles } from '../../ui/styles';
 import { tableFullPageEditorStyles } from '../../plugins/table/ui/styles';
@@ -19,8 +20,8 @@ import EditorActions from '../../actions';
 import {
   Editor,
   EditorContent,
-  EditorSharedConfigConsumer,
   EditorSharedConfig,
+  useEditorSharedConfig,
 } from './Editor';
 import { Toolbar } from './Toolbar';
 import { ContentComponents } from './ContentComponents';
@@ -175,6 +176,7 @@ function FullPage(props: FullPageProps) {
   } = props;
   const handleAnalyticsEvent = useCreateAnalyticsHandler(createAnalyticsEvent);
   const [showKeyline, scrollContainerRef] = useKeyline();
+  const config = useEditorSharedConfig();
 
   return (
     <Editor {...props} onAnalyticsEvent={handleAnalyticsEvent}>
@@ -183,22 +185,19 @@ function FullPage(props: FullPageProps) {
           <MainToolbar showKeyline={showKeyline}>
             <Toolbar />
             <MainToolbarCustomComponentsSlot>
-              <EditorSharedConfigConsumer>
-                {config =>
-                  !config ? null : (
-                    <Avatars
-                      editorView={config.editorView}
-                      eventDispatcher={config.eventDispatcher}
-                      inviteToEditHandler={
-                        collabEdit && collabEdit.inviteToEditHandler
-                      }
-                      isInviteToEditButtonSelected={
-                        collabEdit && collabEdit.isInviteToEditButtonSelected
-                      }
-                    />
-                  )
-                }
-              </EditorSharedConfigConsumer>
+              {!config ? null : (
+                <Avatars
+                  editorView={config.editorView}
+                  eventDispatcher={config.eventDispatcher}
+                  inviteToEditHandler={
+                    collabEdit && collabEdit.inviteToEditHandler
+                  }
+                  isInviteToEditButtonSelected={
+                    collabEdit && collabEdit.isInviteToEditButtonSelected
+                  }
+                />
+              )}
+
               {primaryToolbarComponents}
             </MainToolbarCustomComponentsSlot>
           </MainToolbar>
@@ -206,33 +205,25 @@ function FullPage(props: FullPageProps) {
             innerRef={scrollContainerRef}
             className="fabric-editor-popup-scroll-parent"
           >
-            <EditorSharedConfigConsumer>
-              {config => (
-                <ClickAreaBlock
-                  editorView={(config || ({} as EditorSharedConfig)).editorView}
+            <ClickAreaBlock
+              editorView={(config || ({} as EditorSharedConfig)).editorView}
+            >
+              <ContentArea>
+                <div
+                  style={{ padding: `0 ${GUTTER_PADDING}px` }}
+                  className="ak-editor-content-area"
                 >
-                  <ContentArea>
-                    <div
-                      style={{ padding: `0 ${GUTTER_PADDING}px` }}
-                      className="ak-editor-content-area"
-                    >
-                      {contentComponents}
-                      <EditorContent />
-                      <ContentComponents />
-                    </div>
-                  </ContentArea>
-                </ClickAreaBlock>
-              )}
-            </EditorSharedConfigConsumer>
+                  {contentComponents}
+                  <EditorContent />
+                  <ContentComponents />
+                </div>
+              </ContentArea>
+            </ClickAreaBlock>
           </ScrollContainer>
-          <EditorSharedConfigConsumer>
-            {config => (
-              <WidthEmitter
-                editorView={(config || ({} as EditorSharedConfig)).editorView!}
-                contentArea={scrollContainerRef.current}
-              />
-            )}
-          </EditorSharedConfigConsumer>
+          <WidthEmitter
+            editorView={(config || ({} as EditorSharedConfig)).editorView!}
+            contentArea={scrollContainerRef.current}
+          />
         </FullPageEditorWrapper>
       </BaseTheme>
     </Editor>

@@ -6,9 +6,7 @@ import { pluginFactory } from '../../utils/plugin-state-factory';
 
 export const pluginKey = new PluginKey('editorDisabledPlugin');
 
-export type EditorDisabledPluginState = {
-  editorDisabled: boolean;
-};
+export type EditorDisabledPluginState = { editorDisabled: boolean };
 
 function reducer(
   _pluginState: EditorDisabledPluginState,
@@ -17,7 +15,7 @@ function reducer(
   return meta;
 }
 
-const { createPluginState } = pluginFactory(pluginKey, reducer);
+const { createPluginState, getPluginState } = pluginFactory(pluginKey, reducer);
 
 /*
 Stores the state of the editor enabled/disabled for panel and floating
@@ -30,6 +28,20 @@ export function createPlugin(
   return new Plugin({
     key: pluginKey,
     state: createPluginState(dispatch, { editorDisabled: false }),
+    view: () => {
+      return {
+        update(view) {
+          if (getPluginState(view.state).editorDisabled !== !view.editable) {
+            const tr = view.state.tr.setMeta(pluginKey, {
+              editorDisabled: !view.editable,
+            } as EditorDisabledPluginState);
+
+            tr.setMeta('isLocal', true);
+            view.dispatch(tr);
+          }
+        },
+      };
+    },
   });
 }
 
