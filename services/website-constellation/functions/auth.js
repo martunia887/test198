@@ -6,7 +6,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { passport } = require('./passport');
 const routes = require('./routes');
-const { constellationUrl } = require('./constants');
+const { constellationUrl, cookieSecret } = require('./constants');
 
 app.use(
   cors({
@@ -16,7 +16,7 @@ app.use(
 );
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(require('cookie-parser')(process.env.COOKIE_SECRET));
+app.use(require('cookie-parser')(cookieSecret));
 
 app.use(passport.initialize());
 

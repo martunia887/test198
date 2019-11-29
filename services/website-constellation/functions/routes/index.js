@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { logger } = require('../utils');
 const { constellationUrl, contentfulUrl } = require('../constants');
 function api(app, passport) {
   app.get(
@@ -54,7 +53,7 @@ function api(app, passport) {
         httpOnly: true,
         signed: true,
       });
-      res.redirect();
+      res.redirect(`${constellationUrl}/contentful`);
     },
   );
 }

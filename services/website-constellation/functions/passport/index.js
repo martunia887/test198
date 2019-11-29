@@ -2,14 +2,20 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const JWTStrategy = require('passport-jwt').Strategy;
 const JWTModule = require('jsonwebtoken');
-const { jwtSecret, expiry } = require('../constants');
+const {
+  jwtSecret,
+  jwtExpiry,
+  googleCallbackUrl,
+  googleClientId,
+  googleClientSecret,
+} = require('../constants');
 
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      clientID: googleClientId,
+      clientSecret: googleClientSecret,
+      callbackURL: googleCallbackUrl,
     },
     (
       accessToken,
@@ -18,7 +24,9 @@ passport.use(
       done,
     ) => {
       const profile = { displayName, photos };
-      const token = JWTModule.sign(profile, jwtSecret, { expiresIn: expiry });
+      const token = JWTModule.sign(profile, jwtSecret, {
+        expiresIn: jwtExpiry,
+      });
       return done(null, { profile, token });
     },
   ),
@@ -38,7 +46,7 @@ passport.use(
     ({ displayName, photos }, done) => {
       try {
         const token = JWTModule.sign({ displayName, photos }, jwtSecret, {
-          expiresIn: expiry,
+          expiresIn: jwtExpiry,
         });
         return done(null, { displayName, photos, token });
       } catch (e) {
