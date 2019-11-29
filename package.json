@@ -260,7 +260,7 @@
     "webdriverio": "^5.7.14",
     "webpack": "^4.16.1",
     "webpack-bundle-analyzer": "^2.13.0",
-    "webpack-dev-server": "^3.1.4",
+    "webpack-dev-server": "^3.9.0",
     "xhr-mock": "^2.4.0",
     "xmlhttprequest": "^1.8.0"
   },
@@ -346,7 +346,7 @@
     "apply-ref": "^0.2.0",
     "array-find": "^1.0.0",
     "async-retry": "^1.2.3",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-plugin-react-intl": "^2.4.0",
     "babel-plugin-react-intl-pot": "^0.5.7",
