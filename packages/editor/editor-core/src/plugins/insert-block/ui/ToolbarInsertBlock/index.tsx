@@ -716,6 +716,7 @@ class ToolbarInsertBlock extends React.PureComponent<
         elemBefore: <EditorMoreIcon label={labelViewMore} />,
       });
     }
+
     items.sort((a, b) => (a.content < b.content ? -1 : 1));
     return items;
   };
