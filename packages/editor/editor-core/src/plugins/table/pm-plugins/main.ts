@@ -18,6 +18,9 @@ import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { pluginFactory } from '../../../utils/plugin-state-factory';
 
 import { createTableView } from '../nodeviews/table';
+import { createRowView } from '../nodeviews/tableRow';
+import { createCellView } from '../nodeviews/tableCell';
+
 import {
   setTableRef,
   clearHoverSelection,
@@ -199,6 +202,9 @@ export const createPlugin = (
             isFullWidthModeEnabled,
             wasFullWidthModeEnabled,
           }),
+        tableRow: createRowView,
+        tableCell: createCellView,
+        tableHeader: createCellView,
       },
 
       handleDOMEvents: {

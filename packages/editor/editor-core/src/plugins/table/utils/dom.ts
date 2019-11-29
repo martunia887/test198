@@ -1,6 +1,13 @@
+import { EditorState } from 'prosemirror-state';
 import { TableCssClassName as ClassName } from '../types';
 import { closestElement, containsClassName } from '../../../utils';
 import { tableToolbarSize } from '../ui/styles';
+import { getPluginState } from '../pm-plugins/main';
+
+export const isActiveTable = (
+  state: EditorState,
+  tableNodeViewRef?: HTMLTableElement | null,
+) => tableNodeViewRef && tableNodeViewRef === getPluginState(state).tableRef;
 
 export const isCell = (node: HTMLElement): boolean => {
   return (
@@ -25,8 +32,8 @@ export const getColumnOrRowIndex = (target: HTMLElement): [number, number] => [
   parseInt(target.getAttribute('data-end-index') || '-1', 10),
 ];
 
-export const isColumnControlsDecorations = (node: HTMLElement): boolean =>
-  containsClassName(node, ClassName.COLUMN_CONTROLS_DECORATIONS);
+export const isColumnControlsButton = (node: HTMLElement): boolean =>
+  containsClassName(node, ClassName.COLUMN_CONTROLS_BUTTON);
 
 export const isRowControlsButton = (node: HTMLElement): boolean =>
   containsClassName(node, ClassName.ROW_CONTROLS_BUTTON) ||
@@ -36,8 +43,7 @@ export const isResizeHandleDecoration = (node: HTMLElement): boolean =>
   containsClassName(node, ClassName.RESIZE_HANDLE_DECORATION);
 
 export const isTableControlsButton = (node: HTMLElement): boolean =>
-  containsClassName(node, ClassName.CONTROLS_BUTTON) ||
-  containsClassName(node, ClassName.ROW_CONTROLS_BUTTON_WRAP);
+  containsClassName(node, ClassName.CONTROLS_BUTTON);
 
 /*
  * This function returns which side of a given element the mouse cursor is,
@@ -157,4 +163,28 @@ export const updateResizeHandles = (
   nodes.forEach(node => {
     node.style.height = `${height}px`;
   });
+};
+
+export const forEachNode = (
+  nodes: NodeListOf<Element>,
+  callback: (node: HTMLElement, index: number) => void,
+) => Array.prototype.slice.call(nodes).forEach(callback);
+
+export const forEachCell = (
+  tableRef: HTMLTableElement,
+  callback: (cell: HTMLElement, rowIndex: number, columnIndex: number) => void,
+) => {
+  if (!tableRef.lastChild) {
+    return;
+  }
+  for (
+    let i = 0, rowsCount = tableRef.lastChild.childNodes.length;
+    i < rowsCount;
+    i++
+  ) {
+    const row = tableRef.lastChild.childNodes[i];
+    for (let j = 0, colsCount = row.childNodes.length; j < colsCount; j++) {
+      callback(row.childNodes[j] as HTMLElement, i, j);
+    }
+  }
 };

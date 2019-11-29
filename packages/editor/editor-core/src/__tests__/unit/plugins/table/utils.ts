@@ -47,7 +47,6 @@ describe('table plugin: utils', () => {
         const columnsWidths = getColumnsWidths(editorView);
         columnsWidths.forEach(width => {
           expect(typeof width).toEqual('number');
-          expect(width && width > 0).toBe(true);
         });
       });
     });
@@ -65,7 +64,7 @@ describe('table plugin: utils', () => {
             ),
           );
           const columnsWidths = getColumnsWidths(editorView);
-          expect(columnsWidths).toEqual([1, undefined, 1]);
+          expect(columnsWidths).toEqual([0, undefined, 0]);
         });
       });
     });

@@ -137,6 +137,10 @@ export default class TableView extends ReactNodeView<Props> {
     );
   }
 
+  stopEvent() {
+    return !!getPluginState(this.view.state).reordering;
+  }
+
   ignoreMutation() {
     return true;
   }
@@ -208,7 +212,8 @@ export default class TableView extends ReactNodeView<Props> {
   };
 
   private handleMutation = (records: Array<MutationRecord>) => {
-    if (!records.length || !this.contentDOM) {
+    const { reordering } = getPluginState(this.view.state);
+    if (!records.length || !this.contentDOM || reordering) {
       return;
     }
 

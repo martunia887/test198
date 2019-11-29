@@ -13,7 +13,6 @@ import {
 import {
   findControlsHoverDecoration,
   updateNodeDecorations,
-  createColumnControlsDecoration,
   createColumnSelectedDecorations,
   TableSortStep,
 } from './utils';
@@ -26,15 +25,6 @@ const getDecorationSet = (
   tableNode?: PmNode,
 ): DecorationSet => {
   let decorationSet = DecorationSet.empty;
-
-  if (allowControls && tableNode) {
-    decorationSet = updateNodeDecorations(
-      tr.doc,
-      decorationSet,
-      createColumnControlsDecoration(tr.selection),
-      TableDecorations.COLUMN_CONTROLS_DECORATIONS,
-    );
-  }
 
   if (tr.selection instanceof CellSelection && tr.selection.isColSelection()) {
     decorationSet = updateNodeDecorations(

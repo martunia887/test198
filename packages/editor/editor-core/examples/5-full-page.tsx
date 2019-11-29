@@ -208,6 +208,8 @@ export class ExampleEditorComponent extends React.Component<
               allowTables={{
                 advanced: true,
                 allowColumnSorting: true,
+                allowReorderingColumns: true,
+                allowReorderingRows: true,
               }}
               allowBreakout={true}
               allowJiraIssue={true}

@@ -32,7 +32,7 @@ import {
 import {
   isCell,
   isInsertRowButton,
-  isColumnControlsDecorations,
+  isColumnControlsButton,
   isTableControlsButton,
   isRowControlsButton,
   isCornerButton,
@@ -47,7 +47,6 @@ import {
   showInsertRowButton,
   hideInsertColumnOrRowButton,
   addResizeHandleDecorations,
-  selectColumn,
   hoverColumns,
   clearHoverSelection,
   showResizeHandleLine,
@@ -80,12 +79,6 @@ export const handleClick = (view: EditorView, event: Event): boolean => {
   const element = event.target as HTMLElement;
   const table = findTable(view.state.selection)!;
 
-  if (event instanceof MouseEvent && isColumnControlsDecorations(element)) {
-    const [startIndex] = getColumnOrRowIndex(element);
-    const { state, dispatch } = view;
-
-    return selectColumn(startIndex, event.shiftKey)(state, dispatch);
-  }
   /**
    * Check if the table cell with an image is clicked
    * and its not the image itself
@@ -150,7 +143,7 @@ export const handleMouseOver = (
     return showInsertRowButton(positionRow)(state, dispatch);
   }
 
-  if (isColumnControlsDecorations(target)) {
+  if (isColumnControlsButton(target)) {
     const [startIndex] = getColumnOrRowIndex(target);
     const { state, dispatch } = view;
 
@@ -182,8 +175,7 @@ export const handleMouseDown = (_: EditorView, event: Event) => {
   const isControl = !!(
     event.target &&
     event.target instanceof HTMLElement &&
-    (isColumnControlsDecorations(event.target) ||
-      isRowControlsButton(event.target))
+    (isColumnControlsButton(event.target) || isRowControlsButton(event.target))
   );
 
   if (isControl) {
@@ -199,7 +191,7 @@ export const handleMouseOut = (
 ): boolean => {
   const target = mouseEvent.target as HTMLElement;
 
-  if (isColumnControlsDecorations(target)) {
+  if (isColumnControlsButton(target)) {
     const { state, dispatch } = view;
     return clearHoverSelection()(state, dispatch);
   }
@@ -237,7 +229,7 @@ export const handleMouseLeave = (view: EditorView, event: Event): boolean => {
 export const handleMouseMove = (view: EditorView, event: Event) => {
   const element = event.target as HTMLElement;
 
-  if (isColumnControlsDecorations(element)) {
+  if (isColumnControlsButton(element)) {
     const { state, dispatch } = view;
     const { insertColumnButtonIndex } = getPluginState(state);
     const [startIndex, endIndex] = getColumnOrRowIndex(element);
@@ -404,11 +396,12 @@ export const whenTableInFocus = (
 ) => (view: EditorView, mouseEvent: Event): boolean => {
   const tableResizePluginState = getResizePluginState(view.state);
   const tablePluginState = getPluginState(view.state);
-  const isDragging =
+  const isResizing =
     tableResizePluginState && !!tableResizePluginState.dragging;
+  const isReordering = tablePluginState && !!tablePluginState.reordering;
   const hasTableNode = tablePluginState && tablePluginState.tableNode;
 
-  if (!hasTableNode || isDragging) {
+  if (!hasTableNode || isResizing || isReordering) {
     return false;
   }
 

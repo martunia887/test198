@@ -324,7 +324,11 @@ export const fixCursorAlignment = (view: EditorView) => {
 };
 
 export const isIgnoredClick = (elem: HTMLElement) => {
-  if (elem.nodeName === 'BUTTON' || closestElement(elem, 'button')) {
+  if (
+    elem.nodeName === 'BUTTON' ||
+    closestElement(elem, 'button') ||
+    closestElement(elem, '.media-single')
+  ) {
     return true;
   }
 
@@ -348,12 +352,12 @@ export const isIgnoredClick = (elem: HTMLElement) => {
     const rowControls = tableWrap.querySelector(
       `.${TableCssClassName.ROW_CONTROLS_WRAPPER}`,
     );
-    const isColumnControlsDecoration =
-      elem &&
-      elem.classList &&
-      elem.classList.contains(TableCssClassName.COLUMN_CONTROLS_DECORATIONS);
+    const columnControls = tableWrap.querySelector(
+      `.${TableCssClassName.COLUMN_CONTROLS_WRAPPER}`,
+    );
     return (
-      (rowControls && rowControls.contains(elem)) || isColumnControlsDecoration
+      (rowControls && rowControls.contains(elem)) ||
+      (columnControls && columnControls.contains(elem))
     );
   }
 

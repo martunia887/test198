@@ -33,6 +33,11 @@ export const TableSharedCssClassName = {
   TABLE_CELL_NODEVIEW_CONTENT_DOM: tableCellContentDomSelector,
 };
 
+const borderColor = themed({
+  light: akEditorTableBorder,
+  dark: akEditorTableBorderDark,
+});
+
 const tableSharedStyle = css`
   .${TableSharedCssClassName.TABLE_CONTAINER} {
     position: relative;
@@ -55,10 +60,7 @@ const tableSharedStyle = css`
   .${TableSharedCssClassName.TABLE_NODE_WRAPPER} > table {
     border-collapse: collapse;
     margin: ${tableMarginTop}px ${tableMarginSides}px 0 0;
-    border: ${tableCellBorderWidth}px solid ${themed({
-  light: akEditorTableBorder,
-  dark: akEditorTableBorderDark,
-})};
+
     table-layout: fixed;
     font-size: ${fontSize()}px;
     width: 100%;
@@ -73,7 +75,8 @@ const tableSharedStyle = css`
       }
 
       tbody {
-        border-bottom: none;
+        border-right: ${tableCellBorderWidth}px solid ${borderColor};
+        border-bottom: ${tableCellBorderWidth}px solid ${borderColor};
       }
       th td {
         background-color: white;
@@ -83,10 +86,7 @@ const tableSharedStyle = css`
         min-width: ${tableCellMinWidth}px;
         font-weight: normal;
         vertical-align: top;
-        border: 1px solid ${themed({
-          light: akEditorTableBorder,
-          dark: akEditorTableBorderDark,
-        })};
+        border: 1px solid ${borderColor};
         border-right-width: 0;
         border-bottom-width: 0;
         padding: ${tableCellPadding}px;

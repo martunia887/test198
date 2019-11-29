@@ -11,23 +11,43 @@ import {
   thEmpty,
   tr,
 } from '@atlaskit/editor-test-helpers';
-import { getSelectionRect, selectRow } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+import { getSelectionRect } from 'prosemirror-utils';
 import * as React from 'react';
 import { setTextSelection } from '../../../../../index';
-import { hoverRows } from '../../../../../plugins/table/commands';
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
 import {
   TableCssClassName as ClassName,
   TablePluginState,
 } from '../../../../../plugins/table/types';
-import TableFloatingControls from '../../../../../plugins/table/ui/TableFloatingControls';
 import RowControls from '../../../../../plugins/table/ui/TableFloatingControls/RowControls';
 
 const ControlsButton = `.${ClassName.CONTROLS_BUTTON}`;
-const RowControlsButtonWrap = `.${ClassName.ROW_CONTROLS_BUTTON_WRAP}`;
+const RowControlsButtonWrap = `.${ClassName.ROW_CONTROLS_BUTTON}`;
 
 describe('RowControls', () => {
   const createEditor = createEditorFactory<TablePluginState>();
+
+  const mountControls = ({
+    editorView,
+    hoveredRows,
+    isInDanger,
+  }: {
+    editorView: EditorView;
+    hoveredRows?: number[];
+    isInDanger?: boolean;
+  }) => {
+    const tableRef = document.querySelector('table') as HTMLTableElement;
+    return mountWithIntl(
+      <RowControls
+        tableRef={tableRef}
+        tableActive={true}
+        editorView={editorView}
+        hoveredRows={hoveredRows}
+        isInDanger={isInDanger}
+      />,
+    );
+  };
 
   const editor = (doc: any) =>
     createEditor({
@@ -44,12 +64,7 @@ describe('RowControls', () => {
           rows.push(tr(tdEmpty));
         }
         const { editorView } = editor(doc(p('text'), table()(...rows)));
-        const floatingControls = mountWithIntl(
-          <TableFloatingControls
-            tableRef={document.querySelector('table')!}
-            editorView={editorView}
-          />,
-        );
+        const floatingControls = mountControls({ editorView });
         expect(floatingControls.find(RowControlsButtonWrap)).toHaveLength(row);
         floatingControls.unmount();
       });
@@ -68,13 +83,7 @@ describe('RowControls', () => {
             ),
           ),
         );
-
-        const floatingControls = mountWithIntl(
-          <TableFloatingControls
-            tableRef={document.querySelector('table')!}
-            editorView={editorView}
-          />,
-        );
+        const floatingControls = mountControls({ editorView });
 
         // move to header row
         const { nextPos } = refs;
@@ -84,7 +93,7 @@ describe('RowControls', () => {
         floatingControls
           .find(RowControlsButtonWrap)
           .at(row)
-          .find('button')
+          .find(ControlsButton)
           .first()
           .simulate('mouseover');
 
@@ -96,7 +105,7 @@ describe('RowControls', () => {
         floatingControls
           .find(RowControlsButtonWrap)
           .at(row)
-          .find('button')
+          .find(ControlsButton)
           .first()
           .simulate('mouseout');
 
@@ -120,20 +129,11 @@ describe('RowControls', () => {
       ),
     );
 
-    const floatingControls = mountWithIntl(
-      <RowControls
-        tableRef={document.querySelector('table')!}
-        editorView={editorView}
-        hoverRows={(rows, danger) => {
-          hoverRows(rows, danger)(editorView.state, editorView.dispatch);
-        }}
-        hoveredRows={[0, 1]}
-        isInDanger={true}
-        selectRow={row => {
-          editorView.dispatch(selectRow(row)(editorView.state.tr));
-        }}
-      />,
-    );
+    const floatingControls = mountControls({
+      editorView,
+      hoveredRows: [0, 1],
+      isInDanger: true,
+    });
 
     floatingControls
       .find(RowControlsButtonWrap)
@@ -159,18 +159,9 @@ describe('RowControls', () => {
       );
 
       selectRows([0])(editorView.state, editorView.dispatch);
-      const floatingControls = mountWithIntl(
-        <RowControls
-          tableRef={document.querySelector('table')!}
-          editorView={editorView}
-          hoverRows={(rows, danger) => {
-            hoverRows(rows, danger)(editorView.state, editorView.dispatch);
-          }}
-          selectRow={(row, expand) => {
-            editorView.dispatch(selectRow(row, expand)(editorView.state.tr));
-          }}
-        />,
-      );
+      const floatingControls = mountControls({
+        editorView,
+      });
 
       floatingControls
         .find(ControlsButton)
@@ -194,18 +185,9 @@ describe('RowControls', () => {
       );
 
       selectRows([2])(editorView.state, editorView.dispatch);
-      const floatingControls = mountWithIntl(
-        <RowControls
-          tableRef={document.querySelector('table')!}
-          editorView={editorView}
-          hoverRows={(rows, danger) => {
-            hoverRows(rows, danger)(editorView.state, editorView.dispatch);
-          }}
-          selectRow={(row, expand) => {
-            editorView.dispatch(selectRow(row, expand)(editorView.state.tr));
-          }}
-        />,
-      );
+      const floatingControls = mountControls({
+        editorView,
+      });
 
       floatingControls
         .find(ControlsButton)

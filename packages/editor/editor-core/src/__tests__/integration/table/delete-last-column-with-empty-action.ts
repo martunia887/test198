@@ -38,7 +38,7 @@ BrowserTestCase(
     await quickInsert(page, 'Action item');
 
     // Select button wrapper from last column
-    const controlSelector = `.${ClassName.COLUMN_CONTROLS_DECORATIONS}[data-start-index="2"]`;
+    const controlSelector = `.${ClassName.COLUMN_CONTROLS_BUTTON}[data-start-index="2"]`;
     await page.waitForSelector(controlSelector);
     await page.click(controlSelector);
 
