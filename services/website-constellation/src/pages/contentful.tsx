@@ -5,13 +5,14 @@ import PrivateRoute from '../components/PrivateRoute';
 import Login from '../components/Login';
 import ProtectedContentfulPage from '../components/ProtectedContentfulPage';
 import { useAuth, useData } from '../hooks';
+import { constellationUrl } from '../constants';
 
 function Status() {
   const { isLoggedIn, isValidating } = useAuth();
   const {
     data: { displayName, photos },
     error,
-  } = useData('/.netlify/functions/auth/user');
+  } = useData(`${constellationUrl}/.netlify/functions/auth/user`);
   if (isValidating)
     return (
       <div>
@@ -23,7 +24,9 @@ function Status() {
       {!isLoggedIn && !isValidating ? (
         <p>
           {'you are not logged in'}{' '}
-          <a href="/.netlify/functions/auth/google">{'log in'}</a>
+          <a href={`${constellationUrl}/.netlify/functions/auth/google`}>
+            {'log in'}
+          </a>
         </p>
       ) : (
         `you are logged in ${displayName}`
