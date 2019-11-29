@@ -132,7 +132,7 @@
   dependencies:
     "@babel/types" "^7.4.4"
     jsesc "^2.5.1"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     source-map "^0.5.0"
     trim-right "^1.0.1"
 
@@ -217,7 +217,7 @@
   resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.0.0-beta.32.tgz#8126fc024107c226879841b973677a4f4e510a03"
   dependencies:
     "@babel/types" "7.0.0-beta.32"
-    lodash "^4.7.13"
+    lodash "^4.17.13"
 
 "@babel/helper-module-imports@^7.0.0":
   version "7.0.0"
@@ -918,7 +918,7 @@
     "@babel/types" "^7.4.4"
     debug "^4.1.0"
     globals "^11.1.0"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
 
 "@babel/types@7.0.0-beta.32":
   version "7.0.0-beta.32"
@@ -941,7 +941,7 @@
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.3.4.tgz#bf482eaeaffb367a28abbf9357a94963235d90ed"
   dependencies:
     esutils "^2.0.2"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
 "@babel/types@^7.4.0", "@babel/types@^7.4.4":
@@ -949,7 +949,7 @@
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.4.4.tgz#8db9e9a629bb7c29370009b4b779ed93fe57d5f0"
   dependencies:
     esutils "^2.0.2"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
 "@babel/types@^7.5.5":
@@ -1597,7 +1597,7 @@
     "@oclif/command" "^1.5.3"
     cli-ux "^4.9.0"
     fast-levenshtein "^2.0.6"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
 
 "@oclif/plugin-plugins@^1.7.7":
   version "1.7.7"
@@ -1734,7 +1734,7 @@
     css.escape "^1.5.1"
     jest-diff "^24.0.0"
     jest-matcher-utils "^24.0.0"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     pretty-format "^24.0.0"
     redent "^3.0.0"
 
@@ -3228,13 +3228,13 @@ async@^2.0.0, async@^2.3.0, async@^2.4.1, async@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.0.tgz#61a29abb6fcc026fea77e56d1c6ec53a795951f4"
   dependencies:
-    lodash "^4.14.0"
+    lodash "^4.17.0"
 
 async@^2.1.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.2.tgz#18330ea7e6e313887f5d2f2a904bac6fe4dd5381"
   dependencies:
-    lodash "^4.17.11"
+    lodash "^4.17.13"
 
 async@~1.0.0:
   version "1.0.0"
@@ -5412,7 +5412,7 @@ cli-ux@^4.9.0:
     hyperlinker "^1.0.0"
     indent-string "^3.2.0"
     is-wsl "^1.1.0"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     password-prompt "^1.0.7"
     semver "^5.6.0"
     strip-ansi "^5.0.0"
@@ -5438,7 +5438,7 @@ cli-ux@^5.0.0:
     hyperlinker "^1.0.0"
     indent-string "^3.2.0"
     is-wsl "^1.1.0"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     natural-orderby "^1.0.2"
     password-prompt "^1.0.7"
     semver "^5.6.0"
@@ -5467,7 +5467,7 @@ cli-ux@^5.2.0:
     hyperlinker "^1.0.0"
     indent-string "^3.2.0"
     is-wsl "^1.1.0"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     natural-orderby "^1.0.2"
     password-prompt "^1.1.0"
     semver "^5.6.0"
@@ -7566,7 +7566,7 @@ eslint-plugin-flowtype@^3.4.2:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-3.4.2.tgz#55475e10b05fd714d60bceebbbed596cb8706b16"
   dependencies:
-    lodash "^4.17.11"
+    lodash "^4.17.13"
 
 eslint-plugin-import@^2.18.2:
   version "2.18.2"
@@ -7846,7 +7846,7 @@ eslint@^5.15.3:
     js-yaml "^3.12.0"
     json-stable-stringify-without-jsonify "^1.0.1"
     levn "^0.3.0"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     minimatch "^3.0.4"
     mkdirp "^0.5.1"
     natural-compare "^1.4.0"
@@ -10166,7 +10166,7 @@ inquirer@^6.2.2:
     cli-width "^2.0.0"
     external-editor "^3.0.3"
     figures "^2.0.0"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     mute-stream "0.0.7"
     run-async "^2.2.0"
     rxjs "^6.4.0"
@@ -11666,7 +11666,7 @@ karma@^1.7.1:
     graceful-fs "^4.1.2"
     http-proxy "^1.13.0"
     isbinaryfile "^3.0.0"
-    lodash "^3.8.0"
+    lodash "^4.17.13"
     log4js "^0.6.31"
     mime "^1.3.4"
     minimatch "^3.0.2"
@@ -11882,7 +11882,7 @@ lint-staged@^8.1.5:
     is-windows "^1.0.2"
     listr "^0.14.2"
     listr-update-renderer "^0.5.0"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     log-symbols "^2.2.0"
     micromatch "^3.1.8"
     npm-which "^3.0.1"
@@ -16402,7 +16402,7 @@ redux@^3.6.0, redux@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   dependencies:
-    lodash "^4.2.1"
+    lodash "^4.17.13"
     lodash-es "^4.2.1"
     loose-envify "^1.1.0"
     symbol-observable "^1.0.3"
@@ -16658,7 +16658,7 @@ request-promise-core@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.1.tgz#3eee00b2c5aa83239cfb04c5700da36f81cd08b6"
   dependencies:
-    lodash "^4.13.1"
+    lodash "^4.17.13"
 
 request-promise-native@^1.0.5:
   version "1.0.5"
@@ -18473,7 +18473,7 @@ table@^5.2.3:
   resolved "https://registry.yarnpkg.com/table/-/table-5.2.3.tgz#cde0cc6eb06751c009efab27e8c820ca5b67b7f2"
   dependencies:
     ajv "^6.9.1"
-    lodash "^4.17.11"
+    lodash "^4.17.13"
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
