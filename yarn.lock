@@ -3764,7 +3764,7 @@ babel-plugin-tester@^3.0.0:
     babel-core "^6.25.0"
     common-tags "^1.4.0"
     invariant "^2.2.2"
-    lodash.merge "^4.6.1"
+    lodash.merge "^4.6.2"
     path-exists "^3.0.0"
     strip-indent "^2.0.0"
 
@@ -5166,7 +5166,7 @@ cheerio@^0.22.0:
     lodash.flatten "^4.2.0"
     lodash.foreach "^4.3.0"
     lodash.map "^4.4.0"
-    lodash.merge "^4.4.0"
+    lodash.merge "^4.6.2"
     lodash.pick "^4.2.1"
     lodash.reduce "^4.4.0"
     lodash.reject "^4.4.0"
@@ -5839,7 +5839,7 @@ concordance@^4.0.0:
     lodash.clonedeep "^4.5.0"
     lodash.flattendeep "^4.4.0"
     lodash.islength "^4.0.1"
-    lodash.merge "^4.6.1"
+    lodash.merge "^4.6.2"
     md5-hex "^2.0.0"
     semver "^5.5.1"
     well-known-symbols "^2.0.0"
@@ -11293,7 +11293,7 @@ js-yaml@3.9.1:
     esprima "^4.0.0"
 
 js-yaml@^3.11.0, js-yaml@^3.8.4, js-yaml@^3.9.0:
-  version "3.12.0"
+  version "3.13.1"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.0.tgz#eaed656ec8344f10f527c6bfa1b6e2244de167d1"
   dependencies:
     argparse "^1.0.7"
@@ -12292,7 +12292,7 @@ lodash.memoize@4.1.2, lodash.memoize@4.x, lodash.memoize@^4.1.2:
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
 
 lodash.merge@^4.4.0, lodash.merge@^4.6.0, lodash.merge@^4.6.1:
-  version "4.6.1"
+  version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
 
 lodash.pairs@^3.0.0:
@@ -13327,7 +13327,7 @@ netlify-cli@^2.8.3:
     lodash.get "^4.4.2"
     lodash.isempty "^4.4.0"
     lodash.isequal "^4.5.0"
-    lodash.merge "^4.6.1"
+    lodash.merge "^4.6.2"
     lodash.snakecase "^4.1.1"
     log-symbols "^2.2.0"
     make-dir "^2.1.0"
@@ -15049,7 +15049,7 @@ prettier-eslint@^8.8.2:
     dlv "^1.1.0"
     eslint "^4.0.0"
     indent-string "^3.2.0"
-    lodash.merge "^4.6.0"
+    lodash.merge "^4.6.2"
     loglevel-colored-level-prefix "^1.0.0"
     prettier "^1.7.0"
     pretty-format "^23.0.1"
@@ -19709,7 +19709,7 @@ webdriver@^5.7.14:
     "@wdio/config" "^5.7.13"
     "@wdio/logger" "^5.7.8"
     deepmerge "^2.0.1"
-    lodash.merge "^4.6.1"
+    lodash.merge "^4.6.2"
     request "^2.83.0"
 
 webdriverio@^5.7.14:
@@ -19723,7 +19723,7 @@ webdriverio@^5.7.14:
     grapheme-splitter "^1.0.2"
     lodash.isobject "^3.0.2"
     lodash.isplainobject "^4.0.6"
-    lodash.merge "^4.6.1"
+    lodash.merge "^4.6.2"
     lodash.zip "^4.2.0"
     rgb2hex "^0.1.0"
     serialize-error "^3.0.0"
