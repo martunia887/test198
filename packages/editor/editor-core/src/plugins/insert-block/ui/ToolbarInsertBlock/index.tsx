@@ -449,6 +449,8 @@ class ToolbarInsertBlock extends React.PureComponent<
     const buttons = items.slice(0, numberOfButtons);
     const dropdownItems = items.slice(numberOfButtons);
 
+    dropdownItems.sort((a, b) => (a.content < b.content ? -1 : 1));
+
     if (items.length === 0) {
       return null;
     }
@@ -716,8 +718,6 @@ class ToolbarInsertBlock extends React.PureComponent<
         elemBefore: <EditorMoreIcon label={labelViewMore} />,
       });
     }
-
-    items.sort((a, b) => (a.content < b.content ? -1 : 1));
     return items;
   };
 
