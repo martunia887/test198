@@ -2712,7 +2712,7 @@ agent-base@2, agent-base@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-2.1.1.tgz#d6de10d5af6132d5bd692427d46fc538539094c7"
   dependencies:
-    extend "~3.0.0"
+    extend "~3.0.2"
     semver "~5.0.1"
 
 agent-base@^4.1.0:
@@ -6995,7 +6995,7 @@ dom-serialize@^2.2.0:
   dependencies:
     custom-event "~1.0.0"
     ent "~2.2.0"
-    extend "^3.0.0"
+    extend "^3.0.2"
     void-elements "^2.0.0"
 
 dom-serializer@0, dom-serializer@~0.1.0:
@@ -9862,7 +9862,7 @@ https-proxy-agent@1.0.0, https-proxy-agent@^1.0.0:
   dependencies:
     agent-base "2"
     debug "2"
-    extend "3"
+    extend "^3.0.2"
 
 https-proxy-agent@^2.2.1:
   version "2.2.1"
@@ -12720,7 +12720,7 @@ mdn-browser-compat-data@^0.0.84:
   resolved "https://registry.yarnpkg.com/mdn-browser-compat-data/-/mdn-browser-compat-data-0.0.84.tgz#791d0e238cff5779fae589f99f5b2c7b84ea44b5"
   integrity sha512-fAznuGNaQMQiWLVf+gyp33FaABTglYWqMT7JqvH+4RZn2UQPD12gbMqxwP9m0lj8AAbNpu5/kD6n4Ox1SOffpw==
   dependencies:
-    extend "3.0.2"
+    extend "^3.0.2"
 
 mdurl@^1.0.1, "mdurl@~ 1.0.1":
   version "1.0.1"
@@ -16676,7 +16676,7 @@ request@2.81.0:
     aws4 "^1.2.1"
     caseless "~0.12.0"
     combined-stream "~1.0.5"
-    extend "~3.0.0"
+    extend "~3.0.2"
     forever-agent "~0.6.1"
     form-data "~2.1.1"
     har-validator "~4.2.1"
@@ -18291,7 +18291,7 @@ superagent@^1.4.0:
     component-emitter "~1.2.0"
     cookiejar "2.0.6"
     debug "2"
-    extend "3.0.0"
+    extend "3.0.2"
     form-data "1.0.0-rc3"
     formidable "~1.0.14"
     methods "~1.1.1"
@@ -18307,7 +18307,7 @@ superagent@^3.8.1:
     component-emitter "^1.2.0"
     cookiejar "^2.1.0"
     debug "^3.1.0"
-    extend "^3.0.0"
+    extend "^3.0.2"
     form-data "^2.3.1"
     formidable "^1.1.1"
     methods "^1.1.1"
@@ -19160,7 +19160,7 @@ unified@^6.0.0:
   resolved "https://registry.yarnpkg.com/unified/-/unified-6.1.6.tgz#5ea7f807a0898f1f8acdeefe5f25faa010cc42b1"
   dependencies:
     bail "^1.0.0"
-    extend "^3.0.0"
+    extend "^3.0.2"
     is-plain-obj "^1.1.0"
     trough "^1.0.0"
     vfile "^2.0.0"
