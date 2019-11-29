@@ -10,7 +10,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@types/node": "^11.11.7",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "bitbucket-build-status": "^1.1.0",
     "bolt": "^0.24.3",
     "bolt-query": "^1.1.4",
