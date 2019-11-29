@@ -8,9 +8,11 @@ import { mockFetchFor } from './utils';
 
 async function createMentionProvider() {
   try {
-    const { baseUrl, cloudId, productId } = await createPromise(
-      'getConfig',
-    ).submit();
+    const {
+      baseUrl,
+      cloudId,
+      productId = 'micros-group/confluence',
+    } = await createPromise('getConfig').submit();
     let serviceUrl = url.resolve(baseUrl, `mentions/`);
 
     if (typeof cloudId === 'string') {
@@ -22,11 +24,7 @@ async function createMentionProvider() {
     }
 
     const accountIdResponse = await createPromise('getAccountId').submit();
-
-    const accountId =
-      typeof accountIdResponse === 'string'
-        ? accountIdResponse
-        : accountIdResponse.accountId;
+    const accountId = selectAccountId(accountIdResponse);
 
     return new MentionResource({
       url: serviceUrl,
@@ -46,6 +44,31 @@ async function createMentionProvider() {
     );
     return new MentionResource({ url: 'http://' });
   }
+}
+
+function selectAccountId(input: unknown): string {
+  const hasAccountId = (input: object): input is { accountId: unknown } =>
+    input.hasOwnProperty('accountId');
+
+  switch (typeof input) {
+    case 'string':
+      return input;
+    case 'object':
+      if (
+        input !== null &&
+        input.hasOwnProperty('accountId') &&
+        hasAccountId(input) &&
+        typeof input.accountId === 'string'
+      ) {
+        return input.accountId;
+      }
+  }
+
+  throw new Error(
+    `Could not select accountId, string | { acountId: string } required but received ${JSON.stringify(
+      input,
+    )}`,
+  );
 }
 
 export default createMentionProvider();
