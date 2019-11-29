@@ -60,6 +60,9 @@ dists/
 
 # allow using .envrc to automate local environment, exclude from CVS
 .envrc
-
+services/website-constellation/.env
 # override local config which for many atlassians will be set to registry=https://packages.atlassian.com/api/npm/npm-remote and hence cause certain issues with package resolution
 .npmrc
+
+# Local Netlify folder
+.netlify
