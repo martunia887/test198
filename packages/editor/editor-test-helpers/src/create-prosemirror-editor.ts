@@ -8,9 +8,9 @@ import {
 import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import { EditorView } from 'prosemirror-view';
-import { EditorState, PluginKey } from 'prosemirror-state';
+import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
 import { Schema } from 'prosemirror-model';
-import { RefsNode } from './schema-builder';
+import { Refs, RefsNode } from './schema-builder';
 import { setSelection } from './utils/set-selection';
 
 class PortalProviderMock extends EventDispatcher implements PortalProviderAPI {
@@ -35,8 +35,13 @@ interface CreatePMEditorOptions {
   providerFactory?: ProviderFactory;
 }
 
-interface CreatePMEEditorOutput {
+interface CreatePMEEditorOutput<T = any> {
   editorView: EditorView;
+  eventDispatcher: EventDispatcher;
+  refs: Refs | undefined;
+  sel: number;
+  plugin?: Plugin | null;
+  pluginState: T;
 }
 
 export function createProsemirrorEditorFactory() {
@@ -52,11 +57,12 @@ export function createProsemirrorEditorFactory() {
     }
   });
 
-  return async ({
+  return async <T = any>({
     doc,
+    pluginKey,
     plugins: _plugins = [],
     providerFactory = new ProviderFactory(),
-  }: CreatePMEditorOptions): Promise<CreatePMEEditorOutput> => {
+  }: CreatePMEditorOptions): Promise<CreatePMEEditorOutput<T>> => {
     const eventDispatcher = new EventDispatcher();
     const plugins = await asyncCreatePMPluginList(_plugins, {
       schema: defaultSchema,
@@ -79,7 +85,23 @@ export function createProsemirrorEditorFactory() {
       state,
     });
 
-    setSelection(doc, editorView);
-    return { editorView };
+    const refs = setSelection(doc, editorView);
+
+    let plugin;
+    let pluginState;
+
+    if (pluginKey) {
+      plugin = pluginKey.get(editorView!.state);
+      pluginState = pluginKey.getState(editorView!.state);
+    }
+
+    return {
+      editorView,
+      eventDispatcher,
+      refs,
+      plugin,
+      pluginState,
+      sel: refs ? refs['<>'] : 0,
+    };
   };
 }
