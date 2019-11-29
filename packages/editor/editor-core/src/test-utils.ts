@@ -86,7 +86,7 @@ export async function asyncCreatePMPluginList(
 }
 
 export { PortalProviderAPI } from './ui/PortalProvider';
-export { EventDispatcher } from './event-dispatcher';
+export { EventDispatcher, Dispatch } from './event-dispatcher';
 export {
   GapCursorSelection,
   Side as GapCursorSide,

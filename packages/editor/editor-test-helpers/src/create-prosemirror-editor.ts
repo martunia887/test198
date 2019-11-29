@@ -12,6 +12,7 @@ import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
 import { Schema } from 'prosemirror-model';
 import { Refs, RefsNode } from './schema-builder';
 import { setSelection } from './utils/set-selection';
+import { createDispatch } from '@atlaskit/editor-core/src/event-dispatcher';
 
 class PortalProviderMock extends EventDispatcher implements PortalProviderAPI {
   portals = new Map();
@@ -66,11 +67,12 @@ export function createProsemirrorEditorFactory() {
     const eventDispatcher = new EventDispatcher();
     const plugins = await asyncCreatePMPluginList(_plugins, {
       schema: defaultSchema,
-      props: {},
       providerFactory,
       eventDispatcher,
+      dispatch: createDispatch(eventDispatcher),
+
       // Need to mock (Will only exist on a fully editor experience)
-      dispatch: jest.fn(),
+      props: {}, // This might no be necessary after Stan PR
       portalProviderAPI: PortalProviderMock.create(),
       reactContext: jest.fn(),
       dispatchAnalyticsEvent: jest.fn(),
