@@ -14,8 +14,8 @@ exports.onCreatePage = async ({ page, actions }) => {
   const { createPage } = actions;
   if (page.path.match(/^\/contentful/)) {
     page.matchPath = '/contentful/*';
+    createPage(page);
   }
-  createPage(page);
 };
 
 exports.createSchemaCustomization = ({ actions }) => {
