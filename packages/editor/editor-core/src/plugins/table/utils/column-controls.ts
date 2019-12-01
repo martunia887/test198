@@ -18,7 +18,7 @@ export interface ColumnParams {
   width: number;
 }
 
-export const getColumnsWidthsFromDOM = (tableRef: HTMLElement): number[] => {
+export const getCellsWidthsFromDOM = (tableRef: HTMLElement): number[] => {
   const widths: number[] = [];
   if (tableRef.lastChild) {
     const rows = tableRef.lastChild.childNodes;
@@ -26,7 +26,7 @@ export const getColumnsWidthsFromDOM = (tableRef: HTMLElement): number[] => {
       const row = rows[i] as HTMLTableRowElement;
       for (let j = 0, colsCount = row.childNodes.length; j < colsCount; j++) {
         const cell = row.childNodes[j] as HTMLTableCellElement;
-        widths[j] = cell.offsetWidth;
+        widths.push(cell.offsetWidth);
       }
     }
   }

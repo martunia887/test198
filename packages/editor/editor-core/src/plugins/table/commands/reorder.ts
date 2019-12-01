@@ -1,7 +1,11 @@
 import { Node as PmNode } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
-import { CellSelection } from 'prosemirror-tables';
-import { getSelectionRect } from 'prosemirror-utils';
+import { EditorState } from 'prosemirror-state';
+import { CellSelection, TableMap } from 'prosemirror-tables';
+import {
+  getSelectionRect,
+  getSelectionRangeInRow,
+  getSelectionRangeInColumn,
+} from 'prosemirror-utils';
 import { DropResult, DraggableLocation } from 'react-beautiful-dnd';
 import { Transaction, Selection } from 'prosemirror-state';
 import { Command } from '../../../types';
@@ -12,7 +16,7 @@ import {
   moveRow,
   moveColumn,
   getRowHeights,
-  getColumnsWidthsFromDOM,
+  getCellsWidthsFromDOM,
   addTableStylesBeforeReordering,
   getSelectedColumnIndexes,
   getSelectedRowIndexes,
@@ -21,37 +25,51 @@ import {
 } from '../utils';
 import { selectColumns, selectRows } from '../transforms/selection';
 
+const arrayOverlap = (arr1: number[], arr2: number[]): boolean =>
+  !!arr1.filter(value => arr2.indexOf(value) !== -1).length;
+
 export const onBeforeReorderingStart = (
   table: PmNode,
   type: ReorderingType,
   index: number,
   tableRef: HTMLTableElement,
-  view: EditorView,
+  state: EditorState,
 ) => {
-  const { selection } = view.state;
+  const { selection } = state;
   const tbody = tableRef.querySelector('tbody');
-  const columnWidths = getColumnsWidthsFromDOM(tableRef);
+  const cellsWidths = getCellsWidthsFromDOM(tableRef);
+  const columnWidths = cellsWidths.slice(0, TableMap.get(table).width);
   const rowHeights = getRowHeights(tableRef);
   const tableWidth = tbody ? tbody.offsetWidth : undefined;
   const tableHeight = tbody ? tbody.offsetHeight : undefined;
   const selectionRect = getSelectionRect(selection);
+  const { indexes: mergedIndexes } =
+    type === 'rows'
+      ? getSelectionRangeInRow(index)(state.tr)
+      : getSelectionRangeInColumn(index)(state.tr);
 
   let selectedIndexes: number[] = [];
   if (selectionRect && selection instanceof CellSelection) {
     if (type === 'rows' && selection.isRowSelection()) {
-      selectedIndexes = getSelectedRowIndexes(selectionRect);
+      const selected = getSelectedRowIndexes(selectionRect);
+      selectedIndexes = arrayOverlap(mergedIndexes, selected)
+        ? [...new Set([...mergedIndexes, ...selected])]
+        : selected;
     } else if (type === 'columns' && selection.isColSelection()) {
-      selectedIndexes = getSelectedColumnIndexes(selectionRect);
+      const selected = getSelectedColumnIndexes(selectionRect);
+      selectedIndexes = arrayOverlap(mergedIndexes, selected)
+        ? [...new Set([...mergedIndexes, ...selected])]
+        : selected;
     }
   }
 
   const multiReorderIndexes =
-    selectedIndexes.indexOf(index) > -1 ? selectedIndexes : [];
+    selectedIndexes.indexOf(index) > -1 ? selectedIndexes : mergedIndexes;
 
   addTableStylesBeforeReordering(
     tableRef,
     tableHeight,
-    columnWidths,
+    cellsWidths,
     rowHeights,
   );
 
@@ -62,14 +80,14 @@ export const onBeforeReorderingStart = (
   enableGlobalDraggingStyles();
 
   // reset CellSelection
-  const { tr } = view.state;
+  const { tr } = state;
   if (selectionRect) {
-    const sel = Selection.findFrom(view.state.selection.$from, 1, true);
+    const sel = Selection.findFrom(state.selection.$from, 1, true);
     if (sel) {
       tr.setSelection(sel);
     }
   }
-
+  console.log({ mergedIndexes });
   return createCommand(
     {
       type: 'ON_BEFORE_REORDERING_START',
@@ -81,6 +99,7 @@ export const onBeforeReorderingStart = (
         tableHeight,
         reorderIndex: index,
         multiReorderIndexes,
+        mergedIndexes,
         tableNodeBeforeReorder: table,
       },
     },

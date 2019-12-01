@@ -1,19 +1,16 @@
 import * as React from 'react';
-import { useMemo, useRef, useEffect, useState } from 'react';
+import { useMemo, useEffect } from 'react';
 import classnames from 'classnames';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import Tooltip from '@atlaskit/tooltip';
 import { browser } from '@atlaskit/editor-common';
 import { TableCssClassName as cl } from '../../../types';
 import { getColumnClassNames, onReorderingColumns } from '../../../utils';
 import { ColumnProps } from './types';
-import messages from '../../messages';
 
 import {
   hoverColumns,
   selectColumn,
   clearHoverSelection,
-  hoverMergedCells,
 } from '../../../commands';
 
 const getDraggableCells = (
@@ -71,8 +68,6 @@ const ColumnControlButton = ({
   intl: { formatMessage },
 }: ColumnProps & InjectedIntlProps) => {
   const { state, dispatch } = editorView;
-  const [showMergedCells, setShowMergedCells] = useState(false);
-  const dragStart = useRef(null as null | number);
 
   useEffect(() => {
     if (!provided) {
@@ -95,48 +90,12 @@ const ColumnControlButton = ({
     clearHoverSelection()(editorView.state, dispatch);
   };
 
-  const onMouseUp = () => {
-    if (showMergedCells) {
-      setShowMergedCells(false);
-    }
-  };
-
   const onClick = (event: React.MouseEvent) => {
-    if (showMergedCells) {
-      return;
-    }
     // fix for issue ED-4665
     if (browser.ie_version === 11) {
       (editorView.dom as HTMLElement).blur();
     }
     selectColumn(startIndex, event.shiftKey)(editorView.state, dispatch);
-  };
-
-  const onMouseDown = (event: React.MouseEvent) => {
-    if (!hasMergedCells) {
-      return;
-    }
-    dragStart.current = event.clientX;
-
-    function move(moveEvent: MouseEvent) {
-      if (
-        dragStart.current !== null &&
-        !showMergedCells &&
-        Math.abs(dragStart.current - moveEvent.clientX) > 5
-      ) {
-        clearHoverSelection()(editorView.state, dispatch);
-        hoverMergedCells()(editorView.state, dispatch);
-        setShowMergedCells(true);
-      }
-    }
-
-    function finish(event: MouseEvent) {
-      window.removeEventListener('mouseup', finish);
-      window.removeEventListener('mousemove', move);
-      dragStart.current = null;
-    }
-    window.addEventListener('mouseup', finish);
-    window.addEventListener('mousemove', move);
   };
 
   const style = {
@@ -151,7 +110,7 @@ const ColumnControlButton = ({
     [isPortal, startIndex, rowHeights, tableRef],
   );
 
-  const control = (
+  return (
     <div
       className={classnames(
         getColumnClassNames(
@@ -166,16 +125,13 @@ const ColumnControlButton = ({
           [cl.CONTROLS_BUTTON]: !isPortal,
           [cl.RBD_PORTAL]: isPortal,
           [cl.COLUMN_CONTROLS_PORTAL]: isPortal,
-          [cl.SHOW_MERGED_CELLS]: showMergedCells,
           [cl.MULTI_REORDERING]:
             (multiReorderIndexes || []).indexOf(startIndex) > -1,
         },
       )}
       onClick={onClick}
-      onMouseDown={onMouseDown}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
-      onMouseUp={onMouseUp}
       data-start-index={startIndex}
       data-end-index={endIndex}
       key={startIndex}
@@ -203,20 +159,6 @@ const ColumnControlButton = ({
       )}
     </div>
   );
-
-  if (showMergedCells) {
-    return (
-      <Tooltip
-        content={formatMessage(messages.canNotReorderColumns)}
-        position="top"
-        delay={0}
-      >
-        {control}
-      </Tooltip>
-    );
-  }
-
-  return control;
 };
 
 export const ColumnButton = injectIntl(ColumnControlButton);

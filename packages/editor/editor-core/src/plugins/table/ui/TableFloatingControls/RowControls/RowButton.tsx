@@ -159,10 +159,12 @@ const RowControlButton = ({
       : startIndex + 1
     : null;
 
-  const portalContent = useMemo(
-    () => (isPortal ? getDraggableCells(startIndex, width, tableRef) : null),
-    [isPortal, startIndex, width, tableRef],
-  );
+  const portalContent = useMemo(() => {
+    if (!isPortal) {
+      return null;
+    }
+    return getDraggableCells(startIndex, width, tableRef);
+  }, [isPortal, startIndex, width, tableRef]);
 
   const control = (
     <div

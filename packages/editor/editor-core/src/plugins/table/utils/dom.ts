@@ -172,11 +172,17 @@ export const forEachNode = (
 
 export const forEachCell = (
   tableRef: HTMLTableElement,
-  callback: (cell: HTMLElement, rowIndex: number, columnIndex: number) => void,
+  callback: (
+    cell: HTMLElement,
+    rowIndex: number,
+    columnIndex: number,
+    cellIndex: number,
+  ) => void,
 ) => {
   if (!tableRef.lastChild) {
     return;
   }
+  let cellIndex = 0;
   for (
     let i = 0, rowsCount = tableRef.lastChild.childNodes.length;
     i < rowsCount;
@@ -184,7 +190,8 @@ export const forEachCell = (
   ) {
     const row = tableRef.lastChild.childNodes[i];
     for (let j = 0, colsCount = row.childNodes.length; j < colsCount; j++) {
-      callback(row.childNodes[j] as HTMLElement, i, j);
+      callback(row.childNodes[j] as HTMLElement, i, j, cellIndex);
+      cellIndex++;
     }
   }
 };

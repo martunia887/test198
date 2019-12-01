@@ -112,15 +112,15 @@ export const moveColumn = (
 export const addTableStylesBeforeReordering = (
   tableRef?: HTMLTableElement | null,
   tableHeight?: number,
-  columnWidths?: number[],
+  cellsWidths?: number[],
   rowHeights?: number[],
 ) => {
-  if (!tableRef || !tableRef.lastChild || !rowHeights || !columnWidths) {
+  if (!tableRef || !tableRef.lastChild || !rowHeights || !cellsWidths) {
     return;
   }
   tableRef.style.height = `${Number(tableHeight) + 1}px`;
-  forEachCell(tableRef, (cell, rowIndex, cellIndex) => {
-    cell.style.width = `${columnWidths[cellIndex]}px`;
+  forEachCell(tableRef, (cell, rowIndex, _, cellIndex) => {
+    cell.style.width = `${cellsWidths[cellIndex]}px`;
     cell.style.height = `${rowHeights[rowIndex] - 1}px`;
   });
 };
@@ -263,6 +263,7 @@ export const onReorderingRows = (
     tableRef,
     tableNode,
     reordering,
+    mergedIndexes,
   } = getPluginState(state);
   if (
     !tableRef ||
@@ -272,6 +273,7 @@ export const onReorderingRows = (
     !rowHeights ||
     !columnWidths ||
     !tableWidth ||
+    !mergedIndexes ||
     !multiReorderIndexes ||
     reordering !== 'rows' ||
     typeof reorderIndex === 'undefined'
@@ -300,7 +302,7 @@ export const onReorderingRows = (
     cell.style.height = `${rowHeights[rowIndex] - 1}px`;
   }
 
-  if (reorderIndex === rowIndex) {
+  if (reorderIndex === rowIndex || mergedIndexes.indexOf(rowIndex) > -1) {
     row.style.display = 'none';
     return;
   } else if (multiReorderIndexes.indexOf(rowIndex) > -1) {
@@ -339,6 +341,7 @@ export const onReorderingColumns = (
     tableWidth,
     tableRef,
     reordering,
+    mergedIndexes,
   } = getPluginState(state);
 
   if (
@@ -348,6 +351,7 @@ export const onReorderingColumns = (
     !columnWidths ||
     !tableWidth ||
     !multiReorderIndexes ||
+    !mergedIndexes ||
     reordering !== 'columns' ||
     typeof reorderIndex === 'undefined'
   ) {
@@ -376,8 +380,9 @@ export const onReorderingColumns = (
 
     const offsetTop = rowHeights.slice(0, i).reduce((acc, cur) => acc + cur, 0);
     const cell = row.childNodes[columnIndex] as HTMLElement;
-    cell.style.width = `${columnWidths[columnIndex]}px`;
-    cell.style.height = `${rowHeights[i] - 1}px`;
+    if (!cell) {
+      return;
+    }
     cell.setAttribute(ClassName.RBD_DRAGGABLE_CONTEXT_ID, `${contextId}`);
 
     if (reorderIndex === columnIndex) {

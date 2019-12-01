@@ -109,6 +109,7 @@ export interface TablePluginState {
   tableHeight?: number;
   reorderIndex?: number;
   multiReorderIndexes?: number[];
+  mergedIndexes?: number[];
 }
 
 export type TablePluginAction =
@@ -190,6 +191,7 @@ export type TablePluginAction =
         reorderIndex?: number;
         multiReorderIndexes?: number[];
         tableNodeBeforeReorder?: PmNode;
+        mergedIndexes?: number[];
       };
     }
   | { type: 'ON_REORDERING_END' };

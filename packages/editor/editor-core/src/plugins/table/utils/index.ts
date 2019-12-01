@@ -50,7 +50,7 @@ export {
 } from './dom';
 export {
   getColumnsWidths,
-  getColumnsWidthsFromDOM,
+  getCellsWidthsFromDOM,
   isColumnDeleteButtonVisible,
   getColumnDeleteButtonParams,
   getColumnClassNames,

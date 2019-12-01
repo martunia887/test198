@@ -91,6 +91,7 @@ export default (
         tableHeight: undefined,
         reorderIndex: undefined,
         multiReorderIndexes: undefined,
+        mergedIndexes: undefined,
       };
 
     case 'ADD_RESIZE_HANDLE_DECORATIONS':

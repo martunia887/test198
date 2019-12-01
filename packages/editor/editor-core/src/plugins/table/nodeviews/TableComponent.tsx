@@ -313,15 +313,15 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
   };
 
   private onBeforeDragStart = ({ source, type }: DragStart) => {
-    const { view } = this.props;
+    const { view, node } = this.props;
     const { state, dispatch } = view;
     if (this.table && isActiveTable(state, this.table)) {
       onBeforeReorderingStart(
-        this.props.node,
+        node,
         type as ReorderingType,
         source.index,
         this.table,
-        view,
+        state,
       )(state, dispatch);
     }
   };

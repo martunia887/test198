@@ -18,7 +18,6 @@ const ColumnsList = (props: ColumnsListProps) => (
     {props.columnsParams.map(({ startIndex, endIndex, width }) => {
       if (
         !props.allowReorderingColumns ||
-        props.hasMergedCells ||
         (props.isHeaderColumnEnabled && startIndex === 0)
       ) {
         return (
