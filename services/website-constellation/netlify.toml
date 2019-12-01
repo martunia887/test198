@@ -1,5 +1,5 @@
 [build]
-  command = "yarn run build && yarn run build:lambda"
+  command = "yarn run build && yarn run build:lambda" # build:lambda calls netlify-lambda to build our input directory into a single output for netlify to serve.
   functions = "functions" # netlify dev uses this to know where to scaffold and serve your functions
   publish = "public/"
 

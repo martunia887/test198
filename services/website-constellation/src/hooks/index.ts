@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only';
 export function useData(url) {
-  // const abortController = new AbortController();
+  // TODO: tidy this up to deal with multiple requests and dynamic references
+
+  // we use AbortController to clean up pending requests on unmount
+  // so we don't have unresolved promises leaking everywhere.
+  const abortController = new AbortController();
   const [data, setData] = useState({});
   const [error, setError] = useState(null);
   useEffect(() => {
     fetch(url, {
-      // signal: abortController.signal,
+      signal: abortController.signal,
       credentials: 'include',
     })
       .then(res => res.json())
@@ -14,15 +18,22 @@ export function useData(url) {
         setData(data);
       })
       .catch(err => {
+        // if the promise isn't cancelled due to an abort,
+        // assume its a real error and set it in state.
         if (!abortController.signal.aborted) {
           setError(err);
         }
       });
+    // call abortController.abort() on unmount
     return () => abortController.abort();
   }, []);
   return { data, error };
 }
 export function useAuth() {
+  // TODO: this may need to be tidied up to deal with multiple requests and associated race conditions.
+
+  // we use AbortController to clean up pending requests on unmount
+  // so we don't have unresolved promises leaking everywhere.
   const abortController = new AbortController();
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isValidating, setValidating] = useState(true);
@@ -38,7 +49,6 @@ export function useAuth() {
         setValidating(false);
       })
       .catch(err => {
-        console.error('ERROR', err);
         setLoggedIn(false);
         setValidating(false);
       });

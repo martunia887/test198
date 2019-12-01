@@ -49,6 +49,8 @@ function api(app, passport) {
       failureRedirect: constellationUrl,
     }),
     (req, res) => {
+      // take the token from req.user (attached by passport)
+      // and store it in a signed http only cookie.
       res.cookie('constellation_token', req.user.token, {
         httpOnly: true,
         signed: true,
