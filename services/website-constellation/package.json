@@ -3,9 +3,11 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
+        "postinstall": "netlify-lambda install",
         "pre:gatsby": "node write-resolution-map && brisk build-pages",
         "start": "yarn pre:gatsby && gatsby develop",
         "build": "yarn pre:gatsby && gatsby build",
+        "build:lambda": "netlify-lambda build server",
         "deploy:local": "netlify deploy",
         "deploy:staging": "netlify deploy --auth $NETLIFY_TOKEN --site $CONSTELLATION_ID",
         "deploy:production": "netlify deploy --auth $NETLIFY_TOKEN --site $CONSTELLATION_ID --prod"
@@ -16,6 +18,7 @@
         "@brisk-docs/gatsby-plugin": "^0.1.0",
         "@manypkg/gatsby-source-workspace": "^0.3.0",
         "@reach/router": "^1.2.1",
+        "abortcontroller-polyfill": "^1.1.9",
         "axios": "^0.18.0",
         "body-parser": "^1.19.0",
         "cookie-parser": "^1.4.4",
@@ -25,6 +28,7 @@
         "fs-extra": "^4.0.2",
         "gatsby": "^2.17.10",
         "jsonwebtoken": "^8.5.1",
+        "netlify-lambda": "^1.6.3",
         "passport": "^0.4.0",
         "passport-google-oauth20": "^2.0.0",
         "passport-jwt": "^4.0.0",

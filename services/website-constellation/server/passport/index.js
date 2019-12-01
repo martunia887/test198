@@ -23,6 +23,10 @@ passport.use(
       { name, displayName, photos, ...rest },
       done,
     ) => {
+      // on successful google oAuth2.0 validation
+      // we hash the necessary but not sensitive parts of the retrieved google profile
+      // into a signed JWT
+      // and set the expiry to 1d.
       const profile = { displayName, photos };
       const token = JWTModule.sign(profile, jwtSecret, {
         expiresIn: jwtExpiry,
@@ -44,14 +48,10 @@ passport.use(
       secretOrKey: jwtSecret,
     },
     ({ displayName, photos }, done) => {
-      try {
-        const token = JWTModule.sign({ displayName, photos }, jwtSecret, {
-          expiresIn: jwtExpiry,
-        });
-        return done(null, { displayName, photos, token });
-      } catch (e) {
-        return done(e);
-      }
+      // on successful decryption of the JWT token
+      // we pass the payload (the users google displayName and photo)
+      // to passport to attach to req.user
+      return done(null, { displayName, photos });
     },
   ),
 );

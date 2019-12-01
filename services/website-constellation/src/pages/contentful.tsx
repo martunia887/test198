@@ -12,21 +12,20 @@ function Status() {
   const {
     data: { displayName, photos },
     error,
-  } = useData(`${constellationUrl}/.netlify/functions/auth/user`);
-  if (isValidating)
+  } = useData(`/.netlify/functions/auth/user`);
+  if (isValidating) {
     return (
       <div>
         <Spinner size="small" />
       </div>
     );
+  }
   return (
     <div>
       {!isLoggedIn && !isValidating ? (
         <p>
           {'you are not logged in'}{' '}
-          <a href={`${constellationUrl}/.netlify/functions/auth/google`}>
-            {'log in'}
-          </a>
+          <a href={`/.netlify/functions/auth/google`}>{'log in'}</a>
         </p>
       ) : (
         `you are logged in ${displayName}`
@@ -34,6 +33,7 @@ function Status() {
     </div>
   );
 }
+
 export default () => {
   return (
     <div>

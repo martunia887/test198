@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only';
 export function useData(url) {
-  const abortController = new AbortController();
+  // const abortController = new AbortController();
   const [data, setData] = useState({});
   const [error, setError] = useState(null);
   useEffect(() => {
     fetch(url, {
-      signal: abortController.signal,
+      // signal: abortController.signal,
       credentials: 'include',
     })
       .then(res => res.json())
@@ -17,7 +18,7 @@ export function useData(url) {
           setError(err);
         }
       });
-    return abortController.abort();
+    return () => abortController.abort();
   }, []);
   return { data, error };
 }
@@ -37,11 +38,11 @@ export function useAuth() {
         setValidating(false);
       })
       .catch(err => {
-        if (abortController.signal.aborted) {
-          setValidating(false);
-        }
+        console.error('ERROR', err);
+        setLoggedIn(false);
+        setValidating(false);
       });
-    return abortController.abort();
+    return () => abortController.abort();
   }, []);
 
   return { isLoggedIn, isValidating };
