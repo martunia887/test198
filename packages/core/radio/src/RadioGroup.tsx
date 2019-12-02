@@ -90,6 +90,7 @@ export default class RadioGroup extends Component<RadioGroupProps, State> {
   };
 
   render() {
+    console.log('this is what I was afraid of');
     const options = this.buildOptions();
     return <Fragment>{options}</Fragment>;
   }
