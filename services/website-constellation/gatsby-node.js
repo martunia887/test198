@@ -86,8 +86,33 @@ exports.onCreateWebpackConfig = ({ actions, loaders, getConfig }) => {
     // Omit the default rule where test === '\.jsx?$'
     ...config.module.rules.filter(
       rule => String(rule.test) !== String(/\.jsx?$/),
+      // || String(rule.test) !== String(/\.tsx?$/),
     ),
     // Recreate it with custom exclude filter
+    // {
+    //   test: /\.tsx?$/,
+    //   // exclude: /node_modules/,
+    //   // Feed the compiled ts files through babel
+    //   exclude: modulePath =>
+    //     /node_modules/.test(modulePath) &&
+    //     /*
+    //             What this regex is saying is:
+    //             Do not exclude:
+    //               - files in node_modules
+    //               - that are in a @brisk-docs scoped package
+    //               - BUT still exclude things in the node_modules of that package
+    //           */
+    //     !/node_modules\/@brisk-docs\/[^/]+\/(?!node_modules)/.test(modulePath),
+    //   use: [
+    //     loaders.js(),
+    //     {
+    //       loader: require.resolve('ts-loader'),
+    //       options: {
+    //         transpileOnly: true,
+    //       },
+    //     },
+    //   ],
+    // },
     {
       ...loaders.js(),
       test: /\.jsx?$/,
