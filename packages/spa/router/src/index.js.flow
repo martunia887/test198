@@ -1,297 +1,355 @@
-/* eslint-disable no-use-before-define */
-// @flow
+// @flow strict
 
-// eslint-disable-next-line no-unused-vars
-import type { ComponentType, Node } from 'react';
-// eslint-disable-next-line no-unused-vars
+import type { ComponentType, Node, ElementConfig } from 'react';
 import type { Action, BoundActions } from 'react-sweet-state';
 import type {
-  // eslint-disable-next-line no-unused-vars
   BrowserHistory,
-  // eslint-disable-next-line no-unused-vars
   LocationShape,
 } from 'history/createBrowserHistory';
 
-declare module '@atlaskit/router' {
-  declare type Query = { [string]: string };
+export type Location = {|
+  pathname: string,
+  search: string,
+  hash: string,
+|};
 
-  declare type Match = {|
-    /** TODO we are supporting `undefined` here because we are currently using both
-     * this version of the `Match` type, and react-routers version (which allows for `undefined`)
-     * To fix this we should move `matchPath` to our own util so we can apply our own types, then
-     * decide if we want to support undefined types.
-     */
-    params: { [string]: string | null | typeof undefined },
-    query: Query,
-    isExact: boolean,
-    path: string,
-    url: string,
-  |};
+type Query = { [string]: string };
 
-  declare type MatchedRoute = {|
-    route: Route,
-    match: Match,
-  |};
+type Match = {|
+  /** TODO we are supporting `undefined` here because we are currently using both
+   * this version of the `Match` type, and react-routers version (which allows for `undefined`)
+   * To fix this we should move `matchPath` to our own util so we can apply our own types, then
+   * decide if we want to support undefined types.
+   */
+  params: { [string]: string | null | typeof undefined },
+  query: Query,
+  isExact: boolean,
+  path: string,
+  url: string,
+|};
 
-  declare type RouteContext = {|
-    location: Location,
-    query: Query,
-    route: Route | null,
-    match: Match,
-    action: HistoryAction,
-  |};
+type MatchedRoute = {|
+  route: Route,
+  match: Match,
+|};
 
-  declare type RouteResourceLoading = boolean;
+export type RouteContext = {|
+  location: Location,
+  query: Query,
+  route: Route | null,
+  match: Match,
+  action: HistoryAction,
+|};
 
-  declare type RouteResourceTimestamp = number | null;
+export type RouteResourceLoading = boolean;
+export type RouteResourceTimestamp = number | null;
+export type RouteResourceError = Object | Error | null;
+export type RouteResourceData = Object | null;
+export type RouteResourcePromise = Promise<any> | null;
 
-  declare type RouteResourceError = Object | Error | null;
+export type RouteResourceResponse = {|
+  loading: RouteResourceLoading,
+  error: RouteResourceError,
+  data: RouteResourceData,
+  promise: RouteResourcePromise,
+  expiresAt: RouteResourceTimestamp,
+|};
 
-  declare type RouteResourceData = Object | null;
+export type RouteResourceGettersArgs = [
+  RouterStoreContext,
+  ResourceStoreContext,
+];
 
-  declare type RouteResourcePromise = Promise<any> | null;
+export type RouteResource = {|
+  type: string,
+  getKey: (...args: RouteResourceGettersArgs) => string,
+  maxAge: number,
+  getData: (...args: RouteResourceGettersArgs) => RouteResourcePromise,
+|};
 
-  declare type RouteResourceResponse = {|
-    loading: RouteResourceLoading,
-    error: RouteResourceError,
-    data: RouteResourceData,
-    promise: RouteResourcePromise,
-    expiresAt: RouteResourceTimestamp,
-  |};
+export type RouteResources = RouteResource[];
 
-  declare type RouteResourceGettersArgs = [
-    RouterStoreContext,
-    ResourceStoreContext,
-  ];
+export type ResourceStoreContext = Object;
 
-  declare type RouteResource = {|
-    type: string,
-    getKey: (...args: RouteResourceGettersArgs) => string,
-    maxAge: number,
-    getData: (...args: RouteResourceGettersArgs) => RouteResourcePromise,
-  |};
+export type RouteResourceDataForType = {
+  [key: string]: RouteResourceResponse,
+};
 
-  declare type RouteResources = RouteResource[];
+export type Route = {|
+  path: string,
+  exact?: boolean,
+  /** The component to render on match, typed explicitly */
+  component: ComponentType<RouteContext>,
+  /** If present, must return true to include the route. */
+  enabled?: () => boolean,
+  /** Signals that this is a redirect route, we need to handle these in a special way. */
+  isRedirect?: boolean,
+  /** Used to prevent transitions between app groups */
+  group?: string,
+  /** Unique name for the route */
+  name: string,
+  /**
+   * Triggered before leaving the route, can trigger full page reload if returns (or resolves) false.
+   * Defaults to true.
+   */
+  canTransitionOut?: (
+    currentRouteMatch: MatchedRoute,
+    nextRouteMatch: MatchedRoute,
+    props: any,
+  ) => boolean | Promise<boolean>,
+  /**
+   * Triggered before entering the route, can trigger full page reload if returns (or resolves) false.
+   * Defaults to true.
+   */
+  canTransitionIn?: (
+    currentRouteMatch: MatchedRoute,
+    nextRouteMatch: MatchedRoute,
+    props: any,
+  ) => boolean | Promise<boolean>,
+  /**
+   * Query string matching. Each query param must match for the route to match.
+   *
+   * A query param can take the following shapes:
+   *  * query name only: 'foo' - matches if query name 'foo' is present
+   *  * query name matching value: 'foo=bar' - matches if query name 'foo' equals
+   *    'bar' exactly
+   *  * query name matching regex: 'foo=(bar.+) - matches if query name 'foo' equals
+   *    regex '^(bar.+)$'. Note you must escape backslashes and wrap regex in parentheses.
+   *  * query name NOT matching value: 'foo!=bar' - matches if query name 'foo' does
+   *    not equal bar OR if query name 'foo' does not exist at all
+   */
+  query?: string[],
+  /**
+   * The navigation associated with the current route.
+   */
+  navigation: Navigation | null,
+  /**
+   * These query params will be ignored by the nav transition apdex event.
+   */
+  apdexIgnoreParams?: string[],
+  /**
+   * The resources for the route
+   */
+  resources?: RouteResources,
+|};
 
-  declare type ResourceStoreContext = Object;
+export type Routes = Route[];
 
-  declare type RouteResourceDataForType = {
-    [key: string]: RouteResourceResponse,
-  };
+export type ContainerProps = {|
+  isStatic?: boolean,
+  history: BrowserHistory,
+  location?: Location,
+  routes: Routes,
+  transitionBlocker?: TransitionBlocker,
+  resourceData?: ResourceStoreData,
+  resourceContext?: ResourceStoreContext,
+|};
 
-  declare type Route = {|
-    path: string,
-    exact?: boolean,
-    /** The component to render on match, typed explicitly */
-    component: ComponentType<RouteContext>,
-    /** If present, must return true to include the route. */
-    enabled?: () => boolean,
-    /** Signals that this is a redirect route, we need to handle these in a special way. */
-    isRedirect?: boolean,
-    /** Used to prevent transitions between app groups */
-    group?: string,
-    /** Unique name for the route */
-    name: string,
-    /**
-     * Triggered before leaving the route, can trigger full page reload if returns (or resolves) false.
-     * Defaults to true.
-     */
-    canTransitionOut?: (
-      currentRouteMatch: MatchedRoute,
-      nextRouteMatch: MatchedRoute,
-      props: any,
-    ) => boolean | Promise<boolean>,
-    /**
-     * Triggered before entering the route, can trigger full page reload if returns (or resolves) false.
-     * Defaults to true.
-     */
-    canTransitionIn?: (
-      currentRouteMatch: MatchedRoute,
-      nextRouteMatch: MatchedRoute,
-      props: any,
-    ) => boolean | Promise<boolean>,
-    /**
-     * Query string matching. Each query param must match for the route to match.
-     *
-     * A query param can take the following shapes:
-     *  * query name only: 'foo' - matches if query name 'foo' is present
-     *  * query name matching value: 'foo=bar' - matches if query name 'foo' equals
-     *    'bar' exactly
-     *  * query name matching regex: 'foo=(bar.+) - matches if query name 'foo' equals
-     *    regex '^(bar.+)$'. Note you must escape backslashes and wrap regex in parentheses.
-     *  * query name NOT matching value: 'foo!=bar' - matches if query name 'foo' does
-     *    not equal bar OR if query name 'foo' does not exist at all
-     */
-    query?: string[],
-    /**
-     * The navigation associated with the current route.
-     */
-    navigation: Navigation | null,
-    /**
-     * These query params will be ignored by the nav transition apdex event.
-     */
-    apdexIgnoreParams?: string[],
-    /**
-     * The resources for the route
-     */
-    resources?: RouteResources,
-  |};
+export type TransitionBlocker = (
+  currentMatchedRoute: MatchedRoute | null,
+  nextMatchedRoute: MatchedRoute | null,
+  action: HistoryAction,
+) => Promise<boolean>;
 
-  declare type Routes = Route[];
+export type PublicStateProperties = {|
+  location: Location,
+  query: Query,
+  route: Route | null,
+  match: Match,
+  action: HistoryAction,
+|};
 
-  declare type ContainerProps = {|
-    isStatic?: boolean,
-    history: BrowserHistory,
-    location?: Location,
+export type PrivateStateProperties = {|
+  routes: Routes,
+  history: BrowserHistory,
+  unlisten: (() => void) | null,
+  isStatic: boolean,
+  transitionBlocker: TransitionBlocker,
+  shouldUseSuspense: boolean,
+|};
+
+export type EntireRouterState = {|
+  ...PublicStateProperties,
+  ...PrivateStateProperties,
+|};
+
+export type PrivateRouterActions = {|
+  bootstrapStore: (initialState: ContainerProps) => RouterAction,
+  requestRouteResources: () => RouterAction,
+  listen: () => RouterAction,
+|};
+
+export type RouterActionsType = {|
+  push: (path: string | LocationShape, state?: any) => RouterAction,
+  replace: (path: string | LocationShape, state?: any) => RouterAction,
+  goBack: () => RouterAction,
+  goForward: () => RouterAction,
+  registerBlock: (blocker: HistoryBlocker | any) => RouterAction,
+|};
+
+export type AllRouterActions = {|
+  ...PrivateRouterActions,
+  ...RouterActionsType,
+|};
+
+// eslint-disable-next-line no-use-before-define
+export type RouterAction = Action<
+  EntireRouterState,
+  ContainerProps,
+  AllRouterActions,
+>;
+
+// TODO: DRY out all these different router props if possible
+export type RouterProps = {
+  isStatic?: boolean,
+  history: BrowserHistory,
+  transitionBlocker?: TransitionBlocker,
+  resourceContext?: ResourceStoreContext,
+  resourceData?: ResourceStoreData,
+  routes: Routes,
+  children: Node,
+};
+
+export type MemoryRouterProps = {
+  isStatic?: boolean,
+  location?: string,
+  transitionBlocker?: TransitionBlocker,
+  routes: Routes,
+  children: Node,
+  resourceData?: ResourceStoreData,
+  resourceContext?: ResourceStoreContext,
+};
+
+export type MatchParams = {
+  [key: string]: string | null | typeof undefined,
+};
+
+export type ResourceStoreData =
+  | { [type: string]: RouteResourceDataForType }
+  | {||};
+
+export type RouterStoreContext = {|
+  route: Route | null,
+  match: Match,
+  query: Query,
+  location: Location,
+|};
+
+export type HistoryAction = 'PUSH' | 'REPLACE' | 'POP' | '';
+
+export type NavigationType = 'container' | 'product';
+
+export type NavigationRenderUpdater = (
+  location: Location,
+  match: Match,
+  route: Route,
+) => Node;
+
+export type NavigationStatics = {|
+  type: NavigationType,
+  view: (...args: any[]) => string,
+|};
+
+export type Navigation = {|
+  ...NavigationStatics,
+  renderNavigationUpdater: NavigationRenderUpdater,
+|};
+
+export type HistoryBlocker = (
+  location: Location,
+  action: string,
+) => boolean | Promise<boolean>;
+
+export type RouterState = PublicStateProperties;
+
+export type RouterActionPush = (
+  path: string | LocationShape,
+  state?: any,
+) => RouterAction;
+
+export type RouterActionReplace = (
+  path: string | LocationShape,
+  state?: any,
+) => RouterAction;
+
+export type LinkProps = {
+  children: Node,
+  target?: '_blank' | '_self' | '_parent' | '_top',
+  href?: string,
+  to?: string,
+  replace?: boolean,
+  type?: 'a' | 'button',
+  onClick?: (e: any) => void,
+};
+
+export type RouterSubscriberProps = {|
+  children: (
+    state: RouterState,
+    actions: BoundActions<EntireRouterState, RouterActionsType>,
+  ) => Node,
+|};
+
+// Components
+
+declare var Link: ComponentType<LinkProps>;
+declare var Redirect: ComponentType<{
+  to: Location | string,
+  push?: boolean,
+}>;
+
+declare function RouterActions(props: {|
+  children: (
+    actions: BoundActions<EntireRouterState, RouterActionsType>,
+  ) => Node,
+|}): Node;
+
+declare var Router: ComponentType<RouterProps>;
+declare var MemoryRouter: ComponentType<MemoryRouterProps>;
+
+declare var StaticRouter: {
+  ...ComponentType<MemoryRouterProps>,
+  requestResources(args: {|
+    location: string,
     routes: Routes,
-    transitionBlocker?: TransitionBlocker,
-    resourceData?: ResourceStoreData,
     resourceContext?: ResourceStoreContext,
-  |};
+  |}): ResourceStoreData,
+};
 
-  declare type TransitionBlocker = (
-    currentMatchedRoute: MatchedRoute | null,
-    nextMatchedRoute: MatchedRoute | null,
-    action: HistoryAction,
-  ) => Promise<boolean>;
+declare function RouterSubscriber(props: RouterSubscriberProps): Node;
 
-  declare type PublicStateProperties = {|
-    location: Location,
-    query: Query,
-    route: Route | null,
-    match: Match,
-    action: HistoryAction,
-  |};
+declare function RouteResourceEnabledSubscriber(props: {|
+  children: (isResourceEnabled: boolean) => Node,
+|}): Node;
 
-  declare type PrivateStateProperties = {|
-    routes: Routes,
-    history: BrowserHistory,
-    unlisten: (() => void) | null,
-    isStatic: boolean,
-    transitionBlocker: TransitionBlocker,
-    shouldUseSuspense: boolean,
-  |};
+// hooks
 
-  declare type EntireRouterState = {|
-    ...PublicStateProperties,
-    ...PrivateStateProperties,
-  |};
+declare function useResource(
+  resource: RouteResource,
+): [
+  {|
+    ...RouteResourceResponse,
+    update: (data: RouteResourceData | null) => void,
+    refresh: () => void,
+  |},
+];
+declare function useRouter(): [RouterState, BoundActions<RouterActionsType>];
+declare function useRouterActions(): BoundActions<RouterActionsType>;
 
-  declare type PrivateRouterActions = {|
-    bootstrapStore: (initialState: ContainerProps) => RouterAction,
-    requestRouteResources: () => RouterAction,
-    listen: () => RouterAction,
-  |};
+// Utils
+type WithRouterProps = RouteContext & {| history: BrowserHistory |};
+declare export function withRouter<P: {}, C: ComponentType<P>>(
+  WrappedComponent: C,
+): ComponentType<$Diff<ElementConfig<C>, WithRouterProps>>;
 
-  declare type RouterActionsType = {|
-    push: (path: string | LocationShape, state?: any) => RouterAction,
-    replace: (path: string | LocationShape, state?: any) => RouterAction,
-    goBack: () => RouterAction,
-    goForward: () => RouterAction,
-    registerBlock: (blocker: HistoryBlocker | any) => RouterAction,
-  |};
+declare export function matchRoute(
+  routes: Routes,
+  pathname: string,
+  queryParams: MatchParams,
+): MatchedRoute | null;
 
-  declare type AllRouterActions = {|
-    ...PrivateRouterActions,
-    ...RouterActionsType,
-  |};
+declare export function noopRouterDecorator(story: () => Node): Node;
 
-  // eslint-disable-next-line no-use-before-define
-  declare type RouterAction = Action<
-    EntireRouterState,
-    ContainerProps,
-    AllRouterActions,
-  >;
-
-  declare type MemoryRouterProps = {
-    isStatic?: boolean,
-    location?: string,
-    transitionBlocker?: TransitionBlocker,
-    routes: Routes,
-    children: Node,
-    resourceData?: ResourceStoreData,
-    resourceContext?: ResourceStoreContext,
-  };
-
-  declare type MatchParams = {
-    [key: string]: string | null | typeof undefined,
-  };
-
-  declare type ResourceStoreData =
-    | { [type: string]: RouteResourceDataForType }
-    | {||};
-
-  declare type RouterStoreContext = {|
-    route: Route | null,
-    match: Match,
-    query: Query,
-    location: Location,
-  |};
-
-  declare type HistoryAction = 'PUSH' | 'REPLACE' | 'POP' | '';
-
-  declare type NavigationType = 'container' | 'product';
-
-  declare type NavigationRenderUpdater = (
-    location: Location,
-    match: Match,
-    route: Route,
-  ) => Node;
-
-  declare type NavigationStatics = {|
-    type: NavigationType,
-    view: (...args: any[]) => string,
-  |};
-
-  declare type Navigation = {|
-    ...NavigationStatics,
-    renderNavigationUpdater: NavigationRenderUpdater,
-  |};
-
-  declare type HistoryBlocker = (
-    location: Location,
-    action: string,
-  ) => boolean | Promise<boolean>;
-
-  declare type RouterState = PublicStateProperties;
-
-  declare type RouterActionPush = (
-    path: string | LocationShape,
-    state?: any,
-  ) => RouterAction;
-
-  declare type RouterActionReplace = (
-    path: string | LocationShape,
-    state?: any,
-  ) => RouterAction;
-
-  declare type LinkProps = {
-    children: Node,
-    target?: '_blank' | '_self' | '_parent' | '_top',
-    href?: string,
-    to?: string,
-    replace?: boolean,
-    type?: 'a' | 'button',
-    onClick?: (e: any) => void,
-  };
-
-  // Components
-
-  declare function Link(props: LinkProps): Node;
-
-  declare function RouterActions(props: {|
-    children: (
-      actions: BoundActions<EntireRouterState, RouterActionsType>,
-    ) => Node,
-  |}): Node;
-
-  declare function StaticRouter(props: MemoryRouterProps): Node;
-
-  // Utils
-
-  declare function matchRoute(
-    routes: Routes,
-    pathname: string,
-    queryParams: MatchParams,
-  ): MatchedRoute | null;
-}
+declare export function generatePath(
+  pattern: string,
+  params?: { [paramName: string]: string | number | boolean | null | void },
+): string;
