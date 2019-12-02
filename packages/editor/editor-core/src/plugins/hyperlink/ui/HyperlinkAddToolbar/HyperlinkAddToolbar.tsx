@@ -201,6 +201,13 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
     return (
       <div className="recent-list">
         <Container provider={!!provider}>
+          <RecentList
+            items={items}
+            isLoading={isLoading}
+            selectedIndex={selectedIndex}
+            onSelect={this.handleSelected}
+            onMouseMove={this.handleMouseMove}
+          />
           <UrlInputWrapper>
             <IconWrapper>
               <Tooltip content={formatLinkAddressText}>
@@ -226,13 +233,6 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
               </Tooltip>
             )}
           </UrlInputWrapper>
-          <RecentList
-            items={items}
-            isLoading={isLoading}
-            selectedIndex={selectedIndex}
-            onSelect={this.handleSelected}
-            onMouseMove={this.handleMouseMove}
-          />
           <TextInputWrapper>
             <IconWrapper>
               <Tooltip content={formatDisplayText}>
