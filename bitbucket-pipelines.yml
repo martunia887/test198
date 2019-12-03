@@ -180,7 +180,7 @@ pipelines:
         script:
           - (cd build/utils && yarn install) # Needed for npm-run when updating status.
           - cd build/ci-scripts
-          - yarn install
+          - yarn install --frozen-lockfile
           - node download.build.artefact.for.commit.js netlify-link.txt
           - node update.build.status.with.netlify.link.js
         after-script:
