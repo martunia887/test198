@@ -26,7 +26,6 @@ import { editRemoteImage } from '../../../actions/editRemoteImage';
 
 import {
   FileReference,
-  LocalUploads,
   Recents,
   SelectedItem,
   ServiceFile,
@@ -80,7 +79,6 @@ export interface UploadViewOwnProps {
 export interface UploadViewStateProps {
   readonly isLoading: boolean;
   readonly recents: Recents;
-  readonly uploads: LocalUploads;
   readonly selectedItems: SelectedItem[];
 }
 
@@ -413,7 +411,6 @@ export class StatelessUploadView extends Component<
 const mapStateToProps = (state: State): UploadViewStateProps => ({
   isLoading: state.view.isLoading,
   recents: state.recents,
-  uploads: state.uploads,
   selectedItems: state.selectedItems,
 });
 

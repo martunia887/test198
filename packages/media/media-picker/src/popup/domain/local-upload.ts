@@ -19,8 +19,6 @@ export interface LocalUpload {
   readonly events: UploadEvent[];
   readonly index: number;
   readonly timeStarted: number;
-
-  progress: number | null;
   proxy?: string[];
 }
 

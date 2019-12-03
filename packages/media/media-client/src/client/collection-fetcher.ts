@@ -46,6 +46,16 @@ const createCacheEntry = (): CollectionCacheEntry => ({
   isLoadingNextPage: false,
 });
 
+export const getCollectionEntry = (
+  collectionName: string,
+): CollectionCacheEntry => {
+  if (!collectionCache[collectionName]) {
+    collectionCache[collectionName] = createCacheEntry();
+  }
+
+  return collectionCache[collectionName];
+};
+
 export class CollectionFetcher {
   constructor(readonly mediaStore: MediaStore) {}
 
@@ -93,10 +103,7 @@ export class CollectionFetcher {
     collectionName: string,
     params?: MediaStoreGetCollectionItemsParams,
   ): Observable<MediaCollectionItem[]> {
-    if (!collectionCache[collectionName]) {
-      collectionCache[collectionName] = createCacheEntry();
-    }
-    const collection = collectionCache[collectionName];
+    const collection = getCollectionEntry(collectionName);
     const subject = collection.subject;
 
     this.mediaStore
@@ -110,6 +117,8 @@ export class CollectionFetcher {
         this.populateCache(contents);
         // It's hard to merge two together, so we just take what's came from the server.
         // Since we load only one page > 2 pages will be ditched from the cache.
+        console.log('existing items', collection.items);
+        // TODO: try to keep existing local files
         collection.items = items.data.contents;
         collection.nextInclusiveStartKey = nextInclusiveStartKey;
         subject.next(collection.items);

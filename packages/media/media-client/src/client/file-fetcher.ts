@@ -38,7 +38,7 @@ import {
   Dimensions,
 } from '../utils/getDimensionsFromBlob';
 import { getMediaTypeFromMimeType } from '../utils/getMediaTypeFromMimeType';
-import { collectionCache } from './collection-fetcher';
+import { getCollectionEntry } from './collection-fetcher';
 import { MediaCollectionItem } from '../models/media';
 
 const POLLING_INTERVAL = 1000;
@@ -435,10 +435,9 @@ export class FileFetcherImpl implements FileFetcher {
     );
 
     getFileStreamsCache().set(id, subject);
-
     // Insert item into collection cache
-    if (collection && collectionCache[collection]) {
-      const collectionEntry = collectionCache[collection];
+    if (collection) {
+      const collectionEntry = getCollectionEntry(collection);
       const item: MediaCollectionItem = {
         id,
         insertedAt: new Date().getTime(),

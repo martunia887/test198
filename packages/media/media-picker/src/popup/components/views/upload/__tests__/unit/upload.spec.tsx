@@ -125,7 +125,7 @@ describe('<StatelessUploadView />', () => {
     const mediaClient = fakeMediaClient();
     const store = mockStore(state);
 
-    const { selectedItems, uploads } = state;
+    const { selectedItems } = state;
 
     const recents = {
       items: recentItems,
@@ -139,7 +139,6 @@ describe('<StatelessUploadView />', () => {
           recentsCollection="some-collection-name"
           isLoading={isLoading}
           recents={recents}
-          uploads={uploads}
           selectedItems={selectedItems}
           onFileClick={() => {}}
           onEditorShowImage={() => {}}
@@ -419,7 +418,6 @@ describe('<UploadView />', () => {
           },
           index: 0,
           events: [],
-          progress: 0,
           timeStarted: 0,
         },
       },
@@ -430,7 +428,6 @@ describe('<UploadView />', () => {
     const { component } = createConnectedComponent(state);
     const props = component.props();
     expect(props.recents).toEqual(state.recents);
-    expect(props.uploads).toEqual(state.uploads);
     expect(props.selectedItems).toEqual(state.selectedItems);
   });
 
