@@ -51,6 +51,7 @@ export enum Product {
   JIRA = 'jira',
   SITE_ADMIN = 'site-admin',
   TRUSTED_ADMIN = 'trusted-admin',
+  TRELLO = 'trello',
 }
 
 export enum Feature {
@@ -229,4 +230,6 @@ export type AtlassianSwitcherProps = WithTheme & {
   joinableSitesDataProvider?: any;
   // Optional callback provided to handle
   onJoinableSiteClicked?: JoinableSiteClickHandler;
+  // Optional boolean to render the cross join section.
+  isJoinableSitesSectionEnabled?: boolean;
 } & FeatureFlagProps;

@@ -33,6 +33,7 @@ type GenericSwitcherProps = WithTheme & {
 export default (props: GenericSwitcherProps) => (
   <JoinableSitesProvider
     joinableSitesDataProvider={props.joinableSitesDataProvider}
+    product={props.product}
   >
     {joinableSites => (
       <AvailableProductsProvider

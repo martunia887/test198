@@ -14,14 +14,16 @@ type PrefetchTriggerProps = {
   Container?: React.ReactType;
   availableProductsDataProvider?: AvailableProductsDataProvider;
   joinableSitesDataProvider?: any;
+  isJoinableSitePrefetchEnabled?: boolean;
 } & Partial<FeatureFlagProps>;
 
 export const prefetch = (props: PrefetchTriggerProps) => {
-  const { cloudId, product } = props;
+  const { cloudId, product, isJoinableSitePrefetchEnabled } = props;
 
   prefetchSwitcherBundles(product);
   prefetchAvailableProducts(props.availableProductsDataProvider);
-  prefetchJoinableSites(props.joinableSitesDataProvider);
+  isJoinableSitePrefetchEnabled &&
+    prefetchJoinableSites(props.joinableSitesDataProvider);
 
   if (cloudId) {
     prefetchAll({ cloudId });
