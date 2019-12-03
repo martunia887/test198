@@ -38,6 +38,8 @@ import {
   Dimensions,
 } from '../utils/getDimensionsFromBlob';
 import { getMediaTypeFromMimeType } from '../utils/getMediaTypeFromMimeType';
+import { collectionCache } from './collection-fetcher';
+import { MediaCollectionItem } from '../models/media';
 
 const POLLING_INTERVAL = 1000;
 const maxNumberOfItemsPerCall = 100;
@@ -433,6 +435,27 @@ export class FileFetcherImpl implements FileFetcher {
     );
 
     getFileStreamsCache().set(id, subject);
+
+    // Insert item into collection cache
+    if (collection && collectionCache[collection]) {
+      const collectionEntry = collectionCache[collection];
+      const item: MediaCollectionItem = {
+        id,
+        insertedAt: new Date().getTime(),
+        occurrenceKey: occurrenceKey || uuid(),
+        details: {
+          mediaType,
+          mimeType,
+          name,
+          processingStatus: 'pending',
+          representations: {},
+          artifacts: {},
+          size,
+        },
+      };
+
+      collectionEntry.items.unshift(item);
+    }
 
     // We should report progress asynchronously, since this is what consumer expects
     // (otherwise in newUploadService file-converting event will be emitted before files-added)

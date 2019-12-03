@@ -8,13 +8,7 @@ import {
   CardAction,
   CardEventHandler,
 } from '@atlaskit/media-card';
-import {
-  FileItem,
-  FileDetails,
-  FileIdentifier,
-  getMediaTypeFromMimeType,
-  MediaClient,
-} from '@atlaskit/media-client';
+import { FileItem, FileDetails, MediaClient } from '@atlaskit/media-client';
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import Spinner from '@atlaskit/spinner';
 import Flag, { FlagGroup } from '@atlaskit/flag';
@@ -32,7 +26,6 @@ import { editRemoteImage } from '../../../actions/editRemoteImage';
 
 import {
   FileReference,
-  LocalUploadFileMetadata,
   LocalUploads,
   Recents,
   SelectedItem,
@@ -302,74 +295,12 @@ export class StatelessUploadView extends Component<
 
   private renderCards() {
     const recentFilesCards = this.recentFilesCards();
-    const uploadingFilesCards = this.uploadingFilesCards();
-    return uploadingFilesCards.concat(recentFilesCards).map(({ key, card }) => (
+
+    return recentFilesCards.map(({ key, card }) => (
       <CardWrapper tabIndex={0} key={key}>
         {card}
       </CardWrapper>
     ));
-  }
-
-  private uploadingFilesCards(): IterableCard[] {
-    const { uploads, onFileClick, mediaClient } = this.props;
-    const itemsKeys = Object.keys(uploads);
-    itemsKeys.sort((a, b) => {
-      return uploads[b].index - uploads[a].index;
-    });
-
-    const selectedUploadIds = this.props.selectedItems
-      .filter(item => item.serviceName === 'upload')
-      .map(item => item.id);
-
-    return itemsKeys.map(key => {
-      const item = this.props.uploads[key];
-      const { file } = item;
-      const mediaType = getMediaTypeFromMimeType(file.metadata.mimeType);
-      const fileMetadata: LocalUploadFileMetadata = {
-        ...file.metadata,
-        mimeType: mediaType,
-      };
-      const { id, size, name, occurrenceKey } = fileMetadata;
-      const selected = selectedUploadIds.indexOf(id) > -1;
-      const serviceFile: ServiceFile = {
-        id,
-        mimeType: mediaType,
-        name,
-        size,
-        occurrenceKey,
-        date: 0,
-      };
-      const onClick = () => onFileClick(serviceFile, 'upload');
-      const actions: CardAction[] = [
-        createDeleteCardAction(async () => {
-          this.setState({
-            deletionCandidate: { id, occurrenceKey },
-          });
-        }),
-      ]; // TODO [MS-1017]: allow file annotation for uploading files
-
-      const identifier: FileIdentifier = {
-        id,
-        mediaItemType: 'file',
-      };
-
-      return {
-        isUploading: true,
-        key: id,
-        card: (
-          <Card
-            mediaClientConfig={mediaClient.config}
-            identifier={identifier}
-            dimensions={cardDimension}
-            selectable={true}
-            selected={selected}
-            onClick={onClick}
-            actions={actions}
-            testId="media-picker-uploading-media-card"
-          />
-        ),
-      };
-    });
   }
 
   private recentFilesCards(): IterableCard[] {
@@ -384,21 +315,23 @@ export class StatelessUploadView extends Component<
     } = this.props;
     const { items } = recents;
     const selectedRecentFiles = selectedItems
-      .filter(item => item.serviceName === 'recent_files')
+      .filter(
+        item =>
+          item.serviceName === 'recent_files' || item.serviceName === 'upload',
+      )
       .map(item => item.id);
 
     const onClick = ({ mediaItemDetails }: CardEvent) => {
-      const fileDetails = mediaItemDetails as FileDetails;
-      if (fileDetails) {
-        const { id } = fileDetails;
+      if (mediaItemDetails) {
+        const { id, name = '', mimeType = '', size = 0 } = mediaItemDetails;
 
         onFileClick(
           {
             id,
             date: 0,
-            name: fileDetails.name || '',
-            mimeType: fileDetails.mimeType || '',
-            size: fileDetails.size || 0,
+            name,
+            mimeType,
+            size,
           },
           'recent_files',
         );
@@ -455,6 +388,7 @@ export class StatelessUploadView extends Component<
             onClick={onClick}
             actions={actions}
             testId="media-picker-recent-media-card"
+            // TODO: should we add "media-picker-uploading-media-card" if uploading?
           />
         ),
       };

@@ -37,6 +37,7 @@ export type CollectionCache = {
   [collectionName: string]: CollectionCacheEntry;
 };
 
+//TODO: this should live in media-core/cache
 export const collectionCache: CollectionCache = {};
 
 const createCacheEntry = (): CollectionCacheEntry => ({
