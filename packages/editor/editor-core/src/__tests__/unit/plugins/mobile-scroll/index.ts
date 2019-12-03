@@ -3,6 +3,7 @@ import {
   scrollIntoView,
 } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
+import createStub from 'raf-stub';
 import { mobileScrollPluginKey } from '../../../../plugins/mobile-scroll';
 import { setKeyboardHeight } from '../../../../plugins/mobile-scroll/commands';
 
@@ -25,6 +26,11 @@ describe('Mobile Scroll Plugin', () => {
   let plugin: any;
   let appendTrSpy: jest.SpyInstance;
   let contentComponents: any[];
+  let rafStub: {
+    add: (cb: Function) => number;
+    step: (steps?: number) => void;
+    flush: () => void;
+  };
 
   const createEditor = createEditorFactory();
   const editor = () => {
@@ -37,7 +43,10 @@ describe('Mobile Scroll Plugin', () => {
     scrollIntoView(editor.editorView);
     return editor;
   };
-  const getAppendedTr = () => appendTrSpy.mock.results[0].value;
+  const getAppendedTr = () =>
+    appendTrSpy.mock.results.length
+      ? appendTrSpy.mock.results[0].value
+      : undefined;
 
   beforeEach(() => {
     _windowInnerHeight = (window as any).innerHeight;
@@ -45,6 +54,9 @@ describe('Mobile Scroll Plugin', () => {
     (window as any).webkit = {};
     (window as any).innerHeight = 600;
     (document as any).scrollingElement = { clientHeight: 600 };
+
+    rafStub = createStub();
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation(rafStub.add);
 
     ({ editorView, plugin, contentComponents } = editor());
     contentComponents.forEach(component => {
@@ -56,6 +68,7 @@ describe('Mobile Scroll Plugin', () => {
   afterEach(() => {
     (window as any).window.innerHeight = _windowInnerHeight;
     (document as any).scrollingElement = _scrollingEl;
+    (window.requestAnimationFrame as jest.SpyInstance).mockClear();
   });
 
   it("initially leaves scroll values so we use ProseMirror's default", () => {
@@ -145,10 +158,18 @@ describe('Mobile Scroll Plugin', () => {
 
   describe('when window resizes', () => {
     describe('and height is smaller ie. keyboard is shown', () => {
-      it('scrolls selection into view', () => {
+      it('scrolls selection into view when height stablised', () => {
         (window as any).innerHeight = 400;
         window.dispatchEvent(new Event('resize'));
+        rafStub.flush();
         expect(getAppendedTr().scrolledIntoView).toEqual(true);
+      });
+
+      it("doesn't scroll selection into view before height stablises", () => {
+        (window as any).innerHeight = 400;
+        window.dispatchEvent(new Event('resize'));
+        rafStub.step(1);
+        expect(getAppendedTr()).toBeUndefined();
       });
     });
 
@@ -156,6 +177,7 @@ describe('Mobile Scroll Plugin', () => {
       it("doesn't scroll selection into view", () => {
         (window as any).innerHeight = 800;
         window.dispatchEvent(new Event('resize'));
+        rafStub.flush();
         expect(getAppendedTr()).toBeUndefined();
       });
     });

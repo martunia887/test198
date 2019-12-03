@@ -53,8 +53,10 @@ const { createPluginState, getPluginState, createCommand } = pluginFactory<
   MobileScrollPluginState
 >(mobileScrollPluginKey, reducer);
 
-const createPlugin = (dispatch: Dispatch) =>
-  new Plugin({
+const createPlugin = (dispatch: Dispatch) => {
+  let rafId: number | undefined;
+
+  return new Plugin({
     state: createPluginState(dispatch, getInitialState()),
     key: mobileScrollPluginKey,
     props: {
@@ -117,23 +119,42 @@ const createPlugin = (dispatch: Dispatch) =>
     },
 
     view(editorView) {
-      const handleResize = () =>
-        rafSchedule(
-          setWindowHeight(window.innerHeight)(
-            editorView.state,
-            editorView.dispatch,
-          ),
-        );
+      const handleResize = () => {
+        let windowInnerHeight = window.innerHeight;
+        let count = 0;
+
+        const checkWindowHeight = () => {
+          // wait for height to stabilise before we commit to set it
+          // this helps handle menu transitions in Android which we don't want to scroll for
+          if (window.innerHeight === windowInnerHeight) {
+            count++;
+            if (count >= 5) {
+              rafId = undefined;
+              setWindowHeight(window.innerHeight)(
+                editorView.state,
+                editorView.dispatch,
+              );
+            } else {
+              rafId = requestAnimationFrame(checkWindowHeight);
+            }
+          }
+        };
+        rafId = requestAnimationFrame(checkWindowHeight);
+      };
       // the window will resize on Android when the keyboard shows/hides
       window.addEventListener('resize', handleResize);
 
       return {
         destroy() {
           window.removeEventListener('resize', handleResize);
+          if (rafId) {
+            window.cancelAnimationFrame(rafId);
+          }
         },
       };
     },
   });
+};
 
 /**
  * Update the scroll values on the plugin props
