@@ -158,7 +158,13 @@ describe('ak-progress-tracker/progress-tracker', () => {
     testBackwardsRenderTransitions(progressTrackerStages);
   });
 
-  it('should set multistep transition', () => {
+  it('should set multistep transition on first render', () => {
+    const wrapper = shallow(<ProgressTracker items={completedStages} />);
+    const progressTrackerStages = wrapper.find(ProgressTrackerStage);
+    testMultiStepRenderTransitions(progressTrackerStages);
+  });
+
+  it('should set multistep transition when multiple stages are completed', () => {
     const wrapper = shallow(<ProgressTracker items={items} />);
     wrapper.setProps({ items: completedStages });
     const progressTrackerStages = wrapper.find(ProgressTrackerStage);
@@ -182,5 +188,38 @@ describe('ak-progress-tracker/progress-tracker', () => {
     wrapper.setProps({ changedStages });
     const progressTrackerStages = wrapper.find(ProgressTrackerStage);
     testNoOrSingleStepRenderTransitions(progressTrackerStages);
+  });
+
+  it('should adapt to having a stage added', () => {
+    const wrapper = shallow(<ProgressTracker items={items} />);
+    expect(wrapper.find(ProgressTrackerStage)).toHaveLength(6);
+
+    const newItems = items.map(oldStage => {
+      return {
+        ...oldStage,
+        percentageComplete: 100,
+      };
+    });
+
+    newItems.push({
+      id: '7',
+      label: 'Step 7',
+      percentageComplete: 0,
+      href: '#',
+      status: 'unvisited',
+    });
+
+    wrapper.setProps({ items: newItems });
+    expect(wrapper.find(ProgressTrackerStage)).toHaveLength(newItems.length);
+  });
+
+  it('should adapt to having a stage removed', () => {
+    const wrapper = shallow(<ProgressTracker items={items} />);
+    expect(wrapper.find(ProgressTrackerStage)).toHaveLength(6);
+
+    const newItems = items.slice(0, 4);
+
+    wrapper.setProps({ items: newItems });
+    expect(wrapper.find(ProgressTrackerStage)).toHaveLength(newItems.length);
   });
 });
