@@ -35,7 +35,6 @@ import {
   DiscoverMoreCallback,
   JoinableSiteClickHandler,
 } from '../types';
-import { Fragment } from 'prosemirror-model';
 
 const noop = () => void 0;
 
