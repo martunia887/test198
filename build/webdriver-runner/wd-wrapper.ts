@@ -44,7 +44,7 @@ const defaultWaitingOptions: WaitingOptions = { timeout: WAIT_TIMEOUT };
 type Done<T> = (result: T) => any;
 
 export default class Page {
-  private browser: BrowserObject;
+  protected browser: BrowserObject;
 
   constructor(browserObject: BrowserObject) {
     this.browser = browserObject;
@@ -613,11 +613,5 @@ export default class Page {
 
   hasCapabilities() {
     return !!this.browser.capabilities;
-  }
-
-  // Uploads local (selenium server) file to the client machine (where browser is running)
-  // Result is client local location
-  async uploadBase64File(base64Content: string): Promise<string> {
-    return this.browser.uploadFile(base64Content);
   }
 }

@@ -1,21 +1,19 @@
+import * as path from 'path';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
 import { gotoPopupSimplePage } from '../../../pages/popup-simple-page';
-import {
-  simpleBase64ZippedImageFile,
-  simpleImageFilename,
-} from '@atlaskit/media-test-helpers';
 
 BrowserTestCase(
   'local-upload.ts: MediaPicker - local upload',
-  { skip: ['edge', 'ie', 'safari', 'firefox'] },
-  async (client: BrowserObject) => {
+  { skip: ['edge', 'ie', 'safari'] },
+  async (client: Parameters<typeof gotoPopupSimplePage>[0]) => {
     const page = await gotoPopupSimplePage(client);
-    const filename = simpleImageFilename;
+    const filename = 'popup.png';
+    const localPath = path.join(__dirname, '..', '..', '..', 'docs', filename);
 
     expect(await page.getRecentUploadCards()).toHaveLength(0);
 
-    await page.uploadFile(simpleBase64ZippedImageFile);
+    await page.uploadFile(localPath);
     const cardWithFilename = await page.getRecentUploadCard(filename);
     expect(cardWithFilename).toBeDefined();
     await page.clickInsertButton();

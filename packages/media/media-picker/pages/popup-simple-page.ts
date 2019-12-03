@@ -72,7 +72,7 @@ export class PopupSimplePage extends Page {
   }
 
   async uploadFile(base64File: string) {
-    const filename = await this.uploadBase64File(base64File);
+    const filename: string = (await this.browser.uploadFile(base64File)) as any; // There is a bug in webdriverio types in version 5.11.0
     const fileInputSelector = '[data-testid="media-picker-file-input"]';
     await this.waitForSelector(fileInputSelector);
 
@@ -81,18 +81,21 @@ export class PopupSimplePage extends Page {
       const element = document.querySelector<HTMLInputElement>(
         '[data-testid="media-picker-file-input"]',
       );
-      if (element && element.style) {
+      if (element) {
         element.style.display = 'block';
+        element.removeAttribute('multiple');
+        element.value = '';
       }
     });
+    const fileInput = await this.$(fileInputSelector);
+    await fileInput.setValue(filename);
 
-    await this.type(fileInputSelector, filename);
     await this.waitForSelector('[data-testid="media-picker-insert-button"]');
   }
 }
 
 export async function gotoPopupSimplePage(
-  client: BrowserObject,
+  client: ConstructorParameters<typeof Page>[0],
 ): Promise<PopupSimplePage> {
   const page = new PopupSimplePage(client);
   const url = getExampleUrl('media', 'media-picker', 'popup-simple');

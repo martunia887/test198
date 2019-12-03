@@ -27,8 +27,3 @@ export * from './mediaPickerMocks';
 export * from './clipboardEventMocks';
 export { getAuthFromContextProvider } from './getAuthFromContextProvider';
 export { addGlobalEventEmitterListeners } from './globalEventEmitterListeners';
-export {
-  simpleBase64ZippedImageFile,
-  simpleImageFilename,
-  simpleBase64ZippedPdfFile,
-} from './simple-base64-files';
