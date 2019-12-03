@@ -4,9 +4,7 @@ const {
   getPackagesInfo,
   TOOL_NAME_TO_FILTERS,
 } = require('@atlaskit/build-utils/tools');
-const {
-  getChangedPackagesSinceMaster,
-} = require('@atlaskit/build-utils/packages');
+const { getChangedPackages } = require('@atlaskit/build-utils/packages');
 
 /**
  * This is a helper script to return whether or not a certain tool should be run.
@@ -48,7 +46,7 @@ const {
 
   const [packages, changedPackages] = await Promise.all([
     getPackagesInfo(cwd),
-    getChangedPackagesSinceMaster(),
+    getChangedPackages(),
   ]);
 
   const changedPackageDirs = changedPackages.map(pkg => pkg.dir);

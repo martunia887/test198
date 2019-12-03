@@ -17,7 +17,7 @@ const codeCoverageByPackage = require('./jest.codeCoverageThreshold');
  * }
  * */
 (async () => {
-  const changedPackages = await packages.getChangedPackagesSinceMaster();
+  const changedPackages = await packages.getChangedPackages();
 
   const changedPackagesName = changedPackages.map(
     pkg => pkg.relativeDir && pkg.relativeDir.split('/').pop(),

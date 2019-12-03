@@ -460,12 +460,12 @@ if (process.env.CI) {
     consoleWarn = console.warn;
     consoleLog = console.log;
     console.error = jest.fn();
-    // console.warn = jest.fn();
+    console.warn = jest.fn();
     console.log = jest.fn();
   });
   afterEach(() => {
     console.error = consoleError;
-    // console.warn = consoleWarn;
+    console.warn = consoleWarn;
     console.log = consoleLog;
   });
 }

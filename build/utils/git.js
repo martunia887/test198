@@ -13,6 +13,15 @@ async function getCommitsSince(ref /*: string */) {
   ]);
   return gitCmd.stdout.trim().split('\n');
 }
+async function getCommitsSinceNoHead(ref /*: string */) {
+  const gitCmd = await spawn('git', [
+    'rev-list',
+    '--no-merges',
+    '--abbrev-commit',
+    `${ref}`,
+  ]);
+  return gitCmd.stdout.trim().split('\n');
+}
 
 async function getChangedFilesSince(
   ref /*: string */,
@@ -48,6 +57,36 @@ async function getChangedChangesetFilesSinceMaster(
     .filter(file => file.includes('changes.json'));
   if (!fullPath) return files;
   return files.map(file => path.resolve(file));
+}
+
+async function getChangedChangesetFilesSinceDevelop(
+  fullPath /*:boolean*/ = false,
+) {
+  const ref = await getDevelopRef();
+  // First we need to find the commit where we diverged from `ref` at using `git merge-base`
+  let cmd = await spawn('git', ['merge-base', ref, 'HEAD']);
+  // Now we can find which files we added
+  cmd = await spawn('git', [
+    'diff',
+    '--name-only',
+    '--diff-filter=d',
+    'develop',
+  ]);
+
+  const files = cmd.stdout
+    .trim()
+    .split('\n')
+    .filter(file => file.includes('changes.json'));
+  if (!fullPath) return files;
+  return files.map(file => path.resolve(file));
+}
+
+async function getChangesetFiles() {
+  const branchName = await getBranchName();
+  const parent = await getParent(branchName);
+  return parent === 'develop'
+    ? getChangedChangesetFilesSinceDevelop()
+    : getChangedChangesetFilesSinceMaster();
 }
 
 async function getBranchName() {
@@ -280,15 +319,15 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
 }
 
 async function getParent(branchName /*: string */) {
-  const lastDevelopCommits = (await getCommitsSince('develop')).pop();
+  const lastDevelopCommit = (await getCommitsSinceNoHead('develop')).pop();
   let branchCommits = [];
   try {
-    branchCommits = await getCommitsSince(branchName);
+    branchCommits = await getCommitsSinceNoHead(branchName);
   } catch (e) {
     console.warn(`An error occured because of the branch not found in the tree :${e}.
     \n it will default that the branch / commits was tipped off master`);
   }
-  return branchCommits.includes(lastDevelopCommits) ? 'develop' : 'master';
+  return branchCommits.includes(lastDevelopCommit) ? 'develop' : 'master';
 }
 
 module.exports = {
@@ -308,6 +347,8 @@ module.exports = {
   rebaseAndPush,
   getUnpublishedChangesetCommits,
   getChangedChangesetFilesSinceMaster,
+  getChangedChangesetFilesSinceDevelop,
+  getChangesetFiles,
   getAllReleaseCommits,
   getAllChangesetCommits,
   getLastPublishCommit,
