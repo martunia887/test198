@@ -25,6 +25,7 @@ import {
   SWITCHER_SUBJECT,
   RenderTracker,
   ViewedTracker,
+  ConditionalTracker,
 } from '../utils/analytics';
 import now from '../utils/performance-now';
 import { urlToHostname } from '../utils/url-to-hostname';
@@ -34,6 +35,7 @@ import {
   DiscoverMoreCallback,
   JoinableSiteClickHandler,
 } from '../types';
+import { Fragment } from 'prosemirror-model';
 
 const noop = () => void 0;
 
@@ -190,21 +192,50 @@ export default class Switcher extends React.Component<SwitcherProps> {
       }
     }
 
+    const switchToSectionHasLinks = () =>
+      (licensedProductLinks && licensedProductLinks.length > 0) ||
+      (!isDiscoverSectionEnabled &&
+        suggestedProductLinks &&
+        suggestedProductLinks.length > 0);
+
+    const joinableSitesSectionHasLinks = () =>
+      !!isJoinableSitesSectionEnabled &&
+      joinableSiteLinks &&
+      joinableSiteLinks.length > 0;
+
     return (
       <NavigationAnalyticsContext data={getAnalyticsContext(itemsCount)}>
         <SwitcherWrapper appearance={appearance}>
           {hasLoaded && (
-            <ViewedTracker
-              subject={SWITCHER_SUBJECT}
-              data={{
-                licensedProducts: licensedProductLinks.map(item => item.key),
-                suggestedProducts: suggestedProductLinks.map(item => item.key),
-                adminLinks: adminLinks.map(item => item.key),
-                fixedLinks: fixedLinks.map(item => item.key),
-                joinableSiteLinks: joinableSiteLinks.map(item => item.key),
-                numberOfSites,
-              }}
-            />
+            <React.Fragment>
+              <ViewedTracker
+                subject={SWITCHER_SUBJECT}
+                data={{
+                  licensedProducts: licensedProductLinks.map(item => item.key),
+                  suggestedProducts: suggestedProductLinks.map(
+                    item => item.key,
+                  ),
+                  adminLinks: adminLinks.map(item => item.key),
+                  fixedLinks: fixedLinks.map(item => item.key),
+                  joinableSiteLinks: joinableSiteLinks.map(item => item.key),
+                  numberOfSites,
+                }}
+              />
+              <ConditionalTracker
+                condition={switchToSectionHasLinks}
+                action={`rendered 'switch to' section`}
+                negativeAction={`did not render 'switch to' section`}
+                eventType={'operational'}
+                data={{ duration: this.timeSinceMounted() }}
+              />
+              <ConditionalTracker
+                condition={joinableSitesSectionHasLinks}
+                action={`rendered join section`}
+                negativeAction={`did not render join section`}
+                eventType={'operational'}
+                data={{ duration: this.timeSinceMounted() }}
+              />
+            </React.Fragment>
           )}
           {firstContentArrived && (
             <RenderTracker

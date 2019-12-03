@@ -9,6 +9,7 @@ import {
 import {
   UI_EVENT_TYPE,
   OPERATIONAL_EVENT_TYPE,
+  EventType,
 } from '@atlaskit/analytics-gas-types';
 
 type PropsToContextMapper<P, C> = (props: P) => C;
@@ -51,6 +52,15 @@ interface RenderTrackerProps extends WithAnalyticsEventsProps {
   onRender?: any;
 }
 
+interface ConditionalTrackerProps extends WithAnalyticsEventsProps {
+  condition: () => boolean;
+  action: string;
+  negativeAction: string;
+  eventType: EventType;
+  data?: object;
+  onRender?: any;
+}
+
 export const RenderTracker = withAnalyticsEvents({
   onRender: (
     createAnalyticsEvent: CreateUIAnalyticsEvent,
@@ -89,6 +99,33 @@ export const ViewedTracker = withAnalyticsEvents({
   },
 })(
   class extends React.Component<RenderTrackerProps> {
+    componentDidMount() {
+      this.props.onRender();
+    }
+
+    render() {
+      return null;
+    }
+  },
+);
+
+export const ConditionalTracker = withAnalyticsEvents({
+  onRender: (
+    createAnalyticsEvent: CreateUIAnalyticsEvent,
+    props: ConditionalTrackerProps,
+  ) => {
+    const evaluatedAction = props.condition()
+      ? props.action
+      : props.negativeAction;
+    return createAnalyticsEvent({
+      eventType: props.eventType,
+      action: evaluatedAction,
+      actionSubject: SWITCHER_SUBJECT,
+      attributes: props.data,
+    }).fire(NAVIGATION_CHANNEL);
+  },
+})(
+  class extends React.Component<ConditionalTrackerProps> {
     componentDidMount() {
       this.props.onRender();
     }
