@@ -57,12 +57,56 @@ https://app.datadoghq.com/screen/282018/product-fabric-adf-service?tv_mode=true#
       'text http://example.com/query=some%20text%20with%20encoded%20space text',
     ],
     [
+      'should not double url-encode text links with a url-encoded comma',
+      'text https://example.com/test%2C%20space text',
+    ],
+    [
+      'should not double url-encode text links with raw comma',
+      'text https://example.com/test,%20space text',
+    ],
+    [
+      'should differentiate raw comma from url-encoded comma',
+      'text https://example.com/test%2C,%20space text',
+    ],
+    [
+      'should differentiate raw comma from url-encoded comma in a mailto:',
+      'text mailto:test%2C,%20space@example.com text',
+    ],
+    [
       '[CS-576] should allow {color} macro in formatters',
       'This is _{color:red}*Strong Red and Italic*{color}_',
     ],
     [
       'should not apply strong when ending line is two strong symbols',
       '*not valid strong **',
+    ],
+    [
+      'should auto-linkify text links with tilde character in it',
+      'text prefix https://example.com/~abc/def/^xyz!bang$.#!.bang text suffix',
+    ],
+    [
+      'should auto-linkify monospace formatted text',
+      '{{text prefix https://example.com/~abc/def/^xyz!bang$.#!.bang text suffix}}',
+    ],
+    [
+      'should not let auto-links end with a period',
+      'text prefix https://example.com. text suffix',
+    ],
+    [
+      'should not let auto-links end with a bang',
+      'text prefix https://example.com! text suffix',
+    ],
+    [
+      'should let auto-links end with parenthesis',
+      'text prefix https://example.com/abc) text suffix',
+    ],
+    [
+      'should let auto-links end with parenthesis in url hash segment',
+      'text prefix https://example.com/abc#abc) text suffix',
+    ],
+    [
+      'should auto-link ftp urls',
+      'text prefix ftp://example.com/~abc/ text suffix',
     ],
   ];
 
