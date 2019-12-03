@@ -11,7 +11,12 @@ import {
   TAP_TO_LOAD_TEXT,
   TAP_TO_RETRY_TEXT,
   TAP_TO_VIEW_TEXT,
-  TAP_TO_REFRESH_TEXT,
+  TAP_TO_REFRESH_PAGE_TEXT,
+  ERROR_LOADING_TEXT,
+  FINAL_ERROR_LOADING_TEXT,
+  TAP_TO_VIEW_PROMISE,
+  TAP_TO_REFRESH_PAGE_PROMISE,
+  TAP_TO_LOAD_PROMISE,
 } from './constants';
 
 // create standard translated error messages here????
@@ -125,7 +130,7 @@ export class MacroComponent extends React.Component<
     this.setState({
       loaded: false,
       loading: false,
-      errorMessage: 'Error loading',
+      errorMessage: ERROR_LOADING_TEXT,
     });
   };
 
@@ -133,7 +138,7 @@ export class MacroComponent extends React.Component<
     this.setState({
       loaded: false,
       loading: false,
-      errorMessage: 'Unable to load',
+      errorMessage: FINAL_ERROR_LOADING_TEXT,
     });
   };
 
@@ -151,7 +156,7 @@ export class MacroComponent extends React.Component<
     // set state to loading
     this.setState({ loading: true });
     createPromise(
-      'customTapToLoadMacroButton',
+      TAP_TO_LOAD_PROMISE.name,
       JSON.stringify({
         macroId: this.getMacroId(),
         retryCount: this.state.retryCount,
@@ -174,7 +179,7 @@ export class MacroComponent extends React.Component<
     // on button click
     // do not set state to loading
     createPromise(
-      'customTapToViewMacroButton',
+      TAP_TO_VIEW_PROMISE.name,
       JSON.stringify({ macroId: this.getMacroId() }),
     )
       .submit()
@@ -193,7 +198,7 @@ export class MacroComponent extends React.Component<
       };
     });
     createPromise(
-      'customTapToLoadMacroButton',
+      TAP_TO_LOAD_PROMISE.name,
       JSON.stringify({
         macroId: this.getMacroId(),
         retryCount: this.state.retryCount,
@@ -203,12 +208,22 @@ export class MacroComponent extends React.Component<
       .then(isSuccessful => {
         if (isSuccessful) {
           this.setLoadingSuccessState();
-        } else if (this.state.retryCount >= 3) {
+        } else if (this.state.retryCount > 2) {
           this.setErrorUnableToLoadState();
         } else {
           this.setLoadingErrorState();
         }
       })
+      .catch(() => {
+        this.setErrorUnableToLoadState();
+      });
+  };
+
+  tapToRefreshPage = () => {
+    // on button click
+    // do not set state to loading
+    createPromise(TAP_TO_REFRESH_PAGE_PROMISE.name)
+      .submit()
       .catch(() => {
         this.setErrorUnableToLoadState();
       });
@@ -260,17 +275,11 @@ export class MacroComponent extends React.Component<
   };
 
   getTapToRefreshPageCardProps = (cardProps: CreateMacro): CreateMacro => {
-    // uncomment for https://product-fabric.atlassian.net/browse/CCEA-743
-    // const newProps = {
-    //   isDisabled: false,
-    //   onClick: this.tapToRetry,
-    //   errorMessage: this.state.errorMessage,
-    //   secondaryAction:  <Action callToAction>Refresh page</Action>
-    // };
-    // right now refresh is disabled
     const newProps = {
-      isDisabled: true,
+      isDisabled: false,
+      onClick: this.tapToRefreshPage,
       errorMessage: this.state.errorMessage,
+      secondaryAction: <Action callToAction>{TAP_TO_REFRESH_PAGE_TEXT}</Action>,
     };
 
     return { ...cardProps, ...newProps };

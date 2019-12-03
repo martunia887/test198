@@ -44,14 +44,20 @@ export const Error = styled.span`
   flex-basis: 100%;
   padding-top: 10px;
   display: flex;
+  flex-wrap: wrap;
 `;
 
 export const ErrorMessage = styled.span`
   color: ${colors.N90};
   padding-left: 4px;
   margin-top: -4px;
+  word-break: break-word;
 `;
-
+export const SecondaryAction = styled.span`
+  flex-basis: 100%;
+  padding-left: 12px;
+  margin-top: -8px;
+`;
 export const Icon = styled.span`
   padding-top: 3px;
 `;
@@ -59,4 +65,8 @@ export const Icon = styled.span`
 export const CardBody = styled.span`
   flex: 1;
   flex-wrap: wrap;
+`;
+
+export const ErrorContent = styled.span`
+  display: flex;
 `;

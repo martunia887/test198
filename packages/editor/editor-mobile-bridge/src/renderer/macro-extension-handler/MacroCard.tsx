@@ -9,6 +9,8 @@ import {
   Error,
   ErrorMessage,
   CardBody,
+  SecondaryAction,
+  ErrorContent,
 } from './styles';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { colors } from '@atlaskit/theme';
@@ -31,13 +33,15 @@ export const MacroCard = ({
       </ContentWrapper>
       {errorMessage && !loading ? (
         <Error>
-          <ErrorIcon
-            primaryColor={colors.R300}
-            size="medium"
-            label={errorMessage}
-          />
-          <ErrorMessage>{errorMessage}</ErrorMessage>
-          {secondaryAction}
+          <ErrorContent>
+            <ErrorIcon
+              primaryColor={colors.R300}
+              size="medium"
+              label={errorMessage}
+            />
+            <ErrorMessage>{errorMessage}</ErrorMessage>
+          </ErrorContent>
+          <SecondaryAction>{secondaryAction}</SecondaryAction>
         </Error>
       ) : null}
     </CardBody>
