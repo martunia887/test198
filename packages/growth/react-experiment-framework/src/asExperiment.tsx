@@ -1,37 +1,35 @@
-// @flow
-
-import React, { Component, type ComponentType, Fragment } from 'react';
+import React, { Component, ComponentClass, Fragment } from 'react';
 
 import CohortTracker from './CohortTracker';
 import { ExperimentConsumer } from './ExperimentContext';
-import type {
+import {
   Experiments,
   ExposureDetails,
   ExperimentEnrollmentOptions,
 } from './types';
 
 type State = {
-  forceFallback: boolean,
+  forceFallback: boolean;
 };
 
 type ExperimentComponentMap = {
-  fallback: ComponentType<any>,
-  [string]: ComponentType<any>,
+  fallback: ComponentClass<any>;
+  [key: string]: ComponentClass<any>;
 };
 
 export default function asExperiment(
   experimentComponentMap: ExperimentComponentMap,
   experimentKey: string,
   callbacks: {
-    onError: (error: Error, options?: ExperimentEnrollmentOptions) => void,
+    onError: (error: Error, options?: ExperimentEnrollmentOptions) => void;
     onExposure: (
       exposureDetails: ExposureDetails,
       options?: ExperimentEnrollmentOptions,
-    ) => void,
+    ) => void;
   },
-  LoadingComponent?: ?ComponentType<any>,
+  LoadingComponent?: ComponentClass<any>,
 ) {
-  let contextOptions;
+  let contextOptions: any;
 
   return class ExperimentSwitch extends Component<{}, State> {
     static displayName = 'ExperimentSwitch';

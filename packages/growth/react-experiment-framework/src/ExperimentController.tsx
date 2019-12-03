@@ -1,8 +1,6 @@
-// @flow
-
-import React, { Component, type Element } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { ExperimentProvider } from './ExperimentContext';
-import type {
+import {
   ExperimentKey,
   EnrollmentDetails,
   Experiments,
@@ -13,18 +11,18 @@ import type {
 
 type Props = {
   // A map of experiment resolvers, keyed by experimentKey.
-  experimentEnrollmentConfig: ExperimentEnrollmentConfig,
+  experimentEnrollmentConfig: ExperimentEnrollmentConfig;
 
   // A map of experiment options, keyed by experimentKey. The value of the option
   // under a given key is passed to the experiment resolver with the same key.
-  experimentEnrollmentOptions?: ExperimentEnrollmentOptions,
+  experimentEnrollmentOptions?: ExperimentEnrollmentOptions;
 
   // Children to render inside the Experiment Controller.
-  children?: Element<any>,
+  children?: ReactNode;
 };
 
 type State = {
-  experiments: Experiments,
+  experiments: Experiments;
 };
 
 class ExperimentController extends Component<Props, State> {
@@ -74,6 +72,7 @@ class ExperimentController extends Component<Props, State> {
       this.setState({
         experiments: {
           [experimentKey]: {
+            ...this.state.experiments[experimentKey],
             isEnrollmentDecided: true,
             enrollmentDetails,
           },

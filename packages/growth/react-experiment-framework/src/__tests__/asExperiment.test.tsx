@@ -1,16 +1,15 @@
 /* eslint-disable react/no-multi-comp */
-// @flow
 
-import React, { Component } from 'react';
-import { mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import React, { Component, ReactNode } from 'react';
+import { mount } from 'enzyme';
 
 import { ExperimentProvider } from '../ExperimentContext';
 import asExperiment from '../asExperiment';
-import type {
+import {
   ExperimentEnrollmentResolver,
   Experiments,
   ExperimentEnrollmentOptions,
+  EnrollmentOptions,
 } from '../types';
 import CohortTracker from '../CohortTracker';
 
@@ -30,22 +29,20 @@ class LoadingComponent extends Component<{}> {
   }
 }
 
-configure({ adapter: new Adapter() });
-
 describe('asExperiment', () => {
   let enrollmentResolver: ExperimentEnrollmentResolver;
-  let enrollmentOptions;
+  let enrollmentOptions: any;
   let experiments: {
-    experiments: Experiments,
-    options?: ExperimentEnrollmentOptions,
+    experiments: Experiments;
+    options?: ExperimentEnrollmentOptions;
   };
-  let componentMap;
-  let callbacks;
-  let onError;
-  let onExposure;
-  let ControlComponent;
-  let VariantComponent;
-  let FallbackComponent;
+  let componentMap: any;
+  let callbacks: any;
+  let onError: any;
+  let onExposure: any;
+  let ControlComponent: any;
+  let VariantComponent: any;
+  let FallbackComponent: any;
 
   beforeEach(() => {
     enrollmentResolver = jest.fn();
@@ -145,11 +142,13 @@ describe('asExperiment', () => {
       const mockOptions = {
         example: 'value',
       };
-      const mockOptionsResolver = experimentKey => {
-        return {
+      const mockOptionsResolver = (
+        experimentKey: string,
+      ): EnrollmentOptions => {
+        return ({
           myExperimentKey: mockOptions,
           differentExperiment: 'this should not get returned',
-        }[experimentKey];
+        } as any)[experimentKey];
       };
       const mockExperiments = {
         ...experiments,
@@ -355,7 +354,7 @@ describe('asExperiment', () => {
     describe('Variant but component is broken', () => {
       // eslint-disable-next-line react/require-render-return
       class BrokenComponent extends Component<{}> {
-        render() {
+        render(): ReactNode {
           throw new Error('Exploded');
         }
       }

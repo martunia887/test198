@@ -1,15 +1,13 @@
-// @flow
-
 import { Component } from 'react';
-import type { ExposureDetails, ExperimentEnrollmentOptions } from './types';
+import { ExposureDetails, ExperimentEnrollmentOptions } from './types';
 
 type Props = {
-  exposureDetails: ExposureDetails,
+  exposureDetails: ExposureDetails;
   onExposure: (
     exposureDetails: ExposureDetails,
     options?: ExperimentEnrollmentOptions,
-  ) => void,
-  options?: ExperimentEnrollmentOptions,
+  ) => void;
+  options?: ExperimentEnrollmentOptions;
 };
 
 export default class CohortTracker extends Component<Props> {

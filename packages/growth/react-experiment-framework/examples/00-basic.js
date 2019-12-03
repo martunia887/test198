@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types,react/no-multi-comp */
-// @flow
+
 import React, { Component } from 'react';
 
 import asExperiment from '../src/asExperiment';

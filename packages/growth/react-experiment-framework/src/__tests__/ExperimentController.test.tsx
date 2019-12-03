@@ -1,13 +1,8 @@
-// @flow
-
 import React from 'react';
-import { mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { mount } from 'enzyme';
 
 import ExperimentController from '../ExperimentController';
 import { ExperimentConsumer } from '../ExperimentContext';
-
-configure({ adapter: new Adapter() });
 
 describe('ExperimentController', () => {
   it('should provide context to a consumer', async () => {
@@ -36,7 +31,7 @@ describe('ExperimentController', () => {
       </ExperimentController>,
     );
 
-    const getExperimentValueForReceiverCall = call =>
+    const getExperimentValueForReceiverCall = (call: any) =>
       mockContextReceiver.mock.calls[call][0].experiments.myExperimentKey;
 
     // first call has the initial resolver, and has not decided enrollment
