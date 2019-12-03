@@ -88,7 +88,7 @@ export class PopupSimplePage extends Page {
       }
     });
     const fileInput = await this.$(fileInputSelector);
-    await fileInput.setValue(filename);
+    await fileInput.addValue(filename);
 
     await this.waitForSelector('[data-testid="media-picker-insert-button"]');
   }

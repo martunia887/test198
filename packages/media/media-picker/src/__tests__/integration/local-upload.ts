@@ -5,7 +5,9 @@ import { gotoPopupSimplePage } from '../../../pages/popup-simple-page';
 
 BrowserTestCase(
   'local-upload.ts: MediaPicker - local upload',
-  { skip: ['edge', 'ie', 'safari'] },
+  // Skipping safari because of ongoing issue (comms via email with support) with Browserstack atm
+  // Skipping IE because of different ongoing issue (comms via email with support) with Browserstack atm
+  { skip: ['ie', 'safari'] },
   async (client: Parameters<typeof gotoPopupSimplePage>[0]) => {
     const page = await gotoPopupSimplePage(client);
     const filename = 'popup.png';
