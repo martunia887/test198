@@ -173,7 +173,7 @@ export default class PickerFacade {
     const { dimensions, scaleFactor } = isImagePreview(preview)
       ? preview
       : { dimensions: undefined, scaleFactor: undefined };
-
+    console.log('PickerFacade handleUploadPreviewUpdate', file);
     const state: MediaState = {
       id: file.id,
       fileName: file.name,

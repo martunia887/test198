@@ -20,6 +20,7 @@ export default function(eventEmitter: PopupUploadEventEmitter): Middleware {
         case 'upload-preview-update': {
           const { preview } = event.data;
           const file = copyMediaFileForUpload(event.data.file, uploadId);
+          console.log('sendUploadEvent middleware', file);
           eventEmitter.emitUploadPreviewUpdate(file, preview);
           break;
         }

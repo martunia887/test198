@@ -33,6 +33,7 @@ export class UploadComponent<M extends UploadEventPayloadMap>
   }
 
   emitUploadPreviewUpdate(file: MediaFile, preview: Preview): void {
+    console.log('UploadComponent emitUploadPreviewUpdate', file);
     this.emit('upload-preview-update', {
       file,
       preview,

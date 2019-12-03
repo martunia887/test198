@@ -22,7 +22,7 @@ export default function resetView(state: State, action: Action): State {
         uploads[fileIdToKeep] = oldUploads[fileIdToKeep];
         return uploads;
       }, {});
-
+    console.log('resetView', uploads);
     return {
       ...state,
       selectedItems,

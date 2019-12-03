@@ -114,7 +114,10 @@ export class LocalUploadComponentReact<
       this.uploadComponent.on('uploads-start', onUploadsStart!);
     }
     if (onPreviewUpdate) {
-      this.uploadComponent.on('upload-preview-update', onPreviewUpdate!);
+      this.uploadComponent.on('upload-preview-update', payload => {
+        console.log('LocalUploadComponentReact upload-preview-update', payload);
+        onPreviewUpdate!(payload);
+      });
     }
     if (onStatusUpdate) {
       this.uploadComponent.on('upload-status-update', onStatusUpdate!);
@@ -205,6 +208,7 @@ export class LocalUploadComponentReact<
     file,
     preview,
   }: UploadPreviewUpdateEventPayload): void => {
+    console.log('LocalUploadReact emitUploadPreviewUpdate', file);
     this.uploadComponent.emitUploadPreviewUpdate(file, preview);
   };
 

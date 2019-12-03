@@ -355,7 +355,7 @@ export const importFilesFromLocalUpload = async (
 
   store.dispatch(setEventProxy(id, uploadId));
   await touchSelectedFile(touchFileDescriptor, store);
-
+  console.log('localUpload.events', localUpload.events);
   localUpload.events.forEach(originalEvent => {
     const event = { ...originalEvent };
 
@@ -368,6 +368,9 @@ export const importFilesFromLocalUpload = async (
 
       store.dispatch(finalizeUpload(file, uploadId, source, replaceFileId));
     } else if (event.name !== 'upload-end') {
+      if (event.name === 'upload-preview-update') {
+        console.log('importFilesFromLocalUpload sendUploadEvent', event);
+      }
       store.dispatch(sendUploadEvent({ event, uploadId }));
     }
   });
@@ -411,7 +414,7 @@ export const importFilesFromRemoteService = async (
         const preview = getPreviewFromMetadata(
           (payload as NotifyMetadataPayload).metadata,
         );
-
+        console.log('importFilesFromRemoteService upload-preview-update');
         store.dispatch(
           sendUploadEvent({
             event: {

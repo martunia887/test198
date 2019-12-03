@@ -19,6 +19,7 @@ const dispatchPreviewUpdate = (
   { uploadId, file }: GetPreviewAction,
   preview: Preview,
 ) => {
+  console.log('dispatchPreviewUpdate', file);
   store.dispatch(
     sendUploadEvent({
       event: {

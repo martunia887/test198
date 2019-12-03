@@ -262,6 +262,7 @@ export class UploadServiceImpl implements UploadService {
             ? window.devicePixelRatio
             : undefined,
         ).then(preview => {
+          console.log('emitPreviews 1');
           this.emit('file-preview-update', {
             file: mediaFile,
             preview,
@@ -269,6 +270,7 @@ export class UploadServiceImpl implements UploadService {
         });
       } else {
         getPreviewFromBlob(file, mediaType).then(preview => {
+          console.log('emitPreviews 2');
           this.emit('file-preview-update', {
             file: mediaFile,
             preview,

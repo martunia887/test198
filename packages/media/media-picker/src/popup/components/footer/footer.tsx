@@ -20,8 +20,15 @@ export interface FooterDispatchProps {
 }
 
 export type FooterProps = FooterStateProps & FooterDispatchProps;
+export interface FooterState {
+  isInsertingFiles: boolean;
+}
 
-export class Footer extends Component<FooterProps> {
+export class Footer extends Component<FooterProps, FooterState> {
+  state: FooterState = {
+    isInsertingFiles: false,
+  };
+
   renderCancelButton(): JSX.Element {
     const { canCancel, onCancel } = this.props;
     return (
@@ -35,22 +42,33 @@ export class Footer extends Component<FooterProps> {
     );
   }
 
+  onInserButtonClick = () => {
+    // console.log('onInserButtonClick')
+    const { selectedItems, onInsert } = this.props;
+    // TODO: use state.view.isLoading ?
+    // this.setState({isInsertingFiles: true}, () => setTimeout(() => onInsert(selectedItems), 500));
+    this.setState({ isInsertingFiles: true }, () => {
+      // console.log(selectedItems.length)
+      onInsert(selectedItems);
+    });
+    // this.setState({isInsertingFiles: true});
+  };
+
   renderInsertButton(): JSX.Element | null {
-    const { selectedItems, canInsert, onInsert } = this.props;
+    const { selectedItems, canInsert } = this.props;
+    const { isInsertingFiles } = this.state;
     const itemCount = selectedItems.length;
 
     if (itemCount === 0) {
       return null;
     }
 
-    const onClick = () => onInsert(selectedItems);
-
     return (
       <InsertButton
         testId="media-picker-insert-button"
         appearance="primary"
-        onClick={onClick}
-        isDisabled={!canInsert}
+        onClick={this.onInserButtonClick}
+        isDisabled={!canInsert || isInsertingFiles}
         autoFocus
       >
         <FormattedMessage

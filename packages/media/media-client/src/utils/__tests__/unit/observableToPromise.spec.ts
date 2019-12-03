@@ -10,14 +10,18 @@ describe('observableToPromise()', () => {
     },
   });
 
-  it('should return current value regardless of being complete', async () => {
+  it.only('should return current value regardless of being complete', async () => {
     const subject = new ReplaySubject(1);
 
     subject.next(1);
-    expect(await observableToPromise(subject)).toEqual(1);
-
     subject.next(2);
     expect(await observableToPromise(subject)).toEqual(2);
+
+    subject.next(3);
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    // subject.next(2);
+    // expect(await observableToPromise(subject)).toEqual(2);
   });
 
   it('should unsubscribe after getting the value', async () => {

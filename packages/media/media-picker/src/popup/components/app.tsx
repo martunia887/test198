@@ -144,7 +144,10 @@ export class App extends Component<AppProps, AppState> {
     });
 
     this.localUploader.on('uploads-start', onUploadsStart);
-    this.localUploader.on('upload-preview-update', onUploadPreviewUpdate);
+    this.localUploader.on('upload-preview-update', payload => {
+      console.log('App upload-preview-update', payload);
+      onUploadPreviewUpdate(payload);
+    });
     this.localUploader.on('upload-status-update', onUploadStatusUpdate);
     this.localUploader.on('upload-processing', onUploadProcessing);
     this.localUploader.on('upload-end', onUploadEnd);
@@ -292,7 +295,10 @@ export class App extends Component<AppProps, AppState> {
         mediaClient={this.componentMediaClient}
         config={config}
         onUploadsStart={onUploadsStart}
-        onPreviewUpdate={onUploadPreviewUpdate}
+        onPreviewUpdate={payload => {
+          console.log('BrowserComponent onPreviewUpdate', payload);
+          onUploadPreviewUpdate(payload);
+        }}
         onStatusUpdate={onUploadStatusUpdate}
         onProcessing={onUploadProcessing}
         onEnd={onUploadEnd}

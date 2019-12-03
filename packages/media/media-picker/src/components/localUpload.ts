@@ -61,6 +61,7 @@ export class LocalUploadComponent<
     file,
     preview,
   }: UploadPreviewUpdateEventPayload): void => {
+    console.log('LocalUpload emitUploadPreviewUpdate', file);
     this.emitUploadPreviewUpdate(file, preview);
   };
 

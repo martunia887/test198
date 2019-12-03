@@ -45,7 +45,9 @@ export const proxyUploadEvents = (store: Store<State>) => (
               finalizeUpload(localFile, uploadId, source, uploadId),
             );
           } else if (event.name !== 'upload-end') {
-            // TODO: MSW-376 upload-status-update events from the user has a public Id that should be sanitized here.
+            if (event.name === 'upload-preview-update') {
+              console.log('proxyUploadEvents', event);
+            }
             store.dispatch(sendUploadEvent({ event, uploadId }));
           }
         });
