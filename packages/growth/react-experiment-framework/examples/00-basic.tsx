@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 
 import asExperiment from '../src/asExperiment';
 import ExperimentController from '../src/ExperimentController';
+import { EnrollmentDetails } from '../src/types';
 
 export class Control extends Component<{ title: string }> {
   render() {
@@ -33,6 +34,7 @@ export class VariantB extends Component<{ title: string }> {
 export class Broken extends Component<{}> {
   render() {
     throw new Error('Threw on render');
+    return null;
   }
 }
 
@@ -58,21 +60,25 @@ export const ExperimentWrapped = asExperiment(
   Loader,
 );
 
-const resolveAfterDelay = (resolvesTo, delay = 2000) =>
+const resolveAfterDelay = (
+  resolvesTo: ResolvesTo,
+  delay = 2000,
+): Promise<EnrollmentDetails> =>
   new Promise(resolve => {
     setTimeout(() => {
       resolve(resolvesTo);
     }, delay);
   });
 
+type ResolvesTo = {
+  cohort: string;
+  isEligible: boolean;
+  ineligibilityReasons?: string[];
+};
 type Scenario = {
-  name: string,
-  resolvesTo: {
-    cohort: string,
-    isEligible: boolean,
-    ineligibilityReasons?: string[],
-  },
-  hasError?: boolean,
+  name: string;
+  resolvesTo: ResolvesTo;
+  hasError?: boolean;
 };
 const scenarios: Scenario[] = [
   {
@@ -123,7 +129,7 @@ const scenarios: Scenario[] = [
 ];
 
 type State = {
-  showErrorHandlingScenarios: boolean,
+  showErrorHandlingScenarios: boolean;
 };
 
 export default class extends Component<{}, State> {
@@ -131,9 +137,7 @@ export default class extends Component<{}, State> {
     showErrorHandlingScenarios: false,
   };
 
-  handleErrorHandlingChange = (
-    event: SyntheticInputEvent<HTMLInputElement>,
-  ) => {
+  handleErrorHandlingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ showErrorHandlingScenarios: !!event.target.checked });
   };
 
@@ -161,7 +165,7 @@ export default class extends Component<{}, State> {
                     myExperimentKey: () => resolvesTo,
                   }}
                 >
-                  <ExperimentWrapped title="Component" />
+                  <ExperimentWrapped />
                 </ExperimentController>
               </td>
               <td>
@@ -170,7 +174,7 @@ export default class extends Component<{}, State> {
                     myExperimentKey: () => resolveAfterDelay(resolvesTo, 2000),
                   }}
                 >
-                  <ExperimentWrapped title="Component" />
+                  <ExperimentWrapped />
                 </ExperimentController>
               </td>
             </tr>
@@ -182,7 +186,7 @@ export default class extends Component<{}, State> {
               <label>
                 <input
                   type="checkbox"
-                  value={showErrorHandlingScenarios}
+                  value={showErrorHandlingScenarios.toString()}
                   onChange={this.handleErrorHandlingChange}
                 />
                 Show error handling scenarios
