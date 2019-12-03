@@ -3,4 +3,6 @@ export {
   MediaMock,
   MockCollections,
   mediaMock,
+  MockFile,
+  MockFileInputParams,
 } from './media-mock';

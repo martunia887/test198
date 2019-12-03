@@ -4,7 +4,10 @@ jest.mock('../../../service/uploadServiceImpl');
 
 import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
-import { MockFile, fakeMediaClient } from '@atlaskit/media-test-helpers';
+import {
+  ClipboardMockFile,
+  fakeMediaClient,
+} from '@atlaskit/media-test-helpers';
 import { LocalFileSource } from '../../../service/types';
 import { Clipboard, ClipboardBase } from '../../clipboard/clipboard';
 import { mount } from 'enzyme';
@@ -46,7 +49,7 @@ describe('Clipboard', () => {
 
     const event: any = {
       clipboardData: {
-        files: [new MockFile()],
+        files: [new ClipboardMockFile()],
         types: [],
       },
     };
@@ -96,8 +99,8 @@ describe('Clipboard', () => {
       'addFilesWithSource',
     );
 
-    const mockFile1 = new MockFile();
-    const mockFile2 = new MockFile();
+    const mockFile1 = new ClipboardMockFile();
+    const mockFile2 = new ClipboardMockFile();
 
     const event: any = {
       clipboardData: {
@@ -168,7 +171,7 @@ describe('Clipboard', () => {
       'addFilesWithSource',
     );
 
-    const mockFile = new MockFile();
+    const mockFile = new ClipboardMockFile();
 
     const event: any = {
       clipboardData: {
@@ -205,7 +208,7 @@ describe('Clipboard', () => {
       'addFilesWithSource',
     );
 
-    const mockFile = new MockFile();
+    const mockFile = new ClipboardMockFile();
 
     const event: any = {
       clipboardData: {
@@ -264,8 +267,8 @@ describe('Clipboard', () => {
       'addFilesWithSource',
     );
 
-    const mockFile1 = new MockFile();
-    const mockFile2 = new MockFile();
+    const mockFile1 = new ClipboardMockFile();
+    const mockFile2 = new ClipboardMockFile();
 
     const event: any = {
       clipboardData: {

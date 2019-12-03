@@ -15,7 +15,7 @@ export type RecentUploadCard = {
  * @see https://www.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern
  */
 export class CardFilesMockedPage {
-  constructor(private readonly page: any) {}
+  constructor(private readonly page: Page) {}
 
   async isCardLoadedSuccessful(selector: string): Promise<boolean> {
     const imgSelector = `${selector} .img-wrapper img`;
@@ -43,6 +43,18 @@ export class CardFilesMockedPage {
       },
       source,
     );
+  }
+
+  async launchMediaViewer(selector: string) {
+    return this.page.click(selector);
+  }
+
+  async isMediaViewerLaunched() {
+    return this.page.waitForVisible('[data-testid="media-viewer-image"]');
+  }
+
+  async isCardVisible(selector: string) {
+    return this.page.waitForVisible(selector);
   }
 }
 

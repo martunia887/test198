@@ -54,18 +54,20 @@ export function createDatabase(
         name: collectionName,
         createdAt: Date.now(),
       });
-      collections[collectionName].forEach(({ id, name, blob, mimeType }) =>
-        database.push(
-          'collectionItem',
-          createCollectionItem({
-            id,
-            collectionName,
-            blob,
-            occurrenceKey: uuidV4(),
-            mimeType,
-            name,
-          }),
-        ),
+      collections[collectionName].forEach(
+        ({ id, name, blob, mimeType, processingStatus }) =>
+          database.push(
+            'collectionItem',
+            createCollectionItem({
+              id,
+              collectionName,
+              blob,
+              occurrenceKey: uuidV4(),
+              mimeType,
+              name,
+              processingStatus,
+            }),
+          ),
       );
     });
   } else {

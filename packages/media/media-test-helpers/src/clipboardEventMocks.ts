@@ -1,6 +1,6 @@
 // this isn't implemented by JSDOM so we've implemented it to make Typescript happy
 // see https://github.com/tmpvar/jsdom/issues/1568
-export class MockFile implements File {
+export class ClipboardMockFile implements File {
   readonly size: number;
   readonly type: string;
   readonly lastModified: number = 1234;

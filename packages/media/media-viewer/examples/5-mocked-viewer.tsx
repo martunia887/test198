@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { canUseDOM } from 'exenv';
 
-import { MediaClient, MediaFile, Identifier } from '@atlaskit/media-client';
+import { MediaClient, Identifier } from '@atlaskit/media-client';
 import {
   MediaMock,
   defaultCollectionName,
@@ -9,12 +9,13 @@ import {
   tallImage,
   defaultBaseUrl,
   generateFilesFromTestData,
+  MockFile,
 } from '@atlaskit/media-test-helpers';
 
 import { wideImage } from '../example-helpers/assets/wide-image';
 import { MediaViewer } from '../src/components/media-viewer';
 
-let files: Array<MediaFile & { blob: Blob }> = [];
+let files: MockFile[] = [];
 
 if (canUseDOM) {
   (window as any).areControlsRendered = () => {

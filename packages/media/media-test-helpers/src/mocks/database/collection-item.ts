@@ -1,5 +1,8 @@
 import * as uuid from 'uuid';
-import { MediaCollectionItem } from '@atlaskit/media-client';
+import {
+  MediaCollectionItem,
+  MediaFileProcessingStatus,
+} from '@atlaskit/media-client';
 import {
   getHackerNoun,
   getPastDate,
@@ -22,6 +25,7 @@ export type CreateCollectionItemOptions = {
   readonly occurrenceKey?: string;
   readonly blob?: Blob;
   readonly id?: string;
+  readonly processingStatus?: MediaFileProcessingStatus;
 };
 
 export function createCollectionItem({
@@ -31,6 +35,7 @@ export function createCollectionItem({
   occurrenceKey,
   blob = new Blob(['Hello World'], { type: 'text/plain' }),
   id,
+  processingStatus = 'succeeded',
 }: CreateCollectionItemOptions = {}): CollectionItem {
   const extension = getTextFileType();
   return {
@@ -41,12 +46,15 @@ export function createCollectionItem({
       name: name || getFakeFileName(extension),
       size: blob.size,
       mimeType,
-      processingStatus: 'succeeded',
       mediaType: 'image',
       artifacts: {},
-      representations: {
-        image: {},
-      },
+      processingStatus,
+      representations:
+        processingStatus === 'succeeded'
+          ? {
+              image: {},
+            }
+          : {},
     },
     collectionName: collectionName || getHackerNoun(),
     blob: blob || mapDataUriToBlob(fakeImage),

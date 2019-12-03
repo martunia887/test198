@@ -9,7 +9,7 @@ import { createDatabase } from './database';
 import { mapDataUriToBlob } from '../utils';
 
 export type MockCollections = {
-  [key: string]: Array<MediaFile & { blob: Blob }>;
+  [key: string]: Array<MediaFile & { blob?: Blob }>;
 };
 export class MediaMock {
   private server = new Server();
@@ -33,24 +33,37 @@ export class MediaMock {
   }
 }
 
+export type MockFileInputParams = Partial<MediaFile> & { dataUri?: string };
+export type MockFile = MediaFile & { blob?: Blob };
+
 export function generateFilesFromTestData(
-  files: (Partial<MediaFile> & { dataUri: string })[],
-): Array<MediaFile & { blob: Blob }> {
+  files: MockFileInputParams[],
+): MockFile[] {
   return files.map(file => {
-    const blob = mapDataUriToBlob(file.dataUri);
-    const id = file.id || uuid();
-    const name = file.name || `test-file-${id}`;
+    const {
+      processingStatus = 'succeeded',
+      dataUri,
+      id = uuid(),
+      name = `test-file-${id}`,
+    } = file;
+    const blob =
+      dataUri && dataUri !== '' ? mapDataUriToBlob(dataUri) : undefined;
+
     return {
       id,
       blob,
-      mimeType: blob.type,
+      mimeType: (blob && blob.type) || 'inode/empty',
       mediaType: 'image' as MediaType,
       name,
-      size: blob.size,
+      size: (blob && blob.size) || 0,
       artifacts: {},
-      representations: {
-        image: {},
-      },
+      processingStatus,
+      representations:
+        processingStatus === 'succeeded'
+          ? {
+              image: {},
+            }
+          : {},
     };
   });
 }
