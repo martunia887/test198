@@ -10,13 +10,17 @@ import {
   DEFAULT_IMAGE_WIDTH,
   browser,
   ProviderFactory,
+  ContextIdentifierProvider,
 } from '@atlaskit/editor-common';
 import { CardEvent } from '@atlaskit/media-card';
-import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { NodeSelection } from 'prosemirror-state';
 import { MediaClientConfig } from '@atlaskit/media-core';
 
-import { SelectionBasedNodeView } from '../../../nodeviews/ReactNodeView';
+import {
+  SelectionBasedNodeView,
+  getPosHandler,
+  getPosHandlerNode,
+} from '../../../nodeviews/ReactNodeView';
 import MediaItem from './media';
 import WithPluginState from '../../../ui/WithPluginState';
 import { pluginKey as widthPluginKey } from '../../width';
@@ -30,13 +34,14 @@ import { stateKey as mediaPluginKey } from '../pm-plugins/main';
 import { isMobileUploadCompleted } from '../commands/helpers';
 import { MediaSingleNodeProps, MediaSingleNodeViewProps } from './types';
 import { MediaNodeUpdater } from './mediaNodeUpdater';
-import { getViewMediaClientConfigFromMediaProvider } from '../utils/media-common';
 import { DispatchAnalyticsEvent } from '../../analytics';
+import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 
 export interface MediaSingleNodeState {
   width?: number;
   height?: number;
   viewMediaClientConfig?: MediaClientConfig;
+  contextIdentifierProvider?: ContextIdentifierProvider;
 }
 
 export default class MediaSingleNode extends Component<
@@ -47,7 +52,7 @@ export default class MediaSingleNode extends Component<
     mediaOptions: {},
   };
 
-  state = {
+  state: MediaSingleNodeState = {
     width: undefined,
     height: undefined,
     viewMediaClientConfig: undefined,
@@ -67,16 +72,17 @@ export default class MediaSingleNode extends Component<
   UNSAFE_componentWillReceiveProps(nextProps: MediaSingleNodeProps) {
     if (nextProps.mediaProvider !== this.props.mediaProvider) {
       this.setViewMediaClientConfig(nextProps);
-      this.createMediaNodeUpdater(nextProps).updateFileAttrs();
     }
+
+    // We need to call this method on any prop change since attrs can get removed with collab editing
+    // the method internally checks if we already have all attrs
+    this.createMediaNodeUpdater(nextProps).updateFileAttrs();
   }
 
   setViewMediaClientConfig = async (props: MediaSingleNodeProps) => {
     const mediaProvider = await props.mediaProvider;
     if (mediaProvider) {
-      const viewMediaClientConfig = await getViewMediaClientConfigFromMediaProvider(
-        mediaProvider,
-      );
+      const viewMediaClientConfig = await mediaProvider.viewMediaClientConfig;
 
       this.setState({
         viewMediaClientConfig,
@@ -89,7 +95,6 @@ export default class MediaSingleNode extends Component<
 
     // we want the first child of MediaSingle (type "media")
     const node = this.props.node.firstChild;
-
     if (!node) {
       return;
     }
@@ -99,8 +104,17 @@ export default class MediaSingleNode extends Component<
       mediaNodeUpdater.updateDimensions(updatedDimensions);
     }
 
-    if (node.attrs.type === 'external') {
-      await mediaNodeUpdater.uploadExternalMedia(this.props.getPos());
+    if (node.attrs.type === 'external' && node.attrs.__external) {
+      const pos = this.props.getPos();
+      if (mediaNodeUpdater.isMediaBlobUrl()) {
+        try {
+          await mediaNodeUpdater.copyNodeFromBlobUrl(pos);
+        } catch (e) {
+          await mediaNodeUpdater.uploadExternalMedia(pos);
+        }
+      } else {
+        await mediaNodeUpdater.uploadExternalMedia(pos);
+      }
       return;
     }
 
@@ -117,10 +131,16 @@ export default class MediaSingleNode extends Component<
   };
 
   async componentDidMount() {
+    const { contextIdentifierProvider } = this.props;
+
     await Promise.all([
       this.setViewMediaClientConfig(this.props),
       this.updateMediaNodeAttributes(this.props),
     ]);
+
+    this.setState({
+      contextIdentifierProvider: await contextIdentifierProvider,
+    });
   }
 
   private onExternalImageLoaded = ({
@@ -168,10 +188,11 @@ export default class MediaSingleNode extends Component<
       selected,
       getPos,
       node,
-      view: { state },
       mediaPluginOptions,
       fullWidthMode,
+      view: { state },
     } = this.props;
+    const { contextIdentifierProvider } = this.state;
 
     const { layout, width: mediaSingleWidth } = node.attrs;
     const childNode = node.firstChild!;
@@ -190,16 +211,6 @@ export default class MediaSingleNode extends Component<
       }
     }
 
-    let canResize = !!this.props.mediaOptions.allowResizing;
-
-    const pos = getPos();
-    if (pos) {
-      const $pos = state.doc.resolve(pos);
-      const { table } = state.schema.nodes;
-      const disabledNode = !!findParentNodeOfTypeClosestToPos($pos, [table]);
-      canResize = canResize && !disabledNode;
-    }
-
     if (width === null || height === null) {
       width = DEFAULT_IMAGE_WIDTH;
       height = DEFAULT_IMAGE_HEIGHT;
@@ -216,7 +227,6 @@ export default class MediaSingleNode extends Component<
       layout,
       width,
       height,
-
       containerWidth: this.props.width,
       lineLength: this.props.lineLength,
       pctWidth: mediaSingleWidth,
@@ -244,8 +254,22 @@ export default class MediaSingleNode extends Component<
         }
         uploadComplete={uploadComplete}
         url={childNode.attrs.url}
+        contextIdentifierProvider={contextIdentifierProvider}
       />
     );
+
+    let canResize = !!this.props.mediaOptions.allowResizing;
+
+    if (!this.props.mediaOptions.allowResizingInTables) {
+      // If resizing not allowed in tables, check parents for tables
+      const pos = getPos();
+      if (pos) {
+        const $pos = state.doc.resolve(pos);
+        const { table } = state.schema.nodes;
+        const disabledNode = !!findParentNodeOfTypeClosestToPos($pos, [table]);
+        canResize = canResize && !disabledNode;
+      }
+    }
 
     return canResize ? (
       <ResizableMediaSingle
@@ -332,6 +356,9 @@ class MediaSingleNodeView extends SelectionBasedNodeView<
       dispatchAnalyticsEvent,
     } = this.reactComponentProps;
 
+    // getPos is a boolean for marks, since this is a node we know it must be a function
+    const getPos = this.getPos as getPosHandlerNode;
+
     return (
       <WithProviders
         providers={['mediaProvider', 'contextIdentifierProvider']}
@@ -349,14 +376,14 @@ class MediaSingleNodeView extends SelectionBasedNodeView<
                 const isSelected = () =>
                   this.isSelectionInsideNode(selection.from, selection.to) ||
                   (selection instanceof NodeSelection &&
-                    selection.from === this.getPos());
+                    selection.from === getPos());
 
                 return (
                   <MediaSingleNode
                     width={width.width}
                     lineLength={width.lineLength}
                     node={this.node}
-                    getPos={this.getPos}
+                    getPos={getPos}
                     mediaProvider={mediaProvider}
                     contextIdentifierProvider={contextIdentifierProvider}
                     mediaOptions={mediaOptions || {}}
@@ -402,7 +429,7 @@ export const ReactMediaSingleNode = (
   pluginOptions?: MediaPMPluginOptions,
   fullWidthMode?: boolean,
   dispatchAnalyticsEvent?: DispatchAnalyticsEvent,
-) => (node: PMNode, view: EditorView, getPos: () => number) => {
+) => (node: PMNode, view: EditorView, getPos: getPosHandler) => {
   return new MediaSingleNodeView(node, view, getPos, portalProviderAPI, {
     eventDispatcher,
     mediaPluginOptions: pluginOptions,

@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { Identifier } from '@atlaskit/media-client';
 import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/chevron-left-circle';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
-import { colors } from '@atlaskit/theme';
+import { N800 } from '@atlaskit/theme/colors';
 import { hideControlsClassName, MediaButton } from '@atlaskit/media-ui';
 import { Shortcut } from '@atlaskit/media-ui';
 import {
@@ -79,10 +79,11 @@ export class NavigationBase extends Component<NavigationProps, {}> {
             <Arrow className={hideControlsClassName}>
               <Shortcut keyCode={37} handler={prev('keyboard')} />
               <MediaButton
+                data-testid="media-viewer-navigation-left"
                 onClick={prev('mouse')}
                 iconBefore={
                   <ArrowLeftCircleIcon
-                    primaryColor={colors.N800}
+                    primaryColor={N800}
                     size="xlarge"
                     label="Previous"
                   />
@@ -97,10 +98,11 @@ export class NavigationBase extends Component<NavigationProps, {}> {
             <Arrow className={hideControlsClassName}>
               <Shortcut keyCode={39} handler={next('keyboard')} />
               <MediaButton
+                data-testid="media-viewer-navigation-right"
                 onClick={next('mouse')}
                 iconBefore={
                   <ArrowRightCircleIcon
-                    primaryColor={colors.N800}
+                    primaryColor={N800}
                     size="xlarge"
                     label="Next"
                   />

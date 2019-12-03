@@ -5,6 +5,7 @@ import {
   FileIdentifier,
   FileState,
   MediaFileArtifacts,
+  globalMediaEventEmitter,
 } from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
 import { CustomMediaPlayer, InactivityDetector } from '@atlaskit/media-ui';
@@ -29,6 +30,7 @@ export interface InlinePlayerOwnProps {
     event: React.MouseEvent<HTMLDivElement>,
     analyticsEvent?: UIAnalyticsEvent,
   ) => void;
+  testId?: string;
 }
 
 export type InlinePlayerProps = InlinePlayerOwnProps & WithAnalyticsEventsProps;
@@ -56,9 +58,13 @@ export const getPreferredVideoArtifact = (
   return undefined;
 };
 
-class InlinePlayerBase extends Component<InlinePlayerProps, InlinePlayerState> {
+export class InlinePlayerBase extends Component<
+  InlinePlayerProps,
+  InlinePlayerState
+> {
   subscription?: Subscription;
   state: InlinePlayerState = {};
+  divRef: React.RefObject<HTMLDivElement> = React.createRef();
 
   static defaultProps = {
     dimensions: defaultImageCardDimensions,
@@ -173,19 +179,29 @@ class InlinePlayerBase extends Component<InlinePlayerProps, InlinePlayerState> {
     mediaClient.file.downloadBinary(await id, undefined, collectionName);
   };
 
+  onFirstPlay = async () => {
+    const { identifier } = this.props;
+    globalMediaEventEmitter.emit('media-viewed', {
+      fileId: await identifier.id,
+      viewingLevel: 'full',
+    });
+  };
+
   render() {
-    const { onClick, dimensions, selected } = this.props;
+    const { onClick, dimensions, selected, testId } = this.props;
     const { fileSrc } = this.state;
 
     if (!fileSrc) {
-      return <CardLoading dimensions={dimensions} />;
+      return <CardLoading testId={testId} dimensions={dimensions} />;
     }
 
     return (
       <InlinePlayerWrapper
+        data-testid={testId || 'media-card-inline-player'}
         style={this.getStyle()}
         selected={selected}
         onClick={onClick}
+        innerRef={this.divRef}
       >
         <InactivityDetector>
           {() => (
@@ -195,6 +211,7 @@ class InlinePlayerBase extends Component<InlinePlayerProps, InlinePlayerState> {
               isAutoPlay
               isHDAvailable={false}
               onDownloadClick={this.onDownloadClick}
+              onFirstPlay={this.onFirstPlay}
             />
           )}
         </InactivityDetector>

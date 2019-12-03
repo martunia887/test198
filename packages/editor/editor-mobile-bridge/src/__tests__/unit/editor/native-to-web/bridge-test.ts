@@ -1,5 +1,11 @@
 const mockCalls = [] as string[];
 
+const mockPmHistory = {
+  undo: jest.fn(() => () => {}),
+  redo: jest.fn(() => () => {}),
+};
+jest.mock('prosemirror-history', () => mockPmHistory);
+
 const mockEditorCore = {
   ...jest.genMockFromModule('@atlaskit/editor-core'),
   indentList: jest.fn(() => () => {}),
@@ -12,6 +18,7 @@ const mockEditorCore = {
   setLinkHref: jest.fn(() => () => mockCalls.push('setLinkHref')),
   setLinkText: jest.fn(() => () => mockCalls.push('setLinkText')),
   clearEditorContent: jest.fn(() => {}),
+  setKeyboardHeight: jest.fn(() => () => {}),
 };
 
 jest.mock('../../../../version.json', () => ({
@@ -32,9 +39,11 @@ import {
   setLinkHref,
   setLinkText,
   clearEditorContent,
+  setKeyboardHeight,
 } from '@atlaskit/editor-core';
 
 import WebBridgeImpl from '../../../../editor/native-to-web';
+import { defaultPadding } from '../../../../web-bridge';
 
 describe('general', () => {
   const bridge: any = new WebBridgeImpl();
@@ -57,10 +66,10 @@ describe('lists should work', () => {
     bridge.editorView = undefined;
     bridge.listBridgeState = undefined;
 
-    (indentList as jest.Mock<{}>).mockClear();
-    (outdentList as jest.Mock<{}>).mockClear();
-    (toggleOrderedList as jest.Mock<{}>).mockClear();
-    (toggleBulletList as jest.Mock<{}>).mockClear();
+    ((indentList as Function) as jest.Mock<{}>).mockClear();
+    ((outdentList as Function) as jest.Mock<{}>).mockClear();
+    ((toggleOrderedList as Function) as jest.Mock<{}>).mockClear();
+    ((toggleBulletList as Function) as jest.Mock<{}>).mockClear();
   });
 
   it('should call ordered list toggle', () => {
@@ -143,11 +152,11 @@ describe('links should work', () => {
   afterEach(() => {
     bridge.editorView = undefined;
 
-    (insertLink as jest.Mock<{}>).mockClear();
-    (isTextAtPos as jest.Mock<{}>).mockClear();
-    (isLinkAtPos as jest.Mock<{}>).mockClear();
-    (setLinkHref as jest.Mock<{}>).mockClear();
-    (setLinkText as jest.Mock<{}>).mockClear();
+    ((insertLink as Function) as jest.Mock<{}>).mockClear();
+    ((isTextAtPos as Function) as jest.Mock<{}>).mockClear();
+    ((isLinkAtPos as Function) as jest.Mock<{}>).mockClear();
+    ((setLinkHref as Function) as jest.Mock<{}>).mockClear();
+    ((setLinkText as Function) as jest.Mock<{}>).mockClear();
   });
 
   it('should call insertLink when not on text node', () => {
@@ -325,11 +334,70 @@ describe('content should work', () => {
   afterEach(() => {
     bridge.editorView = undefined;
 
-    (clearEditorContent as jest.Mock<{}>).mockClear();
+    ((clearEditorContent as Function) as jest.Mock<{}>).mockClear();
   });
 
   it('should clear content', () => {
     bridge.clearContent();
     expect(clearEditorContent).toHaveBeenCalled();
+  });
+});
+
+describe('history', () => {
+  const bridge: any = new WebBridgeImpl();
+
+  beforeEach(() => {
+    bridge.editorView = {};
+  });
+
+  it('should call undo', () => {
+    bridge.undo();
+    expect(mockPmHistory.undo).toHaveBeenCalled();
+  });
+
+  it('should call redo', () => {
+    bridge.redo();
+    expect(mockPmHistory.redo).toHaveBeenCalled();
+  });
+});
+
+describe('ui', () => {
+  const bridge: any = new WebBridgeImpl();
+
+  beforeEach(() => {
+    bridge.editorView = {};
+  });
+
+  it('should set keyboard height', () => {
+    bridge.setKeyboardControlsHeight('350');
+    expect(setKeyboardHeight).toHaveBeenCalledWith(350);
+  });
+});
+
+describe('styling', () => {
+  let bridge: any;
+  let mockRootEl: { style: Partial<CSSStyleDeclaration> };
+
+  beforeEach(() => {
+    bridge = new WebBridgeImpl();
+    mockRootEl = {
+      style: {
+        padding: 'auto',
+        margin: 'auto',
+      },
+    };
+    jest.spyOn(bridge, 'getRootElement').mockReturnValue(mockRootEl);
+    bridge.setPadding(...defaultPadding);
+  });
+
+  it('sets padding', () => {
+    const expectedPadding = defaultPadding.map(p => `${p}px`).join(' ');
+    expect(mockRootEl.style.padding).toBe(expectedPadding);
+  });
+
+  // Setting margin causes a bug in Android Recycled View where the height grows
+  // indefinitely https://product-fabric.atlassian.net/browse/FM-2472
+  it('does not set margin', () => {
+    expect(mockRootEl.style.margin).toBe('auto');
   });
 });

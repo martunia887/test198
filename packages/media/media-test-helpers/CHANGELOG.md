@@ -1,5 +1,149 @@
 # @atlaskit/media-test-helpers
 
+## 25.2.5
+
+### Patch Changes
+
+- [patch][3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  Make PopupSelect correctly pass props. Forcing update of @atlaskit/select for all other packages- Updated dependencies [3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  - @atlaskit/select@11.0.2
+
+## 25.2.4
+
+### Patch Changes
+
+- [patch][b967e41a6b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b967e41a6b):
+
+  Add empty file example to media-viewer
+
+- Updated dependencies [ae6408e1e4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ae6408e1e4):
+  - @atlaskit/media-picker@50.0.0
+
+## 25.2.3
+
+- Updated dependencies [30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):
+  - @atlaskit/select@11.0.0
+  - @atlaskit/media-picker@49.0.1
+
+## 25.2.2
+
+- Updated dependencies [24b8ea2667](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24b8ea2667):
+  - @atlaskit/media-client@4.0.0
+  - @atlaskit/media-picker@49.0.0
+  - @atlaskit/media-card@66.0.1
+  - @atlaskit/media-core@31.0.0
+
+## 25.2.1
+
+### Patch Changes
+
+- [patch][6ef4ae5768](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6ef4ae5768):
+
+  Bump kakapo, to fix Router instantiation: we now use only 'fetch' as strategy.
+
+## 25.2.0
+
+### Minor Changes
+
+- [minor][ae4f336a3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ae4f336a3a):
+
+**FABDODGEM-13 Editor Damask Release** - [Internal post](http://go.atlassian.com/damask-release)
+
+**BREAKING CHANGES**
+
+- **Media:** Removed deprecated "context" property from media components in favor of "mediaClientConfig". This affects all public media UI components.
+  - https://product-fabric.atlassian.net/browse/MS-2038
+- **Tasks & Decisions:** Removed containerAri for task-decisions components.
+  - https://product-fabric.atlassian.net/browse/ED-7631
+- **Renderer:** Adapts to task-decision changes.
+- **Editor Mobile Bridge:** Adapts to task-decision changes.
+- **Util Data Test:** Adapts to task-decision changes.
+
+---
+
+**Affected Editor Components:**
+
+tables, media, mobile, emoji, tasks & decisions, analytics
+
+**Editor**
+
+- Support nested actions in stage-0 schema; Change DOM representation of actions
+  - https://product-fabric.atlassian.net/browse/ED-7674
+- Updated i18n translations
+  - https://product-fabric.atlassian.net/browse/ED-7750
+- Improved analytics & crash reporting (via a new error boundary)
+  - https://product-fabric.atlassian.net/browse/ED-7766
+  - https://product-fabric.atlassian.net/browse/ED-7806
+- Improvements to heading anchor links.
+  - https://product-fabric.atlassian.net/browse/ED-7849
+  - https://product-fabric.atlassian.net/browse/ED-7860
+- Copy/Paste improvements
+  - https://product-fabric.atlassian.net/browse/ED-7840
+  - https://product-fabric.atlassian.net/browse/ED-7849
+- Fixes for the selection state of Smart links.
+  - https://product-fabric.atlassian.net/browse/ED-7602?src=confmacro
+- Improvements for table resizing & column creation.
+  - https://product-fabric.atlassian.net/browse/ED-7698
+  - https://product-fabric.atlassian.net/browse/ED-7319
+  - https://product-fabric.atlassian.net/browse/ED-7799
+
+**Mobile**
+
+- GASv3 Analytics Events are now relayed from the web to the native context, ready for dispatching.
+  - https://product-fabric.atlassian.net/browse/FM-2502
+- Hybrid Renderer Recycler view now handles invalid ADF nodes gracefully.
+  - https://product-fabric.atlassian.net/browse/FM-2370
+
+**Media**
+
+- Improved analytics
+  - https://product-fabric.atlassian.net/browse/MS-2036
+  - https://product-fabric.atlassian.net/browse/MS-2145
+  - https://product-fabric.atlassian.net/browse/MS-2416
+  - https://product-fabric.atlassian.net/browse/MS-2487
+- Added shouldOpenMediaViewer property to renderer
+  - https://product-fabric.atlassian.net/browse/MS-2393
+- Implemented analytics for file copy
+  - https://product-fabric.atlassian.net/browse/MS-2036
+- New `media-viewed` event dispatched when media is interacted with via the media card or viewer.
+  - https://product-fabric.atlassian.net/browse/MS-2284
+- Support for `alt` text attribute on media image elements.
+  - https://product-fabric.atlassian.net/browse/ED-7776
+
+**i18n-tools**
+
+Bumped dependencies.
+
+- [minor][00c11ee352](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/00c11ee352):
+
+  Add `addGlobalEventEmitterListeners` util to be used in examples to see `globalMediaEventEmitter` events in console.
+
+- Updated dependencies [c3e65f1b9e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c3e65f1b9e):
+- Updated dependencies [e7b5c917de](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e7b5c917de):
+  - @atlaskit/media-client@3.0.0
+  - @atlaskit/media-core@30.0.17
+  - @atlaskit/media-store@12.0.14
+  - @atlaskit/media-card@66.0.0
+  - @atlaskit/media-picker@48.0.0
+
+## 25.1.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 25.1.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
 ## 25.1.1
 
 - Updated dependencies [af72468517](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/af72468517):

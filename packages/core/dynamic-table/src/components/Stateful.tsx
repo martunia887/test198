@@ -41,18 +41,21 @@ export default class DynamicTable extends React.Component<
     });
   }
 
-  onSetPage = (page: number, event?: UIAnalyticsEvent) => {
+  onSetPage = (page: number, analyticsEvent?: UIAnalyticsEvent) => {
     const { onSetPage } = this.props;
     if (onSetPage) {
-      onSetPage(page, event);
+      onSetPage(page, analyticsEvent);
       this.setState({ page });
     }
   };
 
-  onSort = ({ key, item, sortOrder }: any) => {
+  onSort = (
+    { key, item, sortOrder }: any,
+    analyticsEvent?: UIAnalyticsEvent,
+  ) => {
     const { onSort } = this.props;
     if (onSort) {
-      onSort({ key, item, sortOrder });
+      onSort({ key, item, sortOrder }, analyticsEvent);
       this.setState({ sortKey: key, sortOrder, page: 1 });
     }
   };
@@ -88,6 +91,7 @@ export default class DynamicTable extends React.Component<
       caption,
       emptyView,
       head,
+      highlightedRowIndex,
       loadingSpinnerSize,
       isLoading,
       isFixedSize,
@@ -97,6 +101,7 @@ export default class DynamicTable extends React.Component<
       paginationi18n,
       onRankStart,
       onPageRowsUpdate,
+      testId,
     } = this.props;
 
     return (
@@ -105,6 +110,7 @@ export default class DynamicTable extends React.Component<
         caption={caption}
         emptyView={emptyView}
         head={head}
+        highlightedRowIndex={highlightedRowIndex}
         loadingSpinnerSize={loadingSpinnerSize}
         isLoading={isLoading}
         isFixedSize={isFixedSize}
@@ -120,6 +126,7 @@ export default class DynamicTable extends React.Component<
         onRankEnd={this.onRankEnd}
         onRankStart={onRankStart}
         onPageRowsUpdate={onPageRowsUpdate}
+        testId={testId}
       />
     );
   }

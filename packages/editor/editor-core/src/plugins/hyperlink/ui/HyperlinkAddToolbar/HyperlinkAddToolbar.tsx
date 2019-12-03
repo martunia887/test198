@@ -68,7 +68,7 @@ export interface Props {
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   autoFocus?: boolean;
-  provider: Promise<ActivityProvider>;
+  provider?: Promise<ActivityProvider>;
   displayText?: string;
   displayUrl?: string;
 }
@@ -114,15 +114,15 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
     this.handleClearDisplayText = this.createClearHandler('displayText');
   }
 
-  async resolveProvider() {
-    const provider = await this.props.provider;
+  async resolveProvider(unresolvedProvider: Promise<ActivityProvider>) {
+    const provider = await unresolvedProvider;
     this.setState({ provider });
     return provider;
   }
 
   async componentDidMount() {
     if (this.props.provider) {
-      const activityProvider = await this.resolveProvider();
+      const activityProvider = await this.resolveProvider(this.props.provider);
       this.loadRecentItems(activityProvider);
     }
   }
@@ -297,9 +297,10 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
     // add the link selected in the dropdown if there is one, otherwise submit the value of the input field
     if (items && items.length > 0 && selectedIndex > -1) {
       const item = items[selectedIndex];
+      const url = normalizeUrl(item.url);
       if (this.props.onSubmit) {
         this.props.onSubmit(
-          item.url,
+          url,
           this.state.displayText || item.name,
           INPUT_METHOD.TYPEAHEAD,
         );
@@ -308,10 +309,11 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
         );
       }
     } else if (text && text.length > 0) {
-      if (this.props.onSubmit) {
+      const url = normalizeUrl(text);
+      if (this.props.onSubmit && url) {
         this.submitted = true;
         this.props.onSubmit(
-          text,
+          url,
           this.state.displayText || text,
           INPUT_METHOD.MANUAL,
         );
@@ -354,7 +356,7 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
 
   private handleBlur = (type: string) => {
     const url = normalizeUrl(this.state.text);
-    if (this.props.onBlur && !this.submitted) {
+    if (this.props.onBlur && !this.submitted && url) {
       this.props.onBlur(
         type,
         url,

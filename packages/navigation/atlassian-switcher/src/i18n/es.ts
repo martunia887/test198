@@ -14,13 +14,27 @@ export default {
   'fabric.atlassianSwitcher.manageList': 'Administrar lista',
   'fabric.atlassianSwitcher.jiraProject': 'Proyecto Jira',
   'fabric.atlassianSwitcher.confluenceSpace': 'Espacio de Confluence',
-  'fabric.atlassianSwitcher.people': 'Personas',
   'fabric.atlassianSwitcher.administration': 'Administración',
-  'fabric.atlassianSwitcher.discoverMore': 'Descubrir más',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Explorar aplicaciones de Marketplace',
   'fabric.atlassianSwitcher.errorHeading': 'Algo ha ido mal',
   'fabric.atlassianSwitcher.errorText':
     'Aunque nos encargamos de supervisar estos errores, no dudes en contactar con nosotros si se repiten después de actualizar la página.',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'Ya hay un robot estropeado y varias personas manos a la obra.',
-  'fabric.atlassianSwitcher.expand': 'Expandir',
+    'Un robot estropeado y varias personas arreglándolo.',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'No hemos podido cargar esta lista. Vuelve a cargar la página e inténtalo de nuevo.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'Tu sesión ha finalizado. Vuelve a iniciarla.',
+  'fabric.atlassianSwitcher.login': 'Iniciar sesión',
+  'fabric.atlassianSwitcher.show.more.sites': 'Mostrar más sitios',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

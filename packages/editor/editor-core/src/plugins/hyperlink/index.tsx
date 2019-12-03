@@ -19,6 +19,8 @@ import { tooltip, addLink } from '../../keymaps';
 import { IconLink } from '../quick-insert/assets';
 
 const hyperlinkPlugin = (): EditorPlugin => ({
+  name: 'hyperlink',
+
   marks() {
     return [{ name: 'link', mark: link }];
   },
@@ -60,7 +62,7 @@ const hyperlinkPlugin = (): EditorPlugin => ({
             .setMeta(stateKey, { type: LinkAction.SHOW_INSERT_TOOLBAR })
             .delete(pos - nodeBefore.nodeSize, pos);
 
-          return addAnalytics(tr, {
+          return addAnalytics(state, tr, {
             action: ACTION.INVOKED,
             actionSubject: ACTION_SUBJECT.TYPEAHEAD,
             actionSubjectId: ACTION_SUBJECT_ID.TYPEAHEAD_LINK,

@@ -1,11 +1,11 @@
-import { handleCloudFetchingEvent } from '../../handleCloudFetchingEvent';
 import { mockStore } from '@atlaskit/media-test-helpers';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
+import { handleCloudFetchingEvent } from '../../handleCloudFetchingEvent';
 import {
   HANDLE_CLOUD_FETCHING_EVENT,
   HandleCloudFetchingEventAction,
 } from '../../../actions/handleCloudFetchingEvent';
 import { FINALIZE_UPLOAD } from '../../../actions/finalizeUpload';
-import { RECENTS_COLLECTION } from '../../../config';
 import { sendUploadEvent } from '../../../actions/sendUploadEvent';
 
 describe('handleCloudFetchingEvent', () => {
@@ -13,6 +13,7 @@ describe('handleCloudFetchingEvent', () => {
   const fileId = 'file-id';
   const bytes = 50;
   const fileSize = 1000;
+  const serviceName = 'dropbox';
   const client = { id: 'some-client-id', token: 'some-client-token' };
   const description = 'some-error-description';
   const file = {
@@ -36,7 +37,7 @@ describe('handleCloudFetchingEvent', () => {
       type: HANDLE_CLOUD_FETCHING_EVENT,
       file,
       event: 'RemoteUploadProgress',
-      payload: { uploadId, bytes, fileSize },
+      payload: { uploadId, bytes, fileSize, serviceName },
     };
     const portion = 0.05;
 
@@ -68,7 +69,7 @@ describe('handleCloudFetchingEvent', () => {
       type: HANDLE_CLOUD_FETCHING_EVENT,
       file,
       event: 'RemoteUploadEnd',
-      payload: { fileId, uploadId },
+      payload: { fileId, uploadId, serviceName },
     };
     const remoteUploads = {
       'some-upload-id': {},

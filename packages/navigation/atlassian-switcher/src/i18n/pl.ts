@@ -7,20 +7,34 @@
 // Polish
 export default {
   'fabric.atlassianSwitcher.switchTo': 'Przełącz na',
-  'fabric.atlassianSwitcher.switchToTooltip': 'Przełącz na…',
+  'fabric.atlassianSwitcher.switchToTooltip': 'Przełącz na...',
   'fabric.atlassianSwitcher.recent': 'Ostatnie',
   'fabric.atlassianSwitcher.more': 'Więcej',
   'fabric.atlassianSwitcher.try': 'Wypróbuj',
   'fabric.atlassianSwitcher.manageList': 'Zarządzaj listą',
   'fabric.atlassianSwitcher.jiraProject': 'Projekt Jira',
   'fabric.atlassianSwitcher.confluenceSpace': 'Przestrzeń Confluence',
-  'fabric.atlassianSwitcher.people': 'Użytkownicy',
   'fabric.atlassianSwitcher.administration': 'Administracja',
-  'fabric.atlassianSwitcher.discoverMore': 'Odkryj więcej',
-  'fabric.atlassianSwitcher.errorHeading': 'Wystąpił błąd',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Przeglądaj aplikacje z Marketplace',
+  'fabric.atlassianSwitcher.errorHeading': 'Coś poszło nie tak',
   'fabric.atlassianSwitcher.errorText':
     'Monitorujemy te błędy, ale nie wahaj się skontaktować z nami, jeśli odświeżanie nie rozwiąże problemów',
   'fabric.atlassianSwitcher.errorImageAltText':
     'Zepsuty robot i wiele osób pracuje, aby usunąć błąd.',
-  'fabric.atlassianSwitcher.expand': 'Rozwiń',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'Nie udało się załadować tej listy. Załaduj stronę ponownie i spróbuj ponownie.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'Wylogowano. Zaloguj się ponownie.',
+  'fabric.atlassianSwitcher.login': 'Zaloguj się',
+  'fabric.atlassianSwitcher.show.more.sites': 'Pokaż więcej stron',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

@@ -1,7 +1,6 @@
 import { InjectedIntl } from 'react-intl';
 import { EditorState } from 'prosemirror-state';
 import { removeSelectedNode } from 'prosemirror-utils';
-
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 
 import commonMessages from '../../../messages';
@@ -21,6 +20,8 @@ import {
 import buildLayoutButtons from './buildMediaLayoutButtons';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { MediaLinkingState, getMediaLinkingState } from '../pm-plugins/linking';
+import { getPluginState as getMediaAltTextPluginState } from '../pm-plugins/alt-text';
+import { altTextButton, getAltTextToolbar } from './alt-text';
 
 const remove: Command = (state, dispatch) => {
   if (dispatch) {
@@ -35,6 +36,8 @@ export type MediaFloatingToolbarOptions = {
   allowAnnotation?: boolean;
   allowLinking?: boolean;
   allowAdvancedToolBarOptions?: boolean;
+  allowResizingInTables?: boolean;
+  UNSAFE_allowAltTextOnImages?: boolean;
 };
 
 export const floatingToolbar = (
@@ -48,6 +51,8 @@ export const floatingToolbar = (
     allowAnnotation,
     allowLinking,
     allowAdvancedToolBarOptions,
+    allowResizingInTables,
+    UNSAFE_allowAltTextOnImages,
   } = options;
   const { mediaSingle } = state.schema.nodes;
   const pluginState: MediaPluginState | undefined = stateKey.getState(state);
@@ -82,7 +87,12 @@ export const floatingToolbar = (
 
   let toolbarButtons: FloatingToolbarItem<Command>[] = [];
   if (allowAdvancedToolBarOptions) {
-    toolbarButtons = buildLayoutButtons(state, intl, allowResizing);
+    toolbarButtons = buildLayoutButtons(
+      state,
+      intl,
+      allowResizing,
+      allowResizingInTables,
+    );
     if (toolbarButtons.length) {
       if (allowAnnotation) {
         toolbarButtons.push({
@@ -106,19 +116,30 @@ export const floatingToolbar = (
     }
   }
 
+  if (UNSAFE_allowAltTextOnImages) {
+    const mediaAltTextPluginState = getMediaAltTextPluginState(state);
+    if (mediaAltTextPluginState.isAltTextEditorOpen) {
+      return getAltTextToolbar(baseToolbar);
+    } else {
+      toolbarButtons.push(altTextButton(intl, state), { type: 'separator' });
+    }
+  }
+
+  const items: Array<FloatingToolbarItem<Command>> = [
+    ...toolbarButtons,
+    {
+      type: 'button',
+      appearance: 'danger',
+      icon: RemoveIcon,
+      onMouseEnter: hoverDecoration(mediaSingle, true),
+      onMouseLeave: hoverDecoration(mediaSingle, false),
+      title: intl.formatMessage(commonMessages.remove),
+      onClick: remove,
+    },
+  ];
+
   return {
     ...baseToolbar,
-    items: [
-      ...toolbarButtons,
-      {
-        type: 'button',
-        appearance: 'danger',
-        icon: RemoveIcon,
-        onMouseEnter: hoverDecoration(mediaSingle, true),
-        onMouseLeave: hoverDecoration(mediaSingle, false),
-        title: intl.formatMessage(commonMessages.remove),
-        onClick: remove,
-      },
-    ],
+    items,
   };
 };

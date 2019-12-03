@@ -1,3 +1,4 @@
+// @flow
 // This file is used to create flow definitions for core packages that
 // have been converted to typescript. This is a temporary solution
 // while we are converting all core packages to typescript.
@@ -9,11 +10,15 @@ declare module '@atlaskit/analytics-next' {
   declare module.exports: any;
 }
 
-declare module '@atlaskit/atlassian-switcher' {
+declare module '@atlaskit/atlassian-navigation' {
   declare module.exports: any;
 }
 
-declare module '@atlaskit/app-navigation' {
+declare module '@atlaskit/atlassian-navigation/skeleton' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/atlassian-switcher' {
   declare module.exports: any;
 }
 
@@ -45,11 +50,23 @@ declare module '@atlaskit/button' {
   declare module.exports: any;
 }
 
+declare module '@atlaskit/calendar' {
+  declare module.exports: any;
+}
+
 declare module '@atlaskit/checkbox' {
   declare module.exports: any;
 }
 
 declare module '@atlaskit/code' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/comment' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/datetime-picker' {
   declare module.exports: any;
 }
 
@@ -70,6 +87,18 @@ declare module '@atlaskit/flag' {
 }
 
 declare module '@atlaskit/icon' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/icon-file-type' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/icon-object' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/icon-priority' {
   declare module.exports: any;
 }
 
@@ -149,6 +178,10 @@ declare module '@atlaskit/section-message' {
   declare module.exports: any;
 }
 
+declare module '@atlaskit/select' {
+  declare module.exports: any;
+}
+
 declare module '@atlaskit/spinner' {
   declare module.exports: any;
 }
@@ -178,5 +211,45 @@ declare module '@atlaskit/tooltip' {
 }
 
 declare module '@atlaskit/tree' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/colors' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/constants' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/components' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/elevation' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/getTheme' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/math' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/themed' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/typography' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/theme/AtlaskitThemeProvider' {
   declare module.exports: any;
 }

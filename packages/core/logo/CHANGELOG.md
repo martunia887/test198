@@ -1,5 +1,29 @@
 # @atlaskit/logo
 
+## 12.2.2
+
+### Patch Changes
+
+- [patch][30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):
+
+  @atlaskit/select has been converted to Typescript. Typescript consumers will now get static type safety. Flow types are no longer provided. No API or behavioural changes.
+
+## 12.2.1
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 12.2.0
+
+### Minor Changes
+
+- [minor][9e3b4ffeb1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9e3b4ffeb1):
+
+  Add Trello logo
+
 ## 12.1.8
 
 ### Patch Changes

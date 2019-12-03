@@ -9,7 +9,9 @@ import { BaseViewer } from '../base-viewer';
 import { getObjectUrlFromFileState } from '../../utils/getObjectUrlFromFileState';
 
 const moduleLoader = () =>
-  import(/* webpackChunkName:"@atlaskit-internal_media-viewer-pdf-viewer" */ './pdfRenderer');
+  import(
+    /* webpackChunkName:"@atlaskit-internal_media-viewer-pdf-viewer" */ './pdfRenderer'
+  );
 
 const componentLoader: () => Promise<ComponentClass<RendererProps>> = () =>
   moduleLoader().then(module => module.PDFRenderer);
@@ -19,6 +21,8 @@ export type Props = {
   item: FileState;
   collectionName?: string;
   onClose?: () => void;
+  onError?: (error: Error) => void;
+  onSuccess?: () => void;
 };
 
 export type State = {
@@ -38,7 +42,7 @@ export class DocViewer extends BaseViewer<string, Props> {
     if (!DocViewer.PDFComponent) {
       await this.loadDocViewer();
     }
-    const { item, mediaClient, collectionName } = this.props;
+    const { item, mediaClient, collectionName, onError } = this.props;
 
     if (item.status === 'processed') {
       try {
@@ -47,7 +51,7 @@ export class DocViewer extends BaseViewer<string, Props> {
           'document.pdf',
           collectionName,
         );
-
+        this.onMediaDisplayed();
         this.setState({
           content: Outcome.successful(src),
         });
@@ -55,6 +59,9 @@ export class DocViewer extends BaseViewer<string, Props> {
         this.setState({
           content: Outcome.failed(createError('previewFailed', err, item)),
         });
+        if (onError) {
+          onError(err);
+        }
       }
     } else {
       const src = await getObjectUrlFromFileState(item);
@@ -85,12 +92,19 @@ export class DocViewer extends BaseViewer<string, Props> {
   }
 
   protected renderSuccessful(content: string) {
-    const { onClose } = this.props;
+    const { onClose, onSuccess, onError } = this.props;
     const { PDFComponent } = DocViewer;
 
     if (!PDFComponent) {
       return <Spinner />;
     }
-    return <PDFComponent src={content} onClose={onClose} />;
+    return (
+      <PDFComponent
+        src={content}
+        onSuccess={onSuccess}
+        onError={onError}
+        onClose={onClose}
+      />
+    );
   }
 }

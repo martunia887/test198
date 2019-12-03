@@ -1,5 +1,122 @@
 # @atlaskit/theme
 
+## 9.3.0
+
+### Minor Changes
+
+- [minor][f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+
+  Corrects the type exports for typography, colors, elevation and layers. If you were doing any dynamic code it may break you. Refer to the [upgrade guide](/packages/core/theme/docs/upgrade-guide) for help upgrading.
+
+### Patch Changes
+
+- [patch][3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+
+  Fixes types property in package json to point to the correct location.
+
+## 9.2.8
+
+### Patch Changes
+
+- [patch][ea75c17b3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ea75c17b3a):
+
+  internal typescript fixes
+
+## 9.2.7
+
+### Patch Changes
+
+- [patch][c3dc8235f2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c3dc8235f2):
+
+  Preventing circular dep within theme
+
+## 9.2.6
+
+### Patch Changes
+
+- [patch][d222c2b987](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d222c2b987):
+
+  Theme has been converted to Typescript. Typescript consumers will now get static type safety. Flow types are no longer provided.
+
+  ### Breaking
+
+  ** getTokens props changes **
+  When defining the value function passed into a ThemeProvider, the getTokens parameter cannot be called without props; if no props are provided an empty object `{}` must be passed in:
+
+  ```javascript
+  <CustomTheme.Provider
+    value={t => ({ ...t(), backgroundColor: '#333'})}
+  >
+  ```
+
+  becomes:
+
+  ```javascript
+  <CustomTheme.Provider
+    value={t => ({ ...t({}), backgroundColor: '#333'})}
+  >
+  ```
+
+  ** Color palette changes **
+  Color palettes have been moved into their own file.
+  Users will need to update imports from this:
+
+  ```javascript
+  import { colors } from '@atlaskit/theme';
+
+  colors.colorPalette('8');
+  ```
+
+  to this:
+
+  ```javascript
+  import { colorPalette } from '@atlaskit/theme';
+
+  colorPalette.colorPalette('8');
+  ```
+
+  or for multi entry-point users:
+
+  ```javascript
+  import * as colors from '@atlaskit/theme/colors';
+
+  colors.colorPalette('8');
+  ```
+
+  to this:
+
+  ```javascript
+  import * as colorPalettes from '@atlaskit/theme/color-palette';
+
+  colorPalettes.colorPalette('8');
+  ```
+
+## 9.2.5
+
+### Patch Changes
+
+- [patch][2119c45dfc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2119c45dfc):
+
+  Add missing Theme/GlobalThemeTokens to constants.d.ts
+
+## 9.2.4
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 9.2.3
+
+### Patch Changes
+
+- [patch][decd6fceea](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/decd6fceea):
+
+  ED-5137 added heading anchor link
+
+  Values for heading sizes(h100 - h900) are exported as part of typography. Places need to calculate heights for heading can use those values to calculate.
+
 ## 9.2.2
 
 ### Patch Changes

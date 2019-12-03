@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
-import FabricAnalyticsListeners from '@atlaskit/analytics-listeners';
-import { analyticsClient } from '@atlaskit/editor-test-helpers';
+import { mount, ReactWrapper } from 'enzyme';
+import FabricAnalyticsListeners, {
+  AnalyticsWebClient,
+} from '@atlaskit/analytics-listeners';
+import { analyticsClient } from '@atlaskit/editor-test-helpers/src/analytics-client-mock';
+import { doc, p, a, b, heading, text } from '@atlaskit/adf-utils';
 import { EDITOR_APPEARANCE_CONTEXT } from '@atlaskit/analytics-namespaced-context';
-import Renderer, { Renderer as BaseRenderer } from '../../../ui/Renderer';
+import Renderer, {
+  Renderer as BaseRenderer,
+  Props,
+} from '../../../ui/Renderer';
 import { RendererAppearance } from '../../../ui/Renderer/types';
 
-const validDoc = {
-  version: 1,
+const initialDoc = {
   type: 'doc',
   content: [
     {
@@ -15,44 +20,40 @@ const validDoc = {
       content: [
         {
           type: 'text',
-          text: 'Hello, ',
-          marks: [
-            {
-              type: 'link',
-              attrs: {
-                href: 'https://www.atlassian.com',
-              },
-            },
-          ],
-        },
-        {
-          type: 'text',
-          text: 'World!',
-          marks: [
-            {
-              type: 'strong',
-            },
-            {
-              type: 'link',
-              attrs: {
-                href: 'https://www.atlassian.com',
-              },
-            },
-          ],
+          text: 'Hello!',
         },
       ],
     },
   ],
 };
 
-describe('@atlaskit/renderer/ui/Renderer', () => {
-  it('should re-render when appearance changes', () => {
-    const doc = {
-      type: 'doc',
-      content: 'foo',
-    };
+const invalidDoc = {
+  type: 'doc',
+  content: 'foo',
+};
 
-    const renderer = mount(<Renderer document={doc} />);
+const validDoc = doc(
+  heading({ level: 1 })(text('test')),
+  p(
+    a({ href: 'https://www.atlassian.com' })('Hello, '),
+    a({ href: 'https://www.atlassian.com' })(b('World!')),
+  ),
+);
+
+describe('@atlaskit/renderer/ui/Renderer', () => {
+  let renderer: ReactWrapper;
+
+  const initRenderer = (doc: any = initialDoc, props: Partial<Props> = {}) =>
+    mount(<Renderer document={doc} {...props} />);
+
+  afterEach(() => {
+    if (renderer && renderer.length === 1) {
+      renderer.unmount();
+    }
+  });
+
+  it('should re-render when appearance changes', () => {
+    renderer = initRenderer();
     const renderSpy = jest.spyOn(
       renderer.find(BaseRenderer).instance() as any,
       'render',
@@ -63,98 +64,211 @@ describe('@atlaskit/renderer/ui/Renderer', () => {
   });
 
   it('should catch errors and render unsupported content text', () => {
-    const doc = {
-      type: 'doc',
-      content: 'foo',
-    };
-
-    const renderer = mount(<Renderer document={doc} />);
+    renderer = initRenderer(invalidDoc);
     expect(renderer.find('UnsupportedBlockNode')).toHaveLength(1);
-    renderer.unmount();
+  });
+
+  it('should call onError callback when catch error', () => {
+    const onError = jest.fn();
+    renderer = initRenderer(invalidDoc, { onError });
+    expect(onError).toHaveBeenCalled();
   });
 
   describe('Stage0', () => {
-    const docWithStage0Mark = {
-      type: 'doc',
-      version: 1,
-      content: [
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Hello World',
-              marks: [
-                {
-                  type: 'confluenceInlineComment',
-                  attrs: {
-                    reference: 'ref',
+    describe('marks', () => {
+      const docWithStage0Mark = {
+        type: 'doc',
+        version: 1,
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                text: 'Hello World',
+                marks: [
+                  {
+                    type: 'confluenceInlineComment',
+                    attrs: {
+                      reference: 'ref',
+                    },
                   },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
+                ],
+              },
+            ],
+          },
+        ],
+      };
 
-    it('should remove stage0 marks if flag is not explicitly set to "stage0"', () => {
-      const renderer = mount(<Renderer document={docWithStage0Mark} />);
-      expect(renderer.find('ConfluenceInlineComment')).toHaveLength(0);
-      renderer.unmount();
+      it('should remove stage0 marks if flag is not explicitly set to "stage0"', () => {
+        renderer = initRenderer(docWithStage0Mark);
+        expect(renderer.find('ConfluenceInlineComment')).toHaveLength(0);
+      });
+
+      it('should keep stage0 marks if flag is explicitly set to "stage0"', () => {
+        renderer = initRenderer(docWithStage0Mark, { adfStage: 'stage0' });
+        expect(renderer.find('ConfluenceInlineComment')).toHaveLength(1);
+      });
     });
 
-    it('should keep stage0 marks if flag is explicitly set to "stage0"', () => {
-      const renderer = mount(
-        <Renderer document={docWithStage0Mark} adfStage="stage0" />,
-      );
-      expect(renderer.find('ConfluenceInlineComment')).toHaveLength(1);
-      renderer.unmount();
+    describe('alt text', () => {
+      const docWithStage0AltText = {
+        version: 1,
+        type: 'doc',
+        content: [
+          {
+            type: 'mediaSingle',
+            attrs: {
+              layout: 'center',
+            },
+            content: [
+              {
+                type: 'media',
+                attrs: {
+                  id: '0a7b3495-d1e5-4b27-90fb-a2589cd96e3b',
+                  type: 'file',
+                  collection: 'MediaServicesSample',
+                  width: 1874,
+                  height: 1078,
+                  alt: 'This is an alt text',
+                },
+              },
+            ],
+          },
+          {
+            type: 'paragraph',
+            content: [],
+          },
+        ],
+      };
+
+      it('should support alt text on images if flag adfStage is explicitly set to "stage0"', () => {
+        renderer = initRenderer(docWithStage0AltText, {
+          adfStage: 'stage0',
+          UNSAFE_allowAltTextOnImages: true,
+        });
+        expect(
+          renderer.find('MediaSingle [alt="This is an alt text"]'),
+        ).toHaveLength(1);
+      });
+
+      it('should remove alt text on images if flag UNSAFE_allowAltTextOnImages is not provided', () => {
+        renderer = initRenderer(docWithStage0AltText, {
+          adfStage: 'stage0',
+        });
+        expect(
+          renderer
+            .find('Media')
+            .find('MediaCardInternal')
+            .prop('alt'),
+        ).toBeUndefined();
+      });
+
+      it('should remove alt text on images if flag adfStage is not explicitly set to "stage0"', () => {
+        renderer = initRenderer(docWithStage0AltText, {
+          UNSAFE_allowAltTextOnImages: true,
+        });
+        expect(
+          renderer.find('MediaSingle [alt="This is an alt text"]'),
+        ).toHaveLength(0);
+      });
     });
   });
 
   describe('Truncated Renderer', () => {
     it('should truncate to 95px when truncated prop is true and maxHeight is undefined', () => {
-      const renderer = mount(<Renderer truncated={true} document={validDoc} />);
+      renderer = initRenderer(initialDoc, { truncated: true });
 
       expect(renderer.find('TruncatedWrapper')).toHaveLength(1);
 
       const wrapper = renderer.find('TruncatedWrapper').childAt(0);
       expect(wrapper.props().height).toEqual(95);
-      renderer.unmount();
     });
 
     it('should truncate to custom height when truncated prop is true and maxHeight is defined', () => {
-      const renderer = mount(
-        <Renderer truncated={true} maxHeight={100} document={validDoc} />,
-      );
+      renderer = initRenderer(initialDoc, { truncated: true, maxHeight: 100 });
       expect(renderer.find('TruncatedWrapper')).toHaveLength(1);
       expect(renderer.find('TruncatedWrapper').props().height).toEqual(100);
-
-      renderer.unmount();
     });
 
     it("shouldn't truncate when truncated prop is undefined and maxHeight is defined", () => {
-      const renderer = mount(<Renderer maxHeight={100} document={validDoc} />);
+      renderer = initRenderer(initialDoc, { maxHeight: 100 });
       expect(renderer.find('TruncatedWrapper')).toHaveLength(0);
-      renderer.unmount();
     });
 
     it("shouldn't truncate when truncated prop is undefined and maxHeight is undefined", () => {
-      const renderer = mount(<Renderer document={validDoc} />);
+      renderer = initRenderer();
       expect(renderer.find('TruncatedWrapper')).toHaveLength(0);
-      renderer.unmount();
+    });
+
+    it('should truncate and adjust fade out if fadeoutHeight prop is defined', () => {
+      renderer = initRenderer(initialDoc, {
+        truncated: true,
+        maxHeight: 100,
+        fadeOutHeight: 50,
+      });
+      expect(renderer.find('TruncatedWrapper')).toHaveLength(1);
+      expect(
+        (renderer.find('TruncatedWrapper').props() as any).fadeHeight,
+      ).toEqual(50);
     });
   });
 
   describe('Analytics', () => {
-    it('should fire analytics event on renderer started', () => {
-      const client = analyticsClient();
+    let client: AnalyticsWebClient;
+
+    const initRendererWithAnalytics = (props: Partial<Props> = {}) =>
       mount(
+        <FabricAnalyticsListeners client={client}>
+          <Renderer document={initialDoc} {...props} />
+        </FabricAnalyticsListeners>,
+      );
+
+    beforeEach(() => {
+      client = analyticsClient();
+      jest.useFakeTimers();
+      jest
+        .spyOn(window, 'requestAnimationFrame')
+        .mockImplementation((fn: Function) => fn());
+    });
+
+    afterEach(() => {
+      (window.requestAnimationFrame as jest.Mock).mockRestore();
+      jest.useRealTimers();
+    });
+
+    it('should fire heading anchor hit analytics event', () => {
+      const oldHash = window.location.hash;
+      window.location.hash = '#test';
+
+      renderer = mount(
         <FabricAnalyticsListeners client={client}>
           <Renderer document={validDoc} />
         </FabricAnalyticsListeners>,
+        {
+          attachTo: document.body,
+        },
       );
+
+      jest.runAllTimers();
+
+      expect(client.sendUIEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: 'viewed',
+          actionSubject: 'anchorLink',
+          attributes: expect.objectContaining({
+            platform: 'web',
+            mode: 'renderer',
+          }),
+        }),
+      );
+
+      renderer.detach();
+      window.location.hash = oldHash;
+    });
+
+    it('should fire analytics event on renderer started', () => {
+      renderer = initRendererWithAnalytics();
 
       expect(client.sendUIEvent).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -183,15 +297,10 @@ describe('@atlaskit/renderer/ui/Renderer', () => {
       },
     ];
     appearances.forEach(appearance => {
-      it(`adds appearance to analytics events for ${
-        appearance.appearance
-      } renderer`, () => {
-        const client = analyticsClient();
-        mount(
-          <FabricAnalyticsListeners client={client}>
-            <Renderer document={validDoc} appearance={appearance.appearance} />
-          </FabricAnalyticsListeners>,
-        );
+      it(`adds appearance to analytics events for ${appearance.appearance} renderer`, () => {
+        renderer = initRendererWithAnalytics({
+          appearance: appearance.appearance,
+        });
 
         expect(client.sendUIEvent).toHaveBeenCalledWith(
           expect.objectContaining({

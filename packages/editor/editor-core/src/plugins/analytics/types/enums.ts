@@ -31,6 +31,8 @@ export enum ACTION {
   BROWSER_FREEZE = 'browserFreeze',
   SLOW_INPUT = 'slowInput',
   UPLOAD_EXTERNAL_FAIL = 'uploadExternalFailed',
+  INPUT_PERF_SAMPLING = 'inputPerfSampling',
+  HELP_OPENED = 'helpOpened',
 }
 
 export enum INPUT_METHOD {
@@ -70,6 +72,9 @@ export enum ACTION_SUBJECT {
   TEXT = 'text',
   TYPEAHEAD = 'typeAhead',
   TABLE = 'table',
+  EXPAND = 'expand',
+  NESTED_EXPAND = 'nestedExpand',
+  HELP = 'help',
 }
 
 export enum ACTION_SUBJECT_ID {
@@ -77,6 +82,7 @@ export enum ACTION_SUBJECT_ID {
   ANNOTATE_BUTTON = 'annotateButton',
   BLOCK_QUOTE = 'blockQuote',
   BUTTON_HELP = 'helpButton',
+  HELP_QUICK_INSERT = 'helpQuickInsert',
   BUTTON_FEEDBACK = 'feedbackButton',
   CANCEL = 'cancel',
   CARD_INLINE = 'inlineCard',
@@ -118,12 +124,14 @@ export enum ACTION_SUBJECT_ID {
   STATUS = 'status',
   SYMBOL = 'symbol',
   TABLE = 'table',
+  EXPAND = 'expand',
+  NESTED_EXPAND = 'nestedExpand',
   TYPEAHEAD_EMOJI = 'emojiTypeAhead',
   TYPEAHEAD_LINK = 'linkTypeAhead',
   TYPEAHEAD_MENTION = 'mentionTypeAhead',
   TYPEAHEAD_QUICK_INSERT = 'quickInsertTypeAhead',
   PASTE_BLOCK_CARD = 'blockCard',
-  PASTE_BLOCKQUOTE = 'blockquote',
+  PASTE_BLOCKQUOTE = 'blockQuote',
   PASTE_BODIED_EXTENSION = 'bodiedExtension',
   PASTE_BULLET_LIST = 'bulletList',
   PASTE_CODE_BLOCK = 'codeBlock',
@@ -141,4 +149,6 @@ export enum ACTION_SUBJECT_ID {
   PASTE_TABLE_ROW = 'tableRow',
   PASTE_TABLE = 'table',
   PASTE_TASK_LIST = 'taskList',
+  PASTE_EXPAND = 'expand',
+  PASTE_NESTED_EXPAND = 'nestedExpand',
 }

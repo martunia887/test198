@@ -1,14 +1,11 @@
 #!/usr/bin/env node
-
+// @flow
 const fse = require('fs-extra');
 const path = require('path');
-const util = require('util');
 const packlist = require('npm-packlist');
-const child_process = require('child_process');
+const childProcess = require('child_process');
 const fetchNpmDeps = require('./fetch-npm-deps');
 const { getAllPublicPackages } = require('./utils');
-
-const exec = util.promisify(child_process.exec);
 
 function copyFiles(srcDir, destDir, files) {
   return Promise.all(
@@ -16,11 +13,58 @@ function copyFiles(srcDir, destDir, files) {
   );
 }
 
+function toString(bufferOrStr) {
+  return bufferOrStr instanceof Buffer
+    ? bufferOrStr.toString('utf-8')
+    : bufferOrStr;
+}
+
+// Spawns cmd and logs output/stderr to console
+// Returns a promise that resolves when the process exits completely and rejects otherwise
+function spawnPromise(cmd, args, opts /*: Object */ = {}) {
+  return new Promise((resolve, reject) => {
+    let finished = false;
+    function done(code, signal) {
+      // Guard against done being called multiple times
+      if (finished) {
+        return;
+      }
+      finished = true;
+      let error;
+      if (code != null && code !== 0) {
+        error = new Error(`Process exited with code ${code}`);
+      } else if (signal != null) {
+        error = new Error(`Process was terminated with ${signal}`);
+      }
+      if (error) {
+        // $FlowFixMe - code & signal
+        error.code = code;
+        // $FlowFixMe - code & signal
+        error.signal = signal;
+        reject(error);
+      } else {
+        resolve();
+      }
+    }
+    const spawnedCmd = childProcess.spawn(cmd, args, opts);
+    spawnedCmd.stdout.on('data', data => {
+      console.log(toString(data));
+    });
+    spawnedCmd.stderr.on('data', data => {
+      console.error(toString(data));
+    });
+
+    spawnedCmd.on('error', reject);
+    spawnedCmd.on('close', done);
+    spawnedCmd.on('exit', done);
+  });
+}
+
 async function validatePackage(pkgName, pkgDir, quiet, refetch = false) {
   const npmDistPath = await fetchNpmDeps(pkgName, {
     refetch,
   });
-  let tmpDir = path.join(pkgDir, 'tmp');
+  const tmpDir = path.join(pkgDir, 'tmp');
   try {
     await fse.remove(tmpDir);
     await fse.mkdir(tmpDir);
@@ -29,19 +73,18 @@ async function validatePackage(pkgName, pkgDir, quiet, refetch = false) {
     await copyFiles(pkgDir, tmpDir, packedRepoFiles);
     let valid = true;
     try {
-      await exec(
-        `diff -W 100 -${quiet ? 'q' : ''}ur '${npmDistPath}' '${tmpDir}'`,
-        {
-          maxBuffer: 1024 * 500,
-        },
-      );
+      console.log(`Comparing ${pkgName}...`);
+      await spawnPromise('diff', [
+        `-${quiet ? 'q' : ''}ur`,
+        npmDistPath,
+        tmpDir,
+      ]);
       console.log(`${pkgName} passed validation`);
     } catch (e) {
       if (e.code === 1) {
         // If exit code is 1, there is a diff between the two dirs
         valid = false;
         console.error(`${pkgName} differs from npm`);
-        console.error(e.stdout);
       } else {
         throw e;
       }
@@ -71,7 +114,7 @@ async function validatePackage(pkgName, pkgDir, quiet, refetch = false) {
  *
  * If no `packageName` is passed, compares all packages under `optionalDependencies`.
  */
-async function main(pkgName, opts) {
+async function main(pkgName /*: string */, opts /*: Object */) {
   const allPackages = await getAllPublicPackages(
     path.join(process.cwd(), '..'),
   );
@@ -89,38 +132,38 @@ async function main(pkgName, opts) {
       opts.quiet,
       opts.refetch,
     );
-  } else {
-    // Compare all
-    // Fetch deps first in parallel
-    await fetchNpmDeps(undefined, {
-      force: opts.refetch,
-    });
-
-    const results = [];
-    // Executing sequentially makes output more readable
-    for (const { dir, name } of allPackages) {
-      // Set refetch to false since we've already fetched beforehand
-      const valid = await validatePackage(name, dir, opts.quiet, false);
-      results.push({ name, valid });
-    }
-
-    const validPackages = results.filter(({ valid }) => valid);
-    const invalidPackages = results.filter(({ valid }) => !valid);
-
-    console.log(`Validated ${results.filter(p => !!p).length} packages`);
-
-    if (validPackages.length > 0) {
-      console.log(`${validPackages.length} packages passed validation`);
-      console.log(`${validPackages.map(p => p.name).join(', ')}`);
-    }
-
-    if (invalidPackages.length > 0) {
-      console.error(`${invalidPackages.length} packages failed validation`);
-      console.error(`${invalidPackages.map(p => p.name).join(', ')}`);
-    }
-
-    return invalidPackages.length === 0;
   }
+  // Compare all
+  // Fetch deps first in parallel
+  // $FlowFixMe - undefined
+  await fetchNpmDeps(undefined, {
+    force: opts.refetch,
+  });
+
+  const results = [];
+  // Executing sequentially makes output more readable
+  for (const { dir, name } of allPackages) {
+    // Set refetch to false since we've already fetched beforehand
+    const valid = await validatePackage(name, dir, opts.quiet, false);
+    results.push({ name, valid });
+  }
+
+  const validPackages = results.filter(({ valid }) => valid);
+  const invalidPackages = results.filter(({ valid }) => !valid);
+
+  console.log(`Validated ${results.filter(p => !!p).length} packages`);
+
+  if (validPackages.length > 0) {
+    console.log(`${validPackages.length} packages passed validation`);
+    console.log(`${validPackages.map(p => p.name).join(', ')}`);
+  }
+
+  if (invalidPackages.length > 0) {
+    console.error(`${invalidPackages.length} packages failed validation`);
+    console.error(`${invalidPackages.map(p => p.name).join(', ')}`);
+  }
+
+  return invalidPackages.length === 0;
 }
 
 if (require.main === module) {

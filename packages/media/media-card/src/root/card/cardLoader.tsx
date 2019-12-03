@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { WithContextOrMediaClientConfigProps } from '@atlaskit/media-client';
-import { CardProps, CardLoading } from '../..';
+import { WithMediaClientConfigProps } from '@atlaskit/media-client';
+import { CardLoading } from '../..';
 import { MediaCardAnalyticsErrorBoundaryProps } from '../media-card-analytics-error-boundary';
+import { CardWithAnalyticsEventsProps } from '.';
 
-export type CardWithMediaClientConfigProps = WithContextOrMediaClientConfigProps<
-  CardProps
+export type CardWithMediaClientConfigProps = WithMediaClientConfigProps<
+  CardWithAnalyticsEventsProps
 >;
+
 type CardWithMediaClientConfigComponent = React.ComponentType<
   CardWithMediaClientConfigProps
 >;
@@ -40,9 +42,13 @@ export default class CardLoader extends React.PureComponent<
           cardModule,
           mediaCardErrorBoundaryModule,
         ] = await Promise.all([
-          import(/* webpackChunkName:"@atlaskit-media-client" */ '@atlaskit/media-client'),
+          import(
+            /* webpackChunkName:"@atlaskit-media-client" */ '@atlaskit/media-client'
+          ),
           import(/* webpackChunkName:"@atlaskit-internal_Card" */ './index'),
-          import(/* webpackChunkName:"@atlaskit-internal_MediaCardErrorBoundary" */ '../media-card-analytics-error-boundary'),
+          import(
+            /* webpackChunkName:"@atlaskit-internal_MediaCardErrorBoundary" */ '../media-card-analytics-error-boundary'
+          ),
         ]);
 
         CardLoader.Card = mediaClient.withMediaClient(cardModule.Card);
@@ -60,11 +66,11 @@ export default class CardLoader extends React.PureComponent<
   }
 
   render() {
-    const { dimensions } = this.props;
+    const { dimensions, testId } = this.props;
     const { Card, MediaCardErrorBoundary } = this.state;
 
     if (!Card || !MediaCardErrorBoundary) {
-      return <CardLoading dimensions={dimensions} />;
+      return <CardLoading testId={testId} dimensions={dimensions} />;
     }
 
     return (

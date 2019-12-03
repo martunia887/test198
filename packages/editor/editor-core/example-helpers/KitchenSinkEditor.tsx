@@ -15,6 +15,7 @@ import { mention } from '@atlaskit/util-data-test';
 import Editor from './../src/editor';
 import { EditorAppearance } from '../src/types';
 import { EditorActions } from '../src';
+import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
 
 import {
   providers,
@@ -23,6 +24,7 @@ import {
   quickInsertProvider,
 } from '../examples/5-full-page';
 import { Error } from './ErrorReport';
+import { ExtensionProvider } from '../../editor-common/src';
 
 export type Props = {
   actions: EditorActions;
@@ -34,6 +36,7 @@ export type Props = {
   validationTimeout?: number;
   onDocumentChanged?: (adf: any) => void;
   onDocumentValidated?: (errors?: Error[]) => void;
+  extensionProviders?: ExtensionProvider[];
 };
 
 export type State = {
@@ -57,6 +60,7 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
       disabled,
       primaryToolbarComponents,
       popupMountPoint,
+      extensionProviders,
     } = this.props;
     return (
       <SmartCardProvider>
@@ -66,8 +70,6 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
           quickInsert={{
             provider: this.quickInsertProviderPromise,
           }}
-          allowCodeBlocks={{ enableKeybindingsForIDE: true }}
-          allowLists={true}
           allowTextColor={true}
           allowTables={{
             advanced: true,
@@ -90,7 +92,12 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
           UNSAFE_cards={{
             provider: this.cardProviderPromise,
           }}
+          UNSAFE_allowExpand={{ allowInsertion: true }}
+          annotationProvider={{
+            component: ExampleInlineCommentComponent,
+          }}
           allowStatus={true}
+          allowNestedTasks
           {...providers}
           mentionProvider={Promise.resolve(
             mention.storyData.resourceProviderWithTeamMentionHighlight,
@@ -99,9 +106,11 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
             provider: mediaProvider,
             allowMediaSingle: true,
             allowResizing: true,
+            allowLinking: true,
           }}
           insertMenuItems={customInsertMenuItems}
           extensionHandlers={extensionHandlers}
+          extensionProviders={extensionProviders}
           placeholder="Type something here, and watch it render to the side!"
           shouldFocus={true}
           defaultValue={adf}

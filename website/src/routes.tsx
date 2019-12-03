@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ModalTransition } from '@atlaskit/modal-dialog';
 
@@ -113,7 +113,7 @@ const changelogModal = [
     path: '/packages/:groupId/:pkgId/changelog/:semver?',
     children: (props: RouteComponentProps) => (
       <ModalTransition>
-        {props.match && <ChangelogModal {...props as ChangelogModalProps} />}
+        {props.match && <ChangelogModal {...(props as ChangelogModalProps)} />}
       </ModalTransition>
     ),
   },
@@ -124,7 +124,7 @@ const examplesModal = [
     path: '/packages/:groupId/:pkgId/example/:exampleId',
     children: (props: RouteComponentProps) => (
       <ModalTransition>
-        {props.match && <ExamplesModal {...props as ExamplesModalProps} />}
+        {props.match && <ExamplesModal {...(props as ExamplesModalProps)} />}
       </ModalTransition>
     ),
   },

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { ModalSpinner } from '@atlaskit/media-ui';
 import * as colors from '@atlaskit/theme/colors';
-import { WithContextOrMediaClientConfigProps } from '@atlaskit/media-client';
+import { WithMediaClientConfigProps } from '@atlaskit/media-client';
 import { MediaViewerProps } from './types';
 import { MediaViewerAnalyticsErrorBoundaryProps } from './media-viewer-analytics-error-boundary';
 
-export type MediaViewerWithContextMediaClientConfigProps = WithContextOrMediaClientConfigProps<
+export type MediaViewerWithMediaClientConfigProps = WithMediaClientConfigProps<
   MediaViewerProps
 >;
 
 type MediaViewerWithMediaClientConfigComponent = React.ComponentType<
-  MediaViewerWithContextMediaClientConfigProps
+  MediaViewerWithMediaClientConfigProps
 >;
 
 type MediaViewerErrorBoundaryComponent = React.ComponentType<
@@ -23,7 +23,7 @@ export interface AsyncMediaViewerState {
 }
 
 export default class AsyncMediaViewer extends React.PureComponent<
-  MediaViewerWithContextMediaClientConfigProps & AsyncMediaViewerState,
+  MediaViewerWithMediaClientConfigProps & AsyncMediaViewerState,
   AsyncMediaViewerState
 > {
   static displayName = 'AsyncMediaViewer';
@@ -44,9 +44,15 @@ export default class AsyncMediaViewer extends React.PureComponent<
           mediaViewerModule,
           mediaViewerErrorBoundaryModule,
         ] = await Promise.all([
-          import(/* webpackChunkName:"@atlaskit-media-client" */ '@atlaskit/media-client'),
-          import(/* webpackChunkName:"@atlaskit-internal_media-viewer" */ './media-viewer'),
-          import(/* webpackChunkName:"@atlaskit-internal_MediaPickerErrorBoundary" */ './media-viewer-analytics-error-boundary'),
+          import(
+            /* webpackChunkName:"@atlaskit-media-client" */ '@atlaskit/media-client'
+          ),
+          import(
+            /* webpackChunkName:"@atlaskit-internal_media-viewer" */ './media-viewer'
+          ),
+          import(
+            /* webpackChunkName:"@atlaskit-internal_MediaPickerErrorBoundary" */ './media-viewer-analytics-error-boundary'
+          ),
         ]);
 
         const MediaViewerWithClient = mediaClient.withMediaClient(

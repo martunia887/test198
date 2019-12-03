@@ -1,3 +1,5 @@
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
+
 import { SmartMediaProgress } from '../../domain/progress';
 import { Action, Dispatch, Store } from 'redux';
 import { finalizeUpload } from '../actions/finalizeUpload';
@@ -7,7 +9,6 @@ import {
 } from '../actions/handleCloudFetchingEvent';
 
 import { State } from '../domain';
-import { RECENTS_COLLECTION } from '../config';
 
 import {
   WsUploadEvents,
@@ -15,7 +16,7 @@ import {
   RemoteUploadEndPayload,
   RemoteUploadFailPayload,
 } from '../tools/websocket/upload/wsUploadEvents';
-import { MediaFile } from '../../domain/file';
+import { MediaFile } from '../../types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 
 type CloudFetchingEventAction = HandleCloudFetchingEventAction<

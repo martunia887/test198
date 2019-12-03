@@ -104,7 +104,6 @@ describe('media', () => {
         },
         allowExtension: true,
         allowLayouts: true,
-        allowLists: true,
         allowTables: true,
         allowAnalyticsGASV3: true,
         analyticsHandler: jest.fn(),
@@ -433,7 +432,7 @@ describe('media', () => {
         });
       });
 
-      describe.each([
+      describe.each<[string, ReturnType<typeof doc>, number]>([
         [
           'table',
           doc(
@@ -463,7 +462,7 @@ describe('media', () => {
           ),
           2,
         ],
-      ])('Media inside %s', (_, doc: any, pos: number) => {
+      ])('Media inside %s', (_, doc, pos) => {
         beforeEach(async () => {
           toolbarWrapper = await setupToolbar(doc, { allowLinking: true }, pos);
         });

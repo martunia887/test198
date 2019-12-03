@@ -12,7 +12,7 @@ import {
   tdCursor,
   td,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { colors } from '@atlaskit/theme';
 
 import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
@@ -50,7 +50,7 @@ const secondColumn: Rect = { left: 1, top: 0, bottom: 3, right: 2 };
 
 describe('Table analytic events', () => {
   const createEditor = createEditorFactory<TablePluginState>();
-  let createAnalyticsEvent: jest.Mock<CreateUIAnalyticsEvent>;
+  let createAnalyticsEvent: jest.Mock<UIAnalyticsEvent>;
   let trackEvent: jest.Mock<AnalyticsHandler>;
 
   const editor = (doc: any) => {
@@ -64,7 +64,7 @@ describe('Table analytic events', () => {
     trackEvent = jest.fn();
     createAnalyticsEvent = jest
       .fn()
-      .mockReturnValue({ fire() {} }) as jest.Mock<CreateUIAnalyticsEvent>;
+      .mockReturnValue({ fire() {} }) as jest.Mock<UIAnalyticsEvent>;
 
     const _editor = createEditor({
       doc,
@@ -94,7 +94,9 @@ describe('Table analytic events', () => {
     it('should fire v2 analytics', () => {
       expect(trackEvent).toHaveBeenCalledWith(
         'atlassian.editor.quickinsert.select',
-        { item: 'Table' },
+        {
+          item: 'Table',
+        },
       );
     });
 
@@ -320,7 +322,7 @@ describe('Table analytic events', () => {
         actionSubject: 'table',
         actionSubjectId: null,
         attributes: {
-          cellColor: 'blue',
+          cellColor: 'light blue',
           verticalCells: 1,
           horizontalCells: 3,
           totalCells: 3,
@@ -667,10 +669,11 @@ describe('Table analytic events', () => {
   describe('row deleted', () => {
     beforeEach(() => {
       const { editorView } = editor(defaultTable);
-      deleteRowsWithAnalytics(INPUT_METHOD.CONTEXT_MENU, secondRow, true)(
-        editorView.state,
-        editorView.dispatch,
-      );
+      deleteRowsWithAnalytics(
+        INPUT_METHOD.CONTEXT_MENU,
+        secondRow,
+        true,
+      )(editorView.state, editorView.dispatch);
     });
 
     it('should fire v2 analytics', () => {

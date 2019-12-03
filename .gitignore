@@ -1,5 +1,7 @@
 # ignore dependency caches
 node_modules/
+.yalc/
+yalc.lock
 
 # ignore builds
 dist/
@@ -33,12 +35,16 @@ packages/**/**/yarn.lock
 *.log
 
 # ignore editor generated files
-.vscode
+.vscode/*
+!.vscode/extensions.json
 .idea
 .iml
 
 # ignore OS generated files
 **/.DS_Store
+
+# We need to write out this alias for running the constellation website, however committing it causes issues
+services/website-constellation/aliases-written-map.json
 
 # This is a hardcoded file for now, just to show that things are working, will remove once not
 # hardcoded
@@ -54,3 +60,6 @@ dists/
 
 # allow using .envrc to automate local environment, exclude from CVS
 .envrc
+
+# override local config which for many atlassians will be set to registry=https://packages.atlassian.com/api/npm/npm-remote and hence cause certain issues with package resolution
+.npmrc

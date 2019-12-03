@@ -6,6 +6,7 @@ import { ImageComponent } from './styled';
 
 export interface MediaImageProps {
   dataURI: string;
+  alt?: string;
   crop?: boolean;
   stretch?: boolean;
   previewOrientation?: number;
@@ -81,6 +82,7 @@ export class MediaImage extends Component<MediaImageProps, MediaImageState> {
       previewOrientation,
       crossOrigin,
       onImageError,
+      alt,
     } = this.props;
     const {
       parentWidth,
@@ -418,7 +420,9 @@ export class MediaImage extends Component<MediaImageProps, MediaImageState> {
 
     return (
       <ImageComponent
+        data-testid="media-image"
         draggable={false}
+        alt={alt}
         style={style}
         onLoad={this.onImageLoad}
         onError={onImageError}

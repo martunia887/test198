@@ -1,5 +1,383 @@
 # @atlaskit/editor-mobile-bridge
 
+## 11.0.1
+
+### Patch Changes
+
+- Updated dependencies [271945fd08](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/271945fd08):
+- Updated dependencies [a6663b9325](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a6663b9325):
+- Updated dependencies [5e4d1feec3](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5e4d1feec3):
+- Updated dependencies [0f8d5df4cf](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0f8d5df4cf):
+- Updated dependencies [2d1aee3e47](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2d1aee3e47):
+- Updated dependencies [ecfbe83dfb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ecfbe83dfb):
+- Updated dependencies [ea0e619cc7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ea0e619cc7):
+- Updated dependencies [5b8a074ce6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5b8a074ce6):
+- Updated dependencies [93b445dcdc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/93b445dcdc):
+- Updated dependencies [49fbe3d3bf](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/49fbe3d3bf):
+- Updated dependencies [c1d4898af5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c1d4898af5):
+- Updated dependencies [579779f5aa](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/579779f5aa):
+- Updated dependencies [ded174361e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ded174361e):
+- Updated dependencies [80eb127904](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/80eb127904):
+- Updated dependencies [ef2ba36d5c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ef2ba36d5c):
+- Updated dependencies [8c84ed470e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8c84ed470e):
+- Updated dependencies [6e4b678428](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6e4b678428):
+- Updated dependencies [bb164fbd1e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bb164fbd1e):
+- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+- Updated dependencies [40bec82851](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/40bec82851):
+- Updated dependencies [8b652147a5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8b652147a5):
+- Updated dependencies [b4fda095ef](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b4fda095ef):
+- Updated dependencies [0603c2fbf7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0603c2fbf7):
+- Updated dependencies [72d4c3298d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72d4c3298d):
+- Updated dependencies [10425b84b4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/10425b84b4):
+- Updated dependencies [5ef337766c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5ef337766c):
+- Updated dependencies [dc0999afc2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/dc0999afc2):
+- Updated dependencies [6764e83801](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6764e83801):
+- Updated dependencies [553915553f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/553915553f):
+- Updated dependencies [4700477bbe](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4700477bbe):
+- Updated dependencies [7f8de51c36](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7f8de51c36):
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+- Updated dependencies [3a7c0bfa32](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a7c0bfa32):
+- Updated dependencies [5455e35bc0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5455e35bc0):
+- Updated dependencies [cc1b89d310](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cc1b89d310):
+- Updated dependencies [2bb3af2382](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2bb3af2382):
+- Updated dependencies [611dbe68ff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/611dbe68ff):
+- Updated dependencies [0ea0587ac5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0ea0587ac5):
+- Updated dependencies [938f1c2902](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/938f1c2902):
+- Updated dependencies [926798632e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/926798632e):
+  - @atlaskit/editor-common@43.0.0
+  - @atlaskit/editor-core@115.0.0
+  - @atlaskit/emoji@62.6.0
+  - @atlaskit/smart-card@12.6.1
+  - @atlaskit/mention@18.16.0
+  - @atlaskit/icon@19.0.11
+  - @atlaskit/media-client@4.1.1
+  - @atlaskit/renderer@53.2.0
+  - @atlaskit/theme@9.3.0
+  - @atlaskit/editor-test-helpers@10.3.0
+  - @atlaskit/editor-json-transformer@7.0.1
+  - @atlaskit/task-decision@16.0.4
+
+## 11.0.0
+
+### Major Changes
+
+- [major][9adaeccdc5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9adaeccdc5):
+
+  build: avoid duplicate uglification of output bundles
+
+  Replaces `UglifyjsWebpackPlugin` with webpack's default `TerserPlugin`.
+
+  While there are no API changes caused by us there are diffable changes
+  in the resulting output bundles, which might cause issues for consumers.
+
+  Extensive testing is recommended.
+
+### Minor Changes
+
+- [minor][7dac756d06](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7dac756d06):
+
+  Enable expand in mobile-bridge
+
+- [minor][f68c80d51a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f68c80d51a):
+
+  FM-2211 Implement scrolling improvements to prevent user typing behind keyboard on iOS
+
+  New editor plugin IOSScroll is added into the plugins list for users on iOS mobile devices
+  This works with a new native-to-web bridge method `setKeyboardControlsHeight` to add an extra buffer to the bottom of the page when the on-screen keyboard is showing
+
+### Patch Changes
+
+- [patch][c07b9e3615](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c07b9e3615):
+
+  ED-7890 refactor: remove parseLocationSearch in favor of URLSearchParams
+
+- Updated dependencies [6d9c8a9073](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6d9c8a9073):
+- Updated dependencies [70e1055b8f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/70e1055b8f):
+  - @atlaskit/editor-common@42.0.0
+  - @atlaskit/editor-core@114.1.0
+  - @atlaskit/renderer@53.1.0
+  - @atlaskit/editor-json-transformer@7.0.0
+  - @atlaskit/editor-test-helpers@10.2.0
+  - @atlaskit/task-decision@16.0.3
+
+## 10.0.1
+
+- Updated dependencies [30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):
+  - @atlaskit/form@6.3.2
+  - @atlaskit/media-test-helpers@25.2.3
+  - @atlaskit/select@11.0.0
+  - @atlaskit/button@13.3.4
+  - @atlaskit/editor-core@114.0.4
+
+## 10.0.0
+
+### Patch Changes
+
+- [patch][e47220a6b2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e47220a6b2):
+
+  ED-5450: remove most of ts-ignores from editor packages- [patch][8e7cdd0642](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8e7cdd0642):
+
+  FM-2579: Added renderer bridge methods to be able to observe the height of rendered content changing
+
+- Updated dependencies [f28c191f4a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f28c191f4a):
+- Updated dependencies [24b8ea2667](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24b8ea2667):
+  - @atlaskit/editor-json-transformer@6.3.5
+  - @atlaskit/editor-test-helpers@10.1.3
+  - @atlaskit/editor-core@114.0.0
+  - @atlaskit/renderer@53.0.0
+  - @atlaskit/emoji@62.5.6
+  - @atlaskit/media-client@4.0.0
+  - @atlaskit/media-test-helpers@25.2.2
+  - @atlaskit/task-decision@16.0.2
+  - @atlaskit/editor-common@41.2.1
+  - @atlaskit/media-core@31.0.0
+
+## 9.0.0
+
+### Major Changes
+
+- [major][bd94b1d552](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bd94b1d552):
+
+  ED-7631: removed deprecated code for actions/decisions component- [major][ae4f336a3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ae4f336a3a):
+
+**FABDODGEM-13 Editor Damask Release** - [Internal post](http://go.atlassian.com/damask-release)
+
+**BREAKING CHANGES**
+
+- **Media:** Removed deprecated "context" property from media components in favor of "mediaClientConfig". This affects all public media UI components.
+  - https://product-fabric.atlassian.net/browse/MS-2038
+- **Tasks & Decisions:** Removed containerAri for task-decisions components.
+  - https://product-fabric.atlassian.net/browse/ED-7631
+- **Renderer:** Adapts to task-decision changes.
+- **Editor Mobile Bridge:** Adapts to task-decision changes.
+- **Util Data Test:** Adapts to task-decision changes.
+
+---
+
+**Affected Editor Components:**
+
+tables, media, mobile, emoji, tasks & decisions, analytics
+
+**Editor**
+
+- Support nested actions in stage-0 schema; Change DOM representation of actions
+  - https://product-fabric.atlassian.net/browse/ED-7674
+- Updated i18n translations
+  - https://product-fabric.atlassian.net/browse/ED-7750
+- Improved analytics & crash reporting (via a new error boundary)
+  - https://product-fabric.atlassian.net/browse/ED-7766
+  - https://product-fabric.atlassian.net/browse/ED-7806
+- Improvements to heading anchor links.
+  - https://product-fabric.atlassian.net/browse/ED-7849
+  - https://product-fabric.atlassian.net/browse/ED-7860
+- Copy/Paste improvements
+  - https://product-fabric.atlassian.net/browse/ED-7840
+  - https://product-fabric.atlassian.net/browse/ED-7849
+- Fixes for the selection state of Smart links.
+  - https://product-fabric.atlassian.net/browse/ED-7602?src=confmacro
+- Improvements for table resizing & column creation.
+  - https://product-fabric.atlassian.net/browse/ED-7698
+  - https://product-fabric.atlassian.net/browse/ED-7319
+  - https://product-fabric.atlassian.net/browse/ED-7799
+
+**Mobile**
+
+- GASv3 Analytics Events are now relayed from the web to the native context, ready for dispatching.
+  - https://product-fabric.atlassian.net/browse/FM-2502
+- Hybrid Renderer Recycler view now handles invalid ADF nodes gracefully.
+  - https://product-fabric.atlassian.net/browse/FM-2370
+
+**Media**
+
+- Improved analytics
+  - https://product-fabric.atlassian.net/browse/MS-2036
+  - https://product-fabric.atlassian.net/browse/MS-2145
+  - https://product-fabric.atlassian.net/browse/MS-2416
+  - https://product-fabric.atlassian.net/browse/MS-2487
+- Added shouldOpenMediaViewer property to renderer
+  - https://product-fabric.atlassian.net/browse/MS-2393
+- Implemented analytics for file copy
+  - https://product-fabric.atlassian.net/browse/MS-2036
+- New `media-viewed` event dispatched when media is interacted with via the media card or viewer.
+  - https://product-fabric.atlassian.net/browse/MS-2284
+- Support for `alt` text attribute on media image elements.
+  - https://product-fabric.atlassian.net/browse/ED-7776
+
+**i18n-tools**
+
+Bumped dependencies.
+
+### Minor Changes
+
+- [minor][80572c341d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/80572c341d):
+
+  FM-2502 Relay hybrid editor/renderer analytics to native
+
+  Capture any analytics events within the editor/renderer and send them through `analyticsBridge.trackEvent` to allow native-side to process and fire the events
+
+### Patch Changes
+
+- [patch][cc28419139](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cc28419139):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.- [patch][7f3b4e4ec1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7f3b4e4ec1):
+
+  FM-2370 Fix issue where renderBridge.onContentRendered was not being called when renderer was given invalid adf- [patch][c6835f9555](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c6835f9555):
+
+  Update "scroll to element" after changing DOM type for action in ED-7674
+
+- Updated dependencies [4585681e3d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4585681e3d):
+- Updated dependencies [e7b5c917de](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e7b5c917de):
+  - @atlaskit/task-decision@16.0.0
+  - @atlaskit/renderer@52.0.0
+  - @atlaskit/editor-core@113.2.0
+  - @atlaskit/emoji@62.5.4
+  - @atlaskit/editor-common@41.2.0
+  - @atlaskit/media-core@30.0.17
+  - @atlaskit/media-test-helpers@25.2.0
+  - @atlaskit/media-client@3.0.0
+
+## 8.11.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 8.11.1
+
+### Patch Changes
+
+- [patch][a8162fcbb9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a8162fcbb9):
+
+  FM-2539 Fix issue where scroll pos would jump when typing at bottom of document in iOS
+
+## 8.11.0
+
+### Minor Changes
+
+- [minor][65ada7f318](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/65ada7f318):
+
+  **FABDODGEM-12 Editor Cashmere Release**
+
+  - [Internal post](http://go.atlassian.com/cashmere-release)
+
+  **Affected editor components:**
+
+  tables, media, mobile, text color, emoji, copy/paste, analytics
+
+  **Performance**
+
+  - Async import for code blocks and task items on renderer
+    - https://product-fabric.atlassian.net/browse/ED-7155
+
+  **Table**
+
+  - Add support to sort tables that contains smart links
+    - https://product-fabric.atlassian.net/browse/ED-7449
+  - Scale table when changing to full width mode
+    - https://product-fabric.atlassian.net/browse/ED-7724
+
+  **Text color**
+
+  - Update text color toolbar with right color when text is inside a list, panel, etc.
+    - https://product-fabric.atlassian.net/browse/FM-1752
+
+**Mobile** - Implement undo/redo interface on Hybrid Editor - https://product-fabric.atlassian.net/browse/FM-2393
+
+**Copy and Paste**
+
+    - Support copy & paste when missing context-id attr
+      - https://product-fabric.atlassian.net/browse/MS-2344
+    - Right click + copy image fails the second time that is pasted
+      - https://product-fabric.atlassian.net/browse/MS-2324
+    - Copying a never touched image for the first time from editor fails to paste
+      - https://product-fabric.atlassian.net/browse/MS-2338
+    - Implement analytics when a file is copied
+      - https://product-fabric.atlassian.net/browse/MS-2036
+
+**Media**
+
+- Add analytics events and error reporting [NEW BIG FEATURE]
+  - https://product-fabric.atlassian.net/browse/MS-2275
+  - https://product-fabric.atlassian.net/browse/MS-2329
+  - https://product-fabric.atlassian.net/browse/MS-2330
+  - https://product-fabric.atlassian.net/browse/MS-2331
+  - https://product-fabric.atlassian.net/browse/MS-2332
+  - https://product-fabric.atlassian.net/browse/MS-2390
+- Fixed issue where we can’t insert same file from MediaPicker twice
+  - https://product-fabric.atlassian.net/browse/MS-2080
+- Disable upload of external files to media
+  - https://product-fabric.atlassian.net/browse/MS-2372
+
+**Notable Bug Fixes**
+
+    - Implement consistent behaviour for rule and mediaSingle on insertion
+      - Feature Flag:
+        - allowNewInsertionBehaviour - [default: true]
+      - https://product-fabric.atlassian.net/browse/ED-7503
+    - Fixed bug where we were showing table controls on mobile.
+      - https://product-fabric.atlassian.net/browse/ED-7690
+    - Fixed bug where editor crashes after unmounting react component.
+      - https://product-fabric.atlassian.net/browse/ED-7318
+    - Fixed bug where custom emojis are not been showed on the editor
+      - https://product-fabric.atlassian.net/browse/ED-7726
+
+- [minor][98ad94c69c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/98ad94c69c):
+
+  FM-2393 Expose undo/redo methods on mobile bridge
+
+  native-to-web: undo/redo methods which will hook directly into prosemirror-history's
+  web-to-native: undoRedoBridge.stateChange which informs native whether undo and redo are currently available so they can enable/disable their buttons accordingly
+
+## 8.10.2
+
+### Patch Changes
+
+- [patch][ff722f80a4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ff722f80a4):
+
+  ED-7760 Prevent scroll jumping when editing near the end of the document on iOS.
+
+## 8.10.1
+
+### Patch Changes
+
+- [patch][5463e933e6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5463e933e6):
+
+  FM-2472 Fix issue where Android Recycled View height would grow indefinitely
+
+## 8.10.0
+
+### Minor Changes
+
+- [minor][3458937c4c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3458937c4c):
+
+  FM-2383 Enable Emoji Picker in native UI on iOS. Supports system and custom emojis via the type ahead flow when type a semicolon ':'- [minor][e171e3f38e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e171e3f38e):
+
+  FM-2055, FM-2261: Expose mobile bridge API methods for scrolling to a mention, action, or decision item by ID. Add localId value into rendered action/decision list elements within the existing custom data attribute to allow scroll targetting.
+
+### Patch Changes
+
+- [patch][9fb705e807](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9fb705e807):
+
+  FM-2212: Refactor Mobile Bridge CSS to improve body scrolling. FM-2024: Improve Mobile Editing UX when tapping beneath Tables, Layouts, Columns.- [patch][40ead387ef](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/40ead387ef):
+
+  ED-7532 Expose ability to cancel default browser behavior when clicking Smart Links- [patch][45ae9e1cc2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/45ae9e1cc2):
+
+  ED-7201 Add new background cell colors and improve text color
+
+- Updated dependencies [166eb02474](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/166eb02474):
+- Updated dependencies [80adfefba2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/80adfefba2):
+  - @atlaskit/editor-json-transformer@6.3.3
+  - @atlaskit/editor-test-helpers@10.0.0
+  - @atlaskit/task-decision@15.3.4
+  - @atlaskit/editor-core@113.0.0
+  - @atlaskit/renderer@51.0.0
+  - @atlaskit/emoji@62.5.1
+  - @atlaskit/mention@18.15.2
+  - @atlaskit/status@0.9.13
+  - @atlaskit/editor-common@41.0.0
+
 ## 8.9.3
 
 ### Patch Changes

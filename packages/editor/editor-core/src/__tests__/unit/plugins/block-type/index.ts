@@ -26,7 +26,10 @@ import {
   insertBlockTypesWithAnalytics,
 } from '../../../../plugins/block-type/commands';
 import { HEADING_1 } from '../../../../plugins/block-type/types';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   AnalyticsEventPayload,
   ACTION,
@@ -41,14 +44,17 @@ describe('block-type', () => {
   let createAnalyticsEvent: CreateUIAnalyticsEvent;
 
   const editor = (doc: any) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(
+      () =>
+        ({
+          fire() {},
+        } as UIAnalyticsEvent),
+    );
     return createEditor({
       doc,
       editorProps: {
         allowAnalyticsGASV3: true,
-        allowCodeBlocks: true,
         allowPanel: true,
-        allowLists: true,
       },
       pluginKey: blockTypePluginKey,
       createAnalyticsEvent,
@@ -407,7 +413,7 @@ describe('block-type', () => {
     const editor = (doc: any) =>
       createEditor({
         doc,
-        editorProps: { appearance: 'comment', allowCodeBlocks: true },
+        editorProps: { appearance: 'comment' },
       });
 
     it('should create empty terminal empty paragraph when heading is created', () => {

@@ -2,7 +2,7 @@ import { Database } from 'kakapo';
 import uuidV4 from 'uuid/v4';
 
 import { ClientBasedAuth } from '@atlaskit/media-core';
-import { MediaCollection } from '@atlaskit/media-store';
+import { MediaCollection } from '@atlaskit/media-client';
 
 import { createCollection } from './collection';
 import { CollectionItem, createCollectionItem } from './collection-item';
@@ -11,6 +11,7 @@ import { Chunk } from './chunk';
 import { defaultBaseUrl } from '../../mediaClientProvider';
 import { MockCollections } from '../media-mock';
 import { defaultCollectionName } from '../../collectionNames';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 
 export * from './collection';
 export * from './collection-item';
@@ -68,7 +69,10 @@ export function createDatabase(
       );
     });
   } else {
-    database.push('collection', { name: 'recents', createdAt: Date.now() });
+    database.push('collection', {
+      name: RECENTS_COLLECTION,
+      createdAt: Date.now(),
+    });
     database.push('collection', {
       name: defaultCollectionName,
       createdAt: Date.now(),

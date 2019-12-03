@@ -24,7 +24,10 @@ import {
 
 import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
 import { TablePluginState } from '../../../../plugins/table/types';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { AnalyticsHandler } from '../../../../analytics';
 
 describe('table keymap', () => {
@@ -35,7 +38,7 @@ describe('table keymap', () => {
   let editorView: EditorView;
 
   const editor = (doc: any, trackEvent: AnalyticsHandler = () => {}) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
     return createEditor({
       doc,
       editorProps: {
@@ -59,9 +62,7 @@ describe('table keymap', () => {
         allowExtension: true,
         allowTables: true,
         allowRule: true,
-        allowLists: true,
         allowPanel: true,
-        allowCodeBlocks: true,
         allowTasksAndDecisions: true,
         media: { allowMediaSingle: true },
       },
@@ -261,12 +262,7 @@ describe('table keymap', () => {
         view.dispatch(tr.delete($head.pos - 1, $head.pos));
       };
 
-      const excludeNodes = [
-        'doc',
-        'table',
-        'applicationCard',
-        'bodiedExtension',
-      ];
+      const excludeNodes = ['doc', 'table', 'bodiedExtension'];
 
       Object.keys(defaultSchema.nodes).forEach(nodeName => {
         const node = defaultSchema.nodes[nodeName];

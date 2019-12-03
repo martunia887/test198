@@ -1,5 +1,496 @@
 # @atlaskit/renderer
 
+## 53.2.0
+
+### Minor Changes
+
+- [minor][10425b84b4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/10425b84b4):
+
+  Add support to extensions v2 (using manifests and extension providers)
+
+- [minor][7f8de51c36](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7f8de51c36):
+
+  Exposed the fadeOutHeight prop and passed the value through to the TruncatedWrapper when Renderer is rendering a truncated document
+
+### Patch Changes
+
+- [patch][ef2ba36d5c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ef2ba36d5c):
+
+  Add alt text support for renderer
+
+- [patch][bb164fbd1e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bb164fbd1e):
+
+  ED-8073 ED-8074: Align expand title to the left when it wraps and align the expand chevron to the top
+
+- [patch][b4fda095ef](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b4fda095ef):
+
+  ED-8018 fixed an issue when click on a linked media, it opens preview.
+
+- [patch][f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+
+  Corrects the type exports for typography, colors, elevation and layers. If you were doing any dynamic code it may break you. Refer to the [upgrade guide](/packages/core/theme/docs/upgrade-guide) for help upgrading.- Updated dependencies [271945fd08](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/271945fd08):
+
+- Updated dependencies [161a30be16](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/161a30be16):
+- Updated dependencies [ea0e619cc7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ea0e619cc7):
+- Updated dependencies [5b8a074ce6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5b8a074ce6):
+- Updated dependencies [49fbe3d3bf](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/49fbe3d3bf):
+- Updated dependencies [c1d4898af5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c1d4898af5):
+- Updated dependencies [579779f5aa](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/579779f5aa):
+- Updated dependencies [ef2ba36d5c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ef2ba36d5c):
+- Updated dependencies [6e4b678428](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6e4b678428):
+- Updated dependencies [bb164fbd1e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bb164fbd1e):
+- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+- Updated dependencies [b3fd0964f2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b3fd0964f2):
+- Updated dependencies [10425b84b4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/10425b84b4):
+- Updated dependencies [4700477bbe](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4700477bbe):
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+- Updated dependencies [9a261337b5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9a261337b5):
+- Updated dependencies [cc1b89d310](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cc1b89d310):
+- Updated dependencies [938f1c2902](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/938f1c2902):
+- Updated dependencies [926798632e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/926798632e):
+  - @atlaskit/editor-common@43.0.0
+  - @atlaskit/adf-schema@4.3.1
+  - @atlaskit/smart-card@12.6.1
+  - @atlaskit/mention@18.16.0
+  - @atlaskit/icon@19.0.11
+  - @atlaskit/media-client@4.1.1
+  - @atlaskit/theme@9.3.0
+  - @atlaskit/editor-test-helpers@10.3.0
+  - @atlaskit/profilecard@12.3.5
+  - @atlaskit/editor-json-transformer@7.0.1
+  - @atlaskit/task-decision@16.0.4
+
+## 53.1.0
+
+### Minor Changes
+
+- [minor][166dd996a8](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/166dd996a8):
+
+  ED-7949: Migrate expand react component to renderer from common to avoid extra deps being added to common
+
+- [minor][3a4aa18da6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a4aa18da6):
+
+  ED-7878 Add expand analytics v1
+
+- [minor][f1a06fc2fd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f1a06fc2fd):
+
+  ED-7876 Implement expand and nestedExpand in Editor and Renderer
+
+  A **work in progress** implementation of the new `expand` and `nestedExpand` nodes. These are currently **disabled** by default, but can be tested by enabling an editor prop.
+
+  `UNSAFE_allowExpand={true}`
+
+  Note, `expand` and `nestedExpand` are only in the `stage-0` ADF schema (as of this changeset).
+
+### Patch Changes
+
+- [patch][e76d2904b4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e76d2904b4):
+
+  Adding support for alt text on editor and renderer
+
+- [patch][5b2c89203e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5b2c89203e):
+
+  Fix linting errors from prettier upgrade
+
+- Updated dependencies [6d9c8a9073](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6d9c8a9073):
+- Updated dependencies [70e1055b8f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/70e1055b8f):
+  - @atlaskit/adf-schema@4.3.0
+  - @atlaskit/editor-common@42.0.0
+  - @atlaskit/editor-json-transformer@7.0.0
+  - @atlaskit/editor-test-helpers@10.2.0
+  - @atlaskit/task-decision@16.0.3
+
+## 53.0.0
+
+### Patch Changes
+
+- [patch][e47220a6b2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e47220a6b2):
+
+  ED-5450: remove most of ts-ignores from editor packages- [patch][0e10be832e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0e10be832e):
+
+  ## Remove media-core Context usage from MediaCard node in order to use MediaClientConfig
+
+  > this is not a breaking change
+
+  Renderer public remains the same since the `ProviderFactory` type has not direct contract with media
+
+- Updated dependencies [24b8ea2667](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24b8ea2667):
+  - @atlaskit/editor-test-helpers@10.1.3
+  - @atlaskit/media-client@4.0.0
+  - @atlaskit/media-filmstrip@36.0.0
+  - @atlaskit/media-test-helpers@25.2.2
+  - @atlaskit/editor-json-transformer@6.3.5
+  - @atlaskit/task-decision@16.0.2
+  - @atlaskit/editor-common@41.2.1
+  - @atlaskit/media-card@66.0.1
+  - @atlaskit/media-core@31.0.0
+
+## 52.0.1
+
+### Patch Changes
+
+- [patch][846d2fbcbb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/846d2fbcbb):
+
+  ED-7932 Fixed copy to clipboard in IE 11
+
+## 52.0.0
+
+### Major Changes
+
+- [major][4585681e3d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4585681e3d):
+
+  ED-7631: removed containerAri for task-decisions components- [major][ae4f336a3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ae4f336a3a):
+
+**FABDODGEM-13 Editor Damask Release** - [Internal post](http://go.atlassian.com/damask-release)
+
+**BREAKING CHANGES**
+
+- **Media:** Removed deprecated "context" property from media components in favor of "mediaClientConfig". This affects all public media UI components.
+  - https://product-fabric.atlassian.net/browse/MS-2038
+- **Tasks & Decisions:** Removed containerAri for task-decisions components.
+  - https://product-fabric.atlassian.net/browse/ED-7631
+- **Renderer:** Adapts to task-decision changes.
+- **Editor Mobile Bridge:** Adapts to task-decision changes.
+- **Util Data Test:** Adapts to task-decision changes.
+
+---
+
+**Affected Editor Components:**
+
+tables, media, mobile, emoji, tasks & decisions, analytics
+
+**Editor**
+
+- Support nested actions in stage-0 schema; Change DOM representation of actions
+  - https://product-fabric.atlassian.net/browse/ED-7674
+- Updated i18n translations
+  - https://product-fabric.atlassian.net/browse/ED-7750
+- Improved analytics & crash reporting (via a new error boundary)
+  - https://product-fabric.atlassian.net/browse/ED-7766
+  - https://product-fabric.atlassian.net/browse/ED-7806
+- Improvements to heading anchor links.
+  - https://product-fabric.atlassian.net/browse/ED-7849
+  - https://product-fabric.atlassian.net/browse/ED-7860
+- Copy/Paste improvements
+  - https://product-fabric.atlassian.net/browse/ED-7840
+  - https://product-fabric.atlassian.net/browse/ED-7849
+- Fixes for the selection state of Smart links.
+  - https://product-fabric.atlassian.net/browse/ED-7602?src=confmacro
+- Improvements for table resizing & column creation.
+  - https://product-fabric.atlassian.net/browse/ED-7698
+  - https://product-fabric.atlassian.net/browse/ED-7319
+  - https://product-fabric.atlassian.net/browse/ED-7799
+
+**Mobile**
+
+- GASv3 Analytics Events are now relayed from the web to the native context, ready for dispatching.
+  - https://product-fabric.atlassian.net/browse/FM-2502
+- Hybrid Renderer Recycler view now handles invalid ADF nodes gracefully.
+  - https://product-fabric.atlassian.net/browse/FM-2370
+
+**Media**
+
+- Improved analytics
+  - https://product-fabric.atlassian.net/browse/MS-2036
+  - https://product-fabric.atlassian.net/browse/MS-2145
+  - https://product-fabric.atlassian.net/browse/MS-2416
+  - https://product-fabric.atlassian.net/browse/MS-2487
+- Added shouldOpenMediaViewer property to renderer
+  - https://product-fabric.atlassian.net/browse/MS-2393
+- Implemented analytics for file copy
+  - https://product-fabric.atlassian.net/browse/MS-2036
+- New `media-viewed` event dispatched when media is interacted with via the media card or viewer.
+  - https://product-fabric.atlassian.net/browse/MS-2284
+- Support for `alt` text attribute on media image elements.
+  - https://product-fabric.atlassian.net/browse/ED-7776
+
+**i18n-tools**
+
+Bumped dependencies.
+
+### Minor Changes
+
+- [minor][1a0fe670f9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1a0fe670f9):
+
+  ED-7674: support nested actions in stage-0 schema; change DOM representation of actions
+
+  ### Nested actions
+
+  This changeset adds support for nesting actions _at the schema level_, currently only within the stage-0 ADF schema.
+
+  The editor and renderer currently do nothing special to represent these nested actions. As of this release, they appear as as flat list.
+
+  To enable this feature, use the new `allowNestedTasks` prop.
+
+  ### DOM representation of actions in renderer + editor
+
+  This release also changes the DOM representation of actions away from a `ol > li` structure, to a `div > div` one. That is, both the `taskList` and `taskItem` are wrapped in `div` elements.
+
+  Because taskLists can now be allowed to nest themselves, this would otherwise have created an `ol > ol` structure, which is invalid.- [minor][7f3b4e4ec1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7f3b4e4ec1):
+
+  FM-2370 Add "onError" callback prop to Renderer element
+
+  This is called when the provided ADF is invalid and does not load
+
+- [minor][6936864261](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6936864261):
+
+  Added shouldOpenMediaViewer property to Renderer to override the default behaviour.
+
+  The new optional property will act according to the following:
+
+  - **undefined**: (default behaviour) Media Card will open media viewer on click only if it's not in a mobile app and "on card click" event handler is not provided
+  - **true**: Media Card will open media viewer regardless of the default conditions
+  - **false**: Media Card will **not** open viewer regardless of the default conditions
+
+### Patch Changes
+
+- [patch][cc28419139](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cc28419139):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.- [patch][3c1c4a4bed](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c1c4a4bed):
+
+  ED-7849 fixed issue for header anchor links can't be copied in Columns- [patch][a86ad00736](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a86ad00736):
+
+  MS-2416: Adding package info in analytics GASv3 payload- [patch][e0a1c40a84](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e0a1c40a84):
+
+  make the text serializer for renderer to respect ADF mention attributes (text is not mandatory)- [patch][0a7a1e4995](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0a7a1e4995):
+
+  ED-7860 Fix empty heading ids caused by striping out all special characters
+
+- [patch][03dea4c51a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/03dea4c51a):
+
+  ED-7766 improve heading anchor link analytics
+
+- Updated dependencies [c3e65f1b9e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c3e65f1b9e):
+- Updated dependencies [bd94b1d552](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bd94b1d552):
+- Updated dependencies [e7b5c917de](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e7b5c917de):
+  - @atlaskit/editor-common@41.2.0
+  - @atlaskit/media-client@3.0.0
+  - @atlaskit/media-core@30.0.17
+  - @atlaskit/media-test-helpers@25.2.0
+  - @atlaskit/media-card@66.0.0
+  - @atlaskit/media-filmstrip@35.0.0
+  - @atlaskit/editor-json-transformer@6.3.4
+  - @atlaskit/mention@18.15.5
+  - @atlaskit/profilecard@12.3.3
+  - @atlaskit/task-decision@16.0.0
+  - @atlaskit/util-data-test@13.0.0
+
+## 51.1.2
+
+- Updated dependencies [4778521db3](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4778521db3):
+  - @atlaskit/navigation-next@7.0.0
+
+## 51.1.1
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 51.1.0
+
+### Minor Changes
+
+- [minor][37af022ca2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/37af022ca2):
+
+  Delay loading code blocks and task items- [minor][65ada7f318](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/65ada7f318):
+
+  **FABDODGEM-12 Editor Cashmere Release**
+
+  - [Internal post](http://go.atlassian.com/cashmere-release)
+
+  **Affected editor components:**
+
+  tables, media, mobile, text color, emoji, copy/paste, analytics
+
+  **Performance**
+
+  - Async import for code blocks and task items on renderer
+    - https://product-fabric.atlassian.net/browse/ED-7155
+
+  **Table**
+
+  - Add support to sort tables that contains smart links
+    - https://product-fabric.atlassian.net/browse/ED-7449
+  - Scale table when changing to full width mode
+    - https://product-fabric.atlassian.net/browse/ED-7724
+
+  **Text color**
+
+  - Update text color toolbar with right color when text is inside a list, panel, etc.
+    - https://product-fabric.atlassian.net/browse/FM-1752
+
+**Mobile** - Implement undo/redo interface on Hybrid Editor - https://product-fabric.atlassian.net/browse/FM-2393
+
+**Copy and Paste**
+
+    - Support copy & paste when missing context-id attr
+      - https://product-fabric.atlassian.net/browse/MS-2344
+    - Right click + copy image fails the second time that is pasted
+      - https://product-fabric.atlassian.net/browse/MS-2324
+    - Copying a never touched image for the first time from editor fails to paste
+      - https://product-fabric.atlassian.net/browse/MS-2338
+    - Implement analytics when a file is copied
+      - https://product-fabric.atlassian.net/browse/MS-2036
+
+**Media**
+
+- Add analytics events and error reporting [NEW BIG FEATURE]
+  - https://product-fabric.atlassian.net/browse/MS-2275
+  - https://product-fabric.atlassian.net/browse/MS-2329
+  - https://product-fabric.atlassian.net/browse/MS-2330
+  - https://product-fabric.atlassian.net/browse/MS-2331
+  - https://product-fabric.atlassian.net/browse/MS-2332
+  - https://product-fabric.atlassian.net/browse/MS-2390
+- Fixed issue where we can’t insert same file from MediaPicker twice
+  - https://product-fabric.atlassian.net/browse/MS-2080
+- Disable upload of external files to media
+  - https://product-fabric.atlassian.net/browse/MS-2372
+
+**Notable Bug Fixes**
+
+    - Implement consistent behaviour for rule and mediaSingle on insertion
+      - Feature Flag:
+        - allowNewInsertionBehaviour - [default: true]
+      - https://product-fabric.atlassian.net/browse/ED-7503
+    - Fixed bug where we were showing table controls on mobile.
+      - https://product-fabric.atlassian.net/browse/ED-7690
+    - Fixed bug where editor crashes after unmounting react component.
+      - https://product-fabric.atlassian.net/browse/ED-7318
+    - Fixed bug where custom emojis are not been showed on the editor
+      - https://product-fabric.atlassian.net/browse/ED-7726
+
+- [minor][79c69ed5cd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/79c69ed5cd):
+
+  ED-7449 Implement sorting inline cards inside tables base on resolved title
+
+### Patch Changes
+
+- [patch][92801136b9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/92801136b9):
+
+  [ED-7727] Improve not allowed sorting message when the table has merged cells. Now the message will show up only on the sorting icon avoiding conflicts with confluence comments- [patch][e0edc768ec](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e0edc768ec):
+
+  ED-7743 special chars in heading will gets removed.- [patch][1ea48d7fd1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1ea48d7fd1):
+
+  ED-7244 Fixed flaky test- [patch][dac3a85916](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/dac3a85916):
+
+  ED-7318 Prevent manipulating the DOM after the editor has been destroyed
+
+## 51.0.0
+
+### Major Changes
+
+- [major][166eb02474](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/166eb02474):
+
+  **Editor Bombazine Release**
+
+  **BREAKING CHANGES**
+
+  ​ **Renderer**
+
+  - Change in contract for `eventHandlers.smartCard.onClick` prop:
+        Old: onClick(url): void
+  New: onClick(event, url): void
+
+  ​ **ADF Schema**
+
+      - Remove applicationCard node and action mark
+      - Remove exposed `tableBackgroundBorderColors` in favour of `tableBackgroundBorderColor`
+
+
+    **Affected editor components:**
+
+    Tables, Media, Headings, Copy and Paste, Mobile
+
+    **Anchor Links**
+
+      - Headings in the renderer now show an anchor link on hover
+        - Feature Flag:
+          - allowHeadingAnchorLinks - [default: false]
+        - https://product-fabric.atlassian.net/browse/ED-5137
+
+    **Copy and Paste**
+
+      - Fixed a bug where right click for copy image failed the second time that is pasted
+        - https://product-fabric.atlassian.net/browse/MS-2324
+
+    **Media**
+
+      - Resizing/Aligning media inside Table
+        - Feature Flag:
+          - allowResizingInTables - [default: false]
+        - https://product-fabric.atlassian.net/browse/ED-6359
+      - You can now insert same file from MediaPicker twice
+        - https://product-fabric.atlassian.net/browse/MS-2080
+      - Implement media link in renderer
+        - https://product-fabric.atlassian.net/browse/ED-7244
+
+    **Tables**
+
+      - Implement table sorting in renderer - [NEW BIG FEATURE][not enabled]
+        - Feature Flag:
+          - allowColumnSorting – [default: false]
+        - https://product-fabric.atlassian.net/browse/ED-7392
+      - Expanded table cell background color palette
+        - https://product-fabric.atlassian.net/browse/ED-7201
+
+    **Mobile**
+
+      - Provide method for scrolling to actions, decisions and mentions
+        - https://product-fabric.atlassian.net/browse/FM-2261
+        - https://product-fabric.atlassian.net/browse/FM-2055
+      - Improve Hybrid Editor Scrolling
+        - https://product-fabric.atlassian.net/browse/FM-2212
+
+    **Notable Bug fixes**
+
+      - Fixed an issue where you couldn't split merged cells when a cell contained a media item
+        - https://product-fabric.atlassian.net/browse/ED-6898
+      - Pasting content with an emoji no longer duplicates the emoji as an image
+        - https://product-fabric.atlassian.net/browse/ED-7513
+      - Content inside of a table cell no longer overflows if table looses focus
+        - https://product-fabric.atlassian.net/browse/ED-7529
+      - Fixed an issue when adding rows and cols at the same time start adding infinite columns
+        - https://product-fabric.atlassian.net/browse/ED-7700- [major] [40ead387ef](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/40ead387ef):
+
+ED-7532 Expose ability to cancel default browser behavior when clicking Smart Links- [major][80adfefba2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/80adfefba2):
+
+Remove applicationCard node and action mark
+
+### Minor Changes
+
+- [minor][9cddedc62f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9cddedc62f):
+
+  ED-7244 added hover effects for media link in renderer- [minor][3f1c7dd26a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3f1c7dd26a):
+
+  [ED-7392] Add sort table by column on renderer behind allowColumnSorting feature flag
+  [ED-7392] Extract common methods to sort table
+
+- [minor][decd6fceea](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/decd6fceea):
+
+  ED-5137 added heading anchor link
+
+  You can now use the `allowHeadingAnchorLinks` prop to display heading anchor links in renderer, next to all top level headings.
+  There is also an existing property called `disableHeadingIDs`, when you set both `disableHeadingIDs` and `allowHeadingAnchorLinks` to false, the anchor link button will not display, however the heading anchor id will still be in the DOM.
+
+  Note: This feature is only enabled for top level headings(e.g. not nested in other blocks like table).
+
+### Patch Changes
+
+- [patch][f9584ff209](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9584ff209):
+
+  ED-7244 updated hover animation style- [patch][030e778af9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/030e778af9):
+
+  pass contextId to media card
+
+- Updated dependencies [1194ad5eb3](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1194ad5eb3):
+  - @atlaskit/adf-utils@7.0.0
+  - @atlaskit/editor-common@41.0.0
+  - @atlaskit/editor-json-transformer@6.3.3
+  - @atlaskit/editor-test-helpers@10.0.0
+  - @atlaskit/adf-schema@4.0.0
+
 ## 50.0.2
 
 - Updated dependencies [8d0f37c23e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8d0f37c23e):

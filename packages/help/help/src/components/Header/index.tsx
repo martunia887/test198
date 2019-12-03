@@ -39,18 +39,10 @@ export const HelpContent = (
     intl: { formatMessage },
   } = props;
 
-  const isBackButtonVisible: () => boolean = () => {
-    if (help.history.length === 1 && !help.isDefaultContent()) {
-      return false;
-    }
-
-    return help.isArticleVisible();
-  };
-
   return (
     <HeaderContainer>
       <Transition
-        in={isBackButtonVisible()}
+        in={help.isBackbuttonVisible()}
         timeout={TRANSITION_DURATION_MS}
         mountOnEnter
         unmountOnExit
@@ -75,7 +67,7 @@ export const HelpContent = (
                   ...rest,
                 };
               }}
-              iconBefore={<ArrowleftIcon label="back" size="medium" />}
+              iconBefore={<ArrowleftIcon label="" size="medium" />}
             >
               {formatMessage(messages.help_panel_navigation_back)}
             </Button>

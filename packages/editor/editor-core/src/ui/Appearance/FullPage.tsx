@@ -6,6 +6,8 @@ import {
   akEditorMenuZIndex,
   akEditorFullWidthLayoutWidth,
   akEditorGutterPadding,
+  akEditorSwoopCubicBezier,
+  akLayoutGutterOffset,
 } from '@atlaskit/editor-common';
 import { taskListSelector, decisionListSelector } from '@atlaskit/adf-schema';
 import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
@@ -22,9 +24,8 @@ import { akEditorToolbarKeylineHeight } from '../../styles';
 import rafSchedule from 'raf-schd';
 import { scrollbarStyles } from '../styles';
 import WidthEmitter from '../WidthEmitter';
-import { LAYOUT_OFFSET } from '../../plugins/layout/styles';
 
-const SWOOP_ANIMATION = '0.5s cubic-bezier(.15,1,.3,1)';
+const SWOOP_ANIMATION = `0.5s ${akEditorSwoopCubicBezier}`;
 const TOTAL_PADDING = akEditorGutterPadding * 2;
 
 const FullPageEditorWrapper = styled.div`
@@ -51,7 +52,9 @@ const ContentArea = styled.div`
   line-height: 24px;
   padding-top: 50px;
   padding-bottom: 55px;
-  height: calc(100% - 105px); /* 100% - (padding top & bottom) */
+  height: calc(
+    100% - 105px
+  ); /* fill the viewport: 100% - (padding top & bottom) */
   width: 100%;
   flex-direction: column;
   flex-grow: 1;
@@ -141,7 +144,9 @@ const ContentArea = styled.div`
         }
 
         [data-layout-section] {
-          max-width: ${containerWidth - TOTAL_PADDING + LAYOUT_OFFSET * 2}px;
+          max-width: ${containerWidth -
+            TOTAL_PADDING +
+            akLayoutGutterOffset * 2}px;
         }
       `;
     }}
@@ -153,9 +158,8 @@ interface MainToolbarProps {
   showKeyline: boolean;
 }
 
-const MainToolbar: React.ComponentClass<
-  React.HTMLAttributes<{}> & MainToolbarProps
-> = styled.div`
+const MainToolbar: React.ComponentClass<React.HTMLAttributes<{}> &
+  MainToolbarProps> = styled.div`
   position: relative;
   align-items: center;
   box-shadow: ${(props: MainToolbarProps) =>
@@ -267,6 +271,15 @@ export default class Editor extends React.Component<
     window.addEventListener('resize', this.handleResize, false);
   }
 
+  componentDidUpdate() {
+    if (
+      this.scrollContainer &&
+      this.scrollContainer.clientWidth !== this.state.containerWidth
+    ) {
+      this.updateContainerWidth();
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
 
@@ -296,6 +309,7 @@ export default class Editor extends React.Component<
       disabled,
       collabEdit,
       dispatchAnalyticsEvent,
+      allowAnnotation,
     } = this.props;
 
     const { showKeyline, containerWidth } = this.state;
@@ -333,6 +347,7 @@ export default class Editor extends React.Component<
         </MainToolbar>
         <ScrollContainer
           innerRef={this.scrollContainerRef}
+          allowAnnotation={allowAnnotation}
           className="fabric-editor-popup-scroll-parent"
         >
           <ClickAreaBlock editorView={editorView}>

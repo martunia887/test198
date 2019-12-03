@@ -7,7 +7,12 @@ import {
 } from 'prosemirror-state';
 import { Node as PmNode } from 'prosemirror-model';
 import { TableMap, cellAround, CellSelection } from 'prosemirror-tables';
-import { findTable, getSelectionRect, removeTable } from 'prosemirror-utils';
+import {
+  findTable,
+  getSelectionRect,
+  removeTable,
+  findCellRectClosestToPos,
+} from 'prosemirror-utils';
 import rafSchedule from 'raf-schd';
 import { browser } from '@atlaskit/editor-common';
 
@@ -31,6 +36,7 @@ import {
   isTableControlsButton,
   isRowControlsButton,
   isCornerButton,
+  isResizeHandleDecoration,
   getColumnOrRowIndex,
   getMousePositionHorizontalRelativeByElement,
   getMousePositionVerticalRelativeByElement,
@@ -40,13 +46,18 @@ import {
   showInsertColumnButton,
   showInsertRowButton,
   hideInsertColumnOrRowButton,
+  addResizeHandleDecorations,
   selectColumn,
   hoverColumns,
   clearHoverSelection,
+  showResizeHandleLine,
+  hideResizeHandleLine,
 } from './commands';
 import { getPluginState } from './pm-plugins/main';
+import { getPluginState as getResizePluginState } from './pm-plugins/table-resizing/plugin';
 import { getSelectedCellInfo } from './utils';
 import { deleteColumns, deleteRows } from './transforms';
+import { RESIZE_HANDLE_AREA_DECORATION_GAP } from './types';
 
 export const handleBlur = (view: EditorView, event: Event): boolean => {
   const { state, dispatch } = view;
@@ -124,6 +135,9 @@ export const handleMouseOver = (
 ): boolean => {
   const { state, dispatch } = view;
   const target = mouseEvent.target as HTMLElement;
+  const { insertColumnButtonIndex, insertRowButtonIndex } = getPluginState(
+    state,
+  );
 
   if (isInsertRowButton(target)) {
     const [startIndex, endIndex] = getColumnOrRowIndex(target);
@@ -136,15 +150,27 @@ export const handleMouseOver = (
     return showInsertRowButton(positionRow)(state, dispatch);
   }
 
-  if (isCell(target) || isCornerButton(target)) {
-    return hideInsertColumnOrRowButton()(state, dispatch);
-  }
-
   if (isColumnControlsDecorations(target)) {
     const [startIndex] = getColumnOrRowIndex(target);
     const { state, dispatch } = view;
 
     return hoverColumns([startIndex], false)(state, dispatch);
+  }
+
+  if (
+    (isCell(target) || isCornerButton(target)) &&
+    (typeof insertColumnButtonIndex === 'number' ||
+      typeof insertRowButtonIndex === 'number')
+  ) {
+    return hideInsertColumnOrRowButton()(state, dispatch);
+  }
+
+  if (isResizeHandleDecoration(target)) {
+    const [startIndex, endIndex] = getColumnOrRowIndex(target);
+    return showResizeHandleLine({ left: startIndex, right: endIndex })(
+      state,
+      dispatch,
+    );
   }
 
   return false;
@@ -178,6 +204,11 @@ export const handleMouseOut = (
     return clearHoverSelection()(state, dispatch);
   }
 
+  if (isResizeHandleDecoration(target)) {
+    const { state, dispatch } = view;
+    return hideResizeHandleLine()(state, dispatch);
+  }
+
   return false;
 };
 
@@ -199,6 +230,7 @@ export const handleMouseLeave = (view: EditorView, event: Event): boolean => {
   ) {
     return true;
   }
+
   return false;
 };
 
@@ -234,6 +266,35 @@ export const handleMouseMove = (view: EditorView, event: Event) => {
 
     if (positionRow !== insertRowButtonIndex) {
       return showInsertRowButton(positionRow)(state, dispatch);
+    }
+  }
+
+  if (!isResizeHandleDecoration(element) && isCell(element)) {
+    const positionColumn = getMousePositionHorizontalRelativeByElement(
+      event as MouseEvent,
+      RESIZE_HANDLE_AREA_DECORATION_GAP,
+    );
+
+    if (positionColumn != null) {
+      const { state, dispatch } = view;
+      const tableCell = closestElement(
+        element,
+        'td, th',
+      ) as HTMLTableCellElement;
+      const cellStartPosition = view.posAtDOM(tableCell, 0);
+      const rect = findCellRectClosestToPos(
+        state.doc.resolve(cellStartPosition),
+      );
+
+      if (rect) {
+        const columnEndIndexTarget =
+          positionColumn === 'left' ? rect.left : rect.right;
+
+        return addResizeHandleDecorations(columnEndIndexTarget)(
+          state,
+          dispatch,
+        );
+      }
     }
   }
 
@@ -296,7 +357,7 @@ export const handleCut = (
         } = getSelectedCellInfo(tr.selection);
 
         // Reassigning to make it more obvious and consistent
-        tr = addAnalytics(tr, {
+        tr = addAnalytics(newState, tr, {
           action: TABLE_ACTION.CUT,
           actionSubject: ACTION_SUBJECT.TABLE,
           actionSubjectId: null,
@@ -341,7 +402,13 @@ export const handleCut = (
 export const whenTableInFocus = (
   eventHandler: (view: EditorView, mouseEvent: Event) => boolean,
 ) => (view: EditorView, mouseEvent: Event): boolean => {
-  if (!getPluginState(view.state).tableNode) {
+  const tableResizePluginState = getResizePluginState(view.state);
+  const tablePluginState = getPluginState(view.state);
+  const isDragging =
+    tableResizePluginState && !!tableResizePluginState.dragging;
+  const hasTableNode = tablePluginState && tablePluginState.tableNode;
+
+  if (!hasTableNode || isDragging) {
     return false;
   }
 

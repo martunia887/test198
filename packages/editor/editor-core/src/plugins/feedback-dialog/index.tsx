@@ -50,13 +50,16 @@ export const openFeedbackDialog = async (feedbackInfo?: FeedbackInfo) =>
       }
     }
 
-    window.setTimeout(showJiraCollectorDialog, 0);
-    resolve();
+    const timeoutId = window.setTimeout(showJiraCollectorDialog, 0);
+    // Return the timoutId for consumers to call clearTimeout if they need to.
+    resolve(timeoutId);
   });
 
 const feedbackDialog = (feedbackInfo: FeedbackInfo): EditorPlugin => {
   defaultFeedbackInfo = feedbackInfo;
   return {
+    name: 'feedbackDialog',
+
     pluginsOptions: {
       quickInsert: ({ formatMessage }) => [
         {
@@ -67,11 +70,11 @@ const feedbackDialog = (feedbackInfo: FeedbackInfo): EditorPlugin => {
           icon: () => (
             <IconFeedback label={formatMessage(messages.feedbackDialog)} />
           ),
-          action(insert, _state) {
+          action(insert, state) {
             const tr = insert('');
             openFeedbackDialog(feedbackInfo);
 
-            return addAnalytics(tr, {
+            return addAnalytics(state, tr, {
               action: ACTION.OPENED,
               actionSubject: ACTION_SUBJECT.FEEDBACK_DIALOG,
               attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },

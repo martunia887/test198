@@ -8,6 +8,7 @@ export interface RowCellType {
   key?: string | number;
   colSpan?: number;
   content?: React.ReactNode | string;
+  testId?: string;
 }
 
 export interface I18nShape {
@@ -49,6 +50,22 @@ export interface StatelessProps extends WithAnalyticsEventsProps {
   onRankStart?: (rankStart: RankStart) => void;
   onRankEnd?: (rankEnd: RankEnd, uiAnalyticsEvent?: UIAnalyticsEvent) => void;
   paginationi18n?: I18nShape;
+  /** It highlights the passed row number on the current visible page. Starts with 0 */
+  highlightedRowIndex?: number;
+  /**
+   * A `testId` prop is provided for specified elements, which is a unique string that appears as a data attribute
+   * `data-testid` in the rendered code, serving as a hook for automated tests.
+   *
+   * The value of `testId` is used to prefix testId props in given elements:
+   * **Notes: The content of the cell, keys, index are defined by consumers.
+   * `${testId}--table` - Table.
+   * `${testId}--head` - Table header.
+   * `${testId}--head--{content of the cell}` - Table header cell can be identified by their content.
+   * `${testId}--row--{index - content of the first cell}` - Table row.
+   * `${testId}--body` - Table body.
+   * `${testId}--body--{content of the cell}` - Table body cell can be identified by their content.
+   **/
+  testId?: string;
 }
 
 export interface StatefulProps extends WithAnalyticsEventsProps {
@@ -74,11 +91,15 @@ export interface StatefulProps extends WithAnalyticsEventsProps {
   onRankStart?: (rankStart: RankStart) => void;
   onRankEnd?: (rankEnd: RankEnd) => void;
   paginationi18n?: I18nShape;
+  highlightedRowIndex?: number;
+  testId?: string;
 }
 
 export type RowType = {
   cells: Array<RowCellType>;
   key?: string;
+  onClick?: React.MouseEventHandler;
+  testId?: string;
 };
 
 export type SortOrderType = 'ASC' | 'DESC';

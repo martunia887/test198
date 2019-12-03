@@ -1,5 +1,42 @@
 # @atlaskit/global-navigation
 
+## 8.0.5
+
+### Patch Changes
+
+- [patch][8eca4a1ff5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8eca4a1ff5):
+
+  Bump @atlaskit/navigation-next to ^7.0.4
+
+## 8.0.4
+
+- Updated dependencies [4778521db3](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4778521db3):
+  - @atlaskit/navigation-next@7.0.0
+
+## 8.0.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 8.0.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 8.0.1
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/modal-dialog@10.3.1
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
 ## 8.0.0
 
 ### Major Changes

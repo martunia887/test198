@@ -15,7 +15,7 @@ import MediaPlayer, {
   VideoState,
   VideoActions,
 } from 'react-video-renderer';
-import { colors } from '@atlaskit/theme';
+import { B200, DN400, N0, DN60 } from '@atlaskit/theme/colors';
 import { TimeRange } from './timeRange';
 import {
   CurrentTime,
@@ -56,6 +56,7 @@ export interface CustomMediaPlayerProps extends WithShowControlMethodProp {
   readonly onCanPlay?: () => void;
   readonly onError?: () => void;
   readonly onDownloadClick?: () => void;
+  readonly onFirstPlay?: () => void;
 }
 
 export interface CustomMediaPlayerState {
@@ -77,12 +78,14 @@ export class CustomMediaPlayer extends Component<
 > {
   videoWrapperRef?: HTMLElement;
   private actions?: CustomMediaPlayerActions;
+  private wasPlayedOnce: boolean = false;
 
   state: CustomMediaPlayerState = {
     isFullScreenEnabled: false,
   };
 
   componentDidMount() {
+    const { isAutoPlay, onFirstPlay } = this.props;
     document.addEventListener(
       vendorify('fullscreenchange', false),
       this.onFullScreenChange,
@@ -90,8 +93,12 @@ export class CustomMediaPlayer extends Component<
 
     simultaneousPlayManager.subscribe(this);
 
-    if (this.props.isAutoPlay) {
+    if (isAutoPlay) {
       simultaneousPlayManager.pauseOthers(this);
+      if (onFirstPlay) {
+        this.wasPlayedOnce = true;
+        onFirstPlay();
+      }
     }
   }
 
@@ -137,8 +144,9 @@ export class CustomMediaPlayer extends Component<
     if (type === 'audio' || !isHDAvailable) {
       return;
     }
-    const primaryColor = isHDActive ? colors.B200 : colors.DN400;
-    const secondaryColor = isHDActive ? colors.white : colors.DN60;
+    const primaryColor = isHDActive ? B200 : DN400;
+    const secondaryColor = isHDActive ? N0 : DN60;
+
     return (
       <MediaButton
         appearance={toolbar}
@@ -202,6 +210,7 @@ export class CustomMediaPlayer extends Component<
 
     return (
       <MediaButton
+        data-testid="custom-media-player-fullscreen-button"
         appearance={toolbar}
         onClick={this.onFullScreenClick}
         iconBefore={icon}
@@ -217,6 +226,7 @@ export class CustomMediaPlayer extends Component<
 
     return (
       <MediaButton
+        data-testid="custom-media-player-download-button"
         appearance={toolbar}
         onClick={onDownloadClick}
         iconBefore={<DownloadIcon label="download" />}
@@ -246,10 +256,15 @@ export class CustomMediaPlayer extends Component<
   };
 
   private play = () => {
+    const { onFirstPlay } = this.props;
     if (this.actions) {
       this.actions.play();
     }
     simultaneousPlayManager.pauseOthers(this);
+    if (!this.wasPlayedOnce && onFirstPlay) {
+      this.wasPlayedOnce = true;
+      onFirstPlay();
+    }
   };
 
   render() {
@@ -291,6 +306,8 @@ export class CustomMediaPlayer extends Component<
             const toggleButtonAction = isPlaying ? this.pause : this.play;
             const button = (
               <MediaButton
+                data-testid="custom-media-player-play-toggle-button"
+                data-test-is-playing={isPlaying}
                 appearance={toolbar}
                 iconBefore={toggleButtonIcon}
                 onClick={toggleButtonAction}

@@ -6,8 +6,9 @@ import { selectors as rendererSelectors } from '../../__helpers/page-objects/_re
 import { Page } from 'puppeteer';
 
 const devices = [
-  Device.LaptopHiDPI,
-  Device.LaptopMDPI,
+  // TODO: ED-7455
+  // Device.LaptopHiDPI,
+  // Device.LaptopMDPI,
   Device.iPad,
   Device.iPadPro,
   Device.iPhonePlus,
@@ -16,7 +17,7 @@ const devices = [
 const initRenderer = async (page: Page, adf: any, device: Device) =>
   await initRendererWithADF(page, {
     appearance: 'full-page',
-    rendererProps: { allowDynamicTextSizing: true },
+    rendererProps: { allowDynamicTextSizing: true, disableHeadingIDs: true },
     adf,
     device,
   });

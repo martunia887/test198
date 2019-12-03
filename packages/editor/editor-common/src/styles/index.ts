@@ -15,7 +15,10 @@ export {
 } from './shared/table';
 
 export { columnLayoutSharedStyle } from './shared/column-layout';
-export { mediaSingleSharedStyle } from './shared/media-single';
+export {
+  mediaSingleSharedStyle,
+  mediaSingleClassName,
+} from './shared/media-single';
 export { blockquoteSharedStyles } from './shared/blockquote';
 export { headingsSharedStyles } from './shared/headings';
 export { panelSharedStyles } from './shared/panel';
@@ -30,3 +33,4 @@ export { blockMarksSharedStyles } from './shared/block-marks';
 export { codeMarkSharedStyles } from './shared/code-mark';
 export { shadowSharedStyle } from './shared/shadow';
 export { dateSharedStyle, DateSharedCssClassName } from './shared/date';
+export { tasksAndDecisionsStyles } from './shared/task-decision';

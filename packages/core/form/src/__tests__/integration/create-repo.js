@@ -7,6 +7,7 @@ Some actual functional tests need to be added:
 Those tests should be added before the release candidate*/
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
+
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 
 /* Url to test the example */
@@ -24,7 +25,7 @@ const cancelBtn = 'button[type="button"]#create-repo-cancel';
 
 BrowserTestCase(
   'Create repository form should render without errors',
-  { skip: [] },
+  {},
   async client => {
     const formTest = new Page(client);
     await formTest.goto(urlFormCreateRepo);

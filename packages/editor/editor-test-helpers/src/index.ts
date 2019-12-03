@@ -1,6 +1,6 @@
 export { Refs } from './schema-builder';
 export * from './base64fileconverter';
-export { default as sendKeyToPm } from './send-key-to-pm';
+export { default as sendKeyToPm, testKeymap } from './send-key-to-pm';
 export { default as chaiPlugin } from './chai';
 export { default as createEvent } from './create-event';
 export { default as dispatchPasteEvent } from './dispatch-paste-event';
@@ -8,9 +8,7 @@ export {
   default as createEditorFactory,
   Options as CreateEditorOptions,
 } from './create-editor';
-export {
-  default as createAnalyticsEventMock,
-} from './create-analytics-event-mock';
+export { default as createAnalyticsEventMock } from './create-analytics-event-mock';
 export { default as fixtures } from './fixtures';
 export { default as simulatePlatform, Platforms } from './simulatePlatform';
 export { default as patchEditorViewForJSDOM, Image } from './jsdom-fixtures';
@@ -91,16 +89,18 @@ export {
   status,
   alignment,
   indentation,
+  annotation,
   unsupportedBlock,
   unsupportedInline,
+  builderEval,
+  expand,
+  nestedExpand,
 } from './schema-builder';
 export { default as defaultSchema } from './schema';
 export * from './html-helpers';
 export { storyMediaProviderFactory, fakeMediaProvider } from './media-provider';
 export { activityProviderFactory } from './activity-provider';
-export {
-  storyContextIdentifierProviderFactory,
-} from './context-identifier-provider';
+export { storyContextIdentifierProviderFactory } from './context-identifier-provider';
 export { default as randomId } from './random-id';
 export { default as sleep } from './sleep';
 export { isMobileBrowser } from './device';
@@ -113,7 +113,11 @@ export {
   bodiedExtensionData,
 } from './mock-extension-data';
 export * from './schema-element-builder';
-export { cardProvider, EditorTestCardProvider } from './card-provider';
+export {
+  cardProvider,
+  cardProviderStaging,
+  EditorTestCardProvider,
+} from './card-provider';
 export * from './enzyme';
 export { compareSelection } from './selection';
 export * from './table';
@@ -121,4 +125,6 @@ export * from './constants';
 export { autoformattingProvider } from './autoformatting-provider';
 export { extensionHandlers } from './extensions';
 export { analyticsClient } from './analytics-client-mock';
+export { default as ExampleInlineCommentComponent } from './ExampleInlineCommentComponent';
+
 export const testMediaFileId = 'a559980d-cd47-43e2-8377-27359fcb905f';

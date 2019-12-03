@@ -1,5 +1,6 @@
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { WithTheme } from './theme/types';
+import { AvailableProductsDataProvider } from './providers/products-data-provider';
 
 export interface TriggerXFlowCallback {
   (
@@ -34,6 +35,7 @@ export interface CustomLink {
   key: string;
   label: string;
   link: string;
+  local: boolean;
 }
 
 export enum Permissions {
@@ -43,16 +45,15 @@ export enum Permissions {
 }
 
 export enum Product {
+  BITBUCKET = 'bitbucket',
   CONFLUENCE = 'confluence',
   HOME = 'home',
   JIRA = 'jira',
-  PEOPLE = 'people',
   SITE_ADMIN = 'site-admin',
   TRUSTED_ADMIN = 'trusted-admin',
 }
 
 export enum Feature {
-  enableUserCentricProducts = 'enableUserCentricProducts',
   disableCustomLinks = 'disableCustomLinks',
   disableRecentContainers = 'disableRecentContainers',
   disableHeadings = 'disableHeadings',
@@ -60,39 +61,39 @@ export enum Feature {
   isDiscoverMoreForEveryoneEnabled = 'isDiscoverMoreForEveryoneEnabled',
   // EMCEE stands for Embedded Marketplace with in the product
   isEmceeLinkEnabled = 'isEmceeLinkEnabled',
-}
-
-export enum MultiVariateFeature {
-  productTopItemVariation = 'productTopItemVariation',
-}
-
-export enum ProductTopItemVariation {
-  mostFrequentSite = 'most-frequent-site',
-  currentSite = 'current-site',
+  // Enable Discover section - group suggested product links in Discover section
+  isDiscoverSectionEnabled = 'isDiscoverSectionEnabled',
 }
 
 export type FeatureFlagProps = {
-  [key in Exclude<Feature, typeof Feature.xflow>]: boolean
-} & {
-  [MultiVariateFeature.productTopItemVariation]: ProductTopItemVariation;
+  // Custom links are enabled by default for Jira and Confluence, this feature flag allows to hide them. Custom links are not supported by the switcher in any other products.
+  disableCustomLinks?: boolean;
+  // Hide recent containers. Recent containers are enabled by default.
+  disableRecentContainers?: boolean;
+  // Remove section headers - useful if something else is providing them. i.e: trello inline dialog.
+  disableHeadings?: boolean;
+  // Enable discover more.
+  isDiscoverMoreForEveryoneEnabled?: boolean;
+  // Enable Embedded Marketplace within the product.
+  isEmceeLinkEnabled?: boolean;
+  // Enable Discover section - group suggested product links in Discover section
+  isDiscoverSectionEnabled?: boolean;
 };
 
-export type FeatureMap = { [key in Feature]: boolean } & {
-  [MultiVariateFeature.productTopItemVariation]: ProductTopItemVariation;
-};
+export type FeatureMap = { [key in Feature]: boolean };
 
 export type CustomLinksResponse = CustomLink[];
 
-export interface ProductLicenseInformation {
-  state: string;
-  applicationUrl?: string;
+export type ProvisionedProducts = { [key in WorklensProductType]?: boolean };
+
+export interface CurrentSite {
+  url: string;
+  products: AvailableProduct[];
 }
 
-export interface LicenseInformationResponse {
-  hostname: string;
-  products: {
-    [key: string]: ProductLicenseInformation;
-  };
+export interface UserSiteDataResponse {
+  currentSite: CurrentSite;
+  provisionedProducts: ProvisionedProducts;
 }
 
 export interface XFlowSettingsResponse {
@@ -115,6 +116,7 @@ export enum WorklensProductType {
   OPSGENIE = 'OPSGENIE',
   BITBUCKET = 'BITBUCKET',
   STATUSPAGE = 'STATUSPAGE',
+  TRELLO = 'TRELLO',
 }
 
 export type AvailableProduct =
@@ -130,7 +132,11 @@ export type AvailableProduct =
 
 interface AvailableProductWithUrl {
   activityCount: number;
-  productType: WorklensProductType.BITBUCKET | WorklensProductType.OPSGENIE;
+  productType:
+    | WorklensProductType.BITBUCKET
+    | WorklensProductType.OPSGENIE
+    | WorklensProductType.STATUSPAGE // assuming that the URL is provided by TCS (same as Opsgenie)
+    | WorklensProductType.TRELLO;
   url: string;
 }
 
@@ -147,12 +153,42 @@ export interface AvailableProductsResponse {
   sites: AvailableSite[];
 }
 
+export interface JoinableSiteUser {
+  avatarUrl: string;
+  displayName: string;
+  relevance?: number;
+}
+
+export interface JoinableSiteUserAvatarPropTypes {
+  name: string;
+  src: string;
+  appearance: 'circle';
+  size: 'small';
+  enableTooltip: boolean;
+}
+
+export interface JoinableSiteUsersKeyedByProduct {
+  [key: string]: JoinableSiteUser[];
+}
+
+export interface JoinableSite {
+  cloudId: string;
+  displayName: string;
+  users: JoinableSiteUsersKeyedByProduct;
+  url: string;
+  avatarUrl?: string;
+  relevance?: number;
+}
+
+export interface JoinableSitesResponse {
+  sites: JoinableSite[];
+}
+
 export enum ProductKey {
   CONFLUENCE = 'confluence.ondemand',
   JIRA_CORE = 'jira-core.ondemand',
   JIRA_SOFTWARE = 'jira-software.ondemand',
   JIRA_SERVICE_DESK = 'jira-servicedesk.ondemand',
-  JIRA_OPS = 'jira-incident-manager.ondemand',
   OPSGENIE = 'opsgenie',
 }
 
@@ -172,10 +208,25 @@ export interface SwitcherChildItem {
   avatar: string | null;
 }
 
+export interface JoinableSiteClickHandler {
+  (returnUrl?: string): void;
+}
+
 export type AtlassianSwitcherProps = WithTheme & {
+  // Product name used for analytics events
   product: string;
+  // Optional cloudID, should be provided for tenanted applications.
   cloudId?: string;
+  // Optional callback to be exectuted after an XFlow event is triggered.
   triggerXFlow?: TriggerXFlowCallback;
+  // Optional callback to be exectuted after a user clicks on discover more.
   onDiscoverMoreClicked?: DiscoverMoreCallback;
+  // A map of feature flags used by the XFlow recommendations engine.
   recommendationsFeatureFlags?: RecommendationsFeatureFlags;
-} & Partial<FeatureFlagProps>;
+  // Optional custom provider for available products
+  availableProductsDataProvider?: AvailableProductsDataProvider;
+  // Optional custom provider for joinable sites
+  joinableSitesDataProvider?: any;
+  // Optional callback provided to handle
+  onJoinableSiteClicked?: JoinableSiteClickHandler;
+} & FeatureFlagProps;

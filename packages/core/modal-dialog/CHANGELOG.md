@@ -1,5 +1,70 @@
 # @atlaskit/modal-dialog
 
+## 10.4.0
+
+### Minor Changes
+
+- [minor][1ed27f5f85](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1ed27f5f85):
+
+  Adds prop types for Header / Footer render props.
+
+## 10.3.6
+
+- Updated dependencies [30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):
+  - @atlaskit/form@6.3.2
+  - @atlaskit/inline-dialog@12.1.5
+  - @atlaskit/select@11.0.0
+  - @atlaskit/button@13.3.4
+
+## 10.3.5
+
+### Patch Changes
+
+- [patch][b39742b616](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b39742b616):
+
+  fixed type for the actions props
+
+## 10.3.4
+
+### Patch Changes
+
+- [patch][f86839ca4e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f86839ca4e):
+
+  @atlaskit/portal had an issue in IE11 and this is fixed in 3.1.2
+
+## 10.3.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 10.3.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 10.3.1
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/form@6.2.3
+  - @atlaskit/select@10.1.1
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
+## 10.3.0
+
+### Minor Changes
+
+- [minor][66e147e6a1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/66e147e6a1):
+
+  Adding an optional prop `testId` that will set the attribute value `data-testid`. It will help products to write better integration and end to end tests.
+
 ## 10.2.1
 
 - Updated dependencies [8d0f37c23e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8d0f37c23e):

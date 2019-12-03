@@ -1,18 +1,22 @@
 import uuidV4 from 'uuid/v4';
-import { updateMediaNodeAttrs, replaceExternalMedia } from '../commands';
+import {
+  updateMediaNodeAttrs,
+  replaceExternalMedia,
+  updateAllMediaNodesAttrs,
+} from '../commands';
 import { MediaAttributes, ExternalMediaAttributes } from '@atlaskit/adf-schema';
 import {
   DEFAULT_IMAGE_HEIGHT,
   DEFAULT_IMAGE_WIDTH,
+  MediaProvider,
 } from '@atlaskit/editor-common';
 import {
-  getViewMediaClientConfigFromMediaProvider,
-  getUploadMediaClientConfigFromMediaProvider,
-} from '../utils/media-common';
-import { getMediaClient } from '@atlaskit/media-client';
+  getMediaClient,
+  isMediaBlobUrl,
+  getAttrsFromUrl,
+} from '@atlaskit/media-client';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { MediaProvider } from '../types';
 import { ContextIdentifierProvider } from '@atlaskit/editor-common';
 import { MediaPMPluginOptions } from '../';
 import {
@@ -41,21 +45,27 @@ export class MediaNodeUpdater {
     this.props = props;
   }
 
+  isMediaBlobUrl(): boolean {
+    const attrs = this.getAttrs();
+
+    return !!(attrs && attrs.type === 'external' && isMediaBlobUrl(attrs.url));
+  }
+
   // Updates the node with contextId if it doesn't have one already
+  // TODO [MS-2258]: remove updateContextId in order to only use updateFileAttrs
   updateContextId = async () => {
     const attrs = this.getAttrs();
-    if (!attrs) {
+    if (!attrs || attrs.type !== 'file') {
       return;
     }
 
     const { id } = attrs;
     const objectId = await this.getObjectId();
 
-    updateMediaNodeAttrs(
+    updateAllMediaNodesAttrs(
       id,
       {
         __contextId: objectId,
-        contextId: objectId,
       },
       this.props.isMediaSingle,
     )(this.props.view.state, this.props.view.dispatch);
@@ -64,7 +74,12 @@ export class MediaNodeUpdater {
   hasFileAttributesDefined = () => {
     const attrs = this.getAttrs();
     return (
-      attrs && attrs.__fileName && attrs.__fileMimeType && attrs.__fileSize
+      attrs &&
+      attrs.type === 'file' &&
+      attrs.__fileName &&
+      attrs.__fileMimeType &&
+      attrs.__fileSize &&
+      attrs.__contextId
     );
   };
 
@@ -76,18 +91,14 @@ export class MediaNodeUpdater {
       !mediaProvider ||
       !mediaProvider.uploadParams ||
       !attrs ||
-      !attrs.id ||
+      attrs.type !== 'file' ||
       this.hasFileAttributesDefined()
     ) {
       return;
     }
 
-    const mediaClientConfig = await getViewMediaClientConfigFromMediaProvider(
-      mediaProvider,
-    );
-    const mediaClient = getMediaClient({
-      mediaClientConfig,
-    });
+    const mediaClientConfig = mediaProvider.viewMediaClientConfig;
+    const mediaClient = getMediaClient(mediaClientConfig);
 
     const options = {
       collectionName: attrs.collection,
@@ -99,20 +110,27 @@ export class MediaNodeUpdater {
       return;
     }
 
+    const contextId = this.getCurrentContextId() || (await this.getObjectId());
     const { name, mimeType, size } = fileState;
+    const newAttrs = {
+      __fileName: name,
+      __fileMimeType: mimeType,
+      __fileSize: size,
+      __contextId: contextId,
+    };
+    const attrsChanged = hasPrivateAttrsChanged(attrs, newAttrs);
 
-    updateMediaNodeAttrs(
-      attrs.id,
-      {
-        __fileName: name,
-        __fileMimeType: mimeType,
-        __fileSize: size,
-      },
-      true,
-    )(this.props.view.state, this.props.view.dispatch);
+    if (attrsChanged) {
+      // TODO [MS-2258]: we should pass this.props.isMediaSingle and remove hardcoded "true"
+      updateAllMediaNodesAttrs(
+        attrs.id,
+        newAttrs,
+        true,
+      )(this.props.view.state, this.props.view.dispatch);
+    }
   };
 
-  getAttrs = (): MediaAttributes | undefined => {
+  getAttrs = (): MediaAttributes | ExternalMediaAttributes | undefined => {
     const { attrs } = this.props.node;
     if (attrs) {
       return attrs as MediaAttributes;
@@ -133,15 +151,11 @@ export class MediaNodeUpdater {
     const mediaProvider = await this.props.mediaProvider;
 
     if (node && mediaProvider) {
-      const uploadMediaClientConfig = await getUploadMediaClientConfigFromMediaProvider(
-        mediaProvider,
-      );
+      const uploadMediaClientConfig = await mediaProvider.uploadMediaClientConfig;
       if (!uploadMediaClientConfig || !node.attrs.url) {
         return;
       }
-      const mediaClient = getMediaClient({
-        mediaClientConfig: uploadMediaClientConfig,
-      });
+      const mediaClient = getMediaClient(uploadMediaClientConfig);
 
       const collection =
         mediaProvider.uploadParams && mediaProvider.uploadParams.collection;
@@ -158,6 +172,7 @@ export class MediaNodeUpdater {
           collection,
           height: dimensions.height,
           width: dimensions.width,
+          occurrenceKey: uploadableFileUpfrontIds.occurrenceKey,
         })(this.props.view.state, this.props.view.dispatch);
       } catch (e) {
         //keep it as external media
@@ -174,7 +189,7 @@ export class MediaNodeUpdater {
 
   getCurrentContextId = (): string | undefined => {
     const attrs = this.getAttrs();
-    if (!attrs) {
+    if (!attrs || attrs.type !== 'file') {
       return undefined;
     }
 
@@ -182,7 +197,7 @@ export class MediaNodeUpdater {
   };
 
   updateDimensions = (dimensions: RemoteDimensions) => {
-    updateMediaNodeAttrs(
+    updateAllMediaNodesAttrs(
       dimensions.id,
       {
         height: dimensions.height,
@@ -194,18 +209,16 @@ export class MediaNodeUpdater {
 
   async getRemoteDimensions(): Promise<false | RemoteDimensions> {
     const mediaProvider = await this.props.mediaProvider;
-    const { node, mediaPluginOptions } = this.props;
-    const { attrs } = node;
+    const { mediaPluginOptions } = this.props;
+    const attrs = this.getAttrs();
     if (!mediaProvider || !attrs) {
       return false;
     }
-    const { height, type, width } = attrs as
-      | MediaAttributes
-      | ExternalMediaAttributes;
-    if (type === 'external') {
+    const { height, width } = attrs;
+    if (attrs.type === 'external' || !attrs.id) {
       return false;
     }
-    const { id, collection } = attrs as MediaAttributes;
+    const { id, collection } = attrs;
     if (height && width) {
       return false;
     }
@@ -219,12 +232,8 @@ export class MediaNodeUpdater {
       };
     }
 
-    const viewMediaClientConfig = await getViewMediaClientConfigFromMediaProvider(
-      mediaProvider,
-    );
-    const mediaClient = getMediaClient({
-      mediaClientConfig: viewMediaClientConfig,
-    });
+    const viewMediaClientConfig = await mediaProvider.viewMediaClientConfig;
+    const mediaClient = getMediaClient(viewMediaClientConfig);
     const state = await mediaClient.getImageMetadata(id, {
       collection,
     });
@@ -248,7 +257,7 @@ export class MediaNodeUpdater {
 
     const currentCollectionName = mediaProvider.uploadParams.collection;
     const attrs = this.getAttrs();
-    if (!attrs) {
+    if (!attrs || attrs.type !== 'file') {
       return false;
     }
 
@@ -262,25 +271,85 @@ export class MediaNodeUpdater {
     return false;
   };
 
+  copyNodeFromBlobUrl = async (pos: number) => {
+    const attrs = this.getAttrs();
+
+    if (!attrs || attrs.type !== 'external') {
+      return;
+    }
+    const { url } = attrs;
+    const mediaAttrs = getAttrsFromUrl(url);
+    if (!mediaAttrs) {
+      return;
+    }
+    const mediaProvider = await this.props.mediaProvider;
+    if (!mediaProvider || !mediaProvider.uploadParams) {
+      return;
+    }
+    const currentCollectionName = mediaProvider.uploadParams.collection;
+    const {
+      contextId,
+      id,
+      collection,
+      height,
+      width,
+      mimeType,
+      name,
+      size,
+    } = mediaAttrs;
+    const uploadMediaClientConfig = await mediaProvider.uploadMediaClientConfig;
+    if (
+      !uploadMediaClientConfig ||
+      !uploadMediaClientConfig.getAuthFromContext
+    ) {
+      return;
+    }
+    const mediaClient = getMediaClient(uploadMediaClientConfig);
+    const auth = await uploadMediaClientConfig.getAuthFromContext(contextId);
+    const source = {
+      id,
+      collection,
+      authProvider: () => Promise.resolve(auth),
+    };
+    const destination = {
+      collection: currentCollectionName,
+      authProvider: uploadMediaClientConfig.authProvider,
+      occurrenceKey: uuidV4(),
+    };
+    const mediaFile = await mediaClient.file.copyFile(source, destination);
+
+    replaceExternalMedia(pos + 1, {
+      id: mediaFile.id,
+      collection: currentCollectionName,
+      height,
+      width,
+      __fileName: name,
+      __fileMimeType: mimeType,
+      __fileSize: size,
+    })(this.props.view.state, this.props.view.dispatch);
+  };
+
   copyNode = async () => {
     const mediaProvider = await this.props.mediaProvider;
     const { isMediaSingle, view } = this.props;
     const attrs = this.getAttrs();
-    if (!mediaProvider || !mediaProvider.uploadParams || !attrs) {
+    if (
+      !mediaProvider ||
+      !mediaProvider.uploadParams ||
+      !attrs ||
+      attrs.type !== 'file'
+    ) {
       return;
     }
 
     const currentCollectionName = mediaProvider.uploadParams.collection;
     const contextId = this.getCurrentContextId() || (await this.getObjectId());
-    const uploadMediaClientConfig = await getUploadMediaClientConfigFromMediaProvider(
-      mediaProvider,
-    );
+    const uploadMediaClientConfig = await mediaProvider.uploadMediaClientConfig;
+
     if (!uploadMediaClientConfig) {
       return;
     }
-    const mediaClient = getMediaClient({
-      mediaClientConfig: uploadMediaClientConfig,
-    });
+    const mediaClient = getMediaClient(uploadMediaClientConfig);
 
     if (uploadMediaClientConfig.getAuthFromContext && contextId) {
       const auth = await uploadMediaClientConfig.getAuthFromContext(contextId);
@@ -308,3 +377,15 @@ export class MediaNodeUpdater {
     }
   };
 }
+
+const hasPrivateAttrsChanged = (
+  currentAttrs: MediaAttributes,
+  newAttrs: Partial<MediaAttributes>,
+): Boolean => {
+  return (
+    currentAttrs.__fileName !== newAttrs.__fileName ||
+    currentAttrs.__fileMimeType !== newAttrs.__fileMimeType ||
+    currentAttrs.__fileSize !== newAttrs.__fileSize ||
+    currentAttrs.__contextId !== newAttrs.__contextId
+  );
+};

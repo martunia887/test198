@@ -12,19 +12,29 @@ import {
   globalMediaEventEmitter,
 } from '@atlaskit/media-client';
 import Button from '@atlaskit/button';
-import Select from '@atlaskit/select';
+import Select, { ValueType } from '@atlaskit/select';
 import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
+import { MediaPicker } from '../src';
 import {
-  MediaPicker,
   UploadPreviewUpdateEventPayload,
   MediaFile,
   Popup,
-} from '../src';
+  UploadProcessingEventPayload,
+  UploadEndEventPayload,
+} from '../src/types';
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
+
+addGlobalEventEmitterListeners();
 
 const userMediaClientConfig = createUploadMediaClientConfig();
 const tenantMediaClientConfig = createStorybookMediaClientConfig();
 
-const dataSourceOptions = [
+interface DataSourceOption {
+  label: string;
+  value: DataSourceType;
+}
+
+const dataSourceOptions: DataSourceOption[] = [
   { label: 'List', value: 'list' },
   { label: 'Collection', value: 'collection' },
 ];
@@ -81,10 +91,20 @@ export default class Example extends React.Component<{}, State> {
     });
 
     popup.on('upload-preview-update', this.onUploadPreviewUpdate);
+    popup.on('upload-processing', this.onUploadProcessing);
+    popup.on('upload-end', this.onUploadEnd);
     this.setState({ popup });
 
     popup.show();
   }
+
+  onUploadProcessing = (event: UploadProcessingEventPayload) => {
+    console.log('onUploadProcessing', event.file.id);
+  };
+
+  onUploadEnd = (event: UploadEndEventPayload) => {
+    console.log('onUploadEnd', event.file.id);
+  };
 
   private onUploadPreviewUpdate = async (
     event: UploadPreviewUpdateEventPayload,
@@ -137,9 +157,11 @@ export default class Example extends React.Component<{}, State> {
     });
   };
 
-  private onDataSourceChange = (event: { value: DataSourceType }) => {
+  private onDataSourceChange = (option: ValueType<DataSourceOption>) => {
+    if (!option) return;
+
     this.setState({
-      dataSourceType: event.value,
+      dataSourceType: (option as DataSourceOption).value,
     });
   };
 

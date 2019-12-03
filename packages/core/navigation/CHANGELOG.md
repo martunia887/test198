@@ -1,5 +1,89 @@
 # @atlaskit/navigation
 
+## 35.2.6
+
+### Patch Changes
+
+- [patch][d222c2b987](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d222c2b987):
+
+  Theme has been converted to Typescript. Typescript consumers will now get static type safety. Flow types are no longer provided.
+
+  ### Breaking
+
+  ** getTokens props changes **
+  When defining the value function passed into a ThemeProvider, the getTokens parameter cannot be called without props; if no props are provided an empty object `{}` must be passed in:
+
+  ```javascript
+  <CustomTheme.Provider
+    value={t => ({ ...t(), backgroundColor: '#333'})}
+  >
+  ```
+
+  becomes:
+
+  ```javascript
+  <CustomTheme.Provider
+    value={t => ({ ...t({}), backgroundColor: '#333'})}
+  >
+  ```
+
+  ** Color palette changes **
+  Color palettes have been moved into their own file.
+  Users will need to update imports from this:
+
+  ```javascript
+  import { colors } from '@atlaskit/theme';
+
+  colors.colorPalette('8');
+  ```
+
+  to this:
+
+  ```javascript
+  import { colorPalette } from '@atlaskit/theme';
+
+  colorPalette.colorPalette('8');
+  ```
+
+  or for multi entry-point users:
+
+  ```javascript
+  import * as colors from '@atlaskit/theme/colors';
+
+  colors.colorPalette('8');
+  ```
+
+  to this:
+
+  ```javascript
+  import * as colorPalettes from '@atlaskit/theme/color-palette';
+
+  colorPalettes.colorPalette('8');
+  ```
+
+## 35.2.5
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 35.2.4
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 35.2.3
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
 ## 35.2.2
 
 - Updated dependencies [8d0f37c23e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8d0f37c23e):

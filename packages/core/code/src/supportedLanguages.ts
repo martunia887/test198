@@ -27,6 +27,7 @@ export type SupportedLanguages =
   | 'fortran'
   | 'foxpro' // → purebasic
   | 'go'
+  | 'graphql'
   | 'groovy'
   | 'haskell'
   | 'haxe'
@@ -440,17 +441,20 @@ export const SUPPORTED_LANGUAGE_ALIASES = Object.freeze([
     alias: ['yaml', 'yml'],
     value: 'yaml',
   },
+  {
+    name: 'GraphQL',
+    alias: ['graphql'],
+    value: 'graphql',
+  },
 ]);
 
-export const normalizeLanguage = memoizeOne(
-  (language?: string): string => {
-    if (!language) {
-      return '';
-    }
-    const match = SUPPORTED_LANGUAGE_ALIASES.find(val => {
-      return val.name === language || val.alias.includes(language);
-    });
-    // Fallback to plain monospaced text if language passed but not supported
-    return match ? match.value : 'text';
-  },
-);
+export const normalizeLanguage = memoizeOne((language?: string): string => {
+  if (!language) {
+    return '';
+  }
+  const match = SUPPORTED_LANGUAGE_ALIASES.find(val => {
+    return val.name === language || val.alias.includes(language);
+  });
+  // Fallback to plain monospaced text if language passed but not supported
+  return match ? match.value : 'text';
+});

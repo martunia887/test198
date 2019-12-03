@@ -17,7 +17,7 @@ import { Actions } from '../types';
 import { Image } from '../styled/Dialog';
 import SpotlightCard from './SpotlightCard';
 import ValueChanged from './ValueChanged';
-import { CardTokens } from './Card.js';
+import { CardTokens } from './Card';
 
 export interface SpotlightDialogProps extends WithAnalyticsEventsProps {
   /** Buttons to render in the footer */
@@ -65,12 +65,18 @@ class SpotlightDialog extends Component<SpotlightDialogProps, State> {
     focusLockDisabled: true,
   };
 
+  private focusLockTimeoutId: number | undefined;
+
   componentDidMount() {
-    setTimeout(() => {
+    this.focusLockTimeoutId = window.setTimeout(() => {
       // we delay the enabling of the focus lock to avoid the scroll position
       // jumping around in some situations
       this.setState({ focusLockDisabled: false });
     }, 200);
+  }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.focusLockTimeoutId);
   }
 
   render() {

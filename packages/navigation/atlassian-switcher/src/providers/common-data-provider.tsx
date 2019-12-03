@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { ProviderResult } from './as-data-provider';
 
-import { LicenseInformationResponse, RecentContainersResponse } from '../types';
+import { RecentContainersResponse } from '../types';
 
 import {
-  LicenseInformationProvider,
   RecentContainersProvider,
   UserPermissionProvider,
   XFlowSettingsProvider,
@@ -18,25 +17,20 @@ import {
 
 interface CommonDataProviderProps {
   cloudId?: string;
-  isUserCentric: boolean;
   disableRecentContainers: boolean;
   recommendationsFeatureFlags?: RecommendationsFeatureFlags;
-  children: (
-    props: {
-      recentContainers: ProviderResult<RecentContainersResponse>;
-      licenseInformation: ProviderResult<LicenseInformationResponse>;
-      managePermission: ProviderResult<boolean>;
-      addProductsPermission: ProviderResult<boolean>;
-      isXFlowEnabled: ProviderResult<boolean>;
-      productRecommendations: ProviderResult<RecommendationsEngineResponse>;
-    },
-  ) => React.ReactElement<any>;
+  children: (props: {
+    recentContainers: ProviderResult<RecentContainersResponse>;
+    managePermission: ProviderResult<boolean>;
+    addProductsPermission: ProviderResult<boolean>;
+    isXFlowEnabled: ProviderResult<boolean>;
+    productRecommendations: ProviderResult<RecommendationsEngineResponse>;
+  }) => React.ReactElement<any>;
 }
 
 export default ({
   cloudId,
   children,
-  isUserCentric,
   recommendationsFeatureFlags,
   disableRecentContainers,
 }: CommonDataProviderProps) => {
@@ -46,45 +40,37 @@ export default ({
       disableRecentContainers={disableRecentContainers}
     >
       {recentContainers => (
-        <LicenseInformationProvider
+        <UserPermissionProvider
           cloudId={cloudId}
-          isUserCentric={isUserCentric}
+          permissionId={Permissions.MANAGE}
         >
-          {licenseInformation => (
+          {managePermission => (
             <UserPermissionProvider
               cloudId={cloudId}
-              permissionId={Permissions.MANAGE}
+              permissionId={Permissions.ADD_PRODUCTS}
             >
-              {managePermission => (
-                <UserPermissionProvider
-                  cloudId={cloudId}
-                  permissionId={Permissions.ADD_PRODUCTS}
-                >
-                  {addProductsPermission => (
-                    <XFlowSettingsProvider cloudId={cloudId}>
-                      {isXFlowEnabled => (
-                        <RecommendationsEngineProvider
-                          featureFlags={recommendationsFeatureFlags}
-                        >
-                          {productRecommendations =>
-                            children({
-                              recentContainers,
-                              licenseInformation,
-                              managePermission,
-                              addProductsPermission,
-                              isXFlowEnabled,
-                              productRecommendations,
-                            })
-                          }
-                        </RecommendationsEngineProvider>
-                      )}
-                    </XFlowSettingsProvider>
+              {addProductsPermission => (
+                <XFlowSettingsProvider cloudId={cloudId}>
+                  {isXFlowEnabled => (
+                    <RecommendationsEngineProvider
+                      featureFlags={recommendationsFeatureFlags}
+                    >
+                      {productRecommendations =>
+                        children({
+                          recentContainers,
+                          managePermission,
+                          addProductsPermission,
+                          isXFlowEnabled,
+                          productRecommendations,
+                        })
+                      }
+                    </RecommendationsEngineProvider>
                   )}
-                </UserPermissionProvider>
+                </XFlowSettingsProvider>
               )}
             </UserPermissionProvider>
           )}
-        </LicenseInformationProvider>
+        </UserPermissionProvider>
       )}
     </RecentContainersProvider>
   );

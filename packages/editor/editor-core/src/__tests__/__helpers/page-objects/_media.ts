@@ -7,6 +7,7 @@ import commonMessages, { linkToolbarMessages } from '../../../messages';
 import { messages as mediaLayoutToolbarMessages } from '../../../plugins/media/toolbar/buildMediaLayoutButtons';
 import { mediaLinkToolbarMessages } from '../../../plugins/media/ui/MediaLinkingToolbar';
 import { waitForLoadedImageElements } from '@atlaskit/visual-regression/helper';
+import { mediaSingleClassName } from '@atlaskit/editor-common';
 
 export enum MediaLayout {
   center,
@@ -42,73 +43,48 @@ export enum MediaToolbarButton {
 }
 
 // Selectors
-const mediaUploadCardSelector = '.e2e-recent-upload-card';
-const mediaImageSelector =
-  '.media-single .img-wrapper, .mediaGroupView-content-wrap .img-wrapper';
-const mediaImageSelected =
-  '.ProseMirror-selectednode .media-single .img-wrapper, .ProseMirror-selectednode .mediaGroupView-content-wrap .img-wrapper';
+const mediaUploadCardSelector =
+  '[data-testid="media-picker-popup"] [data-testid="media-file-card-view"]';
+const mediaImageSelector = `.${mediaSingleClassName} .img-wrapper, .mediaGroupView-content-wrap .img-wrapper`;
+const mediaImageSelected = `.ProseMirror-selectednode .${mediaSingleClassName} .img-wrapper, .ProseMirror-selectednode .mediaGroupView-content-wrap .img-wrapper`;
 const insertMediaFileSelector = 'div[aria-label="%s"]';
 
 export const LinkToolbarSelectors = {
-  [MediaToolbarButton.addLink]: `[aria-label="Media floating controls"] [aria-label="${
-    linkToolbarMessages.addLink.defaultMessage
-  }"]`,
-  [MediaToolbarButton.editLink]: `[aria-label="Media floating controls"] [aria-label="${
-    linkToolbarMessages.editLink.defaultMessage
-  }"]`,
-  [MediaToolbarButton.openLink]: `[aria-label="Media floating controls"] [aria-label="${
-    linkToolbarMessages.openLink.defaultMessage
-  }"]`,
-  [MediaToolbarButton.unlink]: `[aria-label="Media floating controls"] [aria-label="${
-    linkToolbarMessages.unlink.defaultMessage
-  }"]`,
-  [MediaToolbarButton.backLink]: `[aria-label="Media floating controls"] [aria-label="${
-    mediaLinkToolbarMessages.backLink.defaultMessage
-  }"]`,
+  [MediaToolbarButton.addLink]: `[aria-label="Media floating controls"] [aria-label="${linkToolbarMessages.addLink.defaultMessage}"]`,
+  [MediaToolbarButton.editLink]: `[aria-label="Media floating controls"] [aria-label="${linkToolbarMessages.editLink.defaultMessage}"]`,
+  [MediaToolbarButton.openLink]: `[aria-label="Media floating controls"] [aria-label="${linkToolbarMessages.openLink.defaultMessage}"]`,
+  [MediaToolbarButton.unlink]: `[aria-label="Media floating controls"] [aria-label="${linkToolbarMessages.unlink.defaultMessage}"]`,
+  [MediaToolbarButton.backLink]: `[aria-label="Media floating controls"] [aria-label="${mediaLinkToolbarMessages.backLink.defaultMessage}"]`,
 };
 
 const LayoutSelectors = {
   [MediaLayout.center]: {
-    button: `[aria-label="Media floating controls"] [aria-label="${
-      commonMessages.alignImageCenter.defaultMessage
-    }"]`,
-    modifier: '.media-single.image-center',
+    button: `[aria-label="Media floating controls"] [aria-label="${commonMessages.alignImageCenter.defaultMessage}"]`,
+    modifier: `.${mediaSingleClassName}.image-center`,
   },
   [MediaLayout.wrapLeft]: {
-    button: `[aria-label="Media floating controls"] [aria-label="${
-      mediaLayoutToolbarMessages.wrapLeft.defaultMessage
-    }"]`,
-    modifier: '.media-single.image-wrap-left',
+    button: `[aria-label="Media floating controls"] [aria-label="${mediaLayoutToolbarMessages.wrapLeft.defaultMessage}"]`,
+    modifier: `.${mediaSingleClassName}.image-wrap-left`,
   },
   [MediaLayout.wrapRight]: {
-    button: `[aria-label="Media floating controls"] [aria-label="${
-      mediaLayoutToolbarMessages.wrapRight.defaultMessage
-    }"]`,
-    modifier: '.media-single.image-wrap-right',
+    button: `[aria-label="Media floating controls"] [aria-label="${mediaLayoutToolbarMessages.wrapRight.defaultMessage}"]`,
+    modifier: `.${mediaSingleClassName}.image-wrap-right`,
   },
   [MediaLayout.wide]: {
-    button: `[aria-label="Media floating controls"] [aria-label="${
-      commonMessages.layoutWide.defaultMessage
-    }"]`,
-    modifier: '.media-single.image-wide',
+    button: `[aria-label="Media floating controls"] [aria-label="${commonMessages.layoutWide.defaultMessage}"]`,
+    modifier: `.${mediaSingleClassName}.image-wide`,
   },
   [MediaLayout.fullWidth]: {
-    button: `[aria-label="Media floating controls"] [aria-label="${
-      commonMessages.layoutFullWidth.defaultMessage
-    }"]`,
-    modifier: '.media-single.image-full-width',
+    button: `[aria-label="Media floating controls"] [aria-label="${commonMessages.layoutFullWidth.defaultMessage}"]`,
+    modifier: `.${mediaSingleClassName}.image-full-width`,
   },
   [MediaLayout.alignStart]: {
-    button: `[aria-label="Media floating controls"] [aria-label="${
-      commonMessages.alignImageLeft.defaultMessage
-    }"]`,
-    modifier: '.media-single.image-align-start',
+    button: `[aria-label="Media floating controls"] [aria-label="${commonMessages.alignImageLeft.defaultMessage}"]`,
+    modifier: `.${mediaSingleClassName}.image-align-start`,
   },
   [MediaLayout.alignEnd]: {
-    button: `[aria-label="Media floating controls"] [aria-label="${
-      commonMessages.alignImageRight.defaultMessage
-    }"]`,
-    modifier: '.media-single.image-align-end',
+    button: `[aria-label="Media floating controls"] [aria-label="${commonMessages.alignImageRight.defaultMessage}"]`,
+    modifier: `.${mediaSingleClassName}.image-align-end`,
   },
 };
 

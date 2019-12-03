@@ -1,55 +1,54 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { EditorState, Transaction, Selection } from 'prosemirror-state';
-import { EditorView, DirectEditorProps } from 'prosemirror-view';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
+import { DirectEditorProps, EditorView } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { intlShape } from 'react-intl';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
+  browser,
+  ErrorReporter,
+  getResponseEndTime,
+  measureRender,
   ProviderFactory,
   Transformer,
-  ErrorReporter,
-  browser,
-  measureRender,
-  getResponseEndTime,
 } from '@atlaskit/editor-common';
 
-import { EventDispatcher, createDispatch, Dispatch } from '../event-dispatcher';
+import { createDispatch, Dispatch, EventDispatcher } from '../event-dispatcher';
 import { processRawValue } from '../utils';
 import { findChangedNodesFromTransaction, validateNodes } from '../utils/nodes';
 import createPluginList from './create-plugins-list';
 import {
-  analyticsEventKey,
-  fireAnalyticsEvent,
-  AnalyticsDispatch,
-  AnalyticsEventPayload,
-  DispatchAnalyticsEvent,
   ACTION,
   ACTION_SUBJECT,
+  AnalyticsDispatch,
+  analyticsEventKey,
+  AnalyticsEventPayload,
+  DispatchAnalyticsEvent,
   EVENT_TYPE,
+  fireAnalyticsEvent,
   FULL_WIDTH_MODE,
+  getAnalyticsEventsFromTransaction,
   PLATFORMS,
-  AnalyticsEventPayloadWithChannel,
-  analyticsPluginKey,
 } from '../plugins/analytics';
 import {
-  EditorProps,
+  EditorAppearance,
   EditorConfig,
   EditorPlugin,
-  EditorAppearance,
+  EditorProps,
 } from '../types';
 import { PortalProviderAPI } from '../ui/PortalProvider';
 import {
-  pluginKey as editorDisabledPluginKey,
   EditorDisabledPluginState,
+  pluginKey as editorDisabledPluginKey,
 } from '../plugins/editor-disabled';
 import { analyticsService } from '../analytics';
 import {
-  processPluginsList,
-  createSchema,
   createErrorReporter,
   createPMPlugins,
+  createSchema,
   initAnalytics,
+  processPluginsList,
 } from './create-editor';
 import { getDocStructure } from '../utils/document-logger';
 import { isFullPage } from '../utils/is-full-page';
@@ -63,40 +62,34 @@ export interface EditorViewProps {
   portalProviderAPI: PortalProviderAPI;
   allowAnalyticsGASV3?: boolean;
   disabled?: boolean;
-  render?: (
-    props: {
-      editor: JSX.Element;
-      view?: EditorView;
-      config: EditorConfig;
-      eventDispatcher: EventDispatcher;
-      transformer?: Transformer<string>;
-      dispatchAnalyticsEvent: DispatchAnalyticsEvent;
-    },
-  ) => JSX.Element;
-  onEditorCreated: (
-    instance: {
-      view: EditorView;
-      config: EditorConfig;
-      eventDispatcher: EventDispatcher;
-      transformer?: Transformer<string>;
-    },
-  ) => void;
-  onEditorDestroyed: (
-    instance: {
-      view: EditorView;
-      config: EditorConfig;
-      eventDispatcher: EventDispatcher;
-      transformer?: Transformer<string>;
-    },
-  ) => void;
+  render?: (props: {
+    editor: JSX.Element;
+    view?: EditorView;
+    config: EditorConfig;
+    eventDispatcher: EventDispatcher;
+    transformer?: Transformer<string>;
+    dispatchAnalyticsEvent: DispatchAnalyticsEvent;
+  }) => JSX.Element;
+  onEditorCreated: (instance: {
+    view: EditorView;
+    config: EditorConfig;
+    eventDispatcher: EventDispatcher;
+    transformer?: Transformer<string>;
+  }) => void;
+  onEditorDestroyed: (instance: {
+    view: EditorView;
+    config: EditorConfig;
+    eventDispatcher: EventDispatcher;
+    transformer?: Transformer<string>;
+  }) => void;
 }
 
-function handleEditorFocus(view: EditorView) {
+function handleEditorFocus(view: EditorView): number | undefined {
   if (view.hasFocus()) {
     return;
   }
 
-  window.setTimeout(() => {
+  return window.setTimeout(() => {
     view.focus();
   }, 0);
 }
@@ -111,17 +104,21 @@ export default class ReactEditorView<T = {}> extends React.Component<
   editorState: EditorState;
   errorReporter: ErrorReporter;
   dispatch: Dispatch;
-  analyticsEventHandler!: (
-    payloadChannel: {
-      payload: AnalyticsEventPayload;
-      channel?: string;
-    },
-  ) => void;
+  analyticsEventHandler!: (payloadChannel: {
+    payload: AnalyticsEventPayload;
+    channel?: string;
+  }) => void;
 
   static contextTypes = {
     getAtlaskitAnalyticsEventHandlers: PropTypes.func,
     intl: intlShape,
   };
+
+  // ProseMirror is instantiated prior to the initial React render cycle,
+  // so we allow transactions by default, to avoid discarding the initial one.
+  private canDispatchTransactions = true;
+
+  private focusTimeoutId: number | undefined;
 
   constructor(props: EditorViewProps & T) {
     super(props);
@@ -174,7 +171,7 @@ export default class ReactEditorView<T = {}> extends React.Component<
         !nextProps.editorProps.disabled &&
         nextProps.editorProps.shouldFocus
       ) {
-        handleEditorFocus(this.view);
+        this.focusTimeoutId = handleEditorFocus(this.view);
       }
     }
 
@@ -288,11 +285,29 @@ export default class ReactEditorView<T = {}> extends React.Component<
     }
   }
 
+  componentDidMount() {
+    // Transaction dispatching is already enabled by default prior to
+    // mounting, but we reset it here, just in case the editor view
+    // instance is ever recycled (mounted again after unmounting) with
+    // the same key.
+    // Although storing mounted state is an anti-pattern in React,
+    // we do so here so that we can intercept and abort asynchronous
+    // ProseMirror transactions when a dismount is imminent.
+    this.canDispatchTransactions = true;
+  }
+
   /**
    * Clean up any non-PM resources when the editor is unmounted
    */
   componentWillUnmount() {
+    // We can ignore any transactions from this point onwards.
+    // This serves to avoid potential runtime exceptions which could arise
+    // from an async dispatched transaction after it's unmounted.
+    this.canDispatchTransactions = false;
+
     this.eventDispatcher.destroy();
+
+    clearTimeout(this.focusTimeoutId);
 
     if (this.view) {
       // Destroy the state if the Editor is being unmounted
@@ -399,43 +414,53 @@ export default class ReactEditorView<T = {}> extends React.Component<
     });
   };
 
+  private dispatchTransaction = (transaction: Transaction) => {
+    if (!this.view) {
+      return;
+    }
+
+    const nodes: PMNode[] = findChangedNodesFromTransaction(transaction);
+    if (validateNodes(nodes)) {
+      // go ahead and update the state now we know the transaction is good
+      const editorState = this.view.state.apply(transaction);
+      this.view.updateState(editorState);
+      if (this.props.editorProps.onChange && transaction.docChanged) {
+        this.props.editorProps.onChange(this.view);
+      }
+      this.editorState = editorState;
+    } else {
+      const documents = {
+        new: getDocStructure(transaction.doc),
+        prev: getDocStructure(transaction.docs[0]),
+      };
+      analyticsService.trackEvent(
+        'atlaskit.fabric.editor.invalidtransaction',
+        { documents: JSON.stringify(documents) }, // V2 events don't support object properties
+      );
+
+      this.dispatchAnalyticsEvent({
+        action: ACTION.DISPATCHED_INVALID_TRANSACTION,
+        actionSubject: ACTION_SUBJECT.EDITOR,
+        eventType: EVENT_TYPE.OPERATIONAL,
+        attributes: {
+          analyticsEventPayloads: getAnalyticsEventsFromTransaction(
+            transaction,
+          ),
+          documents,
+        },
+      });
+    }
+  };
+
   getDirectEditorProps = (state?: EditorState): DirectEditorProps => {
     return {
       state: state || this.editorState,
-      dispatchTransaction: (transaction: Transaction) => {
-        if (!this.view) {
-          return;
-        }
-
-        const nodes: PMNode[] = findChangedNodesFromTransaction(transaction);
-        if (validateNodes(nodes)) {
-          // go ahead and update the state now we know the transaction is good
-          const editorState = this.view.state.apply(transaction);
-          this.view.updateState(editorState);
-          if (this.props.editorProps.onChange && transaction.docChanged) {
-            this.props.editorProps.onChange(this.view);
-          }
-          this.editorState = editorState;
-        } else {
-          const documents = {
-            new: getDocStructure(transaction.doc),
-            prev: getDocStructure(transaction.docs[0]),
-          };
-          analyticsService.trackEvent(
-            'atlaskit.fabric.editor.invalidtransaction',
-            { documents: JSON.stringify(documents) }, // V2 events don't support object properties
-          );
-          this.dispatchAnalyticsEvent({
-            action: ACTION.DISPATCHED_INVALID_TRANSACTION,
-            actionSubject: ACTION_SUBJECT.EDITOR,
-            eventType: EVENT_TYPE.OPERATIONAL,
-            attributes: {
-              analyticsEventPayloads: transaction.getMeta(
-                analyticsPluginKey,
-              ) as AnalyticsEventPayloadWithChannel[],
-              documents,
-            },
-          });
+      dispatchTransaction: (tr: Transaction) => {
+        // Block stale transactions:
+        // Prevent runtime exeptions from async transactions that would attempt to
+        // update the DOM after React has unmounted the Editor.
+        if (this.canDispatchTransactions) {
+          this.dispatchTransaction(tr);
         }
       },
       // Disables the contentEditable attribute of the editor if the editor is disabled
@@ -479,9 +504,10 @@ export default class ReactEditorView<T = {}> extends React.Component<
 
       if (
         this.props.editorProps.shouldFocus &&
-        (view.props.editable && view.props.editable(view.state))
+        view.props.editable &&
+        view.props.editable(view.state)
       ) {
-        handleEditorFocus(view);
+        this.focusTimeoutId = handleEditorFocus(view);
       }
 
       // Set the state of the EditorDisabled plugin to the current value

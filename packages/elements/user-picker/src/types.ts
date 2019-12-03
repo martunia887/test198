@@ -139,10 +139,14 @@ export interface TeamHighlight {
   description?: HighlightRange[];
 }
 
+export interface GroupHighlight {
+  name: HighlightRange[];
+}
+
 export interface OptionData {
   id: string;
   name: string;
-  type?: 'user' | 'team' | 'email';
+  type?: 'user' | 'team' | 'email' | 'group';
   fixed?: boolean;
 }
 
@@ -165,6 +169,13 @@ export interface Team extends OptionData {
   includesYou?: boolean;
   highlight?: TeamHighlight;
   type: 'team';
+}
+
+export const GroupType = 'group';
+
+export interface Group extends OptionData {
+  highlight?: GroupHighlight;
+  type: 'group';
 }
 
 export type Value = OptionData | OptionData[] | null | undefined;
@@ -191,10 +202,10 @@ export type OnPicker = (sessionId?: string) => void;
 
 export type OnOption = (value: Value, sessionId?: string) => void;
 
-export type Option = {
+export type Option<Data = OptionData> = {
   label: string;
   value: string;
-  data: OptionData;
+  data: Data;
 };
 
 export interface LoadOptions {

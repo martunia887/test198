@@ -1,5 +1,5 @@
 import { EditorView } from 'prosemirror-view';
-import { CardAppearance } from '../../../../../../../media/smart-card';
+import { CardAppearance } from '@atlaskit/smart-card';
 import { INPUT_METHOD } from '../../../../plugins/analytics';
 import { setProvider } from '../../../../plugins/card/pm-plugins/actions';
 import {
@@ -42,13 +42,13 @@ const paragraphAdf = {
 
 export function setupProvider(cardAdf: object = paragraphAdf): ProviderWrapper {
   let promises: Promise<any>[] = [];
-  let provider: CardProvider = new class implements CardProvider {
+  let provider: CardProvider = new (class implements CardProvider {
     resolve(): Promise<any> {
       const promise = new Promise(resolve => resolve(cardAdf));
       promises.push(promise);
       return promise;
     }
-  }();
+  })();
 
   return {
     addProvider(editorView: EditorView) {

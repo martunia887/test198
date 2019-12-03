@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { Link } from '../../components/WrappedLink';
-import { gridSize, colors, math } from '@atlaskit/theme';
+import { gridSize, colors } from '@atlaskit/theme';
 import debounce from 'lodash.debounce';
 
 import { AtlassianIcon } from '@atlaskit/logo';
@@ -32,7 +32,7 @@ const CardIcon = styled.span`
   width: 24px;
 `;
 
-const cardVerticalAnimationDistance = math.multiply(gridSize, 7.5);
+const cardVerticalAnimationDistance = gridSize() * 7.5;
 
 const loadInAnimation = keyframes`
   0% {
@@ -88,7 +88,7 @@ const BaseCardStyles = css`
 
   @media (max-width: ${TABLET_BREAKPOINT_MIN}px) {
     display: block;
-    margin: ${math.multiply(gridSize, 3)}px ${gridSize}px;
+    margin: ${gridSize() * 3}px ${gridSize}px;
   }
 
   &:hover {
@@ -299,9 +299,16 @@ export default class Cards extends React.Component {
     if (columnCount === 1) {
       return [[0, 1, 2, 3, 4, 5]];
     } else if (columnCount === 2) {
-      return [[0, 2], [1, 3, 4, 5]];
+      return [
+        [0, 2],
+        [1, 3, 4, 5],
+      ];
     }
-    return [[0, 3], [1, 4], [2, 5]];
+    return [
+      [0, 3],
+      [1, 4],
+      [2, 5],
+    ];
   };
 
   render() {

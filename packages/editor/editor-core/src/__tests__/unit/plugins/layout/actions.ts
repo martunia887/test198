@@ -5,7 +5,10 @@ import {
   p,
   createEditorFactory,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { EditorView } from 'prosemirror-view';
 import {
   deleteActiveLayoutNode,
@@ -22,7 +25,7 @@ describe('layout actions', () => {
   let createAnalyticsEvent: CreateUIAnalyticsEvent;
   let editorView: EditorView;
   const editor = (doc: any) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
     return createEditor({
       doc,
       editorProps: { allowLayouts: true, allowAnalyticsGASV3: true },
@@ -53,9 +56,7 @@ describe('layout actions', () => {
     layouts.forEach(currentLayout => {
       layouts.forEach(newLayout => {
         if (currentLayout.name !== newLayout.name) {
-          it(`handles switching from "${currentLayout.name}" to "${
-            newLayout.name
-          }"`, () => {
+          it(`handles switching from "${currentLayout.name}" to "${newLayout.name}"`, () => {
             ({ editorView } = editor(
               doc(buildLayoutForWidths(currentLayout.widths, true)),
             ));

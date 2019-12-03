@@ -1,6 +1,5 @@
 import { baseKeymap } from 'prosemirror-commands';
 import { history } from 'prosemirror-history';
-import { EditorView } from 'prosemirror-view';
 import { doc, paragraph, text } from '@atlaskit/adf-schema';
 import { EditorPlugin, PMPluginFactory } from '../../types';
 import filterStepsPlugin from './pm-plugins/filter-steps';
@@ -9,17 +8,21 @@ import newlinePreserveMarksPlugin from './pm-plugins/newline-preserve-marks';
 import inlineCursorTargetPlugin from './pm-plugins/inline-cursor-target';
 import { plugin as reactNodeView } from './pm-plugins/react-nodeview';
 import decorationPlugin from './pm-plugins/decoration';
-import scrollGutter from './pm-plugins/scroll-gutter';
+import scrollGutter, {
+  ScrollGutterPluginOptions,
+} from './pm-plugins/scroll-gutter';
 import { keymap } from '../../utils/keymap';
 import frozenEditor from './pm-plugins/frozen-editor';
 
 interface BasePluginOptions {
-  allowScrollGutter?: ((view: EditorView) => HTMLElement | null) | undefined;
+  allowScrollGutter?: ScrollGutterPluginOptions;
   allowInlineCursorTarget?: boolean;
   addRunTimePerformanceCheck?: boolean;
 }
 
 const basePlugin = (options?: BasePluginOptions): EditorPlugin => ({
+  name: 'base',
+
   pmPlugins() {
     const plugins: { name: string; plugin: PMPluginFactory }[] = [
       {
@@ -44,9 +47,9 @@ const basePlugin = (options?: BasePluginOptions): EditorPlugin => ({
       { name: 'reactNodeView', plugin: () => reactNodeView },
       {
         name: 'frozenEditor',
-        plugin: ({ dispatchAnalyticsEvent }) =>
+        plugin: ({ dispatchAnalyticsEvent, props }) =>
           options && options.addRunTimePerformanceCheck
-            ? frozenEditor(dispatchAnalyticsEvent)
+            ? frozenEditor(dispatchAnalyticsEvent, props.inputSamplingLimit)
             : undefined,
       },
       { name: 'decorationPlugin', plugin: () => decorationPlugin() },

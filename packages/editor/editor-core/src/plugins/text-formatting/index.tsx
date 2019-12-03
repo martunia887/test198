@@ -33,7 +33,9 @@ export interface TextFormattingOptions {
   disableSmartTextCompletion?: boolean;
 }
 
-const textFormatting = (options: TextFormattingOptions): EditorPlugin => ({
+const textFormatting = (options: TextFormattingOptions = {}): EditorPlugin => ({
+  name: 'textFormatting',
+
   marks() {
     return [
       { name: 'em', mark: em },

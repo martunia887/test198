@@ -3,11 +3,6 @@ import { Component } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import { splitCell, Rect } from 'prosemirror-tables';
-import { colors } from '@atlaskit/theme';
-import {
-  tableBackgroundColorPalette,
-  tableBackgroundBorderColors,
-} from '@atlaskit/adf-schema';
 import { canMergeCells } from '../../transforms';
 import { getPluginState } from '../../pm-plugins/main';
 import {
@@ -48,6 +43,7 @@ import {
   backspace,
 } from '../../../../keymaps';
 import { DropdownItem } from '../../../block-type/ui/ToolbarBlockType';
+import cellBackgroundColorPalette from '../../../../ui/ColorPalette/Palettes/cellBackgroundColorPalette';
 
 export const messages = defineMessages({
   cellBackground: {
@@ -190,11 +186,10 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
                 ref={this.handleSubMenuRef}
               >
                 <ColorPalette
-                  palette={tableBackgroundColorPalette}
-                  borderColors={tableBackgroundBorderColors}
+                  cols={7}
+                  palette={cellBackgroundColorPalette}
                   onClick={this.setColor}
                   selectedColor={background}
-                  checkMarkColor={colors.N500}
                 />
               </div>
             )}

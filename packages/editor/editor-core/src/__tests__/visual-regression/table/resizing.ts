@@ -5,6 +5,8 @@ import {
   initEditorWithAdf,
   Appearance,
 } from '../_utils';
+import adfTableWithMergedCellsOnFirstRow from './__fixtures__/table-with-merged-cells-on-first-row.adf.json';
+import adfTableWithMergedCells from './__fixtures__/table-with-merged-cells.adf.json';
 import adf from '../common/__fixtures__/noData-adf.json';
 import {
   deleteColumn,
@@ -15,14 +17,13 @@ import {
   toggleBreakout,
   scrollTable,
   unselectTable,
+  tableSelectors,
 } from '../../__helpers/page-objects/_table';
 import { animationFrame } from '../../__helpers/page-objects/_editor';
 import { Page } from '../../__helpers/page-objects/_types';
-import mergedColsAdf from './__fixtures__/table-with-merged-columns-in-first-row.adf.json';
-import mergedAllColsAdf from './__fixtures__/table-with-all-merged-columns-in-first-row.adf.json';
-import mergedRandomColsAdf from './__fixtures__/table-with-randomly-merged-columns.adf.json';
-
-describe('Snapshot Test: table resizing', () => {
+import { TableCssClassName as ClassName } from '../../../plugins/table/types';
+// TODO: https://product-fabric.atlassian.net/browse/ED-7721
+describe.skip('Snapshot Test: table resizing', () => {
   describe('Re-sizing', () => {
     let page: Page;
 
@@ -95,6 +96,20 @@ describe('Snapshot Test: table resizing', () => {
         });
       });
     });
+
+    it('should preserve the selection after resizing', async () => {
+      await clickFirstCell(page);
+
+      const controlSelector = `.${ClassName.COLUMN_CONTROLS_DECORATIONS}[data-start-index="0"]`;
+
+      await page.waitForSelector(controlSelector);
+      await page.click(controlSelector);
+      await page.waitForSelector(tableSelectors.selectedCell);
+      await resizeColumn(page, { colIdx: 1, amount: -100, row: 2 });
+      await animationFrame(page);
+      await animationFrame(page);
+      await snapshot(page);
+    });
   });
 });
 
@@ -138,56 +153,49 @@ describe('Snapshot Test: table scale', () => {
   });
 });
 
-describe('Snapshot Test: table with merged columns in the first row', () => {
+describe('Snapshot Test: table with merged cell on first row', () => {
   let page: Page;
   beforeEach(async () => {
     // @ts-ignore
     page = global.page;
+    await initFullPageEditorWithAdf(page, adfTableWithMergedCellsOnFirstRow);
+    await clickFirstCell(page);
   });
 
-  it('should render resize handle', async () => {
-    await initEditorWithAdf(page, {
-      appearance: Appearance.fullPage,
-      adf: mergedColsAdf,
-      viewport: { width: 1280, height: 500 },
-      editorProps: {
-        allowDynamicTextSizing: true,
-      },
-    });
-    await clickFirstCell(page);
-    await grabResizeHandle(page, { colIdx: 1, row: 2 });
+  it('should resize the first cell on first row', async () => {
+    await resizeColumn(page, { colIdx: 1, row: 1, amount: 100 });
+    await animationFrame(page);
     await snapshot(page);
   });
 
-  describe('when table all columns merged in the first row', () => {
-    it('should render resize handle', async () => {
-      await initEditorWithAdf(page, {
-        appearance: Appearance.fullPage,
-        adf: mergedAllColsAdf,
-        viewport: { width: 1280, height: 500 },
-        editorProps: {
-          allowDynamicTextSizing: true,
-        },
-      });
-      await clickFirstCell(page);
-      await grabResizeHandle(page, { colIdx: 1, row: 2 });
-      await snapshot(page);
-    });
+  it('should resize the first cell on second row', async () => {
+    await resizeColumn(page, { colIdx: 1, row: 2, amount: 100 });
+    await animationFrame(page);
+    await snapshot(page);
   });
 
-  describe('when table columns are randomly merged in the first row', () => {
-    it('should resize columns', async () => {
-      await initEditorWithAdf(page, {
-        appearance: Appearance.fullPage,
-        adf: mergedRandomColsAdf,
-        viewport: { width: 1280, height: 500 },
-        editorProps: {
-          allowDynamicTextSizing: true,
-        },
-      });
-      await clickFirstCell(page);
-      await resizeColumn(page, { colIdx: 3, amount: 100, row: 2 });
-      await snapshot(page);
-    });
+  it('should resize the first cell on third row', async () => {
+    await resizeColumn(page, { colIdx: 1, row: 3, amount: 100 });
+    await animationFrame(page);
+    await snapshot(page);
   });
+});
+
+describe('Snapshot Test: table resize handle line', () => {
+  let page: Page;
+  beforeEach(async () => {
+    // @ts-ignore
+    page = global.page;
+    await initFullPageEditorWithAdf(page, adfTableWithMergedCells);
+    await clickFirstCell(page);
+  });
+
+  it.each([1, 2, 3, 4, 5, 6])(
+    'should display the resize handle line row %d',
+    async row => {
+      await grabResizeHandle(page, { colIdx: 1, row });
+      await animationFrame(page);
+      await snapshot(page);
+    },
+  );
 });

@@ -28,6 +28,20 @@ export interface Props {
   attachPanelTo: string;
   // Right Hand Side panel content
   children?: ReactNode;
+  // Don't animate the component when the component is mounted (false by default)
+  skipAnimationOnMount?: boolean;
+  // Mount component on enter (true by default)
+  mountOnEnter?: boolean;
+  // Unmount component on exit (true by default)
+  unmountOnExit?: boolean;
+  // Disable enter animation (false by default)
+  disableEnterAnimation?: boolean;
+  // Disable exit animation (false by default)
+  disableExitAnimation?: boolean;
+  // Function to be executed when the open animation finishes
+  onOpenAnimationFinished?: () => void;
+  // Function to be executed when the close animation finishes
+  onCloseAnimationFinished?: () => void;
 }
 
 export interface State {
@@ -63,16 +77,30 @@ export class RightSidePanel extends Component<Props, State> {
     });
   }
 
-  renderDrawer = (Container: HTMLElement) => {
-    const { children, isOpen } = this.props;
+  renderDrawer(Container: HTMLElement): ReactNode {
+    const {
+      children,
+      isOpen,
+      skipAnimationOnMount = false,
+      mountOnEnter = true,
+      unmountOnExit = true,
+      disableEnterAnimation = false,
+      disableExitAnimation = false,
+      onOpenAnimationFinished,
+      onCloseAnimationFinished,
+    } = this.props;
 
     return createPortal(
       <Transition
         in={isOpen}
         timeout={transitionDurationMs}
-        mountOnEnter
-        unmountOnExit
-        appear
+        mountOnEnter={mountOnEnter}
+        unmountOnExit={unmountOnExit}
+        appear={!skipAnimationOnMount}
+        enter={!disableEnterAnimation}
+        exit={!disableExitAnimation}
+        onEntered={onOpenAnimationFinished}
+        onExited={onCloseAnimationFinished}
       >
         {(state: TransitionStatus) => (
           <RightSidePanelDrawer
@@ -89,7 +117,7 @@ export class RightSidePanel extends Component<Props, State> {
       </Transition>,
       Container,
     );
-  };
+  }
 
   render() {
     const { container } = this.state;

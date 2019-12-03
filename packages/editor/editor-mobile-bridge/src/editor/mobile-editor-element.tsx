@@ -6,8 +6,13 @@ import {
   MediaProvider as MediaProviderType,
   EditorProps,
 } from '@atlaskit/editor-core';
-
-// @ts-ignore
+import FabricAnalyticsListeners, {
+  AnalyticsWebClient,
+} from '@atlaskit/analytics-listeners';
+import {
+  GasPurePayload,
+  GasPureScreenEventPayload,
+} from '@atlaskit/analytics-gas-types';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { toNativeBridge } from './web-to-native';
 import WebBridgeImpl from './native-to-web';
@@ -20,18 +25,21 @@ import {
   MediaProvider,
   MentionProvider,
   TaskDecisionProvider,
-  MockEmojiProvider,
+  EmojiProvider,
 } from '../providers';
-import { parseLocationSearch } from '../bridge-utils';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 import { cardClient, cardProvider } from '../providers/cardProvider';
-
-const params = parseLocationSearch();
-// @ts-ignore
-// eslint-disable-next-line no-redeclare
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { analyticsBridgeClient } from '../analytics-client';
 
 export const bridge: WebBridgeImpl = ((window as any).bridge = new WebBridgeImpl());
+
+const handleAnalyticsEvent = (
+  event: GasPurePayload | GasPureScreenEventPayload,
+) => {
+  toNativeBridge.call('analyticsBridge', 'trackEvent', {
+    event: JSON.stringify(event),
+  });
+};
 
 class EditorWithState extends Editor {
   onEditorCreated(instance: {
@@ -72,49 +80,56 @@ type Props = EditorProps & {
 };
 
 export default function mobileEditor(props: Props) {
-  // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
-  const mode = (params && params.theme) || props.mode || 'light';
+  const mode = props.mode || 'light';
+
   // Temporarily opting out of the default oauth2 flow for phase 1 of Smart Links
   // See https://product-fabric.atlassian.net/browse/FM-2149 for details.
   const authFlow = 'disabled';
+  const analyticsClient: AnalyticsWebClient = analyticsBridgeClient(
+    handleAnalyticsEvent,
+  );
+
   return (
-    <SmartCardProvider client={cardClient} authFlow={authFlow}>
-      <AtlaskitThemeProvider mode={mode}>
-        <EditorWithState
-          appearance="mobile"
-          mentionProvider={Promise.resolve(MentionProvider)}
-          emojiProvider={Promise.resolve(MockEmojiProvider)}
-          media={{
-            customMediaPicker: new MobilePicker(),
-            provider: props.mediaProvider || MediaProvider,
-            allowMediaSingle: true,
-          }}
-          allowConfluenceInlineComment={true}
-          allowLists={true}
-          onChange={() => {
-            toNativeBridge.updateText(bridge.getContent());
-          }}
-          allowPanel={true}
-          allowCodeBlocks={true}
-          allowTables={{
-            allowControls: false,
-          }}
-          UNSAFE_cards={{
-            provider: props.cardProvider || Promise.resolve(cardProvider),
-          }}
-          allowExtension={true}
-          allowTextColor={true}
-          allowDate={true}
-          allowRule={true}
-          allowStatus={true}
-          allowLayouts={{
-            allowBreakout: true,
-          }}
-          taskDecisionProvider={Promise.resolve(TaskDecisionProvider())}
-          // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
-          {...props}
-        />
-      </AtlaskitThemeProvider>
-    </SmartCardProvider>
+    <FabricAnalyticsListeners client={analyticsClient}>
+      <SmartCardProvider client={cardClient} authFlow={authFlow}>
+        <AtlaskitThemeProvider mode={mode}>
+          <EditorWithState
+            appearance="mobile"
+            mentionProvider={Promise.resolve(MentionProvider)}
+            emojiProvider={Promise.resolve(EmojiProvider)}
+            media={{
+              customMediaPicker: new MobilePicker(),
+              provider: props.mediaProvider || MediaProvider,
+              allowMediaSingle: true,
+            }}
+            allowConfluenceInlineComment={true}
+            onChange={() => {
+              toNativeBridge.updateText(bridge.getContent());
+            }}
+            allowPanel={true}
+            allowTables={{
+              allowControls: false,
+            }}
+            UNSAFE_cards={{
+              provider:
+                (props.UNSAFE_cards && props.UNSAFE_cards.provider) ||
+                Promise.resolve(cardProvider),
+            }}
+            allowExtension={true}
+            allowTextColor={true}
+            allowDate={true}
+            allowRule={true}
+            allowStatus={true}
+            allowLayouts={{
+              allowBreakout: true,
+            }}
+            allowAnalyticsGASV3={true}
+            UNSAFE_allowExpand={true}
+            taskDecisionProvider={Promise.resolve(TaskDecisionProvider())}
+            {...props}
+          />
+        </AtlaskitThemeProvider>
+      </SmartCardProvider>
+    </FabricAnalyticsListeners>
   );
 }

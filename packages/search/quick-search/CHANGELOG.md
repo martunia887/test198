@@ -1,5 +1,21 @@
 # @atlaskit/quick-search
 
+## 7.8.1
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 7.8.0
+
+### Minor Changes
+
+- [minor][bff5be0d46](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bff5be0d46):
+
+  Quick search autocomplete analytics instrumentation
+
 ## 7.7.2
 
 ### Patch Changes

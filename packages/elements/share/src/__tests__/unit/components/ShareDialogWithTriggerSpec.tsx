@@ -48,7 +48,7 @@ describe('ShareDialogWithTrigger', () => {
       shareContentType: 'page',
       showFlags: mockShowFlags,
       createAnalyticsEvent: mockCreateAnalyticsEvent,
-
+      product: 'confluence',
       ...overrides,
     };
 
@@ -58,6 +58,8 @@ describe('ShareDialogWithTrigger', () => {
   }
 
   beforeEach(() => {
+    // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+    //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
     mockCreateAnalyticsEvent = jest.fn<{}>().mockReturnValue({
       fire: jest.fn(),
     });
@@ -254,9 +256,9 @@ describe('ShareDialogWithTrigger', () => {
       });
       wrapper.setState({ isDialogOpen: true });
 
-      const ShareFormProps = shallow(wrapper
-        .find(InlineDialog)
-        .prop('content') as any)
+      const ShareFormProps = shallow(
+        wrapper.find(InlineDialog).prop('content') as any,
+      )
         .find(ShareForm)
         .props();
       expect(ShareFormProps.title).toEqual('Share this page');
@@ -459,6 +461,8 @@ describe('ShareDialogWithTrigger', () => {
 
   describe('handleShareSubmit', () => {
     it('should call onSubmit props with an object of users and comment as an argument', () => {
+      // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+      //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
       const mockOnSubmit = jest.fn<{}>().mockResolvedValue({});
       const values: ShareData = {
         users: [
@@ -489,6 +493,8 @@ describe('ShareDialogWithTrigger', () => {
     });
 
     it('should close inline dialog and reset the state and call props.showFlags when onSubmit resolves a value', async () => {
+      // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+      //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
       const mockOnSubmit = jest.fn<{}>().mockResolvedValue({});
       const mockConfig: ConfigResponse = {
         allowComment: false,
@@ -670,9 +676,9 @@ describe('ShareDialogWithTrigger', () => {
       });
       wrapper.setState({ isDialogOpen: true });
 
-      const content = shallow(wrapper
-        .find(InlineDialog)
-        .prop('content') as any);
+      const content = shallow(
+        wrapper.find(InlineDialog).prop('content') as any,
+      );
       expect(content.contains('Some message')).toBeTruthy();
     });
   });

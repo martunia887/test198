@@ -1,5 +1,127 @@
 # @atlaskit/profilecard
 
+## 12.3.5
+
+### Patch Changes
+
+- [patch][f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+
+  Corrects the type exports for typography, colors, elevation and layers. If you were doing any dynamic code it may break you. Refer to the [upgrade guide](/packages/core/theme/docs/upgrade-guide) for help upgrading.- Updated dependencies [c1d4898af5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c1d4898af5):
+
+- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+  - @atlaskit/icon@19.0.11
+  - @atlaskit/theme@9.3.0
+  - @atlaskit/portal@3.1.3
+
+## 12.3.4
+
+### Patch Changes
+
+- [patch][d222c2b987](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d222c2b987):
+
+  Theme has been converted to Typescript. Typescript consumers will now get static type safety. Flow types are no longer provided.
+
+  ### Breaking
+
+  ** getTokens props changes **
+  When defining the value function passed into a ThemeProvider, the getTokens parameter cannot be called without props; if no props are provided an empty object `{}` must be passed in:
+
+  ```javascript
+  <CustomTheme.Provider
+    value={t => ({ ...t(), backgroundColor: '#333'})}
+  >
+  ```
+
+  becomes:
+
+  ```javascript
+  <CustomTheme.Provider
+    value={t => ({ ...t({}), backgroundColor: '#333'})}
+  >
+  ```
+
+  ** Color palette changes **
+  Color palettes have been moved into their own file.
+  Users will need to update imports from this:
+
+  ```javascript
+  import { colors } from '@atlaskit/theme';
+
+  colors.colorPalette('8');
+  ```
+
+  to this:
+
+  ```javascript
+  import { colorPalette } from '@atlaskit/theme';
+
+  colorPalette.colorPalette('8');
+  ```
+
+  or for multi entry-point users:
+
+  ```javascript
+  import * as colors from '@atlaskit/theme/colors';
+
+  colors.colorPalette('8');
+  ```
+
+  to this:
+
+  ```javascript
+  import * as colorPalettes from '@atlaskit/theme/color-palette';
+
+  colorPalettes.colorPalette('8');
+  ```
+
+## 12.3.3
+
+- Updated dependencies [bd94b1d552](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bd94b1d552):
+- Updated dependencies [ae4f336a3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ae4f336a3a):
+  - @atlaskit/util-data-test@13.0.0
+  - @atlaskit/i18n-tools@0.6.0
+
+## 12.3.2
+
+### Patch Changes
+
+- [patch][f86839ca4e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f86839ca4e):
+
+  @atlaskit/portal had an issue in IE11 and this is fixed in 3.1.2
+
+## 12.3.1
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 12.3.0
+
+### Minor Changes
+
+- [minor][84bedb23c4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/84bedb23c4):
+
+  Export profile-cards withOuterListeners wrapper
+
+## 12.2.0
+
+### Minor Changes
+
+- [minor][8a3c534ec6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8a3c534ec6):
+
+  Export show and hide delay times of profile card trigger
+
+## 12.1.0
+
+### Minor Changes
+
+- [minor][16bf116576](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/16bf116576):
+
+  Increased show/hide delay times for ProfileCardTrigger
+
 ## 12.0.9
 
 ### Patch Changes

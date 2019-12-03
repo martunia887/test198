@@ -1,5 +1,90 @@
 # @atlaskit/page-header
 
+## 9.0.16
+
+- Updated dependencies [30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):
+  - @atlaskit/inline-edit@10.0.24
+  - @atlaskit/select@11.0.0
+  - @atlaskit/breadcrumbs@9.2.4
+  - @atlaskit/button@13.3.4
+
+## 9.0.15
+
+### Patch Changes
+
+- [patch][d222c2b987](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d222c2b987):
+
+  Theme has been converted to Typescript. Typescript consumers will now get static type safety. Flow types are no longer provided.
+
+  ### Breaking
+
+  ** getTokens props changes **
+  When defining the value function passed into a ThemeProvider, the getTokens parameter cannot be called without props; if no props are provided an empty object `{}` must be passed in:
+
+  ```javascript
+  <CustomTheme.Provider
+    value={t => ({ ...t(), backgroundColor: '#333'})}
+  >
+  ```
+
+  becomes:
+
+  ```javascript
+  <CustomTheme.Provider
+    value={t => ({ ...t({}), backgroundColor: '#333'})}
+  >
+  ```
+
+  ** Color palette changes **
+  Color palettes have been moved into their own file.
+  Users will need to update imports from this:
+
+  ```javascript
+  import { colors } from '@atlaskit/theme';
+
+  colors.colorPalette('8');
+  ```
+
+  to this:
+
+  ```javascript
+  import { colorPalette } from '@atlaskit/theme';
+
+  colorPalette.colorPalette('8');
+  ```
+
+  or for multi entry-point users:
+
+  ```javascript
+  import * as colors from '@atlaskit/theme/colors';
+
+  colors.colorPalette('8');
+  ```
+
+  to this:
+
+  ```javascript
+  import * as colorPalettes from '@atlaskit/theme/color-palette';
+
+  colorPalettes.colorPalette('8');
+  ```
+
+## 9.0.14
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 9.0.13
+
+### Patch Changes
+
+- [patch][0b09089d27](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0b09089d27):
+
+  Text alignment of action items will now only be applied to direct children
+
 ## 9.0.12
 
 ### Patch Changes

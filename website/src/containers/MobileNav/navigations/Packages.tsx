@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PackageIcon from '@atlaskit/icon/glyph/chevron-right';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
@@ -104,16 +104,13 @@ const standardGroups = (dirs: Array<Directory>, pathname: string): NavGroup[] =>
     const packages = fs.getDirectories(group.children);
     return {
       title: group.id,
-      items: packages.reduce(
-        (items, pkg) => {
-          const details = getItemDetails(pkg, group, pathname);
-          if (details) {
-            return items.concat(details);
-          }
-          return items;
-        },
-        [] as Array<NavGroupItem>,
-      ),
+      items: packages.reduce((items, pkg) => {
+        const details = getItemDetails(pkg, group, pathname);
+        if (details) {
+          return items.concat(details);
+        }
+        return items;
+      }, [] as Array<NavGroupItem>),
     };
   });
 

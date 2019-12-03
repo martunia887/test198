@@ -36,10 +36,11 @@ const unsupportedNodes = [
   'inlineCard',
   'blockCard',
   'status',
+  'expand',
+  'nestedExpand',
 ];
 
 const unsupportedMarks = [
-  'action',
   'breakout',
   'alignment',
   'indentation',

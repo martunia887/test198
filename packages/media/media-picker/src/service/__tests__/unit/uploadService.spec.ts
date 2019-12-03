@@ -12,21 +12,22 @@ import {
   getFileStreamsCache,
   FileState,
 } from '@atlaskit/media-client';
-import { TouchedFiles } from '@atlaskit/media-client';
+import { TouchedFiles, ProcessingFileState } from '@atlaskit/media-client';
 import { AuthProvider, Auth } from '@atlaskit/media-core';
 import uuidV4 from 'uuid/v4';
 import { asMock, fakeMediaClient } from '@atlaskit/media-test-helpers';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs';
 import { UploadServiceImpl } from '../../uploadServiceImpl';
-import { MediaFile, UploadParams } from '../../..';
 import * as getPreviewModule from '../../../util/getPreviewFromBlob';
 import * as getPreviewFromImage from '../../../util/getPreviewFromImage';
-import { Preview } from '../../../domain/preview';
 import {
+  Preview,
+  MediaFile,
+  UploadParams,
   UploadPreviewUpdateEventPayload,
   UploadsStartEventPayload,
-} from '../../../domain/uploadEvent';
+} from '../../../types';
 
 const fileStreamCacheSpy = jest.spyOn(getFileStreamsCache(), 'set');
 
@@ -97,9 +98,6 @@ describe('UploadService', () => {
     );
 
     if (mediaClient.config.userAuthProvider) {
-      jest
-        .spyOn((uploadService as any).userMediaStore, 'createFile')
-        .mockResolvedValue({ data: { id: 'some-new-user-file-id' } });
       const userMediaClient: MediaClient = (uploadService as any)[
         'userMediaClient'
       ];
@@ -107,7 +105,9 @@ describe('UploadService', () => {
         .spyOn(userMediaClient.file, 'touchFiles')
         .mockResolvedValue(touchedFiles);
       const userMediaClientUpload = jest.spyOn(userMediaClient.file, 'upload');
-      userMediaClientUpload.mockReturnValue(defaultUploadMock);
+      userMediaClientUpload.mockReturnValue(
+        defaultUploadMock as Observable<FileState>,
+      );
 
       return { uploadService, filesAddedPromise, mediaClient, userMediaClient };
     } else {
@@ -124,7 +124,7 @@ describe('UploadService', () => {
     (getPreviewModule.getPreviewFromBlob as any).mockReturnValue(
       Promise.resolve(),
     );
-    (uuidV4 as jest.Mock<{}>)
+    ((uuidV4 as unknown) as jest.Mock<{}>)
       .mockReturnValueOnce('uuid1')
       .mockReturnValueOnce('uuid2')
       .mockReturnValueOnce('uuid3')
@@ -321,7 +321,7 @@ describe('UploadService', () => {
             observer.next({
               status: 'processing',
               id: 'public-file-id',
-            });
+            } as ProcessingFileState);
           });
         }),
       );
@@ -348,6 +348,8 @@ describe('UploadService', () => {
       });
 
       jest.spyOn(mediaClient.file, 'upload').mockReturnValue({
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
         subscribe(subscription: Subscriber<FileState>) {
           subscription.next({
             status: 'uploading',
@@ -391,6 +393,8 @@ describe('UploadService', () => {
       uploadService.on('file-upload-error', fileUploadErrorCallback);
 
       jest.spyOn(mediaClient.file, 'upload').mockReturnValue({
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
         subscribe(subscription: Subscriber<FileState>) {
           // window.setTimeout(() => {
           subscription.error('Some reason');
@@ -477,6 +481,8 @@ describe('UploadService', () => {
 
       return new Promise(resolve => {
         jest.spyOn(mediaClient.file, 'upload').mockReturnValue({
+          // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+          //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
           subscribe(subscription: Subscriber<FileState>) {
             subscription.error();
             expect(

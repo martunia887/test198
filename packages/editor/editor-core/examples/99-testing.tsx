@@ -1,9 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { Step } from 'prosemirror-transform';
 import { EditorView } from 'prosemirror-view';
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import {
   cardProvider,
   storyMediaProviderFactory,
@@ -19,10 +21,10 @@ import ClipboardHelper from './1-clipboard-helper';
 import { SaveAndCancelButtons } from './5-full-page';
 import { TitleInput } from '../example-helpers/PageElements';
 import mediaMockServer from '../example-helpers/media-mock';
-// @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { withSidebarContainer } from '../example-helpers/SidebarContainer';
 import { MountOptions } from '../src/__tests__/visual-regression/_utils';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
 
 function createMediaMockEnableOnce() {
   let enabled = false;
@@ -45,7 +47,16 @@ interface EditorInstance {
   eventDispatcher: EventDispatcher;
 }
 
-export const providers: any = {
+type Providers = Pick<
+  EditorProps,
+  | 'emojiProvider'
+  | 'mentionProvider'
+  | 'taskDecisionProvider'
+  | 'contextIdentifierProvider'
+  | 'activityProvider'
+  | 'macroProvider'
+> & { collabEditProvider?: EditorProps['collabEditProvider'] };
+export const providers: Providers = {
   emojiProvider: emoji.storyData.getEmojiResource({
     uploadSupported: true,
     currentUser: {
@@ -87,13 +98,77 @@ function createEditorWindowBindings(win: Window) {
   let editorProps: EditorProps;
 
   class EditorWithState extends Editor {
+    private editorView: EditorView | null = null;
+
     onEditorCreated(instance: EditorInstance) {
       super.onEditorCreated(instance);
       (window as any)['__editorView'] = instance.view;
+      this.editorView = instance.view;
+      this.createApplyRemoteSteps();
+      this.createDocumentToJSON();
     }
+
+    createDocumentToJSON() {
+      const view = this.editorView;
+
+      if (!view) {
+        return;
+      }
+
+      (window as any)['__documentToJSON'] = function() {
+        const transform = new JSONTransformer();
+        const doc = view.state.doc;
+
+        return transform.encode(doc);
+      };
+    }
+
+    createApplyRemoteSteps() {
+      const view = this.editorView;
+
+      if (!view) {
+        return;
+      }
+
+      (window as any)['__applyRemoteSteps'] = function(
+        stepsAsString: string[],
+      ) {
+        const {
+          state,
+          state: { schema, tr },
+        } = view;
+
+        const stepsAsJSON = stepsAsString.map(s => JSON.parse(s));
+        const steps = stepsAsJSON.map(step => Step.fromJSON(schema, step));
+
+        if (tr) {
+          steps.forEach(step => tr.step(step));
+
+          tr.setMeta('addToHistory', false);
+          tr.setMeta('isRemote', true);
+
+          const { from, to } = state.selection;
+          const [firstStep] = stepsAsJSON;
+
+          /**
+           * If the cursor is a the same position as the first step in
+           * the remote data, we need to manually set it back again
+           * in order to prevent the cursor from moving.
+           */
+          if (from === firstStep.from && to === firstStep.to) {
+            tr.setSelection(state.selection);
+          }
+
+          const newState = state.apply(tr);
+          view.updateState(newState);
+        }
+      };
+    }
+
     onEditorDestroyed(instance: EditorInstance) {
       super.onEditorDestroyed(instance);
       (window as any)['__editorView'] = undefined;
+      (window as any)['__applyRemoteSteps'] = undefined;
     }
   }
 
@@ -119,6 +194,7 @@ function createEditorWindowBindings(win: Window) {
       props.media = {
         allowMediaSingle: true,
         allowResizing: true,
+        allowResizingInTables: true,
         allowLinking: true,
         ...props.media,
         provider: mediaProvider,
@@ -141,6 +217,10 @@ function createEditorWindowBindings(win: Window) {
 
     if (props && props.allowExtension) {
       props.extensionHandlers = extensionHandlers;
+    }
+
+    if (options.collab) {
+      providers.collabEditProvider = createCollabEditProvider(options.collab);
     }
 
     let Editor: React.ComponentType<EditorProps> = (props: EditorProps) => (

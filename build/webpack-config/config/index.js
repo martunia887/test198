@@ -4,12 +4,11 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
+const moduleResolveMapBuilder = require('@atlaskit/multi-entry-tools/module-resolve-map-builder');
 const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
-const moduleResolveMapBuilder = require('@atlaskit/multi-entry-tools/module-resolve-map-builder');
 
 const baseCacheDir = path.resolve(
   __dirname,
@@ -38,6 +37,10 @@ module.exports = async function createWebpackConfig(
   }*/,
 ) {
   const isProduction = mode === 'production';
+
+  // Synchrony integration should be enabled only in development mode
+  const isSynchronyEnabled =
+    !isProduction && (process.env.SYNCHRONY_URL || null) !== null;
 
   // GASv3 integration should be enabled only in development mode
   // So we should check if is not production and we are requiring GASv3
@@ -213,6 +216,18 @@ module.exports = async function createWebpackConfig(
                 'src/module-mocks/analytics-web-client.js',
               ),
             }),
+        ...(isSynchronyEnabled
+          ? {}
+          : {
+              '@atlassian/prosemirror-synchrony-plugin/build/collab-provider': path.resolve(
+                websiteDir,
+                'src/module-mocks/prosemirror-synchrony-plugin-collab-provider.js',
+              ),
+              '@atlassian/prosemirror-synchrony-plugin/build/cljs': path.resolve(
+                websiteDir,
+                'src/module-mocks/prosemirror-synchrony-plugin-cljs.js',
+              ),
+            }),
       },
     },
     resolveLoader: {
@@ -227,6 +242,7 @@ module.exports = async function createWebpackConfig(
       websiteEnv,
       report,
       isAnalyticsGASv3Enabled,
+      isSynchronyEnabled,
     }),
     optimization: getOptimizations({
       isProduction,
@@ -242,7 +258,8 @@ function getPlugins(
     websiteEnv,
     report,
     isAnalyticsGASv3Enabled = false,
-  } /*: { websiteDir: string, websiteEnv: string, report: boolean, isProduction: boolean, isAnalyticsGASv3Enabled: boolean } */,
+    isSynchronyEnabled = false,
+  } /*: { websiteDir: string, websiteEnv: string, report: boolean, isProduction: boolean, isAnalyticsGASv3Enabled: boolean, isSynchronyEnabled: boolean } */,
 ) {
   const faviconPath = path.join(
     websiteDir,
@@ -266,6 +283,9 @@ function getPlugins(
     }),
 
     new webpack.DefinePlugin({
+      SYNCHRONY_URL: `${JSON.stringify(
+        isSynchronyEnabled ? String(process.env.SYNCHRONY_URL) : '',
+      )}`,
       ENABLE_ANALYTICS_GASV3: `${String(isAnalyticsGASv3Enabled)}`,
       WEBSITE_ENV: `"${websiteEnv}"`,
       BASE_TITLE: `"Atlaskit by Atlassian ${!isProduction ? '- DEV' : ''}"`,
@@ -356,11 +376,27 @@ function getOptimizations({ isProduction, noMinimizeFlag }) {
     // There's an interesting bug in webpack where passing *any* uglify plugin, where `minimize` is
     // false, causes webpack to use its own minimizer plugin + settings.
     minimizer: noMinimizeFlag ? undefined : [uglifyPlugin],
-    minimize: noMinimizeFlag ? false : true,
+    minimize: !noMinimizeFlag,
     splitChunks: {
       // "Maximum number of parallel requests when on-demand loading. (default in production: 5)"
       // The default value of 5 causes the webpack process to crash, reason currently unknown
       maxAsyncRequests: Infinity,
+      cacheGroups: {
+        vendors: {
+          name: 'vendors',
+          enforce: true,
+          chunks: 'all',
+          test: (module /*: { context: string | null } */) => {
+            if (!module.context) {
+              return false;
+            }
+            return /node_modules\/(react|react-dom|styled-components|prop-types|@emotion|@babel\/runtime)($|\/)/.test(
+              module.context,
+            );
+          },
+          priority: 1,
+        },
+      },
     },
   };
 }

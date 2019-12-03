@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import * as CommonMark from 'commonmark';
 import * as ReactRenderer from 'commonmark-react-renderer';
@@ -41,6 +41,7 @@ export default function Markdown({
       <Helmet>
         <meta
           name="description"
+          // DEFAULT_META_DESCRIPTION is set by webpack config.
           content={description || DEFAULT_META_DESCRIPTION}
         />
       </Helmet>

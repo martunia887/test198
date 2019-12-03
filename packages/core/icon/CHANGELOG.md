@@ -1,5 +1,49 @@
 # @atlaskit/icon
 
+## 19.0.11
+
+### Patch Changes
+
+- [patch][c1d4898af5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c1d4898af5):
+
+  Added Stopwatch and Sprint icons
+
+- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+  - @atlaskit/theme@9.3.0
+
+## 19.0.10
+
+### Patch Changes
+
+- [patch][6d37081dc8](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6d37081dc8):
+
+  Upgrade prettier from 1.18 to 1.19
+
+## 19.0.9
+
+### Patch Changes
+
+- [patch][f081cdac54](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f081cdac54):
+
+  Upgrade prettier from 1.14 to 1.18
+
+## 19.0.8
+
+### Patch Changes
+
+- [patch][f9b5e24662](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9b5e24662):
+
+  @atlaskit/icon-file-type and @atlaskit/icon-object have been converted to TypeScript to provide static typing. Flow types are no longer provided. No API or bahavioural changes.
+
+## 19.0.7
+
+### Patch Changes
+
+- [patch][3c7bee089a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c7bee089a):
+
+  @atlaskit/icon-priority has been converted to TypeScript to provide static typing. Flow types are no longer provided. No API or bahavioural changes.
+
 ## 19.0.6
 
 ### Patch Changes

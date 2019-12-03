@@ -16,11 +16,9 @@ import {
 import { IconCode } from '../quick-insert/assets';
 import { PMPluginFactoryParams, EditorPlugin } from '../../types';
 
-export interface CodeBlockOptions {
-  enableKeybindingsForIDE?: boolean;
-}
+const codeBlockPlugin = (): EditorPlugin => ({
+  name: 'codeBlock',
 
-const codeBlockPlugin = (options: CodeBlockOptions = {}): EditorPlugin => ({
   nodes() {
     return [{ name: 'codeBlock', node: codeBlock }];
   },
@@ -30,7 +28,7 @@ const codeBlockPlugin = (options: CodeBlockOptions = {}): EditorPlugin => ({
       { name: 'codeBlock', plugin: createPlugin },
       {
         name: 'codeBlockIDEKeyBindings',
-        plugin: () => (options.enableKeybindingsForIDE ? ideUX : undefined),
+        plugin: () => ideUX,
       },
       {
         name: 'codeBlockKeyMap',
@@ -49,7 +47,7 @@ const codeBlockPlugin = (options: CodeBlockOptions = {}): EditorPlugin => ({
         action(insert, state) {
           const schema = state.schema;
           const tr = insert(schema.nodes.codeBlock.createChecked());
-          return addAnalytics(tr, {
+          return addAnalytics(state, tr, {
             action: ACTION.INSERTED,
             actionSubject: ACTION_SUBJECT.DOCUMENT,
             actionSubjectId: ACTION_SUBJECT_ID.CODE_BLOCK,

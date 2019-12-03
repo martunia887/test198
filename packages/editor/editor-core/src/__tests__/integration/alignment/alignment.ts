@@ -21,7 +21,7 @@ const alignRight = async (page: any) => {
 
 BrowserTestCase(
   'alignment: should be able to add alignment to paragraphs',
-  { skip: [] },
+  {},
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
@@ -40,7 +40,7 @@ BrowserTestCase(
 
 BrowserTestCase(
   'alignment: should be able to add alignment to headings',
-  { skip: [] },
+  {},
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
@@ -71,7 +71,6 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: 'full-page',
       allowTextAlignment: true,
-      allowCodeBlocks: true,
     });
 
     await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
@@ -100,7 +99,7 @@ BrowserTestCase(
 
 BrowserTestCase(
   'alignment: should maintain alignment when hit return',
-  { skip: [] },
+  {},
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
     await mountEditor(page, {
@@ -147,9 +146,7 @@ BrowserTestCase(
     await page.click(CELL);
 
     // select a column
-    const controlSelector = `.${
-      ClassName.COLUMN_CONTROLS_DECORATIONS
-    }[data-start-index="0"]`;
+    const controlSelector = `.${ClassName.COLUMN_CONTROLS_DECORATIONS}[data-start-index="0"]`;
     await page.waitForSelector(controlSelector);
     await page.click(controlSelector);
 

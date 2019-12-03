@@ -1,5 +1,38 @@
 # @atlaskit/build-utils
 
+## 2.5.0
+
+### Minor Changes
+
+- [minor][6bce2c0290](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6bce2c0290):
+
+  Fix the circular dependencies between build releases and build utils by moving flattenReleases and parseChangesetCommit to build-utils.
+
+## 2.4.0
+
+### Minor Changes
+
+- [minor][a41507a34d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a41507a34d):
+
+  Add createSpyObject function to build-utils/logging
+  Add bitbucket utils under build-utils/bitbucket
+
+## 2.3.0
+
+### Minor Changes
+
+- [minor][2e18ff850d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2e18ff850d):
+
+  Add runCommands module that runs commands via concurrently.
+
+## 2.2.7
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
 ## 2.2.6
 
 ### Patch Changes

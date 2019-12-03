@@ -6,6 +6,7 @@ import {
   ProviderFactory,
   WithProviders,
   ExtensionHandlers,
+  Providers,
 } from '@atlaskit/editor-common';
 import ExtensionComponent from './ExtensionComponent';
 
@@ -33,20 +34,19 @@ export default class Extension extends Component<Props, any> {
     }
   }
 
-  private renderWithProvider = (providers: Record<string, Promise<any>>) => {
+  private renderWithProvider = (providers: Providers) => {
     const {
       node,
       editorView,
       handleContentDOMRef,
       extensionHandlers,
     } = this.props;
-    const { macroProvider } = providers;
 
     return (
       <ExtensionComponent
         editorView={editorView}
         node={node}
-        macroProvider={macroProvider}
+        providers={providers}
         handleContentDOMRef={handleContentDOMRef}
         extensionHandlers={extensionHandlers}
       />
@@ -56,7 +56,7 @@ export default class Extension extends Component<Props, any> {
   render() {
     return (
       <WithProviders
-        providers={['macroProvider']}
+        providers={['macroProvider', 'extensionProvider']}
         providerFactory={this.providerFactory}
         renderNode={this.renderWithProvider}
       />

@@ -1,5 +1,4 @@
-import { MediaClient } from '@atlaskit/media-client';
-import { MediaCollectionItem } from '@atlaskit/media-store';
+import { MediaClient, MediaCollectionItem } from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
 import { LocalUploads } from './local-upload';
 
@@ -20,7 +19,7 @@ export {
 } from './local-upload';
 
 import { ImageCardModel } from '../tools/fetcher/fetcher';
-import { PopupConfig } from '../..';
+import { PopupConfig } from '../../types';
 
 export interface State {
   readonly redirectUrl: string;

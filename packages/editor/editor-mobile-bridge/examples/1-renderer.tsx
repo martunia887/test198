@@ -1,8 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+import { ProviderFactory } from '@atlaskit/editor-common';
 
 import Renderer from './../src/renderer/mobile-renderer-element';
+import { MentionProvider } from '@atlaskit/mention/types';
 
 export const Wrapper: any = styled.div`
   position: absolute;
@@ -36,6 +38,10 @@ const initialDocument = JSON.stringify({
   ],
 });
 
+const providerFactory = ProviderFactory.create({
+  mentionProvider: Promise.resolve({} as MentionProvider),
+});
+
 export default function Example() {
   return (
     <Wrapper>
@@ -45,6 +51,7 @@ export default function Example() {
           collectionName: 'InitialCollectionForTesting',
           includeUserAuthProvider: true,
         })}
+        dataProviders={providerFactory}
       />
     </Wrapper>
   );

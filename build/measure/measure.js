@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-
+// @flow
 const fs = require('fs');
 const path = require('path');
-const exec = require('child_process').execSync;
-const chalk = require('chalk').default;
+
+const chalk = require('chalk');
 const ora = require('ora');
 const webpack = require('webpack');
 const { fExists, fDeleteIfExist } = require('./utils/fs');
@@ -25,14 +25,23 @@ const {
   downloadFromS3ForLocal,
 } = require('./utils/s3-actions');
 
-function fWriteStats(path, content) {
-  fs.writeFileSync(path, JSON.stringify(clearStats(content), null, 2), 'utf8');
+const { returnMissingPkgBasedOn } = require('./utils/error.js');
+
+const targetBranch = process.env.TARGET_BRANCH || 'master';
+const bitbucketBranch = process.env.BITBUCKET_BRANCH || 'master';
+
+function fWriteStats(pathTo, content) {
+  fs.writeFileSync(
+    pathTo,
+    JSON.stringify(clearStats(content), null, 2),
+    'utf8',
+  );
 }
 
-function getBundleCheckResult(path, stats) {
+function getBundleCheckResult(pathTo, stats) {
   let prevStats;
-  if (fExists(path)) {
-    prevStats = JSON.parse(fs.readFileSync(path, 'utf8'));
+  if (fExists(pathTo)) {
+    prevStats = JSON.parse(fs.readFileSync(pathTo, 'utf8'));
   }
 
   const statsWithDiff = prevStats ? diff(prevStats, stats) : stats;
@@ -48,6 +57,7 @@ function webpackCompilerRun(configs) {
    */
   return new Promise((resolve, reject) => {
     const compiler = webpack(configs);
+    // eslint-disable-next-line consistent-return
     compiler.run(err => {
       if (err) {
         reject(err);
@@ -59,12 +69,12 @@ function webpackCompilerRun(configs) {
 }
 
 module.exports = async function main(
-  filePath,
-  isAnalyze,
-  isJson,
-  isLint,
-  updateSnapshot,
-  s3,
+  filePath /*: string */,
+  isAnalyze /*: boolean */,
+  isJson /*: boolean */,
+  isLint /*: boolean */,
+  updateSnapshot /*: boolean */,
+  s3 /*: boolean */,
 ) {
   const measureOutputPath = path.join(filePath, '.measure-output');
   const sanitizedFilePath = filePath.replace('/', '__');
@@ -182,6 +192,7 @@ module.exports = async function main(
    * - node_modules bundle: includes all external dependencies
    * - package groups bundles: e.g. core, media, editor, etc...
    */
+  // $FlowFixMe - type issue
   const mainConfig = await createWebpackConfig({
     outputDir: measureCompiledOutputPath,
     entryPoint: { main: filePath },
@@ -197,6 +208,7 @@ module.exports = async function main(
    * Config for a combined build. Used to better approximate bundle
    * size since gzip size is highly affected by the size of the input.
    */
+  // $FlowFixMe - type issue
   const combinedConfig = await createWebpackConfig({
     outputDir: measureCompiledOutputPath,
     entryPoint: { combined_sync: filePath },
@@ -220,41 +232,46 @@ module.exports = async function main(
   }
 
   // All the things for S3 flow is under this condition
-  if (s3) {
-    // Add these path to enable to upload data to S3
-    const masterStatsFilePath = path.join(
-      masterStatsFolder,
-      `${packageName}-bundle-size-ratchet.json`,
-    );
-    const currentStatsFilePath = path.join(
-      currentStatsFolder,
-      `${packageName}-bundle-size.json`,
-    );
+  let masterStatsFilePath = path.join(
+    masterStatsFolder,
+    `${packageName}-bundle-size-ratchet.json`,
+  );
+  const currentStatsFilePath = path.join(
+    currentStatsFolder,
+    `${packageName}-bundle-size.json`,
+  );
 
-    if (updateSnapshot) {
-      // Store file into folder for S3
-      fWriteStats(masterStatsFilePath, stats);
-      if (process.env.CI) {
-        // upload to s3 masterStats
-        uploadToS3(masterStatsFilePath, 'master');
-      }
-    } else {
-      if (process.env.CI) {
-        await downloadFromS3(masterStatsFolder, 'master', packageName);
+  if (updateSnapshot) {
+    // Store file into folder for S3
+    fWriteStats(masterStatsFilePath, stats);
+    if (process.env.CI) {
+      // upload to s3 masterStats
+      uploadToS3(masterStatsFilePath, bitbucketBranch);
+    }
+  } else if (process.env.CI) {
+    try {
+      await downloadFromS3(masterStatsFolder, targetBranch, packageName);
+    } catch (err) {
+      const errorMessage = `${err}`;
+      if (errorMessage.includes('not found in s3 bucket')) {
+        const missingPkg = returnMissingPkgBasedOn(errorMessage);
+        masterStatsFilePath = path.join(
+          masterStatsFolder,
+          `${missingPkg}-bundle-size-ratchet.json`,
+        );
+        fWriteStats(masterStatsFilePath, stats);
+        uploadToS3(masterStatsFilePath, targetBranch);
       } else {
-        await downloadFromS3ForLocal(masterStatsFolder, 'master', packageName);
+        throw err;
       }
     }
+  } else {
+    await downloadFromS3ForLocal(masterStatsFolder, targetBranch, packageName);
+  }
 
-    const results = getBundleCheckResult(masterStatsFilePath, stats);
-    chalk.cyan(`Writing current build stats to "${currentStatsFilePath}"`);
-    fWriteStats(currentStatsFilePath, results.statsWithDiff);
-  } // closing s3
-
-  // TODO: replace after changes to flow are complete
-  const prevStatsPath = path.join(filePath, `bundle-size-ratchet.json`);
-  const results = getBundleCheckResult(prevStatsPath, stats);
-
+  const results = getBundleCheckResult(masterStatsFilePath, stats);
+  chalk.cyan(`Writing current build stats to "${currentStatsFilePath}"`);
+  fWriteStats(currentStatsFilePath, results.statsWithDiff);
   if (results.passedBundleSizeCheck) {
     spinner.succeed(
       chalk.cyan(`Module "${packageName}" passed bundle size check`),
@@ -265,17 +282,17 @@ module.exports = async function main(
 
   if (isJson) {
     return console.log(JSON.stringify(stats, null, 2));
-  } else if (!isLint || !results.passedBundleSizeCheck) {
+  }
+  if (!isLint || !results.passedBundleSizeCheck) {
     printHowToReadStats();
     printReport(prepareForPrint(joinedStatsGroups, results.statsWithDiff));
   }
 
-  if (updateSnapshot) {
-    // TODO: remove this write once the flow is switched
-    fWriteStats(prevStatsPath, stats);
-  } else if (results.statsExceededSizeLimit.length && isLint && !s3) {
+  if (results.statsExceededSizeLimit.length && isLint && !s3) {
     throw new Error(`✖ – Module "${packageName}" has exceeded size limit!`);
   }
+
   // For s3, we always pass the bundle check.;
+  // eslint-disable-next-line no-nested-ternary
   return s3 ? 0 : results.passedBundleSizeCheck ? 1 : 0;
 };

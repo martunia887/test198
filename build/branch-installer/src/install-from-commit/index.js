@@ -1,3 +1,4 @@
+// @flow
 const fetch = require('node-fetch');
 const chalk = require('chalk');
 const spawndamnit = require('spawndamnit');
@@ -5,10 +6,12 @@ const prettyjson = require('prettyjson');
 const pWaitFor = require('p-wait-for');
 const fs = require('fs');
 const util = require('util');
+
 const readFile = util.promisify(fs.readFile);
+const retry = require('async-retry');
 
 const CDN_URL_BASE =
-  'http://s3-ap-southeast-2.amazonaws.com/atlaskit-artefacts';
+  'https://s3-ap-southeast-2.amazonaws.com/atlaskit-artefacts';
 
 function flattenDeep(arr1) {
   return arr1.reduce(
@@ -30,7 +33,7 @@ async function getInstalledAtlaskitDependencies() {
     throw new Error(err);
   }
 
-  let atlaskitDependencies = flattenDeep(
+  const atlaskitDependencies = flattenDeep(
     [
       'dependencies',
       'devDependencies',
@@ -52,7 +55,7 @@ async function getInstalledAtlaskitDependencies() {
 }
 // This function needs to be shared between the cli and the main node entry point
 // so that they can print different error messages
-function validateOptions(commitHash, options = {}) {
+function validateOptions(commitHash /*:string */, options /*: Object */ = {}) {
   const errors = [];
   const { engine, cmd, timeout, interval } = options;
 
@@ -78,6 +81,8 @@ function validateOptions(commitHash, options = {}) {
 // returns a function used for logging or doing nothing (depending on shouldLog)
 // i.e const logAlways = createLogger(true);
 // const logInDebugMode = createLogger(flags.debug);
+
+// eslint-disable-next-line no-unused-vars
 const createLogger = shouldLog => {
   if (shouldLog) {
     return message => {
@@ -92,7 +97,7 @@ const createLogger = shouldLog => {
   return () => {};
 };
 
-async function getManifestForCommit(commitHash, options = {}) {
+async function getManifestForCommit(commitHash, options /*: Object */ = {}) {
   const manifestUrl = `${CDN_URL_BASE}/${commitHash}/dists/manifest.json`;
   const { log } = options;
   const { interval, timeout } = options;
@@ -105,24 +110,24 @@ async function getManifestForCommit(commitHash, options = {}) {
   return manifest;
 }
 
-const urlExists = async (url, options = {}) => {
+const urlExists = async (url, options /*: Object */ = {}) => {
   const { verboseLog } = options;
 
   verboseLog(`Checking if url exists: ${url}`);
 
-  let response = await fetch(url, { method: 'HEAD' });
+  const response = await fetch(url, { method: 'HEAD' });
   verboseLog(`HTTP Code ${response.status}`);
 
   return response.status === 200;
 };
 
-const fetchVerbose = async (url, options = {}) => {
+const fetchVerbose = async (url, options /*: Object */ = {}) => {
   const { verboseLog } = options;
   verboseLog(`Trying to fetch ${url}`);
 
-  let response = await fetch(url);
+  const response = await fetch(url);
   verboseLog(`HTTP Code ${response.status}`);
-  let result = await response.json();
+  const result = await response.json();
   verboseLog(result);
 
   return result;
@@ -133,7 +138,10 @@ const fetchVerbose = async (url, options = {}) => {
  * node we can throw an error that can be caught, and from the cli we can print them and correctly
  * process.exit
  */
-async function installFromCommit(fullCommitHash = '', userOptions = {}) {
+async function installFromCommit(
+  fullCommitHash /*: string */ = '',
+  userOptions /*: Object */ = {},
+) {
   const defaultOptions = {
     dryRun: false,
     verbose: false,
@@ -142,6 +150,7 @@ async function installFromCommit(fullCommitHash = '', userOptions = {}) {
     packages: 'all',
     timeout: 20000,
     interval: 5000,
+    extraArgs: [],
   };
   const options = {
     ...defaultOptions,
@@ -157,9 +166,12 @@ async function installFromCommit(fullCommitHash = '', userOptions = {}) {
   return _installFromCommit(commitHash, options);
 }
 
-async function _installFromCommit(commitHash = '', options = {}) {
-  const log = createLogger(true);
-  const verboseLog = createLogger(options.verbose);
+async function _installFromCommit(
+  commitHash /*: string */ = '',
+  options /*: Object */ = {},
+) {
+  const { log } = options;
+  const { verboseLog } = options;
 
   verboseLog('Running with options:');
   verboseLog({ ...options, commitHash });
@@ -174,17 +186,19 @@ async function _installFromCommit(commitHash = '', options = {}) {
       ? await getInstalledAtlaskitDependencies()
       : options.packages.split(',');
 
-  const { engine, cmd } = options;
-  const cmdArgs = [cmd]; // args that we'll pass to the engine ('add'/'upgrade' pkgName@url pkgName@url)
+  const packagesToInstall = packages.filter(pkg => manifest[pkg]);
+  if (packagesToInstall.length === 0) {
+    log('No packages to install.');
+    return;
+  }
 
-  packages.forEach(pkg => {
-    if (manifest[pkg]) {
-      log(`Notice: Installing branch-deploy for: ${pkg}`);
-      const tarUrl = `${CDN_URL_BASE}/${commitHash}/dists/${
-        manifest[pkg].tarFile
-      }`;
-      cmdArgs.push(`${pkg}@${tarUrl}`);
-    }
+  const { engine, cmd } = options;
+  const cmdArgs = [cmd, ...options.extraArgs]; // args that we'll pass to the engine ('add'/'upgrade' pkgName@url pkgName@url)
+
+  packagesToInstall.forEach(pkg => {
+    log(`Notice: Installing branch-deploy for: ${pkg}`);
+    const tarUrl = `${CDN_URL_BASE}/${commitHash}/dists/${manifest[pkg].tarFile}`;
+    cmdArgs.push(`${pkg}@${tarUrl}`);
   });
 
   if (options.dryRun) {
@@ -193,7 +207,34 @@ async function _installFromCommit(commitHash = '', options = {}) {
   } else {
     log('Running command:');
     log(`$ ${engine} ${cmdArgs.join(' ')}`);
-    await spawndamnit(engine, cmdArgs, { stdio: 'inherit' });
+
+    let retryCount = 0;
+    /*
+    On CI we get a weird concurrency issue when installing transitive dependencies from the Atlaskit
+    branch deploy. Re-running the upgrade fixes that problem. It's not great but it unblocks Confluence.
+    https://github.com/yarnpkg/yarn/issues/2629
+     */
+    await retry(
+      async () => {
+        try {
+          await spawndamnit(engine, cmdArgs, {
+            stdio: 'inherit',
+            // $FlowFixMe - isTTY is not in $Stream
+            shell: process.stdout.isTTY,
+          });
+        } catch (err) {
+          log(`${retryCount} retry at running command failed`);
+          log(err.toString());
+          retryCount++;
+          throw err;
+        }
+
+        return true;
+      },
+      {
+        retries: 3,
+      },
+    );
   }
 }
 

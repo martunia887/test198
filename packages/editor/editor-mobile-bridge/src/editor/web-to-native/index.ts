@@ -7,6 +7,8 @@ import {
   StatusBridge,
   TypeAheadBridge,
   LinkBridge,
+  UndoRedoBridge,
+  AnalyticsBridge,
 } from './bridge';
 import AndroidBridge from './android-impl';
 import IosBridge from './ios-impl';
@@ -24,6 +26,8 @@ export interface EditorBridges {
   statusBridge?: StatusBridge;
   typeAheadBridge?: TypeAheadBridge;
   linkBridge?: LinkBridge;
+  undoRedoBridge?: UndoRedoBridge;
+  analyticsBridge?: AnalyticsBridge;
 }
 
 export type EditorPluginBridges = keyof EditorBridges;

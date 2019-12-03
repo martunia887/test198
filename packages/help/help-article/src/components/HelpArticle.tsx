@@ -1,10 +1,12 @@
 import * as React from 'react';
+import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
+
 import {
   ArticleContentInner,
   ArticleContentTitle,
   ArticleContentTitleLink,
 } from './styled';
-import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
+import ArticleBody from './ArticleBody';
 export interface Props {
   // Article Title
   title?: string;
@@ -12,10 +14,21 @@ export interface Props {
   body?: string;
   // URL used as href value of the Article Title. If is undefined, the title will a regular H2 tag instead of a link
   titleLinkUrl?: string;
+  // Function executed when the article rendering begins
+  onArticleRenderBegin?(): void;
+  // Function executed when the article rendering finishes
+  onArticleRenderDone?(): void;
 }
 
-const HelpArticle: React.SFC<Props> = props => {
-  const { title = '', body = '', titleLinkUrl } = props;
+const HelpArticle = (props: Props) => {
+  const {
+    title = '',
+    body,
+    titleLinkUrl,
+    onArticleRenderBegin,
+    onArticleRenderDone,
+  } = props;
+
   return (
     <ArticleContentInner>
       {title && (
@@ -33,12 +46,11 @@ const HelpArticle: React.SFC<Props> = props => {
           )}
         </ArticleContentTitle>
       )}
-      {body && (
-        <div
-          className={'content-platform-support'}
-          dangerouslySetInnerHTML={{ __html: body }}
-        />
-      )}
+      <ArticleBody
+        body={body}
+        onArticleRenderBegin={onArticleRenderBegin}
+        onArticleRenderDone={onArticleRenderDone}
+      />
     </ArticleContentInner>
   );
 };

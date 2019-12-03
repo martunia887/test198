@@ -80,9 +80,10 @@ export class AnnotationToolbar extends React.Component<AnnotationToolbarProps> {
   }
 
   async checkIsImage() {
-    const mediaClient = getMediaClient({
-      mediaClientConfig: this.props.viewMediaClientConfig,
-    });
+    const mediaClient = getMediaClient(this.props.viewMediaClientConfig);
+    if (!this.props.id) {
+      return;
+    }
     const state = await mediaClient.file.getCurrentState(this.props.id, {
       collectionName: this.props.collection,
     });
@@ -137,14 +138,14 @@ export const renderAnnotationButton = (
 ) => {
   return (view?: EditorView, idx?: number) => {
     const selectedContainer = pluginState.selectedMediaContainerNode();
-    if (!selectedContainer) {
+    if (!selectedContainer || !pluginState.mediaClientConfig) {
       return null;
     }
 
     return (
       <AnnotationToolbar
         key={idx}
-        viewMediaClientConfig={pluginState.mediaClientConfig!}
+        viewMediaClientConfig={pluginState.mediaClientConfig}
         id={selectedContainer.firstChild!.attrs.id}
         collection={selectedContainer.firstChild!.attrs.collection}
         view={view}

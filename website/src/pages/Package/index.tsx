@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Media from 'react-media';
 import { match, RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
@@ -126,7 +126,7 @@ export default function LoadData({
         <FourOhFour />
       ) : (
         <Package
-          {...props as PackageData}
+          {...(props as PackageData)}
           pkgId={pkgId}
           groupId={groupId}
           urlIsExactMatch={match.isExact}

@@ -1,11 +1,7 @@
 import * as React from 'react';
-import { Context, MediaClientConfig } from '@atlaskit/media-core';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { MediaClient } from '../client/media-client';
-import { Omit, XOR } from '@atlaskit/type-helpers';
-
-export interface WithContext {
-  context: Context;
-}
+import { Identifier } from '../identifier';
 
 export interface WithMediaClientConfig {
   mediaClientConfig: MediaClientConfig;
@@ -13,54 +9,65 @@ export interface WithMediaClientConfig {
 
 export interface WithMediaClient {
   mediaClient: MediaClient;
+  identifier?: Identifier;
 }
-
-export type WithContextOrMediaClientConfig = XOR<
-  WithContext,
-  WithMediaClientConfig
->;
 
 const mediaClientsMap = new Map<MediaClientConfig, MediaClient>();
 
 export const getMediaClient = (
-  props: WithContextOrMediaClientConfig,
+  mediaClientConfig: MediaClientConfig,
 ): MediaClient => {
-  const { mediaClientConfig } = props;
-  if (mediaClientConfig) {
-    let mediaClient: MediaClient | undefined = mediaClientsMap.get(
-      mediaClientConfig,
-    );
+  let mediaClient: MediaClient | undefined = mediaClientsMap.get(
+    mediaClientConfig,
+  );
 
-    if (!mediaClient) {
-      mediaClient = new MediaClient(mediaClientConfig);
-      mediaClientsMap.set(mediaClientConfig, mediaClient);
-    }
-    return mediaClient;
+  if (!mediaClient) {
+    mediaClient = new MediaClient(mediaClientConfig);
+    mediaClientsMap.set(mediaClientConfig, mediaClient);
   }
-
-  // Context is only created in ContextFactory. And value of it is MediaClient.
-  return props.context as MediaClient;
+  return mediaClient;
 };
 
-export type WithContextOrMediaClientConfigProps<
-  P extends WithMediaClient
-> = Omit<P, 'mediaClient'> & WithContextOrMediaClientConfig;
+const createEmptyMediaClient = (): MediaClient => {
+  const emptyConfig: MediaClientConfig = {
+    authProvider: () =>
+      Promise.resolve({
+        clientId: '',
+        token: '',
+        baseUrl: '',
+      }),
+  };
+
+  return new MediaClient(emptyConfig);
+};
+
+export type WithMediaClientConfigProps<P extends WithMediaClient> = Omit<
+  P,
+  'mediaClient'
+> &
+  WithMediaClientConfig;
 
 export type WithMediaClientFunction = <P extends WithMediaClient>(
   Component: React.ComponentType<P>,
-) => React.ComponentType<WithContextOrMediaClientConfigProps<P>>;
+) => React.ComponentType<WithMediaClientConfigProps<P>>;
 
 export const withMediaClient: WithMediaClientFunction = <
   P extends WithMediaClient
 >(
   Component: React.ComponentType<P>,
 ) => {
-  return class extends React.Component<WithContextOrMediaClientConfigProps<P>> {
+  return class extends React.Component<WithMediaClientConfigProps<P>> {
     render() {
+      // TODO MS-1552: clean up after we move mediaClientConfig into FileIdentifier
       const props = this.props;
-      return (
-        <Component {...props as any} mediaClient={getMediaClient(this.props)} />
-      );
+      const { mediaClientConfig, identifier } = props;
+      const isExternalIdentifier =
+        identifier && identifier.mediaItemType === 'external-image';
+      const mediaClient: MediaClient = isExternalIdentifier
+        ? createEmptyMediaClient()
+        : getMediaClient(mediaClientConfig);
+
+      return <Component {...(props as any)} mediaClient={mediaClient} />;
     }
   };
 };

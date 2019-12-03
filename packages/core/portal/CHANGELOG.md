@@ -1,5 +1,50 @@
 # @atlaskit/portal
 
+## 3.1.3
+
+### Patch Changes
+
+- [patch][f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+
+  Corrects the type exports for typography, colors, elevation and layers. If you were doing any dynamic code it may break you. Refer to the [upgrade guide](/packages/core/theme/docs/upgrade-guide) for help upgrading.- Updated dependencies [c1d4898af5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c1d4898af5):
+
+- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+  - @atlaskit/icon@19.0.11
+  - @atlaskit/theme@9.3.0
+
+## 3.1.2
+
+### Patch Changes
+
+- [patch][adc048de7e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/adc048de7e):
+
+  Fixing ie11 bug caused by using Event constructor
+
+## 3.1.1
+
+**Warning: Do not use this version. It has been deprecated**
+
+It is broken for ie11 if you are not polyfilling the `new Event` constructor
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 3.1.0
+
+**Warning: Do not use this version. It has been deprecated**
+
+It is broken for ie11 if you are not polyfilling the `new Event` constructor
+
+### Minor Changes
+
+- [minor][bf8796cffa](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bf8796cffa):
+
+  Add mount and unmount events to @atlaskit/portal
+
 ## 3.0.13
 
 - Updated dependencies [a75dfaad67](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a75dfaad67):

@@ -15,6 +15,7 @@ export interface BadgeProps {
    * Supersedes the `value` props. The value displayed within the badge. A string can be provided for
    * custom-formatted numbers, however badge should only be used in cases where you want to represent
    * a number.
+   * Use a [lozenge](/packages/core/lozenge) for non-numeric information.
    */
   children?: number | string;
 
@@ -23,6 +24,9 @@ export interface BadgeProps {
 
   /** The theme the component should use. */
   theme?: ThemeProp<ThemeTokens, ThemeProps>;
+
+  /** A `testId` prop is provided for specified elements, which is a unique string that appears as a data attribute `data-testid` in the rendered code, serving as a hook for automated tests */
+  testId?: string;
 }
 
 const Badge: FC<BadgeProps> = ({
@@ -30,14 +34,15 @@ const Badge: FC<BadgeProps> = ({
   appearance = 'default',
   children = 0,
   max = 99,
-}) => {
+  testId,
+}: BadgeProps) => {
   return (
     <Theme.Provider value={theme}>
       <GlobalTheme.Consumer>
         {({ mode }: GlobalThemeTokens) => (
           <Theme.Consumer appearance={appearance} mode={mode}>
             {(tokens: ThemeTokens) => (
-              <Container {...tokens}>
+              <Container {...tokens} data-testid={testId}>
                 {typeof children === 'string' ? (
                   children
                 ) : (

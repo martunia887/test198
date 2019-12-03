@@ -281,10 +281,14 @@ class ExampleEditorComponent extends React.Component<
     mediaOptions: new Map(),
   };
 
+  private mediaProviderTimeoutId: number | undefined;
+
   async componentDidMount() {
     const { mediaOptions } = this.state;
     // Simulate adding mediaProvider async
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => {
+      this.mediaProviderTimeoutId = window.setTimeout(resolve, 1000);
+    });
     mediaOptions.set(
       defaultCollectionName,
       getMediaProvider(defaultCollectionName),
@@ -294,6 +298,10 @@ class ExampleEditorComponent extends React.Component<
       getMediaProvider(defaultMediaPickerCollectionName),
     );
     this.setState({ mediaOptions });
+  }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.mediaProviderTimeoutId);
   }
 
   componentDidUpdate(prevProps: EditorProps) {
@@ -350,6 +358,7 @@ class ExampleEditorComponent extends React.Component<
       allowMediaSingle: true,
       allowResizing: true,
       allowAnnotation: true,
+      UNSAFE_allowAltTextOnImages: true,
     };
 
     return (
@@ -365,8 +374,6 @@ class ExampleEditorComponent extends React.Component<
                   quickInsert={{
                     provider: Promise.resolve(quickInsertProvider),
                   }}
-                  allowCodeBlocks={{ enableKeybindingsForIDE: true }}
-                  allowLists={true}
                   allowTextColor={true}
                   allowTables={{
                     advanced: true,

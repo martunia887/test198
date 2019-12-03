@@ -18,12 +18,14 @@ import withSortedPageRows, {
 } from '../../hoc/withSortedPageRows';
 
 export interface Props extends WithSortedPageRowsProps {
+  highlightedRowIndex?: number;
   onRankStart: (rankStart: RankStart) => void;
   onRankEnd: (rankEnd: RankEnd) => void;
   isFixedSize: boolean;
   isRanking: boolean;
   isRankingDisabled: boolean;
   head?: HeadType;
+  testId?: string;
 }
 
 // computes destination of ranking
@@ -89,11 +91,13 @@ export class RankableBody extends React.Component<Props, {}> {
 
   render() {
     const {
+      highlightedRowIndex,
       pageRows,
       head,
       isFixedSize,
       isRanking,
       isRankingDisabled,
+      testId,
     } = this.props;
 
     return (
@@ -106,7 +110,11 @@ export class RankableBody extends React.Component<Props, {}> {
           isDropDisabled={isRankingDisabled}
         >
           {provided => (
-            <tbody ref={provided.innerRef} {...provided.droppableProps}>
+            <tbody
+              data-testid={testId}
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
               {pageRows.map((row, rowIndex) => (
                 <TableRow
                   head={head}
@@ -116,6 +124,7 @@ export class RankableBody extends React.Component<Props, {}> {
                   rowIndex={rowIndex}
                   row={row}
                   isRankingDisabled={isRankingDisabled}
+                  isHighlighted={highlightedRowIndex === rowIndex}
                 />
               ))}
               {provided.placeholder}

@@ -4,9 +4,9 @@ import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 
 import {
-  ProviderFactory,
   ImageLoaderProps,
   withImageLoader,
+  ContextIdentifierProvider,
 } from '@atlaskit/editor-common';
 
 import {
@@ -36,13 +36,14 @@ export interface MediaNodeProps extends ReactNodeProps, ImageLoaderProps {
   view: EditorView;
   node: PMNode;
   getPos: ProsemirrorGetPosHandler;
-  providerFactory?: ProviderFactory;
+  contextIdentifierProvider?: ContextIdentifierProvider;
   cardDimensions: CardDimensions;
   isMediaSingle?: boolean;
   onClick?: CardOnClickCallback;
-  onExternalImageLoaded?: (
-    dimensions: { width: number; height: number },
-  ) => void;
+  onExternalImageLoaded?: (dimensions: {
+    width: number;
+    height: number;
+  }) => void;
   allowLazyLoading?: boolean;
   mediaProvider?: Promise<MediaProvider>;
   viewMediaClientConfig?: MediaClientConfig;
@@ -66,7 +67,9 @@ class MediaNode extends Component<MediaNodeProps> {
       this.props.node.attrs.id !== nextProps.node.attrs.id ||
       this.props.node.attrs.collection !== nextProps.node.attrs.collection ||
       this.props.cardDimensions.height !== nextProps.cardDimensions.height ||
-      this.props.cardDimensions.width !== nextProps.cardDimensions.width
+      this.props.cardDimensions.width !== nextProps.cardDimensions.width ||
+      this.props.contextIdentifierProvider !==
+        nextProps.contextIdentifierProvider
     ) {
       return true;
     }
@@ -99,9 +102,10 @@ class MediaNode extends Component<MediaNodeProps> {
       allowLazyLoading,
       viewMediaClientConfig,
       uploadComplete,
+      contextIdentifierProvider,
     } = this.props;
 
-    const { id, type, collection, url } = node.attrs;
+    const { id, type, collection, url, alt } = node.attrs;
 
     if (
       type !== 'external' &&
@@ -123,13 +127,18 @@ class MediaNode extends Component<MediaNodeProps> {
             mediaItemType: 'file',
             collectionName: collection!,
           };
+    const contextId =
+      contextIdentifierProvider && contextIdentifierProvider.objectId;
+    // mediaClientConfig is not needed for "external" case. So we have to cheat here.
+    // there is a possibility mediaClientConfig will be part of a identifier,
+    // so this might be not an issue
+    const mediaClientConfig: MediaClientConfig = viewMediaClientConfig || {
+      authProvider: () => ({} as any),
+    };
 
     return (
       <Card
-        // mediaClientConfig is not needed for "external" case. So we have to cheat here.
-        // there is a possibility mediaClientConfig will be part of a identifier,
-        // so this might be not an issue
-        mediaClientConfig={viewMediaClientConfig!}
+        mediaClientConfig={mediaClientConfig}
         resizeMode="stretchy-fit"
         dimensions={cardDimensions}
         identifier={identifier}
@@ -139,6 +148,8 @@ class MediaNode extends Component<MediaNodeProps> {
         onClick={onClick}
         useInlinePlayer={allowLazyLoading}
         isLazy={allowLazyLoading}
+        contextId={contextId}
+        alt={alt}
       />
     );
   }

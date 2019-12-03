@@ -1,13 +1,18 @@
 import { Node as PMNode, Schema, Fragment, Slice } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { safeInsert, hasParentNodeOfType } from 'prosemirror-utils';
-import { EditorState, Selection } from 'prosemirror-state';
+import {
+  safeInsert as pmSafeInsert,
+  hasParentNodeOfType,
+} from 'prosemirror-utils';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { MediaSingleLayout, MediaSingleAttributes } from '@atlaskit/adf-schema';
 import {
   calcPxFromPct,
   breakoutWideScaleRatio,
   akEditorBreakoutPadding,
 } from '@atlaskit/editor-common';
+
+import { getEditorProps } from '../../shared-context';
 
 import {
   isImage,
@@ -31,6 +36,7 @@ import {
   InputMethodInsertMedia,
   InsertEventPayload,
 } from '../../analytics';
+import { safeInsert } from '../../../utils/insert';
 
 export const wrappedLayouts: MediaSingleLayout[] = [
   'wrap-left',
@@ -92,7 +98,11 @@ function insertNodesWithOptionalParagraph(
 
     tr.replaceSelection(new Slice(Fragment.from(nodes), 0, openEnd));
     if (inputMethod) {
-      addAnalytics(tr, getInsertMediaAnalytics(inputMethod, fileExtension));
+      addAnalytics(
+        state,
+        tr,
+        getInsertMediaAnalytics(inputMethod, fileExtension),
+      );
     }
 
     if (dispatch) {
@@ -149,9 +159,10 @@ export const insertMediaSingleNode = (
 
   const { state, dispatch } = view;
   const grandParent = state.selection.$from.node(-1);
-  const node = createMediaSingleNode(state.schema, collection)(
-    mediaState as MediaSingleState,
-  );
+  const node = createMediaSingleNode(
+    state.schema,
+    collection,
+  )(mediaState as MediaSingleState);
   const shouldSplit =
     grandParent && grandParent.type.validContent(Fragment.from(node));
   let fileExtension: string | undefined;
@@ -169,15 +180,22 @@ export const insertMediaSingleNode = (
       dispatch,
     );
   } else {
-    let tr = safeInsert(
-      shouldAddParagraph(view.state)
+    const { allowNewInsertionBehaviour } = getEditorProps(view.state);
+    let tr: Transaction<any> | null = null;
+    if (allowNewInsertionBehaviour) {
+      tr = safeInsert(node, state.selection.from)(state.tr);
+    }
+
+    if (!tr) {
+      const content = shouldAddParagraph(view.state)
         ? Fragment.fromArray([node, state.schema.nodes.paragraph.create()])
-        : node,
-      undefined,
-      true,
-    )(state.tr);
+        : node;
+      tr = pmSafeInsert(content, undefined, true)(state.tr);
+    }
+
     if (inputMethod) {
       tr = addAnalytics(
+        state,
         tr,
         getInsertMediaAnalytics(inputMethod, fileExtension),
       );
@@ -218,22 +236,39 @@ export function transformSliceForMedia(slice: Slice, schema: Schema) {
     table,
     bulletList,
     orderedList,
+    media,
+    expand,
   } = schema.nodes;
 
   return (selection: Selection) => {
+    let newSlice = slice;
     if (
-      hasParentNodeOfType([layoutSection, table, bulletList, orderedList])(
-        selection,
-      )
+      hasParentNodeOfType([
+        layoutSection,
+        table,
+        bulletList,
+        orderedList,
+        expand,
+      ])(selection)
     ) {
-      return mapSlice(slice, node =>
+      newSlice = mapSlice(newSlice, node =>
         node.type.name === 'mediaSingle'
           ? mediaSingle.createChecked({}, node.content, node.marks)
           : node,
       );
     }
 
-    return slice;
+    newSlice = mapSlice(newSlice, node =>
+      node.type.name === 'media' && node.attrs.type === 'external'
+        ? media.createChecked(
+            { ...node.attrs, __external: true },
+            node.content,
+            node.marks,
+          )
+        : node,
+    );
+
+    return newSlice;
   };
 }
 

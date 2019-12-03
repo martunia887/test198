@@ -1,58 +1,100 @@
-import { tableResizeHandleWidth } from '@atlaskit/editor-common';
 import { TableCssClassName as ClassName } from '../types';
-import { closestElement } from '../../../utils';
+import { closestElement, containsClassName } from '../../../utils';
 import { tableToolbarSize } from '../ui/styles';
-import { ResizeState } from '../pm-plugins/table-resizing/utils';
 
 export const isCell = (node: HTMLElement): boolean => {
-  return node && ['TH', 'TD'].indexOf(node.tagName) > -1;
-};
-
-export const isCornerButton = (node: HTMLElement): boolean => {
-  const cl = node.classList;
-  return cl.contains(ClassName.CONTROLS_CORNER_BUTTON);
-};
-
-export const isInsertRowButton = (node: HTMLElement) => {
-  const cl = node.classList;
   return (
-    cl.contains(ClassName.CONTROLS_INSERT_ROW) ||
-    closestElement(node, `.${ClassName.CONTROLS_INSERT_ROW}`) ||
-    (cl.contains(ClassName.CONTROLS_BUTTON_OVERLAY) &&
-      closestElement(node, `.${ClassName.ROW_CONTROLS}`))
+    node &&
+    (['TH', 'TD'].indexOf(node.tagName) > -1 ||
+      !!closestElement(node, `.${ClassName.TABLE_HEADER_CELL}`) ||
+      !!closestElement(node, `.${ClassName.TABLE_CELL}`))
   );
 };
+
+export const isCornerButton = (node: HTMLElement): boolean =>
+  containsClassName(node, ClassName.CONTROLS_CORNER_BUTTON);
+
+export const isInsertRowButton = (node: HTMLElement) =>
+  containsClassName(node, ClassName.CONTROLS_INSERT_ROW) ||
+  closestElement(node, `.${ClassName.CONTROLS_INSERT_ROW}`) ||
+  (containsClassName(node, ClassName.CONTROLS_BUTTON_OVERLAY) &&
+    closestElement(node, `.${ClassName.ROW_CONTROLS}`));
 
 export const getColumnOrRowIndex = (target: HTMLElement): [number, number] => [
   parseInt(target.getAttribute('data-start-index') || '-1', 10),
   parseInt(target.getAttribute('data-end-index') || '-1', 10),
 ];
 
-export const isColumnControlsDecorations = (node: HTMLElement): boolean => {
-  const cl = node.classList;
-  return cl.contains(ClassName.COLUMN_CONTROLS_DECORATIONS);
-};
+export const isColumnControlsDecorations = (node: HTMLElement): boolean =>
+  containsClassName(node, ClassName.COLUMN_CONTROLS_DECORATIONS);
 
-export const isRowControlsButton = (node: HTMLElement): boolean => {
-  const cl = node.classList;
+export const isRowControlsButton = (node: HTMLElement): boolean =>
+  containsClassName(node, ClassName.ROW_CONTROLS_BUTTON) ||
+  containsClassName(node, ClassName.NUMBERED_COLUMN_BUTTON);
 
-  return (
-    cl.contains(ClassName.ROW_CONTROLS_BUTTON) ||
-    cl.contains(ClassName.NUMBERED_COLUMN_BUTTON)
-  );
-};
+export const isResizeHandleDecoration = (node: HTMLElement): boolean =>
+  containsClassName(node, ClassName.RESIZE_HANDLE_DECORATION);
 
-export const isTableControlsButton = (node: HTMLElement): boolean => {
-  const cl = node.classList;
+export const isTableControlsButton = (node: HTMLElement): boolean =>
+  containsClassName(node, ClassName.CONTROLS_BUTTON) ||
+  containsClassName(node, ClassName.ROW_CONTROLS_BUTTON_WRAP);
 
-  return (
-    cl.contains(ClassName.CONTROLS_BUTTON) ||
-    cl.contains(ClassName.ROW_CONTROLS_BUTTON_WRAP)
-  );
-};
-
+/*
+ * This function returns which side of a given element the mouse cursor is,
+ * using as a base the half of the width by default, for example:
+ *
+ * legend
+ * ⌖ = mouse pointer
+ * ▒ = gap
+ *
+ * given this box:
+ * ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+ * ┃                    ┊                     ┃
+ * ┃       left         ┊        right        ┃
+ * ┃                    ┊                     ┃
+ * ┗━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━┛
+ *
+ * if the mouse is on the left, it will return `left`,
+ * if it is on the right it will return `right`.
+ *
+ * You can extend this behavior using the parameter `gapInPixels`
+ * to determinate if the mouse is inside of a gap for each side,
+ * for example:
+ *
+ * given `gapInPixels` is `5`
+ * and given this box:
+ * ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+ * ┃▒▒▒▒▒               ┊                ▒▒▒▒▒┃
+ * ┃▒▒▒▒▒   left        ┊        right   ▒▒▒▒▒┃
+ * ┃▒▒▒▒▒               ┊                ▒▒▒▒▒┃
+ * ┗━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━┛
+ *
+ * if the mouse cursor is inside of the gap like that:
+ *
+ * ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+ * ┃▒▒▒▒▒               ┊                ▒▒▒▒▒┃
+ * ┃▒▒⌖▒▒   left        ┊        right   ▒▒▒▒▒┃
+ * ┃▒▒▒▒▒               ┊                ▒▒▒▒▒┃
+ * ┗━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━┛
+ *
+ * the function will return `left` because the mouse is inside of the gap on the left side.
+ *
+ * if the mouse cursor is outside of the gap like that:
+ *
+ * ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+ * ┃▒▒▒▒▒               ┊                ▒▒▒▒▒┃
+ * ┃▒▒▒▒▒   left  ⌖     ┊        right   ▒▒▒▒▒┃
+ * ┃▒▒▒▒▒               ┊                ▒▒▒▒▒┃
+ * ┗━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━┛
+ *
+ * the function will return `null` because the mouse is inside of left
+ * but is outside of the gap.
+ *
+ * the same is valid to the right side.
+ */
 export const getMousePositionHorizontalRelativeByElement = (
   mouseEvent: MouseEvent,
+  gapInPixels?: number,
 ): 'left' | 'right' | null => {
   const element = mouseEvent.target;
   if (element instanceof HTMLElement) {
@@ -61,8 +103,18 @@ export const getMousePositionHorizontalRelativeByElement = (
       return null;
     }
 
-    const x = mouseEvent.clientX - elementRect.left;
-    return x / elementRect.width > 0.5 ? 'right' : 'left';
+    const { left, width } = elementRect;
+    const x = mouseEvent.clientX - left;
+
+    if (!gapInPixels) {
+      return x / width > 0.5 ? 'right' : 'left';
+    } else {
+      if (x <= gapInPixels) {
+        return 'left';
+      } else if (x >= width - gapInPixels) {
+        return 'right';
+      }
+    }
   }
 
   return null;
@@ -87,8 +139,6 @@ export const getMousePositionVerticalRelativeByElement = (
 
 export const updateResizeHandles = (
   tableRef: HTMLElement | null | undefined,
-  resizeState?: ResizeState,
-  index?: number,
 ) => {
   if (!tableRef) {
     return;
@@ -96,35 +146,15 @@ export const updateResizeHandles = (
   const height = tableRef.offsetHeight + tableToolbarSize;
   // see ED-7600
   const nodes = Array.from(
-    tableRef.querySelectorAll(`.${ClassName.RESIZE_HANDLE}`),
-  ) as Array<HTMLElement>;
+    tableRef.querySelectorAll(`.${ClassName.RESIZE_HANDLE}`) as NodeListOf<
+      HTMLElement
+    >,
+  );
   if (!nodes || !nodes.length) {
     return;
   }
 
-  if (resizeState && typeof index === 'number' && nodes[index]) {
-    nodes.forEach((node, idx) => {
-      if (index !== idx) {
-        node.style.display = `none`;
-      }
-    });
-    const colSpanIndex = parseInt(
-      nodes[index].getAttribute('data-colspan-index') || '-1',
-      10,
-    );
-    const left =
-      colSpanIndex > 0
-        ? resizeState.cols
-            .slice(index - colSpanIndex, index + 1)
-            .reduce((acc, col) => acc + col.width, 0)
-        : resizeState.cols[index].width;
-    const offset = tableResizeHandleWidth / 2 + 4;
-    nodes[index].style.left = `${left - offset}px`;
-    nodes[index].style.height = `${height}px`;
-  } else {
-    nodes.forEach(node => {
-      node.style.height = `${height}px`;
-      node.style.display = `block`;
-    });
-  }
+  nodes.forEach(node => {
+    node.style.height = `${height}px`;
+  });
 };

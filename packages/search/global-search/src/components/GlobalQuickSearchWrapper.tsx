@@ -206,6 +206,11 @@ export interface Props {
    * The user's account id. null if the user is anonymous.
    */
   userId: string | null;
+
+  /**
+   * Check if Jira's people profile's page is enabled.
+   */
+  isJiraPeopleProfilesEnabled?: boolean;
 }
 
 const ConfluenceContainerWithFeedback = withFeedbackButton(
@@ -316,6 +321,7 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
       showFeedbackCollector,
       feedbackCollectorProps,
       confluenceUrl,
+      isJiraPeopleProfilesEnabled,
     } = this.props;
 
     const commonProps = {
@@ -353,12 +359,11 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
         <JiraQuickSearchContainer
           {...commonProps}
           appPermission={appPermission}
+          isJiraPeopleProfilesEnabled={isJiraPeopleProfilesEnabled}
         />
       );
     } else {
-      const errorMessage = `Invalid product type, product ${
-        this.props.context
-      } is unsupported`;
+      const errorMessage = `Invalid product type, product ${this.props.context} is unsupported`;
 
       if (logger) {
         logger.safeError(errorMessage);

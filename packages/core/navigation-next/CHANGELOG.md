@@ -1,5 +1,171 @@
 # @atlaskit/navigation-next
 
+## 7.2.0
+
+### Minor Changes
+
+- [minor][920519979d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/920519979d):
+
+  Update collapse affordance icon
+
+## 7.1.3
+
+### Patch Changes
+
+- [patch][3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  Make PopupSelect correctly pass props. Forcing update of @atlaskit/select for all other packages- Updated dependencies [3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  - @atlaskit/select@11.0.2
+
+## 7.1.2
+
+### Patch Changes
+
+- [patch][75fa61803d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/75fa61803d):
+
+  Reverting broken code
+
+## 7.1.1
+
+- Updated dependencies [30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):
+  - @atlaskit/inline-dialog@12.1.5
+  - @atlaskit/modal-dialog@10.3.6
+  - @atlaskit/select@11.0.0
+  - @atlaskit/button@13.3.4
+  - @atlaskit/logo@12.2.2
+
+## 7.1.0
+
+### Minor Changes
+
+- [minor][d8b3e9833e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d8b3e9833e):
+
+  global-navigation height resizes for mobile browsers
+
+## 7.0.4
+
+### Patch Changes
+
+- [patch][ab32a88243](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ab32a88243):
+
+  Use explicit imports in `NavigationProvider` to reduce the size of the `NavigationProvider` entry point
+
+## 7.0.3
+
+- Updated dependencies [355e7ca2ea](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/355e7ca2ea):
+  - @atlaskit/atlassian-navigation@0.6.0
+
+## 7.0.2
+
+### Patch Changes
+
+- [patch][1450c5f1f5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1450c5f1f5):
+
+  Fix resize not working on FF when connected to an external monitor
+
+## 7.0.1
+
+- Updated dependencies [48640192dc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/48640192dc):
+  - @atlaskit/atlassian-navigation@0.5.0
+
+## 7.0.0
+
+### Major Changes
+
+- [major][4778521db3](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4778521db3):
+
+  ## What changed and why was this change made?
+
+  Lazy load react-select and react-beautiful-dnd to bring down the bundle size. This reduces the main navigation-next bundle by 33% (Drops from 184kb to 124kb un-minified)
+
+  ## How to consume the breaking change?
+
+  Although this is a major version, there's no API change or any other noticable change in the behaviour. It should *just work*™️ like before. But do perform a thorough round of testing to ensure nothing breaks unexpectedly. Areas to stress would be parts of navigation that use the Switcher component and any of the draggable components.
+
+## 6.8.3
+
+- Updated dependencies [f9b5e24662](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9b5e24662):
+  - @atlaskit/icon-object@5.0.0
+  - @atlaskit/icon@19.0.8
+
+## 6.8.2
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 6.8.1
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 6.8.0
+
+### Minor Changes
+
+- [minor][6cc95a6c66](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6cc95a6c66):
+
+  - Support dynamic removal of contextual navigation via the `showContextualNavigation` prop
+  - Support content dataset that targets the page content element
+  - Remove re-renders occurring from the resize control hover effect
+  - Reduce re-renders occurring from the resize transition
+
+## 6.7.7
+
+### Patch Changes
+
+- [patch][c479e7eb8f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c479e7eb8f):
+
+  Fixing nav resize button render issue.
+
+## 6.7.6
+
+### Patch Changes
+
+- [patch][636c5850ae](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/636c5850ae):
+
+  Fix missing horizontal navigation re-renders
+
+## 6.7.5
+
+### Patch Changes
+
+- [patch][83b9b5e4d0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/83b9b5e4d0):
+
+  Bumping devDeps for new atlassian-nav component
+
+## 6.7.4
+
+### Patch Changes
+
+- [patch][f7eb0a4886](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f7eb0a4886):
+
+  Ensuring new horizontal nav allows for scrollbar width. Using 'vw' units prevents this.
+
+## 6.7.3
+
+- Updated dependencies [c5939cb73d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c5939cb73d):
+  - @atlaskit/app-navigation@0.4.0
+
+## 6.7.2
+
+### Patch Changes
+
+- [patch][197aa4ed2c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/197aa4ed2c):
+
+  Use context hooks in favour of emotion-theming
+
+## 6.7.1
+
+- Updated dependencies [382273ee49](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/382273ee49):
+  - @atlaskit/app-navigation@0.3.0
+
 ## 6.7.0
 
 ### Minor Changes

@@ -27,4 +27,7 @@ export default interface NativeToWebBridge {
   onLinkUpdate(text: string, url: string): void;
   insertBlockType(type: string): void;
   scrollToSelection(): void;
+  undo(): void;
+  redo(): void;
+  setKeyboardControlsHeight(height: string): void;
 }

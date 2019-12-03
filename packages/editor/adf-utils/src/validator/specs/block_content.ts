@@ -13,11 +13,12 @@ export default [
   'blockquote',
   'rule',
   'mediaGroup',
-  'applicationCard',
   'decisionList',
   'taskList',
+  'nestableTaskList',
   'table',
   'extension',
   'bodiedExtension',
+  'expand',
   'blockCard',
 ];

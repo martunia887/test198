@@ -4,12 +4,12 @@ import { Mark as PMMark } from 'prosemirror-model';
 
 export type InputRuleWithHandler = InputRule & { handler: InputRuleHandler };
 
-export type InputRuleHandler = ((
+export type InputRuleHandler = (
   state: EditorState,
   match: Array<string>,
   start: number,
   end: number,
-) => Transaction | null);
+) => Transaction | null;
 
 export function defaultInputRuleHandler(
   inputRule: InputRuleWithHandler,
@@ -46,14 +46,6 @@ export function createInputRule(
 // It was introduced because of https://github.com/ProseMirror/prosemirror/issues/262
 // This can be used in an input rule regex to be able to include or exclude such nodes.
 export const leafNodeReplacementCharacter = '\ufffc';
-
-/* eslint-disable no-bitwise */
-export const uuid = () =>
-  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    const r = (Math.random() * 16) | 0;
-    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-  });
-/* eslint-enable no-bitwise */
 
 const hasUnsupportedMarkForBlockInputRule = (
   state: EditorState,

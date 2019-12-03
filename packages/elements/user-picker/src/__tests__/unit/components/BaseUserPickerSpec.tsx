@@ -16,6 +16,7 @@ import {
   OptionData,
   Team,
   User,
+  Group,
   UserPickerProps,
   UserType,
 } from '../../../types';
@@ -389,6 +390,8 @@ describe('BaseUserPicker', () => {
     describe('with session id', () => {
       let analyticsSpy: jest.SpyInstance;
       beforeEach(() => {
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
         analyticsSpy = jest.spyOn(analytics, 'startSession').mockReturnValue({
           id: 'random-session-id',
         });
@@ -778,7 +781,7 @@ describe('BaseUserPicker', () => {
     expect(preventDefault).toHaveBeenCalledTimes(0);
   });
 
-  describe('teams', () => {
+  describe('groups and teams', () => {
     const teamOptions: Team[] = [
       {
         id: 'team-123',
@@ -794,13 +797,22 @@ describe('BaseUserPicker', () => {
       },
     ];
 
+    const groupOptions: Group[] = [
+      { id: 'group-90210', name: 'the-bae-goals-group', type: 'group' },
+      { id: 'group-111', name: 'groups-that-group-groups', type: 'group' },
+    ];
+
     const selectableTeamOptions: Option[] = optionToSelectableOptions(
       teamOptions,
     );
-
-    const mixedOptions: OptionData[] = (options as OptionData[]).concat(
-      teamOptions,
+    const selectableGroupOptions: Option[] = optionToSelectableOptions(
+      groupOptions,
     );
+
+    const mixedOptions: OptionData[] = (options as OptionData[])
+      .concat(teamOptions)
+      .concat(groupOptions);
+
     const selectableMixedOptions: Option[] = optionToSelectableOptions(
       mixedOptions,
     );
@@ -811,13 +823,19 @@ describe('BaseUserPicker', () => {
       expect(select.prop('options')).toEqual(selectableTeamOptions);
     });
 
-    it('should render select with both teams and users', () => {
+    it('should render select with only groups', () => {
+      const component = shallowUserPicker({ options: groupOptions });
+      const select = component.find(Select);
+      expect(select.prop('options')).toEqual(selectableGroupOptions);
+    });
+
+    it('should render select with teams, groups, and users', () => {
       const component = shallowUserPicker({ options: mixedOptions });
       const select = component.find(Select);
       expect(select.prop('options')).toEqual(selectableMixedOptions);
     });
 
-    it('should be able to multi-select a mix of users and teams', () => {
+    it('should be able to multi-select a mix of teams, groups, and users', () => {
       const onChange = jest.fn();
       const component = shallowUserPicker({
         options: mixedOptions,
@@ -830,7 +848,7 @@ describe('BaseUserPicker', () => {
       });
 
       expect(onChange).toHaveBeenCalledWith(
-        [mixedOptions[0], mixedOptions[1], mixedOptions[2], mixedOptions[3]],
+        mixedOptions.slice(0, 6),
         'select-option',
       );
     });
@@ -891,7 +909,7 @@ describe('BaseUserPicker', () => {
       input.simulate('keyDown', { keyCode: 40 });
       input.simulate('keyDown', { keyCode: 38 });
       input.simulate('keyDown', { keyCode: 13 });
-      component.find<any>(Select).prop('onChange')(
+      component.find(Select).prop('onChange')(
         optionToSelectableOption(options[0]),
         {
           action: 'select-option',
@@ -931,7 +949,7 @@ describe('BaseUserPicker', () => {
       input.simulate('keyDown', { keyCode: 40 });
       input.simulate('keyDown', { keyCode: 40 });
       input.simulate('keyDown', { keyCode: 38 });
-      component.find<any>(Select).prop('onChange')(
+      component.find(Select).prop('onChange')(
         optionToSelectableOption(options[0]),
         {
           action: 'select-option',
@@ -966,7 +984,7 @@ describe('BaseUserPicker', () => {
     it('should trigger cleared event', () => {
       const input = component.find('input');
       input.simulate('focus');
-      component.find<any>(Select).prop('onChange')(
+      component.find(Select).prop('onChange')(
         optionToSelectableOption(options[0]),
         {
           action: 'clear',
@@ -997,7 +1015,7 @@ describe('BaseUserPicker', () => {
       component.setProps({ isMulti: true });
       const input = component.find('input');
       input.simulate('focus');
-      component.find<any>(Select).prop('onChange')([], {
+      component.find(Select).prop('onChange')([], {
         action: 'remove-value',
         removedValue: optionToSelectableOption(options[0]),
       });
@@ -1025,7 +1043,7 @@ describe('BaseUserPicker', () => {
       component.setProps({ isMulti: true });
       const input = component.find('input');
       input.simulate('focus');
-      component.find<any>(Select).prop('onChange')([], {
+      component.find(Select).prop('onChange')([], {
         action: 'pop-value',
         removedValue: undefined,
       });

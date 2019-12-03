@@ -65,8 +65,6 @@ describe('table plugin', () => {
         analyticsHandler: trackEvent,
         allowTables: tableOptions,
         allowAnalyticsGASV3: true,
-        allowLists: true,
-        allowCodeBlocks: true,
         media: {
           allowMediaSingle: true,
         },
@@ -112,6 +110,14 @@ describe('table plugin', () => {
   });
 
   describe('insertColumn(number)', () => {
+    it('should not insert a column if selection is not in table', () => {
+      const { editorView } = editor(doc(p('{<>}')));
+
+      expect(insertColumn(2)(editorView.state, editorView.dispatch)).toBe(
+        false,
+      );
+    });
+
     describe('when table has 2 columns', () => {
       describe('when it called with 0', () => {
         it("it should prepend a new column and move cursor inside it's first cell", () => {
@@ -292,6 +298,12 @@ describe('table plugin', () => {
             ),
           ),
         );
+      });
+
+      it('should not insert a row if selection is not in table', () => {
+        const { editorView } = editor(doc(p('{<>}')));
+
+        expect(insertRow(2)(editorView.state, editorView.dispatch)).toBe(false);
       });
 
       it('copies the structure from a tableHeader', () => {

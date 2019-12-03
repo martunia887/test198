@@ -5,6 +5,7 @@ import {
   decisionList,
   taskItem,
   taskList,
+  nestableTaskList,
 } from '@atlaskit/adf-schema';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorPlugin } from '../../types';
@@ -54,11 +55,15 @@ const quickInsertItem = (
 };
 
 const tasksAndDecisionsPlugin = (): EditorPlugin => ({
-  nodes() {
+  name: 'taskDecision',
+  nodes(editorProps) {
     return [
       { name: 'decisionList', node: decisionList },
       { name: 'decisionItem', node: decisionItem },
-      { name: 'taskList', node: taskList },
+      {
+        name: 'taskList',
+        node: editorProps.allowNestedTasks ? nestableTaskList : taskList,
+      },
       { name: 'taskItem', node: taskItem },
     ];
   },

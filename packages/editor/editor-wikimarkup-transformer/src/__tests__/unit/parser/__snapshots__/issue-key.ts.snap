@@ -184,6 +184,7 @@ Object {
           "attrs": Object {
             "__contextId": null,
             "__displayType": null,
+            "__external": false,
             "__fileMimeType": null,
             "__fileName": null,
             "__fileSize": null,
@@ -219,7 +220,7 @@ Object {
     },
     Object {
       "attrs": Object {
-        "language": "java",
+        "language": null,
         "uniqueId": null,
       },
       "content": Array [

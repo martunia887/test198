@@ -4,7 +4,7 @@ import { PreviewData } from './types';
 import { Card } from '@atlaskit/media-card';
 import { FileIdentifier } from '@atlaskit/media-client';
 import { createUploadMediaClientConfig } from '@atlaskit/media-test-helpers';
-import { Preview, ImagePreview } from '../src/domain/preview';
+import { Preview, ImagePreview } from '../src/types';
 
 const mediaClientConfig = createUploadMediaClientConfig();
 
@@ -12,9 +12,7 @@ export class UploadPreview extends React.Component<PreviewData> {
   getPreviewInfo(preview: Preview): string | null {
     if ('scaleFactor' in preview) {
       const imgPreview = preview as ImagePreview;
-      return `${imgPreview.dimensions.width} x ${
-        imgPreview.dimensions.height
-      } @${imgPreview.scaleFactor}x`;
+      return `${imgPreview.dimensions.width} x ${imgPreview.dimensions.height} @${imgPreview.scaleFactor}x`;
     } else {
       return null;
     }

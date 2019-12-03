@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-
+// @flow
 const fse = require('fs-extra');
 const path = require('path');
 const util = require('util');
-const child_process = require('child_process');
+const childProcess = require('child_process');
 const rimraf = require('rimraf');
 const pLimit = require('p-limit');
 const { getNpmDistPath, getAllPublicPackages } = require('./utils');
 
-const exec = util.promisify(child_process.exec);
+const exec = util.promisify(childProcess.exec);
 
 // Limit fetches to at most 25 in parallel
 const limit = pLimit(25);
@@ -49,10 +49,10 @@ async function fetchDistFromNpm(pkgName, pkgVersion, forceRefetch) {
   const lockFilePath = path.join(distPath, lockFileName);
   fse.closeSync(fse.openSync(lockFilePath, 'w'));
   const { stdout } = await limit(() =>
-    exec(`npm pack ${pkgName}@${pkgVersion}`),
+    exec(`npm pack ${pkgName}@${pkgVersion} --silent`),
   );
   const distTarballPath = stdout.split('\n')[0];
-  await exec(`tar -C ${distPath} -xvf ${distTarballPath}`);
+  await exec(`tar -C ${distPath} -xf ${distTarballPath}`);
 
   await fse.move(distTarballPath, path.join(distPath, distTarballPath));
   fse.unlinkSync(lockFilePath);
@@ -73,7 +73,7 @@ async function fetchDistFromNpm(pkgName, pkgVersion, forceRefetch) {
  *
  * --refetch - force refetch of bundle from npm
  */
-async function main(pkgName, opts) {
+async function main(pkgName /*:string */, opts /*: Object */) {
   const allPackages = await getAllPublicPackages(
     path.join(process.cwd(), '..'),
   );
@@ -85,17 +85,16 @@ async function main(pkgName, opts) {
         `Dependency ${pkgName} is not a public package in the atlaskit repo.`,
       );
     }
-    return fetchDistFromNpm(pkgName, resolvedPkg.version, opts.force);
-  } else {
-    const resolvedPromises = await Promise.all(
-      allPackages.map(({ name, version }) => {
-        return fetchDistFromNpm(name, version, opts.force);
-      }),
-    );
-
-    console.log(`Fetched ${resolvedPromises.filter(p => !!p).length} packages`);
-    return resolvedPromises;
+    return fetchDistFromNpm(pkgName, resolvedPkg.version, opts.refetch);
   }
+  const resolvedPromises = await Promise.all(
+    allPackages.map(({ name, version }) => {
+      return fetchDistFromNpm(name, version, opts.refetch);
+    }),
+  );
+
+  console.log(`Fetched ${resolvedPromises.filter(p => !!p).length} packages`);
+  return resolvedPromises;
 }
 
 if (require.main === module) {
@@ -104,7 +103,7 @@ if (require.main === module) {
   const flags = args.filter(a => a.startsWith('--'));
   const pkgName = requiredArgs[0];
   const opts = {
-    force: flags.includes('--refetch'),
+    refetch: flags.includes('--refetch'),
   };
   main(pkgName, opts).catch(e => {
     console.error(e);

@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { toBeInTheDocument, toHaveFocus } from '@testing-library/jest-dom';
 import { XMLHttpRequest } from 'xmlhttprequest';
 import 'jest-styled-components';
 import { toMatchSnapshot } from 'jest-snapshot';
@@ -181,6 +182,13 @@ const removeIdsFromDoc = transformDoc(node => {
       );
     }
 
+    if (node.attrs.occurrenceKey) {
+      replacedNode.attrs.occurrenceKey = node.attrs.occurrenceKey.replace(
+        /([a-z0-9\-]+)(:.*)?$/,
+        '12345678-9abc-def0-1234-56789abcdef0$2',
+      );
+    }
+
     return replacedNode;
   }
   if (hasLocalId(node.type)) {
@@ -265,18 +273,20 @@ const toEqualDocument = (equals, utils, expand) => (actual, expected) => {
 /* eslint-disable no-undef */
 expect.extend({
   toEqualDocument(actual, expected) {
-    return toEqualDocument(this.equals, this.utils, this.expand)(
-      actual,
-      expected,
-    );
+    return toEqualDocument(
+      this.equals,
+      this.utils,
+      this.expand,
+    )(actual, expected);
   },
 
   toEqualDocumentAndSelection(actual, expected) {
     const { doc: actualDoc, selection: actualSelection } = actual;
-    const docComparison = toEqualDocument(this.equals, this.utils, this.expand)(
-      actualDoc,
-      expected,
-    );
+    const docComparison = toEqualDocument(
+      this.equals,
+      this.utils,
+      this.expand,
+    )(actualDoc, expected);
     if (!docComparison.pass) {
       return docComparison;
     }
@@ -410,6 +420,8 @@ expect.extend({
     return ret;
   },
   toHaveStyleDeclaration: matchers.toHaveStyleRule,
+  toBeInTheDocument,
+  toHaveFocus,
 });
 
 // Copied from react-beautiful-dnd/test/setup.js
@@ -451,7 +463,6 @@ if (process.env.CI) {
     console.warn = jest.fn();
     console.log = jest.fn();
   });
-
   afterEach(() => {
     console.error = consoleError;
     console.warn = consoleWarn;
@@ -469,6 +480,10 @@ if (process.env.VISUAL_REGRESSION) {
   jasmine.getEnv().addReporter(screenshotReporter);
 
   beforeAll(async () => {
+    // Start a new collab page
+    if (global.synchronyUrl) {
+      global.collabPage = await global.browser.newPage();
+    }
     global.page = await global.browser.newPage();
     screenshotReporter.reset(global.page);
   }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
@@ -476,6 +491,10 @@ if (process.env.VISUAL_REGRESSION) {
   afterAll(async () => {
     await screenshotReporter.waitForPendingScreenshots();
     await global.page.close();
+    // Close collab page
+    if (global.synchronyUrl && global.collabPage) {
+      global.collabPage = await global.collabPage.close();
+    }
     await global.browser.disconnect();
   });
 

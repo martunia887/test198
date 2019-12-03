@@ -4,20 +4,19 @@ import Portal from '@atlaskit/portal';
 import { ModalTransitionConsumer } from './ModalTransition';
 import StackConsumer from './StackConsumer';
 
-import { AppearanceType, KeyboardOrMouseEvent, ButtonOnClick } from '../types';
+import { AppearanceType, KeyboardOrMouseEvent, ActionProps } from '../types';
 
 import Modal from './Modal';
 import { WidthNames } from '../shared-variables';
 import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
+import { FooterComponentProps } from './Footer';
+import { HeaderComponentProps } from './Header';
 
 export interface WrapperProps extends WithAnalyticsEventsProps {
   /**
     Buttons to render in the footer
   */
-  actions?: Array<{
-    onClick?: ButtonOnClick;
-    text?: string;
-  }>;
+  actions?: Array<ActionProps>;
   /**
     Appearance of the primary action. Also adds an icon to the heading, if provided.
   */
@@ -38,8 +37,8 @@ export interface WrapperProps extends WithAnalyticsEventsProps {
     - Container: wrapper around Header, Body and Footer components.
   */
   components?: {
-    Header?: React.ElementType;
-    Footer?: React.ElementType;
+    Header?: React.ElementType<HeaderComponentProps>;
+    Footer?: React.ElementType<FooterComponentProps>;
     Body?: React.ElementType;
     Container?: React.ElementType;
   };
@@ -50,11 +49,11 @@ export interface WrapperProps extends WithAnalyticsEventsProps {
   /**
     Deprecated, use components prop: Component to render the footer of the modal, replaces internal implementation.
   */
-  footer?: React.ElementType;
+  footer?: React.ElementType<FooterComponentProps>;
   /**
     Deprecated, use components prop: Component to render the header of the modal, replaces internal implementation.
   */
-  header?: React.ElementType;
+  header?: React.ElementType<HeaderComponentProps>;
   /**
     The modal title; rendered in the header.
   */
@@ -116,6 +115,8 @@ export interface WrapperProps extends WithAnalyticsEventsProps {
     Several size options are also recognised.
   */
   width?: number | string | WidthNames;
+  /** A `testId` prop is provided for specified elements, which is a unique string that appears as a data attribute `data-testid` in the rendered code, serving as a hook for automated tests */
+  testId?: string;
 }
 
 interface State {

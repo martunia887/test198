@@ -1,4 +1,3 @@
-import { MediaClientConfig } from '@atlaskit/media-core';
 import { deleteSelection, splitBlock } from 'prosemirror-commands';
 import {
   Node as PMNode,
@@ -24,7 +23,7 @@ import {
   isImage,
 } from '../../../utils';
 import { ProsemirrorGetPosHandler } from '../../../nodeviews';
-import { MediaProvider, MediaState } from '../types';
+import { MediaState } from '../types';
 import { mapSlice } from '../../../utils/slice';
 import {
   walkUpTreeUntil,
@@ -46,6 +45,12 @@ export const isSelectionNonMediaBlockNode = (state: EditorState): boolean => {
   const { node } = state.selection as NodeSelection;
 
   return node && node.type !== state.schema.nodes.media && node.isBlock;
+};
+
+export const isSelectionMediaSingleNode = (state: EditorState): boolean => {
+  const { node } = state.selection as NodeSelection;
+
+  return node && node.type === state.schema.nodes.mediaSingle;
 };
 
 export const posOfPrecedingMediaGroup = (
@@ -233,41 +238,6 @@ export const copyOptionalAttrsFromMediaState = (
     });
 };
 
-/**
- * Customer can define either deprecated Context or MediaClientConfig object directly. All internal
- * API are being switched to MediaClientConfig exclusively.
- * This utility helps to retrieve MediaClientConfig object from media Provider no matter what customer
- * has provided.
- */
-export const getViewMediaClientConfigFromMediaProvider = async (
-  mediaProvider: MediaProvider,
-): Promise<MediaClientConfig> => {
-  if (mediaProvider.viewContext) {
-    return (await mediaProvider.viewContext).config;
-  } else {
-    // We can use ! here since XOR would not allow MediaProvider object created without one of the properties.
-    return mediaProvider.viewMediaClientConfig!;
-  }
-};
-
-/**
- * Customer can define either deprecated Context or MediaClientConfig object directly. All internal
- * API are being switched to MediaClientConfig exclusively.
- * This utility helps to retrieve MediaClientConfig object from media Provider no matter what customer
- * has provided.
- */
-export const getUploadMediaClientConfigFromMediaProvider = async (
-  mediaProvider: MediaProvider,
-): Promise<MediaClientConfig | undefined> => {
-  if (mediaProvider.uploadContext) {
-    return (await mediaProvider.uploadContext).config;
-  } else if (mediaProvider.uploadMediaClientConfig) {
-    return mediaProvider.uploadMediaClientConfig;
-  } else {
-    return;
-  }
-};
-
 export const transformSliceToCorrectMediaWrapper = (
   slice: Slice,
   schema: Schema,
@@ -301,14 +271,23 @@ const isElementInvisible = (element: HTMLElement) => {
   );
 };
 
+const VALID_TAGS_CONTAINER = ['DIV', 'TD'];
+function canContainImage(element: HTMLElement | null): boolean {
+  if (!element) {
+    return false;
+  }
+  return VALID_TAGS_CONTAINER.indexOf(element.tagName) !== -1;
+}
+
 /**
  * Given a html string, we attempt to hoist any nested `<img>` tags,
  * not wrapped by a `<div>` as ProseMirror no-op's on those scenarios.
  * @param html
  */
 export const unwrapNestedMediaElements = (html: string) => {
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = html;
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const wrapper = doc.body;
 
   // Remove Google Doc's wrapper <b> el
   const docsWrapper = wrapper.querySelector<HTMLElement>(
@@ -343,21 +322,28 @@ export const unwrapNestedMediaElements = (html: string) => {
       return;
     }
 
-    // Find the top most parent before we have our faux created element.
-    const rootElement = walkUpTreeUntil(mediaParent, wrapper);
+    // Find the top most element that the parent has a valid container for the image.
+    // Stop just before found the wrapper
+    const insertBeforeElement = walkUpTreeUntil(mediaParent, element => {
+      // If is at the top just use this element as reference
+      if (element.parentElement === wrapper) {
+        return true;
+      }
 
-    // Here we try to insert the media right after its top most parent element
+      return canContainImage(element.parentElement);
+    });
+
+    // Here we try to insert the media right after its top most valid parent element
     // Unless its the last element in our structure then we will insert above it.
-    if (rootElement) {
-      // Insert as close as possible to the root element's index in the tree.
-      wrapper.insertBefore(
+    if (insertBeforeElement && insertBeforeElement.parentElement) {
+      // Insert as close as possible to the most closest valid element index in the tree.
+      insertBeforeElement.parentElement.insertBefore(
         imageTag,
-        rootElement.nextElementSibling || rootElement,
+        insertBeforeElement.nextElementSibling || insertBeforeElement,
       );
 
       // Attempt to clean up lines left behind by the image
       mediaParent.innerText = mediaParent.innerText.trim();
-
       // Walk up and delete empty elements left over after removing the image tag
       removeNestedEmptyEls(mediaParent);
     }
@@ -369,4 +355,22 @@ export const unwrapNestedMediaElements = (html: string) => {
   }
 
   return wrapper.innerHTML;
+};
+
+export const getMediaNodeFromSelection = (
+  state: EditorState,
+): PMNode | null => {
+  if (!isSelectionMediaSingleNode(state)) {
+    return null;
+  }
+
+  const tr = state.tr;
+  const pos = tr.selection.from + 1;
+  const mediaNode = tr.doc.nodeAt(pos);
+
+  if (mediaNode && mediaNode.type === state.schema.nodes.media) {
+    return mediaNode;
+  }
+
+  return null;
 };

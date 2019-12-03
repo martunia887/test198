@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass, ImgHTMLAttributes } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N300 } from '@atlaskit/theme/colors';
 
 export const Container: ComponentClass<HTMLAttributes<{}>> = styled.div`
   height: 100%;
@@ -12,9 +12,8 @@ export const Container: ComponentClass<HTMLAttributes<{}>> = styled.div`
 export interface GridCellProps {
   width: number;
 }
-export const GridCell: ComponentClass<
-  HTMLAttributes<{}> & GridCellProps
-> = styled.div`
+export const GridCell: ComponentClass<HTMLAttributes<{}> &
+  GridCellProps> = styled.div`
   ${({ width }: GridCellProps) => `width: ${width}px;`} margin-top: 5px;
 `;
 
@@ -41,9 +40,7 @@ export const WarningContainer: ComponentClass<HTMLAttributes<{}>> = styled.div`
   user-select: text;
 `;
 
-export const WarningIconWrapper: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const WarningIconWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   width: 92px;
 `;
 
@@ -58,7 +55,7 @@ export const WarningHeading: ComponentClass<HTMLAttributes<{}>> = styled.p`
 `;
 
 export const WarningSuggestion: ComponentClass<HTMLAttributes<{}>> = styled.p`
-  color: ${colors.N300};
+  color: ${N300};
   font-size: 14px;
   margin-top: 5px;
 `;

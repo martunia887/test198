@@ -5,10 +5,10 @@ import React from 'react';
 import rafSchedule from 'raf-schd';
 import ScrollLock from 'react-scrolllock';
 
-import Footer from './Footer';
-import Header from './Header';
+import Footer, { FooterComponentProps } from './Footer';
+import Header, { HeaderComponentProps } from './Header';
 
-import { AppearanceType, KeyboardOrMouseEvent, ButtonOnClick } from '../types';
+import { AppearanceType, KeyboardOrMouseEvent, ActionProps } from '../types';
 import {
   keylineHeight,
   Body as DefaultBody,
@@ -28,10 +28,7 @@ interface Props {
   /**
     Buttons to render in the footer
   */
-  actions?: Array<{
-    onClick?: ButtonOnClick;
-    text?: string;
-  }>;
+  actions?: Array<ActionProps>;
   /**
     Appearance of the primary action. Also adds an icon to the heading, if provided.
   */
@@ -48,19 +45,19 @@ interface Props {
     Object describing internal components. Use this to swap out the default components.
   */
   components: {
-    Header?: React.ElementType;
+    Header?: React.ElementType<HeaderComponentProps>;
     Body?: React.ElementType;
-    Footer?: React.ElementType;
+    Footer?: React.ElementType<FooterComponentProps>;
     Container?: React.ElementType;
   };
   /**
     Deprecated, use components prop: Component to render the header of the modal.
   */
-  header?: React.ElementType;
+  header?: React.ElementType<HeaderComponentProps>;
   /**
     Deprecated, use components prop: Component to render the footer of the moda.l
   */
-  footer?: React.ElementType;
+  footer?: React.ElementType<FooterComponentProps>;
   /**
     Function that will be called to initiate the exit transition.
   */
@@ -94,6 +91,8 @@ interface Props {
    * If false and heading is longer than one line overflow will be not displayed.
    */
   isHeadingMultiline?: boolean;
+  /** A `testId` prop is provided for specified elements, which is a unique string that appears as a data attribute `data-testid` in the rendered code, serving as a hook for automated tests */
+  testId?: string;
 }
 
 interface State {
@@ -247,6 +246,7 @@ export default class Content extends React.Component<Props, State> {
       isHeadingMultiline,
       onClose,
       shouldScroll,
+      testId,
     } = this.props;
 
     const { showFooterKeyline, showHeaderKeyline } = this.state;
@@ -255,7 +255,7 @@ export default class Content extends React.Component<Props, State> {
     const Body = CustomBody || DeprecatedBody || DefaultBody;
 
     return (
-      <Container css={wrapperStyles}>
+      <Container css={wrapperStyles} data-testid={testId}>
         {isChromeless ? (
           children
         ) : (

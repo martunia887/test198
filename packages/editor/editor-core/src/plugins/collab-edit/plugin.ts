@@ -1,6 +1,7 @@
 import { Plugin, PluginKey, Transaction, Selection } from 'prosemirror-state';
 import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 import { Step, ReplaceStep } from 'prosemirror-transform';
+import { fixTablesKey } from 'prosemirror-tables';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import memoizeOne from 'memoize-one';
 
@@ -14,10 +15,10 @@ import {
   applyRemoteData,
 } from './actions';
 import {
-  Participant,
-  ConnectionData,
-  PresenceData,
-  TelepointerData,
+  CollabParticipant,
+  CollabEventConnectionData,
+  CollabeEventPresenceData,
+  CollabEventTelepointerData,
 } from './types';
 import { Participants, ReadOnlyParticipants } from './participants';
 import { findPointers, createTelepointers } from './utils';
@@ -63,7 +64,7 @@ export const createPlugin = (
   sanitizePrivateContent?: boolean,
 ) => {
   let collabEditProvider: CollabEditProvider | null;
-
+  let messageTimeoutId: number = 0;
   return new Plugin({
     key: pluginKey,
     state: {
@@ -72,11 +73,14 @@ export const createPlugin = (
       },
       apply(tr, prevPluginState: PluginState, oldState, newState) {
         const pluginState = prevPluginState.apply(tr);
-
-        if (tr.getMeta('isRemote') !== true) {
-          if (collabEditProvider) {
-            collabEditProvider.send(tr, oldState, newState);
-          }
+        const pmTablesMeta = tr.getMeta(fixTablesKey);
+        if (
+          collabEditProvider &&
+          tr.getMeta('isRemote') !== true &&
+          !(pmTablesMeta && pmTablesMeta.fixTables) &&
+          pluginState.isReady
+        ) {
+          collabEditProvider.send(tr, oldState, newState);
         }
 
         const { activeParticipants: prevActiveParticipants } = prevPluginState;
@@ -93,16 +97,23 @@ export const createPlugin = (
             (sessionId && participantsChanged)
           ) {
             const selection = getSendableSelection(newState.selection);
+
+            const message: CollabEventTelepointerData = {
+              type: 'telepointer',
+              selection,
+              sessionId,
+            };
+            const sendMessage = collabEditProvider.sendMessage.bind(
+              collabEditProvider,
+            );
+
             // Delay sending selection till next tick so that participants info
-            // can go before it
-            window.setTimeout(
-              collabEditProvider.sendMessage.bind(collabEditProvider),
+            // can go before it.
+            clearTimeout(messageTimeoutId);
+            messageTimeoutId = window.setTimeout(
+              (data: CollabEventTelepointerData) => sendMessage(data),
               0,
-              {
-                type: 'telepointer',
-                selection,
-                sessionId,
-              },
+              message,
             );
           }
         }
@@ -191,6 +202,9 @@ export const createPlugin = (
             unsubscribeAllEvents(collabEditProvider);
           }
           collabEditProvider = null;
+
+          // Prevent potential async updates once destroyed.
+          clearTimeout(messageTimeoutId);
         },
       };
     },
@@ -252,9 +266,11 @@ export class PluginState {
   apply(tr: Transaction) {
     let { decorationSet, participants, sid, isReady } = this;
 
-    const presenceData = tr.getMeta('presence') as PresenceData;
-    const telepointerData = tr.getMeta('telepointer') as TelepointerData;
-    const sessionIdData = tr.getMeta('sessionId') as ConnectionData;
+    const presenceData = tr.getMeta('presence') as CollabeEventPresenceData;
+    const telepointerData = tr.getMeta(
+      'telepointer',
+    ) as CollabEventTelepointerData;
+    const sessionIdData = tr.getMeta('sessionId') as CollabEventConnectionData;
     let collabInitialised = tr.getMeta('collabInitialised');
 
     if (typeof collabInitialised !== 'boolean') {
@@ -270,7 +286,7 @@ export class PluginState {
 
     if (presenceData) {
       const {
-        joined = [] as Participant[],
+        joined = [] as CollabParticipant[],
         left = [] as { sessionId: string }[],
       } = presenceData;
 

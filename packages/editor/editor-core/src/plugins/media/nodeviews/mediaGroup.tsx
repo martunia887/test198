@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import ReactNodeView, { ForwardRef } from '../../../nodeviews/ReactNodeView';
+import ReactNodeView, {
+  ForwardRef,
+  getPosHandler,
+  getPosHandlerNode,
+} from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { Filmstrip } from '@atlaskit/media-filmstrip';
 import {
@@ -24,8 +28,8 @@ import {
   WithProviders,
   ProviderFactory,
   ContextIdentifierProvider,
+  MediaProvider,
 } from '@atlaskit/editor-common';
-import { MediaProvider } from '../types';
 import { MediaNodeUpdater } from './mediaNodeUpdater';
 
 export type MediaGroupProps = {
@@ -185,6 +189,7 @@ interface MediaGroupNodeViewProps {
 class MediaGroupNodeView extends ReactNodeView<MediaGroupNodeViewProps> {
   render(props: MediaGroupNodeViewProps, forwardRef: ForwardRef) {
     const { allowLazyLoading, editorAppearance, providerFactory } = props;
+    const getPos = this.getPos as getPosHandlerNode;
     return (
       <WithProviders
         providers={['mediaProvider', 'contextIdentifierProvider']}
@@ -195,14 +200,18 @@ class MediaGroupNodeView extends ReactNodeView<MediaGroupNodeViewProps> {
           }: {
             editorDisabledPlugin: EditorDisabledPluginState;
           }) => {
-            const nodePos = this.getPos();
+            const nodePos = getPos();
             const { $anchor, $head } = this.view.state.selection;
             const isSelected =
               nodePos < $anchor.pos && $head.pos < nodePos + this.node.nodeSize;
+
+            if (!mediaProvider) {
+              return null;
+            }
             return (
               <MediaGroup
                 node={this.node}
-                getPos={this.getPos}
+                getPos={getPos}
                 view={this.view}
                 forwardRef={forwardRef}
                 selected={isSelected ? $anchor.pos : null}
@@ -235,7 +244,7 @@ export const ReactMediaGroupNode = (
   providerFactory: ProviderFactory,
   allowLazyLoading?: boolean,
   editorAppearance?: any,
-) => (node: PMNode, view: EditorView, getPos: () => number): NodeView => {
+) => (node: PMNode, view: EditorView, getPos: getPosHandler): NodeView => {
   return new MediaGroupNodeView(node, view, getPos, portalProviderAPI, {
     allowLazyLoading,
     providerFactory,

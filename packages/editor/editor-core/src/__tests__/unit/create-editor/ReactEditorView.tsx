@@ -11,6 +11,7 @@ import {
   mention,
   defaultSchema,
   storyMediaProviderFactory,
+  createAnalyticsEventMock,
 } from '@atlaskit/editor-test-helpers';
 import { mention as mentionData } from '@atlaskit/util-data-test';
 import { MentionProvider } from '@atlaskit/mention/resource';
@@ -33,6 +34,7 @@ import {
   ACTION_SUBJECT_ID,
   addAnalytics,
   DispatchAnalyticsEvent,
+  editorAnalyticsChannel,
 } from '../../../plugins/analytics';
 import { analyticsService } from '../../../analytics';
 import { EditorAppearance } from '../../../types';
@@ -52,7 +54,7 @@ const requiredProps = () => ({
 
 const analyticsProps = () => ({
   allowAnalyticsGASV3: true,
-  createAnalyticsEvent: (() => {}) as any,
+  createAnalyticsEvent: createAnalyticsEventMock() as any,
 });
 
 const payload: AnalyticsEventPayload = {
@@ -64,7 +66,7 @@ const payload: AnalyticsEventPayload = {
 };
 
 describe(name, () => {
-  let mockFire: jest.SpyInstance;
+  let mockFire: ReturnType<typeof AnalyticsPlugin.fireAnalyticsEvent>;
 
   beforeEach(() => {
     mockFire = jest.fn();
@@ -188,6 +190,46 @@ describe(name, () => {
         expect(renderSpy).toHaveBeenCalledTimes(0);
         wrapper.unmount();
       });
+
+      it('should discard stale transactions after componentWillUnmount is triggered', () => {
+        const unmountSpy = jest.spyOn(
+          ReactEditorView.prototype,
+          'componentWillUnmount',
+        );
+        const wrapper = mountWithIntl(<ReactEditorView {...requiredProps()} />);
+
+        const editor = wrapper.instance() as ReactEditorView;
+        patchEditorViewForJSDOM(editor.view);
+
+        const expectedTransactionCount = 1;
+
+        const dispatchTransactionSpy: jest.SpyInstance<ReactEditorView['dispatchTransaction']> = jest.spyOn(
+          editor as any,
+          'dispatchTransaction',
+        );
+        editor.view!.dispatch(editor.view!.state.tr);
+        expect(dispatchTransactionSpy).toHaveBeenCalledTimes(
+          expectedTransactionCount,
+        );
+
+        // Manually invoke componentWillUnmount.
+        // This won't actually unmount it, but it allows us to check the logic
+        // peformed inside that lifecycle method, ahead of the actual unmounting,
+        // which allows us to dispatch from our view reference before it gets wiped out.
+        editor.componentWillUnmount();
+
+        // Simulate dispatching a stale async transaction after a dismount is triggered.
+        editor.view!.dispatch(editor.view!.state.tr);
+
+        // Because we block transactions once a dismount is imminent the surplus transaction
+        // should have been discarded and the count shouldn't have increased.
+        expect(dispatchTransactionSpy).toHaveBeenCalledTimes(
+          expectedTransactionCount,
+        );
+
+        wrapper.unmount();
+        expect(unmountSpy).toHaveBeenCalledTimes(2);
+      });
     });
 
     describe('when an invalid transaction is dispatched', () => {
@@ -234,8 +276,8 @@ describe(name, () => {
             {...requiredProps()}
             {...analyticsProps()}
             editorProps={{
-              allowCodeBlocks: true,
               allowDate: true,
+              ...analyticsProps(),
             }}
           />,
         );
@@ -252,7 +294,9 @@ describe(name, () => {
 
         expect(analyticsService.trackEvent).toHaveBeenCalledWith(
           'atlaskit.fabric.editor.invalidtransaction',
-          { documents: JSON.stringify(documents) },
+          {
+            documents: JSON.stringify(documents),
+          },
         );
       });
 
@@ -265,9 +309,16 @@ describe(name, () => {
           eventType: EVENT_TYPE.UI,
         };
 
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
+        mockFire.mockClear();
         dispatchInvalidTransaction(
           // add v3 analytics meta to transaction as we want to check this info is sent on
-          addAnalytics(editor.view.state.tr, analyticsEventPayload),
+          addAnalytics(
+            editor.view.state,
+            editor.view.state.tr,
+            analyticsEventPayload,
+          ),
         );
         expect(mockFire).toHaveBeenCalledWith({
           payload: {
@@ -277,7 +328,7 @@ describe(name, () => {
             attributes: {
               analyticsEventPayloads: [
                 {
-                  channel: undefined,
+                  channel: editorAnalyticsChannel,
                   payload: analyticsEventPayload,
                 },
               ],

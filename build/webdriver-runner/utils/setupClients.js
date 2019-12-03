@@ -1,31 +1,37 @@
-'use strict';
 // @flow
 const uniqIdentifierStamp = process.env.LOCAL_IDENTIFIER || '';
+// eslint-disable-next-line no-nested-ternary
 const commit = process.env.BITBUCKET_COMMIT
   ? process.env.BITBUCKET_COMMIT + uniqIdentifierStamp
   : process.env.USER
   ? process.env.USER + uniqIdentifierStamp
   : uniqIdentifierStamp;
 
+let BUILD_BRANCH_NAME = process.env.BITBUCKET_BRANCH;
+
 if (!process.env.BITBUCKET_BRANCH && process.env.USER) {
-  process.env.BITBUCKET_BRANCH = process.env.USER + '_local_run';
+  BUILD_BRANCH_NAME = `${process.env.USER}_local_run`;
+}
+
+if (process.env.LANDKID) {
+  BUILD_BRANCH_NAME = 'Landkid';
 }
 
 function setBrowserStackClients() /*: Array<?Object>*/ {
   const RESOLUTION = '1920x1080';
-  let launchers = {
+  const launchers = {
     chrome: {
       os: 'Windows',
       os_version: '10',
       browserName: 'chrome',
-      browser_version: '74.0',
+      browser_version: '78.0',
       resolution: RESOLUTION,
     },
     firefox: {
       os: 'Windows',
       os_version: '10',
       browserName: 'firefox',
-      browser_version: '68.0',
+      browser_version: '70.0',
       resolution: RESOLUTION,
     },
     ie: {
@@ -56,7 +62,6 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
     delete launchers.ie;
     delete launchers.firefox;
     // delete launchers.edge;
-    process.env.BITBUCKET_BRANCH = 'Landkid';
   }
   const launchKeys = Object.keys(launchers);
   const clients = launchKeys.map(launchKey => {
@@ -67,7 +72,7 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
         browserName: launchers[launchKey].browserName,
         browserVersion: launchers[launchKey].browser_version,
         project: 'Atlaskit Webdriver Tests',
-        build: process.env.BITBUCKET_BRANCH,
+        build: BUILD_BRANCH_NAME,
         'browserstack.local': true,
         'browserstack.debug': true,
         'browserstack.idleTimeout': 300,
@@ -90,9 +95,11 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
 }
 
 function setLocalClients() /*: Array<?Object>*/ {
-  const port = require('./chromeDriver').port;
-  let isHeadless = process.env.HEADLESS !== 'false';
+  // eslint-disable-next-line global-require
+  const { port } = require('./chromeDriver');
+  const isHeadless = process.env.HEADLESS !== 'false';
   // Keep only chrome for watch mode
+  // eslint-disable-next-line no-unused-expressions
   if (process.env.WATCH === 'true') isHeadless === 'false';
   const windowSize = '--window-size=1920,1200';
   const options = {
@@ -101,9 +108,9 @@ function setLocalClients() /*: Array<?Object>*/ {
     hostname: 'localhost',
     capabilities: {
       browserName: 'chrome',
-      chromeOptions: isHeadless
-        ? { args: ['--headless', windowSize] }
-        : { args: [windowSize] },
+      'goog:chromeOptions': isHeadless
+        ? { w3c: false, args: ['--headless', windowSize] }
+        : { w3c: false, args: [windowSize] },
     },
   };
   return [{ browserName: 'chrome', options }];

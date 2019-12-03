@@ -20,6 +20,8 @@ import { tooltip, toggleBulletList, toggleOrderedList } from '../../keymaps';
 import { IconList, IconListNumber } from '../quick-insert/assets';
 
 const listPlugin = (): EditorPlugin => ({
+  name: 'list',
+
   nodes() {
     return [
       { name: 'bulletList', node: bulletList },
@@ -59,7 +61,7 @@ const listPlugin = (): EditorPlugin => ({
             ),
           );
 
-          return addAnalytics(tr, {
+          return addAnalytics(state, tr, {
             action: ACTION.FORMATTED,
             actionSubject: ACTION_SUBJECT.TEXT,
             actionSubjectId: ACTION_SUBJECT_ID.FORMAT_LIST_BULLET,
@@ -90,7 +92,7 @@ const listPlugin = (): EditorPlugin => ({
             ),
           );
 
-          return addAnalytics(tr, {
+          return addAnalytics(state, tr, {
             action: ACTION.FORMATTED,
             actionSubject: ACTION_SUBJECT.TEXT,
             actionSubjectId: ACTION_SUBJECT_ID.FORMAT_LIST_NUMBER,

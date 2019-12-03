@@ -1,5 +1,167 @@
 # @atlaskit/code
 
+## 11.1.0
+
+### Minor Changes
+
+- [minor][9648afc5be](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9648afc5be):
+
+  Adds `highlight` prop to `AkCodeBlock`, `Example`, and the `code` template literal.
+  Use this to emphasize which lines of code you would like people to look at!
+
+  The `highlight` prop can be used as follows:
+
+  - To highlight one line:
+    `highlight="3"`
+  - To highlight sequential lines:
+    `highlight="1-5"`
+  - To highlight sequential and multiple single lines:
+    `highlight="1-5,7,10,15-20"`
+
+  ## `AkCodeBlock` component
+
+  Use the `highlight` prop.
+
+  ```js
+  import { AkCodeBlock } from '@atlaskit/code';
+
+  <AkCodeBlock
+    highlight="1-2"
+    text={`
+  <div>
+    hello there
+    <span>buds</span>
+  </div>
+    `}
+  />;
+  ```
+
+  ## `Example` component
+
+  Use the `highlight` prop.
+
+  ```js
+  import { Example } from '@atlaskit/docs';
+
+  <Example
+    packageName="@atlaskit/code"
+    Component={require('../examples/00-inline-code-basic').default}
+    title="Basic"
+    highlight="19,24,30,36"
+    source={require('!!raw-loader!../examples/00-inline-code-basic')}
+  />;
+  ```
+
+  ## `code` template literal
+
+  Add `highlight=` to the top of your code snippet.
+  It takes the same values as the `highlight` prop.
+
+  ```js
+  import { code } from '@atlaskit/docs';
+
+  code`highlight=5-7
+    import React from 'react';
+  
+    () => (
+      <div>
+        hello there
+        <span>buds</span>
+      </div>
+  )`;
+  ```
+
+## 11.0.14
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 11.0.13
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 11.0.12
+
+### Patch Changes
+
+- [patch][65ada7f318](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/65ada7f318):
+
+  **FABDODGEM-12 Editor Cashmere Release**
+
+  - [Internal post](http://go.atlassian.com/cashmere-release)
+
+  **Affected editor components:**
+
+  tables, media, mobile, text color, emoji, copy/paste, analytics
+
+  **Performance**
+
+  - Async import for code blocks and task items on renderer
+    - https://product-fabric.atlassian.net/browse/ED-7155
+
+  **Table**
+
+  - Add support to sort tables that contains smart links
+    - https://product-fabric.atlassian.net/browse/ED-7449
+  - Scale table when changing to full width mode
+    - https://product-fabric.atlassian.net/browse/ED-7724
+
+  **Text color**
+
+  - Update text color toolbar with right color when text is inside a list, panel, etc.
+    - https://product-fabric.atlassian.net/browse/FM-1752
+
+**Mobile** - Implement undo/redo interface on Hybrid Editor - https://product-fabric.atlassian.net/browse/FM-2393
+
+**Copy and Paste**
+
+    - Support copy & paste when missing context-id attr
+      - https://product-fabric.atlassian.net/browse/MS-2344
+    - Right click + copy image fails the second time that is pasted
+      - https://product-fabric.atlassian.net/browse/MS-2324
+    - Copying a never touched image for the first time from editor fails to paste
+      - https://product-fabric.atlassian.net/browse/MS-2338
+    - Implement analytics when a file is copied
+      - https://product-fabric.atlassian.net/browse/MS-2036
+
+**Media**
+
+- Add analytics events and error reporting [NEW BIG FEATURE]
+  - https://product-fabric.atlassian.net/browse/MS-2275
+  - https://product-fabric.atlassian.net/browse/MS-2329
+  - https://product-fabric.atlassian.net/browse/MS-2330
+  - https://product-fabric.atlassian.net/browse/MS-2331
+  - https://product-fabric.atlassian.net/browse/MS-2332
+  - https://product-fabric.atlassian.net/browse/MS-2390
+- Fixed issue where we can’t insert same file from MediaPicker twice
+  - https://product-fabric.atlassian.net/browse/MS-2080
+- Disable upload of external files to media
+  - https://product-fabric.atlassian.net/browse/MS-2372
+
+**Notable Bug Fixes**
+
+    - Implement consistent behaviour for rule and mediaSingle on insertion
+      - Feature Flag:
+        - allowNewInsertionBehaviour - [default: true]
+      - https://product-fabric.atlassian.net/browse/ED-7503
+    - Fixed bug where we were showing table controls on mobile.
+      - https://product-fabric.atlassian.net/browse/ED-7690
+    - Fixed bug where editor crashes after unmounting react component.
+      - https://product-fabric.atlassian.net/browse/ED-7318
+    - Fixed bug where custom emojis are not been showed on the editor
+      - https://product-fabric.atlassian.net/browse/ED-7726
+
+- [patch][1715ad2bd5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1715ad2bd5):
+
+  ED-7731: add support for GraphQL syntax highlighting
+
 ## 11.0.11
 
 ### Patch Changes

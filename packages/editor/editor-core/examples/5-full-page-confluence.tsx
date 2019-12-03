@@ -7,9 +7,9 @@ import FullPageExample, {
   getAppearance,
   LOCALSTORAGE_defaultDocKey,
 } from './5-full-page';
-import { collabEditProvider } from '../example-helpers/mock-collab-provider';
 import { InviteToEditButton } from './3-collab';
 import SidebarContainer from '../example-helpers/SidebarContainer';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
 
 const DisabledBlanket = styled.div`
   position: absolute;
@@ -46,13 +46,19 @@ export default class ExampleEditorComponent extends React.Component<
     appearance: 'full-page' as EditorAppearance,
   };
 
+  private appearanceTimeoutId: number | undefined;
+
   componentDidMount() {
     // Simulate async nature of confluence fetching appearance
     const timeout = Math.floor(Math.random() * (1500 - 750 + 1)) + 750;
     console.log(`async delay is ${timeout}`);
-    setTimeout(() => {
+    this.appearanceTimeoutId = window.setTimeout(() => {
       this.setState(() => ({ disabled: false, appearance: getAppearance() }));
     }, timeout);
+  }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.appearanceTimeoutId);
   }
 
   render() {
@@ -69,7 +75,10 @@ export default class ExampleEditorComponent extends React.Component<
         <FullPageExample
           {...this.props}
           collabEdit={{
-            provider: collabEditProvider(this.collabSessionId, defaultDoc),
+            provider: createCollabEditProvider({
+              userId: this.collabSessionId,
+              defaultDoc,
+            }),
             inviteToEditComponent: InviteToEditButton,
           }}
           disabled={this.state.disabled}

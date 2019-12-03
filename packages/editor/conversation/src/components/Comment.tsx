@@ -14,7 +14,6 @@ import { HttpError } from '../api/HttpError';
 import CommentContainer from '../containers/Comment';
 import {
   actionSubjectIds,
-  AnalyticsEvent,
   eventTypes,
   fireEvent,
   trackEventActions,
@@ -22,11 +21,13 @@ import {
 import { Comment as CommentType, User } from '../model';
 import Editor from './Editor';
 import { SharedProps } from './types';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 export interface Props extends SharedProps {
   conversationId: string;
   canModerateComment?: boolean;
   comment: CommentType;
+  showBeforeUnloadWarning?: boolean;
 }
 
 export interface State {
@@ -137,14 +138,15 @@ export default class Comment extends React.Component<Props, State> {
     }
   };
 
-  private onReply = (_value: any, analyticsEvent: AnalyticsEvent) => {
+  private onReply = (_event: any, analyticsEvent?: UIAnalyticsEvent) => {
     const { objectId, containerId } = this.props;
 
-    fireEvent(analyticsEvent, {
-      actionSubjectId: actionSubjectIds.replyButton,
-      objectId,
-      containerId,
-    });
+    analyticsEvent &&
+      fireEvent(analyticsEvent, {
+        actionSubjectId: actionSubjectIds.replyButton,
+        objectId,
+        containerId,
+      });
 
     this.setState({
       isReplying: true,
@@ -196,7 +198,7 @@ export default class Comment extends React.Component<Props, State> {
     });
   };
 
-  private onDelete = (_value: any, analyticsEvent: AnalyticsEvent) => {
+  private onDelete = (_value: any, analyticsEvent?: UIAnalyticsEvent) => {
     const {
       comment: { nestedDepth, commentId },
       objectId,
@@ -205,11 +207,12 @@ export default class Comment extends React.Component<Props, State> {
       sendAnalyticsEvent,
     } = this.props;
 
-    fireEvent(analyticsEvent, {
-      actionSubjectId: actionSubjectIds.deleteButton,
-      objectId,
-      containerId,
-    });
+    analyticsEvent &&
+      fireEvent(analyticsEvent, {
+        actionSubjectId: actionSubjectIds.deleteButton,
+        objectId,
+        containerId,
+      });
 
     this.dispatch(
       'onDeleteComment',
@@ -229,14 +232,15 @@ export default class Comment extends React.Component<Props, State> {
     );
   };
 
-  private onEdit = (_value: any, analyticsEvent: AnalyticsEvent) => {
+  private onEdit = (_value: any, analyticsEvent?: UIAnalyticsEvent) => {
     const { objectId, containerId } = this.props;
 
-    fireEvent(analyticsEvent, {
-      actionSubjectId: actionSubjectIds.editButton,
-      objectId,
-      containerId,
-    });
+    analyticsEvent &&
+      fireEvent(analyticsEvent, {
+        actionSubjectId: actionSubjectIds.editButton,
+        objectId,
+        containerId,
+      });
 
     this.setState({
       isEditing: true,
@@ -289,7 +293,10 @@ export default class Comment extends React.Component<Props, State> {
     });
   };
 
-  private onRequestCancel = (_value: any, analyticsEvent: AnalyticsEvent) => {
+  private onRequestCancel = (
+    _value: any,
+    analyticsEvent?: UIAnalyticsEvent,
+  ) => {
     const { comment, onCancel, objectId, containerId } = this.props;
 
     // Invoke optional onCancel hook
@@ -297,16 +304,17 @@ export default class Comment extends React.Component<Props, State> {
       onCancel();
     }
 
-    fireEvent(analyticsEvent, {
-      actionSubjectId: actionSubjectIds.cancelFailedRequestButton,
-      objectId,
-      containerId,
-    });
+    analyticsEvent &&
+      fireEvent(analyticsEvent, {
+        actionSubjectId: actionSubjectIds.cancelFailedRequestButton,
+        objectId,
+        containerId,
+      });
 
     this.dispatch('onRevertComment', comment.conversationId, comment.commentId);
   };
 
-  private onRequestRetry = (_value: any, analyticsEvent: AnalyticsEvent) => {
+  private onRequestRetry = (_value: any, analyticsEvent?: UIAnalyticsEvent) => {
     const { lastDispatch } = this.state;
     const {
       objectId,
@@ -319,11 +327,12 @@ export default class Comment extends React.Component<Props, State> {
       return onRetry(localId);
     }
 
-    fireEvent(analyticsEvent, {
-      actionSubjectId: actionSubjectIds.retryFailedRequestButton,
-      objectId,
-      containerId,
-    });
+    analyticsEvent &&
+      fireEvent(analyticsEvent, {
+        actionSubjectId: actionSubjectIds.retryFailedRequestButton,
+        objectId,
+        containerId,
+      });
 
     if (!lastDispatch) {
       return;
@@ -354,6 +363,7 @@ export default class Comment extends React.Component<Props, State> {
       onEditorClose,
       onEditorOpen,
       portal,
+      showBeforeUnloadWarning,
     } = this.props;
     const { isEditing } = this.state;
     const { createdBy } = comment;
@@ -379,6 +389,7 @@ export default class Comment extends React.Component<Props, State> {
           renderEditor={renderEditor}
           disableScrollTo={disableScrollTo}
           allowFeedbackAndHelpButtons={allowFeedbackAndHelpButtons}
+          showBeforeUnloadWarning={showBeforeUnloadWarning}
         />
       );
     }
@@ -391,6 +402,14 @@ export default class Comment extends React.Component<Props, State> {
         portal={portal}
       />
     );
+  }
+
+  private getAfterContent() {
+    const { renderAfterComment, comment } = this.props;
+
+    return typeof renderAfterComment === 'function'
+      ? renderAfterComment(comment)
+      : null;
   }
 
   private renderComments() {
@@ -424,6 +443,7 @@ export default class Comment extends React.Component<Props, State> {
       allowFeedbackAndHelpButtons,
       onEditorClose,
       onEditorOpen,
+      showBeforeUnloadWarning,
     } = this.props;
 
     return (
@@ -439,6 +459,7 @@ export default class Comment extends React.Component<Props, State> {
         renderEditor={renderEditor}
         disableScrollTo={disableScrollTo}
         allowFeedbackAndHelpButtons={allowFeedbackAndHelpButtons}
+        showBeforeUnloadWarning={showBeforeUnloadWarning}
       />
     );
   }
@@ -450,6 +471,7 @@ export default class Comment extends React.Component<Props, State> {
       dataProviders,
       objectId,
       canModerateComment,
+      renderAdditionalCommentActions,
     } = this.props;
     const { isEditing } = this.state;
     const canReply = !!user && !isEditing && !comment.deleted;
@@ -481,6 +503,13 @@ export default class Comment extends React.Component<Props, State> {
       actions = [...actions, deleteAction];
     }
 
+    if (typeof renderAdditionalCommentActions === 'function') {
+      actions = [
+        ...actions,
+        ...renderAdditionalCommentActions(CommentAction, comment),
+      ];
+    }
+
     if (
       objectId &&
       commentAri &&
@@ -494,16 +523,24 @@ export default class Comment extends React.Component<Props, State> {
           key="reactions"
           providers={['emojiProvider', 'reactionsStore']}
           providerFactory={dataProviders}
-          renderNode={({ emojiProvider, reactionsStore }) => (
-            <Reactions>
-              <ConnectedReactionsView
-                store={reactionsStore}
-                containerAri={objectId}
-                ari={commentAri}
-                emojiProvider={emojiProvider}
-              />
-            </Reactions>
-          )}
+          renderNode={({ emojiProvider, reactionsStore }) => {
+            if (
+              typeof emojiProvider === 'undefined' ||
+              typeof reactionsStore === 'undefined'
+            ) {
+              return null;
+            }
+            return (
+              <Reactions>
+                <ConnectedReactionsView
+                  store={reactionsStore}
+                  containerAri={objectId}
+                  ari={commentAri}
+                  emojiProvider={emojiProvider}
+                />
+              </Reactions>
+            );
+          }}
         />,
       ];
     }
@@ -593,6 +630,7 @@ export default class Comment extends React.Component<Props, State> {
         }
         actions={this.getActions()}
         content={this.getContent()}
+        afterContent={this.getAfterContent()}
         isSaving={commentState === 'SAVING'}
         isError={commentState === 'ERROR'}
         errorActions={errorProps.actions}

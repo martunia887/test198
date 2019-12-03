@@ -1,5 +1,309 @@
 # @atlaskit/media-client
 
+## 4.1.1
+
+### Patch Changes
+
+- [patch][579779f5aa](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/579779f5aa):
+
+  MS-2423 add retries on 5xx errors and network errors to HTTP calls
+
+## 4.1.0
+
+### Minor Changes
+
+- [minor][ed9aafe0e2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ed9aafe0e2):
+
+  Fix withMediaClient to allow external files to work when mediaClientConfig is not defined
+
+## 4.0.1
+
+### Patch Changes
+
+- [patch][c0da69b4dc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c0da69b4dc):
+
+  [MS-2626] Fix objectToQueryString when there is an object using null as value
+
+## 4.0.0
+
+### Minor Changes
+
+- [minor][cbe5316ac9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cbe5316ac9):
+
+  http failures now return Error instances rather than the Response- [minor][51dfee6d35](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/51dfee6d35):
+
+  Image, Binary and Artifact files will be cached for 30 days
+
+### Patch Changes
+
+- [patch][436b46929e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/436b46929e):
+
+  Removed auth credentials from query params in GET requests. Now they are being sent in the heder to help on browser caching.
+
+- Updated dependencies [24b8ea2667](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24b8ea2667):
+  - @atlaskit/media-test-helpers@25.2.2
+  - @atlaskit/media-card@66.0.1
+  - @atlaskit/media-core@31.0.0
+
+## 3.0.1
+
+### Patch Changes
+
+- [patch][f1bbcf3847](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f1bbcf3847):
+
+  dont log id when is not a valid uuid in FileFetcher getFileState
+
+## 3.0.0
+
+### Major Changes
+
+- [major][ae4f336a3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ae4f336a3a):
+
+**FABDODGEM-13 Editor Damask Release** - [Internal post](http://go.atlassian.com/damask-release)
+
+**BREAKING CHANGES**
+
+- **Media:** Removed deprecated "context" property from media components in favor of "mediaClientConfig". This affects all public media UI components.
+  - https://product-fabric.atlassian.net/browse/MS-2038
+- **Tasks & Decisions:** Removed containerAri for task-decisions components.
+  - https://product-fabric.atlassian.net/browse/ED-7631
+- **Renderer:** Adapts to task-decision changes.
+- **Editor Mobile Bridge:** Adapts to task-decision changes.
+- **Util Data Test:** Adapts to task-decision changes.
+
+---
+
+**Affected Editor Components:**
+
+tables, media, mobile, emoji, tasks & decisions, analytics
+
+**Editor**
+
+- Support nested actions in stage-0 schema; Change DOM representation of actions
+  - https://product-fabric.atlassian.net/browse/ED-7674
+- Updated i18n translations
+  - https://product-fabric.atlassian.net/browse/ED-7750
+- Improved analytics & crash reporting (via a new error boundary)
+  - https://product-fabric.atlassian.net/browse/ED-7766
+  - https://product-fabric.atlassian.net/browse/ED-7806
+- Improvements to heading anchor links.
+  - https://product-fabric.atlassian.net/browse/ED-7849
+  - https://product-fabric.atlassian.net/browse/ED-7860
+- Copy/Paste improvements
+  - https://product-fabric.atlassian.net/browse/ED-7840
+  - https://product-fabric.atlassian.net/browse/ED-7849
+- Fixes for the selection state of Smart links.
+  - https://product-fabric.atlassian.net/browse/ED-7602?src=confmacro
+- Improvements for table resizing & column creation.
+  - https://product-fabric.atlassian.net/browse/ED-7698
+  - https://product-fabric.atlassian.net/browse/ED-7319
+  - https://product-fabric.atlassian.net/browse/ED-7799
+
+**Mobile**
+
+- GASv3 Analytics Events are now relayed from the web to the native context, ready for dispatching.
+  - https://product-fabric.atlassian.net/browse/FM-2502
+- Hybrid Renderer Recycler view now handles invalid ADF nodes gracefully.
+  - https://product-fabric.atlassian.net/browse/FM-2370
+
+**Media**
+
+- Improved analytics
+  - https://product-fabric.atlassian.net/browse/MS-2036
+  - https://product-fabric.atlassian.net/browse/MS-2145
+  - https://product-fabric.atlassian.net/browse/MS-2416
+  - https://product-fabric.atlassian.net/browse/MS-2487
+- Added shouldOpenMediaViewer property to renderer
+  - https://product-fabric.atlassian.net/browse/MS-2393
+- Implemented analytics for file copy
+  - https://product-fabric.atlassian.net/browse/MS-2036
+- New `media-viewed` event dispatched when media is interacted with via the media card or viewer.
+  - https://product-fabric.atlassian.net/browse/MS-2284
+- Support for `alt` text attribute on media image elements.
+  - https://product-fabric.atlassian.net/browse/ED-7776
+
+**i18n-tools**
+
+Bumped dependencies.
+
+- [major][e7b5c917de](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e7b5c917de):
+
+  ## Breaking change
+
+  > remove Context related method and types from public api in favour of mediaClientConfig
+
+  ### Removed
+
+  ```
+  * WithContextOrMediaClientConfig
+  * WithContextOrMediaClientConfigProps
+  ```
+
+  ### Added
+
+  ```
+  * WithMediaClientConfig
+  * WithMediaClientConfigProps
+  ```
+
+  ### Changed
+
+  **getMediaClient**
+
+  - Before
+
+  > works with passing either mediaClientConfig or context
+
+  ```
+  import {getMediaClient} from '@atlaskit/media-client'
+
+  const mediaClientFromMediaClientConfig = getMediaClient({
+    mediaClientConfig: {
+      authProvider: () => Promise.resolve()
+    }
+  })
+
+  const mediaClientFromContext = getMediaClient({
+    context: {
+      authProvider: () => Promise.resolve()
+    }
+  })
+  ```
+
+  - Now
+
+  > only accepts mediaClientConfig as the only param
+
+  ```
+  import {getMediaClient} from '@atlaskit/media-client'
+
+  const mediaClient = getMediaClient({
+    authProvider: () => Promise.resolve()
+  })
+  ```
+
+### Minor Changes
+
+- [minor][0b62e854d7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0b62e854d7):
+
+  New event `media-viewed` with type `UploadEventPayloadMap` is added to `globalMediaEventEmitter`- [minor][550d260bfc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/550d260bfc):
+
+  Introducing support for alt-text in media.
+
+- Updated dependencies [c3e65f1b9e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c3e65f1b9e):
+  - @atlaskit/media-core@30.0.17
+  - @atlaskit/media-test-helpers@25.2.0
+  - @atlaskit/media-card@66.0.0
+
+## 2.3.2
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 2.3.1
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 2.3.0
+
+### Minor Changes
+
+- [minor][65ada7f318](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/65ada7f318):
+
+  **FABDODGEM-12 Editor Cashmere Release**
+
+  - [Internal post](http://go.atlassian.com/cashmere-release)
+
+  **Affected editor components:**
+
+  tables, media, mobile, text color, emoji, copy/paste, analytics
+
+  **Performance**
+
+  - Async import for code blocks and task items on renderer
+    - https://product-fabric.atlassian.net/browse/ED-7155
+
+  **Table**
+
+  - Add support to sort tables that contains smart links
+    - https://product-fabric.atlassian.net/browse/ED-7449
+  - Scale table when changing to full width mode
+    - https://product-fabric.atlassian.net/browse/ED-7724
+
+  **Text color**
+
+  - Update text color toolbar with right color when text is inside a list, panel, etc.
+    - https://product-fabric.atlassian.net/browse/FM-1752
+
+**Mobile** - Implement undo/redo interface on Hybrid Editor - https://product-fabric.atlassian.net/browse/FM-2393
+
+**Copy and Paste**
+
+    - Support copy & paste when missing context-id attr
+      - https://product-fabric.atlassian.net/browse/MS-2344
+    - Right click + copy image fails the second time that is pasted
+      - https://product-fabric.atlassian.net/browse/MS-2324
+    - Copying a never touched image for the first time from editor fails to paste
+      - https://product-fabric.atlassian.net/browse/MS-2338
+    - Implement analytics when a file is copied
+      - https://product-fabric.atlassian.net/browse/MS-2036
+
+**Media**
+
+- Add analytics events and error reporting [NEW BIG FEATURE]
+  - https://product-fabric.atlassian.net/browse/MS-2275
+  - https://product-fabric.atlassian.net/browse/MS-2329
+  - https://product-fabric.atlassian.net/browse/MS-2330
+  - https://product-fabric.atlassian.net/browse/MS-2331
+  - https://product-fabric.atlassian.net/browse/MS-2332
+  - https://product-fabric.atlassian.net/browse/MS-2390
+- Fixed issue where we can’t insert same file from MediaPicker twice
+  - https://product-fabric.atlassian.net/browse/MS-2080
+- Disable upload of external files to media
+  - https://product-fabric.atlassian.net/browse/MS-2372
+
+**Notable Bug Fixes**
+
+    - Implement consistent behaviour for rule and mediaSingle on insertion
+      - Feature Flag:
+        - allowNewInsertionBehaviour - [default: true]
+      - https://product-fabric.atlassian.net/browse/ED-7503
+    - Fixed bug where we were showing table controls on mobile.
+      - https://product-fabric.atlassian.net/browse/ED-7690
+    - Fixed bug where editor crashes after unmounting react component.
+      - https://product-fabric.atlassian.net/browse/ED-7318
+    - Fixed bug where custom emojis are not been showed on the editor
+      - https://product-fabric.atlassian.net/browse/ED-7726
+
+- [minor][02dd8e6c76](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/02dd8e6c76):
+
+  Add RECENTS_COLLECTION constant with the name of user's recents collection
+
+## 2.2.1
+
+### Patch Changes
+
+- [patch][598fde647a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/598fde647a):
+
+  dont append file attrs to url in Safari
+
+## 2.2.0
+
+### Minor Changes
+
+- [minor][8e6bce4da8](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8e6bce4da8):
+
+  New fetchMaxRes parameter for getImage method allows to set default download params (4096 width and height and 'fit' mode)- [minor][d9abdd3030](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d9abdd3030):
+
+  Expose url helpers for copy&paste and stringify params
+
 ## 2.1.2
 
 - Updated dependencies [af72468517](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/af72468517):

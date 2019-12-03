@@ -79,6 +79,7 @@ export default function createEditorFactoryForTests<T = any>() {
     sel: number;
     plugin: any;
     pluginState: T;
+    editorProps: EditorProps;
   } => {
     let portalProviderAPI: PortalProviderAPI | undefined;
     const plugins = editorPlugins
@@ -167,10 +168,12 @@ export default function createEditorFactoryForTests<T = any>() {
           const headCell = findCellClosestToPos(doc.resolve(refs['cell>']));
           if (anchorCell && headCell) {
             dispatch(
-              tr.setSelection(new CellSelection(
-                doc.resolve(anchorCell.pos),
-                doc.resolve(headCell.pos),
-              ) as any),
+              tr.setSelection(
+                new CellSelection(
+                  doc.resolve(anchorCell.pos),
+                  doc.resolve(headCell.pos),
+                ) as any,
+              ),
             );
           }
         }
@@ -225,6 +228,7 @@ export default function createEditorFactoryForTests<T = any>() {
       sel: refs ? refs['<>'] : 0,
       plugin,
       pluginState,
+      editorProps,
     };
   };
 }

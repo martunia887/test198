@@ -16,7 +16,10 @@ import { taskDecision } from '@atlaskit/util-data-test';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { uuid } from '@atlaskit/adf-schema';
 import Button from '@atlaskit/button';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 
 import { pluginKey as blockTypePluginKey } from '../../../../../plugins/block-type/pm-plugins/main';
 import {
@@ -125,19 +128,18 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
   let dispatchSpy: jest.SpyInstance;
 
   const editor = (doc: any) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
     return createEditor({
       doc,
       pluginKey: blockTypePluginKey,
       editorProps: {
         analyticsHandler: analyticsHandlerSpy,
-        allowCodeBlocks: true,
         allowLayouts: true,
-        allowLists: true,
         allowPanel: true,
         allowRule: true,
         allowTables: true,
         allowStatus: true,
+        UNSAFE_allowExpand: { allowInsertion: true },
         allowAnalyticsGASV3: true,
         taskDecisionProvider: Promise.resolve(
           taskDecision.getMockTaskDecisionResource(),
@@ -258,6 +260,64 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
       );
 
       expect(customItems[0].onClick).toHaveBeenCalled();
+    });
+  });
+
+  describe('item validation', () => {
+    it('should not conflict with disabled native expand', () => {
+      const customItems = [
+        {
+          content: 'Custom A',
+          value: { name: 'expand' },
+          onClick: jest.fn(),
+        },
+      ];
+
+      buildToolbar({
+        expandEnabled: false,
+        insertMenuItems: customItems,
+      });
+      const spy = jest.spyOn(toolbarOption.instance() as any, 'insertExpand');
+
+      const onItemActivated = toolbarOption
+        .find(DropdownMenu)
+        .prop('onItemActivated');
+
+      onItemActivated!.call(
+        { props: { insertMenuItems: customItems } },
+        { item: customItems[0] },
+      );
+
+      expect(spy).not.toHaveBeenCalled();
+      expect(customItems[0].onClick).toHaveBeenCalled();
+    });
+
+    it('should not conflict with enabled native expand', () => {
+      const customItems = [
+        {
+          content: 'Custom A',
+          value: { name: 'expand' },
+          onClick: jest.fn(),
+        },
+      ];
+
+      buildToolbar({
+        expandEnabled: true,
+        insertMenuItems: customItems,
+      });
+      const spy = jest.spyOn(toolbarOption.instance() as any, 'insertExpand');
+
+      const onItemActivated = toolbarOption
+        .find(DropdownMenu)
+        .prop('onItemActivated');
+
+      onItemActivated!.call(
+        { props: { insertMenuItems: customItems, expandEnabled: true } },
+        { item: customItems[0] },
+      );
+
+      expect(spy).toHaveBeenCalled();
+      expect(customItems[0].onClick).not.toHaveBeenCalled();
     });
   });
 

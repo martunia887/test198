@@ -1,5 +1,15 @@
 import * as React from 'react';
-import { ExtensionHandlers, ExtensionParams } from '@atlaskit/editor-common';
+import {
+  ExtensionHandlers,
+  ExtensionParams,
+  DefaultExtensionProvider,
+  ExtensionType,
+  ExtensionKey,
+} from '@atlaskit/editor-common';
+import {
+  ExtensionManifest,
+  ExtensionModuleNodes,
+} from '@atlaskit/editor-common';
 
 const FakeExtension = ({
   colour,
@@ -35,6 +45,8 @@ class InlineAsyncExtension extends React.Component<{
     width: 85,
   };
 
+  private widthTimeoutId: number | undefined;
+
   render() {
     const { node } = this.props;
     const { width } = this.state;
@@ -46,9 +58,13 @@ class InlineAsyncExtension extends React.Component<{
   }
 
   componentDidMount() {
-    setTimeout(() => {
+    this.widthTimeoutId = window.setTimeout(() => {
       this.setState({ width: 285 });
     }, 2000);
+  }
+
+  componentWillUnmount() {
+    window.clearTimeout(this.widthTimeoutId);
   }
 }
 
@@ -139,4 +155,74 @@ export const extensionHandlers: ExtensionHandlers = {
       return <button>This is a test extension</button>;
     },
   },
+};
+
+export const createFakeModule = (content: any) => () =>
+  Promise.resolve({ __esModule: true, default: content });
+
+export const createFakeExtensionManifest = ({
+  title,
+  type,
+  extensionKey,
+  nodes = [{ key: 'default' }],
+}: {
+  title: string;
+  type: ExtensionType;
+  extensionKey: ExtensionKey;
+  nodes?: { key: string; parameters?: object }[];
+}): ExtensionManifest => ({
+  title,
+  type,
+  key: extensionKey,
+  description: `${title} extension`,
+  icons: {
+    '16': createFakeModule({}),
+    '48': createFakeModule({}),
+  },
+  modules: {
+    quickInsert: nodes.map(({ key, parameters = {} }) => ({
+      key,
+      action: {
+        key,
+        type: 'node',
+        parameters,
+      },
+    })),
+    nodes: nodes.reduce<ExtensionModuleNodes>((acc, { key }) => {
+      acc[key] = {
+        type: 'extension',
+        render: createFakeModule(() => {
+          return <div>My "{name}" extension</div>;
+        }),
+      };
+
+      return acc;
+    }, {}),
+  },
+});
+
+export const createFakeExtensionProvider = (
+  extensionType: ExtensionType,
+  extensionKey: ExtensionKey,
+  extensionHandler: (...args: any) => JSX.Element,
+) => {
+  const macroManifest = createFakeExtensionManifest({
+    title: 'fake extension provider',
+    type: extensionType,
+    extensionKey,
+  });
+
+  const FakeES6Module = {
+    __esModule: true,
+    default: extensionHandler,
+  };
+
+  macroManifest.modules.nodes.default.render = () =>
+    Promise.resolve(FakeES6Module);
+
+  const confluenceMacrosExtensionProvider = new DefaultExtensionProvider([
+    macroManifest,
+  ]);
+
+  return confluenceMacrosExtensionProvider;
 };

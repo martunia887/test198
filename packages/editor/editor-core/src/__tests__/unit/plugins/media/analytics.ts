@@ -11,9 +11,12 @@ import {
   MediaPluginState,
   MediaProvider,
 } from '../../../../plugins/media/pm-plugins/main';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import PickerFacade from '../../../../plugins/media/picker-facade';
-import { MediaFile } from '../../../../../../../media/media-picker';
+import { MediaFile } from '@atlaskit/media-picker/types';
 import {
   imagePreview,
   imageFile,
@@ -35,7 +38,7 @@ describe('Media Analytics', () => {
       mediaProvider,
       contextIdentifierProvider,
     });
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
 
     return createEditor({
       doc,
@@ -79,9 +82,7 @@ describe('Media Analytics', () => {
 
     const mediaPickers = [{ picker: 'popup', inputMethod: 'cloudPicker' }];
     mediaPickers.forEach(mediaPicker => {
-      it(`should fire analytics event when inserted via ${
-        mediaPicker.picker
-      }`, () => {
+      it(`should fire analytics event when inserted via ${mediaPicker.picker}`, () => {
         insertMedia(imageFile, mediaPicker.picker);
         expect(createAnalyticsEvent).toHaveBeenCalledWith({
           action: 'inserted',

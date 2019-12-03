@@ -31,6 +31,7 @@ import {
   pipe,
   closestElement,
   isSelectionInsideLastNodeInDocument,
+  shallowEqual,
 } from '../../../utils';
 import { Node, Schema } from 'prosemirror-model';
 
@@ -44,9 +45,7 @@ describe('@atlaskit/editore-core/utils', () => {
         media: {
           allowMediaSingle: true,
         },
-        allowCodeBlocks: true,
         allowPanel: true,
-        allowLists: true,
         allowTasksAndDecisions: true,
         mentionProvider: Promise.resolve(new MockMentionResource({})),
       },
@@ -343,12 +342,14 @@ describe('@atlaskit/editore-core/utils', () => {
 
     it('should throw for unknown nodes', () => {
       expect(
-        checkEmptyNode((() =>
-          ({
-            type: {
-              name: 'unknown',
-            },
-          } as any)) as any),
+        checkEmptyNode(
+          (() =>
+            ({
+              type: {
+                name: 'unknown',
+              },
+            } as any)) as any,
+        ),
       ).toBeTruthy();
     });
   });
@@ -449,11 +450,7 @@ describe('@atlaskit/editore-core/utils', () => {
       const fn2 = (val: string) => `fn2(${val})`;
       const fn3 = (val: string) => `fn3(${val})`;
 
-      const pipedFunction = pipe(
-        fn1,
-        fn2,
-        fn3,
-      );
+      const pipedFunction = pipe(fn1, fn2, fn3);
 
       expect(pipedFunction('inner')).toBe('fn3(fn2(fn1(inner)))');
     });
@@ -462,11 +459,7 @@ describe('@atlaskit/editore-core/utils', () => {
       const fn1 = (val: string, num: number) => `fn1(${val}-${num})`;
       const fn2 = (val: string) => `fn2(${val})`;
       const fn3 = (val: string) => `fn3(${val})`;
-      const pipedFunction = pipe(
-        fn1,
-        fn2,
-        fn3,
-      );
+      const pipedFunction = pipe(fn1, fn2, fn3);
 
       expect(pipedFunction('inner', 2)).toBe('fn3(fn2(fn1(inner-2)))');
     });
@@ -476,11 +469,7 @@ describe('@atlaskit/editore-core/utils', () => {
       const fn2 = (val: number) => ({ number: val, string: val.toString() });
       const fn3 = (val: object) => `fn3(${JSON.stringify(val)})`;
 
-      const pipedFunction = pipe(
-        fn1,
-        fn2,
-        fn3,
-      );
+      const pipedFunction = pipe(fn1, fn2, fn3);
 
       expect(pipedFunction('2')).toBe('fn3({"number":2,"string":"2"})');
     });
@@ -491,12 +480,7 @@ describe('@atlaskit/editore-core/utils', () => {
       const f1 = (a: string) => `#${a}`;
       const f2 = (b: string) => `!${b}`;
 
-      expect(
-        compose(
-          f1,
-          f2,
-        )('test'),
-      ).toEqual('#!test');
+      expect(compose(f1, f2)('test')).toEqual('#!test');
     });
   });
 
@@ -518,6 +502,36 @@ describe('@atlaskit/editore-core/utils', () => {
       expect(
         isSelectionInsideLastNodeInDocument(editorView.state.selection),
       ).toBe(false);
+    });
+  });
+
+  describe('#shallowEqual', () => {
+    it('should return true if all props from obj1 equals obj2', () => {
+      const objA = { test: 'ok', num: 2, prop: 'xx' };
+      const objB = { test: 'ok', num: 2, prop: 'xx' };
+
+      expect(shallowEqual(objA, objB)).toBe(true);
+    });
+
+    it('should return false if one prop from obj2 differs from obj1', () => {
+      const objA = { test: 'ok', num: 2, prop: 'xx' };
+      const objB = { test: 'ok', num: 2, prop: 'xx2' };
+
+      expect(shallowEqual(objA, objB)).toBe(false);
+    });
+
+    it('should return false if obj2 has nested properties', () => {
+      const objA = { test: 'ok', num: 2, prop: { sub: 'ok' } };
+      const objB = { test: 'ok', num: 2, prop: { sub: 'ok' } };
+
+      expect(shallowEqual(objA, objB)).toBe(false);
+    });
+
+    it('should return false if obj2 has different number of keys', () => {
+      const objA = { test: 'ok' };
+      const objB = { test: 'ok', num: 2, prop: { sub: 'ok' } };
+
+      expect(shallowEqual(objA, objB)).toBe(false);
     });
   });
 });

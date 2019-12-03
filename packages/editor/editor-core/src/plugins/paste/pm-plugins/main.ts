@@ -11,7 +11,8 @@ import { escapeLinks } from '../util';
 import { linkifyContent } from '../../hyperlink/utils';
 import { transformSliceToRemoveOpenBodiedExtension } from '../../extension/actions';
 import { transformSliceToRemoveOpenLayoutNodes } from '../../layout/utils';
-import { pluginKey as tableStateKey } from '../../table/pm-plugins/main';
+import { getPluginState as getTablePluginState } from '../../table/pm-plugins/main';
+import { transformSliceNestedExpandToExpand } from '../../expand/utils';
 import {
   transformSliceToRemoveOpenTable,
   transformSliceToCorrectEmptyTableCells,
@@ -32,6 +33,7 @@ import {
   handlePastePreservingMarksWithAnalytics,
   handleMarkdownWithAnalytics,
   handleRichTextWithAnalytics,
+  handleExpandWithAnalytics,
 } from './analytics';
 import { PasteTypes } from '../../analytics';
 import { insideTable } from '../../../utils';
@@ -40,6 +42,12 @@ import {
   transformSliceToCorrectMediaWrapper,
   unwrapNestedMediaElements,
 } from '../../media/utils/media-common';
+import {
+  transformSliceToRemoveColumnsWidths,
+  transformSliceRemoveCellBackgroundColor,
+} from '../../table/commands/misc';
+import { upgradeTextToLists, splitParagraphs } from '../../lists/transforms';
+
 export const stateKey = new PluginKey('pastePlugin');
 
 export const md = MarkdownIt('zero', { html: false });
@@ -58,8 +66,18 @@ md.enable([
 md.use(linkify);
 
 function isHeaderRowRequired(state: EditorState) {
-  const tableState = tableStateKey.getState(state);
+  const tableState = getTablePluginState(state);
   return tableState && tableState.pluginConfig.isHeaderRowRequired;
+}
+
+function isAllowResizingEnabled(state: EditorState) {
+  const tableState = getTablePluginState(state);
+  return tableState && tableState.pluginConfig.allowColumnResizing;
+}
+
+function isBackgroundCellAllowed(state: EditorState) {
+  const tableState = getTablePluginState(state);
+  return tableState && tableState.pluginConfig.allowBackgroundColor;
 }
 
 export function createPlugin(
@@ -90,8 +108,17 @@ export function createPlugin(
           return false;
         }
 
-        const text = event.clipboardData.getData('text/plain');
+        let text = event.clipboardData.getData('text/plain');
         const html = event.clipboardData.getData('text/html');
+        const uriList = event.clipboardData.getData('text/uri-list');
+
+        // Links copied from iOS Safari share button only have the text/uri-list data type
+        // ProseMirror don't do anything with this type so we want to make our own open slice
+        // with url as text content so link is pasted inline
+        if (uriList && !text && !html) {
+          text = uriList;
+          slice = new Slice(Fragment.from(schema.text(text)), 1, 1);
+        }
 
         const isPastedFile = clipboard.isPastedFile(event);
         const isPlainText = text && !html;
@@ -162,10 +189,12 @@ export function createPlugin(
 
         // If we're in a code block, append the text contents of clipboard inside it
         if (
-          handleCodeBlockWithAnalytics(view, event, slice, text)(
-            state,
-            dispatch,
-          )
+          handleCodeBlockWithAnalytics(
+            view,
+            event,
+            slice,
+            text,
+          )(state, dispatch)
         ) {
           return true;
         }
@@ -194,10 +223,11 @@ export function createPlugin(
             return true;
           }
 
-          return handleMarkdownWithAnalytics(view, event, markdownSlice)(
-            state,
-            dispatch,
-          );
+          return handleMarkdownWithAnalytics(
+            view,
+            event,
+            markdownSlice,
+          )(state, dispatch);
         }
 
         // finally, handle rich-text copy-paste
@@ -226,6 +256,19 @@ export function createPlugin(
             slice = transformSliceToAddTableHeaders(slice, state.schema);
           }
 
+          if (!isAllowResizingEnabled(state)) {
+            slice = transformSliceToRemoveColumnsWidths(slice, state.schema);
+          }
+
+          // If we don't allow background on cells, we need to remove it
+          // from the paste slice
+          if (!isBackgroundCellAllowed(state)) {
+            slice = transformSliceRemoveCellBackgroundColor(
+              slice,
+              state.schema,
+            );
+          }
+
           // get prosemirror-tables to handle pasting tables if it can
           // otherwise, just the replace the selection with the content
           if (handlePasteTable(view, null, slice)) {
@@ -247,10 +290,19 @@ export function createPlugin(
             return true;
           }
 
-          return handleRichTextWithAnalytics(view, event, slice)(
-            state,
-            dispatch,
-          );
+          if (handleExpandWithAnalytics(view, event, slice)(state, dispatch)) {
+            return true;
+          }
+
+          if (!insideTable(state)) {
+            slice = transformSliceNestedExpandToExpand(slice, state.schema);
+          }
+
+          return handleRichTextWithAnalytics(
+            view,
+            event,
+            slice,
+          )(state, dispatch);
         }
 
         return false;
@@ -282,6 +334,11 @@ export function createPlugin(
         slice = transformSliceToCorrectMediaWrapper(slice, schema);
 
         slice = transformSliceToCorrectEmptyTableCells(slice, schema);
+
+        // this must happen before upgrading text to lists
+        slice = splitParagraphs(slice, schema);
+
+        slice = upgradeTextToLists(slice, schema);
 
         if (
           slice.content.childCount &&

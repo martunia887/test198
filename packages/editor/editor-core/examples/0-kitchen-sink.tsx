@@ -7,8 +7,10 @@ import Button from '@atlaskit/button';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import { ReactRenderer } from '@atlaskit/renderer';
 import { colors, AtlaskitThemeProvider } from '@atlaskit/theme';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { extensionHandlers } from '@atlaskit/editor-test-helpers';
+import {
+  ProviderFactory,
+  combineExtensionProviders,
+} from '@atlaskit/editor-common';
 
 import enMessages from '../src/i18n/en';
 import languages from '../src/i18n/languages';
@@ -29,6 +31,12 @@ import ErrorReport, { Error } from '../example-helpers/ErrorReport';
 import KitchenSinkEditor from '../example-helpers/KitchenSinkEditor';
 import withSentry from '../example-helpers/withSentry';
 import FullWidthToggle from '../example-helpers/full-width-toggle';
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
+import { getXProductExtensionProvider } from '../example-helpers/fake-x-product-extensions';
+
+addGlobalEventEmitterListeners();
+
+const extensionProviders = [getXProductExtensionProvider()];
 
 const Container = styled.div`
   display: flex;
@@ -39,9 +47,9 @@ const Column: React.ComponentClass<React.HTMLAttributes<{}> & {}> = styled.div`
   flex: 1;
 `;
 
-const EditorColumn: React.ComponentClass<
-  React.HTMLAttributes<{}> & { vertical: boolean }
-> = styled.div`
+const EditorColumn: React.ComponentClass<React.HTMLAttributes<{}> & {
+  vertical: boolean;
+}> = styled.div`
   flex: 1;
   ${p =>
     p.vertical
@@ -67,7 +75,13 @@ const Controls = styled.div`
   }
 `;
 
-const appearanceOptions = [
+interface AppearanceOptions {
+  label: string;
+  value: EditorAppearance;
+  description: string;
+}
+
+const appearanceOptions: AppearanceOptions[] = [
   {
     label: 'Full page',
     value: 'full-page',
@@ -185,6 +199,13 @@ function getInitialTheme(): Theme {
 }
 
 class FullPageRendererExample extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    if (history.scrollRestoration === 'auto') {
+      history.scrollRestoration = 'manual';
+    }
+  }
+
   private getJSONFromStorage = (key: string, fallback: any = undefined) => {
     const localADF = (localStorage && localStorage.getItem(key)) || undefined;
 
@@ -219,6 +240,9 @@ class FullPageRendererExample extends React.Component<Props, State> {
   private dataProviders = ProviderFactory.create({
     ...providers,
     mediaProvider,
+    extensionProvider: Promise.resolve(
+      combineExtensionProviders(extensionProviders),
+    ),
   });
 
   private inputRef?: HTMLTextAreaElement | null;
@@ -228,6 +252,17 @@ class FullPageRendererExample extends React.Component<Props, State> {
     if (prevState.theme !== this.state.theme) {
       window.sessionStorage.setItem('theme', this.state.theme);
     }
+  }
+
+  componentDidMount() {
+    window.requestAnimationFrame(() => {
+      const anchorElement: HTMLElement | null = document.getElementById(
+        decodeURIComponent(window.location.hash.slice(1)),
+      );
+      if (anchorElement) {
+        anchorElement.scrollIntoView();
+      }
+    });
   }
 
   showHideADF = () =>
@@ -278,15 +313,15 @@ class FullPageRendererExample extends React.Component<Props, State> {
           render={actions => (
             <div>
               <Controls>
-                <Select
+                <Select<AppearanceOptions>
                   formatOptionLabel={formatAppearanceOption}
                   options={appearanceOptions}
                   defaultValue={appearanceOptions.find(
                     opt => opt.value === this.state.appearance,
                   )}
-                  onChange={(opt: { value: EditorAppearance }) => {
+                  onChange={opt => {
                     this.setState({
-                      appearance: opt.value,
+                      appearance: (opt as AppearanceOptions).value,
                     });
                   }}
                   styles={selectStyles}
@@ -394,6 +429,7 @@ class FullPageRendererExample extends React.Component<Props, State> {
                           popupMountPoint={this.popupMountPoint || undefined}
                           onDocumentChanged={this.onDocumentChanged}
                           onDocumentValidated={this.onDocumentValidated}
+                          extensionProviders={extensionProviders}
                           primaryToolbarComponents={
                             <React.Fragment>
                               <LanguagePicker
@@ -425,13 +461,17 @@ class FullPageRendererExample extends React.Component<Props, State> {
                       >
                         <SmartCardProvider>
                           <ReactRenderer
+                            allowHeadingAnchorLinks
                             document={this.state.adf}
                             adfStage="stage0"
                             dataProviders={this.dataProviders}
-                            extensionHandlers={extensionHandlers}
                             eventHandlers={this.legacyMediaEventHandlers()}
-                            // @ts-ignore
-                            appearance={this.state.appearance}
+                            appearance={
+                              this.state.appearance as Exclude<
+                                EditorAppearance,
+                                'chromeless'
+                              >
+                            }
                           />
                         </SmartCardProvider>
                       </IntlProvider>
@@ -511,9 +551,9 @@ class FullPageRendererExample extends React.Component<Props, State> {
   };
 
   private loadLocale = async (locale: string) => {
-    const localeData = await import(`react-intl/locale-data/${this.getLocalTag(
-      locale,
-    )}`);
+    const localeData = await import(
+      `react-intl/locale-data/${this.getLocalTag(locale)}`
+    );
     addLocaleData(localeData.default);
     const messages = await import(`../src/i18n/${locale}`);
     this.setState({ locale, messages: messages.default });

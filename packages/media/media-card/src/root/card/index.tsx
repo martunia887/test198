@@ -1,6 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Component } from 'react';
+
+import {
+  AnalyticsContext,
+  UIAnalyticsEvent,
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
 import {
   MediaClient,
   FileDetails,
@@ -10,28 +19,57 @@ import {
   isFileIdentifier,
   isDifferentIdentifier,
   isImageRepresentationReady,
+  addFileAttrsToUrl,
+  FileState,
+  ExternalImageIdentifier,
+  globalMediaEventEmitter,
+  MediaViewedEventPayload,
+  RECENTS_COLLECTION,
 } from '@atlaskit/media-client';
-import DownloadIcon from '@atlaskit/icon/glyph/download';
-import { AnalyticsContext, UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
+
 import { Subscription } from 'rxjs/Subscription';
 import { IntlProvider } from 'react-intl';
-import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
-import { CardAction, CardDimensions, CardProps, CardState } from '../..';
-import { CardView } from '../cardView';
+import {
+  CardAction,
+  CardDimensions,
+  CardProps,
+  CardState,
+  CardStatus,
+} from '../..';
+import { CardView, CardViewBase } from '../cardView';
 import { LazyContent } from '../../utils/lazyContent';
 import { getDataURIDimension } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
 import { isBigger } from '../../utils/dimensionComparer';
-import { getCardStatus } from './getCardStatus';
-import { InlinePlayer } from '../inlinePlayer';
+import {
+  getCardStatus,
+  getCardStatusFromFileState,
+  getAnalyticsStatusFromCardStatus,
+  getCardProgressFromFileState,
+  getAnalyticsErrorStateAttributes,
+  AnalyticsErrorStateAttributes,
+  AnalyticsLoadingAction,
+} from './getCardStatus';
+import { InlinePlayer, InlinePlayerBase } from '../inlinePlayer';
 import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
+  createAndFireCustomMediaEvent,
+  getFileAttributes,
 } from '../../utils/analytics';
 
-export class Card extends Component<CardProps, CardState> {
+export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
+export class CardBase extends Component<
+  CardWithAnalyticsEventsProps,
+  CardState
+> {
   private hasBeenMounted: boolean = false;
+  private lastAction?: AnalyticsLoadingAction = undefined;
+  private lastErrorState?: AnalyticsErrorStateAttributes = {};
+  private resolvedId: string = '';
+  cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
 
   subscription?: Subscription;
   static defaultProps: Partial<CardProps> = {
@@ -48,10 +86,48 @@ export class Card extends Component<CardProps, CardState> {
     isPlayingFile: false,
   };
 
+  // we add a listener for each of the cards on the page
+  // and then check if the triggered listener is from the card
+  // that contains a div in current window.getSelection()
+  // won't work in IE11
+  onCopyListener = () => {
+    if (typeof window.getSelection === 'function') {
+      const selection = window.getSelection();
+
+      if (
+        this.cardRef.current &&
+        this.cardRef.current.divRef.current instanceof Node &&
+        selection &&
+        selection.containsNode &&
+        selection.containsNode(this.cardRef.current.divRef.current, true)
+      ) {
+        this.fireAnalytics();
+      }
+    }
+  };
+
+  fireAnalytics = async () => {
+    const { createAnalyticsEvent, identifier } = this.props;
+
+    createAndFireCustomMediaEvent(
+      {
+        eventType: 'ui',
+        action: 'copied',
+        actionSubject: 'file',
+        actionSubjectId:
+          identifier.mediaItemType === 'file'
+            ? await identifier.id
+            : identifier.mediaItemType,
+      },
+      createAnalyticsEvent,
+    );
+  };
+
   componentDidMount() {
     const { identifier, mediaClient } = this.props;
     this.hasBeenMounted = true;
     this.subscribe(identifier, mediaClient);
+    document.addEventListener('copy', this.onCopyListener);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: CardProps) {
@@ -90,11 +166,14 @@ export class Card extends Component<CardProps, CardState> {
     this.hasBeenMounted = false;
     this.unsubscribe();
     this.releaseDataURI();
+    document.removeEventListener('copy', this.onCopyListener);
   }
 
   releaseDataURI = () => {
+    const { identifier } = this.props;
     const { dataURI } = this.state;
-    if (dataURI) {
+    // we don't want to release external previews, since it might be reused later on
+    if (dataURI && identifier.mediaItemType !== 'external-image') {
       URL.revokeObjectURL(dataURI);
     }
   };
@@ -111,33 +190,67 @@ export class Card extends Component<CardProps, CardState> {
     }
   };
 
-  async subscribe(identifier: Identifier, mediaClient: MediaClient) {
+  subscribe(identifier: Identifier, mediaClient: MediaClient) {
     const { isCardVisible } = this.state;
+
     if (!isCardVisible) {
       return;
     }
 
     if (identifier.mediaItemType === 'external-image') {
-      const { dataURI, name } = identifier;
-
-      this.setState({
-        status: 'complete',
-        dataURI,
-        metadata: {
-          id: dataURI,
-          name: name || dataURI,
-          mediaType: 'image',
-        },
-      });
-
-      return;
+      this.subscribeExternalFile(identifier);
+    } else {
+      this.subscribeInternalFile(identifier, mediaClient);
     }
+  }
 
+  subscribeExternalFile(identifier: ExternalImageIdentifier) {
+    const { createAnalyticsEvent } = this.props;
+    const { dataURI, name, mediaItemType } = identifier;
+    this.resolvedId = mediaItemType;
+
+    createAndFireCustomMediaEvent(
+      {
+        eventType: 'operational',
+        action: 'commenced',
+        actionSubject: 'mediaCardRender',
+        actionSubjectId: mediaItemType,
+      },
+      createAnalyticsEvent,
+    );
+
+    this.setState({
+      status: 'complete',
+      dataURI,
+      metadata: {
+        id: mediaItemType,
+        name: name || dataURI,
+        mediaType: 'image',
+      },
+    });
+  }
+
+  async subscribeInternalFile(
+    identifier: FileIdentifier,
+    mediaClient: MediaClient,
+  ) {
     const { id, collectionName, occurrenceKey } = identifier;
-    const resolvedId = typeof id === 'string' ? id : await id;
+    const { createAnalyticsEvent } = this.props;
+    this.resolvedId = await id;
+
+    createAndFireCustomMediaEvent(
+      {
+        eventType: 'operational',
+        action: 'commenced',
+        actionSubject: 'mediaCardRender',
+        actionSubjectId: this.resolvedId,
+      },
+      createAnalyticsEvent,
+    );
+
     this.unsubscribe();
     this.subscription = mediaClient.file
-      .getFileState(resolvedId, { collectionName, occurrenceKey })
+      .getFileState(this.resolvedId, { collectionName, occurrenceKey })
       .subscribe({
         next: async fileState => {
           let {
@@ -146,6 +259,7 @@ export class Card extends Component<CardProps, CardState> {
             dataURI,
             previewOrientation = 1,
           } = this.state;
+          const { contextId, alt } = this.props;
           const metadata = extendMetadata(fileState, this.state.metadata);
 
           if (!dataURI) {
@@ -154,29 +268,17 @@ export class Card extends Component<CardProps, CardState> {
             );
             previewOrientation = orientation || 1;
             dataURI = src;
-          }
-
-          switch (fileState.status) {
-            case 'uploading':
-              progress = fileState.progress;
-              status = 'uploading';
-              break;
-            case 'processing':
-              if (dataURI) {
-                status = 'complete';
-                progress = 1;
-              } else {
-                status = 'processing';
-              }
-              break;
-            case 'processed':
-              status = 'complete';
-              break;
-            case 'failed-processing':
-              status = 'failed-processing';
-              break;
-            case 'error':
-              status = 'error';
+            if (dataURI && contextId) {
+              dataURI = addFileAttrsToUrl(dataURI, {
+                id: this.resolvedId,
+                collection: collectionName,
+                contextId,
+                mimeType: metadata.mimeType,
+                name: metadata.name,
+                size: metadata.size,
+                alt,
+              });
+            }
           }
 
           const shouldFetchRemotePreview =
@@ -185,7 +287,7 @@ export class Card extends Component<CardProps, CardState> {
             metadata.mediaType &&
             isPreviewableType(metadata.mediaType);
           if (shouldFetchRemotePreview) {
-            const { appearance, dimensions, resizeMode } = this.props;
+            const { appearance, dimensions, resizeMode, alt } = this.props;
             const options = {
               appearance,
               dimensions,
@@ -196,7 +298,7 @@ export class Card extends Component<CardProps, CardState> {
             try {
               const mode =
                 resizeMode === 'stretchy-fit' ? 'full-fit' : resizeMode;
-              const blob = await mediaClient.getImage(resolvedId, {
+              const blob = await mediaClient.getImage(this.resolvedId, {
                 collection: collectionName,
                 mode,
                 height,
@@ -204,11 +306,35 @@ export class Card extends Component<CardProps, CardState> {
                 allowAnimated: true,
               });
               dataURI = URL.createObjectURL(blob);
+              if (contextId) {
+                dataURI = addFileAttrsToUrl(dataURI, {
+                  id: this.resolvedId,
+                  collection: collectionName,
+                  contextId,
+                  mimeType: metadata.mimeType,
+                  name: metadata.name,
+                  size: metadata.size,
+                  width,
+                  height,
+                  alt,
+                });
+              }
               this.releaseDataURI();
             } catch (e) {
               // We don't want to set status=error if the preview fails, we still want to display the metadata
             }
           }
+
+          status = getCardStatusFromFileState(fileState, dataURI);
+          progress =
+            getCardProgressFromFileState(fileState, dataURI) || progress;
+
+          this.fireLoadingStatusAnalyticsEvent({
+            resolvedId: this.resolvedId,
+            status,
+            fileState,
+            metadata,
+          });
 
           this.notifyStateChange({
             metadata,
@@ -219,10 +345,69 @@ export class Card extends Component<CardProps, CardState> {
           });
         },
         error: error => {
+          this.fireLoadingStatusAnalyticsEvent({
+            resolvedId: this.resolvedId,
+            status: 'error',
+            error,
+          });
           this.notifyStateChange({ error, status: 'error' });
         },
       });
   }
+
+  shouldFireAnalyticsEvent = (
+    action: AnalyticsLoadingAction,
+    errorState: AnalyticsErrorStateAttributes,
+  ) => {
+    const previousFailReason =
+      this.lastErrorState && this.lastErrorState.failReason;
+    const previousErrorMessage =
+      this.lastErrorState && this.lastErrorState.error;
+
+    const isDifferentErrorState =
+      errorState.failReason !== previousFailReason ||
+      errorState.error !== previousErrorMessage;
+
+    const isDifferentAction = action !== this.lastAction;
+
+    return isDifferentAction || isDifferentErrorState;
+  };
+
+  fireLoadingStatusAnalyticsEvent = ({
+    resolvedId,
+    status,
+    fileState,
+    metadata,
+    error,
+  }: {
+    resolvedId: string;
+    status: CardStatus;
+    fileState?: FileState;
+    metadata?: FileDetails;
+    error?: Error;
+  }) => {
+    const { createAnalyticsEvent } = this.props;
+    const action = getAnalyticsStatusFromCardStatus(status);
+    const errorState = getAnalyticsErrorStateAttributes(fileState, error);
+
+    if (action && this.shouldFireAnalyticsEvent(action, errorState)) {
+      this.lastAction = action;
+      this.lastErrorState = errorState;
+      createAndFireCustomMediaEvent(
+        {
+          eventType: 'operational',
+          action,
+          actionSubject: 'mediaCardRender',
+          actionSubjectId: resolvedId,
+          attributes: {
+            fileAttributes: getFileAttributes(metadata),
+            ...errorState,
+          },
+        },
+        createAnalyticsEvent,
+      );
+    }
+  };
 
   notifyStateChange = (state: Partial<CardState>) => {
     if (this.hasBeenMounted) {
@@ -241,12 +426,15 @@ export class Card extends Component<CardProps, CardState> {
     if (this.hasBeenMounted) {
       this.setState({ dataURI: undefined });
     }
+    this.lastAction = undefined;
+    this.lastErrorState = {};
   };
 
   // This method is called when card fails and user press 'Retry'
   private onRetry = () => {
     const { identifier, mediaClient } = this.props;
-
+    this.lastAction = undefined;
+    this.lastErrorState = {};
     this.subscribe(identifier, mediaClient);
   };
 
@@ -319,7 +507,13 @@ export class Card extends Component<CardProps, CardState> {
   };
 
   renderInlinePlayer = () => {
-    const { identifier, mediaClient, dimensions, selected } = this.props;
+    const {
+      identifier,
+      mediaClient,
+      dimensions,
+      selected,
+      testId,
+    } = this.props;
 
     return (
       <InlinePlayer
@@ -329,6 +523,8 @@ export class Card extends Component<CardProps, CardState> {
         onError={this.onInlinePlayerError}
         onClick={this.onClick}
         selected={selected}
+        ref={this.cardRef}
+        testId={testId}
       />
     );
   };
@@ -339,7 +535,31 @@ export class Card extends Component<CardProps, CardState> {
     });
   };
 
-  renderMediaViewer = () => {
+  private onDisplayImage = async () => {
+    const { identifier } = this.props;
+    let payloadPart: Pick<
+      MediaViewedEventPayload,
+      'fileId' | 'isUserCollection'
+    >;
+    if (isFileIdentifier(identifier)) {
+      payloadPart = {
+        fileId: await identifier.id,
+        isUserCollection: identifier.collectionName === RECENTS_COLLECTION,
+      };
+    } else {
+      payloadPart = {
+        fileId: identifier.dataURI,
+        isUserCollection: false,
+      };
+    }
+
+    globalMediaEventEmitter.emit('media-viewed', {
+      viewingLevel: 'minimal',
+      ...payloadPart,
+    });
+  };
+
+  renderMediaViewer = (): React.ReactPortal | undefined => {
     const { mediaViewerSelectedItem } = this.state;
     const { mediaClient, identifier, mediaViewerDataSource } = this.props;
     if (!mediaViewerSelectedItem) {
@@ -357,7 +577,7 @@ export class Card extends Component<CardProps, CardState> {
       <MediaViewer
         collectionName={collectionName}
         dataSource={dataSource}
-        context={mediaClient}
+        mediaClientConfig={mediaClient.config}
         selectedItem={mediaViewerSelectedItem}
         onClose={this.onMediaViewerClose}
       />,
@@ -375,15 +595,25 @@ export class Card extends Component<CardProps, CardState> {
       selected,
       onSelectChange,
       disableOverlay,
+      alt,
+      testId,
     } = this.props;
     const { progress, metadata, dataURI, previewOrientation } = this.state;
-    const { onRetry, onCardViewClick, actions, onMouseEnter } = this;
+    const {
+      onRetry,
+      onCardViewClick,
+      onDisplayImage,
+      actions,
+      onMouseEnter,
+    } = this;
     const status = getCardStatus(this.state, this.props);
+
     const card = (
       <CardView
         status={status}
         metadata={metadata}
         dataURI={dataURI}
+        alt={alt}
         appearance={appearance}
         resizeMode={resizeMode}
         dimensions={dimensions}
@@ -396,7 +626,10 @@ export class Card extends Component<CardProps, CardState> {
         disableOverlay={disableOverlay}
         progress={progress}
         onRetry={onRetry}
+        onDisplayImage={onDisplayImage}
         previewOrientation={previewOrientation}
+        ref={this.cardRef}
+        testId={testId}
       />
     );
 
@@ -430,18 +663,12 @@ export class Card extends Component<CardProps, CardState> {
   render() {
     const { metadata } = this.state;
     return (
-      /* 
-        First Context provides data needed to build packageHierarchy in Atlaskit Analytics Listener and Media Analytics Listener.
-        This data is not added to the final GASv3 payload 
-      */
-      <AnalyticsContext data={getBaseAnalyticsContext()}>
-        {/* 
+      /*
           Second context provides data to be merged with any other context down in the tree and the event's payload.
           This data is usually not available at the time of firing the event, though it is needed to be sent to the backend.
-       */}
-        <AnalyticsContext data={getUIAnalyticsContext(metadata)}>
-          {this.renderContent()}
-        </AnalyticsContext>
+       */
+      <AnalyticsContext data={getUIAnalyticsContext(this.resolvedId, metadata)}>
+        {this.renderContent()}
       </AnalyticsContext>
     );
   }
@@ -480,3 +707,11 @@ export class Card extends Component<CardProps, CardState> {
     }
   };
 }
+
+/*
+  This Context provides data needed to build packageHierarchy in Atlaskit Analytics Listener and Media Analytics Listener.
+  This data is not added to the final GASv3 payload
+*/
+export const Card: React.ComponentType<CardWithAnalyticsEventsProps> = withAnalyticsContext(
+  getBaseAnalyticsContext(),
+)(withAnalyticsEvents()(CardBase));

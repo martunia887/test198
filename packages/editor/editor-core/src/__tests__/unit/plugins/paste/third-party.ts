@@ -29,10 +29,10 @@ describe('paste plugin: third-party', () => {
     createEditor({
       doc,
       editorProps: {
-        allowCodeBlocks: true,
-        allowLists: true,
         allowTextColor: true,
-        allowTables: true,
+        allowTables: {
+          advanced: true,
+        },
       },
     });
   it('should handle pasting content from Apple Pages', () => {

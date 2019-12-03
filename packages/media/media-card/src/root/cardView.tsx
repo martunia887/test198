@@ -37,6 +37,7 @@ export interface CardViewOwnProps extends SharedCardProps {
   ) => void;
   readonly onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void;
   readonly onSelectChange?: (result: OnSelectChangeFuncResult) => void;
+  readonly onDisplayImage?: () => void;
 
   // FileCardProps
   readonly dataURI?: string;
@@ -60,6 +61,7 @@ export class CardViewBase extends React.Component<
   CardViewState
 > {
   state: CardViewState = {};
+  divRef: React.RefObject<HTMLDivElement> = React.createRef();
 
   static defaultProps: Partial<CardViewOwnProps> = {
     appearance: 'auto',
@@ -128,19 +130,27 @@ export class CardViewBase extends React.Component<
   }
 
   render() {
-    const { dimensions, appearance, onClick, onMouseEnter } = this.props;
+    const {
+      dimensions,
+      appearance,
+      onClick,
+      onMouseEnter,
+      testId,
+    } = this.props;
     const wrapperDimensions = dimensions
       ? dimensions
       : getDefaultCardDimensions(appearance);
 
     return (
       <Wrapper
+        data-testid={testId || 'media-card-view'}
         shouldUsePointerCursor={true}
         breakpointSize={breakpointSize(this.width)}
         appearance={appearance}
         dimensions={wrapperDimensions}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
+        innerRef={this.divRef}
       >
         {this.renderFile()}
       </Wrapper>
@@ -162,6 +172,8 @@ export class CardViewBase extends React.Component<
       selected,
       disableOverlay,
       previewOrientation,
+      alt,
+      onDisplayImage,
     } = this.props;
 
     return (
@@ -169,6 +181,7 @@ export class CardViewBase extends React.Component<
         status={status}
         details={metadata}
         dataURI={dataURI}
+        alt={alt}
         progress={progress}
         onRetry={onRetry}
         resizeMode={resizeMode}
@@ -179,6 +192,7 @@ export class CardViewBase extends React.Component<
         selected={selected}
         disableOverlay={disableOverlay}
         previewOrientation={previewOrientation}
+        onDisplayImage={onDisplayImage}
       />
     );
   };
@@ -189,6 +203,5 @@ export const CardView = withAnalyticsEvents({
     eventType: 'ui',
     action: 'clicked',
     actionSubject: 'mediaCard',
-    actionSubjectId: 'mediaCardCardView',
   }),
 })(CardViewBase);

@@ -27,7 +27,11 @@ import {
   isFirstChildOfParent,
   findCutBefore,
 } from '../../utils/commands';
-import { isRangeOfType, compose, sanitizeSelectionMarks } from '../../utils';
+import {
+  isRangeOfType,
+  compose,
+  sanitiseSelectionMarksForWrapping,
+} from '../../utils';
 import { liftFollowingList, liftSelectionList } from './transforms';
 import { Command } from '../../types';
 import { GapCursorSelection } from '../gap-cursor';
@@ -629,7 +633,8 @@ export const toggleList = (
   if (
     !fromNode ||
     fromNode.type.name !== listType ||
-    (!endNode || endNode.type.name !== listType)
+    !endNode ||
+    endNode.type.name !== listType
   ) {
     return toggleListCommandWithAnalytics(inputMethod, listType)(
       state,
@@ -646,7 +651,7 @@ export const toggleList = (
       state.tr,
     );
     tr = liftSelectionList(state, tr);
-    tr = addAnalytics(tr, {
+    tr = addAnalytics(state, tr, {
       action: ACTION.FORMATTED,
       actionSubject: ACTION_SUBJECT.TEXT,
       actionSubjectId:
@@ -719,9 +724,12 @@ export function toggleListCommand(
       }
 
       // Remove any invalid marks that are not supported
-      const tr = sanitizeSelectionMarks(state);
-      if (tr) {
-        dispatch!(tr);
+      const tr = sanitiseSelectionMarksForWrapping(
+        state,
+        state.schema.nodes[listType],
+      );
+      if (tr && dispatch) {
+        dispatch(tr);
         state = view.state;
       }
       // Wraps selection in list
@@ -744,7 +752,7 @@ export const toggleListCommandWithAnalytics = (
     if (toggleListCommand(listType)(state, dispatch, view)) {
       if (view && dispatch) {
         dispatch(
-          addAnalytics(view.state.tr, {
+          addAnalytics(state, view.state.tr, {
             action: ACTION.FORMATTED,
             actionSubject: ACTION_SUBJECT.TEXT,
             actionSubjectId: listTypeActionSubjectId[listType] as

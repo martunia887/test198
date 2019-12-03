@@ -7,12 +7,10 @@ export { Config } from './api/configureSearchClients';
 
 export { GlobalSearchPrefetchedResults } from './api/prefetchResults';
 
-export {
-  default as GlobalSearchPrefetchedResultsProvider,
-} from './components/PrefetchedResultsProvider';
+export { default as GlobalSearchPrefetchedResultsProvider } from './components/PrefetchedResultsProvider';
 
 export {
-  default as withFeedbackButton,
+  withFeedbackButton,
   FeedbackCollectorProps,
 } from './components/feedback/withFeedbackButton';
 

@@ -4,10 +4,15 @@ import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
 import { ThemeProvider } from 'styled-components';
 import { MediaEditor, LoadParameters } from '../mediaEditor';
-import { Tool, Dimensions, ShapeParameters } from '../../common';
+import {
+  CancelInputType,
+  Tool,
+  Dimensions,
+  ShapeParameters,
+} from '../../common';
 import Toolbar, { tools } from './toolbar/toolbar';
 import { EditorContainer } from './styles';
-import { colors } from '@atlaskit/theme';
+import { R300 } from '@atlaskit/theme/colors';
 import { Theme as ButtonTheme } from '@atlaskit/button';
 import { rgbToHex } from '../../util';
 import { DEFAULT_COLOR } from './toolbar/popups/colorPopup';
@@ -25,9 +30,9 @@ const propertyLineWidth = 'media-editor-line-width';
 export interface EditorViewProps {
   readonly imageUrl: string;
   readonly onSave: (image: string, dimensions: Dimensions) => void;
-  readonly onCancel: () => void;
+  readonly onCancel: (input: CancelInputType) => void;
   readonly onError: (message: string) => void;
-  readonly onAnyEdit?: () => void;
+  readonly onAnyEdit?: (tool: Tool, shapeParameters: ShapeParameters) => void;
 }
 
 export interface EditorViewState {
@@ -37,7 +42,7 @@ export interface EditorViewState {
   readonly tool: Tool;
 }
 
-class EditorView extends Component<
+export class EditorView extends Component<
   EditorViewProps & InjectedIntlProps,
   EditorViewState
 > {
@@ -48,7 +53,7 @@ class EditorView extends Component<
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT - TOOLBAR_HEIGHT,
     },
-    color: colors.R300,
+    color: R300,
     lineWidth: 8,
     tool: 'arrow',
   };
@@ -125,7 +130,7 @@ class EditorView extends Component<
     const onColorChanged = (color: string) => this.setState({ color });
     const onLineWidthChanged = (lineWidth: number) =>
       this.setState({ lineWidth });
-    const onCancel = () => this.props.onCancel();
+    const onCancel = () => this.props.onCancel('button');
 
     return (
       <Toolbar
@@ -233,7 +238,7 @@ class EditorView extends Component<
     if (e.key === 'Escape') {
       e.stopPropagation();
       e.nativeEvent.stopImmediatePropagation();
-      this.props.onCancel();
+      this.props.onCancel('esc');
     }
   };
 }

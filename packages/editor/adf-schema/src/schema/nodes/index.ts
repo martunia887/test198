@@ -7,6 +7,7 @@ export {
   BlockContent,
   Inline,
   ExtensionContent,
+  NestedExpandContent,
   NoMark,
   MarksObject,
   InlineFormattedText,
@@ -66,6 +67,7 @@ export { text, TextDefinition } from './text';
 export { default as unknownBlock } from './unknown-block';
 export {
   media,
+  mediaWithAltText,
   MediaType,
   MediaBaseAttributes,
   MediaAttributes,
@@ -93,7 +95,7 @@ export {
   toJSONTableHeader,
   tableRow,
   tableBackgroundColorPalette,
-  tableBackgroundBorderColors,
+  tableBackgroundBorderColor,
   tableBackgroundColorNames,
   CellAttributes,
   Layout as TableLayout,
@@ -109,18 +111,18 @@ export {
   tableCellContentDomSelector,
 } from './tableNodes';
 export {
-  applicationCard,
-  ApplicationCardAttributes,
-  AppCardAction,
-  ApplicationCardDefinition,
-} from './applicationCard';
-export {
   decisionList,
   DecisionListDefinition,
   decisionListSelector,
 } from './decision-list';
 export { decisionItem, DecisionItemDefinition } from './decision-item';
-export { taskList, TaskListDefinition, taskListSelector } from './task-list';
+export {
+  taskList,
+  nestableTaskList,
+  TaskListDefinition,
+  TaskListWithNestingDefinition,
+  taskListSelector,
+} from './task-list';
 export { taskItem, TaskItemDefinition } from './task-item';
 export { extension, ExtensionDefinition } from './extension';
 export { inlineExtension, InlineExtensionDefinition } from './inline-extension';
@@ -134,7 +136,15 @@ export { placeholder, PlaceholderDefinition } from './placeholder';
 export { layoutSection, LayoutSectionDefinition } from './layout-section';
 export { layoutColumn, LayoutColumnDefinition } from './layout-column';
 export { inlineCard, InlineCardDefinition } from './inline-card';
-export { blockCard, CardAttributes, BlockCardDefinition } from './block-card';
+export {
+  blockCard,
+  UrlType,
+  DataType,
+  CardAttributes,
+  BlockCardDefinition,
+} from './block-card';
 export { unsupportedBlock } from './unsupported-block';
 export { unsupportedInline } from './unsupported-inline';
 export { status, StatusDefinition } from './status';
+export { expand, ExpandDefinition, toJSON as expandToJSON } from './expand';
+export { nestedExpand, NestedExpandDefinition } from './nested-expand';

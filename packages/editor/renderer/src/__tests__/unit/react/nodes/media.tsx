@@ -126,6 +126,40 @@ describe('Media', () => {
     mediaComponent.unmount();
   });
 
+  it('should render a media component with alt text if FF is on', async () => {
+    const mediaComponent = mount(
+      <Media
+        type={mediaNode.attrs.type as MediaType}
+        id={mediaNode.attrs.id}
+        collection={mediaNode.attrs.collection}
+        alt="test"
+        UNSAFE_allowAltTextOnImages={true}
+      />,
+    );
+
+    const mediaCard = mediaComponent.find(MediaCard);
+    expect(mediaCard.length).toEqual(1);
+    expect(mediaCard.prop('alt')).toBe('test');
+    mediaComponent.unmount();
+  });
+
+  it('should render a media component without alt text if FF is off', async () => {
+    const mediaComponent = mount(
+      <Media
+        type={mediaNode.attrs.type as MediaType}
+        id={mediaNode.attrs.id}
+        collection={mediaNode.attrs.collection}
+        alt="test"
+        UNSAFE_allowAltTextOnImages={true}
+      />,
+    );
+
+    const mediaCard = mediaComponent.find(MediaCard);
+    expect(mediaCard.length).toEqual(1);
+    expect(mediaCard.prop('alt')).toBe('test');
+    mediaComponent.unmount();
+  });
+
   it('should render a media component with external image', async () => {
     const mediaComponent = mount(
       <Media type="external" url="http://image.jpg" />,
@@ -160,6 +194,102 @@ describe('Media', () => {
       expect(
         cardWithoutOnClick.find(Card).prop('shouldOpenMediaViewer'),
       ).toBeTruthy();
+    });
+
+    it('should pass shouldOpenMediaViewer=true if renderer appearance is not mobile', () => {
+      const cardMobile = mount(
+        <MediaCard type="file" id="1" rendererAppearance={'mobile'} />,
+      );
+      const cardNoMobile = mount(<MediaCard type="file" id="1" />);
+
+      // force media mediaClientConfig to be resolved
+      cardMobile.find(MediaCardInternal).setState({ mediaClientConfig: {} });
+      cardNoMobile.find(MediaCardInternal).setState({ mediaClientConfig: {} });
+
+      expect(
+        cardNoMobile.find(Card).prop('shouldOpenMediaViewer'),
+      ).toBeTruthy();
+      expect(cardMobile.find(Card).prop('shouldOpenMediaViewer')).toBeFalsy();
+    });
+
+    it('should pass shouldOpenMediaViewer=true if property shouldOpenMediaViewer is set to true', () => {
+      const cardWithOnClick = mount(
+        <MediaCard
+          type="file"
+          id="1"
+          shouldOpenMediaViewer={true}
+          eventHandlers={{ media: { onClick: jest.fn() } }}
+        />,
+      );
+
+      const cardMobile = mount(
+        <MediaCard
+          type="file"
+          id="1"
+          shouldOpenMediaViewer={true}
+          rendererAppearance={'mobile'}
+        />,
+      );
+
+      const cardWithoutOnClick = mount(
+        <MediaCard type="file" id="1" shouldOpenMediaViewer={true} />,
+      );
+
+      // force media mediaClientConfig to be resolved
+      cardWithOnClick
+        .find(MediaCardInternal)
+        .setState({ mediaClientConfig: {} });
+      cardWithoutOnClick
+        .find(MediaCardInternal)
+        .setState({ mediaClientConfig: {} });
+      cardMobile.find(MediaCardInternal).setState({ mediaClientConfig: {} });
+
+      expect(
+        cardWithOnClick.find(Card).prop('shouldOpenMediaViewer'),
+      ).toBeTruthy();
+      expect(
+        cardWithoutOnClick.find(Card).prop('shouldOpenMediaViewer'),
+      ).toBeTruthy();
+      expect(cardMobile.find(Card).prop('shouldOpenMediaViewer')).toBeTruthy();
+    });
+
+    it('should pass shouldOpenMediaViewer=false if property shouldOpenMediaViewer is set to false', () => {
+      const cardWithOnClick = mount(
+        <MediaCard
+          type="file"
+          id="1"
+          shouldOpenMediaViewer={false}
+          eventHandlers={{ media: { onClick: jest.fn() } }}
+        />,
+      );
+      const cardWithoutOnClick = mount(
+        <MediaCard type="file" id="1" shouldOpenMediaViewer={false} />,
+      );
+      const cardMobile = mount(
+        <MediaCard
+          type="file"
+          id="1"
+          shouldOpenMediaViewer={false}
+          rendererAppearance={'mobile'}
+        />,
+      );
+
+      // force media mediaClientConfig to be resolved
+      cardWithOnClick
+        .find(MediaCardInternal)
+        .setState({ mediaClientConfig: {} });
+      cardWithoutOnClick
+        .find(MediaCardInternal)
+        .setState({ mediaClientConfig: {} });
+      cardMobile.find(MediaCardInternal).setState({ mediaClientConfig: {} });
+
+      expect(
+        cardWithOnClick.find(Card).prop('shouldOpenMediaViewer'),
+      ).toBeFalsy();
+      expect(
+        cardWithoutOnClick.find(Card).prop('shouldOpenMediaViewer'),
+      ).toBeFalsy();
+      expect(cardMobile.find(Card).prop('shouldOpenMediaViewer')).toBeFalsy();
     });
 
     it('should call passed onClick', () => {

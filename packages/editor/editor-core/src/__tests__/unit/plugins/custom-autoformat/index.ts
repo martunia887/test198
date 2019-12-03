@@ -40,7 +40,6 @@ describe('custom-autoformat', () => {
       doc,
       editorProps: {
         autoformattingProvider,
-        allowLists: true,
       },
       providerFactory,
       pluginKey,
@@ -165,7 +164,9 @@ describe('custom-autoformat', () => {
   describe('provider validation', () => {
     it('does nothing if provider rejects', async () => {
       const replacementRule = jest.fn(() => {
-        return Promise.reject('nope').catch(() => {});
+        return (Promise.reject('nope').catch(() => {}) as any) as Promise<
+          ADFEntity
+        >;
       });
 
       const rejectingProvider: AutoformattingProvider = {

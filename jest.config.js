@@ -64,16 +64,19 @@ const config = {
   transformIgnorePatterns: [
     '\\/node_modules\\/(?!@atlaskit|react-syntax-highlighter)',
   ],
-  resolver: `${__dirname}/resolver.js`,
+  resolver: `${__dirname}/build/resolvers/jest-resolver.js`,
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',
   },
   globals: {
     'ts-jest': {
-      tsConfigFile: './tsconfig.jest.json',
+      tsConfig: './tsconfig.jest.json',
+      diagnostics: false,
+      isolatedModules: true,
     },
     __BASEURL__: 'http://localhost:9000',
+    synchronyUrl: '',
   },
   moduleFileExtensions: ['js', 'ts', 'tsx', 'json'],
   moduleNameMapper: {
@@ -95,6 +98,20 @@ const config = {
   globalTeardown: undefined,
   // Jest's default test environment 'jsdom' uses JSDOM 11 to support Node 6. Here we upgrade to JSDOM 14, which supports Node >= 8
   testEnvironment: 'jest-environment-jsdom-fourteen',
+  // The modules below cause problems when automocking.
+  unmockedModulePathPatterns: [
+    'node_modules/tslib/',
+    'node_modules/babel-runtime/',
+    'node_modules/@babel/runtime/',
+    'node_modules/es-abstract/',
+    'node_modules/graceful-fs/',
+    'node_modules/any-promise/',
+    'node_modules/globby/',
+    'node_modules/chalk/',
+    'node_modules/fs-extra/',
+    'node_modules/meow/',
+    'node_modules/colors/',
+  ],
 };
 
 // If the CHANGED_PACKAGES variable is set, we parse it to get an array of changed packages and only
@@ -181,6 +198,10 @@ if (process.env.VISUAL_REGRESSION) {
 
   if (!process.env.CI && !process.env.DEBUG) {
     config.globals.__BASEURL__ = 'http://testing.local.com:9000';
+  }
+
+  if (process.env.SYNCHRONY_URL) {
+    config.globals.synchronyUrl = process.env.SYNCHRONY_URL;
   }
 }
 

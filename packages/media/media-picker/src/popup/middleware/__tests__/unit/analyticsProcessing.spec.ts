@@ -21,14 +21,11 @@ import { hidePopup } from '../../../actions/hidePopup';
 import { changeService } from '../../../actions/changeService';
 import { editRemoteImage } from '../../../actions/editRemoteImage';
 import { editorClose } from '../../../actions/editorClose';
-import { fileUploadsStart } from '../../../actions/fileUploadsStart';
 import { handleCloudFetchingEvent } from '../../../actions/handleCloudFetchingEvent';
-import { fileUploadEnd } from '../../../actions/fileUploadEnd';
 import { startFileBrowser } from '../../../actions/startFileBrowser';
 import { GET_PREVIEW } from '../../../actions/getPreview';
-import { MediaFile } from '../../../../domain/file';
+import { MediaFile } from '../../../../types';
 import { buttonClickPayload, Payload } from '../../analyticsHandlers';
-import { fileUploadError } from '../../../actions/fileUploadError';
 
 type TestPayload = GasCorePayload & { action: string; attributes: {} };
 type UploadType = 'cloudMedia' | 'localMedia';
@@ -46,14 +43,6 @@ const testFile1: MediaFile = {
   type: 'type1',
 };
 
-const testFile2: MediaFile = {
-  id: 'id2',
-  name: 'file2',
-  size: 2,
-  creationDate: 2,
-  type: 'type2',
-};
-
 const attributes = {
   componentName: 'mediaPicker',
   componentVersion: expect.any(String),
@@ -63,11 +52,14 @@ const attributes = {
 const makePayloadForOperationalFileUpload = (
   file: MediaFile,
   uploadType: UploadType,
+  serviceName: ServiceName,
 ): TestPayload => ({
   action: 'commenced',
   actionSubject: 'mediaUpload',
   actionSubjectId: uploadType,
   attributes: {
+    sourceType: 'cloud',
+    serviceName,
     fileAttributes: {
       fileId: file.id,
       fileSize: file.size,
@@ -83,12 +75,15 @@ const makePayloadForTrackFileConversion = (
   file: MediaFile,
   uploadType: UploadType,
   status: 'success' | 'fail',
+  serviceName: ServiceName,
   failReason?: string,
 ): TestPayload => ({
   action: 'uploaded',
   actionSubject: 'mediaUpload',
   actionSubjectId: uploadType,
   attributes: {
+    sourceType: 'cloud',
+    serviceName,
     fileAttributes: {
       fileId: file.id,
       fileSize: file.size,
@@ -262,13 +257,14 @@ describe('analyticsProcessing middleware', () => {
         attributes: {
           fileCount: 1,
           ...attributes,
+          serviceNames: ['upload'],
           files: [
             {
               accountId: undefined,
               fileId: '789',
-              fileName: '1.jpg',
               fileSize: 10,
               fileMimetype: 'image/jpg',
+              serviceName: 'upload',
             },
           ],
         },
@@ -297,20 +293,21 @@ describe('analyticsProcessing middleware', () => {
         attributes: {
           ...attributes,
           fileCount: 2,
+          serviceNames: ['upload', 'upload'],
           files: [
             {
               accountId: undefined,
               fileId: '123',
-              fileName: '1.jpg',
               fileSize: 10,
               fileMimetype: 'image/jpg',
+              serviceName: 'upload',
             },
             {
               accountId: undefined,
               fileId: '456',
-              fileName: '1.png',
               fileSize: 20,
               fileMimetype: 'image/png',
+              serviceName: 'upload',
             },
           ],
         },
@@ -400,7 +397,6 @@ describe('analyticsProcessing middleware', () => {
           ...attributes,
           collectionName: '',
           fileId: '',
-          fileName: '',
         },
       },
     );
@@ -422,50 +418,13 @@ describe('analyticsProcessing middleware', () => {
     });
   });
 
-  it('should process action fileUploadsStart with 1 file, fire 1 event', () => {
-    verifyAnalyticsCall(
-      fileUploadsStart({
-        files: [testFile1],
-      }),
-      {
-        action: 'commenced',
-        actionSubject: 'mediaUpload',
-        actionSubjectId: 'localMedia',
-        attributes: {
-          fileAttributes: {
-            fileId: testFile1.id,
-            fileSize: 1,
-            fileMimetype: 'type1',
-            fileSource: 'mediapicker',
-          },
-          ...attributes,
-        },
-        eventType: OPERATIONAL_EVENT_TYPE,
-      },
-    );
-  });
-
-  it('should process action fileUploadsStart with 2 files, fire 2 events', () => {
-    verifyAnalyticsCall(
-      fileUploadsStart({
-        files: [testFile1, testFile2],
-      }),
-      makePayloadForOperationalFileUpload(testFile1, 'localMedia'),
-    );
-    verifyAnalyticsCall(
-      fileUploadsStart({
-        files: [testFile1, testFile2],
-      }),
-      makePayloadForOperationalFileUpload(testFile2, 'localMedia'),
-    );
-  });
-
   it('should process action handleCloudFetchingEvent with 1 upload, fire 1 event', () => {
     verifyAnalyticsCall(
       handleCloudFetchingEvent(testFile1, 'RemoteUploadStart', {
         uploadId: 'upid1',
+        serviceName: DROPBOX,
       }),
-      makePayloadForOperationalFileUpload(testFile1, 'cloudMedia'),
+      makePayloadForOperationalFileUpload(testFile1, 'cloudMedia', DROPBOX),
     );
   });
 
@@ -474,8 +433,14 @@ describe('analyticsProcessing middleware', () => {
       handleCloudFetchingEvent(testFile1, 'RemoteUploadEnd', {
         fileId: 'id1',
         uploadId: 'upid1',
+        serviceName: DROPBOX,
       }),
-      makePayloadForTrackFileConversion(testFile1, 'cloudMedia', 'success'),
+      makePayloadForTrackFileConversion(
+        testFile1,
+        'cloudMedia',
+        'success',
+        DROPBOX,
+      ),
       {
         remoteUploads: {
           upid1: {
@@ -491,110 +456,19 @@ describe('analyticsProcessing middleware', () => {
       handleCloudFetchingEvent(testFile1, 'RemoteUploadFail', {
         description: 'id1 failed',
         uploadId: 'upid1',
+        serviceName: DROPBOX,
       }),
-      makePayloadForTrackFileConversion(testFile1, 'cloudMedia', 'fail'),
+      makePayloadForTrackFileConversion(
+        testFile1,
+        'cloudMedia',
+        'fail',
+        DROPBOX,
+        'id1 failed',
+      ),
       {
         remoteUploads: {
           upid1: {
             timeStarted: 0,
-          },
-        },
-      },
-    );
-  });
-
-  it('should process action fileUploadEnd with success, fire 1 event', () => {
-    const payload = makePayloadForTrackFileConversion(
-      testFile1,
-      'localMedia',
-      'success',
-    );
-    verifyAnalyticsCall(
-      fileUploadEnd({
-        file: testFile1,
-      }),
-      {
-        ...payload,
-        attributes: {
-          ...payload.attributes,
-          fileAttributes: payload.attributes.fileAttributes,
-        },
-      },
-      {
-        uploads: {
-          id1: {
-            file: {
-              metadata: {
-                id: 'id1',
-                name: 'file1',
-                size: 1,
-                mimeType: 'type1',
-              },
-            },
-            events: [
-              {
-                data: {
-                  file: testFile1,
-                },
-                name: 'upload-end',
-              },
-            ],
-            index: 0,
-            timeStarted: 0,
-            progress: null,
-          },
-        },
-      },
-    );
-  });
-
-  it('should process action fileUploadError with one file, fire 1 event', () => {
-    const payload = makePayloadForTrackFileConversion(
-      testFile1,
-      'localMedia',
-      'fail',
-      'foo',
-    );
-    delete payload.attributes.fileAttributes.fileMimetype;
-    payload.attributes.fileAttributes.fileId = testFile1.id;
-    verifyAnalyticsCall(
-      fileUploadError({
-        file: {
-          ...testFile1,
-        },
-        error: {
-          description: 'foo',
-          name: 'object_create_fail',
-        },
-      }),
-      payload,
-      {
-        uploads: {
-          id1: {
-            file: {
-              metadata: {
-                id: 'id1',
-                name: 'file1',
-                size: 1,
-                mimeType: 'type1',
-              },
-            },
-            events: [
-              {
-                data: {
-                  file: testFile1,
-                  error: {
-                    name: 'object_create_fail',
-                    description: 'foo',
-                    fileId: 'id1',
-                  },
-                },
-                name: 'upload-error',
-              },
-            ],
-            index: 0,
-            timeStarted: 0,
-            progress: null,
           },
         },
       },

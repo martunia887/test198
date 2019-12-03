@@ -1,13 +1,5 @@
 import uuidV4 from 'uuid/v4';
 import {
-  UploadableFile,
-  MediaType,
-  getMediaTypeFromMimeType,
-  getFileStreamsCache,
-  MediaClient,
-  globalMediaEventEmitter,
-} from '@atlaskit/media-client';
-import {
   MediaStore,
   MediaStoreCopyFileWithTokenBody,
   UploadController,
@@ -16,16 +8,21 @@ import {
   MediaFile as MediaStoreMediaFile,
   TouchFileDescriptor,
   UploadableFileUpfrontIds,
-} from '@atlaskit/media-store';
+  UploadableFile,
+  MediaType,
+  getMediaTypeFromMimeType,
+  getFileStreamsCache,
+  MediaClient,
+  globalMediaEventEmitter,
+} from '@atlaskit/media-client';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { EventEmitter2 } from 'eventemitter2';
-import { MediaFile } from '../domain/file';
+import { MediaFile, UploadParams } from '../types';
 
-import { RECENTS_COLLECTION } from '../popup/config';
 import { mapAuthToSourceFileOwner } from '../popup/domain/source-file';
 import { getPreviewFromImage } from '../util/getPreviewFromImage';
-import { UploadParams } from '..';
 import { SmartMediaProgress } from '../domain/progress';
-import { MediaErrorName } from '../domain/error';
+import { MediaErrorName } from '../types';
 import {
   UploadService,
   UploadServiceEventListener,
@@ -157,7 +154,7 @@ export class UploadServiceImpl implements UploadService {
         };
 
         const controller = this.createUploadController();
-        const observable = mediaClient.file.upload(
+        const sourceFileObservable = mediaClient.file.upload(
           uploadableFile,
           controller,
           uploadableUpfrontIds,
@@ -181,14 +178,14 @@ export class UploadServiceImpl implements UploadService {
           },
         };
 
-        const subscription = observable.subscribe({
+        const subscription = sourceFileObservable.subscribe({
           next: state => {
             if (state.status === 'uploading') {
               this.onFileProgress(cancellableFileUpload, state.progress);
             }
 
             if (state.status === 'processing') {
-              subscription.unsubscribe();
+              setTimeout(() => subscription.unsubscribe(), 0);
               if (shouldCopyFileToRecents) {
                 mediaClient.emit('file-added', state);
                 globalMediaEventEmitter.emit('file-added', state);
@@ -203,8 +200,7 @@ export class UploadServiceImpl implements UploadService {
 
         this.cancellableFilesUploads[id] = cancellableFileUpload;
         // Save observable in the cache
-        // We want to save the observable without collection too, due consumers using cards without collection.
-        getFileStreamsCache().set(id, observable);
+        getFileStreamsCache().set(id, sourceFileObservable);
 
         return cancellableFileUpload;
       },

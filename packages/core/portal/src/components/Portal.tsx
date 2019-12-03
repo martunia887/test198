@@ -2,6 +2,9 @@ import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 import invariant from 'tiny-invariant';
 import { canUseDOM } from 'exenv';
+import { layers } from '@atlaskit/theme';
+
+import { PORTAL_MOUNT_EVENT, PORTAL_UNMOUNT_EVENT } from '../constants';
 
 type Props = {
   /* Children to render in the React Portal. */
@@ -15,19 +18,83 @@ type State = {
   portalIsMounted: boolean;
 };
 
-const createContainer = (zIndex: number | string) => {
+type Layers = keyof typeof layers;
+
+export type PortalEventDetail = {
+  layer: Layers | null;
+  zIndex: number;
+};
+
+export type PortalEvent = CustomEvent<PortalEventDetail>;
+
+const createContainer = (zIndex: number | string): HTMLElement => {
   const container = document.createElement('div');
   container.setAttribute('class', 'atlaskit-portal');
   container.setAttribute('style', `z-index: ${zIndex};`);
   return container;
 };
 
-const body = () => {
+const getBody = (): HTMLElement => {
   invariant(document && document.body, 'cannot find document.body');
   return document.body;
 };
 
-const portalParent = () => {
+/**
+ * Reverses the name: zIndex object so we can quickly access it using the zIndex value as the key.
+ */
+const zIndexToName: Record<number, Layers> = Object.keys(layers).reduce<
+  Record<number, Layers>
+>((acc, name) => {
+  const layerName = name as Layers;
+  const value: number = layers[layerName]();
+  acc[value] = layerName;
+  return acc;
+}, {});
+
+const getLayerName = (zIndex: number): Layers | null => {
+  return Object.prototype.hasOwnProperty.call(zIndexToName, zIndex)
+    ? zIndexToName[zIndex]
+    : null;
+};
+
+const getEvent = (
+  eventName: string,
+  zIndex: number,
+): CustomEvent<PortalEventDetail> => {
+  const detail: PortalEventDetail = {
+    layer: getLayerName(Number(zIndex)),
+    zIndex,
+  };
+
+  // In ie11 the CustomEvent object exists, but it cannot be used as a constructor
+  if (typeof CustomEvent === 'function') {
+    return new CustomEvent(eventName, {
+      detail,
+    });
+  }
+  // CustomEvent constructor API not supported (ie11)
+  // Using `new Event` or `new CustomEvent` does not work in ie11
+  const event: CustomEvent = document.createEvent('CustomEvent');
+  const params = {
+    bubbles: true,
+    cancellable: true,
+    detail,
+  };
+  event.initCustomEvent(
+    eventName,
+    params.bubbles,
+    params.cancellable,
+    params.detail,
+  );
+  return event;
+};
+
+const firePortalEvent = (eventName: string, zIndex: number): void => {
+  const event: PortalEvent = getEvent(eventName, zIndex);
+  window.dispatchEvent(event);
+};
+
+const getPortalParent = () => {
   const parentElement = document.querySelector(
     'body > .atlaskit-portal-container',
   );
@@ -35,7 +102,7 @@ const portalParent = () => {
     const parent = document.createElement('div');
     parent.setAttribute('class', 'atlaskit-portal-container');
     parent.setAttribute('style', `display: flex;`);
-    body().appendChild(parent);
+    getBody().appendChild(parent);
     return parent;
   }
   return parentElement;
@@ -62,12 +129,12 @@ class Portal extends React.Component<Props, State> {
     if (container && prevProps.zIndex !== zIndex) {
       const newContainer = createContainer(zIndex);
 
-      portalParent().replaceChild(container, newContainer);
+      getPortalParent().replaceChild(container, newContainer);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ container: newContainer });
     } else if (!prevState.container && container) {
       // SSR path
-      portalParent().appendChild(container);
+      getPortalParent().appendChild(container);
     }
   }
 
@@ -75,7 +142,7 @@ class Portal extends React.Component<Props, State> {
     const { container } = this.state;
     const { zIndex } = this.props;
     if (container) {
-      portalParent().appendChild(container);
+      getPortalParent().appendChild(container);
     } else {
       // SSR path
       const newContainer = createContainer(zIndex);
@@ -86,23 +153,28 @@ class Portal extends React.Component<Props, State> {
     this.setState({
       portalIsMounted: true,
     });
+
+    firePortalEvent(PORTAL_MOUNT_EVENT, Number(zIndex));
   }
 
   componentWillUnmount() {
     const { container } = this.state;
+    const { zIndex } = this.props;
     if (container) {
-      portalParent().removeChild(container);
+      getPortalParent().removeChild(container);
       // clean up parent element if there are no more portals
       const portals = !!document.querySelector(
         'body > .atlaskit-portal-container > .atlaskit-portal',
       );
       if (!portals) {
-        body().removeChild(portalParent());
+        getBody().removeChild(getPortalParent());
       }
     }
+
+    firePortalEvent(PORTAL_UNMOUNT_EVENT, Number(zIndex));
   }
 
-  render() {
+  render(): JSX.Element | null {
     const { container, portalIsMounted } = this.state;
     return container && portalIsMounted
       ? ReactDOM.createPortal(this.props.children, container)

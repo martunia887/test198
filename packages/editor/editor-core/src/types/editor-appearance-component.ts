@@ -37,8 +37,6 @@ export interface EditorAppearanceComponentProps {
   customSecondaryToolbarComponents?: ReactComponents;
   insertMenuItems?: InsertMenuCustomItem[];
 
-  addonToolbarComponents?: ReactComponents;
-
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
@@ -50,4 +48,5 @@ export interface EditorAppearanceComponentProps {
   collabEdit?: CollabEditOptions;
 
   allowDynamicTextSizing?: boolean;
+  allowAnnotation?: boolean;
 }

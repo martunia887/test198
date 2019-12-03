@@ -12,6 +12,8 @@ export interface Props extends WithDimensionsProps {
   row: RowType;
   rowIndex: number;
   isRankingDisabled: boolean;
+  isHighlighted?: boolean;
+  testId?: string;
 }
 
 export class RankableTableRow extends React.Component<Props, {}> {
@@ -31,6 +33,8 @@ export class RankableTableRow extends React.Component<Props, {}> {
       refWidth,
       rowIndex,
       isRankingDisabled,
+      isHighlighted,
+      testId,
     } = this.props;
     const { cells, key, ...restRowProps } = row;
     const inlineStyles = inlineStylesIfRanking(isRanking, refWidth);
@@ -54,6 +58,7 @@ export class RankableTableRow extends React.Component<Props, {}> {
             {...provided.draggableProps}
             innerRef={this.innerRef(provided.innerRef)}
             style={{ ...provided.draggableProps.style, ...inlineStyles }}
+            isHighlighted={isHighlighted}
             isRanking={isRanking}
             isRankingItem={snapshot.isDragging}
           >
@@ -66,6 +71,7 @@ export class RankableTableRow extends React.Component<Props, {}> {
                   isRanking={isRanking}
                   key={cellIndex} // eslint-disable-line react/no-array-index-key
                   isFixedSize={isFixedSize}
+                  testId={testId}
                 />
               );
             })}

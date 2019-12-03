@@ -28,6 +28,7 @@ import { shallow } from 'enzyme';
 import { ReactElement } from 'react';
 import { IntlProvider } from 'react-intl';
 import commonMessages from '../../../../../messages';
+import { messages as altTextMessages } from '../../../../../plugins/media/pm-plugins/alt-text/messages';
 import { FloatingToolbarCustom } from '../../../../../plugins/floating-toolbar/types';
 import Button from '../../../../../plugins/floating-toolbar/ui/Button';
 import { MediaOptions } from '../../../../../plugins/media';
@@ -72,7 +73,6 @@ describe('media', () => {
         },
         allowExtension: true,
         allowLayouts: true,
-        allowLists: true,
         allowTables: true,
         allowAnalyticsGASV3: true,
         analyticsHandler: jest.fn(),
@@ -96,6 +96,7 @@ describe('media', () => {
   const temporaryMediaSingle = mediaSingle({ layout: 'center' })(
     temporaryMedia,
   );
+
   const docWithMediaSingle = doc(temporaryMediaSingle);
 
   beforeEach(() => {
@@ -125,6 +126,26 @@ describe('media', () => {
         appearance: 'danger',
         icon: RemoveIcon,
       });
+    });
+
+    it('should render alt text button when enabled', () => {
+      const { editorView } = editor(docWithMediaSingle, {
+        UNSAFE_allowAltTextOnImages: true,
+      });
+      setNodeSelection(editorView, 0);
+
+      const altTextTitle = intl.formatMessage(altTextMessages.altText);
+
+      const toolbar = floatingToolbar(editorView.state, intl, {
+        UNSAFE_allowAltTextOnImages: true,
+      });
+
+      const button = findToolbarBtn(
+        getToolbarItems(toolbar!, editorView),
+        altTextTitle,
+      );
+
+      expect(button).toBeDefined();
     });
 
     it('should render alignment, wrapping and breakout buttons in full page without resizing enabled', () => {
@@ -222,7 +243,25 @@ describe('media', () => {
       expect(toolbar!.items.length).toEqual(1);
     });
 
-    it('should not render any layout buttons when inside a table', () => {
+    it('should render layout buttons when inside a table and allowResizingInTable is enabled', () => {
+      const { editorView } = editor(
+        doc(table()(tr(td()(temporaryMediaSingle)))),
+        {
+          allowResizing: true,
+          allowResizingInTables: true,
+        },
+      );
+
+      const toolbar = floatingToolbar(editorView.state, intl, {
+        allowResizing: true,
+        allowAdvancedToolBarOptions: true,
+        allowResizingInTables: true,
+      });
+      expect(toolbar).toBeDefined();
+      expect(toolbar!.items.length).toEqual(8);
+    });
+
+    it('should not render layout buttons when inside a table and allowResizingInTable is disabled', () => {
       const { editorView } = editor(
         doc(table()(tr(td()(temporaryMediaSingle)))),
       );
@@ -334,9 +373,9 @@ describe('media', () => {
           editorView,
         ).find(item => item.type === 'custom') as FloatingToolbarCustom;
 
-        const annotationToolbar = shallow(annotateToolbarComponent.render(
-          editorView,
-        ) as ReactElement<any>);
+        const annotationToolbar = shallow(
+          annotateToolbarComponent.render(editorView) as ReactElement<any>,
+        );
         expect(annotationToolbar.instance()).toBeInstanceOf(AnnotationToolbar);
       });
 

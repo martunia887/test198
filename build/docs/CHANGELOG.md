@@ -1,5 +1,142 @@
 # @atlaskit/docs
 
+## 8.2.0
+
+### Minor Changes
+
+- [minor][9648afc5be](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9648afc5be):
+
+  Adds `highlight` prop to `AkCodeBlock`, `Example`, and the `code` template literal.
+  Use this to emphasize which lines of code you would like people to look at!
+
+  The `highlight` prop can be used as follows:
+
+  - To highlight one line:
+    `highlight="3"`
+  - To highlight sequential lines:
+    `highlight="1-5"`
+  - To highlight sequential and multiple single lines:
+    `highlight="1-5,7,10,15-20"`
+
+  ## `AkCodeBlock` component
+
+  Use the `highlight` prop.
+
+  ```js
+  import { AkCodeBlock } from '@atlaskit/code';
+
+  <AkCodeBlock
+    highlight="1-2"
+    text={`
+  <div>
+    hello there
+    <span>buds</span>
+  </div>
+    `}
+  />;
+  ```
+
+  ## `Example` component
+
+  Use the `highlight` prop.
+
+  ```js
+  import { Example } from '@atlaskit/docs';
+
+  <Example
+    packageName="@atlaskit/code"
+    Component={require('../examples/00-inline-code-basic').default}
+    title="Basic"
+    highlight="19,24,30,36"
+    source={require('!!raw-loader!../examples/00-inline-code-basic')}
+  />;
+  ```
+
+  ## `code` template literal
+
+  Add `highlight=` to the top of your code snippet.
+  It takes the same values as the `highlight` prop.
+
+  ```js
+  import { code } from '@atlaskit/docs';
+
+  code`highlight=5-7
+    import React from 'react';
+  
+    () => (
+      <div>
+        hello there
+        <span>buds</span>
+      </div>
+  )`;
+  ```
+
+## 8.1.9
+
+### Patch Changes
+
+- [patch][5f044ec4d0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5f044ec4d0):
+
+  Update pretty-proptype dep fro 1.0.1 to 1.0.2
+
+## 8.1.8
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 8.1.7
+
+### Patch Changes
+
+- [patch][97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+
+  `@atlaskit/checkbox` **10.x** includes the following changes:
+
+  - Replaced previous theme implementation with new `@atlaskit/theme` v2 implementation
+    - Please read more about this implementation in the [theming guide](https://atlaskit.atlassian.com/packages/core/theme/docs/theming-guide)
+  - Added `overrides` prop which enables targeted customisations of key components in the @atlaskit/checkbox package.
+    - Please read more about this implementation in the [overrides guide](https://atlaskit.atlassian.com/packages/core/theme/docs/overrides-guide)
+
+  ### Breaking Changes
+
+  **HiddenCheckbox and spread props**
+
+  Passing props to the `<Checkbox/>` component for them to be spread onto the underlying `<HiddenCheckbox/>` component is now **no longer possible**.
+  `@atlaskit/checkbox` still supports passing props down to the `<HiddenCheckbox/>` component, however we've opted to make this behaviour more explicit.
+
+  Whereas previously you would do this:
+
+  ```js
+  <Checkbox
+    ...supportedCheckboxProps
+    'data-testid'='test-checkbox'
+  />
+  ```
+
+  Now you would leverage the overrides prop to pass these props down to the `<HiddenCheckbox/>` component like so:
+
+  ```js
+  <Checkbox
+    ...supportedCheckboxProps
+    overrides={{
+      HiddenCheckbox:{
+        attributesFn: () => ({ 'data-testid': 'test-checkbox' })
+      }
+    }}
+  />
+  ```
+
+## 8.1.6
+
+### Patch Changes
+
+- [patch][556c413643](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/556c413643):
+
+  Fixes the title size of the Atlaskit documentation messages.
+
 ## 8.1.5
 
 ### Patch Changes

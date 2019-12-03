@@ -10,11 +10,12 @@ if (dev) {
   require('ts-node').register({ project });
 }
 
-require(path.join('..', dev ? 'src' : 'dist'))
+require(path.join('..', dev ? 'src/cli' : 'dist/cli'))
   .run()
   .catch(error => {
     if (typeof error === 'number') {
       process.exit(error);
     }
     console.error(error);
+    process.exit(1);
   });

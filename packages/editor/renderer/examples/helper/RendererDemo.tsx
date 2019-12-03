@@ -6,7 +6,7 @@ import {
   taskDecision,
 } from '@atlaskit/util-data-test';
 import { CardEvent } from '@atlaskit/media-card';
-import { defaultSchema, ActionMarkAction } from '@atlaskit/adf-schema';
+import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   CardSurroundings,
   ProviderFactory,
@@ -32,6 +32,7 @@ import { renderDocument, TextSerializer } from '../../src';
 
 import Sidebar, { getDefaultShowSidebarState } from './NavigationNext';
 import { RendererAppearance } from '../../src/ui/Renderer/types';
+import { MentionProvider } from '@atlaskit/mention/types';
 
 const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;
 const MockProfileClient = getMockProfileClientUtil(
@@ -43,7 +44,7 @@ const mentionProvider = Promise.resolve({
   shouldHighlightMention(mention: { id: string }) {
     return mention.id === 'ABCDE-ABCDE-ABCDE-ABCDE';
   },
-});
+} as MentionProvider);
 
 const mediaProvider = storyMediaProviderFactory();
 
@@ -157,10 +158,6 @@ const eventHandlers: EventHandlers = {
       );
     },
   },
-  action: {
-    onClick: (event: ActionMarkAction) =>
-      console.log('onClick', '[react.MouseEvent]', event),
-  },
 };
 
 export interface DemoRendererProps {
@@ -171,8 +168,11 @@ export interface DemoRendererProps {
   document?: object;
   appearance?: RendererAppearance;
   maxHeight?: number;
+  fadeOutHeight?: number;
   truncationEnabled?: boolean;
   allowDynamicTextSizing?: boolean;
+  allowHeadingAnchorLinks?: boolean;
+  allowColumnSorting?: boolean;
 }
 
 export interface DemoRendererState {
@@ -196,6 +196,13 @@ export default class RendererDemo extends React.Component<
     super(props);
 
     const doc = !!this.props.document ? this.props.document : storyDataDocument;
+
+    // Prevent browser retain the previous scroll position when refresh,
+    // This code is necessary for pages with scrollable body to avoid two scroll actions.
+    // For pages such as confluence(with a scrollable div), this code is not necessary.
+    if (props.allowHeadingAnchorLinks && history.scrollRestoration === 'auto') {
+      history.scrollRestoration = 'manual';
+    }
 
     this.state = {
       input: JSON.stringify(doc, null, 2),
@@ -246,11 +253,11 @@ export default class RendererDemo extends React.Component<
     );
   }
 
-  private toggleTruncated() {
+  private toggleTruncated = () => {
     this.setState(prevState => ({
       truncated: !prevState.truncated,
     }));
-  }
+  };
 
   private renderRenderer(additionalRendererProps: any) {
     const { shouldUseEventHandlers } = this.state;
@@ -270,6 +277,10 @@ export default class RendererDemo extends React.Component<
         props.dataProviders = providerFactory;
       }
 
+      if (this.props.allowHeadingAnchorLinks) {
+        props.allowHeadingAnchorLinks = true;
+      }
+
       if (this.props.withExtension) {
         props.extensionHandlers = extensionHandlers;
       }
@@ -279,8 +290,10 @@ export default class RendererDemo extends React.Component<
       }
 
       props.maxHeight = this.props.maxHeight;
+      props.fadeOutHeight = this.props.fadeOutHeight;
       props.truncated = this.props.truncationEnabled && this.state.truncated;
       props.allowDynamicTextSizing = this.props.allowDynamicTextSizing;
+      props.allowColumnSorting = this.props.allowColumnSorting;
 
       if (additionalRendererProps) {
         props = {
@@ -327,7 +340,7 @@ export default class RendererDemo extends React.Component<
     }
   }
 
-  private renderText() {
+  private renderText = () => {
     if (this.props.serializer !== 'text') {
       return null;
     }
@@ -344,7 +357,7 @@ export default class RendererDemo extends React.Component<
     } catch (ex) {
       return null;
     }
-  }
+  };
 
   private toggleSidebar = () => {
     this.setState(prevState => ({ showSidebar: !prevState.showSidebar }));

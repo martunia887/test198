@@ -4,7 +4,10 @@ import { ToolbarFeatures } from '../../../example-helpers/ToolsDrawer';
 import { EditorAppearance, EditorProps } from '../../types';
 import { pluginKey as tableResizingPluginKey } from '../../plugins/table/pm-plugins/table-resizing';
 import messages from '../../messages';
-import { tableSelectors } from '../__helpers/page-objects/_table';
+import {
+  tableSelectors,
+  getSelectorForTableCell,
+} from '../__helpers/page-objects/_table';
 import { TableCssClassName } from '../../plugins/table/types';
 
 /**
@@ -13,6 +16,15 @@ import { TableCssClassName } from '../../plugins/table/types';
  * And, don't get too fancy with it ;)
  */
 export const getDocFromElement = (el: any) => el.pmViewDesc.node.toJSON();
+
+export const expectToMatchDocument = async (page: any, testName: string) => {
+  const doc = await page.browser.execute(() => {
+    return (window as any).__documentToJSON();
+  });
+
+  expect(doc).toMatchCustomDocSnapshot(testName);
+};
+
 export const editable = '.ProseMirror';
 export const LONG_WAIT_FOR = 5000;
 export const typeAheadPicker = '.fabric-editor-typeahead';
@@ -167,26 +179,18 @@ export const rerenderEditor = async (browser: any) => {
   await browser.click('.reloadEditorButton');
 };
 
-export const insertMedia = async (
+// This function assumes the media picker modal is already shown.
+export const insertMediaFromMediaPicker = async (
   browser: any,
   filenames = ['one.svg'],
   fileSelector = 'div=%s',
 ) => {
-  const openMediaPopup = `[aria-label="${
-    insertBlockMessages.filesAndImages.defaultMessage
-  }"]`;
-  const insertMediaButton = '.e2e-insert-button';
+  const insertMediaButton = '[data-testid="media-picker-insert-button"]';
   const mediaCardSelector = `${editable} .img-wrapper`;
-
   const existingMediaCards = await browser.$$(mediaCardSelector);
-
-  // wait for media button in toolbar and click it
-  await browser.waitForSelector(openMediaPopup);
-  await browser.click(openMediaPopup);
-
   // wait for media item, and select it
   await browser.waitForSelector(
-    '.e2e-recent-upload-card [aria-label="one.svg"]',
+    '[data-testid="media-picker-popup"] [data-testid="media-file-card-view"] [aria-label="one.svg"]',
   );
   if (filenames) {
     for (const filename of filenames) {
@@ -233,6 +237,19 @@ export const insertMedia = async (
   }
 };
 
+export const insertMedia = async (
+  browser: any,
+  filenames = ['one.svg'],
+  fileSelector = 'div=%s',
+) => {
+  const openMediaPopup = `[aria-label="${insertBlockMessages.filesAndImages.defaultMessage}"]`;
+
+  // wait for media button in toolbar and click it
+  await browser.waitForSelector(openMediaPopup);
+  await browser.click(openMediaPopup);
+  await insertMediaFromMediaPicker(browser, filenames, fileSelector);
+};
+
 /**
  * We use $$ in the context of selenium and puppeteer, which return different results.
  */
@@ -264,9 +281,7 @@ export const insertBlockMenuItem = async (
     menuSelector = `[aria-label="${menuTitle}"]`;
   } else {
     // Open insert menu and try to look the menu there
-    const openInsertBlockMenuSelector = `[aria-label="${
-      insertBlockMessages.insertMenu.defaultMessage
-    }"]`;
+    const openInsertBlockMenuSelector = `[aria-label="${insertBlockMessages.insertMenu.defaultMessage}"]`;
 
     await browser.click(openInsertBlockMenuSelector);
 
@@ -410,6 +425,13 @@ export const setProseMirrorTextSelection = async (
   );
 };
 
+export const getProseMirrorPos = async (page: any): Promise<number> => {
+  return await page.browser.execute(() => {
+    var view = (window as any).__editorView;
+    return view.state.selection.from;
+  });
+};
+
 export const resizeColumn = async (page: any, resizeOptions: ResizeOptions) => {
   await page.browser.execute(
     (
@@ -466,40 +488,29 @@ export const animationFrame = async (page: any) => {
 
 export const doubleClickResizeHandle = async (
   page: any,
-  resizeHandlePos: number,
+  row: number,
+  column: number,
 ) => {
-  await page.browser.execute(
-    (tableResizingPluginKey: any, resizeHandlePos: any) => {
-      const view = (window as any).__editorView;
-      if (!view) {
-        return;
-      }
-      const startX = 600;
+  const tableCellSelector = getSelectorForTableCell({ row, cell: column });
 
-      view.dispatch(
-        view.state.tr.setMeta(tableResizingPluginKey, {
-          type: 'SET_RESIZE_HANDLE_POSITION',
-          data: {
-            resizeHandlePos,
-          },
-        }),
-      );
+  const cell = await page.getBoundingRect(tableCellSelector);
 
-      view.dom.dispatchEvent(new MouseEvent('mousedown', { clientX: startX }));
-      window.dispatchEvent(new MouseEvent('mouseup', { clientX: startX }));
-      view.dom.dispatchEvent(new MouseEvent('mousedown', { clientX: startX }));
-      window.dispatchEvent(new MouseEvent('mouseup', { clientX: startX }));
-    },
-    tableResizingPluginKey,
-    resizeHandlePos,
+  // We need to move the mouse first, giving time to prosemirror catch the event
+  // and add the decorations
+  await page.moveTo(tableCellSelector, cell.width - 1, 0);
+
+  await animationFrame(page);
+  await page.moveTo(
+    `${tableCellSelector} .${TableCssClassName.RESIZE_HANDLE_DECORATION}`,
+    0,
+    0,
   );
+  await page.browser.positionDoubleClick();
 };
 
 export const selectColumns = async (page: any, indexes: number[]) => {
   for (let i = 0, count = indexes.length; i < count; i++) {
-    const controlSelector = `.${
-      TableCssClassName.COLUMN_CONTROLS_DECORATIONS
-    }[data-start-index="${indexes[i]}"]`;
+    const controlSelector = `.${TableCssClassName.COLUMN_CONTROLS_DECORATIONS}[data-start-index="${indexes[i]}"]`;
     await page.waitForSelector(controlSelector);
     if (i > 0) {
       await page.browser.keys(['Shift']);

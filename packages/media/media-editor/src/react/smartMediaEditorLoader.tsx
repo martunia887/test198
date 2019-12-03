@@ -1,11 +1,10 @@
 import * as React from 'react';
-
 import { ModalSpinner } from '@atlaskit/media-ui';
-import { colors } from '@atlaskit/theme';
-import { WithContextOrMediaClientConfigProps } from '@atlaskit/media-client';
+import { WithMediaClientConfigProps } from '@atlaskit/media-client';
+import { N700A } from '@atlaskit/theme/colors';
 import { SmartMediaEditorProps } from './smartMediaEditor';
 
-type SmartEditorWithMediaClientConfigProps = WithContextOrMediaClientConfigProps<
+type SmartEditorWithMediaClientConfigProps = WithMediaClientConfigProps<
   SmartMediaEditorProps
 >;
 type SmartEditorWithMediaClientConfigComponent = React.ComponentType<
@@ -33,8 +32,12 @@ export default class AsyncSmartMediaEditor extends React.PureComponent<
     if (!this.state.SmartMediaEditor) {
       try {
         const [mediaClient, smartEditorModule] = await Promise.all([
-          import(/* webpackChunkName:"@atlaskit-media-client" */ '@atlaskit/media-client'),
-          import(/* webpackChunkName:"@atlaskit-internal_smart-media-editor" */ './smartMediaEditor'),
+          import(
+            /* webpackChunkName:"@atlaskit-media-client" */ '@atlaskit/media-client'
+          ),
+          import(
+            /* webpackChunkName:"@atlaskit-internal_smart-media-editor" */ './smartMediaEditor'
+          ),
         ]);
         AsyncSmartMediaEditor.SmartMediaEditor = mediaClient.withMediaClient(
           smartEditorModule.default,
@@ -57,9 +60,7 @@ export default class AsyncSmartMediaEditor extends React.PureComponent<
       return null;
     }
     if (!this.state.SmartMediaEditor) {
-      return (
-        <ModalSpinner blankedColor={colors.N700A} invertSpinnerColor={true} />
-      );
+      return <ModalSpinner blankedColor={N700A} invertSpinnerColor={true} />;
     }
 
     return <this.state.SmartMediaEditor {...this.props} />;

@@ -8,6 +8,7 @@ import { EditorView, NodeView } from 'prosemirror-view';
 import ReactNodeView, {
   ForwardRef,
   getPosHandler,
+  getPosHandlerNode,
 } from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { generateColgroup } from '../pm-plugins/table-resizing/utils';
@@ -21,7 +22,7 @@ import { contentWidth } from '../pm-plugins/table-resizing/utils';
 import { handleBreakoutContent } from '../pm-plugins/table-resizing/commands';
 import { pluginConfig as getPluginConfig } from '../index';
 import { TableCssClassName as ClassName } from '../types';
-import { closestElement } from '../../../utils';
+import { closestElement, containsClassName } from '../../../utils';
 
 export type TableOptions = {
   dynamicTextSizing?: boolean;
@@ -67,12 +68,14 @@ const toDOM = (node: PmNode, props: Props) => {
 export default class TableView extends ReactNodeView<Props> {
   private table: HTMLElement | undefined;
   private observer?: MutationObserver;
+  getPos: getPosHandlerNode;
 
   constructor(props: Props) {
     super(props.node, props.view, props.getPos, props.portalProviderAPI, props);
 
     const MutObserver = (window as any).MutationObserver;
     this.observer = MutObserver && new MutObserver(this.handleMutation);
+    this.getPos = props.getPos;
   }
 
   getContentDOM() {
@@ -215,7 +218,7 @@ export default class TableView extends ReactNodeView<Props> {
       // ED-7344: ignore mutations that happen inside anything other than DIV or SPAN elements
       if (
         ['DIV', 'SPAN'].indexOf(target.tagName) === -1 ||
-        target.classList.contains(ClassName.RESIZE_HANDLE)
+        containsClassName(target, ClassName.RESIZE_HANDLE)
       ) {
         return;
       }
@@ -244,7 +247,7 @@ export const createTableView = (
     view,
     allowColumnResizing,
     portalProviderAPI,
-    getPos,
+    getPos: getPos as getPosHandlerNode,
     options,
   }).init();
 };

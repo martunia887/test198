@@ -62,6 +62,8 @@ interface TablePluginOptions {
 }
 
 const tablesPlugin = (options?: TablePluginOptions): EditorPlugin => ({
+  name: 'table',
+
   nodes() {
     return [
       { name: 'table', node: table },
@@ -143,6 +145,7 @@ const tablesPlugin = (options?: TablePluginOptions): EditorPlugin => ({
           return (
             <>
               {pluginState.targetCellPosition &&
+                pluginState.tableRef &&
                 !isDragging &&
                 options &&
                 options.allowContextualMenu && (
@@ -220,7 +223,7 @@ const tablesPlugin = (options?: TablePluginOptions): EditorPlugin => ({
         icon: () => <IconTable label={formatMessage(messages.table)} />,
         action(insert, state) {
           const tr = insert(createTable(state.schema));
-          return addAnalytics(tr, {
+          return addAnalytics(state, tr, {
             action: ACTION.INSERTED,
             actionSubject: ACTION_SUBJECT.DOCUMENT,
             actionSubjectId: ACTION_SUBJECT_ID.TABLE,

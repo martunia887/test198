@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 //@flow
 const compose = require('docker-compose');
 const path = require('path');
@@ -13,12 +14,12 @@ process.env.HOST_IP = ip.address();
 
 async function startDocker() {
   console.log('starting docker');
-  return await compose.upAll({ cwd, log });
+  return compose.upAll({ cwd, log });
 }
 
 async function stopDocker() {
   console.log('stopping docker');
-  return await compose.stop({ cwd, log });
+  return compose.stop({ cwd, log });
 }
 
 const getDockerImageProdVersion = () =>
@@ -26,16 +27,18 @@ const getDockerImageProdVersion = () =>
 
 const getDockerImageLocalVersion = async () => {
   const cmd = `docker images| grep atlassianlabs/atlaskit-mk-2-vr| awk '{print $2}'| head -n 1`;
-  return await exec(cmd).toString();
+  return exec(cmd)
+    .toString()
+    .trim();
 };
 
 async function isLatestVersion(localVersion /*: string */) {
   const prodVersion = getDockerImageProdVersion();
 
   console.info('Latest docker image version:', prodVersion);
-  console.info('Local docker image version:', localVersion.trim());
+  console.info('Local docker image version:', localVersion);
 
-  return localVersion && prodVersion === localVersion.trim();
+  return localVersion ? prodVersion === localVersion : false;
 }
 
 async function deleteOldDockerImage() {

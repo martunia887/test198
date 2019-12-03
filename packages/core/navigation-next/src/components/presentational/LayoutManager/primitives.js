@@ -28,6 +28,7 @@ export const HorizontalNavigationContainer = ({
     css={{
       position: 'fixed',
       top: topOffset,
+      width: '100%',
       zIndex: layers.navigation() + 1,
     }}
   >
@@ -40,13 +41,13 @@ export const NavigationContainer = ({ topOffset, innerRef, ...props }: *) => (
     ref={innerRef}
     css={{
       bottom: 0,
-      display: 'flex',
-      flexDirection: 'row',
       left: 0,
       position: 'fixed',
       top: topOffset,
       zIndex: layers.navigation(),
-      height: `calc(100vh - ${topOffset}px)`,
+      '&:hover .ak-navigation-resize-button': {
+        opacity: 1,
+      },
     }}
     {...props}
   />

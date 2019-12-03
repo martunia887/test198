@@ -56,6 +56,9 @@ describe('JSON schema', () => {
     let existingSchema: any;
 
     try {
+      // This should prevent breakcing changes are introduced into editor-next-release
+      // We should revert this back to fetchMasterJSONSchema when editor-next-release is merged back
+      // into master
       existingSchema = await fetchMasterJSONSchema();
     } catch (err) {
       // if package with this version doesn't exist test against the latest version

@@ -15,6 +15,7 @@ import {
   getMediaTypeFromMimeType,
   MediaClient,
 } from '@atlaskit/media-client';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import Spinner from '@atlaskit/spinner';
 import Flag, { FlagGroup } from '@atlaskit/flag';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
@@ -48,9 +49,8 @@ import {
   RecentUploadsTitle,
   CardWrapper,
 } from './styled';
-import { RECENTS_COLLECTION } from '../../../config';
 import { removeFileFromRecents } from '../../../actions/removeFileFromRecents';
-import { Browser } from '../../../../components/browser/browser';
+import { BrowserBase } from '../../../../components/browser/browser';
 
 const createEditCardAction = (
   handler: CardEventHandler,
@@ -73,8 +73,13 @@ const createDeleteCardAction = (handler: CardEventHandler): CardAction => {
 
 const cardDimension = { width: 162, height: 108 };
 
+interface IterableCard {
+  key: string;
+  card: JSX.Element;
+}
+
 export interface UploadViewOwnProps {
-  readonly browserRef: React.RefObject<Browser>;
+  readonly browserRef: React.RefObject<BrowserBase>;
   readonly mediaClient: MediaClient;
   readonly recentsCollection: string;
 }
@@ -151,6 +156,7 @@ export class StatelessUploadView extends Component<
 
     return (
       <InfiniteScroll
+        data-testid="media-picker-recents-infinite-scroll"
         height="100%"
         onThresholdReached={this.onThresholdReachedListener}
       >
@@ -297,16 +303,14 @@ export class StatelessUploadView extends Component<
   private renderCards() {
     const recentFilesCards = this.recentFilesCards();
     const uploadingFilesCards = this.uploadingFilesCards();
-    return uploadingFilesCards
-      .concat(recentFilesCards)
-      .map(({ key, el: card }) => (
-        <CardWrapper tabIndex={0} className="e2e-recent-upload-card" key={key}>
-          {card}
-        </CardWrapper>
-      ));
+    return uploadingFilesCards.concat(recentFilesCards).map(({ key, card }) => (
+      <CardWrapper tabIndex={0} key={key}>
+        {card}
+      </CardWrapper>
+    ));
   }
 
-  private uploadingFilesCards(): { key: string; el: JSX.Element }[] {
+  private uploadingFilesCards(): IterableCard[] {
     const { uploads, onFileClick, mediaClient } = this.props;
     const itemsKeys = Object.keys(uploads);
     itemsKeys.sort((a, b) => {
@@ -350,8 +354,9 @@ export class StatelessUploadView extends Component<
       };
 
       return {
+        isUploading: true,
         key: id,
-        el: (
+        card: (
           <Card
             mediaClientConfig={mediaClient.config}
             identifier={identifier}
@@ -360,13 +365,14 @@ export class StatelessUploadView extends Component<
             selected={selected}
             onClick={onClick}
             actions={actions}
+            testId="media-picker-uploading-media-card"
           />
         ),
       };
     });
   }
 
-  private recentFilesCards(): { key: string; el: JSX.Element }[] {
+  private recentFilesCards(): IterableCard[] {
     const {
       mediaClient,
       recents,
@@ -435,7 +441,7 @@ export class StatelessUploadView extends Component<
 
       return {
         key: `${occurrenceKey}-${id}`,
-        el: (
+        card: (
           <Card
             mediaClientConfig={mediaClient.config}
             identifier={{
@@ -448,6 +454,7 @@ export class StatelessUploadView extends Component<
             selected={selected}
             onClick={onClick}
             actions={actions}
+            testId="media-picker-recent-media-card"
           />
         ),
       };

@@ -1,5 +1,24 @@
 # @atlaskit/empty-state
 
+## 6.0.6
+
+### Patch Changes
+
+- [patch][6c9c2d5487](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6c9c2d5487):
+
+  Fixes empty state image not having appropriate accessibility attributes.- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+  - @atlaskit/theme@9.3.0
+
+## 6.0.5
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
 ## 6.0.4
 
 ### Patch Changes

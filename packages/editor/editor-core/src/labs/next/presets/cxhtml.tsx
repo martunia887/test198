@@ -1,13 +1,8 @@
+// #region Imports
 import * as React from 'react';
-import { PresetProvider } from '../Editor';
+import { MentionProvider } from '@atlaskit/mention/resource';
+
 import {
-  pastePlugin,
-  blockTypePlugin,
-  clearMarksOnChangeToEmptyDocumentPlugin,
-  hyperlinkPlugin,
-  textFormattingPlugin,
-  widthPlugin,
-  unsupportedContentPlugin,
   quickInsertPlugin,
   tablesPlugin,
   codeBlockPlugin,
@@ -25,69 +20,87 @@ import {
   statusPlugin,
   mediaPlugin,
   mentionsPlugin,
-  emojiPlugin,
   tasksAndDecisionsPlugin,
   insertBlockPlugin,
+  basePlugin,
+  placeholderPlugin,
 } from '../../../plugins';
-import { MentionProvider } from '@atlaskit/mention/resource';
 import { MediaProvider } from '../../../plugins/media';
+import { PresetProvider } from '../Editor';
+import { EditorPresetProps } from './types';
+import { useDefaultPreset } from './default';
+import { getPluginsFromPreset } from './utils';
+// #endregion
 
 interface EditorPresetCXHTMLProps {
   children?: React.ReactNode;
+  placeholder?: string;
   mentionProvider?: Promise<MentionProvider>;
   mediaProvider?: Promise<MediaProvider>;
 }
 
-export function EditorPresetCXHTML({
-  children,
+export function useCXHTMLPreset({
   mentionProvider,
   mediaProvider,
-}: EditorPresetCXHTMLProps) {
-  const plugins = [
-    pastePlugin(),
-    blockTypePlugin(),
-    clearMarksOnChangeToEmptyDocumentPlugin(),
-    hyperlinkPlugin(),
-    textFormattingPlugin({}),
-    widthPlugin(),
-    unsupportedContentPlugin(),
-    quickInsertPlugin(),
-    tablesPlugin({
-      tableOptions: { advanced: true },
-    }),
-    codeBlockPlugin(),
-    panelPlugin(),
-    listsPlugin(),
-    textColorPlugin(),
-    breakoutPlugin(),
-    jiraIssuePlugin(),
-    extensionPlugin(),
-    rulePlugin(),
-    datePlugin(),
-    layoutPlugin(),
-    indentationPlugin(),
-    cardPlugin(), // experimental
-    statusPlugin({ menuDisabled: false }),
-    tasksAndDecisionsPlugin(),
-    emojiPlugin(),
-    insertBlockPlugin({}),
-  ];
+  placeholder,
+}: EditorPresetCXHTMLProps & EditorPresetProps) {
+  const [preset] = useDefaultPreset();
+
+  preset.push(
+    [
+      basePlugin,
+      {
+        allowInlineCursorTarget: true,
+        allowScrollGutter: () =>
+          document.querySelector('.fabric-editor-popup-scroll-parent'),
+      },
+    ],
+    quickInsertPlugin,
+    [tablesPlugin, { tableOptions: { advanced: true } }],
+    codeBlockPlugin,
+    panelPlugin,
+    listsPlugin,
+    textColorPlugin,
+    breakoutPlugin,
+    jiraIssuePlugin,
+    extensionPlugin,
+    rulePlugin,
+    datePlugin,
+    layoutPlugin,
+    indentationPlugin,
+    cardPlugin,
+    [statusPlugin, { menuDisabled: false }],
+    tasksAndDecisionsPlugin,
+    insertBlockPlugin,
+    [placeholderPlugin, { placeholder }],
+  );
 
   if (mentionProvider) {
-    plugins.push(mentionsPlugin());
+    preset.push(mentionsPlugin);
   }
 
   if (mediaProvider) {
-    plugins.push(
-      mediaPlugin({
+    preset.push([
+      mediaPlugin,
+      {
         provider: mediaProvider,
         allowMediaSingle: true,
         allowMediaGroup: true,
         allowAnnotation: true,
         allowResizing: true,
-      }),
-    );
+      },
+    ]);
   }
+
+  return [preset];
+}
+
+export function EditorPresetCXHTML(
+  props: EditorPresetCXHTMLProps & EditorPresetProps,
+) {
+  const { children, excludes, experimental } = props;
+  const [preset] = useCXHTMLPreset(props);
+  const plugins = getPluginsFromPreset(preset, excludes, experimental);
 
   return <PresetProvider value={plugins}>{children}</PresetProvider>;
 }

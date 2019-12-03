@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass, ButtonHTMLAttributes } from 'react';
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N50A } from '@atlaskit/theme/colors';
 
 // Using module augmentation to add crossOrigin attribute as it does not exist yet, PR has been opened in
 // DefinitelyTyped for it
@@ -60,17 +61,13 @@ export const DragOverlay: ComponentClass<HTMLAttributes<{}>> = styled.div`
   cursor: move;
 `;
 
-export const RemoveImageContainer: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const RemoveImageContainer: ComponentClass<HTMLAttributes<{}>> = styled.div`
   position: absolute;
   right: 4px;
   top: 4px;
 `;
 
-export const RemoveImageButton: ComponentClass<
-  ButtonHTMLAttributes<{}>
-> = styled.button`
+export const RemoveImageButton: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`
   border-radius: ${borderRadius()}px;
   background-color: transparent;
   width: 24px;
@@ -86,6 +83,6 @@ export const RemoveImageButton: ComponentClass<
   }
 
   &:hover {
-    background-color: ${colors.N50A};
+    background-color: ${N50A};
   }
 `;

@@ -6,7 +6,6 @@ import {
 } from '@atlaskit/media-core';
 import {
   MediaFile,
-  MediaCollection,
   MediaCollectionItems,
   MediaUpload,
   MediaChunksProbe,
@@ -21,11 +20,11 @@ import {
   mapResponseToBlob,
   MediaFileArtifacts,
   getArtifactUrl,
-  // checkWebpSupport,
 } from '..';
+import { FILE_CACHE_MAX_AGE } from '../constants';
 
 const defaultImageOptions: MediaStoreGetFileImageParams = {
-  'max-age': 3600,
+  'max-age': FILE_CACHE_MAX_AGE,
   allowAnimated: true,
   mode: 'crop',
 };
@@ -37,8 +36,13 @@ const defaultGetCollectionItems: MediaStoreGetCollectionItemsParams = {
 
 const extendImageParams = (
   params?: MediaStoreGetFileImageParams,
+  fetchMaxRes: boolean = false,
 ): MediaStoreGetFileImageParams => {
-  return { ...defaultImageOptions, ...params };
+  return {
+    ...defaultImageOptions,
+    ...params,
+    ...(fetchMaxRes ? { width: 4096, height: 4096 } : {}),
+  };
 };
 
 const jsonHeaders = {
@@ -48,28 +52,6 @@ const jsonHeaders = {
 
 export class MediaStore {
   constructor(private readonly config: MediaApiConfig) {}
-
-  createCollection(
-    collectionName: string,
-  ): Promise<MediaStoreResponse<MediaCollection>> {
-    return this.request('/collection', {
-      method: 'POST',
-      body: JSON.stringify({ name: collectionName }),
-      authContext: { collectionName },
-      headers: jsonHeaders,
-    }).then(mapResponseToJson);
-  }
-
-  getCollection(
-    collectionName: string,
-  ): Promise<MediaStoreResponse<MediaCollection>> {
-    return this.request(`/collection/${collectionName}`, {
-      authContext: { collectionName },
-      headers: {
-        Accept: 'application/json',
-      },
-    }).then(mapResponseToJson);
-  }
 
   async getCollectionItems(
     collectionName: string,
@@ -200,35 +182,6 @@ export class MediaStore {
     }).then(mapResponseToJson);
   }
 
-  createFile(
-    params: MediaStoreCreateFileParams = {},
-  ): Promise<MediaStoreResponse<EmptyFile>> {
-    return this.request('/file', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-      },
-      params,
-      authContext: { collectionName: params.collection },
-    }).then(mapResponseToJson);
-  }
-
-  createFileFromBinary(
-    blob: Blob,
-    params: MediaStoreCreateFileFromBinaryParams = {},
-  ): Promise<MediaStoreResponse<MediaFile>> {
-    return this.request('/file/binary', {
-      method: 'POST',
-      body: blob,
-      params,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': blob.type,
-      },
-      authContext: { collectionName: params.collection },
-    }).then(mapResponseToJson);
-  }
-
   getFile = (
     fileId: string,
     params: MediaStoreGetFileParams = {},
@@ -258,7 +211,11 @@ export class MediaStore {
     const auth = await this.config.authProvider({ collectionName });
 
     return createUrl(`${auth.baseUrl}/file/${id}/binary`, {
-      params: { dl: true, collection: collectionName },
+      params: {
+        dl: true,
+        collection: collectionName,
+        'max-age': FILE_CACHE_MAX_AGE,
+      },
       auth,
     });
   };
@@ -276,7 +233,7 @@ export class MediaStore {
     const auth = await this.config.authProvider({ collectionName });
 
     return createUrl(`${auth.baseUrl}${artifactUrl}`, {
-      params: { collection: collectionName },
+      params: { collection: collectionName, 'max-age': FILE_CACHE_MAX_AGE },
       auth,
     });
   };
@@ -285,6 +242,7 @@ export class MediaStore {
     id: string,
     params?: MediaStoreGetFileImageParams,
     controller?: AbortController,
+    fetchMaxRes?: boolean,
   ): Promise<Blob> => {
     // TODO [MS-1787]: add checkWebpSupport() back
     const isWebpSupported = false;
@@ -298,7 +256,7 @@ export class MediaStore {
       `/file/${id}/image`,
       {
         headers,
-        params: extendImageParams(params),
+        params: extendImageParams(params, fetchMaxRes),
         authContext: { collectionName: params && params.collection },
       },
       controller,

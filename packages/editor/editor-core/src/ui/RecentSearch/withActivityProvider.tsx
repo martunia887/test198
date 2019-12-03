@@ -4,8 +4,8 @@ import {
   ProviderFactory,
   WithProviders,
   Providers,
+  Diff,
 } from '@atlaskit/editor-common';
-import { Diff } from '../../utils/types';
 
 export interface ExpandedActivityProviderProps {
   providerFactory: ProviderFactory;
@@ -29,7 +29,7 @@ export default function withActivityProvider<Props>(
       return (
         <WrappedComponent
           activityProvider={activityProvider as any}
-          {...props as Props}
+          {...(props as Props)}
         />
       );
     };

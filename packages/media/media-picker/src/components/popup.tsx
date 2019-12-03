@@ -14,13 +14,13 @@ import { createStore } from '../store';
 import { UploadComponent } from './component';
 
 import { defaultUploadParams } from '../domain/uploadParams';
-import { UploadParams } from '../domain/config';
 import {
+  UploadParams,
   PopupUploadEventPayloadMap,
   Popup,
-  PopupUploadEventEmitter,
   PopupConfig,
-} from './types';
+} from '../types';
+import { PopupUploadEventEmitter } from './types';
 
 export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
   implements PopupUploadEventEmitter, Popup {
@@ -41,7 +41,7 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
     super();
     this.proxyReactContext = proxyReactContext;
 
-    const { userAuthProvider, cacheSize } = tenantMediaClient.config;
+    const { userAuthProvider } = tenantMediaClient.config;
     if (!userAuthProvider) {
       throw new Error(
         'When using Popup media picker userAuthProvider must be provided in the context',
@@ -49,7 +49,6 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
     }
 
     const userMediaClient = new MediaClient({
-      cacheSize,
       authProvider: userAuthProvider,
     });
     const tenantUploadParams = {

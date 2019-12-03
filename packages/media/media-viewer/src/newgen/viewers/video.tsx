@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { MediaClient, FileState } from '@atlaskit/media-client';
-import { getArtifactUrl } from '@atlaskit/media-store';
+import {
+  getArtifactUrl,
+  MediaClient,
+  FileState,
+  globalMediaEventEmitter,
+} from '@atlaskit/media-client';
 import {
   CustomMediaPlayer,
   WithShowControlMethodProp,
@@ -52,13 +56,21 @@ export class VideoViewer extends BaseViewer<string, Props, State> {
     this.init(isHDActive);
   };
 
+  private onFirstPlay = () => {
+    const { item } = this.props;
+    globalMediaEventEmitter.emit('media-viewed', {
+      fileId: item.id,
+      viewingLevel: 'full',
+    });
+  };
+
   protected renderSuccessful(content: string) {
     const { isHDActive } = this.state;
     const { item, showControls, previewCount, onCanPlay, onError } = this.props;
     const useCustomVideoPlayer = !isIE();
     const isAutoPlay = previewCount === 0;
     return useCustomVideoPlayer ? (
-      <CustomVideoPlayerWrapper>
+      <CustomVideoPlayerWrapper data-testid="media-viewer-video-content">
         <CustomMediaPlayer
           type="video"
           isAutoPlay={isAutoPlay}
@@ -69,6 +81,7 @@ export class VideoViewer extends BaseViewer<string, Props, State> {
           isHDAvailable={isHDAvailable(item)}
           isShortcutEnabled={true}
           onCanPlay={onCanPlay}
+          onFirstPlay={this.onFirstPlay}
           onError={onError}
         />
       </CustomVideoPlayerWrapper>

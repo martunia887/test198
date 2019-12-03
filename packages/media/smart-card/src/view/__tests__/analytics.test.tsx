@@ -21,9 +21,12 @@ jest.doMock('../../utils/analytics', () => mockEvents);
 jest.doMock('@atlaskit/outbound-auth-flow-client', () => ({
   auth: mockAuthFlow,
 }));
-
-import * as React from 'react';
+const mockFetchError = jest.fn();
+jest.doMock('../../client/errors', () => ({
+  FetchError: mockFetchError,
+}));
 import CardClient from '../../client';
+import * as React from 'react';
 import { Card } from '../Card';
 import { Provider } from '../..';
 import { fakeFactory, mocks } from '../../utils/mocks';
@@ -38,7 +41,7 @@ import {
   KEY_SENSITIVE_DATA,
   KEY_WINDOW_CLOSED,
 } from '../../utils/analytics';
-
+// TODO: Failing in Landkid
 describe('smart-card: analytics', () => {
   let mockClient: CardClient;
   let mockFetch: jest.Mock;

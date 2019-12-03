@@ -1,5 +1,54 @@
 # @atlaskit/drawer
 
+## 5.1.0
+
+### Minor Changes
+
+- [minor][d438b16fbc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d438b16fbc):
+
+  Added an onOpenComplete callback to the @atlaskit/drawer that is called when the drawer finishes opening.
+
+### Patch Changes
+
+- Updated dependencies [c1d4898af5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c1d4898af5):
+- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+  - @atlaskit/icon@19.0.11
+  - @atlaskit/theme@9.3.0
+  - @atlaskit/portal@3.1.3
+
+## 5.0.14
+
+### Patch Changes
+
+- [patch][f86839ca4e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f86839ca4e):
+
+  @atlaskit/portal had an issue in IE11 and this is fixed in 3.1.2
+
+## 5.0.13
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 5.0.12
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 5.0.11
+
+### Patch Changes
+
+- [patch][ab418242f6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ab418242f6):
+
+  Removes @atlaskit/docs package from dependencies
+
 ## 5.0.10
 
 - Updated dependencies [8d0f37c23e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8d0f37c23e):

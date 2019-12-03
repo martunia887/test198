@@ -4,11 +4,8 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { publishReplay } from 'rxjs/operators/publishReplay';
 import uuid from 'uuid/v4';
 import Dataloader from 'dataloader';
-import {
-  AuthProvider,
-  authToOwner,
-  ProcessingFileState,
-} from '@atlaskit/media-core';
+import { ProcessingFileState } from '../models/file-state';
+import { AuthProvider, authToOwner } from '@atlaskit/media-core';
 import {
   MediaStore,
   UploadableFile,
@@ -29,6 +26,8 @@ import {
   MediaStoreCopyFileWithTokenBody,
   MediaStoreCopyFileWithTokenParams,
   mapMediaFileToFileState,
+  globalMediaEventEmitter,
+  RECENTS_COLLECTION,
 } from '..';
 import isValidId from 'uuid-validate';
 import { getMediaTypeFromUploadableFile } from '../utils/getMediaTypeFromUploadableFile';
@@ -140,18 +139,15 @@ export class FileFetcherImpl implements FileFetcher {
   // Returns an array of the same length as the keys filled with file items
   private batchLoadingFunc = async (keys: DataloaderKey[]) => {
     const nonCollectionName = '__media-single-file-collection__';
-    const fileIdsByCollection = keys.reduce(
-      (prev, next) => {
-        const collectionName = next.collection || nonCollectionName;
-        const fileIds = prev[collectionName] || [];
+    const fileIdsByCollection = keys.reduce((prev, next) => {
+      const collectionName = next.collection || nonCollectionName;
+      const fileIds = prev[collectionName] || [];
 
-        fileIds.push(next.id);
-        prev[collectionName] = fileIds;
+      fileIds.push(next.id);
+      prev[collectionName] = fileIds;
 
-        return prev;
-      },
-      {} as { [collectionName: string]: string[] },
-    );
+      return prev;
+    }, {} as { [collectionName: string]: string[] });
     const items: ResponseFileItem[] = [];
 
     await Promise.all(
@@ -179,7 +175,7 @@ export class FileFetcherImpl implements FileFetcher {
   ): Observable<FileState> {
     if (!isValidId(id)) {
       return Observable.create((observer: Observer<FileState>) => {
-        observer.error(`${id} is not a valid file id`);
+        observer.error('invalid id was passed to getFileState');
       });
     }
 
@@ -292,6 +288,7 @@ export class FileFetcherImpl implements FileFetcher {
     );
     const { id, occurrenceKey } = uploadableFileUpfrontIds;
     const subject = new ReplaySubject<FileState>(1);
+
     const deferredBlob = fetch(url)
       .then(response => response.blob())
       .catch(() => undefined);
@@ -478,6 +475,12 @@ export class FileFetcherImpl implements FileFetcher {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    globalMediaEventEmitter.emit('media-viewed', {
+      fileId: id,
+      isUserCollection: collectionName === RECENTS_COLLECTION,
+      viewingLevel: 'download',
+    });
   }
 
   public async copyFile(

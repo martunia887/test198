@@ -3,7 +3,6 @@ import {
   MediaAttributes,
   MentionAttributes,
   MediaSingleAttributes,
-  ApplicationCardAttributes,
   CellAttributes,
   LinkAttributes,
   TableAttributes,
@@ -11,6 +10,7 @@ import {
   BreakoutMarkAttrs,
   AlignmentAttributes,
   IndentationMarkAttributes,
+  AnnotationMarkAttributes,
 } from '@atlaskit/adf-schema';
 import {
   Fragment,
@@ -274,15 +274,12 @@ export const slice = (...content: BuilderContent[]) =>
 export const clean = (content: BuilderContentFn) => (schema: Schema) => {
   const node = content(schema);
   if (Array.isArray(node)) {
-    return node.reduce(
-      (acc, next) => {
-        if (next instanceof Node) {
-          acc.push(Node.fromJSON(schema, next.toJSON()));
-        }
-        return acc;
-      },
-      [] as Node[],
-    );
+    return node.reduce((acc, next) => {
+      if (next instanceof Node) {
+        acc.push(Node.fromJSON(schema, next.toJSON()));
+      }
+      return acc;
+    }, [] as Node[]);
   }
   return node instanceof Node
     ? Node.fromJSON(schema, node.toJSON())
@@ -397,8 +394,6 @@ export const mediaSingle = (
 export const mediaGroup = nodeFactory(sampleSchema.nodes.mediaGroup);
 export const media = (attrs: MediaAttributes | ExternalMediaAttributes) =>
   nodeFactory(sampleSchema.nodes.media, attrs);
-export const applicationCard = (attrs: ApplicationCardAttributes) =>
-  nodeFactory(sampleSchema.nodes.applicationCard, attrs);
 export const placeholder = (attrs: { text: string }) =>
   nodeFactory(sampleSchema.nodes.placeholder, attrs)();
 export const layoutSection = nodeFactory(sampleSchema.nodes.layoutSection);
@@ -408,6 +403,10 @@ export const inlineCard = (attrs: CardAttributes) =>
   nodeFactory(sampleSchema.nodes.inlineCard, attrs);
 export const blockCard = (attrs: CardAttributes) =>
   nodeFactory(sampleSchema.nodes.blockCard, attrs);
+export const expand = (attrs: {} = {}) =>
+  nodeFactory(sampleSchema.nodes.expand, attrs);
+export const nestedExpand = (attrs: {} = {}) =>
+  nodeFactory(sampleSchema.nodes.nestedExpand, attrs);
 export const unsupportedInline = (attrs: any) =>
   nodeFactory(sampleSchema.nodes.unsupportedInline, attrs);
 export const unsupportedBlock = (attrs: any) =>
@@ -436,6 +435,8 @@ export const confluenceInlineComment = (attrs: { reference: string }) =>
     attrs ? attrs : {},
     true,
   );
+export const annotation = (attrs: AnnotationMarkAttributes) =>
+  markFactory(sampleSchema.marks.annotation, attrs, true);
 
 //
 // Block Marks
@@ -446,3 +447,9 @@ export const breakout = (attrs: BreakoutMarkAttrs) =>
   markFactory(sampleSchema.marks.breakout, attrs);
 export const indentation = (attrs: IndentationMarkAttributes) =>
   markFactory(sampleSchema.marks.indentation, attrs);
+
+// builderEval is used for doc-builder example, and needs scope of the above node factories
+export const builderEval = (data: string) => {
+  // eslint-disable-next-line no-eval
+  return eval(data);
+};

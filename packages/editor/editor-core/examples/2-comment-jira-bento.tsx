@@ -5,8 +5,8 @@ import WithEditorActions from './../src/ui/WithEditorActions';
 import CollapsedEditor from '../src/ui/CollapsedEditor';
 import ToolbarHelp from '../src/ui/ToolbarHelp';
 import { mention, emoji } from '@atlaskit/util-data-test';
+import { EmojiProvider } from '@atlaskit/emoji';
 import { mediaProvider } from './5-full-page';
-import { EmojiProvider } from '../../../elements/emoji';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 
 export type Props = {
@@ -68,11 +68,11 @@ export class CommentEditorJiraBento extends React.Component<Props, State> {
                   provider: mediaProvider,
                   allowMediaSingle: true,
                 }}
-                allowLists={true}
-                allowCodeBlocks={true}
                 allowRule={true}
                 allowTextColor={true}
-                allowTables={true}
+                allowTables={{
+                  allowControls: true,
+                }}
                 allowPanel={true}
                 allowHelpDialog={true}
                 placeholder="We support markdown! Try **bold**, `inline code`, or ``` for code blocks."

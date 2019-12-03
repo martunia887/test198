@@ -8,25 +8,18 @@ import { getDocFromElement, editable } from '../_helpers';
 import { messages } from '../../../plugins/block-type/types';
 import commonMessages from '../../../messages';
 
-const wideBreakoutButtonQuery = `div[aria-label="${
-  commonMessages.layoutWide.defaultMessage
-}"]`;
-const fullWidthBreakoutButtonQuery = `div[aria-label="${
-  commonMessages.layoutFullWidth.defaultMessage
-}"]`;
-const centerBreakoutButtonQuery = `div[aria-label="${
-  commonMessages.layoutFixedWidth.defaultMessage
-}"]`;
+const wideBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutWide.defaultMessage}"]`;
+const fullWidthBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutFullWidth.defaultMessage}"]`;
+const centerBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutFixedWidth.defaultMessage}"]`;
 
 BrowserTestCase(
   'breakout: should be able to switch to wide mode',
-  { skip: [] },
+  {},
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
     await mountEditor(page, {
       appearance: 'full-page',
-      allowCodeBlocks: true,
       allowBreakout: true,
     });
 
@@ -43,13 +36,12 @@ BrowserTestCase(
 
 BrowserTestCase(
   'breakout: should be able to switch to full-width mode',
-  { skip: [] },
+  {},
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
     await mountEditor(page, {
       appearance: 'full-page',
-      allowCodeBlocks: true,
       allowBreakout: true,
     });
 
@@ -74,7 +66,6 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: 'full-page',
-      allowCodeBlocks: true,
       allowBreakout: true,
     });
 
@@ -105,7 +96,6 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: 'full-page',
-      allowCodeBlocks: true,
       allowBreakout: true,
     });
 
