@@ -32,9 +32,4 @@ describe('MediaTypeIcon', () => {
     const element = shallow(<MediaTypeIcon type="unknown" />);
     expect(element.find(UnknownIcon).exists()).toBeTruthy();
   });
-
-  it('should render an unknown icon when type is not known', () => {
-    const element = shallow(<MediaTypeIcon type="foobar" />);
-    expect(element.find(UnknownIcon).exists()).toBeTruthy();
-  });
 });

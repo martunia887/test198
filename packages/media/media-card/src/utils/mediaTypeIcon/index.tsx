@@ -4,9 +4,10 @@ import AudioIcon from '@atlaskit/icon/glyph/audio';
 import VideoIcon from '@atlaskit/icon/glyph/media-services/video';
 import DocIcon from '@atlaskit/icon/glyph/document';
 import UnknownIcon from '@atlaskit/icon/glyph/page';
+import { MediaType } from '@atlaskit/media-client';
 import { IconWrapper } from './styled';
 
-const icons: any = {
+const icons: { [k in MediaType]: React.ComponentType<any> } = {
   image: ImageIcon,
   audio: AudioIcon,
   video: VideoIcon,
@@ -15,7 +16,7 @@ const icons: any = {
 };
 
 export interface FileIconProps {
-  type?: string;
+  type?: MediaType;
   size?: string;
   className?: string;
 }

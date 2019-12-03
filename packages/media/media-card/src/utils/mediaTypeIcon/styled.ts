@@ -2,8 +2,9 @@ import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass } from 'react';
 import { Y200, P200, B300 } from '@atlaskit/theme/colors';
+import { MediaType } from '@atlaskit/media-client';
 
-const typeToColorMap: any = {
+const typeToColorMap: { [k in MediaType]: string } = {
   image: Y200,
   audio: P200,
   video: '#ff7143',
@@ -12,7 +13,7 @@ const typeToColorMap: any = {
 };
 
 export interface IconWrapperProps {
-  type: string;
+  type: MediaType;
 }
 
 export const IconWrapper: ComponentClass<HTMLAttributes<{}> &

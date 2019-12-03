@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
+import { MediaType } from '@atlaskit/media-client';
 import { MediaTypeIcon } from '../mediaTypeIcon';
 import { FileTypeIcon } from './styled';
 
 export interface FileIconProps {
-  mediaType?: string;
+  mediaType?: MediaType;
   style?: any;
   iconUrl?: string;
 }

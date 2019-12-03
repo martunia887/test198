@@ -30,11 +30,6 @@ describe('CardGenericViewSmall', () => {
         const element = shallow(<IconWrapper type="unknown" />);
         expect(element).toHaveStyleRule('color', '#3dc7dc');
       });
-
-      it('should render the correct color when type is not valid', () => {
-        const element = shallow(<IconWrapper type="foobar" />);
-        expect(element).toHaveStyleRule('color', '#3dc7dc');
-      });
     });
   });
 });
