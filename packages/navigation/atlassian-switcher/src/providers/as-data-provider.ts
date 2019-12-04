@@ -67,6 +67,7 @@ export default function<P, D>(
   name: string,
   mapPropsToPromise: PropsToPromiseMapper<Readonly<P>, D>,
   mapPropsToInitialValue?: PropsToValueMapper<Readonly<P>, D | void>,
+  isFetchedResultEmpty?: (result: any) => boolean,
 ) {
   const getInitialState = (props: Readonly<P>): ProviderResult<D> => {
     if (mapPropsToInitialValue) {
@@ -135,10 +136,16 @@ export default function<P, D>(
         });
       }
 
-      this.fireOperationalEvent({
+      const payload = {
         action: 'receivedResult',
         actionSubjectId: name,
-      });
+      };
+      if (isFetchedResultEmpty) {
+        Object.assign(payload, {
+          attributes: { isResultEmpty: isFetchedResultEmpty(value) },
+        });
+      }
+      this.fireOperationalEvent(payload);
     }
 
     onError(error: any) {

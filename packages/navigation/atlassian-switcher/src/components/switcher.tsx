@@ -25,7 +25,6 @@ import {
   SWITCHER_SUBJECT,
   RenderTracker,
   ViewedTracker,
-  ConditionalTracker,
 } from '../utils/analytics';
 import now from '../utils/performance-now';
 import { urlToHostname } from '../utils/url-to-hostname';
@@ -191,11 +190,6 @@ export default class Switcher extends React.Component<SwitcherProps> {
       }
     }
 
-    const joinableSitesSectionHasLinks = () =>
-      !!isJoinableSitesSectionEnabled &&
-      joinableSiteLinks &&
-      joinableSiteLinks.length > 0;
-
     return (
       <NavigationAnalyticsContext data={getAnalyticsContext(itemsCount)}>
         <SwitcherWrapper appearance={appearance}>
@@ -214,13 +208,12 @@ export default class Switcher extends React.Component<SwitcherProps> {
                   numberOfSites,
                 }}
               />
-              <ConditionalTracker
-                condition={joinableSitesSectionHasLinks}
-                action={`rendered join section`}
-                negativeAction={`did not render join section`}
-                eventType={'operational'}
-                data={{ duration: this.timeSinceMounted() }}
-              />
+              {!isJoinableSitesSectionEnabled && (
+                <RenderTracker
+                  subject={`did not render join section`}
+                  data={{ duration: this.timeSinceMounted() }}
+                />
+              )}
             </React.Fragment>
           )}
           {firstContentArrived && (

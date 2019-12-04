@@ -14,5 +14,6 @@ export const createJoinableSitesProvider = (
   return createProviderWithCustomFetchData<JoinableSitesResponse>(
     'joinableSites',
     fetchData || defaultFetchData(product),
+    result => !result || !result.sites || result.sites.length == 0,
   );
 };

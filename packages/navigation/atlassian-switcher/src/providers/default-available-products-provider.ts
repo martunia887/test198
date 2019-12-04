@@ -7,5 +7,9 @@ const DEFAULT_AVAILABLE_PRODUCTS_ENDPOINT =
 export const createAvailableProductsProvider = (
   url: string = DEFAULT_AVAILABLE_PRODUCTS_ENDPOINT,
 ): ExportedDataProvider<AvailableProductsResponse> => {
-  return createProvider<AvailableProductsResponse>('availableProducts', url);
+  return createProvider<AvailableProductsResponse>(
+    'availableProducts',
+    url,
+    result => !result || !result.sites || result.sites.length == 0,
+  );
 };
