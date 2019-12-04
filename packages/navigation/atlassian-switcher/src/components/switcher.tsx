@@ -191,12 +191,6 @@ export default class Switcher extends React.Component<SwitcherProps> {
       }
     }
 
-    const switchToSectionHasLinks = () =>
-      (licensedProductLinks && licensedProductLinks.length > 0) ||
-      (!isDiscoverSectionEnabled &&
-        suggestedProductLinks &&
-        suggestedProductLinks.length > 0);
-
     const joinableSitesSectionHasLinks = () =>
       !!isJoinableSitesSectionEnabled &&
       joinableSiteLinks &&
