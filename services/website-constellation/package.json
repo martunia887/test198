@@ -3,9 +3,12 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
+        "postinstall": "netlify-lambda install",
         "pre:gatsby": "node write-resolution-map && brisk build-pages",
         "start": "yarn pre:gatsby && gatsby develop",
         "build": "yarn pre:gatsby && gatsby build",
+        "build:lambda": "netlify-lambda build server",
+        "dev": "netlify dev",
         "deploy:local": "netlify deploy",
         "deploy:staging": "netlify deploy --auth $NETLIFY_TOKEN --site $CONSTELLATION_ID",
         "deploy:production": "netlify deploy --auth $NETLIFY_TOKEN --site $CONSTELLATION_ID --prod"
@@ -30,6 +33,19 @@
         "gatsby": "^2.17.10",
         "gatsby-core-utils": "^1.0.21",
         "gatsby-plugin-mdx": "^1.0.46",
-        "react": "^16.8.0"
+        "react": "^16.8.0",
+        "abortcontroller-polyfill": "^1.1.9",
+        "axios": "^0.18.0",
+        "body-parser": "^1.19.0",
+        "cookie-parser": "^1.4.4",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1",
+        "netlify-lambda": "^1.6.3",
+        "passport": "^0.4.0",
+        "passport-google-oauth20": "^2.0.0",
+        "passport-jwt": "^4.0.0",
+        "serverless-http": "^2.3.0"
     }
 }

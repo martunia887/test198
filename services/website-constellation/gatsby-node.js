@@ -47,6 +47,7 @@ try {
 //           reject(result.errors);
 //         }
 
+
 //         // BC: I am unsure if I want this info to be queriable or not. I've assumed not, but if you
 //         // want to change this, move this you will need to add this as nodes
 //         const pagesToMake = filterTopages(result.data);
@@ -69,6 +70,14 @@ try {
 //   const { createPage } = actions;
 //   return createDocsPages(graphql, createPage);
 // };
+
+exports.onCreatePage = async ({ page, actions }) => {
+  const { createPage } = actions;
+  if (page.path.match(/^\/contentful/)) {
+    page.matchPath = '/contentful/*';
+    createPage(page);
+  }
+};
 
 exports.onCreateWebpackConfig = ({ actions, loaders, getConfig }) => {
   actions.setWebpackConfig({
