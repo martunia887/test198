@@ -35,12 +35,7 @@ describe('CardOverlay', () => {
         .childAt(0)
         .text(),
     ).toEqual(errorMessage);
-    expect(
-      card
-        .find(TitleWrapper)
-        .find(Ellipsify)
-        .props().text,
-    ).toBe('');
+    expect(card.find(TitleWrapper).find(Ellipsify)).toHaveLength(0);
     expect(card.find(Metadata)).toHaveLength(0);
   });
 
