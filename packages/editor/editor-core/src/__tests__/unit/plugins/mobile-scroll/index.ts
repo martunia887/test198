@@ -160,4 +160,22 @@ describe('Mobile Scroll Plugin', () => {
       });
     });
   });
+
+  describe('when window resizes', () => {
+    describe('and height is smaller ie. keyboard is shown', () => {
+      it('scrolls selection into view', () => {
+        (window as any).innerHeight = 400;
+        window.dispatchEvent(new Event('resize'));
+        expect(getAppendedTr().scrolledIntoView).toEqual(true);
+      });
+    });
+
+    describe('and height is bigger ie. keyboard is hidden', () => {
+      it("doesn't scroll selection into view", () => {
+        (window as any).innerHeight = 800;
+        window.dispatchEvent(new Event('resize'));
+        expect(getAppendedTr()).toBeUndefined();
+      });
+    });
+  });
 });
