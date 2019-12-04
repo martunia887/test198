@@ -43,7 +43,7 @@ declare module '@atlaskit/router' {
 
   declare type RouteResourceLoading = boolean;
   declare type RouteResourceTimestamp = number | null;
-  declare type RouteResourceError = Object | Error | null;
+  declare export type RouteResourceError = Object | Error | null;
   declare type RouteResourceData = Object | null;
   declare type RouteResourcePromise = Promise<any> | null;
 
@@ -60,7 +60,7 @@ declare module '@atlaskit/router' {
     ResourceStoreContext,
   ];
 
-  declare type RouteResource = {|
+  declare export type RouteResource = {|
     type: string,
     getKey: (...args: RouteResourceGettersArgs) => string,
     maxAge: number,
@@ -201,9 +201,9 @@ declare module '@atlaskit/router' {
   >;
 
   // TODO: DRY out all these different router props if possible
-  declare type RouterProps = {
+  declare export type RouterProps = {
     isStatic?: boolean,
-    history: BrowserHistory,
+    history?: BrowserHistory,
     transitionBlocker?: TransitionBlocker,
     resourceContext?: ResourceStoreContext,
     resourceData?: ResourceStoreData,
@@ -221,24 +221,24 @@ declare module '@atlaskit/router' {
     resourceContext?: ResourceStoreContext,
   };
 
-  declare type MatchParams = {
+  declare export type MatchParams = {
     [key: string]: string | null | typeof undefined,
   };
 
-  declare type ResourceStoreData =
+  declare export type ResourceStoreData =
     | { [type: string]: RouteResourceDataForType }
     | {||};
 
-  declare type RouterStoreContext = {|
+  declare export type RouterStoreContext = {|
     route: Route | null,
     match: Match,
     query: Query,
     location: Location,
   |};
 
-  declare type HistoryAction = 'PUSH' | 'REPLACE' | 'POP' | '';
+  declare export type HistoryAction = 'PUSH' | 'REPLACE' | 'POP' | '';
 
-  declare type NavigationType = 'container' | 'product';
+  declare export type NavigationType = 'container' | 'product';
 
   declare type NavigationRenderUpdater = (
     location: Location,
@@ -246,15 +246,15 @@ declare module '@atlaskit/router' {
     route: Route,
   ) => Node;
 
-  declare type NavigationStatics = {|
+  declare export type NavigationStatics = {|
     type: NavigationType,
     view: (...args: any[]) => string,
   |};
 
-  declare type Navigation = {|
+  declare export type Navigation = {
     ...NavigationStatics,
     renderNavigationUpdater: NavigationRenderUpdater,
-  |};
+  };
 
   declare export type HistoryBlocker = (
     location: Location,
@@ -268,7 +268,7 @@ declare module '@atlaskit/router' {
     state?: any,
   ) => RouterAction;
 
-  declare type RouterActionReplace = (
+  declare export type RouterActionReplace = (
     path: string | LocationShape,
     state?: any,
   ) => RouterAction;
@@ -283,7 +283,7 @@ declare module '@atlaskit/router' {
     onClick?: (e: any) => void,
   };
 
-  declare type RouterSubscriberProps = {|
+  declare export type RouterSubscriberProps = {|
     children: (
       state: RouterState,
       actions: BoundActions<EntireRouterState, RouterActionsType>,
@@ -316,6 +316,15 @@ declare module '@atlaskit/router' {
     |}): ResourceStoreData,
   };
 
+  declare export function ResourceSubscriber(props: {
+    children: (
+      resource: RouteResourceResponse & {
+        update: (data: RouteResourceData | null) => void,
+        refresh: () => void,
+      },
+    ) => Node,
+    resource: RouteResource,
+  }): Node;
   declare export function RouterSubscriber(props: RouterSubscriberProps): Node;
 
   declare export function RouteResourceEnabledSubscriber(props: {|
@@ -338,6 +347,7 @@ declare module '@atlaskit/router' {
     BoundActions<RouterActionsType>,
   ];
   declare export function useRouterActions(): BoundActions<RouterActionsType>;
+  declare export function useResourceStoreContext(): ResourceStoreContext;
 
   // Utils
   declare type WithRouterProps = RouteContext & {| history: BrowserHistory |};
@@ -348,7 +358,7 @@ declare module '@atlaskit/router' {
   declare export function matchRoute(
     routes: Routes,
     pathname: string,
-    queryParams: MatchParams,
+    queryParams: MatchParams | string,
   ): MatchedRoute | null;
 
   declare export function noopRouterDecorator(story: () => Node): Node;
@@ -357,4 +367,31 @@ declare module '@atlaskit/router' {
     pattern: string,
     params?: { [paramName: string]: string | number | boolean | null | void },
   ): string;
+
+  /**
+   * Utility method to created async versions of getData functions
+   *
+   */
+  declare type GetDataLoader = () => Promise</* inexact */ {
+    default: $ElementType<RouteResource, 'getData'>,
+  }>;
+
+  /**
+   * Utility method to created type safe resources with defaults.
+   *
+   */
+  declare type CreateResourceArg =
+    | {| ...RouteResource, maxAge?: number |}
+    | {|
+        ...$Diff<
+          RouteResource,
+          {| getData: $ElementType<RouteResource, 'getData'> |},
+        >,
+        maxAge?: number,
+        getDataLoader: GetDataLoader,
+      |};
+
+  declare export function createResource(
+    args: CreateResourceArg,
+  ): RouteResource;
 }
