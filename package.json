@@ -295,6 +295,7 @@
     "@manypkg/gatsby-source-workspace": "^0.3.0",
     "@marionebl/prosemirror-markdown": "^1.4.2",
     "@mdx-js/react": "^1.5.1",
+    "@reach/router": "^1.2.1",
     "@sentry/browser": "^4.6.3",
     "@types/algoliasearch": "^3.30.8",
     "@types/bricks.js": "^1.8.0",

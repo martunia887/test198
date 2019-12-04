@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'gatsby';
 import { Location } from '@reach/router';
 
@@ -12,8 +12,6 @@ import {
 import { N900, B200 } from '@atlaskit/theme/colors';
 import { gridSize } from '@atlaskit/theme';
 import Avatar from '@atlaskit/avatar';
-
-import '@atlaskit/css-reset';
 
 const theme = generateTheme({
   name: 'dark',
@@ -30,7 +28,9 @@ const NavItem = ({ href, pathname, ...rest }) => (
   />
 );
 
-export default () => {
+const TopNav = () => {
+  const [searchText, updateSearchText] = useState('');
+
   return (
     <>
       <div
@@ -45,17 +45,26 @@ export default () => {
               theme={theme}
               renderProductHome={() => (
                 <Link to="/">
-                  <div>DESIGN IS COOL</div>
+                  <img
+                    src="/logo-atlassian-design-white.svg"
+                    alt="Atlassian Design"
+                  />
                 </Link>
               )}
-              renderProfile={() => <Profile icon={<Avatar />} />}
               renderSearch={() => (
+                // TODO: Complete search implementation
                 <Search
-                  //   onClick={() => console.log('clicky-clack')}
+                  onClick={() =>
+                    console.error(
+                      'BC: we do not have a working search implementation - talk to me for more details',
+                    )
+                  }
                   text="Search..."
                   tooltip="Search"
                 />
               )}
+              // TODO: BC - this doesn't do anything yet, but can't really until we implement auth. This is on me to be real when I implement auth
+              renderProfile={() => <Profile icon={<Avatar />} />}
               primaryItems={[
                 <NavItem pathname={location.pathname} href="/brand">
                   Brand
@@ -88,3 +97,5 @@ export default () => {
     </>
   );
 };
+
+export default TopNav;
