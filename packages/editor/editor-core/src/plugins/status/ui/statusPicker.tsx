@@ -196,18 +196,19 @@ export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
     });
   };
 
-  private onColorClick = (colorPressed: Color) => {
-    const { text, localId, color } = this.state;
+  private onColorClick = (color: Color) => {
+    const { text, localId } = this.state;
+    const currColor = this.state.color;
 
-    if (color == colorPressed) {
+    if (currColor === color) {
       this.onEnter();
       return;
     }
-    this.setState({ color: colorPressed });
+    this.setState({ color });
 
     this.props.onSelect({
       text,
-      color: colorPressed,
+      color,
       localId,
     });
 
@@ -215,7 +216,7 @@ export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
       action: 'clicked',
       actionSubject: 'statusColorPicker',
       attributes: {
-        colorPressed,
+        color,
         localId,
         state: analyticsState(this.props.isNew),
       },
