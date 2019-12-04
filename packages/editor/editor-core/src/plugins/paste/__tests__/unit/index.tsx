@@ -473,8 +473,8 @@ describe('paste plugins', () => {
             layout="center"
             width={1333}
             height={1019}
-            lineLength={680}
             pctWidth={80}
+            lineLength={680}
           >
             <div
               dangerouslySetInnerHTML={{

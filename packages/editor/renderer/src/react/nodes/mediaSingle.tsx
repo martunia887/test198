@@ -19,6 +19,7 @@ export interface Props {
   layout: MediaSingleLayout;
   width?: number;
   allowDynamicTextSizing?: boolean;
+  isInsideExpand?: boolean;
   rendererAppearance: RendererAppearance;
 }
 
@@ -90,6 +91,7 @@ export default class MediaSingle extends Component<Props, State> {
     return (
       <WidthConsumer>
         {({ width: containerWidth, breakpoint }) => {
+          const { isInsideExpand, allowDynamicTextSizing } = this.props;
           const cardWidth = containerWidth;
           const cardHeight = (height / width) * cardWidth;
           const cardDimensions = {
@@ -99,12 +101,22 @@ export default class MediaSingle extends Component<Props, State> {
 
           const isFullWidth = this.props.rendererAppearance === 'full-width';
 
-          const nonFullWidthSize =
-            containerWidth - padding >= akEditorFullPageMaxWidth
-              ? this.props.allowDynamicTextSizing
-                ? mapBreakpointToLayoutMaxWidth(breakpoint)
-                : akEditorFullPageMaxWidth
-              : containerWidth - padding;
+          let nonFullWidthSize = containerWidth;
+          if (!isInsideExpand) {
+            const isContainerSizeGreaterThanMaxFullPageWidth =
+              containerWidth - padding >= akEditorFullPageMaxWidth;
+
+            if (
+              isContainerSizeGreaterThanMaxFullPageWidth &&
+              allowDynamicTextSizing
+            ) {
+              nonFullWidthSize = mapBreakpointToLayoutMaxWidth(breakpoint);
+            } else if (isContainerSizeGreaterThanMaxFullPageWidth) {
+              nonFullWidthSize = akEditorFullPageMaxWidth;
+            } else {
+              nonFullWidthSize = containerWidth - padding;
+            }
+          }
 
           const lineLength = isFullWidth
             ? Math.min(akEditorFullWidthLayoutWidth, containerWidth - padding)
@@ -115,10 +127,11 @@ export default class MediaSingle extends Component<Props, State> {
               layout={props.layout}
               width={width}
               height={height}
-              containerWidth={containerWidth}
               lineLength={lineLength}
+              containerWidth={containerWidth}
               pctWidth={props.width}
               fullWidthMode={isFullWidth}
+              forcePercentCalcWithContainerWidth={isInsideExpand}
             >
               {React.cloneElement(child, {
                 resizeMode: 'stretchy-fit',

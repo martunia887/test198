@@ -1,3 +1,4 @@
+import { mountWithIntl } from '@atlaskit/editor-test-helpers/src/enzyme';
 import { mount, shallow, ReactWrapper } from 'enzyme';
 import { ReactSerializer } from '../../../index';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
@@ -10,6 +11,8 @@ import * as mediaDoc from '../../__fixtures__/media.adf.json';
 import * as mediaFragment from '../../__fixtures__/media-fragment.json';
 import * as mediaGroupFragment from '../../__fixtures__/media-group-fragment.json';
 import * as linkDoc from '../../__fixtures__/links.adf.json';
+import * as expandWithMedia from '../../__fixtures__/expand-with-media.json';
+import * as nestedExpandWithMedia from '../../__fixtures__/nested-expand-with-media.json';
 import { nextTick } from '../../../../../../media/media-test-helpers/src';
 
 const docFromSchema = schema.nodeFromJSON(doc);
@@ -21,6 +24,12 @@ const getMedia = (wrapper: ReactWrapper) => {
   return wrapper.findWhere(
     (item: ReactWrapper) =>
       item.is('LoadableComponent') && item.prop('nodeType') === 'media',
+  );
+};
+
+const getMediaSingle = (wrapper: ReactWrapper<any, any, any>) => {
+  return wrapper.findWhere(
+    (item: ReactWrapper) => item.prop('nodeType') === 'mediaSingle',
   );
 };
 
@@ -167,6 +176,42 @@ describe('Renderer - ReactSerializer', () => {
   });
 
   describe('media', () => {
+    describe('when inside of', () => {
+      describe('expand', () => {
+        it('media node has isInsideExpand as true', async () => {
+          const reactSerializer = ReactSerializer.fromSchema(schema, {});
+
+          const reactDoc = mountWithIntl(
+            reactSerializer.serializeFragment(
+              schema.nodeFromJSON(expandWithMedia).content,
+            ) as any,
+          );
+
+          await nextTick();
+          await nextTick();
+          reactDoc.update();
+          expect(getMediaSingle(reactDoc).prop('isInsideExpand')).toEqual(true);
+        });
+      });
+
+      describe('tables -> nestedExpand', () => {
+        it('media node has isInsideExpand as true', async () => {
+          const reactSerializer = ReactSerializer.fromSchema(schema, {});
+
+          const reactDoc = mountWithIntl(
+            reactSerializer.serializeFragment(
+              schema.nodeFromJSON(nestedExpandWithMedia).content,
+            ) as any,
+          );
+
+          await nextTick();
+          await nextTick();
+          reactDoc.update();
+          expect(getMediaSingle(reactDoc).prop('isInsideExpand')).toEqual(true);
+        });
+      });
+    });
+
     describe('when default shouldOpenMediaViewer is false', () => {
       it('media node has shouldOpenMediaViewer set to default value when parent is not mediaSingle', async () => {
         const reactSerializer = ReactSerializer.fromSchema(schema, {

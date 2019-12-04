@@ -106,7 +106,10 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
             provider: mediaProvider,
             allowMediaSingle: true,
             allowResizing: true,
+            allowAnnotation: true,
             allowLinking: true,
+            allowResizingInTables: true,
+            UNSAFE_allowAltTextOnImages: true,
           }}
           insertMenuItems={customInsertMenuItems}
           extensionHandlers={extensionHandlers}

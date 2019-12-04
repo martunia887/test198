@@ -111,3 +111,100 @@ export const expandADF = (breakoutMode = 'default', title = 'Cool cheese') => ({
     },
   ],
 });
+
+export const expandADFWithMedia = (breakoutMode = 'default', width = 100) => ({
+  version: 1,
+  type: 'doc',
+  content: [
+    {
+      type: 'expand',
+      attrs: {
+        title: '',
+      },
+      content: [
+        {
+          type: 'mediaSingle',
+          attrs: {
+            width,
+            layout: 'center',
+          },
+          content: [
+            {
+              type: 'media',
+              attrs: {
+                id: '3be656f1-b53d-48d9-82ff-64d6171c5475',
+                type: 'file',
+                collection: 'MediaServicesSample',
+                width: 1024,
+                height: 683,
+              },
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [],
+        },
+      ],
+      marks: [
+        {
+          type: 'breakout',
+          attrs: {
+            mode: breakoutMode,
+          },
+        },
+      ],
+    },
+    {
+      type: 'table',
+      attrs: {
+        isNumberColumnEnabled: false,
+        layout: breakoutMode,
+      },
+      content: [
+        {
+          type: 'tableRow',
+          content: [
+            {
+              type: 'tableCell',
+              attrs: {},
+              content: [
+                {
+                  type: 'nestedExpand',
+                  attrs: {
+                    title: '',
+                  },
+                  content: [
+                    {
+                      type: 'mediaSingle',
+                      attrs: {
+                        width,
+                        layout: 'center',
+                      },
+                      content: [
+                        {
+                          type: 'media',
+                          attrs: {
+                            id: '3be656f1-b53d-48d9-82ff-64d6171c5475',
+                            type: 'file',
+                            collection: 'MediaServicesSample',
+                            width: 1024,
+                            height: 683,
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'paragraph',
+      content: [],
+    },
+  ],
+});

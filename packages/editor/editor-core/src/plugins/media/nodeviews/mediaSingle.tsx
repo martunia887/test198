@@ -191,6 +191,7 @@ export default class MediaSingleNode extends Component<
       mediaPluginOptions,
       fullWidthMode,
       view: { state },
+      view,
     } = this.props;
     const { contextIdentifierProvider } = this.state;
 
@@ -274,6 +275,11 @@ export default class MediaSingleNode extends Component<
     return canResize ? (
       <ResizableMediaSingle
         {...props}
+        lineLength={
+          fullWidthMode
+            ? this.props.lineLength
+            : this.getLineLength(view, getPos()) || this.props.lineLength
+        }
         view={this.props.view}
         getPos={getPos}
         updateSize={this.updateSize}
@@ -292,6 +298,29 @@ export default class MediaSingleNode extends Component<
       <MediaSingle {...props}>{MediaChild}</MediaSingle>
     );
   }
+
+  private getLineLength = (view: EditorView, pos: number): number | null => {
+    if (typeof pos !== 'number' || isNaN(pos) || !view) {
+      return null;
+    }
+
+    const { expand, nestedExpand } = view.state.schema.nodes;
+    const $pos = view.state.doc.resolve(pos);
+    const isInsideExpand = !!findParentNodeOfTypeClosestToPos($pos, [
+      expand,
+      nestedExpand,
+    ]);
+
+    if (isInsideExpand) {
+      const domNode = view.nodeDOM($pos.pos);
+
+      if (domNode instanceof HTMLElement) {
+        return domNode.offsetWidth;
+      }
+    }
+
+    return null;
+  };
 }
 
 class MediaSingleNodeView extends SelectionBasedNodeView<

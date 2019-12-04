@@ -8,6 +8,8 @@ import {
   sharedExpandStyles,
   ExpandIconWrapper,
   ExpandLayoutWrapper,
+  WidthProvider,
+  WIDTH_DETECTOR_CLASSNAME,
 } from '@atlaskit/editor-common';
 import { AnalyticsEventPayload, PLATFORM, MODE } from '../analytics/events';
 import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../analytics/enums';
@@ -52,6 +54,10 @@ TitleContainer.displayName = 'TitleContainerButton';
 
 const ContentContainer = styled.div<StyleProps>`
   ${sharedExpandStyles.ContentStyles};
+
+  .${WIDTH_DETECTOR_CLASSNAME} + * {
+    margin-top: 0;
+  }
 `;
 
 export interface ExpandProps {
@@ -108,7 +114,9 @@ function Expand({
         </Title>
       </TitleContainer>
       <ContentContainer expanded={expanded}>
-        <div className={`${nodeType}-content-wrapper`}>{children}</div>
+        <div className={`${nodeType}-content-wrapper`}>
+          <WidthProvider>{children}</WidthProvider>
+        </div>
       </ContentContainer>
     </Container>
   );

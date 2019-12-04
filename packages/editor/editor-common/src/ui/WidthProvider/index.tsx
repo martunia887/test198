@@ -31,6 +31,8 @@ export type WidthProviderState = {
   width?: number;
 };
 
+export const WIDTH_DETECTOR_CLASSNAME = 'ak-width-detector-container';
+
 export class WidthProvider extends React.Component<any, WidthProviderState> {
   state = { width: 0 };
 
@@ -43,6 +45,7 @@ export class WidthProvider extends React.Component<any, WidthProviderState> {
     return (
       <>
         <WidthDetector
+          className={WIDTH_DETECTOR_CLASSNAME}
           containerStyle={{
             height: '0',
             borderStyle: 'none',

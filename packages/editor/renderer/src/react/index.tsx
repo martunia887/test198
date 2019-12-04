@@ -153,6 +153,8 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
           props = this.getTableChildrenProps(node);
         } else if (node.type.name === 'media') {
           props = this.getMediaProps(node, parentInfo && parentInfo.path);
+        } else if (node.type.name === 'mediaSingle') {
+          props = this.getMediaSingleProps(node, parentInfo && parentInfo.path);
         } else {
           props = this.getProps(node);
         }
@@ -277,6 +279,23 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     return {
       timestamp: node.attrs && node.attrs.timestamp,
       parentIsIncompleteTask: parentInfo && parentInfo.parentIsIncompleteTask,
+    };
+  }
+
+  private getMediaSingleProps(node: Node, path: Array<Node> = []) {
+    const {
+      nodes: { expand, nestedExpand },
+    } = node.type.schema;
+    let isInsideExpand =
+      path &&
+      path.some(
+        n =>
+          n.type && [expand.name, nestedExpand.name].indexOf(n.type.name) > -1,
+      );
+
+    return {
+      ...this.getProps(node),
+      isInsideExpand,
     };
   }
 

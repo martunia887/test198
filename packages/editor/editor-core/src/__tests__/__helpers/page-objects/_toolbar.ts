@@ -22,6 +22,7 @@ export enum ToolbarMenuItem {
   fontStyle,
   toolbarDropList,
   insertMenu,
+  expand,
 }
 
 export const toolbarMenuItemsSelectors = {
@@ -46,6 +47,7 @@ export const toolbarMenuItemsSelectors = {
   [ToolbarMenuItem.fontStyle]: `[aria-label="Font style"]`,
   [ToolbarMenuItem.toolbarDropList]: '[data-role="droplistContent"]',
   [ToolbarMenuItem.insertMenu]: '[aria-label="Insert"]',
+  [ToolbarMenuItem.expand]: '[aria-label="Expand"]',
 };
 
 export async function clickToolbarMenu(page: Page, menu: ToolbarMenuItem) {

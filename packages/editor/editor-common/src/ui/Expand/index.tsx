@@ -108,9 +108,9 @@ const ContentStyles = css<StyleProps>`
         ? `
       .expand-content-wrapper, .nestedExpand-content-wrapper {
         /* We visually hide the content here to preserve the content during copy+paste */
-        position: absolute;
-        height: 1px;
-        width: 1px;
+        width: 100%;
+        display: block;
+        height: 0;
         overflow: hidden;
         clip: rect(1px, 1px, 1px, 1px);
         white-space: nowrap;

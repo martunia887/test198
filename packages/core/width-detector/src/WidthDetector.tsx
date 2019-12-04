@@ -26,6 +26,7 @@ type Props = {
   onResize?: (width: number) => void;
   /** Optional styles to be applied to the containing element */
   containerStyle?: React.CSSProperties;
+  className?: string;
 };
 
 type State = {

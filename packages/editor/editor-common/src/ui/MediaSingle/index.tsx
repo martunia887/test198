@@ -12,12 +12,13 @@ export interface Props {
   layout: MediaSingleLayout;
   width: number;
   height: number;
+  lineLength: number;
   containerWidth?: number;
   isLoading?: boolean;
   className?: string;
-  lineLength: number;
   pctWidth?: number;
   fullWidthMode?: boolean;
+  forcePercentCalcWithContainerWidth?: boolean;
 }
 
 export default function MediaSingle({
@@ -28,14 +29,21 @@ export default function MediaSingle({
   containerWidth = width,
   isLoading = false,
   pctWidth,
-  lineLength,
   className,
   fullWidthMode,
+  forcePercentCalcWithContainerWidth,
+  lineLength,
 }: Props) {
   const usePctWidth = pctWidth && layoutSupportsWidth(layout);
   if (pctWidth && usePctWidth) {
+    const baseWidthToCalc = forcePercentCalcWithContainerWidth
+      ? containerWidth
+      : lineLength;
     const pxWidth = Math.ceil(
-      calcPxFromPct(pctWidth / 100, lineLength || containerWidth),
+      calcPxFromPct(
+        pctWidth / 100,
+        baseWidthToCalc || lineLength || containerWidth,
+      ),
     );
 
     // scale, keeping aspect ratio

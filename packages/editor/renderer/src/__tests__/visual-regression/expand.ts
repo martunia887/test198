@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer';
 import { snapshot, initRendererWithADF, Device } from './_utils';
 import { selectors } from '../__helpers/page-objects/_expand';
-import { expandADF } from '../__fixtures__/expand-adf';
+import { expandADF, expandADFWithMedia } from '../__fixtures__/expand-adf';
 
 const initRenderer = async (page: Page, adf: any) => {
   await initRendererWithADF(page, {
@@ -56,6 +56,17 @@ describe('Snapshot Test: Expand', () => {
       await page.waitForSelector(selectors.expand);
       await page.click(selectors.expandToggle);
       await page.click(selectors.nestedExpandToggle);
+    });
+  });
+
+  describe.each(['default', 'wide', 'full-width'])('Breakout: %s', mode => {
+    describe.each([30, 50, 60, 70, 100])('media size: %s', width => {
+      test('should display media expand', async () => {
+        await initRenderer(page, expandADFWithMedia(mode, width));
+        await page.waitForSelector(selectors.expand);
+        await page.click(selectors.expandToggle);
+        await page.click(selectors.nestedExpandToggle);
+      });
     });
   });
 });
