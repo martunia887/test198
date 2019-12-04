@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@atlaskit/build-utils": "^2.4.0",
-    "netlify-cli": "^2.8.3",
     "js-yaml": "^3.13.1",
+    "netlify-cli": "^2.21.0",
     "query-string": "^4.3.2"
   }
 }
