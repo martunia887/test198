@@ -8,6 +8,7 @@ module.exports = {
     description: `Help us lol`,
   },
   plugins: [
+    'gatsby-plugin-typescript',
     {
       resolve: `@atlaskit/gatsby-theme-brisk`,
       options: {
