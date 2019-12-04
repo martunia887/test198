@@ -62,7 +62,7 @@ describe('Gap cursor: layout', () => {
     await initEditor(gapCursorLayout);
   });
 
-  it(' should render gap cursor on table on ArrowDown', async () => {
+  it(' should render gap cursor on action inside a layout on ArrowRight', async () => {
     await clickOnStatus(page);
     await pressKey(page, ['ArrowRight']);
     await page.waitForSelector(selectors.gapCursor);
