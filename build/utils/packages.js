@@ -4,6 +4,8 @@ const path = require('path');
 const bolt = require('bolt');
 const git = require('./git');
 
+const { TARGET_BRANCH } = process.env;
+
 async function getChangedPackagesSinceCommit(commit) {
   const changedFiles = await git.getChangedFilesSince(commit, true);
   const project = await bolt.getProject();
@@ -53,9 +55,7 @@ async function getChangedPackagesSinceDevelop() {
 }
 
 async function getChangedPackages() {
-  const { BITBUCKET_BRANCH, TARGET_BRANCH, CI } = process.env;
-  const branchName = CI ? BITBUCKET_BRANCH : await git.getBranchName();
-  const parent = TARGET_BRANCH || (await git.getParent(branchName));
+  const parent = TARGET_BRANCH || (await git.getParent());
   if (parent) {
     return parent === 'develop'
       ? getChangedPackagesSinceDevelop()

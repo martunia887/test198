@@ -13,15 +13,6 @@ async function getCommitsSince(ref /*: string */) {
   ]);
   return gitCmd.stdout.trim().split('\n');
 }
-async function getCommitsSinceNoHead(ref /*: string */) {
-  const gitCmd = await spawn('git', [
-    'rev-list',
-    '--no-merges',
-    '--abbrev-commit',
-    `${ref}`,
-  ]);
-  return gitCmd.stdout.trim().split('\n');
-}
 
 async function getChangedFilesSince(
   ref /*: string */,
@@ -54,7 +45,7 @@ async function getChangedChangesetFilesSinceMaster(
   const files = cmd.stdout
     .trim()
     .split('\n')
-    .filter(file => file.includes('changes.json'));
+    .filter(file => !files.includes('README.md') && file.startsWith('changes'));
   if (!fullPath) return files;
   return files.map(file => path.resolve(file));
 }
@@ -76,14 +67,13 @@ async function getChangedChangesetFilesSinceDevelop(
   const files = cmd.stdout
     .trim()
     .split('\n')
-    .filter(file => file.includes('changes.json'));
+    .filter(file => !files.includes('README.md') && file.startsWith('changes'));
   if (!fullPath) return files;
   return files.map(file => path.resolve(file));
 }
 
 async function getChangesetFiles() {
-  const branchName = await getBranchName();
-  const parent = await getParent(branchName);
+  const parent = await getParent();
   return parent === 'develop'
     ? getChangedChangesetFilesSinceDevelop()
     : getChangedChangesetFilesSinceMaster();
@@ -109,13 +99,13 @@ async function add(pathToFile /*: string */) {
   return gitCmd.code === 0;
 }
 
-async function checkout(pathToFile /*: string */) {
-  const gitCmd = await spawn('git', ['checkout', pathToFile]);
+async function branch(branchName /*: string */) {
+  const gitCmd = await spawn('git', ['checkout', '-b', branchName]);
   return gitCmd.code === 0;
 }
 
-async function branch(branchName /*: string */) {
-  const gitCmd = await spawn('git', ['checkout', '-b', branchName]);
+async function checkout(pathToFile /*: string */) {
+  const gitCmd = await spawn('git', ['checkout', pathToFile]);
   return gitCmd.code === 0;
 }
 
@@ -124,8 +114,28 @@ async function commit(message /*: string */) {
   return gitCmd.code === 0;
 }
 
+async function fetch() {
+  const gitCmd = await spawn('git', ['fetch']);
+  return gitCmd.code === 0;
+}
+
+async function init() {
+  const gitCmd = await spawn('git', ['init']);
+  return gitCmd.code === 0;
+}
+
+async function merge(branchName /*: string */) {
+  const gitCmd = await spawn('git', ['merge', `${branchName}`]);
+  return gitCmd.code === 0;
+}
+
 async function push(args /*: Array<any>*/ = []) {
   const gitCmd = await spawn('git', ['push', ...args]);
+  return gitCmd.code === 0;
+}
+
+async function remote(name /*: string */, url /*: string */) {
+  const gitCmd = await spawn('git', ['remote', 'add', `${name}`, `${url}`]);
   return gitCmd.code === 0;
 }
 
@@ -318,16 +328,46 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
   return unpublishedCommits;
 }
 
-async function getParent(branchName /*: string */) {
-  const lastDevelopCommit = (await getCommitsSinceNoHead('develop')).pop();
-  let branchCommits = [];
+async function getMergeCommits(
+  branchName /*: string */,
+  reference /*: string */,
+) {
+  const gitCmd = await spawn('git', [
+    'merge-base',
+    `${branchName}`,
+    `${reference}`,
+  ]);
+
+  // eslint-disable-next-line no-shadow
+  const commit = gitCmd.stdout.split('\n')[0];
+  return commit;
+}
+
+async function branchContainsCommit(commitId /*:string */) {
+  const gitCmd = await spawn('git', [
+    'branch',
+    '-r',
+    '--contains',
+    `${commitId}`,
+  ]);
+
+  // eslint-disable-next-line no-shadow
+  const output = gitCmd.stdout.split('\n')[0];
+  return output;
+}
+
+async function getParent() {
+  await fetch();
   try {
-    branchCommits = await getCommitsSinceNoHead(branchName);
-  } catch (e) {
-    console.warn(`An error occured because of the branch not found in the tree :${e}.
-    \n it will default that the branch / commits was tipped off master`);
+    const mergeDevelopCommit = await getMergeCommits('develop', 'HEAD');
+    const output = await branchContainsCommit(mergeDevelopCommit);
+    return output.includes('origin/master') ? 'master' : 'develop';
+  } catch (err) {
+    console.warn(
+      `In some cases, 'develop' is not found: ${err}, especially in the test, so we default to master`,
+    );
+    return 'master';
   }
-  return branchCommits.includes(lastDevelopCommit) ? 'develop' : 'master';
 }
 
 module.exports = {
@@ -341,7 +381,11 @@ module.exports = {
   branch,
   checkout,
   commit,
+  fetch,
+  init,
+  merge,
   push,
+  remote,
   tag,
   rebase,
   rebaseAndPush,
