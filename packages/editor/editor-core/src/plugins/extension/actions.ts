@@ -1,60 +1,11 @@
-import { findParentNodeOfType, replaceSelectedNode } from 'prosemirror-utils';
 import { Slice, Schema, Node as PmNode } from 'prosemirror-model';
 import { EditorState, NodeSelection } from 'prosemirror-state';
-import {
-  removeSelectedNode,
-  removeParentNodeOfType,
-  findSelectedNodeOfType,
-} from 'prosemirror-utils';
+import { replaceSelectedNode } from 'prosemirror-utils';
 import { UpdateExtension } from '@atlaskit/editor-common';
-import { pluginKey } from './plugin';
 import { MacroProvider, insertMacroFromMacroBrowser } from '../macro';
-import { getExtensionNode, isSelectionNodeExtension } from './utils';
+import { getSelectedExtension } from './utils';
 import { mapFragment } from '../../utils/slice';
 import { Command, CommandDispatch } from '../../types';
-
-export const updateExtensionLayout = (layout: string): Command => (
-  state,
-  dispatch,
-) => {
-  const { selection, schema, tr } = state;
-  const { bodiedExtension, extension, inlineExtension } = schema.nodes;
-  const parentExtNode = findParentNodeOfType([bodiedExtension])(selection);
-
-  let extPosition;
-  let extNode;
-
-  const selectedNode = findSelectedNodeOfType([
-    bodiedExtension,
-    inlineExtension,
-    extension,
-  ])(selection);
-
-  if (!parentExtNode && !selectedNode) {
-    return false;
-  }
-
-  if (selectedNode) {
-    extPosition = selectedNode.pos;
-    extNode = selectedNode.node;
-  } else {
-    extPosition = parentExtNode!.pos;
-    extNode = parentExtNode!.node;
-  }
-
-  const pluginState = pluginKey.getState(state);
-
-  tr.setNodeMarkup(extPosition, undefined, {
-    ...extNode!.attrs,
-    layout,
-  }).setMeta(pluginKey, { ...pluginState, layout });
-
-  if (dispatch) {
-    dispatch(tr);
-  }
-
-  return true;
-};
 
 export const updateExtensionParams = (
   updateExtension: UpdateExtension<object>,
@@ -96,14 +47,14 @@ export const editExtension = (
   macroProvider: MacroProvider | null,
   updateExtension?: UpdateExtension<object>,
 ): Command => (state, dispatch): boolean => {
-  const node = getExtensionNode(state);
+  const nodeWithPos = getSelectedExtension(state, true);
 
-  if (!node) {
+  if (!nodeWithPos) {
     return false;
   }
 
   if (updateExtension) {
-    updateExtensionParams(updateExtension, node)(state, dispatch);
+    updateExtensionParams(updateExtension, nodeWithPos)(state, dispatch);
     return true;
   }
 
@@ -111,25 +62,11 @@ export const editExtension = (
     return false;
   }
 
-  insertMacroFromMacroBrowser(macroProvider, node.node, true)(state, dispatch);
-  return true;
-};
-
-export const removeExtension = (): Command => (state, dispatch) => {
-  const { schema, selection } = state;
-  const pluginState = pluginKey.getState(state);
-  let tr = state.tr.setMeta(pluginKey, { ...pluginState, element: null });
-
-  if (isSelectionNodeExtension(selection, schema)) {
-    tr = removeSelectedNode(tr);
-  } else {
-    tr = removeParentNodeOfType(schema.nodes.bodiedExtension)(tr);
-  }
-
-  if (dispatch) {
-    dispatch(tr);
-  }
-
+  insertMacroFromMacroBrowser(
+    macroProvider,
+    nodeWithPos.node,
+    true,
+  )(state, dispatch);
   return true;
 };
 

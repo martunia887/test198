@@ -10,6 +10,6 @@ export { default as DefaultExtensionProvider } from './default-extension-provide
 
 export { getItemsFromModule } from './menu-helpers';
 
-export { getNodeRenderer } from './extension-handlers';
+export { getExtensionModuleNode, getNodeRenderer } from './extension-handlers';
 
 export { default as combineExtensionProviders } from './combine-extension-providers';
