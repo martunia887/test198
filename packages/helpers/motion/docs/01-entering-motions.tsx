@@ -15,13 +15,12 @@ StaggeredEntrance will have no effect.`}
 );
 
 export default md`
-  Motion comes with out of the box entering motions.
+  Motion comes with entering motions out of the box.
   Most motions have a **pairing exiting motion**,
   while some only have an exiting motion and no entering.
 
   For consistency - don't try to mix & match.
   If an element **enters with one motion** it should **leave with the same motion**.
-  If the parent element exits it doesn't need to use the same motion though.
 
   ## \`<FadeIn />\`
 

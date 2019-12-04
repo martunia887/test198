@@ -76,7 +76,7 @@ export const useResizingHeight = ({
       nextDimensions.height,
     );
 
-    const newStyles: Partial<CSSStyleDeclaration> = {
+    const newStyles: React.CSSProperties = {
       height: `${prevDimensions.current.height}px`,
       willChange: 'height',
       transitionProperty: 'height',
