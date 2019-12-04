@@ -6,6 +6,7 @@ const constellationInitialPackages = require('./constellation-package-list');
 
 module.exports = {
   plugins: [
+    'gatsby-plugin-typescript',
     {
       resolve: '@manypkg/gatsby-source-workspace',
       options: {
@@ -65,8 +66,8 @@ module.exports = {
         ],
       },
     },
-    {
-      resolve: require.resolve('@brisk-docs/gatsby-plugin'),
-    },
+    // {
+    //   resolve: require.resolve('@brisk-docs/gatsby-plugin'),
+    // },
   ],
 };
