@@ -192,6 +192,7 @@ export class ExpandNodeView implements NodeView {
     );
   }
 
+  // @see ED-8164
   private isAllowInteractiveExpandEnabled = () => {
     const { state } = this.view;
     const editorProps = getEditorProps(state);
@@ -295,8 +296,10 @@ export class ExpandNodeView implements NodeView {
   };
 
   private toggleExpand = () => {
-    const { state, dispatch } = this.view;
-    toggleExpandExpanded(this.getPos(), this.node.type)(state, dispatch);
+    if (this.isAllowInteractiveExpandEnabled()) {
+      const { state, dispatch } = this.view;
+      toggleExpandExpanded(this.getPos(), this.node.type)(state, dispatch);
+    }
   };
 
   private moveToOutsideOfTitle = (event: KeyboardEvent) => {

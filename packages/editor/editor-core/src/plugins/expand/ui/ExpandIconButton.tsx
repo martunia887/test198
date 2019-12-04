@@ -89,9 +89,5 @@ export const ExpandIconButton = (props: ExpandIconButtonProps) => {
     return <ButtonWithTooltip label={label} {...props} />;
   }
 
-  return (
-    <ExpandLayoutWrapper>
-      <ButtonWithoutTooltip label={label} {...props} />
-    </ExpandLayoutWrapper>
-  );
+  return <ButtonWithoutTooltip label={label} {...props} />;
 };
