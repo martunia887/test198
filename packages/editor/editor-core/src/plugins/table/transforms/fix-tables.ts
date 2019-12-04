@@ -14,7 +14,6 @@ import {
   contentWidth,
   getLayoutSize,
 } from '../pm-plugins/table-resizing/utils';
-import { sendLogs } from '../../../utils/sendLogs';
 
 export const fireAnalytics = (properties = {}) =>
   sendLogs({
@@ -62,12 +61,7 @@ export const removeExtraneousColumnWidths = (
     return cell;
   });
 
-  if (hasProblems) {
-    fireAnalytics({ message: 'removeExtraneousColumnWidths' });
-    return true;
-  }
-
-  return false;
+  return hasProblems;
 };
 
 export const fixTables = (tr: Transaction): Transaction | undefined => {

@@ -13,4 +13,16 @@ type InvalidTransactionErrorAEP = OperationalAEP<
   undefined
 >;
 
-export type ErrorEventPayload = InvalidTransactionErrorAEP;
+type InvalidTransactionStepErrorAEP = OperationalAEP<
+  ACTION.DISCARD_INVALID_STEPS_FROM_TRANSACTION,
+  ACTION_SUBJECT.EDITOR,
+  undefined,
+  {
+    analyticsEventPayloads: AnalyticsEventPayloadWithChannel[];
+  },
+  undefined
+>;
+
+export type ErrorEventPayload =
+  | InvalidTransactionErrorAEP
+  | InvalidTransactionStepErrorAEP;

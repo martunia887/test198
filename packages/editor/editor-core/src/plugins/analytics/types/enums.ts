@@ -15,6 +15,7 @@ export enum ACTION {
   CLICKED = 'clicked',
   CLOSED = 'closed',
   DELETED = 'deleted',
+  DISCARD_INVALID_STEPS_FROM_TRANSACTION = 'discardInvalidStepsFromTransaction',
   DISPATCHED_INVALID_TRANSACTION = 'dispatchedInvalidTransaction',
   EDITED = 'edited',
   EDITOR_MOUNTED = 'mounted',

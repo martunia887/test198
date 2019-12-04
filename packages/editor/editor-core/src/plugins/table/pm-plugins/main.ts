@@ -114,10 +114,10 @@ export const createPlugin = (
       if (tr) {
         // "fixTables" removes empty rows as we don't allow that in schema
         const updatedTr = handleCut(tr, oldState, newState);
-        return fixTables(updatedTr) || updatedTr;
+        return fixTables(updatedTr, newState) || updatedTr;
       }
       if (transactions.find(tr => tr.docChanged)) {
-        return fixTables(newState.tr);
+        return fixTables(newState.tr, newState);
       }
     },
     view: (editorView: EditorView) => {
