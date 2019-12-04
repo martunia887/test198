@@ -17,7 +17,7 @@ export const EditorIconWrapper: ComponentClass<HTMLAttributes<{}> &
     props.showPlaceholder
       ? colors.N100
       : themed({ light: colors.G300, dark: colors.G200 })};
-  margin: 2px ${gridSize}px 0 0;
+  margin: 4px ${gridSize}px 0 0;
 
   > span {
     margin: -8px;
