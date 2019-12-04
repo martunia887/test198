@@ -66,6 +66,7 @@ describe('Layouts:', () => {
 
   it('should actions placeholder not overflow the layout', async () => {
     await initEditor(layoutWithAction, largeViewport);
+    await page.click(layoutColSelector);
   });
 
   // todo: https://product-fabric.atlassian.net/browse/ED-6676
