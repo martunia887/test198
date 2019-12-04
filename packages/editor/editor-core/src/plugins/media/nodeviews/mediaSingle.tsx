@@ -165,7 +165,10 @@ export default class MediaSingleNode extends Component<
     // We need to call "stopPropagation" here in order to prevent the browser from navigating to
     // another URL if the media node is wrapped in a link mark.
     event.stopPropagation();
+    const { state, dispatch } = this.props.view;
+
     setNodeSelection(this.props.view, this.props.getPos());
+    dispatch(state.tr.scrollIntoView());
   };
 
   updateSize = (width: number | null, layout: MediaSingleLayout) => {
