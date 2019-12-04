@@ -1,9 +1,11 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+import { Appearance, initEditorWithAdf, snapshot } from '../_utils';
 import gapcursor from './__fixtures__/gap-cursor-adf.json';
+import gapCursorLayout from './__fixtures__/gap-cursor-layout-adf.json';
 import paragraph from './__fixtures__/paragraph-of-text.adf.json';
 import { selectors } from '../../__helpers/page-objects/_editor';
 import { pressKey } from '../../__helpers/page-objects/_keyboard';
 import { Page } from '../../__helpers/page-objects/_types';
+import { clickOnStatus } from '../../__helpers/page-objects/_status';
 
 let page: Page;
 
@@ -50,6 +52,21 @@ describe('Gap cursor:', () => {
     await pressKey(page, 'ArrowRight');
     await pressKey(page, 'ArrowDown');
     await page.waitForSelector(selectors.gapCursor);
+  });
+});
+
+describe('Gap cursor: layout', () => {
+  beforeEach(async () => {
+    // @ts-ignore
+    page = global.page;
+    await initEditor(gapCursorLayout);
+  });
+
+  it(' should render gap cursor on table on ArrowDown', async () => {
+    await clickOnStatus(page);
+    await pressKey(page, ['ArrowRight']);
+    await page.waitForSelector(selectors.gapCursor);
+    await snapshot(page, undefined, '[data-layout-section]');
   });
 });
 

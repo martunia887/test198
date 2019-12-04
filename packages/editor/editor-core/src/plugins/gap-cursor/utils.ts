@@ -220,6 +220,10 @@ export const fixCursorAlignment = (view: EditorView) => {
       !!targetNodeRef.parentElement &&
       /td|th/i.test(targetNodeRef.parentElement.nodeName);
 
+    const isInLayout =
+      !!targetNodeRef.parentElement &&
+      targetNodeRef.parentElement.dataset.layoutContent;
+
     height = parseInt(css.height!, 10);
     width = parseInt(css.width!, 10);
 
@@ -231,7 +235,7 @@ export const fixCursorAlignment = (view: EditorView) => {
     // padding is cumulative
     paddingLeft += parseInt(css.paddingLeft!, 10);
 
-    if (previousSibling || isMediaWithWrapping || isInTableCell) {
+    if (previousSibling || isMediaWithWrapping || isInTableCell || isInLayout) {
       const curNodeMarginTop = getDomNodeVerticalMargin(targetNodeRef, 'top');
       if (curNodeMarginTop > prevNodeMarginBottom) {
         marginTop = curNodeMarginTop - prevNodeMarginBottom;
