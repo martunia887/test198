@@ -221,13 +221,6 @@ export default class Switcher extends React.Component<SwitcherProps> {
                 }}
               />
               <ConditionalTracker
-                condition={switchToSectionHasLinks}
-                action={`rendered 'switch to' section`}
-                negativeAction={`did not render 'switch to' section`}
-                eventType={'operational'}
-                data={{ duration: this.timeSinceMounted() }}
-              />
-              <ConditionalTracker
                 condition={joinableSitesSectionHasLinks}
                 action={`rendered join section`}
                 negativeAction={`did not render join section`}
