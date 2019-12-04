@@ -1,5 +1,5 @@
 import React from 'react';
-import { md, Props, Example, code } from '@atlaskit/docs';
+import { md, Props, Example } from '@atlaskit/docs';
 import Lozenge from '@atlaskit/lozenge';
 import Tooltip from '@atlaskit/tooltip';
 

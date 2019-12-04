@@ -34,10 +34,7 @@ const ShrinkOut: React.FC<ShrinkOutProps> = ({
         requestAnimationFrame(() => {
           const newStyles: Partial<CSSStyleDeclaration> = {
             width: '0px',
-            // We animate margin down to zero so it doesn't take any space.
-            margin: '0px',
-            boxSizing: 'border-box',
-            willChange: 'width,margin',
+            margin: '0px', // We animate margin down to zero so it doesn't take any space.
             transitionTimingFunction: easeIn,
             transitionDuration: `${duration}ms`,
             transitionProperty: 'width,margin',
