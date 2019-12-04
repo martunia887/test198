@@ -8,7 +8,7 @@ import { defaultFetchData } from './default-joinable-sites-fetch';
 export type JoinableSiteDataFetcher = () => Promise<JoinableSitesResponse>;
 
 export const createJoinableSitesProvider = (
-  fetchData: JoinableSiteDataFetcher,
+  fetchData?: JoinableSiteDataFetcher,
   product?: Product,
 ): ExportedDataProvider<JoinableSitesResponse> => {
   return createProviderWithCustomFetchData<JoinableSitesResponse>(
