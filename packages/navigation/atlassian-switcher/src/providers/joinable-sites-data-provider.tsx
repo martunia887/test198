@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { JoinableSitesResponse, Product } from '../types';
+import { JoinableSitesResponse } from '../types';
 import { ProviderResult } from './as-data-provider';
 import { createJoinableSitesProvider } from './default-joinable-sites-provider';
 import { ExportedDataProvider, DataProvider } from './create-data-provider';
@@ -17,13 +17,11 @@ export type JoinableSitesDataProvider = ExportedDataProvider<
 export const JoinableSitesProvider = ({
   children,
   joinableSitesDataProvider,
-  product,
 }: {
   children: (
     joinableSites: ProviderResult<JoinableSitesResponse>,
   ) => React.ReactNode;
   joinableSitesDataProvider?: JoinableSitesDataProvider;
-  product?: Product;
 }) => {
   const CustomDataProviderComponent =
     joinableSitesDataProvider && joinableSitesDataProvider.ProviderComponent;
