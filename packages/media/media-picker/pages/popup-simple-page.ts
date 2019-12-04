@@ -72,7 +72,11 @@ export class PopupSimplePage extends Page {
   }
 
   async uploadFile(localFilePath: string) {
-    const filename = await this.browser.uploadFile(localFilePath);
+    // Any is because there is a bug in webdriverio types in version 5.11.0
+    // It is only fixed in 5.11.14, but that version introduces bigger problem.
+    const filename: string = (await this.browser.uploadFile(
+      localFilePath,
+    )) as any;
     const fileInputSelector = '[data-testid="media-picker-file-input"]';
     await this.waitForSelector(fileInputSelector);
 
