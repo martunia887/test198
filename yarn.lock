@@ -3035,6 +3035,7 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+<<<<<<< HEAD
 "@manypkg/gatsby-source-workspace@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@manypkg/gatsby-source-workspace/-/gatsby-source-workspace-0.3.0.tgz#5fade8e7e3934822c4192726904c6350719db5bc"
@@ -3051,6 +3052,8 @@
   dependencies:
     prosemirror-markdown "^1.4.0"
 
+=======
+>>>>>>> master
 "@mdx-js/loader@^0.17.5":
   version "0.17.5"
   resolved "https://registry.yarnpkg.com/@mdx-js/loader/-/loader-0.17.5.tgz#26ce463142acaf66c9a286f2e794b04a510a4488"

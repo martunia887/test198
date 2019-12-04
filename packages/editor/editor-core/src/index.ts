@@ -115,7 +115,6 @@ export {
 } from './plugins/hyperlink/commands';
 export { LinkInputType as LinkInputMethod } from './plugins/hyperlink/ui/HyperlinkAddToolbar/HyperlinkAddToolbar';
 export { historyPluginKey, HistoryPluginState } from './plugins/history';
-export { setKeyboardHeight } from './plugins/mobile-scroll/commands';
 export {
   INPUT_METHOD,
   ACTION,
@@ -125,6 +124,7 @@ export {
   AnalyticsEventPayload,
 } from './plugins/analytics';
 export { TOOLBAR_MENU_TYPE as InsertBlockInputMethodToolbar } from './plugins/insert-block/ui/ToolbarInsertBlock';
+export { setKeyboardHeight } from './plugins/ios-scroll/commands';
 
 // Used in editor-test-helpers
 export { setTextSelection } from './utils';
