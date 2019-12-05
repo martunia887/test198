@@ -125,6 +125,7 @@ export {
   AnalyticsEventPayload,
 } from './plugins/analytics';
 export { TOOLBAR_MENU_TYPE as InsertBlockInputMethodToolbar } from './plugins/insert-block/ui/ToolbarInsertBlock';
+export { setKeyboardHeight } from './plugins/mobile-scroll/commands';
 
 // Used in editor-test-helpers
 export { setTextSelection } from './utils';
