@@ -145,7 +145,7 @@ const mediaPlugin = (
                   pluginOptions,
                   pluginOptions && pluginOptions.fullWidthEnabled,
                   dispatchAnalyticsEvent,
-                  props.appearance,
+                  appearance,
                 ),
               },
               errorReporter,
