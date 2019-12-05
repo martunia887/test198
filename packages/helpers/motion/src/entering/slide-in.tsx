@@ -2,7 +2,7 @@ import React from 'react';
 import { ObjectInterpolation } from '@emotion/core';
 import { easeOut, easeIn } from '../utils/curves';
 import { mediumDurationMs } from '../utils/durations';
-import EnteringMotion, { EnteringMotionProps } from './motion';
+import KeyframesMotion, { KeyframesMotionProps } from './keyframes-motion';
 import { Direction } from './types';
 
 export type From = 'top' | 'right' | 'bottom' | 'left';
@@ -30,7 +30,7 @@ export const slideInAnimation = (
   };
 };
 
-export interface SlideInProps extends EnteringMotionProps {
+export interface SlideInProps extends KeyframesMotionProps {
   /**
    * Direction the element will slide in from.
    * E.g. `"right"` will slide in from the right to the left.
@@ -45,7 +45,7 @@ const SlideIn: React.FC<SlideInProps> = ({
   ...props
 }: SlideInProps) => {
   return (
-    <EnteringMotion
+    <KeyframesMotion
       duration={duration}
       enteringAnimation={slideInAnimation(from, 'entering')}
       exitingAnimation={slideInAnimation(from, 'exiting')}
@@ -55,7 +55,7 @@ const SlideIn: React.FC<SlideInProps> = ({
       {...props}
     >
       {children}
-    </EnteringMotion>
+    </KeyframesMotion>
   );
 };
 

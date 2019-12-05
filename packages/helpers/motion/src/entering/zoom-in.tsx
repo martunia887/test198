@@ -1,6 +1,6 @@
 import React from 'react';
 import { ObjectInterpolation } from '@emotion/core';
-import EnteringMotion, { EnteringMotionProps } from './motion';
+import KeyframesMotion, { KeyframesMotionProps } from './keyframes-motion';
 
 export const zoomInAnimation = (): ObjectInterpolation<undefined> => ({
   '0%': {
@@ -25,13 +25,13 @@ export const shrinkOutAnimation = (): ObjectInterpolation<undefined> => ({
   },
 });
 
-const ZoomIn: React.FC<EnteringMotionProps> = ({
+const ZoomIn: React.FC<KeyframesMotionProps> = ({
   children,
   duration = 125,
   ...props
-}: EnteringMotionProps) => {
+}: KeyframesMotionProps) => {
   return (
-    <EnteringMotion
+    <KeyframesMotion
       duration={duration}
       enteringAnimation={zoomInAnimation()}
       exitingAnimation={shrinkOutAnimation()}
@@ -39,7 +39,7 @@ const ZoomIn: React.FC<EnteringMotionProps> = ({
       {...props}
     >
       {children}
-    </EnteringMotion>
+    </KeyframesMotion>
   );
 };
 

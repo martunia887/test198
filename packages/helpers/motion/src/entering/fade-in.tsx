@@ -2,7 +2,7 @@ import React from 'react';
 import { ObjectInterpolation } from '@emotion/core';
 import { easeInOut } from '../utils/curves';
 import { largeDurationMs } from '../utils/durations';
-import EnteringMotion, { KeyframesMotionProps } from './keyframes-motion';
+import KeyframesMotion, { KeyframesMotionProps } from './keyframes-motion';
 
 export const fadeInAnimation = (): ObjectInterpolation<undefined> => ({
   from: {
@@ -34,7 +34,7 @@ const FadeIn: React.FC<KeyframesMotionProps> = ({
   ...props
 }: KeyframesMotionProps) => {
   return (
-    <EnteringMotion
+    <KeyframesMotion
       duration={duration}
       enteringAnimation={fadeInAnimation()}
       exitingAnimation={fadeOutAnimation()}
@@ -42,7 +42,7 @@ const FadeIn: React.FC<KeyframesMotionProps> = ({
       {...props}
     >
       {children}
-    </EnteringMotion>
+    </KeyframesMotion>
   );
 };
 
