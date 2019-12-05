@@ -835,6 +835,10 @@
         "../../core/select/src/Select",
         "./packages/core/select/src/Select"
       ],
+      "@atlaskit/select/styles": [
+        "../../core/select/src/styles",
+        "./packages/core/select/src/styles"
+      ],
       "@atlaskit/select/types": [
         "../../core/select/src/types",
         "./packages/core/select/src/types"
@@ -1110,10 +1114,6 @@
       "@atlaskit/editor-bitbucket-transformer/util": [
         "../../editor/editor-bitbucket-transformer/src/util",
         "./packages/editor/editor-bitbucket-transformer/src/util"
-      ],
-      "@atlaskit/editor-common/color": [
-        "../../editor/editor-common/src/color",
-        "./packages/editor/editor-common/src/color"
       ],
       "@atlaskit/editor-common": [
         "../../editor/editor-common/src/",
@@ -2171,13 +2171,17 @@
         "../../media/smart-card/src/",
         "./packages/media/smart-card/src/"
       ],
+      "@atlaskit/branch-deploy-product-integrator/cli": [
+        "../../monorepo-tooling/branch-deploy-product-integrator/src/cli",
+        "./packages/monorepo-tooling/branch-deploy-product-integrator/src/cli"
+      ],
       "@atlaskit/branch-deploy-product-integrator": [
         "../../monorepo-tooling/branch-deploy-product-integrator/src/",
         "./packages/monorepo-tooling/branch-deploy-product-integrator/src/"
       ],
-      "@atlaskit/branch-deploy-product-integrator/util": [
-        "../../monorepo-tooling/branch-deploy-product-integrator/src/util",
-        "./packages/monorepo-tooling/branch-deploy-product-integrator/src/util"
+      "@atlaskit/branch-deploy-product-integrator/types": [
+        "../../monorepo-tooling/branch-deploy-product-integrator/src/types",
+        "./packages/monorepo-tooling/branch-deploy-product-integrator/src/types"
       ],
       "@atlaskit/code-insights": [
         "../../monorepo-tooling/code-insights/src/",

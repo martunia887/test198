@@ -30,11 +30,10 @@ export class VariantB extends Component<{ title: string }> {
   }
 }
 
-// eslint-disable-next-line react/require-render-return
 export class Broken extends Component<{}> {
+  //@ts-ignore - We are forcing an error
   render() {
     throw new Error('Threw on render');
-    return null;
   }
 }
 
@@ -48,6 +47,7 @@ export const ExperimentWrapped = asExperiment(
   {
     variantA: VariantA,
     variantB: VariantB,
+    //@ts-ignore - We are forcing an error
     broken: Broken,
     control: Control,
     fallback: Control,
