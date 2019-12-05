@@ -30,10 +30,14 @@ export class VariantB extends Component<{ title: string }> {
   }
 }
 
-export class Broken extends Component<{}> {
-  //@ts-ignore - We are forcing an error
-  render() {
+export class Broken extends Component<{ title: string }> {
+  renderError() {
     throw new Error('Threw on render');
+  }
+
+  render() {
+    this.renderError();
+    return null;
   }
 }
 
@@ -47,7 +51,6 @@ export const ExperimentWrapped = asExperiment(
   {
     variantA: VariantA,
     variantB: VariantB,
-    //@ts-ignore - We are forcing an error
     broken: Broken,
     control: Control,
     fallback: Control,
