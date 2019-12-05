@@ -48,6 +48,7 @@ export {
 } from './controllers/router-store/types';
 
 export {
+  mockRoute,
   mockRouteContextProp,
   mockRouterStoreContextProp,
 } from './common/mocks';

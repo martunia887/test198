@@ -394,4 +394,9 @@ declare module '@atlaskit/router' {
   declare export function createResource(
     args: CreateResourceArg,
   ): RouteResource;
+
+  // mocks
+  declare export var mockRoute: Route;
+  declare export var mockRouterContextProp: RouteContext;
+  declare export var mockRouterStoreContextProp: RouterStoreContext;
 }
