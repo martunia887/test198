@@ -59,14 +59,20 @@ describe('Snapshot Test: Expand', () => {
     });
   });
 
-  describe.each(['default', 'wide', 'full-width'])('Breakout: %s', mode => {
-    describe.each([30, 50, 60, 70, 100])('media size: %s', width => {
-      test('should display media expand', async () => {
-        await initRenderer(page, expandADFWithMedia(mode, width));
-        await page.waitForSelector(selectors.expand);
-        await page.click(selectors.expandToggle);
-        await page.click(selectors.nestedExpandToggle);
+  // TODO: ED-8011
+  // TO avoid flaky tests we need to skip that
+  // until we have a mock to media on renderer
+  describe.skip.each(['default', 'wide', 'full-width'])(
+    'Breakout: %s',
+    mode => {
+      describe.each([30, 50, 60, 70, 100])('media size: %s', width => {
+        test('should display media expand', async () => {
+          await initRenderer(page, expandADFWithMedia(mode, width));
+          await page.waitForSelector(selectors.expand);
+          await page.click(selectors.expandToggle);
+          await page.click(selectors.nestedExpandToggle);
+        });
       });
-    });
-  });
+    },
+  );
 });
