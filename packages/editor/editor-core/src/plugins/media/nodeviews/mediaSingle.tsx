@@ -74,9 +74,19 @@ export default class MediaSingleNode extends Component<
       this.setViewMediaClientConfig(nextProps);
     }
 
+    // Collab is disabled on mobile (for now), bail
+
+    // Next properties don't hold an image, bail
+    if (
+      nextProps.node.firstChild === null ||
+      typeof nextProps.node.firstChild === 'undefined'
+    ) {
+      return;
+    }
+
     const uploadComplete = isMobileUploadCompleted(
       nextProps.mediaPluginState,
-      nextProps.node!.firstChild!.attrs.id,
+      nextProps.node.firstChild.attrs.id,
     );
 
     if (uploadComplete) {
