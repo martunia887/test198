@@ -31,7 +31,10 @@ export default function asExperiment(
 ) {
   let contextOptions: any;
 
-  return class ExperimentSwitch extends Component<{}, State> {
+  return class ExperimentSwitch extends Component<
+    { [key: string]: any },
+    State
+  > {
     static displayName = 'ExperimentSwitch';
 
     state = {

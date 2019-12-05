@@ -165,7 +165,7 @@ export default class extends Component<{}, State> {
                     myExperimentKey: () => resolvesTo,
                   }}
                 >
-                  <ExperimentWrapped />
+                  <ExperimentWrapped title="Component" />
                 </ExperimentController>
               </td>
               <td>
@@ -174,7 +174,7 @@ export default class extends Component<{}, State> {
                     myExperimentKey: () => resolveAfterDelay(resolvesTo, 2000),
                   }}
                 >
-                  <ExperimentWrapped />
+                  <ExperimentWrapped title="Component" />
                 </ExperimentController>
               </td>
             </tr>
