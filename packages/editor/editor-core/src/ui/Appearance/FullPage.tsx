@@ -49,6 +49,15 @@ const ScrollContainer = styled(ContentStyles)`
 ScrollContainer.displayName = 'ScrollContainer';
 
 const ContentArea = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const Sidebar = styled.div`
+  width: 300px;
+`;
+
+const EditorContentArea = styled.div`
   line-height: 24px;
   padding-top: 50px;
   padding-bottom: 55px;
@@ -152,7 +161,7 @@ const ContentArea = styled.div`
     }}
   }
 `;
-ContentArea.displayName = 'ContentArea';
+EditorContentArea.displayName = 'EditorContentArea';
 
 interface MainToolbarProps {
   showKeyline: boolean;
@@ -345,51 +354,54 @@ export default class Editor extends React.Component<
             {customPrimaryToolbarComponents}
           </MainToolbarCustomComponentsSlot>
         </MainToolbar>
-        <ScrollContainer
-          innerRef={this.scrollContainerRef}
-          allowAnnotation={allowAnnotation}
-          className="fabric-editor-popup-scroll-parent"
-        >
-          <ClickAreaBlock editorView={editorView}>
-            <ContentArea
-              fullWidthMode={appearance === 'full-width'}
-              innerRef={(contentArea: HTMLElement) => {
-                this.contentArea = contentArea;
-              }}
-              containerWidth={containerWidth}
-            >
-              <div
-                style={{ padding: `0 ${akEditorGutterPadding}px` }}
-                className={[
-                  'ak-editor-content-area',
-                  this.props.appearance === 'full-width'
-                    ? 'fabric-editor--full-width-mode'
-                    : '',
-                ].join(' ')}
+        <ContentArea>
+          <ScrollContainer
+            innerRef={this.scrollContainerRef}
+            allowAnnotation={allowAnnotation}
+            className="fabric-editor-popup-scroll-parent"
+          >
+            <ClickAreaBlock editorView={editorView}>
+              <EditorContentArea
+                fullWidthMode={appearance === 'full-width'}
+                innerRef={(contentArea: HTMLElement) => {
+                  this.contentArea = contentArea;
+                }}
+                containerWidth={containerWidth}
               >
-                {customContentComponents}
-                {
-                  <PluginSlot
-                    editorView={editorView}
-                    editorActions={editorActions}
-                    eventDispatcher={eventDispatcher}
-                    providerFactory={providerFactory}
-                    appearance={this.props.appearance || this.appearance}
-                    items={contentComponents}
-                    contentArea={this.contentArea}
-                    popupsMountPoint={popupsMountPoint}
-                    popupsBoundariesElement={popupsBoundariesElement}
-                    popupsScrollableElement={popupsScrollableElement}
-                    disabled={!!disabled}
-                    containerElement={this.scrollContainer}
-                    dispatchAnalyticsEvent={dispatchAnalyticsEvent}
-                  />
-                }
-                {editorDOMElement}
-              </div>
-            </ContentArea>
-          </ClickAreaBlock>
-        </ScrollContainer>
+                <div
+                  style={{ padding: `0 ${akEditorGutterPadding}px` }}
+                  className={[
+                    'ak-editor-content-area',
+                    this.props.appearance === 'full-width'
+                      ? 'fabric-editor--full-width-mode'
+                      : '',
+                  ].join(' ')}
+                >
+                  {customContentComponents}
+                  {
+                    <PluginSlot
+                      editorView={editorView}
+                      editorActions={editorActions}
+                      eventDispatcher={eventDispatcher}
+                      providerFactory={providerFactory}
+                      appearance={this.props.appearance || this.appearance}
+                      items={contentComponents}
+                      contentArea={this.contentArea}
+                      popupsMountPoint={popupsMountPoint}
+                      popupsBoundariesElement={popupsBoundariesElement}
+                      popupsScrollableElement={popupsScrollableElement}
+                      disabled={!!disabled}
+                      containerElement={this.scrollContainer}
+                      dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                    />
+                  }
+                  {editorDOMElement}
+                </div>
+              </EditorContentArea>
+            </ClickAreaBlock>
+          </ScrollContainer>
+          <Sidebar>{this.props.sidebar}</Sidebar>
+        </ContentArea>
         <WidthEmitter
           editorView={editorView!}
           contentArea={this.scrollContainer}
