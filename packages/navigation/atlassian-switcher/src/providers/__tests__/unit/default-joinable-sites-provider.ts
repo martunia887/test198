@@ -15,15 +15,20 @@ describe('default-joinabble-sites-provider', () => {
   test('should create a provider using the internal url (/gateway) by default', () => {
     const {
       createJoinableSitesProvider,
+      isResultEmpty,
     } = require('../../default-joinable-sites-provider');
     createJoinableSitesProvider();
-    expect(defaultFetchData).toBeCalledWith(undefined);
-    expect(createProviderWithCustomFetchData).toBeCalled();
+    expect(createProviderWithCustomFetchData).toBeCalledWith(
+      'joinableSites',
+      defaultFetchData(),
+      isResultEmpty,
+    );
   });
 
   test('should allow to create a provider with custom endpoint url', () => {
     const {
       createJoinableSitesProvider,
+      isResultEmpty,
     } = require('../../default-joinable-sites-provider');
     const promise: JoinableSiteDataFetcher = () =>
       new Promise(resolve => ({
@@ -33,6 +38,7 @@ describe('default-joinabble-sites-provider', () => {
     expect(createProviderWithCustomFetchData).toBeCalledWith(
       'joinableSites',
       promise,
+      isResultEmpty,
     );
   });
 });

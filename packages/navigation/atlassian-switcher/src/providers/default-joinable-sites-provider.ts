@@ -7,6 +7,9 @@ import { defaultFetchData } from './default-joinable-sites-fetch';
 
 export type JoinableSiteDataFetcher = () => Promise<JoinableSitesResponse>;
 
+export const isResultEmpty = (result: JoinableSitesResponse) =>
+  !result || !result.sites || result.sites.length == 0;
+
 export const createJoinableSitesProvider = (
   fetchData?: JoinableSiteDataFetcher,
   product?: Product,
@@ -14,6 +17,6 @@ export const createJoinableSitesProvider = (
   return createProviderWithCustomFetchData<JoinableSitesResponse>(
     'joinableSites',
     fetchData || defaultFetchData(product),
-    result => !result || !result.sites || result.sites.length == 0,
+    isResultEmpty,
   );
 };
