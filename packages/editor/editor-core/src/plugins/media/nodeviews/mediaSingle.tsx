@@ -24,7 +24,7 @@ import {
 import MediaItem from './media';
 import WithPluginState from '../../../ui/WithPluginState';
 import { pluginKey as widthPluginKey } from '../../width';
-import { setNodeSelection } from '../../../utils';
+import { setNodeSelection, setTextSelection } from '../../../utils';
 import ResizableMediaSingle from '../ui/ResizableMediaSingle';
 import { createDisplayGrid } from '../../../plugins/grid';
 import { EventDispatcher } from '../../../event-dispatcher';
@@ -168,10 +168,30 @@ export default class MediaSingleNode extends Component<
   };
 
   selectMediaSingle = ({ event }: CardEvent) => {
+    console.log('---selectMediaSingle');
+    // return;
+
     // We need to call "stopPropagation" here in order to prevent the browser from navigating to
     // another URL if the media node is wrapped in a link mark.
     event.stopPropagation();
-    setNodeSelection(this.props.view, this.props.getPos());
+
+    // setNodeSelection(this.props.view, this.props.getPos());
+
+    const propPos = this.props.getPos();
+    //
+    const { state } = this.props.view;
+
+    // state.selection.ranges[0].$from.start() ?
+
+    if (event.shiftKey) {
+      setTextSelection(
+        this.props.view,
+        state.selection.ranges[0].$from.pos,
+        propPos + 3,
+      );
+    } else {
+      // setNodeSelection(this.props.view, propPos);
+    }
   };
 
   updateSize = (width: number | null, layout: MediaSingleLayout) => {

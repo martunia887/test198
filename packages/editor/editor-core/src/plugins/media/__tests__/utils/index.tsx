@@ -51,11 +51,20 @@ import {
   waitForAllPickersInitialised,
   testCollectionName,
   temporaryFileId,
+  imageFile,
 } from '../../../../__tests__/unit/plugins/media/_utils';
-import { MediaAttributes, MediaSingleAttributes } from '@atlaskit/adf-schema';
-import { ReactWrapper } from 'enzyme';
+import {
+  MediaAttributes,
+  MediaSingleAttributes,
+  defaultSchema,
+} from '@atlaskit/adf-schema';
+import { ReactWrapper, mount } from 'enzyme';
 import { ClipboardWrapper } from '../../../../plugins/media/ui/MediaPicker/ClipboardWrapper';
 import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { getMediaNodeFromSelection } from '../../utils/media-common';
+import MediaSingleNode from '../../nodeviews/mediaSingle';
+import { MediaOptions } from '../..';
+import MediaItem from '../../nodeviews/media';
 
 const pdfFile = {
   id: `${randomId()}`,
@@ -147,7 +156,6 @@ describe('Media plugin', () => {
 
       it('should be false when an image is inserted', function() {
         mediaPluginState.insertFile(foo, () => {});
-
         expect(mediaPluginState.allUploadsFinished).toBe(false);
       });
 
@@ -930,6 +938,60 @@ describe('Media plugin', () => {
         expect(pluginState.element!.className).toBe(
           'mediaSingleView-content-wrap ProseMirror-selectednode',
         );
+      });
+
+      describe('while holding the shift key', () => {
+        it.only('should include media into text selection', done => {
+          const mediaSingleNode = mediaSingle({ layout: 'wrap-left' })(
+            media({
+              id: 'media_test',
+              type: 'file',
+              width: 100,
+              height: 100,
+              collection: testCollectionName,
+            })(),
+          );
+          // const wrapper = mount()
+          const editorInstance = editor(
+            doc(p('{<}test{>}'), mediaSingleNode, p('test')),
+          );
+
+          expect(mediaSingleNode).toBeTruthy();
+          expect(editorInstance).toBeTruthy();
+
+          const mediaOptions: MediaOptions = {
+            allowResizing: false,
+          };
+          const wrapper = mount(
+            <MediaSingleNode
+              view={editorInstance.editorView}
+              eventDispatcher={editorInstance.eventDispatcher}
+              node={mediaSingleNode(defaultSchema)}
+              lineLength={680}
+              getPos={() => 6}
+              width={123}
+              selected={() => 1}
+              mediaOptions={mediaOptions}
+              contextIdentifierProvider={contextIdentifierProvider}
+              mediaPluginState={editorInstance.pluginState}
+            />,
+          );
+
+          const mediaItem = wrapper.find(MediaItem);
+          mediaItem.simulate('click');
+
+          // mediaItem.getDOMNode().dispatchEvent(new Event('click'));
+
+          expect(mediaNode).toBeTruthy();
+          // const pos = getNodePos(editorInstance.pluginState, 'media_test', false)
+
+          //try editorInstance.pluginState.dispatch(eventName, data)
+
+          //editorInstance.pluginState.mediaNodes[0].node ... get dom node somehow
+          setTimeout(() => {
+            done();
+          }, 100);
+        });
       });
     });
 
