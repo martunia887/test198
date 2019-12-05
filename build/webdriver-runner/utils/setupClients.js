@@ -80,7 +80,7 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
         resolution: launchers[launchKey].resolution,
         acceptSslCerts: true,
       },
-      logLevel: 'error',
+      logLevel: 'trace',
       user: process.env.BROWSERSTACK_USERNAME,
       key: process.env.BROWSERSTACK_KEY,
       waitforTimeout: 3000,
@@ -104,7 +104,7 @@ function setLocalClients() /*: Array<?Object>*/ {
   const windowSize = '--window-size=1920,1200';
   const options = {
     port,
-    logLevel: 'error',
+    logLevel: 'trace',
     hostname: 'localhost',
     capabilities: {
       browserName: 'chrome',

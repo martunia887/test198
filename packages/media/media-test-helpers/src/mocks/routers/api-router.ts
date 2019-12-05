@@ -72,11 +72,16 @@ class RouterWithLogging<M extends DatabaseSchema> extends Router<M> {
   }
 }
 
-export function createApiRouter(): Router<DatabaseSchema> {
-  const router = new RouterWithLogging<DatabaseSchema>(
+export function createApiRouter(
+  isSlowServer?: boolean,
+): Router<DatabaseSchema> {
+  const requestDelay = isSlowServer ? 2000 : 10;
+  console.log({ requestDelay });
+
+  const router = new Router<DatabaseSchema>(
     {
       host: defaultBaseUrl,
-      requestDelay: 10,
+      requestDelay,
     },
     { strategies: ['fetch'] },
   );
