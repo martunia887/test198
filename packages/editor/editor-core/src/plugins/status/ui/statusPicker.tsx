@@ -198,10 +198,8 @@ export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
 
   private onColorClick = (color: Color) => {
     const { text, localId } = this.state;
-    const currColor = this.state.color;
 
-    if (currColor === color) {
-      this.onEnter();
+    if (color === this.state.color) {
       this.createStatusAnalyticsAndFireFunc({
         action: 'clicked',
         actionSubject: 'statusColorPicker',
@@ -211,15 +209,16 @@ export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
           state: analyticsState(this.props.isNew),
         },
       });
-      return;
+      // closes status box and commits colour
+      this.onEnter();
+    } else {
+      this.setState({ color });
+      this.props.onSelect({
+        text,
+        color,
+        localId,
+      });
     }
-    this.setState({ color });
-
-    this.props.onSelect({
-      text,
-      color,
-      localId,
-    });
   };
 
   private onTextChanged = (text: string) => {
