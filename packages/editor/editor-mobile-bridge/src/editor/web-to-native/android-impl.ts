@@ -10,6 +10,7 @@ import {
   StatusBridge,
   LinkBridge,
   UndoRedoBridge,
+  CollabEditingBridge,
 } from './bridge';
 
 import { sendToBridge } from '../../bridge-utils';
@@ -23,6 +24,7 @@ export default class AndroidBridge implements NativeBridge {
   statusBridge: StatusBridge;
   linkBridge: LinkBridge;
   undoRedoBridge: UndoRedoBridge;
+  collabBridge: CollabEditingBridge;
 
   constructor() {
     this.mentionBridge = window.mentionsBridge as MentionBridge;
@@ -33,6 +35,7 @@ export default class AndroidBridge implements NativeBridge {
     this.statusBridge = window.statusBridge as StatusBridge;
     this.linkBridge = window.linkBridge as LinkBridge;
     this.undoRedoBridge = window.undoRedoBridge as UndoRedoBridge;
+    this.collabBridge = window.collabBridge as CollabEditingBridge;
   }
 
   showMentions(query: String) {
@@ -112,4 +115,16 @@ export default class AndroidBridge implements NativeBridge {
   }
 
   updateTextColor() {}
+
+  emit(event: string, jsonArgs: string): void {
+    this.collabBridge.emit(event, jsonArgs);
+  }
+
+  connect(path: string): void {
+    this.collabBridge.connect(path);
+  }
+
+  disconnect(): void {
+    this.collabBridge.disconnect();
+  }
 }

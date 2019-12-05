@@ -56,6 +56,12 @@ export interface UndoRedoBridge {
   stateChanged(canUndo: boolean, canRedo: boolean): void;
 }
 
+export interface CollabEditingBridge {
+  emit(event: string, jsonArgs: string): void;
+  connect(path: string): void;
+  disconnect(): void;
+}
+
 export default interface NativeBridge
   extends MentionBridge,
     TextFormattingBridge,
@@ -63,7 +69,8 @@ export default interface NativeBridge
     ListBridge,
     StatusBridge,
     LinkBridge,
-    UndoRedoBridge {
+    UndoRedoBridge,
+    CollabEditingBridge {
   call<T extends EditorPluginBridges>(
     bridge: T,
     event: keyof Exclude<EditorBridges[T], undefined>,

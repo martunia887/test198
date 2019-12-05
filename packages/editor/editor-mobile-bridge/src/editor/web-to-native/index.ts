@@ -8,6 +8,7 @@ import {
   TypeAheadBridge,
   LinkBridge,
   UndoRedoBridge,
+  CollabEditingBridge,
 } from './bridge';
 import AndroidBridge from './android-impl';
 import IosBridge from './ios-impl';
@@ -26,6 +27,7 @@ export interface EditorBridges {
   typeAheadBridge?: TypeAheadBridge;
   linkBridge?: LinkBridge;
   undoRedoBridge?: UndoRedoBridge;
+  collabBridge?: CollabEditingBridge;
 }
 
 export type EditorPluginBridges = keyof EditorBridges;

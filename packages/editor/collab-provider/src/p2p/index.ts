@@ -12,9 +12,18 @@ import { Emitter } from './emitter';
 
 const logger = createLogger('Provider', 'blue');
 
+// Minimal interface for spike
+export interface Socket {
+  id: string;
+  on(event: string | string[], listener: (...values: any[]) => void): void;
+  disconnect: () => void;
+  emit: (event: string, ...values: any[]) => void;
+}
+
 export interface Config {
   url: string;
   documentAri: string;
+  socket: (path: string, opts: any /* TODO */) => Socket;
   // userId: string;
 }
 
@@ -109,14 +118,14 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
   }
 
   private debounceSend() {
-    logger(`Debouncing...`);
+    // logger(`Debouncing...`);
 
     if (this.debounced) {
       clearTimeout(this.debounced);
     }
 
     this.debounced = window.setTimeout(() => {
-      logger(`Sending debounced steps..`);
+      // logger(`Sending debounced steps..`);
       this.sendSteps(this.getState());
     }, 250);
   }
@@ -124,6 +133,11 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
   private sendSteps(state: EditorState<any>, localSteps?: Array<Step>) {
     if (this.isSending) {
       this.debounceSend();
+      return;
+    }
+
+    if (!this.channel.isConnected) {
+      logger(`Not connected yet`);
       return;
     }
 
@@ -189,6 +203,7 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
   };
 
   private onLeaderChanged = ({ timestamp, leader }: any) => {
+    logger(`onLeaderChanged ${leader}`);
     if (this.channel.isLeader) {
       this.repo.setAsLeader();
 
@@ -203,6 +218,7 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
   };
 
   private onLeaderLatest = ({ data }: any) => {
+    logger(`onLeaderLatest`);
     if (this.channel.isLeader) {
       return;
     }
@@ -416,6 +432,7 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
    * Called when new steps have been added in the StepRepository.
    */
   private onStepsAdded = ({ version, steps }: StepData) => {
+    logger('onStepsAdded');
     if (steps && steps.length) {
       const userIds = steps.map((step: any) => step.userId);
 

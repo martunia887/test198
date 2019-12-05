@@ -151,4 +151,8 @@ export default class IosBridge implements NativeBridge {
   }
 
   updateTextColor() {}
+
+  emit(event: string, jsonArgs: string): void {}
+  connect(path: string): void {}
+  disconnect(): void {}
 }

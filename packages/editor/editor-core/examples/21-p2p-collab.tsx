@@ -1,3 +1,4 @@
+import io from 'socket.io-client';
 import * as React from 'react';
 import { Component } from 'react';
 
@@ -78,6 +79,7 @@ export default class Example extends Component<any, State> {
     const collabProvider = new P2PCollabProvider({
       documentAri,
       url: 'https://pf-collab-spike-service.ap-southeast-2.dev.atl-paas.net',
+      socket: io,
     });
     collabProvider.on('titleChange', this._onExternalTitleChange);
     this.setState({ collabProvider }, () => {

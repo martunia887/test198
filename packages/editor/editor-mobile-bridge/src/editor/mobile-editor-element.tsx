@@ -21,6 +21,7 @@ import {
   MentionProvider,
   TaskDecisionProvider,
   EmojiProvider,
+  CollabProvider,
 } from '../providers';
 import { parseLocationSearch } from '../bridge-utils';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
@@ -111,6 +112,10 @@ export default function mobileEditor(props: Props) {
             allowBreakout: true,
           }}
           taskDecisionProvider={Promise.resolve(TaskDecisionProvider())}
+          collabEdit={{
+            useNativePlugin: true,
+            provider: CollabProvider(bridge),
+          }}
           // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
           {...props}
         />

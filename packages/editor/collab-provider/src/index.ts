@@ -1,1 +1,1 @@
-export { P2PCollabProvider } from './p2p';
+export { P2PCollabProvider, Config, Socket } from './p2p';

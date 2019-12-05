@@ -1,6 +1,4 @@
-import io from 'socket.io-client';
-
-import { Config } from './';
+import { Config, Socket } from './';
 import { Emitter } from './emitter';
 import { createLogger } from '../utils';
 
@@ -34,7 +32,7 @@ export interface StepData {
 
 export class Channel extends Emitter<ChannelEvent> {
   private config: Config;
-  private socket: SocketIOClient.Socket | undefined;
+  private socket: Socket | undefined;
   private leader: string | undefined;
   private connected: boolean = false;
 
@@ -46,13 +44,18 @@ export class Channel extends Emitter<ChannelEvent> {
     return this.leader;
   }
 
+  get isConnected() {
+    return this.connected;
+  }
+
   constructor(config: Config) {
     super();
     this.config = config;
   }
 
   connect() {
-    this.socket = io(`${this.config.url}/session/${this.config.documentAri}`, {
+    const { documentAri, url, socket } = this.config;
+    this.socket = socket(`${url}/session/${documentAri}`, {
       transports: ['websocket', 'polling'],
     });
     this.socket.on('connect', this.onConnect);

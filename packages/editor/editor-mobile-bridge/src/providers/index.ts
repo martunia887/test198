@@ -7,3 +7,4 @@ export {
   MobileSmartCardClient,
   EditorMobileCardProvider,
 } from './cardProvider';
+export { default as CollabProvider } from './collabProvider';

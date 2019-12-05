@@ -51,6 +51,10 @@ import { rejectPromise, resolvePromise } from '../../cross-platform-promise';
 
 import { version as packageVersion } from '../../version.json';
 
+export interface EventReceiver {
+  received: (event: string, payload: string) => void;
+}
+
 export default class WebBridgeImpl extends WebBridge
   implements NativeToWebBridge {
   textFormatBridgeState: TextFormattingState | null = null;
@@ -63,6 +67,7 @@ export default class WebBridgeImpl extends WebBridge
   editorActions: EditorActions = new EditorActions();
   mediaPicker: CustomMediaPicker | undefined;
   mediaMap: Map<string, Function> = new Map();
+  socket: EventReceiver | null = null;
 
   currentVersion(): string {
     return packageVersion;
@@ -404,5 +409,11 @@ export default class WebBridgeImpl extends WebBridge
 
   getRootElement(): HTMLElement | null {
     return document.querySelector('#editor');
+  }
+
+  onCollabEvent(event: string, payload: string): void {
+    if (this.socket) {
+      this.socket.received(event, payload);
+    }
   }
 }
