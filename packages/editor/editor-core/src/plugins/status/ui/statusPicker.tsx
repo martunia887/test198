@@ -202,6 +202,15 @@ export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
 
     if (currColor === color) {
       this.onEnter();
+      this.createStatusAnalyticsAndFireFunc({
+        action: 'clicked',
+        actionSubject: 'statusColorPicker',
+        attributes: {
+          color,
+          localId,
+          state: analyticsState(this.props.isNew),
+        },
+      });
       return;
     }
     this.setState({ color });
@@ -210,16 +219,6 @@ export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
       text,
       color,
       localId,
-    });
-
-    this.createStatusAnalyticsAndFireFunc({
-      action: 'clicked',
-      actionSubject: 'statusColorPicker',
-      attributes: {
-        color,
-        localId,
-        state: analyticsState(this.props.isNew),
-      },
     });
   };
 
