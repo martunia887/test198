@@ -17,20 +17,26 @@ export interface EllipsifyProps {
   lines: number;
   endLength?: number;
   inline?: boolean;
+  testId?: string;
 }
 
-export const Ellipsify = (props: EllipsifyProps): JSX.Element => {
-  return (
-    <Wrapper
-      className="ellipsed-text"
-      innerRef={setEllipsis(props)}
-      aria-label={props.text}
-      inline={props.inline}
-    >
-      {props.text}
-    </Wrapper>
-  );
-};
+export const Ellipsify = ({
+  text,
+  lines,
+  endLength,
+  inline,
+  testId,
+}: EllipsifyProps): JSX.Element => (
+  <Wrapper
+    className="ellipsed-text"
+    innerRef={setEllipsis({ lines, endLength })}
+    aria-label={text}
+    inline={inline}
+    data-testid={testId}
+  >
+    {text}
+  </Wrapper>
+);
 
 const setEllipsis = (props: EllipsifyProps) => (element: HTMLElement) => {
   if (!element) {

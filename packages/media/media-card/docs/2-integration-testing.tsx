@@ -31,6 +31,7 @@ Only one of these three can be found as a top DOM element:
 - \`[data-testid="media-card-actions-menu"]\`: Actions menu button (three dots icon) that open dropdown
 - \`[data-testid="media-card-actions-menu-item"]\`: Action dropdown item
 - \`[data-testid="media-image"]\`: Actual image (\`<img />\`) of a card
+- \`[data-testid="media-card-file-name"]\`: Element that contains filename
 - These controls can be found as part of Card's inline media player:
   - \`[data-testid="custom-media-player-fullscreen-button"]\`: Fullscreen button
   - \`[data-testid="custom-media-player-download-button"]\`: Download button

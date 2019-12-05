@@ -44,7 +44,7 @@ const defaultWaitingOptions: WaitingOptions = { timeout: WAIT_TIMEOUT };
 type Done<T> = (result: T) => any;
 
 export default class Page {
-  private browser: BrowserObject;
+  protected browser: BrowserObject;
 
   constructor(browserObject: BrowserObject) {
     this.browser = browserObject;
