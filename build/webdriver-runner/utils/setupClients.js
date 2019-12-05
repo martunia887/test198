@@ -20,34 +20,42 @@ if (process.env.LANDKID) {
 function setBrowserStackClients() /*: Array<?Object>*/ {
   const RESOLUTION = '1920x1080';
   const launchers = {
-    chrome: {
-      os: 'Windows',
-      os_version: '10',
-      browserName: 'chrome',
-      browser_version: '78.0',
-      resolution: RESOLUTION,
-    },
-    firefox: {
-      os: 'Windows',
-      os_version: '10',
-      browserName: 'firefox',
-      browser_version: '70.0',
-      resolution: RESOLUTION,
-    },
-    ie: {
-      os: 'Windows',
-      os_version: '10',
-      browserName: 'ie',
-      browser_version: '11',
-      resolution: RESOLUTION,
-    },
-    safari: {
-      os: 'OS X',
-      os_version: 'Mojave',
-      browserName: 'Safari',
-      browser_version: '12.1',
-      resolution: RESOLUTION,
-    },
+    chrome: [
+      {
+        os: 'Windows',
+        os_version: '10',
+        browserName: 'chrome',
+        browser_version: '78.0',
+        resolution: RESOLUTION,
+      },
+    ],
+    firefox: [
+      {
+        os: 'Windows',
+        os_version: '10',
+        browserName: 'firefox',
+        browser_version: '70.0',
+        resolution: RESOLUTION,
+      },
+    ],
+    ie: [
+      {
+        os: 'Windows',
+        os_version: '10',
+        browserName: 'ie',
+        browser_version: '11',
+        resolution: RESOLUTION,
+      },
+    ],
+    safari: [
+      {
+        os: 'OS X',
+        os_version: 'Mojave',
+        browserName: 'Safari',
+        browser_version: '12.1',
+        resolution: RESOLUTION,
+      },
+    ],
     // https://github.com/webdriverio/webdriverio/issues/3196
     // edge: {
     //   os: 'Windows',
@@ -65,33 +73,35 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
   }
   const launchKeys = Object.keys(launchers);
   const clients = launchKeys.map(launchKey => {
-    const options = {
-      capabilities: {
-        os: launchers[launchKey].os,
-        os_version: launchers[launchKey].os_version,
-        browserName: launchers[launchKey].browserName,
-        browserVersion: launchers[launchKey].browser_version,
-        project: 'Atlaskit Webdriver Tests',
-        build: BUILD_BRANCH_NAME,
-        'browserstack.local': true,
-        'browserstack.debug': true,
-        'browserstack.idleTimeout': 300,
-        'browserstack.localIdentifier': commit,
-        resolution: launchers[launchKey].resolution,
-        acceptSslCerts: true,
-      },
-      logLevel: 'error',
-      user: process.env.BROWSERSTACK_USERNAME,
-      key: process.env.BROWSERSTACK_KEY,
-      waitforTimeout: 3000,
-    };
-    return {
-      browserName: launchers[launchKey].browserName,
-      options,
-    };
+    return launchers[launchKey].map(lc => {
+      const options = {
+        capabilities: {
+          os: lc.os,
+          os_version: lc.os_version,
+          browserName: lc.browserName,
+          browserVersion: lc.browser_version,
+          project: 'Atlaskit Webdriver Tests',
+          build: BUILD_BRANCH_NAME,
+          'browserstack.local': true,
+          'browserstack.debug': true,
+          'browserstack.idleTimeout': 300,
+          'browserstack.localIdentifier': commit,
+          resolution: lc.resolution,
+          acceptSslCerts: true,
+        },
+        logLevel: 'error',
+        user: process.env.BROWSERSTACK_USERNAME,
+        key: process.env.BROWSERSTACK_KEY,
+        waitforTimeout: 3000,
+      };
+      return {
+        browserName: lc.browserName,
+        options,
+      };
+    });
   });
 
-  return clients;
+  return Array.prototype.concat.apply([], clients);
 }
 
 function setLocalClients() /*: Array<?Object>*/ {
