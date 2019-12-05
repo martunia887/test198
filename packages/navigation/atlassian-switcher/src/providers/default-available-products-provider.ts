@@ -11,7 +11,7 @@ export const isResultEmpty = (result: AvailableProductsResponse) => {
     result.sites.length == 0 ||
     result.sites.every(
       (site: AvailableSite) =>
-        !site.availableProducts || site.availableProducts.length == 0,
+        !site.availableProducts || site.availableProducts.length === 0,
     )
   );
 };
