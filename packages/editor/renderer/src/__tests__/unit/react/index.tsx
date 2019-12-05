@@ -1,4 +1,4 @@
-import { mountWithIntl } from '@atlaskit/editor-test-helpers/src/enzyme';
+import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { mount, shallow, ReactWrapper } from 'enzyme';
 import { ReactSerializer } from '../../../index';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';

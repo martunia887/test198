@@ -127,11 +127,10 @@ export default class MediaSingle extends Component<Props, State> {
               layout={props.layout}
               width={width}
               height={height}
-              lineLength={lineLength}
+              lineLength={isInsideExpand ? containerWidth : lineLength}
               containerWidth={containerWidth}
               pctWidth={props.width}
               fullWidthMode={isFullWidth}
-              forcePercentCalcWithContainerWidth={isInsideExpand}
             >
               {React.cloneElement(child, {
                 resizeMode: 'stretchy-fit',

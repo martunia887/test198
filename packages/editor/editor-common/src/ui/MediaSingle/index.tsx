@@ -18,7 +18,6 @@ export interface Props {
   className?: string;
   pctWidth?: number;
   fullWidthMode?: boolean;
-  forcePercentCalcWithContainerWidth?: boolean;
 }
 
 export default function MediaSingle({
@@ -31,19 +30,12 @@ export default function MediaSingle({
   pctWidth,
   className,
   fullWidthMode,
-  forcePercentCalcWithContainerWidth,
   lineLength,
 }: Props) {
   const usePctWidth = pctWidth && layoutSupportsWidth(layout);
   if (pctWidth && usePctWidth) {
-    const baseWidthToCalc = forcePercentCalcWithContainerWidth
-      ? containerWidth
-      : lineLength;
     const pxWidth = Math.ceil(
-      calcPxFromPct(
-        pctWidth / 100,
-        baseWidthToCalc || lineLength || containerWidth,
-      ),
+      calcPxFromPct(pctWidth / 100, lineLength || containerWidth),
     );
 
     // scale, keeping aspect ratio
