@@ -24,7 +24,7 @@ interface ExperimentApiJoinableSites {
   sites: ExperiementApiJoinableSite[];
 }
 
-const jswProducts = [
+const joinSupportedProducts = [
   'jira-software.ondemand',
   'jira-servicedesk.ondemand',
   'jira-core.ondemand',
@@ -68,7 +68,10 @@ export const fetchJoinableSites = (
 export const defaultFetchData: (
   product?: Product,
 ) => JoinableSiteDataFetcher = (product?: Product) => () => {
-  return fetchJoinableSites(jswProducts, getUrlPrefixByProduct(product))
+  return fetchJoinableSites(
+    joinSupportedProducts,
+    getUrlPrefixByProduct(product),
+  )
     .then(json => transformExperimentSitesToSwitcherSites(json))
     .catch(() => emptyJoinableSites);
 };
