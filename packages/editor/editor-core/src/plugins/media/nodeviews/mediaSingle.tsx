@@ -36,8 +36,7 @@ import { MediaSingleNodeProps, MediaSingleNodeViewProps } from './types';
 import { MediaNodeUpdater } from './mediaNodeUpdater';
 import { DispatchAnalyticsEvent } from '../../analytics';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
-import { hasParticipants as hasCollabParticipants } from '../../collab-edit/plugin';
-import { EditorAppearance } from 'src/types';
+import { EditorAppearance } from '../../../types';
 
 export interface MediaSingleNodeState {
   width?: number;
@@ -76,27 +75,11 @@ export default class MediaSingleNode extends Component<
       this.setViewMediaClientConfig(nextProps);
     }
 
-    // No collab, bail
-    if (!hasCollabParticipants(nextProps.view.state)) {
-      return;
-    }
-
-    // Next properties don't hold an image, bail
+    // Forced updates not required on mobile
     if (
-      nextProps.node.firstChild === null ||
-      typeof nextProps.node.firstChild === 'undefined'
+      typeof this.props.editorAppearance !== 'undefined' &&
+      this.props.editorAppearance === 'mobile'
     ) {
-      return;
-    }
-
-    const uploadComplete = isMobileUploadCompleted(
-      nextProps.mediaPluginState,
-      nextProps.node.firstChild.attrs.id,
-    );
-
-    // The image is still uploading, prevent MediaNodeUpdate.updateFileAttrs()
-    // from triggering an authProvider call (causing FM-2810)
-    if (!uploadComplete) {
       return;
     }
 

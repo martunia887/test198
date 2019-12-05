@@ -1,7 +1,6 @@
 import { CollabParticipant } from './types';
 
 export interface ReadOnlyParticipants {
-  size: number;
   get(sessionId: string): CollabParticipant | undefined;
   toArray(): ReadonlyArray<CollabParticipant>;
   eq(other: ReadOnlyParticipants): boolean;
@@ -17,10 +16,6 @@ export class Participants implements ReadOnlyParticipants {
     >(),
   ) {
     this.participants = participants;
-  }
-
-  get size(): number {
-    return this.participants.size;
   }
 
   add(data: CollabParticipant[]) {
