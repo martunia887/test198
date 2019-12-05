@@ -50,6 +50,14 @@ ScrollContainer.displayName = 'ScrollContainer';
 const GUTTER_PADDING = 32;
 
 const ContentArea = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  box-sizing: border-box;
+`;
+ContentArea.displayName = 'ContentArea';
+
+const EditorContentArea = styled.div`
   line-height: 24px;
   height: 100%;
   width: 100%;
@@ -84,7 +92,7 @@ const ContentArea = styled.div`
   }
   ${tableFullPageEditorStyles};
 `;
-ContentArea.displayName = 'ContentArea';
+EditorContentArea.displayName = 'EditorContentArea';
 
 interface MainToolbarProps {
   showKeyline: boolean;
@@ -126,6 +134,12 @@ const SecondaryToolbar = styled.div`
   padding: 24px 0;
 `;
 SecondaryToolbar.displayName = 'SecondaryToolbar';
+
+const SidebarArea = styled.div`
+  height: 100%;
+  box-sizing: border-box;
+`;
+SidebarArea.displayName = 'SidebarArea';
 
 function useKeyline() {
   const [showKeyline, setShowKeyline] = React.useState<boolean>(false);
@@ -173,6 +187,7 @@ function FullPage(props: FullPageProps) {
     allowDynamicTextSizing,
     collabEdit,
     createAnalyticsEvent,
+    contextPanel,
   } = props;
   const handleAnalyticsEvent = useCreateAnalyticsHandler(createAnalyticsEvent);
   const [showKeyline, scrollContainerRef] = useKeyline();
@@ -201,29 +216,32 @@ function FullPage(props: FullPageProps) {
               {primaryToolbarComponents}
             </MainToolbarCustomComponentsSlot>
           </MainToolbar>
-          <ScrollContainer
-            innerRef={scrollContainerRef}
-            className="fabric-editor-popup-scroll-parent"
-          >
-            <ClickAreaBlock
-              editorView={(config || ({} as EditorSharedConfig)).editorView}
+          <ContentArea>
+            <ScrollContainer
+              innerRef={scrollContainerRef}
+              className="fabric-editor-popup-scroll-parent"
             >
-              <ContentArea>
-                <div
-                  style={{ padding: `0 ${GUTTER_PADDING}px` }}
-                  className="ak-editor-content-area"
-                >
-                  {contentComponents}
-                  <EditorContent />
-                  <ContentComponents />
-                </div>
-              </ContentArea>
-            </ClickAreaBlock>
-          </ScrollContainer>
-          <WidthEmitter
-            editorView={(config || ({} as EditorSharedConfig)).editorView!}
-            contentArea={scrollContainerRef.current}
-          />
+              <ClickAreaBlock
+                editorView={(config || ({} as EditorSharedConfig)).editorView}
+              >
+                <EditorContentArea>
+                  <div
+                    style={{ padding: `0 ${GUTTER_PADDING}px` }}
+                    className="ak-editor-content-area"
+                  >
+                    {contentComponents}
+                    <EditorContent />
+                    <ContentComponents />
+                  </div>
+                </EditorContentArea>
+              </ClickAreaBlock>
+            </ScrollContainer>
+            {contextPanel && <SidebarArea>{contextPanel}</SidebarArea>}
+            <WidthEmitter
+              editorView={(config || ({} as EditorSharedConfig)).editorView!}
+              contentArea={scrollContainerRef.current}
+            />
+          </ContentArea>
         </FullPageEditorWrapper>
       </BaseTheme>
     </Editor>

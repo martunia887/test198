@@ -402,6 +402,7 @@ export default class Editor extends React.Component<EditorProps, {}> {
                                     customSecondaryToolbarComponents={
                                       this.props.secondaryToolbarComponents
                                     }
+                                    contextPanel={this.props.contextPanel}
                                     collabEdit={this.props.collabEdit}
                                     allowAnnotation={
                                       !!this.props.annotationProvider

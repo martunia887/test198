@@ -17,7 +17,7 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
-import { Editor, EditorProps, EventDispatcher } from './../src';
+import { Editor, EditorProps, EventDispatcher, ContextPanel } from './../src';
 import ClipboardHelper from './1-clipboard-helper';
 import { SaveAndCancelButtons } from './5-full-page';
 import { TitleInput } from '../example-helpers/PageElements';
@@ -206,7 +206,7 @@ function createEditorWindowBindings(win: Window) {
     options: MountOptions = {},
   ) => {
     const target = document.getElementById('editor-container');
-    const { mode, withSidebar } = options;
+    const { mode, withSidebar, withContextPanel } = options;
 
     if (!target) {
       return;
@@ -250,6 +250,16 @@ function createEditorWindowBindings(win: Window) {
 
     if (options.collab) {
       providers.collabEditProvider = createCollabEditProvider(options.collab);
+    }
+
+    if (withContextPanel) {
+      props.contextPanel = (
+        <ContextPanel>
+          {new Array(50).fill(
+            <p>Somebody once told me the world is gonna roll me</p>,
+          )}
+        </ContextPanel>
+      );
     }
 
     let Editor: React.ComponentType<EditorProps> = (props: EditorProps) => (

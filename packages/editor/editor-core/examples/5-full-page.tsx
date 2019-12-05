@@ -61,7 +61,7 @@ import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
  */
 export const Wrapper: any = styled.div`
   box-sizing: border-box;
-  height: 100vh;
+  height: 100%;
 `;
 Wrapper.displayName = 'Wrapper';
 

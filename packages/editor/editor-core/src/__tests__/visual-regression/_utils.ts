@@ -141,6 +141,7 @@ export type MountOptions = {
   i18n?: {
     locale: string;
   };
+  withContextPanel?: boolean;
 };
 
 export async function mountEditor(
@@ -182,6 +183,7 @@ type InitEditorWithADFOptions = {
   allowSideEffects?: SideEffectsOption;
   withSidebar?: boolean;
   withCollab?: boolean;
+  withContextPanel?: boolean;
 };
 
 async function setupEditor(
@@ -199,6 +201,7 @@ async function setupEditor(
     viewport,
     editorProps = {},
     allowSideEffects = {},
+    withContextPanel,
   } = options;
 
   const { mode, withSidebar = false } = mountOptions;
@@ -222,7 +225,7 @@ async function setupEditor(
       ...getEditorProps(appearance),
       ...editorProps,
     },
-    { mode, withSidebar },
+    { mode, withSidebar, withContextPanel },
   );
 
   // We disable possible side effects, like animation, transitions and caret cursor,

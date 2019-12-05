@@ -2,7 +2,12 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import { WithEditorActions, EditorActions, EditorContext } from '../src';
+import {
+  WithEditorActions,
+  EditorActions,
+  EditorContext,
+  ContextPanel,
+} from '../src';
 import { TitleArea } from '../example-helpers/PageElements';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
 
@@ -66,6 +71,7 @@ Content.displayName = 'Content';
 
 export default function Example() {
   const [disabled, setDisabledState] = React.useState(false);
+  const [panel, setPanelState] = React.useState(false);
   const [mounted, setMountState] = React.useState(true);
   const onMount = React.useCallback(() => {
     console.log('on mount');
@@ -86,6 +92,9 @@ export default function Example() {
             </button>
             <button onClick={() => setMountState(!mounted)}>
               Toggle Mount
+            </button>
+            <button onClick={() => setPanelState(!panel)}>
+              Toggle Context Panel
             </button>
             {mounted ? (
               <EditorPresetCXHTML
@@ -116,6 +125,11 @@ export default function Example() {
                     />,
                   ]}
                   allowDynamicTextSizing={true}
+                  contextPanel={
+                    <ContextPanel visible={panel}>
+                      Good morning sunshine!
+                    </ContextPanel>
+                  }
                 />
               </EditorPresetCXHTML>
             ) : null}

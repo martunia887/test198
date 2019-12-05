@@ -8,6 +8,8 @@ export { default as WithHelpTrigger } from './ui/WithHelpTrigger';
 export { default as CollapsedEditor } from './ui/CollapsedEditor';
 export { default as ToolbarHelp } from './ui/ToolbarHelp';
 export { default as ToolbarFeedback } from './ui/ToolbarFeedback';
+export { default as ContextPanel } from './ui/ContextPanel';
+
 export { EmojiResource } from '@atlaskit/emoji/resource';
 export {
   default as mediaPlugin,

@@ -36,6 +36,7 @@ export interface EditorAppearanceComponentProps {
   customPrimaryToolbarComponents?: ReactComponents;
   customSecondaryToolbarComponents?: ReactComponents;
   insertMenuItems?: InsertMenuCustomItem[];
+  contextPanel?: ReactComponents;
 
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;

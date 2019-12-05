@@ -197,6 +197,8 @@ export interface EditorProps {
   // Set if the editor should be disabled.
   disabled?: boolean;
 
+  contextPanel?: ReactComponents;
+
   errorReporterHandler?: ErrorReportingHandler;
   uploadErrorHandler?: (state: MediaState) => void;
 
