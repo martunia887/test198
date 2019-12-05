@@ -51,10 +51,17 @@ ScrollContainer.displayName = 'ScrollContainer';
 const ContentArea = styled.div`
   display: flex;
   flex-direction: row;
+  height: 100%;
+  box-sizing: border-box;
 `;
 
 const Sidebar = styled.div`
   width: 300px;
+  height: 100%;
+  padding: 16px 24px 16px 24px;
+  border-left: 1px solid ${colors.N40};
+  overflow-x: scroll;
+  box-sizing: border-box;
 `;
 
 const EditorContentArea = styled.div`
@@ -402,6 +409,7 @@ export default class Editor extends React.Component<
           </ScrollContainer>
           <Sidebar>{this.props.sidebar}</Sidebar>
         </ContentArea>
+
         <WidthEmitter
           editorView={editorView!}
           contentArea={this.scrollContainer}

@@ -61,7 +61,7 @@ import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
  */
 export const Wrapper: any = styled.div`
   box-sizing: border-box;
-  height: 100vh;
+  height: 100%;
 `;
 Wrapper.displayName = 'Wrapper';
 
@@ -250,7 +250,7 @@ export class ExampleEditorComponent extends React.Component<
                   allowResizingInTables: true,
                   UNSAFE_allowAltTextOnImages: true,
                 }}
-                sidebar={<div>hello world</div>}
+                sidebar={<div>{new Array(50).fill(<p>hello world</p>)}</div>}
                 allowHelpDialog
                 placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
                 shouldFocus={false}
