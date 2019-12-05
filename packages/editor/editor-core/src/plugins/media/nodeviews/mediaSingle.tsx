@@ -37,6 +37,7 @@ import { MediaNodeUpdater } from './mediaNodeUpdater';
 import { DispatchAnalyticsEvent } from '../../analytics';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { hasParticipants as hasCollabParticipants } from '../../collab-edit/plugin';
+import { EditorAppearance } from 'src/types';
 
 export interface MediaSingleNodeState {
   width?: number;
@@ -379,6 +380,7 @@ class MediaSingleNodeView extends SelectionBasedNodeView<
       mediaOptions,
       mediaPluginOptions,
       dispatchAnalyticsEvent,
+      editorAppearance,
     } = this.reactComponentProps;
 
     // getPos is a boolean for marks, since this is a node we know it must be a function
@@ -419,6 +421,7 @@ class MediaSingleNodeView extends SelectionBasedNodeView<
                     mediaPluginOptions={mediaPluginOptions}
                     mediaPluginState={mediaPluginState}
                     dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                    editorAppearance={editorAppearance}
                   />
                 );
               }}
@@ -454,6 +457,7 @@ export const ReactMediaSingleNode = (
   pluginOptions?: MediaPMPluginOptions,
   fullWidthMode?: boolean,
   dispatchAnalyticsEvent?: DispatchAnalyticsEvent,
+  editorAppearance?: EditorAppearance,
 ) => (node: PMNode, view: EditorView, getPos: getPosHandler) => {
   return new MediaSingleNodeView(node, view, getPos, portalProviderAPI, {
     eventDispatcher,
@@ -462,5 +466,6 @@ export const ReactMediaSingleNode = (
     providerFactory,
     mediaOptions,
     dispatchAnalyticsEvent,
+    editorAppearance,
   }).init();
 };

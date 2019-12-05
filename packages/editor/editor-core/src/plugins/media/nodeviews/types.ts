@@ -10,6 +10,7 @@ import { EventDispatcher } from '../../../event-dispatcher';
 import { MediaOptions, MediaPMPluginOptions } from '../index';
 import { MediaPluginState } from '../pm-plugins/main';
 import { DispatchAnalyticsEvent } from '../../analytics';
+import { EditorAppearance } from 'src/types';
 
 export interface MediaSingleNodeProps {
   view: EditorView;
@@ -26,6 +27,7 @@ export interface MediaSingleNodeProps {
   fullWidthMode?: boolean;
   mediaPluginState: MediaPluginState;
   dispatchAnalyticsEvent: DispatchAnalyticsEvent;
+  editorAppearance?: EditorAppearance;
 }
 
 export interface MediaSingleNodeViewProps {
@@ -35,4 +37,5 @@ export interface MediaSingleNodeViewProps {
   mediaPluginOptions?: MediaPMPluginOptions;
   fullWidthMode?: boolean;
   dispatchAnalyticsEvent?: DispatchAnalyticsEvent;
+  editorAppearance?: EditorAppearance;
 }
