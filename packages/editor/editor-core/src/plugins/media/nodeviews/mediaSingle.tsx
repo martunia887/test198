@@ -168,29 +168,22 @@ export default class MediaSingleNode extends Component<
   };
 
   selectMediaSingle = ({ event }: CardEvent) => {
-    console.log('---selectMediaSingle');
-    // return;
-
     // We need to call "stopPropagation" here in order to prevent the browser from navigating to
     // another URL if the media node is wrapped in a link mark.
     event.stopPropagation();
 
-    // setNodeSelection(this.props.view, this.props.getPos());
-
     const propPos = this.props.getPos();
-    //
     const { state } = this.props.view;
-
-    // state.selection.ranges[0].$from.start() ?
 
     if (event.shiftKey) {
       setTextSelection(
         this.props.view,
-        state.selection.ranges[0].$from.pos,
+        state.selection.from,
+        // + 3 needed for offset of the media inside mediaSingle and cursor to make whole mediaSingle selected
         propPos + 3,
       );
     } else {
-      // setNodeSelection(this.props.view, propPos);
+      setNodeSelection(this.props.view, propPos);
     }
   };
 

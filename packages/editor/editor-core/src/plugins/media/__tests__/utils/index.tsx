@@ -51,7 +51,6 @@ import {
   waitForAllPickersInitialised,
   testCollectionName,
   temporaryFileId,
-  imageFile,
 } from '../../../../__tests__/unit/plugins/media/_utils';
 import {
   MediaAttributes,
@@ -61,10 +60,11 @@ import {
 import { ReactWrapper, mount } from 'enzyme';
 import { ClipboardWrapper } from '../../../../plugins/media/ui/MediaPicker/ClipboardWrapper';
 import { INPUT_METHOD } from '../../../../plugins/analytics';
-import { getMediaNodeFromSelection } from '../../utils/media-common';
 import MediaSingleNode from '../../nodeviews/mediaSingle';
 import { MediaOptions } from '../..';
 import MediaItem from '../../nodeviews/media';
+import { CardEvent } from '../../../../../../../media/media-card/src';
+import { FileDetails } from '../../../../../../../media/media-client/src';
 
 const pdfFile = {
   id: `${randomId()}`,
@@ -941,7 +941,7 @@ describe('Media plugin', () => {
       });
 
       describe('while holding the shift key', () => {
-        it.only('should include media into text selection', done => {
+        it('should include media into text selection', () => {
           const mediaSingleNode = mediaSingle({ layout: 'wrap-left' })(
             media({
               id: 'media_test',
@@ -951,13 +951,17 @@ describe('Media plugin', () => {
               collection: testCollectionName,
             })(),
           );
-          // const wrapper = mount()
           const editorInstance = editor(
             doc(p('{<}test{>}'), mediaSingleNode, p('test')),
           );
 
-          expect(mediaSingleNode).toBeTruthy();
-          expect(editorInstance).toBeTruthy();
+          expect(editorInstance.editorView.state.selection.ranges.length).toBe(
+            1,
+          );
+          const selectedRange =
+            editorInstance.editorView.state.selection.ranges[0];
+          expect(selectedRange.$from.pos).toBe(1);
+          expect(selectedRange.$to.pos).toBe(5);
 
           const mediaOptions: MediaOptions = {
             allowResizing: false,
@@ -978,19 +982,27 @@ describe('Media plugin', () => {
           );
 
           const mediaItem = wrapper.find(MediaItem);
-          mediaItem.simulate('click');
 
-          // mediaItem.getDOMNode().dispatchEvent(new Event('click'));
+          const onClick = mediaItem.prop('onClick');
 
-          expect(mediaNode).toBeTruthy();
-          // const pos = getNodePos(editorInstance.pluginState, 'media_test', false)
+          const cardEvent: CardEvent = {
+            event: ({
+              shiftKey: true,
+              stopPropagation: jest.fn(),
+            } as unknown) as React.MouseEvent<HTMLElement>,
+            mediaItemDetails: {} as FileDetails,
+          };
 
-          //try editorInstance.pluginState.dispatch(eventName, data)
+          expect(onClick).toBeDefined();
+          if (onClick) {
+            onClick(cardEvent);
+          }
 
-          //editorInstance.pluginState.mediaNodes[0].node ... get dom node somehow
-          setTimeout(() => {
-            done();
-          }, 100);
+          expect(cardEvent.event.stopPropagation).toHaveBeenCalled();
+          const updatedRange =
+            editorInstance.editorView.state.selection.ranges[0];
+          expect(updatedRange.$from.pos).toBe(1);
+          expect(updatedRange.$to.pos).toBe(9);
         });
       });
     });
