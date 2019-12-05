@@ -76,10 +76,7 @@ export default class MediaSingleNode extends Component<
     }
 
     // Forced updates not required on mobile
-    if (
-      typeof nextProps.editorAppearance !== 'undefined' &&
-      nextProps.editorAppearance === 'mobile'
-    ) {
+    if (nextProps.editorAppearance && nextProps.editorAppearance === 'mobile') {
       return;
     }
 
