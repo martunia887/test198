@@ -36,6 +36,7 @@ import { MediaSingleNodeProps, MediaSingleNodeViewProps } from './types';
 import { MediaNodeUpdater } from './mediaNodeUpdater';
 import { DispatchAnalyticsEvent } from '../../analytics';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
+import { hasParticipants as hasCollabParticipants } from '../../collab-edit/plugin';
 
 export interface MediaSingleNodeState {
   width?: number;
@@ -74,7 +75,10 @@ export default class MediaSingleNode extends Component<
       this.setViewMediaClientConfig(nextProps);
     }
 
-    // Collab is disabled on mobile (for now), bail
+    // No collab, bail
+    if (!hasCollabParticipants(nextProps.view.state)) {
+      return;
+    }
 
     // Next properties don't hold an image, bail
     if (
@@ -89,11 +93,15 @@ export default class MediaSingleNode extends Component<
       nextProps.node.firstChild.attrs.id,
     );
 
-    if (uploadComplete) {
-      // We need to call this method on any prop change since attrs can get removed with collab editing
-      // the method internally checks if we already have all attrs
-      this.createMediaNodeUpdater(nextProps).updateFileAttrs();
+    // The image is still uploading, prevent MediaNodeUpdate.updateFileAttrs()
+    // from triggering an authProvider call (causing FM-2810)
+    if (!uploadComplete) {
+      return;
     }
+
+    // We need to call this method on any prop change since attrs can get removed with collab editing
+    // the method internally checks if we already have all attrs
+    this.createMediaNodeUpdater(nextProps).updateFileAttrs();
   }
 
   setViewMediaClientConfig = async (props: MediaSingleNodeProps) => {
