@@ -447,9 +447,15 @@ class ToolbarInsertBlock extends React.PureComponent<
 
     const items = this.createItems();
     const buttons = items.slice(0, numberOfButtons);
-    const dropdownItems = items.slice(numberOfButtons);
+    var dropdownItems = items.slice(numberOfButtons);
 
+    // sort list, remove macros and then reattach (this ensures the macros are still sorted alphabetically)
     dropdownItems.sort((a, b) => (a.content < b.content ? -1 : 1));
+    const macros = dropdownItems.filter(item => item.content.includes('macro'));
+    dropdownItems = dropdownItems.filter(
+      item => !item.content.includes('macro'),
+    );
+    dropdownItems = dropdownItems.concat(macros);
 
     if (items.length === 0) {
       return null;
