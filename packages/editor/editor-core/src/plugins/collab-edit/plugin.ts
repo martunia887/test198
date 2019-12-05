@@ -1,10 +1,4 @@
-import {
-  Plugin,
-  PluginKey,
-  Transaction,
-  Selection,
-  EditorState,
-} from 'prosemirror-state';
+import { Plugin, PluginKey, Transaction, Selection } from 'prosemirror-state';
 import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 import { Step, ReplaceStep } from 'prosemirror-transform';
 import { fixTablesKey } from 'prosemirror-tables';
@@ -62,16 +56,6 @@ const initCollab = (
 };
 
 const initCollabMemo = memoizeOne(initCollab);
-
-export function hasParticipants(state: EditorState): boolean {
-  const collabState = pluginKey.getState(state) as PluginState;
-
-  if (!collabState) {
-    return false;
-  }
-
-  return collabState.activeParticipants.size > 0;
-}
 
 export const createPlugin = (
   dispatch: Dispatch,
