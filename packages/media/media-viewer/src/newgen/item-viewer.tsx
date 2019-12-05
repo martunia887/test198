@@ -26,10 +26,12 @@ import {
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 import {
-  ViewerLoadPayload,
+  isAnalyticsViewerLoadSuccess,
+  AnalyticsViewerLoadPayload,
   mediaFileCommencedEvent,
-  mediaFileLoadSucceededEvent,
+  mediaFileLoadAbortedEvent,
   mediaFileLoadFailedEvent,
+  mediaFileLoadSucceededEvent,
 } from './analytics/item-viewer';
 import { channel } from './analytics/index';
 import {
@@ -82,25 +84,41 @@ export class ItemViewerBase extends React.Component<Props, State> {
     this.init(this.props);
   }
 
-  private onImageViewerLoaded = async (payload: ViewerLoadPayload) => {
+  private onImageViewerLoaded = async (
+    analytics: AnalyticsViewerLoadPayload,
+  ) => {
     const { item } = this.state;
     // the item.whenFailed case is handled in the "init" method
     item.whenSuccessful(async fileState => {
-      if (fileState.status === 'processed') {
-        const { identifier } = this.props;
-        if (payload.status === 'success') {
-          this.fireAnalytics(mediaFileLoadSucceededEvent(fileState));
-        } else if (payload.status === 'error' && isFileIdentifier(identifier)) {
-          const id =
-            typeof identifier.id === 'string'
-              ? identifier.id
-              : await identifier.id;
+      const { identifier } = this.props;
+
+      if (fileState.status !== 'processed') {
+        // fileState.status should always be "processed"
+        return;
+      }
+
+      if (isAnalyticsViewerLoadSuccess(analytics)) {
+        this.fireAnalytics(mediaFileLoadSucceededEvent(fileState));
+        return;
+      }
+
+      if (
+        !isAnalyticsViewerLoadSuccess(analytics) &&
+        isFileIdentifier(identifier)
+      ) {
+        const id =
+          typeof identifier.id === 'string'
+            ? identifier.id
+            : await identifier.id;
+        const { failReason, userAbortedRequest } = analytics;
+
+        if (userAbortedRequest) {
           this.fireAnalytics(
-            mediaFileLoadFailedEvent(
-              id,
-              payload.errorMessage || 'ImageViewer error',
-              fileState,
-            ),
+            mediaFileLoadAbortedEvent(id, failReason, fileState),
+          );
+        } else {
+          this.fireAnalytics(
+            mediaFileLoadFailedEvent(id, failReason, fileState),
           );
         }
       }
@@ -133,6 +151,18 @@ export class ItemViewerBase extends React.Component<Props, State> {
     );
   };
 
+  private onDocAborted = (fileState: FileState) => () => {
+    const processedFileState =
+      fileState.status === 'processed' ? fileState : undefined;
+    this.fireAnalytics(
+      mediaFileLoadAbortedEvent(
+        fileState.id,
+        'DocViewer aborted',
+        processedFileState,
+      ),
+    );
+  };
+
   private renderFileState(item: FileState) {
     if (item.status === 'error') {
       return this.renderError('previewFailed', item);
@@ -146,9 +176,11 @@ export class ItemViewerBase extends React.Component<Props, State> {
       previewCount,
       isSidebarVisible,
     } = this.props;
+
     const collectionName = isFileIdentifier(identifier)
       ? identifier.collectionName
       : undefined;
+
     const viewerProps = {
       mediaClient,
       item,
@@ -183,6 +215,7 @@ export class ItemViewerBase extends React.Component<Props, State> {
       case 'doc':
         return (
           <DocViewer
+            onAbort={this.onDocAborted(item)}
             onSuccess={this.onCanPlay(item)}
             onError={this.onDocError(item)}
             isSidebarVisible={isSidebarVisible}

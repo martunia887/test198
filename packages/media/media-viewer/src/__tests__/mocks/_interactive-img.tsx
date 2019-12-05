@@ -1,10 +1,12 @@
 import * as React from 'react';
 
+import { ImageViewerErrorPayload } from '../../newgen/viewers/image';
+
 export type Props = {
   src: string;
   onClose?: () => void;
   onLoad: () => void;
-  onError: () => void;
+  onError: (error: ImageViewerErrorPayload) => void;
 };
 
 type State = 'error' | 'success';
@@ -18,7 +20,9 @@ export const setState = (state: State) => {
 export class InteractiveImg extends React.Component<Props, {}> {
   componentDidMount() {
     if (_state === 'error') {
-      this.props.onError();
+      this.props.onError({
+        failReason: 'Interactive-img render failed',
+      });
     } else {
       this.props.onLoad();
     }

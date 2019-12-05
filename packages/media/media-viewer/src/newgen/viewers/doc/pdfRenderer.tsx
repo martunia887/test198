@@ -80,13 +80,21 @@ injectGlobal`
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/'; // TODO: use web workers instead of fake worker.
 
-const fetchPdf = (url: string): Promise<Blob> => {
-  return pdfjsLib.getDocument(url).promise;
+const fetchPdf = (
+  url: string,
+  onProgressCb?: (progress: { loaded: number; total: number }) => void,
+): Promise<PDFDocumentProxy> => {
+  const task = pdfjsLib.getDocument(url);
+  if (onProgressCb) {
+    task.onProgress = onProgressCb;
+  }
+  return task.promise;
 };
 
 export type Props = {
   src: string;
   isSidebarVisible?: boolean;
+  onAbort?: () => void;
   onClose?: () => void;
   onSuccess?: () => void;
   onError?: (error: Error) => void;
@@ -104,6 +112,8 @@ const initialState: State = {
 
 export class PDFRenderer extends React.Component<Props, State> {
   private el?: HTMLDivElement;
+  private doc?: PDFDocumentProxy;
+  private docLoaded = false;
   private pdfViewer: any;
 
   state: State = initialState;
@@ -112,14 +122,27 @@ export class PDFRenderer extends React.Component<Props, State> {
     this.init();
   }
 
+  componentWillUnmount() {
+    if (this.doc && this.doc.loadingTask && !this.doc.loadingTask.destroyed) {
+      this.doc.destroy();
+    }
+
+    if (!this.docLoaded && this.props.onAbort) {
+      this.props.onAbort();
+    }
+  }
+
   private async init() {
     const { src, onSuccess, onError } = this.props;
 
     try {
-      const doc = await fetchPdf(src);
-      this.setState({ doc: Outcome.successful(doc) }, () => {
+      this.doc = await fetchPdf(
+        src,
+        ({ loaded, total }) => (this.docLoaded = loaded >= total),
+      );
+      this.setState({ doc: Outcome.successful(this.doc) }, () => {
         this.pdfViewer = new PDFJSViewer.PDFViewer({ container: this.el });
-        this.pdfViewer.setDocument(doc);
+        this.pdfViewer.setDocument(this.doc);
         this.pdfViewer.firstPagePromise.then(this.scaleToFit);
 
         if (onSuccess) {

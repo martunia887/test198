@@ -2,13 +2,28 @@ import { GasPayload } from '@atlaskit/analytics-gas-types';
 import { ProcessedFileState, FileState } from '@atlaskit/media-client';
 import { packageAttributes, fileStateToFileGasPayload } from './index';
 
-export type ViewerLoadPayload = {
-  status: 'success' | 'error';
-  errorMessage?: string;
+export type AnalyticsViewerLoadPayload =
+  | AnalyticsViewerLoadSuccess
+  | AnalyticsViewerLoadError;
+
+export type AnalyticsViewerLoadSuccess = {
+  status: 'success';
 };
 
+export type AnalyticsViewerLoadError = {
+  status: 'error';
+  failReason: string;
+  userAbortedRequest?: boolean;
+};
+
+export function isAnalyticsViewerLoadSuccess(
+  payload: AnalyticsViewerLoadPayload,
+): payload is AnalyticsViewerLoadSuccess {
+  return payload.status === 'success';
+}
+
 export type AnalyticViewerProps = {
-  onLoad: (payload: ViewerLoadPayload) => void;
+  onLoad: (analytics: AnalyticsViewerLoadPayload) => void;
 };
 
 export const mediaFileCommencedEvent = (id: string): GasPayload => {
@@ -43,10 +58,10 @@ export const mediaFileLoadSucceededEvent = (
 export const mediaFileLoadFailedEvent = (
   id: string,
   failReason: string,
-  file?: ProcessedFileState,
+  fileState?: ProcessedFileState,
 ): GasPayload => {
-  const fileAttributes = file
-    ? fileStateToFileGasPayload(file)
+  const fileAttributes = fileState
+    ? fileStateToFileGasPayload(fileState)
     : {
         fileId: id,
       };
@@ -57,6 +72,31 @@ export const mediaFileLoadFailedEvent = (
     actionSubjectId: id,
     attributes: {
       status: 'fail',
+      ...fileAttributes,
+      failReason,
+      ...packageAttributes,
+    },
+  };
+};
+
+export const mediaFileLoadAbortedEvent = (
+  id: string,
+  failReason: string,
+  fileState?: ProcessedFileState,
+): GasPayload => {
+  const fileAttributes = fileState
+    ? fileStateToFileGasPayload(fileState)
+    : {
+        fileId: id,
+      };
+
+  return {
+    eventType: 'operational',
+    actionSubject: 'mediaFile',
+    action: 'loadAborted',
+    actionSubjectId: id,
+    attributes: {
+      status: 'aborted',
       ...fileAttributes,
       failReason,
       ...packageAttributes,

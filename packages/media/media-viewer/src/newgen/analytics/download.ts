@@ -30,7 +30,7 @@ const downloadEvent = (
   fileState: FileState,
   actionSubjectId: string,
   failReason?: string,
-) => {
+): DownloadGasPayload => {
   const basePayload = getBasePayload(actionSubjectId);
   const baseAttributes = failReason
     ? {

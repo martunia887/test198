@@ -20,9 +20,10 @@ export type Props = {
   mediaClient: MediaClient;
   item: FileState;
   collectionName?: string;
+  onAbort?: () => void;
   onClose?: () => void;
-  onError?: (error: Error) => void;
   onSuccess?: () => void;
+  onError?: (error: Error) => void;
   isSidebarVisible?: boolean;
 };
 
@@ -93,7 +94,13 @@ export class DocViewer extends BaseViewer<string, Props> {
   }
 
   protected renderSuccessful(content: string) {
-    const { onClose, onSuccess, onError, isSidebarVisible } = this.props;
+    const {
+      onAbort,
+      onClose,
+      onSuccess,
+      onError,
+      isSidebarVisible,
+    } = this.props;
     const { PDFComponent } = DocViewer;
 
     if (!PDFComponent) {
@@ -104,6 +111,7 @@ export class DocViewer extends BaseViewer<string, Props> {
         src={content}
         onSuccess={onSuccess}
         onError={onError}
+        onAbort={onAbort}
         onClose={onClose}
         isSidebarVisible={isSidebarVisible}
       />

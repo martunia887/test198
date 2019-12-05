@@ -101,7 +101,7 @@ describe('ImageViewer analytics', () => {
     await response;
     expect(el.prop('onLoad')).toHaveBeenCalledWith({
       status: 'error',
-      errorMessage: 'Interactive-img render failed',
+      failReason: 'Interactive-img render failed',
     });
   });
 
@@ -112,7 +112,8 @@ describe('ImageViewer analytics', () => {
     await awaitError(response, 'test_error');
     expect(el.prop('onLoad')).toHaveBeenCalledWith({
       status: 'error',
-      errorMessage: 'test_error',
+      failReason: 'test_error',
+      userAbortedRequest: false,
     });
   });
 });

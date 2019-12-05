@@ -24,6 +24,11 @@ export type ImageViewerProps = AnalyticViewerProps & {
   onClose?: () => void;
 };
 
+export type ImageViewerErrorPayload = {
+  failReason: string;
+  userAbortedRequest?: boolean;
+};
+
 export interface ImageViewerContent {
   objectUrl: ObjectUrl;
   orientation?: number;
@@ -95,14 +100,14 @@ export class ImageViewer extends BaseViewer<
         content: Outcome.successful({ objectUrl, orientation }),
       });
     } catch (err) {
-      // TODO : properly handle aborted requests (MS-2843)
-      if (!isAbortedRequestError(err)) {
-        this.setState({
-          content: Outcome.failed(createError('previewFailed', err, file)),
-        });
-        const errorMessage = err.message || err.name;
-        this.props.onLoad({ status: 'error', errorMessage });
-      }
+      this.onError({
+        failReason: err.message || err.name,
+        userAbortedRequest: isAbortedRequestError(err),
+      });
+
+      this.setState({
+        content: Outcome.failed(createError('previewFailed', err, file)),
+      });
     }
   }
 
@@ -139,10 +144,14 @@ export class ImageViewer extends BaseViewer<
     this.onMediaDisplayed();
   };
 
-  private onError = () => {
+  private onError = ({
+    failReason,
+    userAbortedRequest,
+  }: ImageViewerErrorPayload) => {
     this.props.onLoad({
       status: 'error',
-      errorMessage: 'Interactive-img render failed',
+      failReason,
+      userAbortedRequest,
     });
   };
 }

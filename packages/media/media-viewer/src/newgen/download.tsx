@@ -25,7 +25,7 @@ const downloadIcon = <DownloadIcon label="Download" />;
 // TODO: MS-1556
 export const DownloadButton: any = withAnalyticsEvents({
   onClick: (createEvent: CreateUIAnalyticsEvent, props: any) => {
-    const ev = createEvent(props.analyticsPayload);
+    const ev = createEvent(props.analyticspayload);
     ev.fire(channel);
   },
 })(MediaButton);
@@ -55,7 +55,7 @@ export const ErrorViewDownloadButton = (
     <DownloadButtonWrapper>
       <DownloadButton
         testId="media-viewer-download-button"
-        analyticsPayload={downloadEvent}
+        analyticspayload={downloadEvent}
         appearance="primary"
         onClick={createItemDownloader(
           props.state,
@@ -87,7 +87,7 @@ export const ToolbarDownloadButton = (props: ToolbarDownloadButtonProps) => {
   return (
     <DownloadButton
       testId="media-viewer-download-button"
-      analyticsPayload={downloadEvent}
+      analyticspayload={downloadEvent}
       appearance={'toolbar' as any}
       onClick={createItemDownloader(
         state,

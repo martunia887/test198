@@ -2,11 +2,13 @@ import * as React from 'react';
 import { MediaClient, ProcessedFileState } from '@atlaskit/media-client';
 import {
   AnalyticViewerProps,
-  ViewerLoadPayload,
+  AnalyticsViewerLoadPayload,
 } from '../../../src/newgen/analytics/item-viewer';
 
-let _payload: ViewerLoadPayload = { status: 'success' };
-export const setViewerPayload = (payload: ViewerLoadPayload) => {
+let _payload: AnalyticsViewerLoadPayload = { status: 'success' };
+export const setAnalyticsViewerPayload = (
+  payload: AnalyticsViewerLoadPayload,
+) => {
   _payload = payload;
 };
 

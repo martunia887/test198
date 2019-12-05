@@ -55,8 +55,9 @@ describe('ImageViewer', () => {
     expect(el.state().content.data).toBeDefined();
   });
 
-  it('should not update state when image fetch request is cancelled', async () => {
-    const response = Promise.reject(new Error('request_cancelled'));
+  it('should update state to an error when image fetch request is cancelled', async () => {
+    const cancelledError = new Error('request_cancelled');
+    const response = Promise.reject(cancelledError);
     const { el } = createFixture(response);
 
     const previousContent = el.state().content;
@@ -64,18 +65,27 @@ describe('ImageViewer', () => {
 
     await awaitError(response, 'request_cancelled');
 
-    expect(el.state().content).toEqual(previousContent);
+    expect(el.state().content).toMatchObject({
+      state: {
+        err: {
+          errorName: 'previewFailed',
+          innerError: cancelledError,
+        },
+      },
+    });
   });
 
-  it('should not call `onLoad` callback when image fetch request is cancelled', async () => {
+  it('should call `onLoad` callback when image fetch request is cancelled', async () => {
     const response = Promise.reject(new Error('request_cancelled'));
     const { el } = createFixture(response);
 
-    expect(el.props().onLoad).not.toHaveBeenCalled();
-
     await awaitError(response, 'request_cancelled');
 
-    expect(el.props().onLoad).not.toHaveBeenCalled();
+    expect(el.props().onLoad).toHaveBeenCalledWith({
+      status: 'error',
+      failReason: 'request_cancelled',
+      userAbortedRequest: true,
+    });
   });
 
   it('cancels an image fetch request when unmounted', () => {

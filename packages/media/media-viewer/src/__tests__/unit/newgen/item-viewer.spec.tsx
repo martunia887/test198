@@ -1,5 +1,5 @@
 import {
-  setViewerPayload,
+  setAnalyticsViewerPayload,
   ImageViewer as ImageViewerMock,
 } from '../../mocks/_image-viewer';
 
@@ -102,7 +102,7 @@ function mountBaseComponent(
 
 describe('<ItemViewer />', () => {
   beforeEach(() => {
-    setViewerPayload({ status: 'success' });
+    setAnalyticsViewerPayload({ status: 'success' });
   });
 
   it('shows an indicator while loading', () => {
@@ -454,9 +454,9 @@ describe('<ItemViewer />', () => {
     });
 
     it('should trigger analytics when viewer returned an error', () => {
-      setViewerPayload({
+      setAnalyticsViewerPayload({
         status: 'error',
-        errorMessage: 'Image viewer failed :(',
+        failReason: 'Image viewer failed :(',
       });
       const mediaClient = makeFakeMediaClient(
         Observable.of({
@@ -479,6 +479,39 @@ describe('<ItemViewer />', () => {
           fileMediatype: 'image',
           fileSize: undefined,
           status: 'fail',
+          ...analyticsBaseAttributes,
+        },
+        eventType: 'operational',
+      });
+    });
+
+    it('should trigger analytics when viewer is aborted by user', () => {
+      setAnalyticsViewerPayload({
+        status: 'error',
+        failReason: 'The user aborted a request.',
+        userAbortedRequest: true,
+      });
+      const mediaClient = makeFakeMediaClient(
+        Observable.of({
+          id: identifier.id,
+          mediaType: 'image',
+          status: 'processed',
+        }),
+      );
+      const { createAnalyticsEventSpy } = mountBaseComponent(
+        mediaClient,
+        identifier,
+      );
+      expect(createAnalyticsEventSpy).toHaveBeenCalledWith({
+        action: 'loadAborted',
+        actionSubject: 'mediaFile',
+        actionSubjectId: 'some-id',
+        attributes: {
+          failReason: 'The user aborted a request.',
+          fileId: 'some-id',
+          fileMediatype: 'image',
+          fileSize: undefined,
+          status: 'aborted',
           ...analyticsBaseAttributes,
         },
         eventType: 'operational',

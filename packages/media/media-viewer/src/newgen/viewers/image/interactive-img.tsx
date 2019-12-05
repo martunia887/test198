@@ -17,6 +17,7 @@ import { ZoomControls } from '../../zoomControls';
 import { Outcome } from '../../domain';
 import { closedEvent } from '../../analytics/closed';
 import { channel } from '../../analytics';
+import { ImageViewerErrorPayload } from '.';
 
 export function zoomLevelAfterResize(
   newCamera: Camera,
@@ -43,7 +44,7 @@ export interface Props extends WithAnalyticsEventsProps {
   orientation?: number;
   onClose?: () => void;
   onLoad?: () => void;
-  onError?: () => void;
+  onError?: (error: ImageViewerErrorPayload) => void;
   onBlanketClicked?: () => void;
 }
 
@@ -88,7 +89,7 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
   };
 
   render() {
-    const { src, orientation, onError } = this.props;
+    const { src, orientation } = this.props;
     const { zoomLevel, camera, isDragging } = this.state;
 
     const canDrag = camera.match({
@@ -120,7 +121,7 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
           src={src}
           style={imgStyle}
           onLoad={this.onImgLoad}
-          onError={onError}
+          onError={this.onError}
           onMouseDown={this.startDragging}
           shouldPixelate={zoomLevel.value > 1}
         />
@@ -193,6 +194,15 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
         wrapper.scrollTop = y;
       });
     });
+  };
+
+  private onError = () => {
+    const { onError } = this.props;
+    if (onError) {
+      onError({
+        failReason: 'Interactive-img render failed',
+      });
+    }
   };
 
   private startDragging = (ev: React.MouseEvent<{}>) => {
