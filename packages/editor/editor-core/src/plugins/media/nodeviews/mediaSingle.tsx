@@ -77,8 +77,8 @@ export default class MediaSingleNode extends Component<
 
     // Forced updates not required on mobile
     if (
-      typeof this.props.editorAppearance !== 'undefined' &&
-      this.props.editorAppearance === 'mobile'
+      typeof nextProps.editorAppearance !== 'undefined' &&
+      nextProps.editorAppearance === 'mobile'
     ) {
       return;
     }
