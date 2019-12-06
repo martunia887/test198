@@ -101,6 +101,7 @@ export type State = {
   appearance: EditorAppearance;
   mediaOptions: Map<string, Promise<MediaProvider>>;
 };
+// TODO: create a different identifierProvider for each editor
 const contextIdentifierProvider = storyContextIdentifierProviderFactory();
 const providers: any = {
   emojiProvider: emoji.storyData.getEmojiResource({

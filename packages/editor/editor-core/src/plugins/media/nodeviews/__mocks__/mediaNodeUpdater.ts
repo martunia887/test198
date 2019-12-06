@@ -14,8 +14,7 @@ export class MediaNodeUpdater {
     this.getAttrs = mockOverrides['getAttrs'] || jest.fn();
     this.getObjectId =
       mockOverrides['getObjectId'] || jest.fn().mockResolvedValue(undefined);
-    this.getCurrentContextId =
-      mockOverrides['getCurrentContextId'] || jest.fn();
+    this.getNodeContextId = mockOverrides['getNodeContextId'] || jest.fn();
     this.updateDimensions = mockOverrides['updateDimensions'] || jest.fn();
     this.getRemoteDimensions =
       mockOverrides['getRemoteDimensions'] ||
@@ -44,7 +43,7 @@ export class MediaNodeUpdater {
   async updateContextId() {}
   getAttrs() {}
   async getObjectId() {}
-  getCurrentContextId() {}
+  getNodeContextId() {}
   updateDimensions() {}
   async getRemoteDimensions() {}
   async isNodeFromDifferentCollection() {}
