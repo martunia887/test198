@@ -47,6 +47,7 @@ export const withAnalyticsContextData = function<P, C>(
 
 interface RenderTrackerProps extends WithAnalyticsEventsProps {
   subject: string;
+  action?: string;
   data?: object;
   onRender?: any;
 }
@@ -58,7 +59,7 @@ export const RenderTracker = withAnalyticsEvents({
   ) => {
     return createAnalyticsEvent({
       eventType: OPERATIONAL_EVENT_TYPE,
-      action: 'rendered',
+      action: props.action || 'rendered',
       actionSubject: props.subject,
       attributes: props.data,
     }).fire(NAVIGATION_CHANNEL);
@@ -82,8 +83,8 @@ export const ViewedTracker = withAnalyticsEvents({
   ) => {
     return createAnalyticsEvent({
       eventType: UI_EVENT_TYPE,
-      action: 'viewed',
-      actionSubject: SWITCHER_SUBJECT,
+      action: props.action || 'viewed',
+      actionSubject: props.subject || SWITCHER_SUBJECT,
       attributes: props.data,
     }).fire(NAVIGATION_CHANNEL);
   },

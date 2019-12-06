@@ -133,8 +133,8 @@ describe('Atlassian Switcher - Component Analytics', () => {
     const { payload: renderJoinableSitesPayload } = await eventStream.next();
     expect(renderJoinableSitesPayload).toMatchObject({
       eventType: 'operational',
-      action: 'rendered',
-      actionSubject: 'did not render joinable sites section',
+      action: 'not rendered',
+      actionSubject: 'atlassianSwitcherJoinableSites',
     });
     expect(renderJoinableSitesPayload.attributes).toHaveProperty('duration');
     expect(

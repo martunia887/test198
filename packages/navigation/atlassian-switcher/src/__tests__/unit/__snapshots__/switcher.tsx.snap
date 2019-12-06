@@ -27,12 +27,13 @@ exports[`Switcher should be able to disable headers with "disableHeadings" 1`] =
       subject="atlassianSwitcher"
     />
     <WithAnalyticsEvents(class_1)
+      action="not rendered"
       data={
         Object {
           "duration": 0,
         }
       }
-      subject="did not render joinable sites section"
+      subject="atlassianSwitcherJoinableSites"
     />
     <Component
       sectionId="switchTo"
@@ -82,12 +83,13 @@ exports[`Switcher should render sections with headers by default 1`] = `
       subject="atlassianSwitcher"
     />
     <WithAnalyticsEvents(class_1)
+      action="not rendered"
       data={
         Object {
           "duration": 0,
         }
       }
-      subject="did not render joinable sites section"
+      subject="atlassianSwitcherJoinableSites"
     />
     <Component
       sectionId="switchTo"
