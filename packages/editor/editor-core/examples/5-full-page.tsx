@@ -250,7 +250,6 @@ export class ExampleEditorComponent extends React.Component<
                   allowResizingInTables: true,
                   UNSAFE_allowAltTextOnImages: true,
                 }}
-                sidebar={<div>{new Array(50).fill(<p>hello world</p>)}</div>}
                 allowHelpDialog
                 placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
                 shouldFocus={false}
