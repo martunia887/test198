@@ -54,12 +54,7 @@ describe('utils/prefetch', () => {
   });
 
   it('should prefetch joinable sites', () => {
-    prefetch({ isJoinableSitePrefetchEnabled: true });
-    expect(prefetchJoinableSites).toHaveBeenCalledTimes(1);
-  });
-
-  it('should not prefetch joinable sites', () => {
     prefetch({});
-    expect(prefetchJoinableSites).toHaveBeenCalledTimes(0);
+    expect(prefetchJoinableSites).toHaveBeenCalledTimes(1);
   });
 });

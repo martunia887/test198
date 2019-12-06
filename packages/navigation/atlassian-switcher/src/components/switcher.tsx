@@ -69,7 +69,6 @@ export type SwitcherProps = {
   isDiscoverSectionEnabled?: boolean;
   discoverSectionLinks: SwitcherItemType[];
   onJoinableSiteClicked?: JoinableSiteClickHandler;
-  isJoinableSitesSectionEnabled?: boolean;
 };
 
 const getAnalyticsContext = (itemsCount: number) => ({
@@ -151,7 +150,6 @@ export default class Switcher extends React.Component<SwitcherProps> {
       isDiscoverSectionEnabled,
       discoverSectionLinks,
       onJoinableSiteClicked,
-      isJoinableSitesSectionEnabled,
     } = this.props;
     /**
      * It is essential that switchToLinks reflects the order corresponding nav items
@@ -208,12 +206,14 @@ export default class Switcher extends React.Component<SwitcherProps> {
                   numberOfSites,
                 }}
               />
-              {!isJoinableSitesSectionEnabled && (
-                <RenderTracker
-                  subject={`did not render join section`}
-                  data={{ duration: this.timeSinceMounted() }}
-                />
-              )}
+              <RenderTracker
+                subject={
+                  joinableSiteLinks.length > 0
+                    ? 'rendered joinable sites section'
+                    : 'did not render joinable sites section'
+                }
+                data={{ duration: this.timeSinceMounted() }}
+              />
             </React.Fragment>
           )}
           {firstContentArrived && (
@@ -319,55 +319,47 @@ export default class Switcher extends React.Component<SwitcherProps> {
               </NavigationAnalyticsContext>
             ))}
           </Section>
-          {isJoinableSitesSectionEnabled && (
-            <Section
-              sectionId="join"
-              title={<FormattedMessage {...messages.join} />}
-            >
-              {joinableSiteLinks.map(
-                (
-                  {
+          <Section
+            sectionId="join"
+            title={
+              disableHeadings ? null : <FormattedMessage {...messages.join} />
+            }
+          >
+            {joinableSiteLinks.map(
+              (
+                { cloudId, description, href, Icon, label, productType, users },
+                groupIndex: number,
+              ) => (
+                <NavigationAnalyticsContext
+                  key={groupIndex}
+                  data={getItemAnalyticsContext(
+                    groupIndex,
                     cloudId,
-                    description,
+                    'join',
                     href,
-                    Icon,
-                    label,
                     productType,
-                    users,
-                  },
-                  groupIndex: number,
-                ) => (
-                  <NavigationAnalyticsContext
-                    key={groupIndex}
-                    data={getItemAnalyticsContext(
-                      groupIndex,
-                      cloudId,
-                      'join',
-                      href,
-                      productType,
-                    )}
+                  )}
+                >
+                  <ItemWithAvatarGroup
+                    icon={<Icon theme="product" />}
+                    description={description}
+                    users={users}
+                    href={href}
+                    onItemClick={(event: React.SyntheticEvent) => {
+                      if (onJoinableSiteClicked) {
+                        event.preventDefault();
+                        onJoinableSiteClicked(href);
+                      }
+                    }}
+                    target={onJoinableSiteClicked ? undefined : '_blank'}
+                    rel={onJoinableSiteClicked ? undefined : 'noreferrer'}
                   >
-                    <ItemWithAvatarGroup
-                      icon={<Icon theme="product" />}
-                      description={description}
-                      users={users}
-                      href={href}
-                      onItemClick={(event: React.SyntheticEvent) => {
-                        if (onJoinableSiteClicked) {
-                          event.preventDefault();
-                          onJoinableSiteClicked(href);
-                        }
-                      }}
-                      target={onJoinableSiteClicked ? undefined : '_blank'}
-                      rel={onJoinableSiteClicked ? undefined : 'noreferrer'}
-                    >
-                      {label}
-                    </ItemWithAvatarGroup>
-                  </NavigationAnalyticsContext>
-                ),
-              )}
-            </Section>
-          )}
+                    {label}
+                  </ItemWithAvatarGroup>
+                </NavigationAnalyticsContext>
+              ),
+            )}
+          </Section>
           )}
           {isDiscoverSectionEnabled && (
             <Section

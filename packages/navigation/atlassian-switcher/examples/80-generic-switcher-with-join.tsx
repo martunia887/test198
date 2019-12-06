@@ -4,10 +4,18 @@ import Drawer from '@atlaskit/drawer';
 import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
 import { withAnalyticsLogger, withIntlProvider } from './helpers';
 import AtlassianSwitcher from '../src';
+import {
+  createJoinableSitesProvider,
+  defaultJoinableSitesFetch,
+} from '../src/index';
 
 const onJoinableSiteClicked = (returnUrl?: string) => {
   console.log('joinable site clicked');
 };
+
+const joinableSitesDataProvider = createJoinableSitesProvider(
+  defaultJoinableSitesFetch,
+);
 
 class GenericSwitcherWithJoinExample extends React.Component {
   state = {
@@ -50,7 +58,7 @@ class GenericSwitcherWithJoinExample extends React.Component {
             product="generic-product"
             cloudId="some-cloud-id"
             onJoinableSiteClicked={onJoinableSiteClicked}
-            isJoinableSitesSectionEnabled={true}
+            joinableSitesDataProvider={joinableSitesDataProvider}
           />
         </Drawer>
         <Button type="button" onClick={this.openDrawer}>

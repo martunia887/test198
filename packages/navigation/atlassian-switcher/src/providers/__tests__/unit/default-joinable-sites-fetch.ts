@@ -7,7 +7,10 @@ import {
 
 describe('default-joinabble-sites-fetch', () => {
   test('should return empty joinable sites when fetch could not retrieve data', async () => {
-    fetchMock.post(`/trello-cross-product-join/recommended-sites`, 400);
+    fetchMock.post(
+      `gateway/api/trello-cross-product-join/recommended-sites`,
+      400,
+    );
 
     const joinableSites = await fetchJoinableSites(['jira-software.ondemand']);
     expect(joinableSites).toBe(emptyJoinableSites);
@@ -29,7 +32,7 @@ describe('default-joinabble-sites-fetch', () => {
       ],
     };
     fetchMock.post(
-      `/trello-cross-product-join/recommended-sites`,
+      `gateway/api/trello-cross-product-join/recommended-sites`,
       experimentApiSites,
       { method: 'POST', overwriteRoutes: true },
     );

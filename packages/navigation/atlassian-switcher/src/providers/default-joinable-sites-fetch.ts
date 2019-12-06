@@ -1,5 +1,4 @@
-import { JoinableSitesResponse, Product } from '../types';
-import { JoinableSiteDataFetcher } from './default-joinable-sites-provider';
+import { JoinableSitesResponse } from '../types';
 
 interface ExperimentApiJoinableSiteUser {
   avatarUrl: string;
@@ -49,38 +48,35 @@ export const transformExperimentSitesToSwitcherSites = (
 
 export const fetchJoinableSites = (
   products: string[],
-  urlPrefix: string = '',
-): Promise<ExperimentApiJoinableSites> => {
-  return fetch(`${urlPrefix}/trello-cross-product-join/recommended-sites`, {
-    method: 'post',
-    body: JSON.stringify({ collaborators: [], products }),
-    headers: {
-      'Content-Type': 'application/json',
+  baseUrl: string = '',
+  resultTransformer?: (rawResponse: any) => JoinableSitesResponse,
+): Promise<JoinableSitesResponse> => {
+  console.log(
+    `${baseUrl}/gateway/api/trello-cross-product-join/recommended-sites`,
+  );
+  return fetch(
+    `${baseUrl}/gateway/api/trello-cross-product-join/recommended-sites`,
+    {
+      method: 'post',
+      body: JSON.stringify({ products }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-  }).then(response => {
+  ).then(response => {
     if (!response.ok) {
       return emptyJoinableSites;
     }
-    return response.json();
+    const json = response.json();
+    json.then(json => (resultTransformer ? resultTransformer(json) : json));
+    json.catch(() => emptyJoinableSites);
+    return json;
   });
 };
 
-export const defaultFetchData: (
-  product?: Product,
-) => JoinableSiteDataFetcher = (product?: Product) => () => {
-  return fetchJoinableSites(
+export const defaultFetchData = () =>
+  fetchJoinableSites(
     joinSupportedProducts,
-    getUrlPrefixByProduct(product),
-  )
-    .then(json => transformExperimentSitesToSwitcherSites(json))
-    .catch(() => emptyJoinableSites);
-};
-
-const getUrlPrefixByProduct = (product?: Product) => {
-  switch (product) {
-    case Product.TRELLO:
-      return 'https://api-gateway.trellis.coffee/gateway/api';
-    default:
-      return '/gateway/api';
-  }
-};
+    '',
+    transformExperimentSitesToSwitcherSites,
+  );

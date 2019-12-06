@@ -13,7 +13,7 @@ const fetchJoinableSites: () => Promise<JoinableSitesResponse> = () =>
     setTimeout(() => resolve({ sites: mockJoinableSites.sites }), 1000);
   });
 
-const customAvailableProductsDataProvider = createJoinableSitesProvider(
+const customJoinableSitesDataProvider = createJoinableSitesProvider(
   fetchJoinableSites,
 );
 
@@ -61,9 +61,8 @@ class GenericSwitcherWithJoinExample extends React.Component {
           <AtlassianSwitcher
             product="generic-product"
             cloudId="some-cloud-id"
-            joinableSitesDataProvider={customAvailableProductsDataProvider}
+            joinableSitesDataProvider={customJoinableSitesDataProvider}
             onJoinableSiteClicked={onJoinableSiteClicked}
-            isJoinableSitesSectionEnabled={true}
           />
         </Drawer>
         <Button type="button" onClick={this.openDrawer}>

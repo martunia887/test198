@@ -37,7 +37,6 @@ type PrefetchTriggerProps = {
   Container?: React.ReactType;
   availableProductsDataProvider?: AvailableProductsDataProvider;
   joinableSitesDataProvider?: JoinableSitesDataProvider;
-  isJoinableSitePrefetchEnabled?: boolean;
 } & Partial<FeatureFlagProps>;
 
 class PrefetchTrigger extends React.Component<

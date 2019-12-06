@@ -267,6 +267,8 @@ export function mapResultsToSwitcherProps(
     hasLoadedSuggestedProducts &&
     hasLoadedAdminLinks;
 
+  const hasLoadedJoinableSites = hasLoaded(joinableSites);
+
   return {
     licensedProductLinks: collect(
       collectAvailableProductLinks(cloudId, availableProducts),
@@ -312,7 +314,8 @@ export function mapResultsToSwitcherProps(
     hasLoaded:
       hasLoadedAvailableProducts &&
       hasLoadedAdminLinks &&
-      hasLoadedSuggestedProducts,
+      hasLoadedSuggestedProducts &&
+      hasLoadedJoinableSites,
     hasLoadedCritical: hasLoadedAvailableProducts,
     discoverSectionLinks: hasLoadedDiscoverSection
       ? collect(

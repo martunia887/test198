@@ -6,26 +6,22 @@ describe('default-available-products-provider', () => {
   test('should create a provider using the internal url (/gateway) by default', () => {
     const {
       createAvailableProductsProvider,
-      isResultEmpty,
     } = require('../../default-available-products-provider');
     createAvailableProductsProvider();
     expect(createProvider).toBeCalledWith(
       'availableProducts',
       '/gateway/api/worklens/api/available-products',
-      isResultEmpty,
     );
   });
 
   test('should allow to create a provider with custom endpoint url', () => {
     const {
       createAvailableProductsProvider,
-      isResultEmpty,
     } = require('../../default-available-products-provider');
     createAvailableProductsProvider('http://my-api/api/content');
     expect(createProvider).toBeCalledWith(
       'availableProducts',
       'http://my-api/api/content',
-      isResultEmpty,
     );
   });
 });

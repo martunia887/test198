@@ -134,7 +134,7 @@ describe('Atlassian Switcher - Component Analytics', () => {
     expect(renderJoinableSitesPayload).toMatchObject({
       eventType: 'operational',
       action: 'rendered',
-      actionSubject: 'did not render join section',
+      actionSubject: 'did not render joinable sites section',
     });
     expect(renderJoinableSitesPayload.attributes).toHaveProperty('duration');
     expect(

@@ -25,35 +25,23 @@ export type ExportedDataProvider<T> = {
 export const createProvider = <T>(
   name: string,
   url: string,
-  isFetchedResultEmpty?: (result: any) => boolean,
 ): DataProvider<T> => {
   const fetchMethod = withCached((param: object) => fetchJson<T>(url));
 
   return {
     fetchMethod,
-    ProviderComponent: asDataProvider(
-      name,
-      fetchMethod,
-      fetchMethod.cached,
-      isFetchedResultEmpty,
-    ),
+    ProviderComponent: asDataProvider(name, fetchMethod, fetchMethod.cached),
   };
 };
 
 export const createProviderWithCustomFetchData = <T>(
   name: string,
   fetchData: () => Promise<T>,
-  isFetchedResultEmpty?: (result: any) => boolean,
 ): DataProvider<T> => {
   const fetchMethod = withCached((param: object) => fetchData());
 
   return {
     fetchMethod,
-    ProviderComponent: asDataProvider(
-      name,
-      fetchMethod,
-      fetchMethod.cached,
-      isFetchedResultEmpty,
-    ),
+    ProviderComponent: asDataProvider(name, fetchMethod, fetchMethod.cached),
   };
 };
