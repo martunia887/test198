@@ -42,6 +42,7 @@ export default () => {
         <ul
           css={{
             maxWidth: '474px',
+            height: '328px',
             padding: 0,
             margin: '16px auto !important',
             div: { margin: '0' },
