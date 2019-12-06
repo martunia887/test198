@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 // @flow
 
-// declare module '@atlaskit/router' {
 import type { ComponentType, Node, ElementConfig } from 'react';
 import type { Action, BoundActions } from 'react-sweet-state';
 import type {
@@ -412,4 +411,3 @@ declare export function createResource(args: CreateResourceArg): RouteResource;
 declare export var mockRoute: Route;
 declare export var mockRouterContextProp: RouteContext;
 declare export var mockRouterStoreContextProp: RouterStoreContext;
-// }
