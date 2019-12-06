@@ -180,11 +180,12 @@ export default class MediaSingleNode extends Component<
       if (state.selection instanceof CellSelection) {
         return;
       }
+
       setTextSelection(
         this.props.view,
-        state.selection.from,
+        state.selection.from < propPos ? state.selection.from : propPos,
         // + 3 needed for offset of the media inside mediaSingle and cursor to make whole mediaSingle selected
-        propPos + 3,
+        state.selection.to > propPos ? state.selection.to : propPos + 3,
       );
     } else {
       setNodeSelection(this.props.view, propPos);
