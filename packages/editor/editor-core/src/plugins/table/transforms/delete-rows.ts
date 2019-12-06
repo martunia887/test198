@@ -1,4 +1,4 @@
-import { Transaction, Selection } from 'prosemirror-state';
+import { Transaction, Selection, EditorState } from 'prosemirror-state';
 import { TableMap, Rect } from 'prosemirror-tables';
 import { findTable } from 'prosemirror-utils';
 import { Node as PMNode } from 'prosemirror-model';
@@ -9,6 +9,7 @@ import { setMeta } from './metadata';
 export const deleteRows = (
   rect: Rect,
   isHeaderRowRequired: boolean = false,
+  state: EditorState,
 ) => (tr: Transaction): Transaction => {
   const table = findTable(tr.selection);
   if (!table) {
@@ -116,7 +117,7 @@ export const deleteRows = (
   }
 
   if (!rows.length) {
-    return setMeta({ type: 'DELETE_ROWS', problem: 'EMPTY_TABLE' })(tr);
+    return setMeta({ type: 'DELETE_ROWS', problem: 'EMPTY_TABLE' }, state)(tr);
   }
 
   const newTable = table.node.type.createChecked(
@@ -126,13 +127,17 @@ export const deleteRows = (
   );
   const fixedTable = removeEmptyColumns(newTable);
   if (fixedTable === null) {
-    return setMeta({ type: 'DELETE_ROWS', problem: 'REMOVE_EMPTY_COLUMNS' })(
-      tr,
-    );
+    return setMeta(
+      { type: 'DELETE_ROWS', problem: 'REMOVE_EMPTY_COLUMNS' },
+      state,
+    )(tr);
   }
   const cursorPos = getNextCursorPos(newTable, rowsToDelete);
 
-  return setMeta({ type: 'DELETE_ROWS' })(
+  return setMeta(
+    { type: 'DELETE_ROWS' },
+    state,
+  )(
     tr
       .replaceWith(table.pos, table.pos + table.node.nodeSize, fixedTable)
       // move cursor before the deleted rows if possible, otherwise - to the first row

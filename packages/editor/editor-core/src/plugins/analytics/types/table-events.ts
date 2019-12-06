@@ -1,5 +1,5 @@
-import { TableAEP } from './events';
-import { INPUT_METHOD } from './enums';
+import { TableAEP, OperationalAEP } from './events';
+import { INPUT_METHOD, ACTION_SUBJECT } from './enums';
 import { SortOrder } from '../../table/types';
 
 //#region Constants
@@ -21,6 +21,16 @@ export enum TABLE_ACTION {
   DELETED_COLUMN = 'deletedColumn',
   SORTED_COLUMN = 'sortedColumn',
 }
+export enum TABLE_FIX_ACTION {
+  REMOVED_EXTRANEOUS_COLUMN_WIDTHS = 'removedExtraneousColumnWidths',
+  NEGATIVE_ROWSPAN_PREVENTED = 'negativeRowspanPrevented',
+  REMOVED_EMPTY_ROWS = 'removedEmptyRows',
+  REMOVED_EMPTY_COLUMNS = 'removedEmptyColumns',
+  ZERO_ROW_TABLE_PREVENTED = 'zeroRowTablePrevented',
+  SUPERFLUOUS_ROWSPAN_PREVENTED = 'superfluousRowspanPrevented',
+  COLWIDTHS_BEFORE_UPDATE = 'loggedColWidthsBeforeUpdate',
+  COLWIDTHS_AFTER_UPDATE = 'loggedColWidthsAfterUpdate',
+}
 
 export enum TABLE_BREAKOUT {
   WIDE = 'wide',
@@ -38,6 +48,11 @@ interface SortColumn {
 interface TotalRowAndColCount {
   totalRowCount: number;
   totalColumnCount: number;
+}
+
+interface ColumnWidthInfo {
+  colwidths: number[];
+  colspan: number;
 }
 
 interface HorizontalAndVerticalCells {
@@ -142,6 +157,65 @@ type TableSortColumnAEP = TableAEP<
   undefined
 >;
 
+type TableProblemAEP<
+  Action,
+  Attributes,
+  NonPrivacySafeAttributes
+> = OperationalAEP<
+  Action,
+  ACTION_SUBJECT.TABLE,
+  null,
+  Attributes,
+  NonPrivacySafeAttributes
+>;
+
+type TableRemovedExtraColumnWidthsAEP = TableProblemAEP<
+  TABLE_FIX_ACTION.REMOVED_EXTRANEOUS_COLUMN_WIDTHS,
+  TotalRowAndColCount,
+  undefined
+>;
+
+type TableNegativeRowspanAEP = TableProblemAEP<
+  TABLE_FIX_ACTION.NEGATIVE_ROWSPAN_PREVENTED,
+  undefined,
+  undefined
+>;
+
+type TableRemoveEmptyRowsAEP = TableProblemAEP<
+  TABLE_FIX_ACTION.REMOVED_EMPTY_ROWS,
+  undefined,
+  undefined
+>;
+
+type TableRemoveEmptyColumnsAEP = TableProblemAEP<
+  TABLE_FIX_ACTION.REMOVED_EMPTY_COLUMNS,
+  undefined,
+  undefined
+>;
+
+type TablePreventZeroRowsAEP = TableProblemAEP<
+  TABLE_FIX_ACTION.ZERO_ROW_TABLE_PREVENTED,
+  undefined,
+  undefined
+>;
+
+type TableColWidthsBeforeUpdateAEP = TableProblemAEP<
+  TABLE_FIX_ACTION.COLWIDTHS_BEFORE_UPDATE,
+  ColumnWidthInfo,
+  undefined
+>;
+
+type TableColWidthsAfterUpdateAEP = TableProblemAEP<
+  TABLE_FIX_ACTION.COLWIDTHS_AFTER_UPDATE,
+  ColumnWidthInfo,
+  undefined
+>;
+
+type TablePreventSuperfluousRowspansAEP = TableProblemAEP<
+  TABLE_FIX_ACTION.SUPERFLUOUS_ROWSPAN_PREVENTED,
+  undefined,
+  undefined
+>;
 //#endregion
 
 export type TableEventPayload =
@@ -154,4 +228,12 @@ export type TableEventPayload =
   | TableCopyAndCutAEP
   | TableAddRowOrColumnAEP
   | TableSortColumnAEP
-  | TableDeleteRowOrColumnAEP;
+  | TableDeleteRowOrColumnAEP
+  | TableRemovedExtraColumnWidthsAEP
+  | TableNegativeRowspanAEP
+  | TableRemoveEmptyRowsAEP
+  | TableRemoveEmptyColumnsAEP
+  | TablePreventZeroRowsAEP
+  | TableColWidthsBeforeUpdateAEP
+  | TableColWidthsAfterUpdateAEP
+  | TablePreventSuperfluousRowspansAEP;

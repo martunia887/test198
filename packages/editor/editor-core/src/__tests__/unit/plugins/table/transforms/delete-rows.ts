@@ -49,7 +49,7 @@ describe('table plugin -> transforms -> delete rows', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteRows(rowsToRect([0], 3))(state.tr));
+        dispatch(deleteRows(rowsToRect([0], 3), false, state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -76,7 +76,7 @@ describe('table plugin -> transforms -> delete rows', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteRows(rowsToRect([1], 3))(state.tr));
+        dispatch(deleteRows(rowsToRect([1], 3), false, state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -100,7 +100,7 @@ describe('table plugin -> transforms -> delete rows', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteRows(rowsToRect([0, 1], 3))(state.tr));
+        dispatch(deleteRows(rowsToRect([0, 1], 3), false, state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(p('text'), table()(tr(td()(p('c1')), td()(p('c2'))))),
         );
@@ -120,7 +120,9 @@ describe('table plugin -> transforms -> delete rows', () => {
         ),
       );
       const { state, dispatch } = editorView;
-      dispatch(deleteRows(getSelectionRect(state.selection)!)(state.tr));
+      dispatch(
+        deleteRows(getSelectionRect(state.selection)!, false, state)(state.tr),
+      );
       expect(editorView.state.doc).toEqualDocument(
         doc(
           p('text'),
@@ -143,7 +145,9 @@ describe('table plugin -> transforms -> delete rows', () => {
         ),
       );
       const { state, dispatch } = editorView;
-      dispatch(deleteRows(getSelectionRect(state.selection)!)(state.tr));
+      dispatch(
+        deleteRows(getSelectionRect(state.selection)!, false, state)(state.tr),
+      );
       expect(editorView.state.doc).toEqualDocument(
         doc(p('text'), table()(tr(td({})(p('c1')), td({})(p('c2'))))),
       );
@@ -163,7 +167,9 @@ describe('table plugin -> transforms -> delete rows', () => {
         ),
       );
       const { state, dispatch } = editorView;
-      dispatch(deleteRows(getSelectionRect(state.selection)!)(state.tr));
+      dispatch(
+        deleteRows(getSelectionRect(state.selection)!, false, state)(state.tr),
+      );
       expect(editorView.state.doc).toEqualDocument(
         doc(p('text'), table()(tr(td({})(p('c4')), td({})(p('c5'))))),
       );
@@ -187,7 +193,13 @@ describe('table plugin -> transforms -> delete rows', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteRows(getSelectionRect(state.selection)!)(state.tr));
+        dispatch(
+          deleteRows(
+            getSelectionRect(state.selection)!,
+            false,
+            state,
+          )(state.tr),
+        );
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -213,7 +225,13 @@ describe('table plugin -> transforms -> delete rows', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteRows(getSelectionRect(state.selection)!)(state.tr));
+        dispatch(
+          deleteRows(
+            getSelectionRect(state.selection)!,
+            false,
+            state,
+          )(state.tr),
+        );
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -236,7 +254,11 @@ describe('table plugin -> transforms -> delete rows', () => {
           );
           const { state, dispatch } = editorView;
           dispatch(
-            deleteRows(rowsToRect([0], 3), isHeaderRowRequired)(state.tr),
+            deleteRows(
+              rowsToRect([0], 3),
+              isHeaderRowRequired,
+              state,
+            )(state.tr),
           );
           expect(editorView.state.doc).toEqualDocument(
             doc(table()(tr(thEmpty), tr(tdEmpty), tr(tdEmpty))),
@@ -260,6 +282,7 @@ describe('table plugin -> transforms -> delete rows', () => {
             deleteRows(
               getSelectionRect(state.selection)!,
               isHeaderRowRequired,
+              state,
             )(state.tr),
           );
           expect(editorView.state.doc).toEqualDocument(
@@ -297,7 +320,7 @@ describe('table plugin -> transforms -> delete rows', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(deleteRows(rowsToRect([0], 3))(state.tr));
+          dispatch(deleteRows(rowsToRect([0], 3), false, state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               table()(
@@ -345,7 +368,7 @@ describe('table plugin -> transforms -> delete rows', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(deleteRows(rowsToRect([0], 3))(state.tr));
+          dispatch(deleteRows(rowsToRect([0], 3), false, state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               table()(
@@ -403,7 +426,7 @@ describe('table plugin -> transforms -> delete rows', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(deleteRows(rowsToRect([1], 3))(state.tr));
+          dispatch(deleteRows(rowsToRect([1], 3), false, state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               table()(
@@ -450,7 +473,7 @@ describe('table plugin -> transforms -> delete rows', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(deleteRows(rowsToRect([1], 3))(state.tr));
+          dispatch(deleteRows(rowsToRect([1], 3), false, state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               table()(
@@ -492,7 +515,7 @@ describe('table plugin -> transforms -> delete rows', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteRows(rowsToRect([1, 2], 3))(state.tr));
+        dispatch(deleteRows(rowsToRect([1, 2], 3), false, state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             table()(

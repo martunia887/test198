@@ -56,7 +56,7 @@ export const handleBreakoutContent = (
   );
 
   const { tr } = state;
-  updateColumnWidths(resizeState, table, start)(tr);
+  updateColumnWidths(resizeState, table, start, state)(tr);
 
   if (dispatch && tr.docChanged) {
     dispatch(tr);
@@ -94,7 +94,7 @@ export const scaleTable = (
 
   if (resizeState) {
     let { tr } = state;
-    tr = updateColumnWidths(resizeState, node, start)(tr);
+    tr = updateColumnWidths(resizeState, node, start, state)(tr);
 
     if (tr.docChanged && dispatch) {
       tr.setMeta('scrollIntoView', false);
@@ -131,10 +131,9 @@ export const evenColumns = ({
     isClickNear(event, lastClick)
   ) {
     const newState = evenAllColumnsWidths(resizeState);
-    setLastClick(null, tr => updateColumnWidths(newState, table, start)(tr))(
-      state,
-      dispatch,
-    );
+    setLastClick(null, tr =>
+      updateColumnWidths(newState, table, start, state)(tr),
+    )(state, dispatch);
 
     return true;
   }

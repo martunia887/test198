@@ -149,7 +149,7 @@ export const handleMouseDown = (
           dom,
           resizingSelectedColumns ? selectedColumns : undefined,
         );
-        tr = updateColumnWidths(newResizeState, table, start)(tr);
+        tr = updateColumnWidths(newResizeState, table, start, state)(tr);
       }
 
       return stopResizing(tr)(state, dispatch);

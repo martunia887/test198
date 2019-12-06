@@ -14,7 +14,7 @@ type InvalidTransactionErrorAEP = OperationalAEP<
 >;
 
 type InvalidTransactionStepErrorAEP = OperationalAEP<
-  ACTION.DISCARD_INVALID_STEPS_FROM_TRANSACTION,
+  ACTION.DISCARDED_INVALID_STEPS_FROM_TRANSACTION,
   ACTION_SUBJECT.EDITOR,
   undefined,
   {

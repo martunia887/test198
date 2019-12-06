@@ -117,7 +117,7 @@ export const createPlugin = (
         return fixTables(updatedTr, newState) || updatedTr;
       }
       if (transactions.find(tr => tr.docChanged)) {
-        return fixTables(newState.tr, newState);
+        return fixTables(newState.tr, newState) || newState.tr;
       }
     },
     view: (editorView: EditorView) => {

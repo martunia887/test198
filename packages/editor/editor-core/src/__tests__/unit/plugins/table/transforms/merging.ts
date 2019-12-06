@@ -34,7 +34,7 @@ describe('table plugin -> transforms -> merge cells', () => {
         ),
       );
       const { state, dispatch } = editorView;
-      dispatch(mergeCells(state.tr));
+      dispatch(mergeCells(state)(state.tr));
       expect(editorView.state.doc).toEqualDocument(
         doc(
           p('text'),
@@ -65,7 +65,7 @@ describe('table plugin -> transforms -> merge cells', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(mergeCells(state.tr));
+          dispatch(mergeCells(state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               p('text'),
@@ -94,7 +94,7 @@ describe('table plugin -> transforms -> merge cells', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(mergeCells(state.tr));
+          dispatch(mergeCells(state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               p('text'),
@@ -124,7 +124,7 @@ describe('table plugin -> transforms -> merge cells', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(mergeCells(state.tr));
+          dispatch(mergeCells(state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               p('text'),
@@ -153,7 +153,7 @@ describe('table plugin -> transforms -> merge cells', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(mergeCells(state.tr));
+          dispatch(mergeCells(state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               p('text'),
@@ -181,7 +181,7 @@ describe('table plugin -> transforms -> merge cells', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(mergeCells(state.tr));
+          dispatch(mergeCells(state)(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               p('text'),
@@ -207,7 +207,7 @@ describe('table plugin -> transforms -> merge cells', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(mergeCells(state.tr));
+        dispatch(mergeCells(state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -230,7 +230,7 @@ describe('table plugin -> transforms -> merge cells', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(mergeCells(state.tr));
+        dispatch(mergeCells(state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -258,7 +258,7 @@ describe('table plugin -> transforms -> merge cells', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(mergeCells(state.tr));
+        dispatch(mergeCells(state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -286,7 +286,7 @@ describe('table plugin -> transforms -> merge cells', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(mergeCells(state.tr));
+        dispatch(mergeCells(state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -325,7 +325,7 @@ describe('table plugin -> transforms -> merge cells', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(mergeCells(state.tr));
+        dispatch(mergeCells(state)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),

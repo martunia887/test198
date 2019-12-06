@@ -1,5 +1,5 @@
 import { TableMap, CellSelection } from 'prosemirror-tables';
-import { Transaction, TextSelection } from 'prosemirror-state';
+import { Transaction, TextSelection, EditorState } from 'prosemirror-state';
 import { Node as PMNode } from 'prosemirror-model';
 import { CellAttributes } from '@atlaskit/adf-schema';
 import { ResizeState } from '../pm-plugins/table-resizing/utils';
@@ -9,6 +9,7 @@ export const updateColumnWidths = (
   resizeState: ResizeState,
   table: PMNode,
   start: number,
+  state: EditorState,
 ) => (tr: Transaction): Transaction => {
   const map = TableMap.get(table);
   const updatedCellsAttrs: { [key: number]: CellAttributes } = {};
@@ -24,11 +25,14 @@ export const updateColumnWidths = (
       };
       const colspan = attrs.colspan || 1;
       if (attrs.colwidth && attrs.colwidth.length > colspan) {
-        tr = setMeta({
-          type: 'UPDATE_COLUMN_WIDTHS',
-          problem: 'COLWIDTHS_BEFORE_UPDATE',
-          data: { colwidths: attrs.colwidth, colspan },
-        })(tr);
+        tr = setMeta(
+          {
+            type: 'UPDATE_COLUMN_WIDTHS',
+            problem: 'COLWIDTHS_BEFORE_UPDATE',
+            data: { colwidths: attrs.colwidth, colspan },
+          },
+          state,
+        )(tr);
         attrs.colwidth = attrs.colwidth.slice(0, colspan);
       }
 
@@ -48,11 +52,14 @@ export const updateColumnWidths = (
 
       colwidth[colspanIndex] = width;
       if (colwidth.length > colspan) {
-        tr = setMeta({
-          type: 'UPDATE_COLUMN_WIDTHS',
-          problem: 'COLWIDTHS_AFTER_UPDATE',
-          data: { colwidths: colwidth, colspan },
-        })(tr);
+        tr = setMeta(
+          {
+            type: 'UPDATE_COLUMN_WIDTHS',
+            problem: 'COLWIDTHS_AFTER_UPDATE',
+            data: { colwidths: colwidth, colspan },
+          },
+          state,
+        )(tr);
         colwidth = colwidth.slice(0, colspan);
       }
       updatedCellsAttrs[cellPos] = { ...attrs, colwidth };

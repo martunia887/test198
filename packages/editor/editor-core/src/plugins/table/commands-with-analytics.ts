@@ -104,7 +104,7 @@ export const mergeCellsWithAnalytics = () =>
   })((state, dispatch) => {
     if (dispatch) {
       analyticsV2.trackEvent('atlassian.editor.format.table.merge.button');
-      dispatch(mergeCells(state.tr));
+      dispatch(mergeCells(state)(state.tr));
     }
     return true;
   });
@@ -259,7 +259,7 @@ export const deleteRowsWithAnalytics = (
   })((state, dispatch) => {
     if (dispatch) {
       analyticsV2.trackEvent('atlassian.editor.format.table.delete_row.button');
-      dispatch(deleteRows(rect, isHeaderRowRequired)(state.tr));
+      dispatch(deleteRows(rect, isHeaderRowRequired, state)(state.tr));
     }
     return true;
   });
@@ -289,7 +289,7 @@ export const deleteColumnsWithAnalytics = (
       analyticsV2.trackEvent(
         'atlassian.editor.format.table.delete_column.button',
       );
-      dispatch(deleteColumns(rect)(state.tr));
+      dispatch(deleteColumns(rect, state)(state.tr));
     }
     return true;
   });

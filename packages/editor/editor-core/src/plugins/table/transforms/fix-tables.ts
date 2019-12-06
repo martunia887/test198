@@ -1,4 +1,4 @@
-import { Transaction } from 'prosemirror-state';
+import { Transaction, EditorState } from 'prosemirror-state';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { TableLayout } from '@atlaskit/adf-schema';
@@ -14,20 +14,14 @@ import {
   contentWidth,
   getLayoutSize,
 } from '../pm-plugins/table-resizing/utils';
-
-export const fireAnalytics = (properties = {}) =>
-  sendLogs({
-    events: [
-      {
-        name: 'atlaskit.fabric.editor.fixtable',
-        product: 'atlaskit',
-        properties,
-        serverTime: new Date().getTime(),
-        server: 'local',
-        user: '-',
-      },
-    ],
-  });
+import {
+  addAnalytics,
+  ACTION_SUBJECT,
+  EVENT_TYPE,
+  TABLE_FIX_ACTION,
+} from '../../analytics';
+import { analyticsService } from '../../../analytics';
+import { getSelectedTableInfo } from '../utils';
 
 // We attempt to patch the document when we have extra, unneeded, column widths
 // Take this node for example:
@@ -64,7 +58,10 @@ export const removeExtraneousColumnWidths = (
   return hasProblems;
 };
 
-export const fixTables = (tr: Transaction): Transaction | undefined => {
+export const fixTables = (
+  tr: Transaction,
+  state: EditorState,
+): Transaction | undefined => {
   let hasProblems = false;
   tr.doc.descendants((node, pos) => {
     if (node.type.name === 'table') {
@@ -74,8 +71,27 @@ export const fixTables = (tr: Transaction): Transaction | undefined => {
   });
 
   if (hasProblems) {
-    return tr;
+    const { totalColumnCount, totalRowCount } = getSelectedTableInfo(
+      tr.selection,
+    );
+
+    // Temporarily dispatch legacy GasV2 event in parallel
+    analyticsService.trackEvent('atlaskit.fabric.editor.fixtable', {
+      message: 'removeExtraneousColumnWidths',
+    });
+
+    return addAnalytics(state, tr, {
+      action: TABLE_FIX_ACTION.REMOVED_EXTRANEOUS_COLUMN_WIDTHS,
+      actionSubject: ACTION_SUBJECT.TABLE,
+      eventType: EVENT_TYPE.OPERATIONAL,
+      attributes: {
+        totalColumnCount,
+        totalRowCount,
+      },
+    });
   }
+
+  return undefined;
 };
 
 // When we get a table with an 'auto' attribute, we want to:

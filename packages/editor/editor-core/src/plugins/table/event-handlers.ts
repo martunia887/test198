@@ -381,7 +381,7 @@ export const handleCut = (
             const {
               pluginConfig: { isHeaderRowRequired },
             } = getPluginState(newState);
-            tr = deleteRows(rect, isHeaderRowRequired)(tr);
+            tr = deleteRows(rect, isHeaderRowRequired, newState)(tr);
             analyticsService.trackEvent(
               'atlassian.editor.format.table.delete_row.button',
             );
@@ -389,7 +389,7 @@ export const handleCut = (
             analyticsService.trackEvent(
               'atlassian.editor.format.table.delete_column.button',
             );
-            tr = deleteColumns(rect)(tr);
+            tr = deleteColumns(rect, newState)(tr);
           }
         }
       }

@@ -23,7 +23,7 @@ import {
 export type DispatchAnalyticsEvent = (payload: AnalyticsEventPayload) => void;
 export type HigherOrderCommand = (command: Command) => Command;
 
-function getAnalyticsState(
+function getCreateUIAnalyticsEvent(
   editorState: EditorState,
 ): CreateUIAnalyticsEvent | null | undefined {
   return analyticsPluginKey.getState(editorState) as
@@ -112,7 +112,7 @@ export function addAnalytics(
   payload: AnalyticsEventPayload,
   channel: string = editorAnalyticsChannel,
 ): Transaction {
-  const createAnalyticsEvent = getAnalyticsState(state);
+  const createAnalyticsEvent = getCreateUIAnalyticsEvent(state);
   payload = getStateContext(state, payload);
 
   if (createAnalyticsEvent) {

@@ -12,13 +12,14 @@ import {
   AnalyticsEventPayloadWithChannel,
   EVENT_TYPE,
   TABLE_ACTION,
+  TABLE_FIX_ACTION,
   ACTION,
 } from './types';
 import { fireAnalyticsEvent } from './utils';
 
 export const analyticsStepType = 'atlaskit-analytics';
 
-const actionsToIgnore: (ACTION | TABLE_ACTION)[] = [
+const actionsToIgnore: (ACTION | TABLE_ACTION | TABLE_FIX_ACTION)[] = [
   ACTION.INVOKED,
   ACTION.OPENED,
 ];

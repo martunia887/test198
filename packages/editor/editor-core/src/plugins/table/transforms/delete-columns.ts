@@ -1,11 +1,13 @@
-import { Transaction, Selection } from 'prosemirror-state';
+import { Transaction, Selection, EditorState } from 'prosemirror-state';
 import { TableMap, Rect } from 'prosemirror-tables';
 import { findTable } from 'prosemirror-utils';
 import { Node as PMNode } from 'prosemirror-model';
 import { CellAttributes } from '@atlaskit/adf-schema';
 import { setMeta } from './metadata';
 
-export const deleteColumns = (rect: Rect) => (tr: Transaction): Transaction => {
+export const deleteColumns = (rect: Rect, state: EditorState) => (
+  tr: Transaction,
+): Transaction => {
   const table = findTable(tr.selection);
   if (!table) {
     return tr;
@@ -111,7 +113,10 @@ export const deleteColumns = (rect: Rect) => (tr: Transaction): Transaction => {
   }
 
   if (!rows.length) {
-    return setMeta({ type: 'DELETE_COLUMNS', problem: 'EMPTY_TABLE' })(tr);
+    return setMeta(
+      { type: 'DELETE_COLUMNS', problem: 'EMPTY_TABLE' },
+      state,
+    )(tr);
   }
 
   const newTable = table.node.type.createChecked(
@@ -122,12 +127,18 @@ export const deleteColumns = (rect: Rect) => (tr: Transaction): Transaction => {
 
   const fixedTable = fixRowSpans(newTable);
   if (fixedTable === null) {
-    return setMeta({ type: 'DELETE_COLUMNS', problem: 'FIX_ROWSPANS' })(tr);
+    return setMeta(
+      { type: 'DELETE_COLUMNS', problem: 'FIX_ROWSPANS' },
+      state,
+    )(tr);
   }
 
   const cursorPos = getNextCursorPos(newTable, columnsToDelete);
 
-  return setMeta({ type: 'DELETE_COLUMNS' })(
+  return setMeta(
+    { type: 'DELETE_COLUMNS' },
+    state,
+  )(
     tr
       .replaceWith(table.pos, table.pos + table.node.nodeSize, fixedTable)
       // move cursor to the left of the deleted columns if possible, otherwise - to the first column

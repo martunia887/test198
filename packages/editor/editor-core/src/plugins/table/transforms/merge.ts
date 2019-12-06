@@ -1,12 +1,14 @@
 import { CellSelection, TableMap, Rect } from 'prosemirror-tables';
-import { Transaction, Selection } from 'prosemirror-state';
+import { Transaction, Selection, EditorState } from 'prosemirror-state';
 import { Node as PMNode, Fragment } from 'prosemirror-model';
 import { getSelectionRect, findTable } from 'prosemirror-utils';
 import { CellAttributes } from '@atlaskit/adf-schema';
 import { setMeta } from './metadata';
 
 // re-creates table node with merged cells
-export function mergeCells(tr: Transaction): Transaction {
+export const mergeCells = (state: EditorState) => (
+  tr: Transaction,
+): Transaction => {
   const { selection } = tr;
   if (!(selection instanceof CellSelection) || !canMergeCells(tr)) {
     return tr;
@@ -52,9 +54,10 @@ export function mergeCells(tr: Transaction): Transaction {
         }
         const rowspan = rect.bottom - rect.top;
         if (rowspan < 1) {
-          return setMeta({ type: 'MERGE_CELLS', problem: 'NEGATIVE_ROWSPAN' })(
-            tr,
-          );
+          return setMeta(
+            { type: 'MERGE_CELLS', problem: 'NEGATIVE_ROWSPAN' },
+            state,
+          )(tr);
         }
         // update colspan and rowspan of the merged cell to span the selection
         const attrs = addColSpan(
@@ -92,10 +95,13 @@ export function mergeCells(tr: Transaction): Transaction {
           if (rowspan && rowspan + i - 1 >= rows.length) {
             rowChanged = true;
             if (rowspan < 2) {
-              return setMeta({
-                type: 'MERGE_CELLS',
-                problem: 'NEGATIVE_ROWSPAN',
-              })(tr);
+              return setMeta(
+                {
+                  type: 'MERGE_CELLS',
+                  problem: 'NEGATIVE_ROWSPAN',
+                },
+                state,
+              )(tr);
             }
             cells.push(
               cell.type.createChecked(
@@ -120,7 +126,7 @@ export function mergeCells(tr: Transaction): Transaction {
 
   // empty tables? cancel merging like nothing happened
   if (!rows.length) {
-    return setMeta({ type: 'MERGE_CELLS', problem: 'EMPTY_TABLE' })(tr);
+    return setMeta({ type: 'MERGE_CELLS', problem: 'EMPTY_TABLE' }, state)(tr);
   }
 
   const newTable = table.node.type.createChecked(
@@ -130,19 +136,23 @@ export function mergeCells(tr: Transaction): Transaction {
   );
   const fixedTable = removeEmptyColumns(newTable);
   if (fixedTable === null) {
-    return setMeta({ type: 'MERGE_CELLS', problem: 'REMOVE_EMPTY_COLUMNS' })(
-      tr,
-    );
+    return setMeta(
+      { type: 'MERGE_CELLS', problem: 'REMOVE_EMPTY_COLUMNS' },
+      state,
+    )(tr);
   }
 
-  return setMeta({ type: 'MERGE_CELLS' })(
+  return setMeta(
+    { type: 'MERGE_CELLS' },
+    state,
+  )(
     tr
       .replaceWith(table.pos, table.pos + table.node.nodeSize, fixedTable)
       .setSelection(
         Selection.near(tr.doc.resolve((mergedCellPos || 0) + table.start)),
       ),
   );
-}
+};
 
 export function canMergeCells(tr: Transaction): boolean {
   const { selection } = tr;
