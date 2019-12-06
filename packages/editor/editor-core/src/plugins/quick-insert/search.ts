@@ -109,25 +109,29 @@ export function getSearchChunks({
   return keywords ? [title].concat(keywords) : [title];
 }
 
-export function find(
-  query: string,
-  items: Array<{
-    title: string;
-    keywords?: string;
-    priority?: number;
-  }>,
-) {
+export interface SearchItem {
+  title: string;
+  keywords?: string;
+  priority?: number;
+}
+
+export function sort(items: SearchItem[]): SearchItem[] {
+  const sorted = [...items]
+    // pre-sort items by title ascending, putting high-priority items first
+    .sort(
+      buildSortPredicateWith(
+        item => item.title,
+        item => item.priority || Number.POSITIVE_INFINITY,
+        SortMode.PRIORITY_FIRST,
+      ),
+    );
+
+  return sorted;
+}
+
+export function filter(query: string, items: SearchItem[]) {
   return (
     items
-      // pre-sort items by title ascending, putting prioritary items first
-      .sort(
-        buildSortPredicateWith(
-          item => item.title,
-          item => item.priority || Number.POSITIVE_INFINITY,
-          SortMode.PRIORITY_FIRST,
-        ),
-      )
-      // calculate lowest items distance to query
       .map(item => ({
         item,
         distance: getSearchChunks(item).reduce((acc, chunk) => {

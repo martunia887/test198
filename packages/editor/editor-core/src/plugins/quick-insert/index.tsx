@@ -1,15 +1,14 @@
 import { InjectedIntl } from 'react-intl';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import Fuse from 'fuse.js';
 import { analyticsService } from '../../analytics';
 import { EditorPlugin, Command } from '../../types';
-import { dedupe } from '../../utils';
 import {
   QuickInsertItem,
   QuickInsertProvider,
   QuickInsertHandler,
 } from './types';
-import { find } from './search';
 import {
   analyticsEventKey,
   AnalyticsDispatch,
@@ -57,25 +56,26 @@ const quickInsertPlugin = (): EditorPlugin => ({
           });
         }
         const quickInsertState = pluginKey.getState(state);
-        const defaultItems = processItems(quickInsertState.items, intl);
-        const defaultSearch = () => find(query, defaultItems);
+        const fuse = new Fuse(processItems(quickInsertState.items, intl), {
+          shouldSort: true,
+          threshold: 0.6,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: [
+            {
+              name: 'title',
+              weight: 0.8,
+            },
+            {
+              name: 'keywords',
+              weight: 0.2,
+            },
+          ],
+        });
 
-        if (quickInsertState.provider) {
-          return (quickInsertState.provider as Promise<Array<QuickInsertItem>>)
-            .then(items =>
-              find(
-                query,
-                dedupe([...defaultItems, ...items], item => item.title),
-              ),
-            )
-            .catch(err => {
-              // eslint-disable-next-line no-console
-              console.error(err);
-              return defaultSearch();
-            });
-        }
-
-        return defaultSearch();
+        return fuse.search(query);
       },
       selectItem: (state, item, insert) => {
         analyticsService.trackEvent('atlassian.editor.quickinsert.select', {

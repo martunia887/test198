@@ -1,4 +1,4 @@
-import { find } from '../../../../plugins/quick-insert/search';
+import { filter } from '../../../../plugins/quick-insert/search';
 
 describe('Quick Insert Search', () => {
   const getTitles = (item: { title: string }) => item.title;
@@ -16,35 +16,35 @@ describe('Quick Insert Search', () => {
   ];
 
   it('should find exact match', () => {
-    const results = find('Date', items);
+    const results = filter('Date', items);
     expect(results[0].title).toBe('Date');
   });
 
   it('should not match substring of a word which excludes first letter', () => {
-    expect(find('zon', items).length).toEqual(0);
+    expect(filter('zon', items).length).toEqual(0);
   });
 
   it('should match substring of a word which includes first letter', () => {
-    const result = find('hor', items);
+    const result = filter('hor', items);
     expect(result[0].title).toEqual('Horizontal rule');
     expect(result.length).toEqual(1);
   });
 
   it('should match substring of a sentence which includes first letter of last word', () => {
-    const result = find('rul', items);
+    const result = filter('rul', items);
     expect(result[0].title).toEqual('Horizontal rule');
   });
 
   it('should find an item approximately matching a query', () => {
-    expect(find('dte', items)[0].title).toBe('Date');
+    expect(filter('dte', items)[0].title).toBe('Date');
   });
 
   it('should find items that approximately match a query', () => {
-    expect(find('te', items).map(getTitles)).toEqual(['Table']);
+    expect(filter('te', items).map(getTitles)).toEqual(['Table']);
   });
 
   it('should respect item priority', () => {
-    expect(find('', items).map(getTitles)).toEqual([
+    expect(filter('', items).map(getTitles)).toEqual([
       'Table',
       'Files and Images',
       'Horizontal rule',
@@ -59,26 +59,26 @@ describe('Quick Insert Search', () => {
 
   it('should respect item priority when 2 items match a query with the same score', () => {
     expect(
-      find('code', [...items, { priority: 9, title: 'Code inline' }]).map(
+      filter('code', [...items, { priority: 9, title: 'Code inline' }]).map(
         getTitles,
       ),
     ).toEqual(['Code snippet', 'Code inline']);
   });
 
   it('should not match string when character repeats more times than in original string', () => {
-    expect(find('//', [{ title: '/' }])).toEqual([]);
+    expect(filter('//', [{ title: '/' }])).toEqual([]);
   });
 
   it('should find items that match partial query containing trailing space', () => {
     expect(
-      find('block ', [
+      filter('block ', [
         ...items,
         { priority: 9, title: 'Block extensions' },
       ]).map(getTitles),
     ).toEqual(['Block extensions']);
 
     expect(
-      find('qu', [...items, { priority: 9, title: 'Block extensions' }]).map(
+      filter('qu', [...items, { priority: 9, title: 'Block extensions' }]).map(
         getTitles,
       ),
     ).toEqual(['Quote']);
