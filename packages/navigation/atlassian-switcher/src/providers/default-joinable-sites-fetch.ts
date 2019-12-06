@@ -51,9 +51,6 @@ export const fetchJoinableSites = (
   baseUrl: string = '',
   resultTransformer?: (rawResponse: any) => JoinableSitesResponse,
 ): Promise<JoinableSitesResponse> => {
-  console.log(
-    `${baseUrl}/gateway/api/trello-cross-product-join/recommended-sites`,
-  );
   return fetch(
     `${baseUrl}/gateway/api/trello-cross-product-join/recommended-sites`,
     {
