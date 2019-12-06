@@ -1,18 +1,25 @@
+import * as React from 'react';
+import { IntlProvider } from 'react-intl';
 import {
   createEditorFactory,
   doc,
   extension,
   activityProviderFactory,
 } from '@atlaskit/editor-test-helpers';
-import { IntlProvider } from 'react-intl';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import { createFakeExtensionProvider } from '@atlaskit/editor-test-helpers/extensions';
+import {
+  ProviderFactory,
+  combineExtensionProviders,
+} from '@atlaskit/editor-common';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import EditIcon from '@atlaskit/icon/glyph/editor/edit';
-import { pluginKey } from '../../../../plugins/extension/plugin';
 
+import { pluginKey } from '../../../../plugins/extension/plugin';
+import { ExtensionState } from '../../../../plugins/extension/types';
 import { getToolbarConfig } from '../../../../plugins/extension/toolbar';
 import commonMessages from '../../../../messages';
 import { EditorProps } from '../../../../types';
+import { waitForProvider, flushPromises } from '../../../__helpers/utils';
 import { getToolbarItems } from '../floating-toolbar/_helpers';
 
 describe('extension toolbar', () => {
@@ -21,7 +28,11 @@ describe('extension toolbar', () => {
     activityProvider: activityProviderFactory([]),
   });
 
-  const editor = (doc: any, props: Partial<EditorProps> = {}) => {
+  const editor = (
+    doc: any,
+    props: Partial<EditorProps> = {},
+    providerFactory?: ProviderFactory,
+  ) => {
     return createEditor({
       doc,
       editorProps: {
@@ -33,6 +44,7 @@ describe('extension toolbar', () => {
         ...props,
       },
       pluginKey,
+      providerFactory,
     });
   };
 
@@ -152,6 +164,92 @@ describe('extension toolbar', () => {
 
       expect(breakoutButtons).toBeDefined();
       expect(breakoutButtons).toHaveLength(0);
+    });
+
+    describe('Extension Provider', () => {
+      const ExtensionHandlerComponent = () => <div>Awesome Extension</div>;
+      const extensionUpdater = () => Promise.resolve();
+
+      it('should show the edit button when update method is provided', async () => {
+        const extensionProvider = createFakeExtensionProvider(
+          'fake.confluence',
+          'expand',
+          ExtensionHandlerComponent,
+          extensionUpdater,
+        );
+
+        const providerFactory = ProviderFactory.create({
+          extensionProvider: Promise.resolve(
+            combineExtensionProviders([extensionProvider]),
+          ),
+        });
+
+        const { editorView } = editor(
+          doc(
+            '{<node>}',
+            extension({
+              extensionType: 'fake.confluence',
+              extensionKey: 'expand',
+            })(),
+          ),
+          {},
+          providerFactory,
+        );
+
+        expect(providerFactory.hasProvider('extensionProvider')).toBeTruthy();
+        await waitForProvider(providerFactory)('extensionProvider');
+        // Need to wait for promises to get the updated state from getExtensionModuleNode
+        await flushPromises();
+
+        // Getting `pluginState` from `editor` will give an old state
+        const pluginState = pluginKey.getState(
+          editorView.state,
+        ) as ExtensionState;
+
+        expect(pluginState.extensionProvider).toBeDefined();
+        expect(pluginState.showEditButton).toBeTruthy();
+        expect(pluginState.updateExtension).toBeDefined();
+      });
+
+      it('should not show the edit button when update method is not provided', async () => {
+        const extensionProvider = createFakeExtensionProvider(
+          'fake.confluence',
+          'expand',
+          ExtensionHandlerComponent,
+        );
+
+        const providerFactory = ProviderFactory.create({
+          extensionProvider: Promise.resolve(
+            combineExtensionProviders([extensionProvider]),
+          ),
+        });
+
+        const { editorView } = editor(
+          doc(
+            '{<node>}',
+            extension({
+              extensionType: 'fake.confluence',
+              extensionKey: 'expand',
+            })(),
+          ),
+          {},
+          providerFactory,
+        );
+
+        expect(providerFactory.hasProvider('extensionProvider')).toBeTruthy();
+        await waitForProvider(providerFactory)('extensionProvider');
+        // Need to wait for promises to get the updated state from getExtensionModuleNode
+        await flushPromises();
+
+        // Getting `pluginState` from `editor` will give an old state
+        const pluginState = pluginKey.getState(
+          editorView.state,
+        ) as ExtensionState;
+
+        expect(pluginState.extensionProvider).toBeDefined();
+        expect(pluginState.showEditButton).toBeTruthy();
+        expect(pluginState.updateExtension).not.toBeDefined();
+      });
     });
   });
 });

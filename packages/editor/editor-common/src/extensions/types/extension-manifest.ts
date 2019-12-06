@@ -58,9 +58,10 @@ export type ExtensionModuleNodes = {
   [key: string]: ExtensionModuleNode;
 };
 
-export type ExtensionModuleNode = {
+export type ExtensionModuleNode<T = any> = {
   type: ExtensionNodeType;
   render: () => AsyncESModule<ReactNode>;
+  update?: (parameters: T) => Promise<T>;
 };
 
 export type ExtensionModuleType = Exclude<keyof ExtensionModules, 'nodes'>;
