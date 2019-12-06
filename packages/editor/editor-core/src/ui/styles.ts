@@ -37,6 +37,10 @@ export const Wrapper: ComponentClass<HTMLAttributes<{}> & {
   > div > div {
     display: flex;
   }
+  > div > div > div {
+    display: flex;
+  }
+
   margin-left: ${({ isSmall }: { isSmall?: boolean }) => (isSmall ? 4 : 0)}px;
   min-width: ${({ isSmall }: { isSmall?: boolean }) =>
     isSmall ? '40px' : 'auto'};
