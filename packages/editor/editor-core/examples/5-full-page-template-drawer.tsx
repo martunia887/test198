@@ -6,6 +6,6 @@ import { exampleDocument } from '../example-helpers/example-document';
 export default function Example() {
   return FullPageExample({
     defaultValue: exampleDocument,
-    sidebar: <div>{new Array(50).fill(<p>hello world</p>)}</div>,
+    sidebar: <div>{new Array(2).fill(<p>hello world</p>)}</div>,
   });
 }

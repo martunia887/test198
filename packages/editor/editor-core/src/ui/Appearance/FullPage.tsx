@@ -214,13 +214,14 @@ SecondaryToolbar.displayName = 'SecondaryToolbar';
 interface State {
   showKeyline: boolean;
   containerWidth?: number;
+  sidebarVisible: boolean;
 }
 
 export default class Editor extends React.Component<
   EditorAppearanceComponentProps,
   State
 > {
-  state: State = { showKeyline: false };
+  state: State = { showKeyline: false, sidebarVisible: !!this.props.sidebar };
 
   static displayName = 'FullPageEditor';
   private appearance: EditorAppearance = 'full-page';
@@ -287,12 +288,24 @@ export default class Editor extends React.Component<
     window.addEventListener('resize', this.handleResize, false);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: EditorAppearanceComponentProps) {
     if (
       this.scrollContainer &&
       this.scrollContainer.clientWidth !== this.state.containerWidth
     ) {
       this.updateContainerWidth();
+    }
+
+    if (!prevProps.sidebar && this.props.sidebar) {
+      this.setState({
+        sidebarVisible: true,
+      });
+    }
+
+    if (prevProps.sidebar && !this.props.sidebar) {
+      this.setState({
+        sidebarVisible: false,
+      });
     }
   }
 
@@ -407,7 +420,7 @@ export default class Editor extends React.Component<
               </EditorContentArea>
             </ClickAreaBlock>
           </ScrollContainer>
-          <Sidebar>{this.props.sidebar}</Sidebar>
+          {this.state.sidebarVisible && <Sidebar>{this.props.sidebar}</Sidebar>}
         </ContentArea>
 
         <WidthEmitter
