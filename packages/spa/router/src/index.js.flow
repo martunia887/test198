@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // @flow
 import type { ComponentType, Node, ElementConfig } from 'react';
 import type { Action, BoundActions } from 'react-sweet-state';
@@ -215,10 +216,25 @@ declare module '@atlaskit/router' {
     isStatic?: boolean,
     location?: string,
     transitionBlocker?: TransitionBlocker,
+    routes?: Routes,
+    children: Node,
+    resourceData?: ResourceStoreData,
+    resourceContext?: ResourceStoreContext,
+  };
+
+  declare type StaticRouterProps = {
+    isStatic?: boolean,
+    location?: string,
+    transitionBlocker?: TransitionBlocker,
     routes: Routes,
     children: Node,
     resourceData?: ResourceStoreData,
     resourceContext?: ResourceStoreContext,
+    requestResources(args: {|
+      location: string,
+      routes: Routes,
+      resourceContext?: ResourceStoreContext,
+    |}): ResourceStoreData,
   };
 
   declare export type MatchParams = {
@@ -251,10 +267,11 @@ declare module '@atlaskit/router' {
     view: (...args: any[]) => string,
   |};
 
-  declare export type Navigation = {
+  declare export type Navigation = {|
     ...NavigationStatics,
     renderNavigationUpdater: NavigationRenderUpdater,
-  };
+    sidebar?: boolean,
+  |};
 
   declare export type HistoryBlocker = (
     location: Location,
@@ -306,15 +323,7 @@ declare module '@atlaskit/router' {
 
   declare export function Router(props: RouterProps): Node;
   declare export function MemoryRouter(props: MemoryRouterProps): Node;
-
-  declare export var StaticRouter: {
-    ...ComponentType<MemoryRouterProps>,
-    requestResources(args: {|
-      location: string,
-      routes: Routes,
-      resourceContext?: ResourceStoreContext,
-    |}): ResourceStoreData,
-  };
+  declare export function StaticRouter(props: StaticRouterProps): Node;
 
   declare export function ResourceSubscriber(props: {
     children: (
