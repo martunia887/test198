@@ -176,6 +176,10 @@ export default class MediaSingleNode extends Component<
     const { state } = this.props.view;
 
     if (event.shiftKey) {
+      // don't select text if there is current selection in a table (as this would override selected cells)
+      if (state.selection instanceof CellSelection) {
+        return;
+      }
       setTextSelection(
         this.props.view,
         state.selection.from,
