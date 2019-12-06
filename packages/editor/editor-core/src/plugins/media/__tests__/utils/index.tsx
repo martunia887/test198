@@ -949,7 +949,9 @@ describe('Media plugin', () => {
 
       describe('while holding the shift key', () => {
         let mediaSingleNode: (schema: Schema<any, any>) => RefsNode,
-          shiftClickEvent: CardEvent;
+          shiftClickEvent: CardEvent,
+          wrapper: ReactWrapper;
+
         beforeEach(() => {
           mediaSingleNode = mediaSingle({ layout: 'wrap-left' })(
             media({
@@ -969,6 +971,10 @@ describe('Media plugin', () => {
           };
         });
 
+        afterEach(() => {
+          wrapper.unmount();
+        });
+
         function setupWrapper(
           editorInstance: EditorInstance & {
             portalProviderAPI: PortalProviderAPI;
@@ -979,11 +985,10 @@ describe('Media plugin', () => {
             editorProps: EditorProps;
           },
         ): {
-          wrapper: ReactWrapper;
           mediaItem: ReactWrapper<MediaNodeProps>;
           onClickHandler: CardOnClickCallback;
         } {
-          const wrapper = mount(
+          wrapper = mount(
             <MediaSingleNode
               view={editorInstance.editorView}
               eventDispatcher={editorInstance.eventDispatcher}
@@ -1004,7 +1009,7 @@ describe('Media plugin', () => {
           ) as CardOnClickCallback;
           expect(onClickHandler).toBeDefined();
 
-          return { wrapper, mediaItem, onClickHandler };
+          return { mediaItem, onClickHandler };
         }
 
         it('should include media into text selection', () => {
