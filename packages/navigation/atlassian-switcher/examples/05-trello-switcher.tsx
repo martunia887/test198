@@ -81,7 +81,6 @@ class InlineDialogSwitcherExample extends React.Component {
           disableHeadings
           appearance="standalone"
           theme={trelloTheme}
-          isJoinableSitesSectionEnabled={true}
         />,
       )
     );

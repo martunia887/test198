@@ -80,14 +80,12 @@ class GenericSwitcherExample extends React.Component {
             triggerXFlow={this.onTriggerXFlow}
             availableProductsDataProvider={customAvailableProductsDataProvider}
             joinableSitesDataProvider={customJoinableSitesDataProvider}
-            isJoinableSitesSectionEnabled={true}
           />
         </Drawer>
         <div style={{ display: 'flex' }}>
           <AtlassianSwitcherPrefetchTrigger
             availableProductsDataProvider={customAvailableProductsDataProvider}
             joinableSitesDataProvider={customJoinableSitesDataProvider}
-            isJoinableSitePrefetchEnabled={true}
           >
             <Button type="button" onClick={this.openDrawer}>
               Open drawer
