@@ -1,9 +1,8 @@
 import { Color as StatusColor } from '@atlaskit/status/element';
-import { EditorBridges, EditorPluginBridges } from './index';
 import {
+  NativeBridgeInterface,
   MentionBridge,
   TextFormattingBridge,
-  default as NativeBridge,
   MediaBridge,
   PromiseBridge,
   ListBridge,
@@ -11,31 +10,36 @@ import {
   LinkBridge,
   UndoRedoBridge,
   AnalyticsBridge,
-} from './bridge';
+  TypeAheadBridge,
+  ErrorBridge,
+} from './types';
+import { BridgedWindow } from '../../types';
 
-import { sendToBridge } from '../../bridge-utils';
-
-export default class AndroidBridge implements NativeBridge {
-  mentionBridge: MentionBridge;
-  textFormatBridge: TextFormattingBridge;
-  mediaBridge: MediaBridge;
-  promiseBridge: PromiseBridge;
-  listBridge: ListBridge;
-  statusBridge: StatusBridge;
-  linkBridge: LinkBridge;
-  undoRedoBridge: UndoRedoBridge;
+export default class AndroidNativeBridge implements NativeBridgeInterface {
   analyticsBridge: AnalyticsBridge;
+  errorBridge: ErrorBridge;
+  linkBridge: LinkBridge;
+  listBridge: ListBridge;
+  mediaBridge: MediaBridge;
+  mentionBridge: MentionBridge;
+  promiseBridge: PromiseBridge;
+  statusBridge: StatusBridge;
+  textFormatBridge: TextFormattingBridge;
+  typeaheadBridge: TypeAheadBridge;
+  undoRedoBridge: UndoRedoBridge;
 
-  constructor() {
-    this.mentionBridge = window.mentionsBridge as MentionBridge;
-    this.textFormatBridge = window.textFormatBridge as TextFormattingBridge;
-    this.mediaBridge = window.mediaBridge as MediaBridge;
-    this.promiseBridge = window.promiseBridge as PromiseBridge;
-    this.listBridge = window.listBridge as ListBridge;
-    this.statusBridge = window.statusBridge as StatusBridge;
-    this.linkBridge = window.linkBridge as LinkBridge;
-    this.undoRedoBridge = window.undoRedoBridge as UndoRedoBridge;
+  constructor(window: BridgedWindow) {
     this.analyticsBridge = window.analyticsBridge as AnalyticsBridge;
+    this.errorBridge = window.errorBridge as ErrorBridge;
+    this.linkBridge = window.linkBridge as LinkBridge;
+    this.listBridge = window.listBridge as ListBridge;
+    this.mediaBridge = window.mediaBridge as MediaBridge;
+    this.mentionBridge = window.mentionsBridge as MentionBridge;
+    this.promiseBridge = window.promiseBridge as PromiseBridge;
+    this.statusBridge = window.statusBridge as StatusBridge;
+    this.textFormatBridge = window.textFormatBridge as TextFormattingBridge;
+    this.typeaheadBridge = window.typeAheadBridge as TypeAheadBridge;
+    this.undoRedoBridge = window.undoRedoBridge as UndoRedoBridge;
   }
 
   showMentions(query: string) {
@@ -110,13 +114,23 @@ export default class AndroidBridge implements NativeBridge {
     this.analyticsBridge.trackEvent(event);
   }
 
-  call<T extends EditorPluginBridges>(
-    bridge: T,
-    event: keyof Exclude<EditorBridges[T], undefined>,
-    ...args: any[]
-  ) {
-    sendToBridge(bridge, event, ...args);
+  updateTextColor(_serializedColor: string) {}
+
+  typeAheadQuery(query: string, trigger: string) {
+    this.typeaheadBridge.typeAheadQuery(query, trigger);
   }
 
-  updateTextColor() {}
+  dismissTypeAhead() {
+    this.typeaheadBridge.dismissTypeAhead();
+  }
+
+  sendError(
+    message: string,
+    source: string,
+    line: number,
+    col: number,
+    stackTrace: string[],
+  ) {
+    this.errorBridge.sendError(message, source, line, col, stackTrace);
+  }
 }

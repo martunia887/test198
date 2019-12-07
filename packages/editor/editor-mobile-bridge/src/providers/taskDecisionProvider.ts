@@ -13,7 +13,7 @@ export const objectKeyToString = (objectKey: ObjectKey) => {
   const { objectAri, localId } = objectKey;
   return `${objectAri}:${localId}`;
 };
-export class TaskDecisionProviderImpl implements TaskDecisionProvider {
+export class MobileTaskDecisionProvider implements TaskDecisionProvider {
   _handleToggleTask: ToggleTaskCallback | undefined;
   _handlers: Map<string, Handler>;
 
@@ -50,5 +50,6 @@ export class TaskDecisionProviderImpl implements TaskDecisionProvider {
   }
 }
 
-export default (handleToggleTask?: ToggleTaskCallback) =>
-  new TaskDecisionProviderImpl(handleToggleTask);
+export const createTaskAndDecisionProvider = async (
+  handleToggleTask?: ToggleTaskCallback,
+) => new MobileTaskDecisionProvider(handleToggleTask);

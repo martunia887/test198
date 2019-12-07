@@ -18,19 +18,14 @@ import RendererBridgeImpl from './native-to-web/implementation';
 import { toNativeBridge } from './web-to-native/implementation';
 import HeightObserver from './height-observer';
 import {
-  mediaProvider,
-  mentionProvider,
-  createTaskDecisionProvider,
-  emojiProvider,
-} from '../providers';
-import { cardClient } from '../providers/cardProvider';
-import {
   Provider as SmartCardProvider,
   Client as CardClient,
 } from '@atlaskit/smart-card';
 import { eventDispatcher } from './dispatcher';
 import { ObjectKey, TaskState } from '@atlaskit/task-decision';
 import { analyticsBridgeClient } from '../analytics-client';
+import { createProviderFactory, createCardClient } from '../providers';
+import { MobileTaskDecisionProvider } from '../providers/taskDecisionProvider';
 
 export interface MobileRendererProps extends RendererProps {
   document: string;
@@ -77,17 +72,11 @@ export default class MobileRenderer extends React.Component<
     }
     this.state = { document };
 
-    const taskDecisionProvider = createTaskDecisionProvider(
+    const taskDecisionProvider = new MobileTaskDecisionProvider(
       this.handleToggleTask,
     );
 
-    this.providerFactory = ProviderFactory.create({
-      mediaProvider: props.mediaProvider || mediaProvider,
-      mentionProvider: Promise.resolve(mentionProvider),
-      taskDecisionProvider: Promise.resolve(taskDecisionProvider),
-      emojiProvider: Promise.resolve(emojiProvider),
-    });
-
+    this.providerFactory = createProviderFactory();
     this.containerAri = 'MOCK-containerAri';
     this.objectAri = 'MOCK-objectAri';
 
@@ -145,7 +134,7 @@ export default class MobileRenderer extends React.Component<
       // Temporarily opting out of the default oauth2 flow for phase 1 of Smart Links
       // See https://product-fabric.atlassian.net/browse/FM-2149 for details.
       const authFlow = 'disabled';
-      const smartCardClient = this.props.cardClient || cardClient;
+      const smartCardClient = this.props.cardClient || createCardClient();
       return (
         <FabricAnalyticsListeners client={this.analyticsClient}>
           <WithCreateAnalyticsEvent

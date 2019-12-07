@@ -1,8 +1,3 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import MobileRenderer from './mobile-renderer-element';
+import { mountMobileRenderer } from './mount-mobile-renderer';
 
-ReactDOM.render(
-  <MobileRenderer document="" />,
-  document.getElementById('renderer'),
-);
+mountMobileRenderer(window);

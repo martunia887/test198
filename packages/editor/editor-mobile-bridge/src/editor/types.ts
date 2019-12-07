@@ -1,6 +1,34 @@
+import {
+  ListBridge,
+  MediaBridge,
+  MentionBridge,
+  PromiseBridge,
+  TextFormattingBridge,
+  StatusBridge,
+  TypeAheadBridge,
+  LinkBridge,
+  UndoRedoBridge,
+  AnalyticsBridge,
+} from './native-bridge/types';
+
+export interface EditorBridges {
+  mentionsBridge?: MentionBridge;
+  mentionBridge?: MentionBridge;
+  textFormatBridge?: TextFormattingBridge;
+  mediaBridge?: MediaBridge;
+  promiseBridge?: PromiseBridge;
+  listBridge?: ListBridge;
+  blockFormatBridge?: TextFormattingBridge;
+  statusBridge?: StatusBridge;
+  typeAheadBridge?: TypeAheadBridge;
+  linkBridge?: LinkBridge;
+  undoRedoBridge?: UndoRedoBridge;
+  analyticsBridge?: AnalyticsBridge;
+}
+
 import { Color as StatusColor } from '@atlaskit/status/element';
 
-export default interface NativeToWebBridge {
+export interface WebBridgeInterface {
   currentVersion(): string;
   onBoldClicked(): void;
   onItalicClicked(): void;
@@ -31,3 +59,5 @@ export default interface NativeToWebBridge {
   redo(): void;
   setKeyboardControlsHeight(height: string): void;
 }
+
+export type EditorPluginBridges = keyof EditorBridges;

@@ -43,9 +43,3 @@ export interface RendererBridges {
 }
 
 export type RendererPluginBridges = keyof RendererBridges;
-
-declare global {
-  interface Window extends RendererBridges {
-    webkit?: any;
-  }
-}

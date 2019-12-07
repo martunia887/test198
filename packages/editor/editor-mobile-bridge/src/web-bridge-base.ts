@@ -4,7 +4,7 @@ type Padding = { top: number; right: number; bottom: number; left: number };
 
 export const defaultPadding = [32, 16, 32, 16];
 
-export default abstract class WebBridge {
+export abstract class WebBridgeBase {
   constructor() {
     // Set initial page padding (necessary for seeing the gap cursor for some content nodes).
     // This may be overwritten at runtime by a native bridge consumer.

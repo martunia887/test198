@@ -1,5 +1,4 @@
 import { CardAppearance } from '@atlaskit/smart-card';
-import { toNativeBridge } from './editor/web-to-native';
 import {
   PromiseName,
   GetAuthPayload,
@@ -59,7 +58,7 @@ export function createPromise<T>(
     submit(): Promise<T> {
       const serializedArgs =
         typeof args === 'string' ? args : JSON.stringify(args);
-      toNativeBridge.submitPromise(name, uuid, serializedArgs);
+      window.nativeBridge.submitPromise(name, uuid, serializedArgs);
       return holder.promise
         .then(data => {
           pendingPromises.delete(uuid);

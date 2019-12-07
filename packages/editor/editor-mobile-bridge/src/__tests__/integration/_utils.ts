@@ -1,6 +1,6 @@
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
 import RendererBridgeImpl from '../../renderer/native-to-web/implementation';
-import WebBridgeImpl from '../../editor/native-to-web';
+import WebBridge from '../../editor/native-to-web';
 
 // FIXME Ideally these would be mobile browsers
 // Safari & Chrome should suffice for now.
@@ -45,7 +45,7 @@ export const clipboardHelper = {
 export const clipboardInput = 'textarea[data-id=clipboardInput]';
 export const copyButton = 'button[aria-label="copy"]';
 
-type WebBridgeMethods = keyof typeof WebBridgeImpl['prototype'];
+type WebBridgeMethods = keyof typeof WebBridge['prototype'];
 
 export const callNativeBridge = async (
   browser: any,

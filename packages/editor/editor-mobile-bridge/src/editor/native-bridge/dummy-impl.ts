@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
 import { Color as StatusColor } from '@atlaskit/status/element';
-import { EditorBridges, EditorPluginBridges } from './index';
-import NativeBridge from './bridge';
-import { sendToBridge } from '../../bridge-utils';
+import { NativeBridgeInterface } from './types';
 
-export default class DummyBridge implements NativeBridge {
+export default class DummyNativeBridge implements NativeBridgeInterface {
   log = (...args: any[]) => {
     console.log(...args);
   };
@@ -61,14 +59,16 @@ export default class DummyBridge implements NativeBridge {
   trackEvent(event: string) {
     this.log(`trackEvent(${event})`);
   }
-
-  call<T extends EditorPluginBridges>(
-    bridge: T,
-    event: keyof Exclude<EditorBridges[T], undefined>,
-    ...args: any[]
-  ) {
-    sendToBridge(bridge, event, ...args);
+  updateTextColor(_serializedColor: string) {
+    this.log(`updateTextColor`);
   }
-
-  updateTextColor() {}
+  dismissTypeAhead() {
+    this.log(`dismissTypeAhead`);
+  }
+  typeAheadQuery() {
+    this.log(`typeAheadQuery`);
+  }
+  sendError() {
+    this.log(`sendError`);
+  }
 }

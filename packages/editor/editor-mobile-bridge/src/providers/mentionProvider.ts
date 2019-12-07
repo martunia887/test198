@@ -6,7 +6,7 @@ import {
 import { createPromise } from '../cross-platform-promise';
 import { mockFetchFor } from './utils';
 
-async function createMentionProvider() {
+export async function createMentionProvider() {
   try {
     const {
       baseUrl,
@@ -70,5 +70,3 @@ function selectAccountId(input: unknown): string {
     )}`,
   );
 }
-
-export default createMentionProvider();

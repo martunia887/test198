@@ -36,7 +36,6 @@ import {
   setKeyboardHeight,
 } from '@atlaskit/editor-core';
 import { EditorView } from 'prosemirror-view';
-import { EditorViewWithComposition } from '../../types';
 import { EditorState } from 'prosemirror-state';
 import {
   undo as pmHistoryUndo,
@@ -45,13 +44,12 @@ import {
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import { Color as StatusColor } from '@atlaskit/status/element';
 
-import NativeToWebBridge from './bridge';
-import WebBridge from '../../web-bridge';
-import { hasValue } from '../../utils';
-import { rejectPromise, resolvePromise } from '../../cross-platform-promise';
+import { WebBridgeInterface } from './types';
+import { EditorViewWithComposition } from '../types';
+import { WebBridgeBase } from '../web-bridge-base';
+import { rejectPromise, resolvePromise } from '../cross-platform-promise';
 
-export default class WebBridgeImpl extends WebBridge
-  implements NativeToWebBridge {
+export class WebBridge extends WebBridgeBase implements WebBridgeInterface {
   textFormatBridgeState: TextFormattingState | null = null;
   statusBridgeState: StatusState | null = null;
   blockFormatBridgeState: BlockTypeState | null = null;
@@ -62,6 +60,12 @@ export default class WebBridgeImpl extends WebBridge
   editorActions: EditorActions = new EditorActions();
   mediaPicker: CustomMediaPicker | undefined;
   mediaMap: Map<string, Function> = new Map();
+
+  public static fromWindow(window: Window) {
+    const webBridge = new WebBridge();
+    window.bridge = webBridge;
+    return webBridge;
+  }
 
   onBoldClicked() {
     if (this.textFormatBridgeState && this.editorView) {
@@ -251,7 +255,7 @@ export default class WebBridgeImpl extends WebBridge
         (cmds, setLinkHrefCmd) =>
           // if adding link => set link then set link text
           // if removing link => execute the same reversed
-          hasValue(url)
+          typeof url === 'string' && url !== ''
             ? [
                 setLinkHrefCmd,
                 setLinkText(text, leftBound, rightBound),
@@ -413,5 +417,10 @@ export default class WebBridgeImpl extends WebBridge
 
   getRootElement(): HTMLElement | null {
     return document.querySelector('#editor');
+  }
+
+  setTypeAheadItems(trigger: string, payload: string) {
+    const items = JSON.parse(payload);
+    console.log({ trigger, items });
   }
 }

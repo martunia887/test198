@@ -10,35 +10,34 @@ import { analyticsBridgeClient } from './analytics-client';
 import FabricAnalyticsListeners, {
   AnalyticsWebClient,
 } from '@atlaskit/analytics-listeners';
-import { toNativeBridge } from './editor/web-to-native';
-import WebBridgeImpl from './editor/native-to-web';
+import { WebBridge } from './editor/web-bridge';
 import { cardClient } from './providers/cardProvider';
 import { EditorViewWithComposition } from './types';
-import {
-  initPluginListeners,
-  destroyPluginListeners,
-} from './editor/plugin-subscription';
+import { PluginSubscription } from './editor/plugin-subscription';
 import { providerFactory } from './providers';
 import MobilePicker from './editor/MobileMediaPicker';
 import { ProviderFactoryProvider } from '@atlaskit/editor-common/provider-factory';
+import { NativeBridge } from './editor/native-bridge';
 
 // Expose WebBridge instance for use by native side
-const bridge = new WebBridgeImpl();
+const bridge = new WebBridge();
 window.bridge = bridge;
+
+const nativeBridge = NativeBridge.fromWindow(window);
 
 function main(window: Window, document: Document) {
   const params = new URLSearchParams(window.location.search);
   const mode = determineMode(params.get('mode'));
 
-  const actions = bridge.editorActions;
-
-  const analyticsClient = analyticsBridgeClient(event => {
-    toNativeBridge.call('analyticsBridge', 'trackEvent', {
-      event: JSON.stringify(event),
-    });
-  });
+  const analyticsClient = analyticsBridgeClient(event =>
+    nativeBridge.trackEvent(JSON.stringify(event)),
+  );
 
   const mediaPicker = new MobilePicker();
+  const subscription = new PluginSubscription({
+    webBridge: bridge,
+    nativeBridge,
+  });
 
   ReactDOM.render(
     <MobileEditorArchV3
@@ -46,19 +45,17 @@ function main(window: Window, document: Document) {
       mode={mode}
       mediaPicker={mediaPicker}
       analyticsClient={analyticsClient}
-      onChange={() => {
-        toNativeBridge.updateText(bridge.getContent());
-      }}
+      onChange={() => nativeBridge.updateText(bridge.getContent())}
       onMount={actions => {
         const view = actions._privateGetEditorView() as EditorViewWithComposition;
         const eventDispatcher = actions._privateGetEventDispatcher()!;
         bridge.editorView = view;
         bridge.editorActions._privateRegisterEditor(view, eventDispatcher);
         bridge.mediaPicker = mediaPicker;
-        initPluginListeners(eventDispatcher, bridge, view);
+        subscription.subscribe(eventDispatcher, view);
       }}
       onDestroy={() => {
-        destroyPluginListeners(actions._privateGetEventDispatcher()!, bridge);
+        subscription.unsubscribe();
         bridge.editorActions._privateUnregisterEditor();
         bridge.editorView = null;
         bridge.mentionsPluginState = null;

@@ -1,9 +1,5 @@
-import RendererBridgeImpl from './renderer/native-to-web/implementation';
-import WebBridgeImpl from './editor/native-to-web/implementation';
+import { BridgedWindow } from './types';
 
 declare global {
-  interface Window {
-    bridge?: WebBridgeImpl;
-    rendererBridge?: RendererBridgeImpl;
-  }
+  interface Window extends BridgedWindow {}
 }

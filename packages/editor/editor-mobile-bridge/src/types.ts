@@ -1,5 +1,18 @@
 import { EditorView } from 'prosemirror-view';
 import { ResolveResponse } from '@atlaskit/smart-card';
+import { EditorBridges, IOSEditorBridges } from './editor/native-bridge/types';
+import { WebBridge } from './editor/web-bridge';
+import RendererBridgeImpl from './renderer/native-to-web/implementation';
+import { NativeBridge } from './editor/native-bridge';
+
+export interface BridgedWindow extends EditorBridges {
+  bridge?: WebBridge;
+  rendererBridge?: RendererBridgeImpl;
+  nativeBridge: NativeBridge;
+  webkit?: {
+    messageHandlers: IOSEditorBridges;
+  };
+}
 
 export type EditorViewWithComposition = EditorView & {
   domObserver: {

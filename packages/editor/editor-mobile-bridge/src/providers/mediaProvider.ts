@@ -11,7 +11,7 @@ const getMediaToken = (context?: AuthContext): Promise<Auth> =>
     context && context.collectionName ? context.collectionName : '',
   ).submit();
 
-async function createMediaProvider(): Promise<MediaProvider> {
+export async function createMediaProvider(): Promise<MediaProvider> {
   const mediaClientConfig: MediaClientConfig = {
     authProvider: (context?: AuthContext) => getMediaToken(context),
   };
@@ -24,5 +24,3 @@ async function createMediaProvider(): Promise<MediaProvider> {
     },
   });
 }
-
-export default createMediaProvider();
