@@ -166,6 +166,7 @@ export interface DemoRendererProps {
   withExtension?: boolean;
   serializer: 'react' | 'text' | 'email';
   document?: object;
+  showHowManyCopies?: boolean;
   appearance?: RendererAppearance;
   maxHeight?: number;
   fadeOutHeight?: number;
@@ -173,6 +174,7 @@ export interface DemoRendererProps {
   allowDynamicTextSizing?: boolean;
   allowHeadingAnchorLinks?: boolean;
   allowColumnSorting?: boolean;
+  copies: number;
 }
 
 export interface DemoRendererState {
@@ -181,6 +183,7 @@ export interface DemoRendererState {
   truncated: boolean;
   showSidebar: boolean;
   shouldUseEventHandlers: boolean;
+  copies: number;
 }
 
 export default class RendererDemo extends React.Component<
@@ -190,6 +193,7 @@ export default class RendererDemo extends React.Component<
   textSerializer = new TextSerializer(defaultSchema);
   emailRef?: HTMLIFrameElement;
   inputBox?: HTMLTextAreaElement | null;
+  inputCopies?: HTMLInputElement | null;
   emailTextareaRef?: any;
 
   constructor(props: DemoRendererProps) {
@@ -209,6 +213,7 @@ export default class RendererDemo extends React.Component<
       truncated: true,
       showSidebar: getDefaultShowSidebarState(false),
       shouldUseEventHandlers: false,
+      copies: props.copies || 1,
     };
   }
 
@@ -244,6 +249,16 @@ export default class RendererDemo extends React.Component<
               <button onClick={this.toggleEventHandlers}>
                 Toggle Event handlers
               </button>
+              {this.props.showHowManyCopies && (
+                <input
+                  type="number"
+                  ref={ref => {
+                    this.inputCopies = ref;
+                  }}
+                  onChange={this.onCopiesChange}
+                  value={this.state.copies}
+                />
+              )}
             </fieldset>
             {this.renderRenderer(additionalRendererProps)}
             {this.renderText()}
@@ -260,7 +275,7 @@ export default class RendererDemo extends React.Component<
   };
 
   private renderRenderer(additionalRendererProps: any) {
-    const { shouldUseEventHandlers } = this.state;
+    const { shouldUseEventHandlers, copies } = this.state;
     if (this.props.serializer !== 'react') {
       return null;
     }
@@ -326,7 +341,9 @@ export default class RendererDemo extends React.Component<
             &lt;Renderer&gt;
           </div>
           <div id="RendererOutput">
-            <Renderer {...props} />
+            {Array.from({ length: copies || 1 }).map((_, index) => (
+              <Renderer key={index} {...props} />
+            ))}
           </div>
           {this.props.truncationEnabled ? expandButton : null}
           <div style={{ color: '#ccc', marginTop: '8px' }}>
@@ -372,6 +389,12 @@ export default class RendererDemo extends React.Component<
   private onDocumentChange = () => {
     if (this.inputBox) {
       this.setState({ input: this.inputBox.value });
+    }
+  };
+
+  private onCopiesChange = () => {
+    if (this.inputCopies) {
+      this.setState({ copies: Number(this.inputCopies.value) });
     }
   };
 }

@@ -30,6 +30,7 @@
     ]
   },
   "files": [
+    "./typings/resizeobserver.d.ts",
     "./typings/atlaskit.d.ts",
     "./typings/atlassian.d.ts",
     "./typings/blueimp-load-image.d.ts",

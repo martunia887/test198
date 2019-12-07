@@ -33,7 +33,12 @@ export { BaseTheme, mapBreakpointToLayoutMaxWidth } from './BaseTheme';
 
 export { default as withOuterListeners } from './with-outer-listeners';
 export * from './EventHandlers';
-export { WidthConsumer, WidthProvider, getBreakpoint } from './WidthProvider';
+export {
+  WidthConsumer,
+  WidthProvider,
+  getBreakpoint,
+  SwitchWidthDetectorProvider,
+} from './WidthProvider';
 
 export {
   default as overflowShadow,
