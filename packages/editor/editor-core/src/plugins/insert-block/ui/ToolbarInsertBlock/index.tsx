@@ -39,7 +39,6 @@ import {
   tooltip,
   findKeymapByDescription,
   addLink,
-  findShortcutByDescription,
   renderTooltipContent,
 } from '../../../../keymaps';
 import { InsertMenuCustomItem, CommandDispatch } from '../../../../types';
@@ -454,8 +453,6 @@ class ToolbarInsertBlock extends React.PureComponent<
     }
 
     const labelInsertMenu = formatMessage(messages.insertMenu);
-
-    findShortcutByDescription(messages.insertMenu.description);
 
     const toolbarButtonFactory = (disabled: boolean, items: Array<any>) => (
       <ToolbarButton
