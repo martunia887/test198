@@ -97,7 +97,6 @@ export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
     floatingToolbarPlugin(),
     sharedContextPlugin(props),
     codeBlockPlugin(),
-    findReplacePlugin(),
   ];
 }
 
