@@ -423,6 +423,10 @@
         "../../core/form/src/Messages",
         "./packages/core/form/src/Messages"
       ],
+      "@atlaskit/form/types": [
+        "../../core/form/src/types",
+        "./packages/core/form/src/types"
+      ],
       "@atlaskit/global-navigation/constants": [
         "../../core/global-navigation/src/constants",
         "./packages/core/global-navigation/src/constants"
@@ -551,25 +555,9 @@
         "../../core/lozenge/src/theme",
         "./packages/core/lozenge/src/theme"
       ],
-      "@atlaskit/menu/Group": [
-        "../../core/menu/src/Group",
-        "./packages/core/menu/src/Group"
-      ],
       "@atlaskit/menu": [
         "../../core/menu/src/",
         "./packages/core/menu/src/"
-      ],
-      "@atlaskit/menu/MenuItem": [
-        "../../core/menu/src/MenuItem",
-        "./packages/core/menu/src/MenuItem"
-      ],
-      "@atlaskit/menu/styles": [
-        "../../core/menu/src/styles",
-        "./packages/core/menu/src/styles"
-      ],
-      "@atlaskit/menu/types": [
-        "../../core/menu/src/types",
-        "./packages/core/menu/src/types"
       ],
       "@atlaskit/modal-dialog": [
         "../../core/modal-dialog/src/",
@@ -782,10 +770,6 @@
       "@atlaskit/range/theme": [
         "../../core/range/src/theme",
         "./packages/core/range/src/theme"
-      ],
-      "@atlaskit/right-side-panel": [
-        "../../core/right-side-panel/src/",
-        "./packages/core/right-side-panel/src/"
       ],
       "@atlaskit/section-message": [
         "../../core/section-message/src/",
@@ -1839,6 +1823,10 @@
         "../../help/help-article/src/",
         "./packages/help/help-article/src/"
       ],
+      "@atlaskit/right-side-panel": [
+        "../../help/right-side-panel/src/",
+        "./packages/help/right-side-panel/src/"
+      ],
       "@atlaskit/locale": [
         "../../helpers/locale/src/",
         "./packages/helpers/locale/src/"
@@ -2183,13 +2171,17 @@
         "../../media/smart-card/src/",
         "./packages/media/smart-card/src/"
       ],
+      "@atlaskit/branch-deploy-product-integrator/cli": [
+        "../../monorepo-tooling/branch-deploy-product-integrator/src/cli",
+        "./packages/monorepo-tooling/branch-deploy-product-integrator/src/cli"
+      ],
       "@atlaskit/branch-deploy-product-integrator": [
         "../../monorepo-tooling/branch-deploy-product-integrator/src/",
         "./packages/monorepo-tooling/branch-deploy-product-integrator/src/"
       ],
-      "@atlaskit/branch-deploy-product-integrator/util": [
-        "../../monorepo-tooling/branch-deploy-product-integrator/src/util",
-        "./packages/monorepo-tooling/branch-deploy-product-integrator/src/util"
+      "@atlaskit/branch-deploy-product-integrator/types": [
+        "../../monorepo-tooling/branch-deploy-product-integrator/src/types",
+        "./packages/monorepo-tooling/branch-deploy-product-integrator/src/types"
       ],
       "@atlaskit/code-insights": [
         "../../monorepo-tooling/code-insights/src/",
