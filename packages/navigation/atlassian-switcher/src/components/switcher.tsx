@@ -189,21 +189,6 @@ export default class Switcher extends React.Component<SwitcherProps> {
       }
     }
 
-    let JoinableSitesTracker;
-    let joinableSitesTrackerProps;
-    if (joinableSiteLinks.length > 0) {
-      JoinableSitesTracker = ViewedTracker;
-      joinableSitesTrackerProps = {
-        subject: 'atlassianSwitcherJoinableSites',
-      };
-    } else {
-      JoinableSitesTracker = RenderTracker;
-      joinableSitesTrackerProps = {
-        subject: 'atlassianSwitcherJoinableSites',
-        action: 'not rendered',
-      };
-    }
-
     return (
       <NavigationAnalyticsContext data={getAnalyticsContext(itemsCount)}>
         <SwitcherWrapper appearance={appearance}>
