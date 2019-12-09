@@ -34,14 +34,16 @@ const joinSupportedProducts: ProductKey[] = [
 export const transformExperimentSitesToSwitcherSites = (
   rawResponse: ExperimentApiJoinableSites,
 ): JoinableSitesResponse => {
-  const transformedSites = rawResponse.sites.map(site => ({
-    cloudId: site.cloudId,
-    url: site.url,
-    users: site.products,
-    displayName: site.displayName,
-    avatarUrl: site.avatarUrl,
-    relevance: site.relevance,
-  }));
+  const transformedSites = rawResponse.sites.map(
+    ({ cloudId, url, products, displayName, avatarUrl, relevance }) => ({
+      cloudId,
+      url,
+      users: products,
+      displayName,
+      avatarUrl,
+      relevance,
+    }),
+  );
   const result = { sites: transformedSites };
   return result;
 };
