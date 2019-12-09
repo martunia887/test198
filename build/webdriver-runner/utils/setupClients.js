@@ -17,6 +17,10 @@ if (process.env.LANDKID) {
   BUILD_BRANCH_NAME = 'Landkid';
 }
 
+// Safari support only Selenium version above 2.45 on browserstack.
+const seleniumVersion = browser =>
+  browser === 'Safari' ? ' 2.45.0' : '3.141.0';
+
 function setBrowserStackClients() /*: Array<?Object>*/ {
   const RESOLUTION = '1920x1080';
   const launchers = {
@@ -77,6 +81,9 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
         'browserstack.debug': true,
         'browserstack.idleTimeout': 300,
         'browserstack.localIdentifier': commit,
+        'browserstack.selenium_version': seleniumVersion(
+          launchers[launchKey].browserName,
+        ),
         resolution: launchers[launchKey].resolution,
         acceptSslCerts: true,
       },
