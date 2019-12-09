@@ -72,6 +72,7 @@ const params = {
   s3Params: {
     Bucket: BUCKET_NAME,
     Key: bucketPath,
+    ACL: 'public-read',
   },
 };
 
