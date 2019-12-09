@@ -59,8 +59,9 @@ class EditorWithSidebar extends React.Component<{
     }
   };
 
+  // handle typing to dismiss right after selecting a template
   onInput = () => {
-    if (this.state.selectedTemplate) {
+    if (this.state.selectedTemplate && this.state.sidebarVisible) {
       this.setState({
         selectedTemplate: null,
         sidebarVisible: false,

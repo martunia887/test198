@@ -21,7 +21,6 @@ const Panel = styled.div`
 
   height: 100%;
   transition: width ${animSpeed};
-  overflow: hidden;
 `;
 
 const Content = styled.div`
@@ -39,6 +38,7 @@ const Content = styled.div`
     transform: translateX(0px);
   }
   transition: transform ${animSpeed};
+  overflow-x: scroll;
 `;
 
 export default class ContextPanel extends React.Component<Props> {

@@ -57,7 +57,6 @@ const ContentArea = styled.div`
 
 const Sidebar = styled.div`
   height: 100%;
-  overflow-x: scroll;
   box-sizing: border-box;
 `;
 
