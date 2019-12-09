@@ -13,9 +13,18 @@ import { rule } from './nodes/rule';
 import { table } from './nodes/table';
 import { unknown } from './nodes/unknown';
 import { blockCard } from './nodes/block-card';
+import { Context } from '../interfaces';
 
 export type MarkEncoder = (text: string, attrs: any) => string;
-export type NodeEncoder = (node: PMNode, parent?: PMNode) => string;
+export type NodeEncoder = NodeEncoderWithContext | NodeEncoderWithParent;
+export type NodeEncoderWithParent = (
+  node: PMNode,
+  parent?: Context | PMNode,
+) => string;
+export type NodeEncoderWithContext = (
+  node: PMNode,
+  context?: Context,
+) => string;
 
 const nodeEncoderMapping: { [key: string]: NodeEncoder } = {
   blockquote,
@@ -33,11 +42,11 @@ const nodeEncoderMapping: { [key: string]: NodeEncoder } = {
   blockCard,
 };
 
-export function encode(node: PMNode): string {
+export function encode(node: PMNode, context?: Context): string {
   const encoder = nodeEncoderMapping[node.type.name];
   try {
     if (encoder) {
-      return encoder(node);
+      return encoder(node, context);
     }
     return unknown(node);
   } catch (err) {

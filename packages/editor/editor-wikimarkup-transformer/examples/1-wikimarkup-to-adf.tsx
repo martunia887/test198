@@ -108,6 +108,9 @@ function getADF(wiki: string) {
     filenameConversion: {
       'image.jpg': '1234',
     },
+    mentionConversion: {
+      'accountId:9999': 9999,
+    },
   };
   const pmNode = wikiTransformer.parse(wiki, context);
 

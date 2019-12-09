@@ -19,7 +19,7 @@ const inlinesEncoderMapping: { [key: string]: NodeEncoder } = {
 export const inlines: NodeEncoder = (node: PMNode, parent?: PMNode): string => {
   const encoder = inlinesEncoderMapping[node.type.name];
   if (encoder) {
-    return encoder(node, parent);
+    return encoder(node, parent as any);
   }
   return unknown(node);
 };

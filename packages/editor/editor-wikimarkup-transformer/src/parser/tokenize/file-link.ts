@@ -16,7 +16,7 @@ export function fileLink(
     return fallback(input, position);
   }
 
-  const node = getMediaGroupNodeView(schema, match[1]);
+  const node = getMediaGroupNodeView(schema, match[1], {});
 
   return {
     type: 'pmnode',

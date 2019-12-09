@@ -1,5 +1,5 @@
 import WikiMarkupTransformer from '../../../index';
-import { Context } from '../../../parser/tokenize';
+import { Context } from '../../../interfaces';
 
 describe('JIRA wiki markup - Issue key (smart card)', () => {
   const testCases: Array<[string, string]> = [

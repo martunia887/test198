@@ -1,17 +1,15 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
-import { Context } from '../tokenize';
+import { Context } from '../../interfaces';
 
 export default function getMediaGroupNodeView(
   schema: Schema,
   filename: string,
-  context?: Context,
+  context: Context,
 ): PMNode {
   const { media, mediaGroup } = schema.nodes;
 
   const id =
-    context &&
-    context.filenameConversion &&
-    context.filenameConversion[filename]
+    context.filenameConversion && context.filenameConversion[filename]
       ? context.filenameConversion[filename]
       : filename;
 
