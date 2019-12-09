@@ -59,12 +59,23 @@ class TemplateDrawer extends React.Component<
       JSON.stringify(this.state.adf) ===
         JSON.stringify(this.state.selectedTemplate.adf);
 
+    console.log({
+      noDoc,
+      emptyDoc,
+      sameAsSelectedTemplate,
+      selTmpl: this.state.selectedTemplate,
+      adf: this.state.adf,
+    });
+
+    if (this.state.selectedTemplate) {
+      console.log('a', JSON.stringify(this.state.adf));
+      console.log('b', JSON.stringify(this.state.selectedTemplate.adf));
+    }
+
     return noDoc || emptyDoc || sameAsSelectedTemplate;
   }
 
   selectTemplate(tmpl: TemplateDefinition, actions: EditorActions) {
-    console.log('selecting', tmpl);
-
     this.setState({
       selectedTemplate: tmpl,
     });
@@ -72,33 +83,26 @@ class TemplateDrawer extends React.Component<
     actions.replaceDocument(tmpl.adf);
   }
 
-  renderTemplateDrawer(actions: EditorActions) {
-    return (
-      <div>
-        {templates.map((tmpl, idx) => (
-          <TemplateCard
-            key={idx}
-            onClick={() => this.selectTemplate(tmpl, actions)}
-          >
-            <h4>{tmpl.title}</h4>
-            <p>{tmpl.desc}</p>
-          </TemplateCard>
-        ))}
-      </div>
-    );
-  }
-
   render() {
     return (
       <ContextPanel visible={this.showSidebar()}>
-        {this.renderTemplateDrawer(this.props.actions)}
+        <div>
+          {templates.map((tmpl, idx) => (
+            <TemplateCard
+              key={idx}
+              onClick={() => this.selectTemplate(tmpl, this.props.actions)}
+            >
+              <h4>{tmpl.title}</h4>
+              <p>{tmpl.desc}</p>
+            </TemplateCard>
+          ))}
+        </div>
       </ContextPanel>
     );
   }
 }
 
-// keeps track of the editor's document, and determines whether
-// to show or hide the sidebar
+// connects editor to sidebar
 class EditorWithSidebar extends React.Component<{
   actions: EditorActions;
 }> {
@@ -110,11 +114,9 @@ class EditorWithSidebar extends React.Component<{
 
     // unfortunately we need to reach into the drawer
     // to update ADF, otherwise if we set state on this
-    // component then we re-render the
+    // component then we re-render the whole editor, leading to performance issues
     if (this.drawerRef.current) {
-      this.drawerRef.current.setState({
-        adf,
-      });
+      this.drawerRef.current.setState({ adf });
     }
   };
 
