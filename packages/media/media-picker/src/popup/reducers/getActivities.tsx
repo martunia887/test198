@@ -28,7 +28,6 @@ export const getActivitiesFullfilled = (
   if (isGetActivitiesFullfilledAction(action)) {
     const { items } = action;
 
-    console.log({ items });
     return {
       ...state,
       view: {

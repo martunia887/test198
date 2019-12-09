@@ -42,6 +42,11 @@ import {
   getActivitiesFullfilled,
   getActivitiesFailed,
 } from './getActivities';
+import {
+  getPluginsStarted,
+  getPluginsFullfilled,
+  getPluginsFailed,
+} from './getPlugins';
 
 const reducers = combineReducers([
   fileClick,
@@ -58,6 +63,9 @@ const reducers = combineReducers([
   getRecentFilesStarted,
   getRecentFilesFullfilled,
   getRecentFilesFailed,
+  getPluginsStarted,
+  getPluginsFullfilled,
+  getPluginsFailed,
   updatePopupUrls,
   fileUploadsAdd,
   filePreviewUpdate,

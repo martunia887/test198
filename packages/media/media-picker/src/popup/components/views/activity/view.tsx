@@ -150,9 +150,12 @@ export class StatelessActivityView extends React.Component<ActivityViewProps> {
       activities.workedOn.nodes
         .slice(0, 9)
         .map(({ object, containers, contributors, eventType }) => {
-          console.log({ containers });
           return (
-            <ActivityRow href={object.url} onClick={this.onWorkClick}>
+            <ActivityRow
+              href={object.url}
+              onClick={this.onWorkClick}
+              key={object.id}
+            >
               <ActivityObjectIcon alt="" src={object.iconURL} />
               <ActivityObjectDetail>
                 <ActivityObjectName data-test-id="objectName">
@@ -193,7 +196,6 @@ export class StatelessActivityView extends React.Component<ActivityViewProps> {
   }
 
   render() {
-    console.log({ props: this.props });
     return (
       <ActivityWrapper>
         <RecentUploadsTitle style={{ paddingTop: '4px' }}>

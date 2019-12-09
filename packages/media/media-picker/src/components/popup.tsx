@@ -7,7 +7,7 @@ import App, { AppProxyReactContext } from '../popup/components/app';
 import { cancelUpload } from '../popup/actions/cancelUpload';
 import { showPopup } from '../popup/actions/showPopup';
 import { getFilesInRecents } from '../popup/actions/getFilesInRecents';
-import { getActivities } from '../popup/actions';
+import { getActivities, getPlugins } from '../popup/actions';
 import { State } from '../popup/domain';
 import { hidePopup } from '../popup/actions/hidePopup';
 import { failureErrorLogger } from '../popup/actions/failureErrorLogger';
@@ -83,6 +83,7 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
 
     dispatch(getFilesInRecents());
     dispatch(getActivities());
+    dispatch(getPlugins());
     dispatch(showPopup());
   }
 

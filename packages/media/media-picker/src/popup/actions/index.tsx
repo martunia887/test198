@@ -69,6 +69,13 @@ export {
   GetActivitiesFullfilledAction,
 } from './getActivities';
 export {
+  GET_PLUGINS_FULLFILLED,
+  getPlugins,
+  getPluginsFullfilled,
+  getPluginsFailed,
+  GetPluginsFullfilledAction,
+} from './getPlugins';
+export {
   UPDATE_SERVICE_LIST,
   updateServiceList,
   UpdateServiceListAction,
