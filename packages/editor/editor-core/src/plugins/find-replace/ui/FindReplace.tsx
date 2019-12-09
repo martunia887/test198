@@ -52,6 +52,7 @@ export interface FindReplaceProps {
   onReplace: (replaceWith: string) => void;
   onReplaceAll: (replaceWith: string) => void;
   onCancel: () => void;
+  onRefSet: (ref: React.RefObject<HTMLInputElement>) => void;
 }
 
 export interface FindReplaceState {
@@ -76,6 +77,7 @@ class FindReplace extends React.PureComponent<
 
   componentDidMount() {
     this.focusFindTextfield();
+    this.props.onRefSet(this.findTextfieldRef);
   }
 
   componentWillReceiveProps(newProps: FindReplaceProps) {
