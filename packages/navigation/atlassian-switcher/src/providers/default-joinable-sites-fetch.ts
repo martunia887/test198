@@ -56,7 +56,7 @@ export const fetchJoinableSites = (
   ) => JoinableSitesResponse = transformExperimentSitesToSwitcherSites,
 ): Promise<JoinableSitesResponse> => {
   return customFetchJson<ExperimentApiJoinableSites>(
-    `${baseUrl}/gateway/api/trello-cross-product-join/recommended-sites`,
+    `${baseUrl}/trello-cross-product-join/recommended-sites`,
     {
       method: 'post',
       body: JSON.stringify({ products }),
@@ -68,9 +68,9 @@ export const fetchJoinableSites = (
   ).then(json => resultTransformer(json));
 };
 
-export const defaultFetchData = () =>
+export const defaultFetchData = (baseUrl: string) => () =>
   fetchJoinableSites(
     joinSupportedProducts,
-    '',
+    baseUrl,
     transformExperimentSitesToSwitcherSites,
   );

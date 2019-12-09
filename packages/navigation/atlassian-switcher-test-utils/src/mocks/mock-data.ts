@@ -325,7 +325,7 @@ const ORIGINAL_MOCK_DATA: MockData = {
       {
         cloudId: 'cloud-1',
         url: 'https://teamsinspace.com',
-        users: {
+        products: {
           'jira-software.ondemand': [],
         },
         displayName: 'Example',
@@ -335,7 +335,7 @@ const ORIGINAL_MOCK_DATA: MockData = {
       {
         cloudId: 'cloud-2',
         url: 'https://teamsinspace2.com',
-        users: {},
+        products: {},
         displayName: 'Example 2',
         avatarUrl: 'http://avatarSite/avatar',
         relevance: 0,

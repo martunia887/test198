@@ -14,7 +14,7 @@ const onJoinableSiteClicked = (returnUrl?: string) => {
 };
 
 const joinableSitesDataProvider = createJoinableSitesProvider(
-  defaultJoinableSitesFetch,
+  defaultJoinableSitesFetch('/gateway/api'),
 );
 
 class GenericSwitcherWithJoinExample extends React.Component {
