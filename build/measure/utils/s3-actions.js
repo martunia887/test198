@@ -162,7 +162,7 @@ function uploadToS3(pathToFile /*: string */, branch /*: string */) {
   const bucketPath = `s3://${BUCKET_NAME}/${branch}/bundleSize/${fileName}`;
 
   const params = {
-    localFile: fileName,
+    localFile: pathToFile,
 
     s3Params: {
       Bucket: BUCKET_NAME,
@@ -179,6 +179,7 @@ function uploadToS3(pathToFile /*: string */, branch /*: string */) {
   uploader.on('error', err => {
     throw Error(`unable to upload: ${err.stack}`);
   });
+
   uploader.on('progress', () => {
     console.log(
       'progress',
@@ -187,6 +188,7 @@ function uploadToS3(pathToFile /*: string */, branch /*: string */) {
       uploader.progressTotal,
     );
   });
+
   uploader.on('end', () => {
     console.log('done uploading');
   });

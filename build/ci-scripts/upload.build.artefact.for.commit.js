@@ -67,7 +67,7 @@ const client = s3.createClient({
 });
 
 const params = {
-  localFile: fileName,
+  localFile: pathToFile,
 
   s3Params: {
     Bucket: BUCKET_NAME,
