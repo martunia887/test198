@@ -5,7 +5,7 @@ import uuid from 'uuid/v4';
 import { MediaFile, MediaType } from '@atlaskit/media-client';
 
 import { createApiRouter, createMediaPlaygroundRouter } from './routers';
-import { createDatabase } from './database';
+import { createDatabase, MediaDatabaseSchema } from './database';
 import { mapDataUriToBlob } from '../utils';
 
 export type MockCollections = {
@@ -17,9 +17,9 @@ export interface MediaMockConfig {
 }
 
 export class MediaMock {
-  private server = new Server();
-  private routers: Router[] = [];
-  private dbs: Database<any>[] = [];
+  private server = new Server<MediaDatabaseSchema>();
+  private routers: Router<MediaDatabaseSchema>[] = [];
+  private dbs: Database<MediaDatabaseSchema>[] = [];
 
   constructor(readonly collections?: MockCollections) {}
 
@@ -32,6 +32,7 @@ export class MediaMock {
       createMediaPlaygroundRouter(),
       createApiRouter(isSlowServer),
     ];
+
     this.dbs = [createDatabase(this.collections)];
 
     [...this.routers, ...this.dbs].forEach(this.server.use.bind(this.server));
