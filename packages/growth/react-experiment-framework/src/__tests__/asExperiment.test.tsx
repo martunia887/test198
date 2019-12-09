@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactNode, ComponentClass } from 'react';
 import { mount } from 'enzyme';
 
 import { ExperimentProvider } from '../ExperimentContext';
@@ -31,7 +31,7 @@ class LoadingComponent extends Component<{}> {
 
 describe('asExperiment', () => {
   let enrollmentResolver: ExperimentEnrollmentResolver;
-  let enrollmentOptions: any;
+  let enrollmentOptions: EnrollmentOptions;
   let experiments: {
     experiments: Experiments;
     options?: ExperimentEnrollmentOptions;
@@ -40,9 +40,9 @@ describe('asExperiment', () => {
   let callbacks: any;
   let onError: () => void;
   let onExposure: () => void;
-  let ControlComponent: any;
-  let VariantComponent: any;
-  let FallbackComponent: any;
+  let ControlComponent: ComponentClass;
+  let VariantComponent: ComponentClass;
+  let FallbackComponent: ComponentClass;
 
   beforeEach(() => {
     enrollmentResolver = jest.fn();

@@ -31,7 +31,7 @@ describe('ExperimentController', () => {
       </ExperimentController>,
     );
 
-    const getExperimentValueForReceiverCall = (call: any) =>
+    const getExperimentValueForReceiverCall = (call: number) =>
       mockContextReceiver.mock.calls[call][0].experiments.myExperimentKey;
 
     // first call has the initial resolver, and has not decided enrollment
