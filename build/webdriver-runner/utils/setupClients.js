@@ -17,10 +17,11 @@ if (process.env.LANDKID) {
   BUILD_BRANCH_NAME = 'Landkid';
 }
 
-// Safari support only Selenium version above 2.45 on browserstack.
-const seleniumVersion = browser =>
-  browser === 'Safari' ? ' 2.45.0' : '3.141.0';
-
+// Other browsers does not seem to support Selenium version above 2.45 on browserstack.
+// eslint-disable-next-line consistent-return
+const seleniumVersion = browser => {
+  if (browser === 'chrome') return '3.141.0';
+};
 function setBrowserStackClients() /*: Array<?Object>*/ {
   const RESOLUTION = '1920x1080';
   const launchers = {
