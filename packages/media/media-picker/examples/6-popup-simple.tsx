@@ -12,7 +12,7 @@ import Button from '@atlaskit/button';
 import { MediaPicker } from '../src';
 import { Popup } from '../src/types';
 import { MediaClientConfig } from '@atlaskit/media-core';
-import { MediaMockConfig } from '@atlaskit/media-test-helpers/src/mocks/media-mock';
+import { MediaMockConfig } from '@atlaskit/media-test-helpers';
 
 mediaMock.enable();
 
