@@ -20,6 +20,8 @@ import {
   wideImageIdentifier,
   audioItem,
   audioItemNoCover,
+  largeImageItem,
+  verticalImageItem,
 } from '../example-helpers';
 import { MediaViewer, MediaViewerDataSource } from '../src';
 import { videoFileId } from '@atlaskit/media-test-helpers';
@@ -60,13 +62,16 @@ export default class Example extends React.Component<{}, State> {
       defaultMediaPickerCollectionName,
     );
 
-    this.setState({
-      firstItemFromMediaPickerCollection: {
-        id: firstDefaultMPCollectionItem.id,
-        mediaItemType: 'file',
-        occurrenceKey: firstDefaultMPCollectionItem.occurrenceKey,
+    this.setState(
+      {
+        firstItemFromMediaPickerCollection: {
+          id: firstDefaultMPCollectionItem.id,
+          mediaItemType: 'file',
+          occurrenceKey: firstDefaultMPCollectionItem.occurrenceKey,
+        },
       },
-    });
+      this.openList,
+    );
   }
 
   getFirstCollectionItem = async (collectionName: string) => {
@@ -82,18 +87,19 @@ export default class Example extends React.Component<{}, State> {
       selected: {
         dataSource: {
           list: [
-            externalImageIdentifier,
+            // externalImageIdentifier,
             imageIdentifier,
-            videoIdentifier,
-            externalSmallImageIdentifier,
-            videoHorizontalFileItem,
             wideImageIdentifier,
-            audioItem,
-            audioItemNoCover,
-            docIdentifier,
-            largePdfIdentifier,
-            imageIdentifier2,
-            unsupportedIdentifier,
+            verticalImageItem,
+            // videoIdentifier,
+            // externalSmallImageIdentifier,
+            // videoHorizontalFileItem,
+            largeImageItem,
+            // audioItem,
+            // audioItemNoCover,
+            // docIdentifier,
+            // largePdfIdentifier,
+            // unsupportedIdentifier,
           ],
         },
         identifier: imageIdentifier,

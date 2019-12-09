@@ -45,6 +45,7 @@ export type Props = Readonly<{
   onClose?: () => void;
   previewCount: number;
   isSidebarVisible?: boolean;
+  className?: string;
 }> &
   WithAnalyticsEventsProps &
   WithShowControlMethodProp;
@@ -145,6 +146,7 @@ export class ItemViewerBase extends React.Component<Props, State> {
       onClose,
       previewCount,
       isSidebarVisible,
+      className,
     } = this.props;
     const collectionName = isFileIdentifier(identifier)
       ? identifier.collectionName
@@ -160,7 +162,11 @@ export class ItemViewerBase extends React.Component<Props, State> {
     switch (item.mediaType) {
       case 'image':
         return (
-          <ImageViewer onLoad={this.onImageViewerLoaded} {...viewerProps} />
+          <ImageViewer
+            className={className}
+            onLoad={this.onImageViewerLoaded}
+            {...viewerProps}
+          />
         );
       case 'audio':
         return (

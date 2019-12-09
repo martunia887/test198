@@ -203,6 +203,8 @@ export const ImageWrapper = styled.div`
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
+  position: absolute;
+  transition: transform 0.5s;
 `;
 
 export const BaselineExtend = styled.div`
@@ -362,4 +364,29 @@ export const SidebarWrapper = styled.div`
   overflow: hidden;
   background-color: ${DN50};
   color: ${N0};
+`;
+
+export const ItemViewerWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+
+  .prev-prev-item {
+    transform: translateX(-200%);
+  }
+
+  .prev-item {
+    transform: translateX(-100%);
+  }
+
+  .current-item {
+    transform: translateX(0);
+  }
+
+  .next-item {
+    transform: translateX(100%);
+  }
+
+  .next-next-item {
+    transform: translateX(200%);
+  }
 `;
