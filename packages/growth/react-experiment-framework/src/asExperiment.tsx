@@ -6,6 +6,7 @@ import {
   Experiments,
   ExposureDetails,
   ExperimentEnrollmentOptions,
+  EnrollmentOptions,
 } from './types';
 
 type State = {
@@ -29,7 +30,7 @@ export default function asExperiment(
   },
   LoadingComponent?: ComponentClass<any>,
 ) {
-  let contextOptions: any;
+  let contextOptions: EnrollmentOptions | undefined;
 
   return class ExperimentSwitch extends Component<
     { [key: string]: any },

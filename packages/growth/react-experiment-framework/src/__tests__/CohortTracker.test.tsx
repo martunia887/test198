@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import CohortTracker from '../CohortTracker';
-import { ExposureDetails, EnrollmentOptions } from 'src/types';
+import { ExposureDetails, EnrollmentOptions } from '../types';
 
 describe('CohortTracker', () => {
   let mockExposureDetails: ExposureDetails;

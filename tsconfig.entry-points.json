@@ -2171,17 +2171,13 @@
         "../../media/smart-card/src/",
         "./packages/media/smart-card/src/"
       ],
-      "@atlaskit/branch-deploy-product-integrator/cli": [
-        "../../monorepo-tooling/branch-deploy-product-integrator/src/cli",
-        "./packages/monorepo-tooling/branch-deploy-product-integrator/src/cli"
-      ],
       "@atlaskit/branch-deploy-product-integrator": [
         "../../monorepo-tooling/branch-deploy-product-integrator/src/",
         "./packages/monorepo-tooling/branch-deploy-product-integrator/src/"
       ],
-      "@atlaskit/branch-deploy-product-integrator/types": [
-        "../../monorepo-tooling/branch-deploy-product-integrator/src/types",
-        "./packages/monorepo-tooling/branch-deploy-product-integrator/src/types"
+      "@atlaskit/branch-deploy-product-integrator/util": [
+      "../../monorepo-tooling/branch-deploy-product-integrator/src/util",
+      "./packages/monorepo-tooling/branch-deploy-product-integrator/src/util"
       ],
       "@atlaskit/code-insights": [
         "../../monorepo-tooling/code-insights/src/",
