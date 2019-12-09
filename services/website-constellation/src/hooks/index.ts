@@ -26,7 +26,7 @@ export function useData(url) {
       });
     // call abortController.abort() on unmount
     return () => abortController.abort();
-  }, []);
+  }, [abortController, url]);
   return { data, error };
 }
 export function useAuth() {
@@ -53,7 +53,7 @@ export function useAuth() {
         setValidating(false);
       });
     return () => abortController.abort();
-  }, []);
+  }, [abortController]);
 
   return { isLoggedIn, isValidating };
 }
