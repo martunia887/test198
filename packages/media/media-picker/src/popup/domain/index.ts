@@ -22,12 +22,15 @@ import { ImageCardModel } from '../tools/fetcher/fetcher';
 import { MediaPickerPlugin } from '../../domain/plugin';
 import { PopupConfig } from '../../types';
 
+import { Activities } from './activities';
+
 export interface State {
   readonly redirectUrl: string;
   readonly view: View;
   readonly accounts: Promise<ServiceAccountWithType[]>;
   readonly editorData?: EditorData;
   readonly recents: Recents;
+  readonly activities: Activities;
   readonly selectedItems: SelectedItem[];
   readonly uploads: LocalUploads;
   readonly remoteUploads: RemoteUploads;
@@ -86,6 +89,7 @@ export interface EditorError {
 }
 
 export type ServiceName =
+  | 'activity'
   | 'recent_files'
   | 'google'
   | 'dropbox'

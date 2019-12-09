@@ -52,7 +52,7 @@ import {
 import { removeFileFromRecents } from '../../../actions/removeFileFromRecents';
 import { BrowserBase } from '../../../../components/browser/browser';
 
-const createEditCardAction = (
+export const createEditCardAction = (
   handler: CardEventHandler,
   label: string,
 ): CardAction => {
@@ -63,7 +63,9 @@ const createEditCardAction = (
   };
 };
 
-const createDeleteCardAction = (handler: CardEventHandler): CardAction => {
+export const createDeleteCardAction = (
+  handler: CardEventHandler,
+): CardAction => {
   return {
     label: menuDelete,
     handler,

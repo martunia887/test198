@@ -16,6 +16,7 @@ import { changeCloudAccountFolderMiddleware } from '../popup/middleware/changeCl
 import startAppMiddleware from '../popup/middleware/startApp';
 import { getConnectedRemoteAccounts } from '../popup/middleware/getConnectedRemoteAccounts';
 import { getFilesInRecents } from '../popup/middleware/getFilesInRecents';
+import { getActivities } from '../popup/middleware/getActivities';
 import { importFilesMiddleware } from '../popup/middleware/importFiles';
 import { startCloudAccountOAuthFlow } from '../popup/middleware/startAuth';
 import unlinkCloudAccount from '../popup/middleware/unlinkCloudAccount';
@@ -61,6 +62,7 @@ export default (
         analyticsProcessing as Middleware,
         startAppMiddleware() as Middleware,
         getFilesInRecents() as Middleware,
+        getActivities() as Middleware,
         changeService as Middleware,
         changeAccount as Middleware,
         changeCloudAccountFolderMiddleware(fetcher) as Middleware,

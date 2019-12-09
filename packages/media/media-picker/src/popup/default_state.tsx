@@ -4,6 +4,7 @@ import { State } from './domain';
 // and needs to be provided when final state is constructed:
 // 'mediaClient' | 'userMediaClient' | 'redirectUrl' | 'config'
 export type DefaultStateKeys =
+  | 'activities'
   | 'uploads'
   | 'remoteUploads'
   | 'recents'
@@ -29,10 +30,18 @@ const defaultState: DefaultState = {
   recents: {
     items: [],
   },
+  activities: {
+    workedOn: {
+      nodes: [],
+    },
+    viewed: {
+      nodes: [],
+    },
+  },
   view: {
     isVisible: false,
     service: {
-      name: 'upload',
+      name: 'activity',
       accountId: '',
     },
     hasError: false,

@@ -64,6 +64,7 @@ import {
 } from '../../components/browser/browser';
 import { LocalUploadComponent } from '../../components/localUpload';
 import { resetView } from '../actions/resetView';
+import ActivityView from './views/activity';
 
 export interface AppStateProps {
   readonly selectedServiceName: ServiceName;
@@ -197,6 +198,8 @@ export class App extends Component<AppProps, AppState> {
       store,
       proxyReactContext,
     } = this.props;
+
+    console.log({ selectedServiceName });
     const { isDropzoneActive } = this.state;
 
     return (
@@ -229,10 +232,17 @@ export class App extends Component<AppProps, AppState> {
     );
   }
 
-  private renderCurrentView(selectedServiceName: ServiceName): ReactNode {
+  private renderCurrentView(selectedServiceName: ServiceName): JSX.Element {
     const { plugins = [], onFileClick, selectedItems } = this.props;
-
-    if (selectedServiceName === 'upload') {
+    if (selectedServiceName === 'activity') {
+      const { userMediaClient } = this.props;
+      return (
+        <ActivityView
+          mediaClient={userMediaClient}
+          recentsCollection={RECENTS_COLLECTION}
+        />
+      );
+    } else if (selectedServiceName === 'upload') {
       // We need to create a new context since Cards in recents view need user auth
       const { userMediaClient } = this.props;
       return (

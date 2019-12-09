@@ -37,6 +37,11 @@ import hidePopup from './hidePopup';
 import startApp from './startApp';
 import saveCollectionItemsSubscription from './saveCollectionItemsSubscription';
 import removeFileFromRecents from './removeFileFromRecents';
+import {
+  getActivitiesStarted,
+  getActivitiesFullfilled,
+  getActivitiesFailed,
+} from './getActivities';
 
 const reducers = combineReducers([
   fileClick,
@@ -47,6 +52,9 @@ const reducers = combineReducers([
   accountChange,
   serviceConnect,
   accountUnlink,
+  getActivitiesStarted,
+  getActivitiesFullfilled,
+  getActivitiesFailed,
   getRecentFilesStarted,
   getRecentFilesFullfilled,
   getRecentFilesFailed,

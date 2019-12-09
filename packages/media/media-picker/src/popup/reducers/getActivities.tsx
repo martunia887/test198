@@ -1,13 +1,13 @@
 import { Action } from 'redux';
 import {
-  isGetFilesInRecentsAction,
-  isGetFilesInRecentsFullfilledAction,
-  isGetFilesInRecentsFailedAction,
-} from '../actions/getFilesInRecents';
+  isGetActivitiesAction,
+  isGetActivitiesFullfilledAction,
+  isGetActivitiesFailedAction,
+} from '../actions/getActivities';
 import { State } from '../domain';
 
-export const getRecentFilesStarted = (state: State, action: Action): State => {
-  if (isGetFilesInRecentsAction(action)) {
+export const getActivitiesStarted = (state: State, action: Action): State => {
+  if (isGetActivitiesAction(action)) {
     return {
       ...state,
       view: {
@@ -21,30 +21,29 @@ export const getRecentFilesStarted = (state: State, action: Action): State => {
   }
 };
 
-export const getRecentFilesFullfilled = (
+export const getActivitiesFullfilled = (
   state: State,
   action: Action,
 ): State => {
-  if (isGetFilesInRecentsFullfilledAction(action)) {
+  if (isGetActivitiesFullfilledAction(action)) {
     const { items } = action;
 
+    console.log({ items });
     return {
       ...state,
       view: {
         ...state.view,
         isLoading: false,
       },
-      recents: {
-        items,
-      },
+      activities: items,
     };
   }
 
   return state;
 };
 
-export const getRecentFilesFailed = (state: State, action: Action): State => {
-  if (isGetFilesInRecentsFailedAction(action)) {
+export const getActivitiesFailed = (state: State, action: Action): State => {
+  if (isGetActivitiesFailedAction(action)) {
     return {
       ...state,
       view: {

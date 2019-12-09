@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import RecentIcon from '@atlaskit/icon/glyph/recent';
 import UploadIcon from '@atlaskit/icon/glyph/upload';
 import DropboxIcon from '@atlaskit/icon/glyph/dropbox';
 import GoogleDriveIcon from '@atlaskit/icon/glyph/googledrive';
@@ -26,6 +27,22 @@ export class StatelessSidebar extends Component<SidebarProps> {
     return (
       <Wrapper>
         <ServiceList>
+          <SidebarItem
+            serviceName="activity"
+            serviceFullName={
+              <FormattedMessage
+                {...{
+                  id: 'fabric.media.activity',
+                  defaultMessage: 'Activity',
+                  description:
+                    'Title of a section where we show recent activity for Media and Links.',
+                }}
+              />
+            }
+            isActive={selected === 'activity'}
+          >
+            <RecentIcon label="recent" />
+          </SidebarItem>
           <SidebarItem
             serviceName="upload"
             serviceFullName={<FormattedMessage {...messages.upload} />}

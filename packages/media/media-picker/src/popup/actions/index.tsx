@@ -62,6 +62,13 @@ export {
   GetFilesInRecentsFullfilledAction,
 } from './getFilesInRecents';
 export {
+  GET_ACTIVITIES_FULLFILLED,
+  getActivities,
+  getActivitiesFullfilled,
+  getActivitiesFailed,
+  GetActivitiesFullfilledAction,
+} from './getActivities';
+export {
   UPDATE_SERVICE_LIST,
   updateServiceList,
   UpdateServiceListAction,
