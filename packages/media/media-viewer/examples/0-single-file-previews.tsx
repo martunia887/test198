@@ -24,6 +24,7 @@ import {
   wideImageItem,
   verticalImageItem,
   videoSquareFileIdItem,
+  zipItem,
 } from '../example-helpers';
 import { MediaViewer } from '../src';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
@@ -102,6 +103,12 @@ export default class Example extends React.Component<{}, State> {
               <li>
                 {this.createItem(externalImageIdentifier, 'Atlassian logo')}
               </li>
+            </ButtonList>
+          </Group>
+          <Group>
+            <h2>Archives</h2>
+            <ButtonList>
+              <li>{this.createItem(zipItem, 'Zip Archive')}</li>
             </ButtonList>
           </Group>
           <Group>

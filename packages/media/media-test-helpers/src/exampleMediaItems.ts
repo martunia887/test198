@@ -120,6 +120,12 @@ export const archiveFileId = {
   collectionName,
 };
 
+export const zipFileId = {
+  id: 'dec7b8cb-1908-4416-b63b-0dbb958ab0b5',
+  mediaItemType: fileType,
+  collectionName,
+};
+
 export const unknownFileId = {
   id: 'e0652e68-c596-4800-8a91-1920e6b8a585',
   mediaItemType: fileType,
