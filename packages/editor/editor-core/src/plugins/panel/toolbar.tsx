@@ -5,12 +5,17 @@ import NoteIcon from '@atlaskit/icon/glyph/editor/note';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
+import TextColorIcon from '@atlaskit/icon/glyph/editor/text-color';
 
 import commonMessages from '../../messages';
 import { FloatingToolbarHandler } from '../floating-toolbar/types';
 import { removePanel, changePanelType } from './actions';
 import { getPluginState } from './pm-plugins/main';
 import { hoverDecoration } from '../base/pm-plugins/decoration';
+import React from 'react';
+
+import ColorPickerButton from './nodeviews/color-picker-button';
+import EmojiPickerButton from './nodeviews/emoji-picker-button';
 
 export const messages = defineMessages({
   info: {
@@ -93,8 +98,53 @@ export const getToolbarConfig: FloatingToolbarHandler = (
           selected: activePanelType === 'error',
           title: formatMessage(messages.error),
         },
+        // {
+        //   type: 'button',
+        //   icon: MoreIcon,
+        //   onClick: openEmojiPicker,
+        //   selected: activePanelType === 'emoji',
+        //   title: formatMessage(messages.error),
+        // },
+        {
+          type: 'custom',
+          icon: TextColorIcon,
+          onClick: openColorPicker(),
+          selected: activePanelType === 'error',
+          title: formatMessage(messages.error),
+          render: (
+            view,
+            idx,
+          ):
+            | React.ComponentClass
+            | React.SFC
+            | React.ReactElement<any>
+            | null => {
+            return (
+              <EmojiPickerButton key={idx} view={view}></EmojiPickerButton>
+            );
+          },
+        },
         {
           type: 'separator',
+        },
+        {
+          type: 'custom',
+          icon: TextColorIcon,
+          onClick: openColorPicker(),
+          selected: activePanelType === 'error',
+          title: formatMessage(messages.error),
+          render: (
+            view,
+            idx,
+          ):
+            | React.ComponentClass
+            | React.SFC
+            | React.ReactElement<any>
+            | null => {
+            return (
+              <ColorPickerButton key={idx} view={view}></ColorPickerButton>
+            );
+          },
         },
         {
           type: 'button',

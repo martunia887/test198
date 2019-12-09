@@ -10,7 +10,8 @@ export type PanelType =
   | 'tip'
   | 'warning'
   | 'error'
-  | 'success';
+  | 'success'
+  | 'emoji';
 
 export interface PanelAttributes {
   panelType: PanelType;
