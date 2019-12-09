@@ -151,12 +151,10 @@ export async function push(
     dryRun,
   });
 
-  const commitInfo = await (
-    await fetch(
-      `https://api.bitbucket.org/2.0/repositories/atlassian/atlaskit-mk-2/commit/${atlaskitCommitHash}`,
-      {},
-    )
-  ).json();
+  const commitInfo = await (await fetch(
+    `https://api.bitbucket.org/2.0/repositories/atlassian/atlaskit-mk-2/commit/${atlaskitCommitHash}`,
+    {},
+  )).json();
   const emailRegex = /^.*<([A-z]+@atlassian.com)>$/;
 
   let authorEmail = 'no-reply@atlassian.com';
@@ -170,6 +168,8 @@ export async function push(
 https://bitbucket.org/atlassian/atlaskit-mk-2/branch/${atlaskitBranchName}
 
 This commit was auto-generated.
+
+atlaskit-commit-hash: ${atlaskitCommitHash}
   `;
 
   await createVersionFile(atlaskitCommitHash);
