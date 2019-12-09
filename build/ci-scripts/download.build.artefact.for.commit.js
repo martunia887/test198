@@ -45,7 +45,6 @@ const params = {
   s3Params: {
     Bucket: BUCKET_NAME,
     Key: remotePathToFile,
-    ACL: 'public-read',
   },
 };
 
