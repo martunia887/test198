@@ -1,12 +1,14 @@
 // @flow
 import queryString from 'query-string';
-import flattenChangesets from '@atlaskit/build-releases/version/flattenChangesets';
+import flattenChangesets from '@atlaskit/build-utils/flattenReleases';
 import yaml from 'js-yaml';
 
 import getChangesetsFromCommits from './get-commits';
 import getChangesetsFromFiles from './get-changesets';
 import { legacyChangesetRepos } from './config';
 
+// TODO: Replace the static url `atlassian/atlaskit-mk-2` by  `atlassian/atlassian-frontend`.
+// https://product-fabric.atlassian.net/browse/AFP-1373
 const noChangesetMessage = `<div style="border: 2px solid red; padding: 10px; border-radius: 10px; display: inline-block;">
   <p><strong>Warning:</strong> No packages will be released with this PR</p>
   <p>It is now a requirement that all PRs <strong>must</strong> include a changeset.</p>
@@ -81,7 +83,7 @@ const yamlToReleases = changesets => {
 };
 
 const {
-  repoName, // repoName is the full repo path (i.e atlassian/atlaskit-mk-2)
+  repoName, // repoName is the full repo path
   pullrequestid,
   sourcehash,
   destinationhash,

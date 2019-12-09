@@ -1,5 +1,57 @@
 # @atlaskit/atlassian-switcher
 
+## 4.9.0
+
+### Minor Changes
+
+- [minor][54588e51df](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/54588e51df):
+
+  Add recommendationsFeatureFlags to generic-switcher
+
+### Patch Changes
+
+- Updated dependencies [54588e51df](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/54588e51df):
+  - @atlaskit/atlassian-switcher-test-utils@0.1.0
+
+## 4.8.3
+
+### Patch Changes
+
+- [patch][f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+
+  Corrects the type exports for typography, colors, elevation and layers. If you were doing any dynamic code it may break you. Refer to the [upgrade guide](/packages/core/theme/docs/upgrade-guide) for help upgrading.- Updated dependencies [d438b16fbc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d438b16fbc):
+
+- Updated dependencies [c1d4898af5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c1d4898af5):
+- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+  - @atlaskit/drawer@5.1.0
+  - @atlaskit/icon@19.0.11
+  - @atlaskit/theme@9.3.0
+
+## 4.8.2
+
+### Patch Changes
+
+- [patch][a5dd2b0188](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a5dd2b0188):
+
+  Fixed href for jira products and replaced `products` key with `users` for JoinableSite
+
+## 4.8.1
+
+### Patch Changes
+
+- [patch][3478b25562](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3478b25562):
+
+  moved Join section above Discover section
+
+## 4.8.0
+
+### Minor Changes
+
+- [minor][28b8211352](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/28b8211352):
+
+  Allow joinable products to accept a callback. This is required to support migration flow from Trello.
+
 ## 4.7.1
 
 ### Patch Changes

@@ -51,6 +51,7 @@ export enum Product {
   JIRA = 'jira',
   SITE_ADMIN = 'site-admin',
   TRUSTED_ADMIN = 'trusted-admin',
+  TRELLO = 'trello',
 }
 
 export enum Feature {
@@ -167,14 +168,14 @@ export interface JoinableSiteUserAvatarPropTypes {
   enableTooltip: boolean;
 }
 
-export interface JoinableSiteProduct {
+export interface JoinableSiteUsersKeyedByProduct {
   [key: string]: JoinableSiteUser[];
 }
 
 export interface JoinableSite {
   cloudId: string;
   displayName: string;
-  products: JoinableSiteProduct;
+  users: JoinableSiteUsersKeyedByProduct;
   url: string;
   avatarUrl?: string;
   relevance?: number;
@@ -189,7 +190,10 @@ export enum ProductKey {
   JIRA_CORE = 'jira-core.ondemand',
   JIRA_SOFTWARE = 'jira-software.ondemand',
   JIRA_SERVICE_DESK = 'jira-servicedesk.ondemand',
+  BITBUCKET = 'bitbucket',
   OPSGENIE = 'opsgenie',
+  STATUSPAGE = 'statuspage',
+  TRELLO = 'trello',
 }
 
 export type RecommendationsEngineResponse = RecommendationItem[];
@@ -202,25 +206,35 @@ export type RecommendationsFeatureFlags = {
   [key: string]: string | boolean;
 };
 
+// A map of feature flags used by the XFlow recommendations engine.
+export interface WithRecommendationsFeatureFlags {
+  recommendationsFeatureFlags: RecommendationsFeatureFlags;
+}
+
 export interface SwitcherChildItem {
   href: string;
   label: string;
   avatar: string | null;
 }
 
-export type AtlassianSwitcherProps = WithTheme & {
-  // Product name used for analytics events
-  product: string;
-  // Optional cloudID, should be provided for tenanted applications.
-  cloudId?: string;
-  // Optional callback to be exectuted after an XFlow event is triggered.
-  triggerXFlow?: TriggerXFlowCallback;
-  // Optional callback to be exectuted after a user clicks on discover more.
-  onDiscoverMoreClicked?: DiscoverMoreCallback;
-  // A map of feature flags used by the XFlow recommendations engine.
-  recommendationsFeatureFlags?: RecommendationsFeatureFlags;
-  // Optional custom provider for available products
-  availableProductsDataProvider?: AvailableProductsDataProvider;
-  // Optional custom provider for joinable sites
-  joinableSitesDataProvider?: any;
-} & FeatureFlagProps;
+export interface JoinableSiteClickHandler {
+  (returnUrl?: string): void;
+}
+
+export type AtlassianSwitcherProps = WithTheme &
+  Partial<WithRecommendationsFeatureFlags> & {
+    // Product name used for analytics events
+    product: string;
+    // Optional cloudID, should be provided for tenanted applications.
+    cloudId?: string;
+    // Optional callback to be exectuted after an XFlow event is triggered.
+    triggerXFlow?: TriggerXFlowCallback;
+    // Optional callback to be exectuted after a user clicks on discover more.
+    onDiscoverMoreClicked?: DiscoverMoreCallback;
+    // Optional custom provider for available products
+    availableProductsDataProvider?: AvailableProductsDataProvider;
+    // Optional custom provider for joinable sites
+    joinableSitesDataProvider?: any;
+    // Optional callback provided to handle
+    onJoinableSiteClicked?: JoinableSiteClickHandler;
+  } & FeatureFlagProps;

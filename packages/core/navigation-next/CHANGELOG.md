@@ -1,5 +1,38 @@
 # @atlaskit/navigation-next
 
+## 7.2.1
+
+### Patch Changes
+
+- Updated dependencies [63b9f324df](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/63b9f324df):
+  - @atlaskit/atlassian-navigation@0.7.0
+
+## 7.2.0
+
+### Minor Changes
+
+- [minor][920519979d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/920519979d):
+
+  Update collapse affordance icon
+
+## 7.1.3
+
+### Patch Changes
+
+- [patch][3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  Make PopupSelect correctly pass props. Forcing update of @atlaskit/select for all other packages- Updated dependencies [3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  - @atlaskit/select@11.0.2
+
+## 7.1.2
+
+### Patch Changes
+
+- [patch][75fa61803d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/75fa61803d):
+
+  Reverting broken code
+
 ## 7.1.1
 
 - Updated dependencies [30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):

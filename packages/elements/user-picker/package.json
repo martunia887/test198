@@ -1,6 +1,6 @@
 {
   "name": "@atlaskit/user-picker",
-  "version": "4.1.4",
+  "version": "4.1.5",
   "config": {
     "access": "public"
   },
@@ -16,7 +16,7 @@
     "@atlaskit/field-base": "^13.0.15",
     "@atlaskit/icon": "^19.0.6",
     "@atlaskit/lozenge": "^9.1.1",
-    "@atlaskit/select": "^11.0.0",
+    "@atlaskit/select": "^11.0.2",
     "@atlaskit/tag": "^9.0.9",
     "@atlaskit/theme": "^9.2.4",
     "@atlaskit/tooltip": "^15.1.1",
@@ -46,8 +46,8 @@
     "@atlaskit/util-data-test": "^13.0.0",
     "@types/lodash.debounce": "^4.0.4",
     "@types/uuid": "^3.4.4",
-    "enzyme": "^3.7.0",
-    "enzyme-react-intl": "^2.0.3",
+    "enzyme": "^3.10.0",
+    "enzyme-react-intl": "^2.0.6",
     "react-intl": "^2.6.0"
   },
   "repository": {
