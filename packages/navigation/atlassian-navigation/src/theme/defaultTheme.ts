@@ -4,9 +4,9 @@ import {
   B400,
   DN10A,
   N0,
+  N20,
   N40,
   N200,
-  N500,
   N600,
 } from '@atlaskit/theme/colors';
 
@@ -40,7 +40,7 @@ const defaultTheme: { mode: Mode } = {
     },
     iconButton: {
       active: {
-        color: N500,
+        color: B400,
         backgroundColor: hexToRGBA(B50, 0.6),
         boxShadow: '',
       },
@@ -69,10 +69,36 @@ const defaultTheme: { mode: Mode } = {
       gradientStart: B400,
       gradientStop: B200,
       iconColor: B200,
+      active: {
+        color: B400,
+        backgroundColor: hexToRGBA(B50, 0.7),
+        boxShadow: '0 0 0 2px transparent',
+      },
+      default: {
+        color: N600,
+        backgroundColor: 'transparent',
+        boxShadow: '0 0 0 2px transparent',
+      },
+      focus: {
+        color: N600,
+        backgroundColor: '',
+        boxShadow: `0 0 0 2px ${B200}`,
+      },
+      hover: {
+        color: B400,
+        backgroundColor: hexToRGBA(B50, 0.9),
+        boxShadow: '0 0 0 2px transparent',
+      },
+      selected: {
+        color: B400,
+        backgroundColor: '',
+        boxShadow: '',
+        bordorBottom: `4px solid ${B400}`,
+      },
     },
     primaryButton: {
       active: {
-        color: N600,
+        color: B400,
         backgroundColor: hexToRGBA(B50, 0.7),
         boxShadow: '0 0 0 2px transparent',
       },
@@ -108,7 +134,7 @@ const defaultTheme: { mode: Mode } = {
         borderColor: B200,
       },
     },
-    skeleton: { backgroundColor: DN10A, opacity: 0.15 },
+    skeleton: { backgroundColor: N20, opacity: 1 },
   },
 };
 
