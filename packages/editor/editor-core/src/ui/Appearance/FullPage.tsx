@@ -56,10 +56,7 @@ const ContentArea = styled.div`
 `;
 
 const Sidebar = styled.div`
-  width: 300px;
   height: 100%;
-  padding: 16px 24px 16px 24px;
-  border-left: 1px solid ${colors.N40};
   overflow-x: scroll;
   box-sizing: border-box;
 `;
@@ -214,14 +211,15 @@ SecondaryToolbar.displayName = 'SecondaryToolbar';
 interface State {
   showKeyline: boolean;
   containerWidth?: number;
-  sidebarVisible: boolean;
 }
 
 export default class Editor extends React.Component<
   EditorAppearanceComponentProps,
   State
 > {
-  state: State = { showKeyline: false, sidebarVisible: !!this.props.sidebar };
+  state: State = {
+    showKeyline: false,
+  };
 
   static displayName = 'FullPageEditor';
   private appearance: EditorAppearance = 'full-page';
@@ -294,18 +292,6 @@ export default class Editor extends React.Component<
       this.scrollContainer.clientWidth !== this.state.containerWidth
     ) {
       this.updateContainerWidth();
-    }
-
-    if (!prevProps.sidebar && this.props.sidebar) {
-      this.setState({
-        sidebarVisible: true,
-      });
-    }
-
-    if (prevProps.sidebar && !this.props.sidebar) {
-      this.setState({
-        sidebarVisible: false,
-      });
     }
   }
 
@@ -420,7 +406,9 @@ export default class Editor extends React.Component<
               </EditorContentArea>
             </ClickAreaBlock>
           </ScrollContainer>
-          {this.state.sidebarVisible && <Sidebar>{this.props.sidebar}</Sidebar>}
+          {this.props.contextPanel && (
+            <Sidebar>{this.props.contextPanel}</Sidebar>
+          )}
         </ContentArea>
 
         <WidthEmitter

@@ -7,7 +7,7 @@ import WithEditorActions from './../src/ui/WithEditorActions';
 import { ExampleEditor } from './5-full-page';
 
 import decisionAdf from '../example-helpers/templates/decision.adf.json';
-import { EditorActions } from '../src';
+import { EditorActions, ContextPanel } from '../src';
 
 const isEmptyDoc = (adf: any) => adf.content.length === 0;
 
@@ -36,16 +36,18 @@ const TemplateCard = styled.div`
   }
 `;
 
-class EditorWithSidebar extends React.Component<
-  any,
+class TemplateDrawer extends React.Component<
+  {
+    actions: EditorActions;
+  },
   {
     adf?: any;
     selectedTemplate?: TemplateDefinition;
   }
 > {
   state = {
-    adf: undefined,
     selectedTemplate: undefined,
+    adf: null,
   };
 
   showSidebar() {
@@ -56,13 +58,6 @@ class EditorWithSidebar extends React.Component<
       this.state.selectedTemplate &&
       JSON.stringify(this.state.adf) ===
         JSON.stringify(this.state.selectedTemplate.adf);
-
-    // console.log({ noDoc, emptyDoc, sameAsSelectedTemplate, state: this.state });
-    // if (this.state.adf && this.state.selectedTemplate) {
-    //   console.log({
-    //     adf: JSON.stringify(this.state.adf), template: JSON.stringify(this.state.selectedTemplate)
-    //   });
-    // }
 
     return noDoc || emptyDoc || sameAsSelectedTemplate;
   }
@@ -93,28 +88,43 @@ class EditorWithSidebar extends React.Component<
     );
   }
 
-  onChange = async (actions: EditorActions) => {
+  render() {
+    return (
+      <ContextPanel visible={this.showSidebar()}>
+        {this.renderTemplateDrawer(this.props.actions)}
+      </ContextPanel>
+    );
+  }
+}
+
+// keeps track of the editor's document, and determines whether
+// to show or hide the sidebar
+class EditorWithSidebar extends React.Component<{
+  actions: EditorActions;
+}> {
+  drawerRef = React.createRef<TemplateDrawer>();
+
+  onChange = async () => {
+    const actions = this.props.actions;
     const adf = await actions.getValue();
-    this.setState({
-      adf,
-    });
+
+    // unfortunately we need to reach into the drawer
+    // to update ADF, otherwise if we set state on this
+    // component then we re-render the
+    if (this.drawerRef.current) {
+      this.drawerRef.current.setState({
+        adf,
+      });
+    }
   };
 
   render() {
     return (
-      <WithEditorActions
-        render={actions => {
-          return (
-            <ExampleEditor
-              onChange={() => this.onChange(actions)}
-              sidebar={
-                this.showSidebar()
-                  ? this.renderTemplateDrawer(actions)
-                  : undefined
-              }
-            />
-          );
-        }}
+      <ExampleEditor
+        onChange={this.onChange}
+        contextPanel={
+          <TemplateDrawer actions={this.props.actions} ref={this.drawerRef} />
+        }
       />
     );
   }
@@ -124,7 +134,11 @@ export default function Example() {
   return (
     <EditorContext>
       <div style={{ height: '100%' }}>
-        <EditorWithSidebar />
+        <WithEditorActions
+          render={actions => {
+            return <EditorWithSidebar actions={actions} />;
+          }}
+        />
       </div>
     </EditorContext>
   );
