@@ -1,5 +1,5 @@
 import React from 'react';
 
-const NavSection = props => <ul {...props} />;
+const NavSection = props => <nav {...props} />;
 
 export default NavSection;

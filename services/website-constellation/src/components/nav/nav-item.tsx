@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  ButtonItem,
-  LinkItem,
-  CustomItem,
-  HeadingItem,
-  SkeletonItem,
-  SkeletonHeadingItem,
-} from '@atlaskit/menu';
+import { CustomItem } from '@atlaskit/menu';
 
 import { Link } from 'gatsby';
 
@@ -15,36 +8,20 @@ type Props = {
   href?: string;
   type?: 'heading';
   to?: string;
+  isSelected: boolean;
 };
 
-const NavItem = ({ text, href, to, type }: Props) => {
+const NavItem = ({ text, href, to, isSelected = false }: Props) => {
   return (
     <CustomItem
-      component={({ href, ...rest }) => <Link to={href} {...rest} />}
-    />
+      isSelected={isSelected}
+      component={({ wrapperClass, ...rest }) => (
+        <Link className={wrapperClass} to={href || to} {...rest} />
+      )}
+    >
+      {text}
+    </CustomItem>
   );
-
-  if (type === 'heading') {
-    return (
-      <li>
-        <h3>{text}</h3>
-      </li>
-    );
-  } else if (href) {
-    return (
-      <li>
-        <a href={href}>{text}</a>
-      </li>
-    );
-  } else if (to) {
-    return (
-      <li>
-        <Link to={to}>{text}</Link>
-      </li>
-    );
-  }
-  console.error('incompatible item passed to side nav');
-  return <li>{text}</li>;
 };
 
 export default NavItem;
