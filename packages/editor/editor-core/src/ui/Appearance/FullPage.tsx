@@ -55,7 +55,8 @@ const ContentArea = styled.div`
   height: calc(
     100% - 105px
   ); /* fill the viewport: 100% - (padding top & bottom) */
-  width: 100%;
+  width: ${theme => theme.layoutMaxWidth}px;
+  margin: auto;
   flex-direction: column;
   flex-grow: 1;
 
@@ -63,9 +64,6 @@ const ContentArea = styled.div`
     (fullWidthMode ? akEditorFullWidthLayoutWidth : theme.layoutMaxWidth) +
     TOTAL_PADDING}px;
   transition: margin-left ${SWOOP_ANIMATION}, max-width ${SWOOP_ANIMATION};
-  margin-left: ${({ theme, fullWidthMode }: any) =>
-    !fullWidthMode &&
-    `calc(50% - ${(theme.layoutMaxWidth + TOTAL_PADDING) / 2}px)`};
 
   ${({ fullWidthMode }) =>
     fullWidthMode &&
@@ -75,12 +73,6 @@ const ContentArea = styled.div`
         TOTAL_PADDING) /
         2}px)`};
   }`}
-
-  ${({ theme }) => `
-    @media (max-width: ${theme.layoutMaxWidth + TOTAL_PADDING}px) {
-      margin-left: auto;
-    }
-  `}
 
   & .ProseMirror {
     flex-grow: 1;
