@@ -1,4 +1,5 @@
-import { JoinableSitesResponse } from '../types';
+import { JoinableSitesResponse, ProductKey } from '../types';
+import { customFetchJson } from '../utils/fetch';
 
 interface ExperimentApiJoinableSiteUser {
   avatarUrl: string;
@@ -10,7 +11,7 @@ interface ExperimentApiJoinableSiteProducts {
   [productKey: string]: ExperimentApiJoinableSiteUser[];
 }
 
-interface ExperiementApiJoinableSite {
+interface ExperimentApiJoinableSite {
   cloudId: string;
   url: string;
   products: ExperimentApiJoinableSiteProducts;
@@ -20,17 +21,16 @@ interface ExperiementApiJoinableSite {
 }
 
 interface ExperimentApiJoinableSites {
-  sites: ExperiementApiJoinableSite[];
+  sites: ExperimentApiJoinableSite[];
 }
 
-const joinSupportedProducts = [
-  'jira-software.ondemand',
-  'jira-servicedesk.ondemand',
-  'jira-core.ondemand',
-  'confluence.ondemand',
+const joinSupportedProducts: ProductKey[] = [
+  ProductKey.JIRA_SOFTWARE,
+  ProductKey.JIRA_SERVICE_DESK,
+  ProductKey.JIRA_CORE,
+  ProductKey.CONFLUENCE,
 ];
 
-export const emptyJoinableSites = { sites: [] };
 export const transformExperimentSitesToSwitcherSites = (
   rawResponse: ExperimentApiJoinableSites,
 ): JoinableSitesResponse => {
@@ -49,9 +49,11 @@ export const transformExperimentSitesToSwitcherSites = (
 export const fetchJoinableSites = (
   products: string[],
   baseUrl: string = '',
-  resultTransformer?: (rawResponse: any) => JoinableSitesResponse,
+  resultTransformer: (
+    rawResponse: any,
+  ) => JoinableSitesResponse = transformExperimentSitesToSwitcherSites,
 ): Promise<JoinableSitesResponse> => {
-  return fetch(
+  return customFetchJson<ExperimentApiJoinableSites>(
     `${baseUrl}/gateway/api/trello-cross-product-join/recommended-sites`,
     {
       method: 'post',
@@ -59,16 +61,9 @@ export const fetchJoinableSites = (
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: baseUrl && baseUrl.length === 0 ? 'same-origin' : 'include',
     },
-  ).then(response => {
-    if (!response.ok) {
-      return emptyJoinableSites;
-    }
-    const json = response.json();
-    json.then(json => (resultTransformer ? resultTransformer(json) : json));
-    json.catch(() => emptyJoinableSites);
-    return json;
-  });
+  ).then(json => resultTransformer(json));
 };
 
 export const defaultFetchData = () =>
