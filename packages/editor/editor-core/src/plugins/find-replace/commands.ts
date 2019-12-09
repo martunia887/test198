@@ -11,6 +11,7 @@ import { findMatches, findSearchIndex } from './utils';
 import { Command } from '../../types';
 import { HigherOrderCommand } from '../analytics';
 
+// todo: put in utils
 const withScrollIntoView: HigherOrderCommand = (command: Command): Command => (
   state,
   dispatch,
@@ -54,20 +55,32 @@ export const activate = () =>
   );
 
 export const find = (keyword?: string) =>
-  createFindReplaceCommand((state: EditorState) => {
-    const { selectionPos } = getFindReplacePluginState(state);
+  withScrollIntoView(
+    createFindReplaceCommand(
+      (state: EditorState) => {
+        const { selectionPos } = getFindReplacePluginState(state);
 
-    const matches = keyword ? findMatches(state.doc, keyword) : [];
-    const index = findSearchIndex(selectionPos, matches);
+        const matches = keyword ? findMatches(state.doc, keyword) : [];
+        const index = findSearchIndex(selectionPos, matches);
 
-    return {
-      type: FindReplaceActionTypes.FIND,
-      findText: keyword || '',
-      matches,
-      index,
-      selectionPos: matches[index] ? matches[index].start : 1,
-    };
-  });
+        return {
+          type: FindReplaceActionTypes.FIND,
+          findText: keyword || '',
+          matches,
+          index,
+          selectionPos: matches[index] ? matches[index].start : 1,
+        };
+      },
+      (tr, state) => {
+        const { selectionPos } = getFindReplacePluginState(state);
+        const matches = keyword ? findMatches(state.doc, keyword) : [];
+        const index = findSearchIndex(selectionPos, matches);
+        return tr.setSelection(
+          TextSelection.create(state.doc, matches[index].start),
+        );
+      },
+    ),
+  );
 
 export const findNext = () =>
   withScrollIntoView(
@@ -106,19 +119,27 @@ export const findPrev = () =>
   );
 
 export const replace = (replaceText: string) =>
-  createFindReplaceCommand(
-    {
-      type: FindReplaceActionTypes.REPLACE,
-      replaceText,
-    },
-    (tr, state) => {
-      const { matches, index } = getFindReplacePluginState(state);
-      if (matches[index]) {
-        const replacePos = matches[index];
-        return tr.insertText(replaceText, replacePos.start, replacePos.end);
-      }
-      return tr;
-    },
+  withScrollIntoView(
+    createFindReplaceCommand(
+      {
+        type: FindReplaceActionTypes.REPLACE,
+        replaceText,
+      },
+      (tr, state) => {
+        const { matches, index } = getFindReplacePluginState(state);
+        if (matches[index]) {
+          const { start, end } = matches[index];
+          tr.insertText(replaceText, start, end).setSelection(
+            TextSelection.create(
+              state.doc,
+              // todo: move this to util
+              matches[(index + 1) % matches.length].start,
+            ),
+          );
+        }
+        return tr;
+      },
+    ),
   );
 
 export const replaceAll = (replaceText: string) =>

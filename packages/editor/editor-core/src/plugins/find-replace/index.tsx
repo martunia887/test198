@@ -58,7 +58,9 @@ export const findReplacePlugin = (): EditorPlugin => {
         fireCommand(cancelSearch());
       };
       const handleFind = (keyword?: string) => {
+        editorView.focus();
         fireCommand(find(keyword));
+        focusFindReplace();
       };
       const handleFindNext = () => {
         editorView.focus();

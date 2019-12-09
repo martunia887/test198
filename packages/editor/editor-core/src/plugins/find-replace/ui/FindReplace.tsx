@@ -65,6 +65,7 @@ class FindReplace extends React.PureComponent<
   FindReplaceState
 > {
   private findTextfieldRef = React.createRef<HTMLInputElement>();
+  private replaceTextfieldRef = React.createRef<HTMLInputElement>();
 
   constructor(props: FindReplaceProps) {
     super(props);
@@ -77,7 +78,6 @@ class FindReplace extends React.PureComponent<
 
   componentDidMount() {
     this.focusFindTextfield();
-    this.props.onRefSet(this.findTextfieldRef);
   }
 
   componentWillReceiveProps(newProps: FindReplaceProps) {
@@ -146,6 +146,14 @@ class FindReplace extends React.PureComponent<
     this.props.onReplaceAll(this.state.replaceText);
   };
 
+  handleFindFocus = () => {
+    this.props.onRefSet(this.findTextfieldRef);
+  };
+
+  handleReplaceFocus = () => {
+    this.props.onRefSet(this.replaceTextfieldRef);
+  };
+
   renderFindSection = () => {
     // todo: get these from i18n
     const find = 'Find';
@@ -169,6 +177,7 @@ class FindReplace extends React.PureComponent<
           onChange={this.handleFindChange}
           onKeyDown={this.handleFindKeyDown}
           onBlur={this.props.onFindBlur}
+          onFocus={this.handleFindFocus}
         />
         {findText && (
           <Count>
@@ -216,9 +225,11 @@ class FindReplace extends React.PureComponent<
           appearance="none"
           placeholder={replaceWith}
           defaultValue={replaceText}
+          ref={this.replaceTextfieldRef}
           autoComplete="off"
           onChange={this.handleReplaceChange}
           onKeyDown={this.handleReplaceKeyDown}
+          onFocus={this.handleReplaceFocus}
         />
         <FindReplaceButton onClick={this.handleReplaceClick}>
           {replace}
