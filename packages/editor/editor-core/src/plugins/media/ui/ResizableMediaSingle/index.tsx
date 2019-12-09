@@ -54,7 +54,7 @@ export default class ResizableMediaSingle extends React.Component<
   async componentDidMount() {
     const { viewMediaClientConfig } = this.props;
     if (viewMediaClientConfig) {
-      this.checkVideoFile(viewMediaClientConfig);
+      await this.checkVideoFile(viewMediaClientConfig);
     }
   }
 

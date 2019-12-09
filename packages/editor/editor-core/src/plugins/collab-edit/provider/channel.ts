@@ -68,7 +68,7 @@ export class Channel {
       logger('Connected to FPS-service');
     });
 
-    this.pubSubClient.join([`ari:cloud::fabric:collab-service/${docId}`]);
+    await this.pubSubClient.join([`ari:cloud::fabric:collab-service/${docId}`]);
     this.pubSubClient
       .on(
         'avi:pf-collab-service:steps:created',

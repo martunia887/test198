@@ -22,7 +22,7 @@ export function fixExcludes(marks: {
   const markKeys = Object.keys(marks);
   const markGroups = new Set(markKeys.map(mark => marks[mark].group));
 
-  markKeys.map(markKey => {
+  markKeys.forEach(markKey => {
     const mark = marks[markKey];
     if (mark.excludes) {
       mark.excludes = mark.excludes
