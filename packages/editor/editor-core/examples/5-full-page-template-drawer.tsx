@@ -36,98 +36,74 @@ const TemplateCard = styled.div`
   }
 `;
 
-class TemplateDrawer extends React.Component<
-  {
-    actions: EditorActions;
-  },
-  {
-    adf?: any;
-    selectedTemplate?: TemplateDefinition;
-  }
-> {
-  state = {
-    selectedTemplate: undefined,
-    adf: null,
-  };
-
-  showSidebar() {
-    const noDoc = !this.state.adf;
-    const emptyDoc = this.state.adf && isEmptyDoc(this.state.adf);
-    const sameAsSelectedTemplate =
-      this.state.adf &&
-      this.state.selectedTemplate &&
-      JSON.stringify(this.state.adf) ===
-        JSON.stringify(this.state.selectedTemplate.adf);
-
-    console.log({
-      noDoc,
-      emptyDoc,
-      sameAsSelectedTemplate,
-      selTmpl: this.state.selectedTemplate,
-      adf: this.state.adf,
-    });
-
-    if (this.state.selectedTemplate) {
-      console.log('a', JSON.stringify(this.state.adf));
-      console.log('b', JSON.stringify(this.state.selectedTemplate.adf));
-    }
-
-    return noDoc || emptyDoc || sameAsSelectedTemplate;
-  }
-
-  selectTemplate(tmpl: TemplateDefinition, actions: EditorActions) {
-    this.setState({
-      selectedTemplate: tmpl,
-    });
-
-    actions.replaceDocument(tmpl.adf);
-  }
-
-  render() {
-    return (
-      <ContextPanel visible={this.showSidebar()}>
-        <div>
-          {templates.map((tmpl, idx) => (
-            <TemplateCard
-              key={idx}
-              onClick={() => this.selectTemplate(tmpl, this.props.actions)}
-            >
-              <h4>{tmpl.title}</h4>
-              <p>{tmpl.desc}</p>
-            </TemplateCard>
-          ))}
-        </div>
-      </ContextPanel>
-    );
-  }
-}
-
-// connects editor to sidebar
 class EditorWithSidebar extends React.Component<{
   actions: EditorActions;
 }> {
-  drawerRef = React.createRef<TemplateDrawer>();
+  state = {
+    sidebarVisible: true,
+    selectedTemplate: null,
+  };
 
   onChange = async () => {
     const actions = this.props.actions;
     const adf = await actions.getValue();
 
-    // unfortunately we need to reach into the drawer
-    // to update ADF, otherwise if we set state on this
-    // component then we re-render the whole editor, leading to performance issues
-    if (this.drawerRef.current) {
-      this.drawerRef.current.setState({ adf });
+    if (isEmptyDoc(adf)) {
+      this.setState({
+        sidebarVisible: true,
+      });
+    } else if (!this.state.selectedTemplate && this.state.sidebarVisible) {
+      this.setState({
+        sidebarVisible: false,
+      });
     }
   };
 
+  onInput = () => {
+    if (this.state.selectedTemplate) {
+      this.setState({
+        selectedTemplate: null,
+        sidebarVisible: false,
+      });
+    }
+  };
+
+  selectTemplate(tmpl: TemplateDefinition) {
+    this.setState({
+      selectedTemplate: tmpl,
+      sidebarVisible: true,
+    });
+
+    this.props.actions.replaceDocument(tmpl.adf);
+  }
+
   render() {
     return (
-      <ExampleEditor
-        onChange={this.onChange}
-        contextPanel={
-          <TemplateDrawer actions={this.props.actions} ref={this.drawerRef} />
-        }
-      />
+      <div
+        style={{
+          height: '100%',
+        }}
+        onInput={this.onInput}
+      >
+        <ExampleEditor
+          onChange={this.onChange}
+          contextPanel={
+            <ContextPanel visible={this.state.sidebarVisible}>
+              <div>
+                {templates.map((tmpl, idx) => (
+                  <TemplateCard
+                    key={idx}
+                    onClick={() => this.selectTemplate(tmpl)}
+                  >
+                    <h4>{tmpl.title}</h4>
+                    <p>{tmpl.desc}</p>
+                  </TemplateCard>
+                ))}
+              </div>
+            </ContextPanel>
+          }
+        />
+      </div>
     );
   }
 }
