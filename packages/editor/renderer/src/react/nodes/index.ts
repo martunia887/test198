@@ -11,7 +11,6 @@ import Doc from './doc';
 import Extension, { Props as ExtensionProps } from './extension';
 import HardBreak from './hardBreak';
 import Heading from './heading';
-import Image from './image';
 import InlineExtension, {
   Props as InlineExtensionProps,
 } from './inlineExtension';
@@ -153,7 +152,6 @@ export const nodeToReact: { [key: string]: React.ComponentType<any> } = {
   bodiedExtension: BodiedExtension,
   hardBreak: HardBreak,
   heading: Heading,
-  image: Image,
   inlineCard: InlineCard,
   inlineExtension: InlineExtension,
   layoutSection: LayoutSection,
@@ -336,7 +334,6 @@ export {
   HardBreak,
   Heading,
   ListItem,
-  Image,
   InlineCard,
   InlineExtension,
   InlineExtensionProps,
