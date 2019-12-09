@@ -71,8 +71,8 @@ import {
 import { FileDetails } from '../../../../../../../media/media-client/src';
 import { Schema } from '../../../../../../editor-test-helpers/src/schema';
 import { CellSelection } from 'prosemirror-tables';
-import { EditorInstance, PortalProviderAPI, EditorProps } from '../../../..';
 import { TextSelection } from 'prosemirror-state';
+import { EditorInstanceWithPlugin } from '../../../../../../editor-test-helpers/src/create-editor';
 
 const pdfFile = {
   id: `${randomId()}`,
@@ -979,14 +979,7 @@ describe('Media plugin', () => {
         });
 
         function setupWrapper(
-          editorInstance: EditorInstance & {
-            portalProviderAPI: PortalProviderAPI;
-            refs: Refs;
-            sel: number;
-            plugin: any;
-            pluginState: MediaPluginState;
-            editorProps: EditorProps;
-          },
+          editorInstance: EditorInstanceWithPlugin<MediaPluginState>,
         ): {
           mediaItem: ReactWrapper<MediaNodeProps>;
           onClickHandler: CardOnClickCallback;
@@ -1010,7 +1003,6 @@ describe('Media plugin', () => {
           const onClickHandler = mediaItem.prop(
             'onClick',
           ) as CardOnClickCallback;
-          expect(onClickHandler).toBeDefined();
 
           return { mediaItem, onClickHandler };
         }
@@ -1094,8 +1086,7 @@ describe('Media plugin', () => {
             ),
           );
 
-          const { onClickHandler } = setupWrapper(editorInstance);
-          onClickHandler(shiftClickEvent);
+          setupWrapper(editorInstance);
 
           expect(
             editorInstance.editorView.state.selection instanceof CellSelection,

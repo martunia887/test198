@@ -37,6 +37,7 @@ import { MediaNodeUpdater } from './mediaNodeUpdater';
 import { DispatchAnalyticsEvent } from '../../analytics';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { EditorAppearance } from '../../../types';
+import { CellSelection } from 'prosemirror-tables';
 
 export interface MediaSingleNodeState {
   width?: number;
