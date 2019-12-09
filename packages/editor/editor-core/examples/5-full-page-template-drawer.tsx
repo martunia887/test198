@@ -45,6 +45,7 @@ class EditorWithSidebar extends React.Component<{
   };
 
   onChange = async () => {
+    // TODO: re-order to reduce per-keystroke impact of getValue
     const actions = this.props.actions;
     const adf = await actions.getValue();
 

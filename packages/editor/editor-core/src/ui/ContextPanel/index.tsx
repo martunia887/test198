@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import { colors } from '@atlaskit/theme';
 
 export type Props = {
@@ -41,7 +41,7 @@ const Content = styled.div`
   overflow-x: scroll;
 `;
 
-export default class ContextPanel extends React.Component<Props> {
+class ContextPanelWithTheme extends React.Component<Props & { theme: any }> {
   state = {
     mounted: false,
   };
@@ -53,6 +53,7 @@ export default class ContextPanel extends React.Component<Props> {
   }
 
   render() {
+    console.log('theme', this.props.theme);
     return (
       <Panel
         className={
@@ -64,3 +65,5 @@ export default class ContextPanel extends React.Component<Props> {
     );
   }
 }
+
+export default withTheme(ContextPanelWithTheme);
