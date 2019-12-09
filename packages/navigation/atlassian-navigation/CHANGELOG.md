@@ -1,5 +1,31 @@
 # @atlaskit/atlassian-navigation
 
+## 0.7.1
+
+### Patch Changes
+
+- [patch][72ceb0c548](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72ceb0c548):
+
+  Fixes Skeleton for atlassian navigation, which had broken earlier due to the ProductHome re-write
+
+## 0.7.0
+
+### Minor Changes
+
+- [minor][63b9f324df](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/63b9f324df):
+
+  Change the way ProductHome is rendered
+
+## 0.6.7
+
+### Patch Changes
+
+- [patch][38a300c7e0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/38a300c7e0):
+
+  Misc UI changes- Updated dependencies [d0415ae306](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d0415ae306):
+
+  - @atlaskit/popup@0.2.4
+
 ## 0.6.6
 
 ### Patch Changes
