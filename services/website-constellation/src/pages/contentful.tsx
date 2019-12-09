@@ -5,14 +5,14 @@ import PrivateRoute from '../components/PrivateRoute';
 import Login from '../components/Login';
 import ProtectedContentfulPage from '../components/ProtectedContentfulPage';
 import { useAuth, useData } from '../hooks';
-import { constellationUrl } from '../constants';
+// import { constellationUrl } from '../constants';
 
 function Status() {
   const { isLoggedIn, isValidating } = useAuth();
   const {
     data: { displayName, photos },
     error,
-  } = useData(`/.netlify/functions/auth/user`);
+  }: { data: any; error: any } = useData(`/.netlify/functions/auth/user`);
   if (isValidating) {
     return (
       <div>

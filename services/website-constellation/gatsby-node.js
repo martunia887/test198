@@ -36,6 +36,7 @@ const divideChangelog = changelog => {
 exports.onCreatePage = async ({ page, actions }) => {
   const { createPage } = actions;
   if (page.path.match(/^\/contentful/)) {
+    // eslint-disable-next-line no-param-reassign
     page.matchPath = '/contentful/*';
     createPage(page);
   }

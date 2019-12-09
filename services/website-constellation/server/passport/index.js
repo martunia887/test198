@@ -1,3 +1,4 @@
+// @flow
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const JWTStrategy = require('passport-jwt').Strategy;
@@ -17,12 +18,7 @@ passport.use(
       clientSecret: googleClientSecret,
       callbackURL: googleCallbackUrl,
     },
-    (
-      accessToken,
-      refreshToken,
-      { name, displayName, photos, ...rest },
-      done,
-    ) => {
+    (accessToken, refreshToken, { displayName, photos }, done) => {
       // on successful google oAuth2.0 validation
       // we hash the necessary but not sensitive parts of the retrieved google profile
       // into a signed JWT
