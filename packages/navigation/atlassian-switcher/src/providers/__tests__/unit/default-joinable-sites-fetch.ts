@@ -36,10 +36,7 @@ describe('default-joinable-sites-fetch', () => {
 
   describe('fetch', () => {
     test('should return error when fetch could not retrieve data', async () => {
-      fetchMock.post(
-        `gateway/api/trello-cross-product-join/recommended-sites`,
-        400,
-      );
+      fetchMock.post(`/trello-cross-product-join/recommended-sites`, 400);
 
       // Apparently you have to wrap in a try catch -> https://github.com/facebook/jest/issues/1700
       async function testFetch() {
@@ -55,7 +52,7 @@ describe('default-joinable-sites-fetch', () => {
 
     test('should return transformed joinable sites when fetch succeeds', async () => {
       fetchMock.post(
-        `gateway/api/trello-cross-product-join/recommended-sites`,
+        `/trello-cross-product-join/recommended-sites`,
         experimentApiSites,
         { method: 'POST', overwriteRoutes: true },
       );
