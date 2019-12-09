@@ -13,7 +13,7 @@ exports[`Switcher should be able to disable headers with "disableHeadings" 1`] =
   <SwitcherWrapper
     appearance="drawer"
   >
-    <WithAnalyticsEvents(class_2)
+    <WithAnalyticsEvents(class_3)
       data={
         Object {
           "adminLinks": Array [],
@@ -26,8 +26,7 @@ exports[`Switcher should be able to disable headers with "disableHeadings" 1`] =
       }
       subject="atlassianSwitcher"
     />
-    <WithAnalyticsEvents(class_1)
-      action="not rendered"
+    <WithAnalyticsEvents(class_2)
       data={
         Object {
           "duration": 0,
@@ -69,7 +68,7 @@ exports[`Switcher should render sections with headers by default 1`] = `
   <SwitcherWrapper
     appearance="drawer"
   >
-    <WithAnalyticsEvents(class_2)
+    <WithAnalyticsEvents(class_3)
       data={
         Object {
           "adminLinks": Array [],
@@ -82,8 +81,7 @@ exports[`Switcher should render sections with headers by default 1`] = `
       }
       subject="atlassianSwitcher"
     />
-    <WithAnalyticsEvents(class_1)
-      action="not rendered"
+    <WithAnalyticsEvents(class_2)
       data={
         Object {
           "duration": 0,

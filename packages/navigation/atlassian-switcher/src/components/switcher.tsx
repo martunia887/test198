@@ -25,6 +25,7 @@ import {
   SWITCHER_SUBJECT,
   RenderTracker,
   ViewedTracker,
+  NotRenderedTracker,
 } from '../utils/analytics';
 import now from '../utils/performance-now';
 import { urlToHostname } from '../utils/url-to-hostname';
@@ -221,10 +222,17 @@ export default class Switcher extends React.Component<SwitcherProps> {
                   numberOfSites,
                 }}
               />
-              <JoinableSitesTracker
-                {...joinableSitesTrackerProps}
-                data={{ duration: this.timeSinceMounted() }}
-              />
+              {joinableSiteLinks.length > 0 ? (
+                <ViewedTracker
+                  subject={'atlassianSwitcherJoinableSites'}
+                  data={{ duration: this.timeSinceMounted() }}
+                />
+              ) : (
+                <NotRenderedTracker
+                  subject={'atlassianSwitcherJoinableSites'}
+                  data={{ duration: this.timeSinceMounted() }}
+                />
+              )}
             </React.Fragment>
           )}
           {firstContentArrived && (
