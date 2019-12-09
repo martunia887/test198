@@ -1,5 +1,7 @@
+// @flow
 const axios = require('axios');
 const { constellationUrl, contentfulUrl } = require('../constants');
+
 function api(app, passport) {
   app.get(
     '/.netlify/functions/auth/google',
@@ -38,6 +40,8 @@ function api(app, passport) {
           res.json(response.data);
         })
         .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
           res.status(500);
         });
     },

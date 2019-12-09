@@ -23,6 +23,7 @@
         "@atlaskit/radio": "^3.1.4",
         "@atlaskit/textfield": "^3.1.2",
         "@atlaskit/theme": "^9.2.8",
+        "@atlaskit/spinner": "^12.1.2",
         "@brisk-docs/gatsby-generator": "^1.1.0",
         "@brisk-docs/gatsby-plugin": "^0.1.0",
         "@emotion/core": "^10.0.9",
@@ -46,6 +47,7 @@
         "passport": "^0.4.0",
         "passport-google-oauth20": "^2.0.0",
         "passport-jwt": "^4.0.0",
+        "react": "^16.8.0",
         "serverless-http": "^2.3.0"
     }
 }
