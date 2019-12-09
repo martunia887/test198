@@ -20,12 +20,12 @@ import {
   randomId,
 } from '@atlaskit/editor-test-helpers';
 import { NodeSelection } from 'prosemirror-state';
+import { editExtension } from '../../../../plugins/extension/actions';
 import {
-  editExtension,
   removeExtension,
   updateExtensionLayout,
-} from '../../../../plugins/extension/actions';
-import { pluginKey } from '../../../../plugins/extension/plugin';
+} from '../../../../plugins/extension/commands';
+import { getPluginState } from '../../../../plugins/extension/plugin';
 import { findParentNodeOfType } from 'prosemirror-utils';
 import { setNodeSelection } from '../../../../utils';
 
@@ -222,12 +222,15 @@ describe('extension', () => {
               ),
             ),
           );
-          const pluginState = pluginKey.getState(editorView.state);
+          const pluginState = getPluginState(editorView.state);
           const provider = await macroProviderPromise;
           expect(
             editExtension(provider)(editorView.state, editorView.dispatch),
           ).toBe(true);
-          expect(pluginState.node.node.attrs.layout).toEqual('full-width');
+          expect(pluginState.nodeWithPos).toBeDefined();
+          expect(pluginState.nodeWithPos!.node.attrs.layout).toEqual(
+            'full-width',
+          );
         });
       });
 
@@ -283,7 +286,7 @@ describe('extension', () => {
     });
 
     describe('removeExtension', () => {
-      it('should set "element" prop in plugin state to null and remove the node, if it is an bodied extension', () => {
+      it('should set "element" prop in plugin state to undefined and remove the node, if it is an bodied extension', () => {
         const { editorView } = editor(
           doc(bodiedExtension(extensionAttrs)(paragraph('te{<>}xt'))),
         );
@@ -292,20 +295,20 @@ describe('extension', () => {
           true,
         );
 
-        const pluginState = pluginKey.getState(editorView.state);
-        expect(pluginState.element).toEqual(null);
+        const pluginState = getPluginState(editorView.state);
+        expect(pluginState.element).not.toBeDefined();
         expect(editorView.state.doc).toEqualDocument(doc(paragraph('')));
       });
 
-      it('should set "element" prop in plugin state to null and remove the node, if it is an extension', () => {
+      it('should set "element" prop in plugin state to undefined and remove the node, if it is an extension', () => {
         const { editorView } = editor(doc(extension(extensionAttrs)()));
 
         expect(removeExtension()(editorView.state, editorView.dispatch)).toBe(
           true,
         );
 
-        const pluginState = pluginKey.getState(editorView.state);
-        expect(pluginState.element).toEqual(null);
+        const pluginState = getPluginState(editorView.state);
+        expect(pluginState.element).not.toBeDefined();
         expect(editorView.state.doc).toEqualDocument(doc(paragraph('')));
       });
     });
@@ -332,8 +335,8 @@ describe('extension', () => {
         true,
       );
 
-      const pluginState = pluginKey.getState(editorView.state);
-      expect(pluginState.element).toEqual(null);
+      const pluginState = getPluginState(editorView.state);
+      expect(pluginState.element).not.toBeDefined();
       expect(editorView.state.doc).toEqualDocument(doc(paragraph('')));
     });
   });
@@ -343,7 +346,7 @@ describe('extension', () => {
       const { editorView } = editor(
         doc(bodiedExtension(extensionAttrs)(paragraph('te{<>}xt'))),
       );
-      const pluginState = pluginKey.getState(editorView.state);
+      const pluginState = getPluginState(editorView.state);
       expect(pluginState.element).not.toEqual(null);
     });
   });

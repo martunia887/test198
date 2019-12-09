@@ -5,5 +5,6 @@ export {
   HeadingItem,
   SkeletonItem,
   SkeletonHeadingItem,
-} from './MenuItem';
-export { MenuGroup, Section } from './Group';
+  MenuGroup,
+  Section,
+} from './components';

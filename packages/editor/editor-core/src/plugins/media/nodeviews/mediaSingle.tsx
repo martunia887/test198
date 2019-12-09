@@ -36,6 +36,7 @@ import { MediaSingleNodeProps, MediaSingleNodeViewProps } from './types';
 import { MediaNodeUpdater } from './mediaNodeUpdater';
 import { DispatchAnalyticsEvent } from '../../analytics';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
+import { EditorAppearance } from '../../../types';
 
 export interface MediaSingleNodeState {
   width?: number;
@@ -72,6 +73,11 @@ export default class MediaSingleNode extends Component<
   UNSAFE_componentWillReceiveProps(nextProps: MediaSingleNodeProps) {
     if (nextProps.mediaProvider !== this.props.mediaProvider) {
       this.setViewMediaClientConfig(nextProps);
+    }
+
+    // Forced updates not required on mobile
+    if (nextProps.editorAppearance === 'mobile') {
+      return;
     }
 
     // We need to call this method on any prop change since attrs can get removed with collab editing
@@ -354,6 +360,7 @@ class MediaSingleNodeView extends SelectionBasedNodeView<
       mediaOptions,
       mediaPluginOptions,
       dispatchAnalyticsEvent,
+      editorAppearance,
     } = this.reactComponentProps;
 
     // getPos is a boolean for marks, since this is a node we know it must be a function
@@ -394,6 +401,7 @@ class MediaSingleNodeView extends SelectionBasedNodeView<
                     mediaPluginOptions={mediaPluginOptions}
                     mediaPluginState={mediaPluginState}
                     dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                    editorAppearance={editorAppearance}
                   />
                 );
               }}
@@ -429,6 +437,7 @@ export const ReactMediaSingleNode = (
   pluginOptions?: MediaPMPluginOptions,
   fullWidthMode?: boolean,
   dispatchAnalyticsEvent?: DispatchAnalyticsEvent,
+  editorAppearance?: EditorAppearance,
 ) => (node: PMNode, view: EditorView, getPos: getPosHandler) => {
   return new MediaSingleNodeView(node, view, getPos, portalProviderAPI, {
     eventDispatcher,
@@ -437,5 +446,6 @@ export const ReactMediaSingleNode = (
     providerFactory,
     mediaOptions,
     dispatchAnalyticsEvent,
+    editorAppearance,
   }).init();
 };
