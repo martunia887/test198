@@ -1,6 +1,19 @@
 // @flow
 const path = require('path');
-const npmRun = require('npm-run');
+const s3 = require('@auth0/s3');
+
+const client = s3.createClient({
+  maxAsyncS3: 20, // this is the default
+  s3RetryCount: 3, // this is the default
+  s3RetryDelay: 1000, // this is the default
+  multipartUploadThreshold: 20971520, // this is the default (20 MB)
+  multipartUploadSize: 15728640, // this is the default (15 MB)
+  s3Options: {
+    accessKeyId: AWS_ACCESS_KEY,
+    secretAccessKey: AWS_SECRET_KEY,
+    region: BUCKET_REGION,
+  },
+});
 
 const { BITBUCKET_COMMIT } = process.env;
 const { AWS_ACCESS_KEY } = process.env;
@@ -26,6 +39,29 @@ const filePath = process.argv[2];
 const remotePathToFile = `s3://${BUCKET_NAME}/${commitHash}/${filePath}`;
 const localFileName = path.basename(filePath);
 
-npmRun.sync(
-  `s3-cli --region="${BUCKET_REGION}" get ${remotePathToFile} ${localFileName}`,
-);
+const params = {
+  localFile: localFileName,
+
+  s3Params: {
+    Bucket: BUCKET_NAME,
+    Key: remotePathToFile,
+  },
+};
+
+// npmRun.sync(
+//   `s3-cli --region="${BUCKET_REGION}" get ${remotePathToFile} ${localFileName}`,
+// );
+
+const downloader = client.downloadFile(params);
+
+downloader.on('error', err => {
+  throw Error(`unable to download: ${err.stack}`);
+});
+
+downloader.on('progress', () => {
+  console.log('progress', downloader.progressAmount, downloader.progressTotal);
+});
+
+downloader.on('end', () => {
+  console.log('done downloading');
+});

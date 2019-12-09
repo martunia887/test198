@@ -1,7 +1,8 @@
 // @flow
 const fs = require('fs');
 const path = require('path');
-const npmRun = require('npm-run');
+// const npmRun = require('npm-run');
+const s3 = require('@auth0/s3');
 const chalk = require('chalk');
 const axios = require('axios');
 
@@ -13,6 +14,19 @@ const { AWS_ACCESS_KEY } = process.env;
 const { AWS_SECRET_KEY } = process.env;
 const BUCKET_NAME = 'atlaskit-artefacts';
 const BUCKET_REGION = 'ap-southeast-2';
+
+const client = s3.createClient({
+  maxAsyncS3: 20, // this is the default
+  s3RetryCount: 3, // this is the default
+  s3RetryDelay: 1000, // this is the default
+  multipartUploadThreshold: 20971520, // this is the default (20 MB)
+  multipartUploadSize: 15728640, // this is the default (15 MB)
+  s3Options: {
+    accessKeyId: AWS_ACCESS_KEY,
+    secretAccessKey: AWS_SECRET_KEY,
+    region: BUCKET_REGION,
+  },
+});
 
 function createDir(dir) {
   try {
@@ -89,9 +103,34 @@ function downloadFromS3(
 
   console.log('bucket', bucketPath);
   try {
-    npmRun.sync(
-      `s3-cli --region="${BUCKET_REGION}" get ${bucketPath} ${downloadToFolder}/${ratchetFile}`,
-    );
+    const params = {
+      localFile: `${downloadToFolder}/${ratchetFile}`,
+
+      s3Params: {
+        Bucket: BUCKET_NAME,
+        Key: bucketPath,
+      },
+    };
+    const downloader = client.downloadFile(params);
+
+    downloader.on('error', err => {
+      throw Error(`unable to download: ${err.stack}`);
+    });
+
+    downloader.on('progress', () => {
+      console.log(
+        'progress',
+        downloader.progressAmount,
+        downloader.progressTotal,
+      );
+    });
+
+    downloader.on('end', () => {
+      console.log('done downloading');
+    });
+    // npmRun.sync(
+    //   `s3-cli --region="${BUCKET_REGION}" get ${bucketPath} ${downloadToFolder}/${ratchetFile}`,
+    // );
   } catch (err) {
     if (err.status === 1) {
       console.warn(
@@ -122,9 +161,35 @@ function uploadToS3(pathToFile /*: string */, branch /*: string */) {
   const fileName = path.basename(pathToFile);
   const bucketPath = `s3://${BUCKET_NAME}/${branch}/bundleSize/${fileName}`;
 
-  npmRun.sync(
-    `s3-cli --region="${BUCKET_REGION}" put ${pathToFile} ${bucketPath}`,
-  );
+  const params = {
+    localFile: fileName,
+
+    s3Params: {
+      Bucket: BUCKET_NAME,
+      Key: bucketPath,
+    },
+  };
+
+  // npmRun.sync(
+  //   `s3-cli --region="${BUCKET_REGION}" put ${pathToFile} ${bucketPath}`,
+  // );
+
+  const uploader = client.uploadFile(params);
+
+  uploader.on('error', err => {
+    throw Error(`unable to upload: ${err.stack}`);
+  });
+  uploader.on('progress', () => {
+    console.log(
+      'progress',
+      uploader.progressMd5Amount,
+      uploader.progressAmount,
+      uploader.progressTotal,
+    );
+  });
+  uploader.on('end', () => {
+    console.log('done uploading');
+  });
 
   const publicUrl = `s3-${BUCKET_REGION}.amazonaws.com/${BUCKET_NAME}/${branch}/bundleSize/${fileName}`;
   console.log(chalk.green('Successfully published to', publicUrl));

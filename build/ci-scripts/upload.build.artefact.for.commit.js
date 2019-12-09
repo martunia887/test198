@@ -1,7 +1,20 @@
 // @flow
 const fs = require('fs');
 const path = require('path');
-const npmRun = require('npm-run');
+const s3 = require('@auth0/s3');
+
+const client = s3.createClient({
+  maxAsyncS3: 20, // this is the default
+  s3RetryCount: 3, // this is the default
+  s3RetryDelay: 1000, // this is the default
+  multipartUploadThreshold: 20971520, // this is the default (20 MB)
+  multipartUploadSize: 15728640, // this is the default (15 MB)
+  s3Options: {
+    accessKeyId: AWS_ACCESS_KEY,
+    secretAccessKey: AWS_SECRET_KEY,
+    region: BUCKET_REGION,
+  },
+});
 
 const { BITBUCKET_COMMIT } = process.env;
 const { AWS_ACCESS_KEY } = process.env;
@@ -49,9 +62,35 @@ if (outputPath && !outputPath.endsWith('/')) {
 }
 const bucketPath = `s3://${BUCKET_NAME}/${commitHash}/${outputPath}${fileName}`;
 
-npmRun.sync(
-  `s3-cli --region="${BUCKET_REGION}" put ${pathToFile} ${bucketPath}`,
-);
+// npmRun.sync(
+//   `s3-cli --region="${BUCKET_REGION}" put ${pathToFile} ${bucketPath}`,
+// );
+
+const params = {
+  localFile: fileName,
+
+  s3Params: {
+    Bucket: BUCKET_NAME,
+    Key: bucketPath,
+  },
+};
+
+const uploader = client.uploadFile(params);
+
+uploader.on('error', err => {
+  throw Error(`unable to upload: ${err.stack}`);
+});
+uploader.on('progress', () => {
+  console.log(
+    'progress',
+    uploader.progressMd5Amount,
+    uploader.progressAmount,
+    uploader.progressTotal,
+  );
+});
+uploader.on('end', () => {
+  console.log('done uploading');
+});
 
 const publicUrl = `https://s3-${BUCKET_REGION}.amazonaws.com/${BUCKET_NAME}/${commitHash}/${outputPath}${fileName}`;
 console.log('Successfully published to', publicUrl);

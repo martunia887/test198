@@ -13,6 +13,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@atlaskit/build-utils": "^2.3.0",
+    "@auth0/s3": "^1.0.0",
     "adf-builder": "^3.2.0",
     "axios": "^0.18.0",
     "bitbucket-build-status": "^1.1.0",

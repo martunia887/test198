@@ -85,6 +85,7 @@
     ]
   },
   "devDependencies": {
+    "@auth0/s3": "^1.0.0",
     "@babel/node": "^7.0.0",
     "@babel/plugin-syntax-optional-catch-binding": "^7.2.0",
     "@babel/preset-typescript": "^7.1.0",
@@ -594,8 +595,8 @@
   "resolutions": {
     "**/@atlaskit/theme/styled-components": "^3.2.6",
     "**/expand-range/fill-range": "2.2.3",
-    "react":"16.8.6",
-    "react-dom":"16.8.6"
+    "react": "16.8.6",
+    "react-dom": "16.8.6"
   },
   "engines": {
     "node": "^12.3.1"
