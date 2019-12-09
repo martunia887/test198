@@ -4,7 +4,7 @@ import React, { Component, ReactNode } from 'react';
 import { mount } from 'enzyme';
 
 import { ExperimentProvider } from '../ExperimentContext';
-import asExperiment from '../asExperiment';
+import asExperiment, { ExperimentComponentMap } from '../asExperiment';
 import {
   ExperimentEnrollmentResolver,
   Experiments,
@@ -36,10 +36,10 @@ describe('asExperiment', () => {
     experiments: Experiments;
     options?: ExperimentEnrollmentOptions;
   };
-  let componentMap: any;
+  let componentMap: ExperimentComponentMap;
   let callbacks: any;
-  let onError: any;
-  let onExposure: any;
+  let onError: () => void;
+  let onExposure: () => void;
   let ControlComponent: any;
   let VariantComponent: any;
   let FallbackComponent: any;

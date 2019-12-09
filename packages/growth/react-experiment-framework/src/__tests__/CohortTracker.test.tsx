@@ -6,7 +6,7 @@ import CohortTracker from '../CohortTracker';
 describe('CohortTracker', () => {
   let mockExposureDetails: any;
   let mockEnrollmentOptions: any;
-  let mockOnExposure: any;
+  let mockOnExposure: () => void;
 
   beforeEach(() => {
     mockExposureDetails = {

@@ -12,7 +12,7 @@ type State = {
   forceFallback: boolean;
 };
 
-type ExperimentComponentMap = {
+export type ExperimentComponentMap = {
   fallback: ComponentClass<any>;
   [key: string]: ComponentClass<any>;
 };
