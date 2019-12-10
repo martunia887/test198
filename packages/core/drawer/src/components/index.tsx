@@ -2,14 +2,12 @@ import React, {
   Children,
   Component,
   SyntheticEvent,
-  Fragment,
   ReactNode,
   FC,
 } from 'react';
 import { canUseDOM } from 'exenv';
 import Portal from '@atlaskit/portal';
 import { ThemeProvider } from 'styled-components';
-import { TransitionGroup, Transition } from 'react-transition-group';
 import {
   createAndFireEvent,
   withAnalyticsEvents,
@@ -17,14 +15,14 @@ import {
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 import Blanket from '@atlaskit/blanket';
+import { FadeIn, ExitingPersistence } from '@atlaskit/motion';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
 import drawerItemTheme from '../theme/drawer-item-theme';
 import FocusLock from './focus-lock';
-import DrawerPrimitive from './primitives';
-import { Fade } from './transitions';
+import { DrawerPrimitive } from './primitives';
 import { CloseTrigger, DrawerProps, DrawerWidth } from './types';
 
 const OnlyChild: FC<any> = ({ children }) =>
@@ -136,39 +134,40 @@ export class DrawerBase extends Component<
     } = this.props;
 
     return (
-      <Transition
-        in={isOpen}
-        timeout={{ enter: 0, exit: 220 }}
-        mountOnEnter
-        unmountOnExit
-      >
-        <Portal zIndex="unset">
-          <TransitionGroup component={OnlyChild}>
-            <Fragment>
-              <Fade in={isOpen}>
-                <Blanket isTinted onBlanketClicked={this.handleBlanketClick} />
-              </Fade>
-              <FocusLock
-                autoFocusFirstElem={autoFocusFirstElem}
-                isFocusLockEnabled={isFocusLockEnabled}
-                shouldReturnFocus={shouldReturnFocus}
-              >
-                <DrawerPrimitive
-                  icon={icon}
-                  in={isOpen}
-                  onClose={this.handleBackButtonClick}
-                  onCloseComplete={onCloseComplete}
-                  onOpenComplete={onOpenComplete}
-                  width={width}
-                  shouldUnmountOnExit={shouldUnmountOnExit}
-                >
-                  {children}
-                </DrawerPrimitive>
-              </FocusLock>
-            </Fragment>
-          </TransitionGroup>
-        </Portal>
-      </Transition>
+      <Portal zIndex="unset">
+        <ExitingPersistence>
+          {isOpen && (
+            <FadeIn>
+              {props => (
+                <span {...props}>
+                  <Blanket
+                    isTinted
+                    onBlanketClicked={this.handleBlanketClick}
+                  />
+                </span>
+              )}
+            </FadeIn>
+          )}
+        </ExitingPersistence>
+
+        <FocusLock
+          autoFocusFirstElem={autoFocusFirstElem}
+          isFocusLockEnabled={isFocusLockEnabled}
+          shouldReturnFocus={shouldReturnFocus}
+        >
+          <DrawerPrimitive
+            icon={icon}
+            in={isOpen}
+            onClose={this.handleBackButtonClick}
+            onCloseComplete={onCloseComplete}
+            onOpenComplete={onOpenComplete}
+            width={width}
+            shouldUnmountOnExit={shouldUnmountOnExit}
+          >
+            {children}
+          </DrawerPrimitive>
+        </FocusLock>
+      </Portal>
     );
   }
 }

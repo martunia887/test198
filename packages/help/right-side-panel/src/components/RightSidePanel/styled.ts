@@ -7,7 +7,7 @@ export const RightSidePanelDrawer = styled.div`
   background-color: white;
   width: ${panelWidth}px;
   flex: 0 0 ${panelWidth}px;
-  position relative;
+  position: relative;
   overflow: hidden;
 `;
 
