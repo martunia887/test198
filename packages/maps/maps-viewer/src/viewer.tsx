@@ -1,5 +1,5 @@
 import * as React from 'react';
-import 'mapbox-gl/dist/mapbox-gl.css';
+
 import {
   Geolocation,
   openMap,
