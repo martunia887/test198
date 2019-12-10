@@ -3,6 +3,7 @@ import {
   MediaClient,
   Identifier,
   isFileIdentifier,
+  generateIdentifierKey,
 } from '@atlaskit/media-client';
 import {
   hideControlsClassName,
@@ -13,7 +14,6 @@ import { HeaderWrapper, ListWrapper, ItemViewerWrapper } from './styled';
 import { Navigation } from './navigation';
 import Header from './header';
 import { MediaViewerExtensions } from '../components/types';
-import { generateIdentifierKey } from '../../../media-filmstrip/src/utils/generateIdentifierKey';
 
 export type Props = Readonly<
   {

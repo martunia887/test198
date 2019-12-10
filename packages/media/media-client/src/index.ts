@@ -112,6 +112,7 @@ export { observableToPromise } from './utils/observableToPromise';
 
 export { getMediaTypeFromMimeType } from './utils/getMediaTypeFromMimeType';
 export { safeUnsubscribe } from './utils/safeUnsubscribe';
+export { generateIdentifierKey } from './utils/generateIdentifierKey';
 export {
   Identifier,
   FileIdentifier,
