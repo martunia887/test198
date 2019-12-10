@@ -111,7 +111,7 @@ export const ViewedTracker = withAnalyticsEvents({
     return createAnalyticsEvent({
       eventType: UI_EVENT_TYPE,
       action: VIEWED_ACTION,
-      actionSubject: SWITCHER_SUBJECT,
+      actionSubject: props.subject,
       attributes: props.data,
     }).fire(NAVIGATION_CHANNEL);
   },
