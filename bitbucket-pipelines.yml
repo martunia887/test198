@@ -192,6 +192,7 @@ pipelines:
     build-constellation-website:
       - step:
           script:
+            - source ./build-setup.sh
             - bolt install --frozen-lockfile
             - cd services/website-constellation
             - yarn build
