@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+// import 'mapbox-gl/dist/mapbox-gl.css'; // THIS SHOULD BE DYNAMICALLY LOADED
 import {
   Geolocation,
   openMap,
@@ -58,6 +58,7 @@ export default class MapViewer extends React.Component<MapViewerProps> {
 
     return (
       <div style={parentStyle}>
+        {/* THIS CODE HAS TO BE IMPORTED FROM Map Core */}
         <link
           href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css"
           rel="stylesheet"

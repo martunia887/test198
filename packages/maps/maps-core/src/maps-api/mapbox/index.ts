@@ -8,8 +8,6 @@ import mapboxgl, {
 } from 'mapbox-gl';
 import { DEFAULT_ZOOM, MAP_PADDING } from './deafult-options';
 
-import 'mapbox-gl/dist/mapbox-gl.css'; // THIS SHOULD BE DYNAMICALLY LOADED
-
 mapboxgl.accessToken =
   'pk.eyJ1Ijoiam9zZS1udW5lei1hdGxhcyIsImEiOiJjazJ2NDc0bHQwMTZ3M2xwbThkNnBtaGhrIn0.HqY00u5U1a4juO9Md4lFMA';
 
