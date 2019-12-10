@@ -1,5 +1,5 @@
 declare module '@atlaskit/field-text-area' {
-  import { Component, FormEvent } from 'react';
+  import { Component, FormEvent, FocusEvent } from 'react';
 
   export interface FieldTextAreaStatelessProps {
     compact?: boolean;
@@ -11,9 +11,9 @@ declare module '@atlaskit/field-text-area' {
     name?: string;
     placeholder?: string;
     value?: string | number;
-    onBlur?: (event: SyntheticInputEvent<HTMLTextAreaElement>) => mixed;
-    onChange?: (event: SyntheticInputEvent<HTMLTextAreaElement>) => mixed;
-    onFocus?: (event: SyntheticInputEvent<HTMLTextAreaElement>) => mixed;
+    onBlur?: (event: FocusEvent<HTMLTextAreaElement>) => void;
+    onChange?: (event: FormEvent<HTMLTextAreaElement>) => void;
+    onFocus?: (event: FocusEvent<HTMLTextAreaElement>) => void;
     id?: string;
     isLabelHidden?: boolean;
     isMonospaced?: boolean;
