@@ -20,8 +20,7 @@
     "@atlaskit/icon": "^19.0.8",
     "@atlaskit/maps-viewer": "^0.0.1",
     "@atlaskit/maps-core": "^0.0.1",
-    "@atlaskit/media-ui": "^11.7.0",
-    "@atlaskit/modal-dialog": "^10.4.0"
+    "@atlaskit/media-ui": "^11.7.0"
   },
   "peerDependencies": {
     "react": "^16.8.0"

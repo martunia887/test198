@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Geolocation } from '@atlaskit/maps-core';
 import Button from '@atlaskit/button';
-import { ModalTransition } from '@atlaskit/modal-dialog';
 import MapModal from '../src/modal';
 
 const locations = [
@@ -49,9 +48,11 @@ export default class ExampleBasic extends React.PureComponent<{}, State> {
     return (
       <div>
         <Button onClick={this.open}>Open Modal</Button>
-        <ModalTransition>
-          {isOpen && <MapModal onClose={this.close} locations={geolocations} />}
-        </ModalTransition>
+        <MapModal
+          isOpen={isOpen}
+          onClose={this.close}
+          locations={geolocations}
+        />
       </div>
     );
   }

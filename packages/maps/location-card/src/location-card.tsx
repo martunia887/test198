@@ -3,7 +3,6 @@ import { InlineCardResolvedView } from '@atlaskit/media-ui';
 import LocationIcon from '@atlaskit/icon/glyph/location';
 import { Geolocation, locationsManager } from '@atlaskit/maps-core';
 import { MapModal } from '@atlaskit/maps-viewer';
-import { ModalTransition } from '@atlaskit/modal-dialog';
 
 export type LocationCardProps = {
   location: Geolocation;
@@ -41,17 +40,13 @@ export default class LocationCard extends React.Component<
   };
 
   renderMapModal = () => {
-    const allLocations = locationsManager.getLocations();
+    const { isSelected } = this.state;
     return (
-      <ModalTransition>
-        {this.state.isSelected && (
-          <MapModal
-            onClose={() => this.setSelected(false)}
-            locations={allLocations}
-            selected={this.props.location}
-          />
-        )}
-      </ModalTransition>
+      <MapModal
+        onClose={() => this.setSelected(false)}
+        isOpen={isSelected}
+        selected={this.props.location}
+      />
     );
   };
 
