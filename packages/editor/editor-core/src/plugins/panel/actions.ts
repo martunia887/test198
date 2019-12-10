@@ -10,8 +10,10 @@ import {
   EVENT_TYPE,
   addAnalytics,
 } from '../analytics';
-import { pluginKey } from './pm-plugins/main';
+import { pluginKey, PanelOptions } from './pm-plugins/main';
 import { PANEL_TYPE } from '../analytics/types/node-events';
+
+import { getPanelTypeBackground } from '../../../../editor-common/src/styles/shared/panel';
 
 export type DomAtPos = (pos: number) => { node: HTMLElement; offset: number };
 
@@ -36,16 +38,25 @@ export const removePanel = (): Command => (state, dispatch) => {
   return true;
 };
 
-export const changePanelType = (panelType: PanelType): Command => (
-  state,
-  dispatch,
-) => {
+export const changePanelType = (
+  panelType?: PanelType,
+  panelOptions?: PanelOptions,
+): Command => (state, dispatch) => {
   const {
     schema: { nodes },
     tr,
   } = state;
 
+  // this is a hack to add atribute to the schema in the panel state, should be removed
+  nodes.panel.attrs.panelIcon = {
+    hasDefault: false,
+  };
+  nodes.panel.attrs.panelColor = {
+    hasDefault: false,
+  };
+
   let previousType: PANEL_TYPE = pluginKey.getState(state).activePanelType;
+
   const payload: AnalyticsEventPayload = {
     action: ACTION.CHANGED_TYPE,
     actionSubject: ACTION_SUBJECT.PANEL,
@@ -60,12 +71,53 @@ export const changePanelType = (panelType: PanelType): Command => (
     `atlassian.editor.format.panel.${panelType}.button`,
   );
 
+  let previousColor = pluginKey.getState(state).activePanelColor;
+  let previousEmoji = pluginKey.getState(state).activePanelIcon;
+
+  console.log(
+    '%cPREVIOUS PANEL OPTIONS:',
+    'color: tomato',
+    panelType,
+    previousColor,
+    previousEmoji,
+  );
+
+  let panelIcon = '';
+  let panelColor = '';
+
+  if (panelOptions && panelOptions.emoji && panelType === 'emoji') {
+    panelIcon = panelOptions.emoji.shortName;
+
+    // if there was color previously set - use previous color
+    if (previousColor) {
+      panelColor = previousColor;
+    } else {
+      // if there was no previous color - use color of the previous panel
+      panelColor = getPanelTypeBackground(previousType, {});
+    }
+  }
+
+  if (panelOptions && panelOptions.color) {
+    panelColor = panelOptions.color;
+
+    // if panel type is not changed and there was active emoji - use previous emoji
+    if (!panelType && previousEmoji) {
+      panelIcon = previousEmoji;
+      panelType = 'emoji';
+    }
+  }
+
   const changePanelTypeTr = addAnalytics(
     state,
-    setParentNodeMarkup(nodes.panel, null, { panelType })(tr).setMeta(
-      pluginKey,
-      { activePanelType: panelType },
-    ),
+    setParentNodeMarkup(nodes.panel, null, {
+      panelType,
+      panelIcon,
+      panelColor,
+    })(tr).setMeta(pluginKey, {
+      activePanelType: panelType,
+      panelIcon: panelIcon,
+      panelColor: panelColor,
+    }),
     payload,
   );
   changePanelTypeTr.setMeta('scrollIntoView', false);

@@ -13,6 +13,7 @@ export enum PANEL_TYPE {
   NOTE = 'note',
   WARNING = 'warning',
   ERROR = 'error',
+  EMOJI = 'emoji',
 }
 
 export enum USER_CONTEXT {

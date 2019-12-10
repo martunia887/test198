@@ -91,6 +91,14 @@ const mainDynamicStyles = (panelType: PanelType) => (props: any) => {
   `;
 };
 
+export const getPanelTypeBackground = (panelType: PanelType, props) => {
+  const light = lightPanelColor[panelType];
+  const dark = hexToRgba(darkPanelColor[panelType], darkPanelOpacity);
+  const darkText = darkTextColor[panelType];
+  const background = themed({ light, dark })(props);
+  return background;
+};
+
 export const panelSharedStyles = css`
   .${PanelSharedCssClassName.PANEL_CONTAINER} {
     border-radius: ${borderRadius()}px;

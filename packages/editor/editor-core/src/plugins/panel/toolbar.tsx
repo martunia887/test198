@@ -48,6 +48,12 @@ export const messages = defineMessages({
     description:
       'Panels provide a way to highlight text. The error panel has a red background.',
   },
+  emoji: {
+    id: 'fabric.editor.emoji',
+    defaultMessage: 'Emoji',
+    description:
+      'Panels provide a way to highlight text. The emoji panel has a custom icon.',
+  },
 });
 
 export const getToolbarConfig: FloatingToolbarHandler = (
@@ -98,19 +104,10 @@ export const getToolbarConfig: FloatingToolbarHandler = (
           selected: activePanelType === 'error',
           title: formatMessage(messages.error),
         },
-        // {
-        //   type: 'button',
-        //   icon: MoreIcon,
-        //   onClick: openEmojiPicker,
-        //   selected: activePanelType === 'emoji',
-        //   title: formatMessage(messages.error),
-        // },
         {
           type: 'custom',
-          icon: TextColorIcon,
-          onClick: openColorPicker(),
-          selected: activePanelType === 'error',
-          title: formatMessage(messages.error),
+          selected: activePanelType === 'emoji',
+          title: formatMessage(messages.emoji),
           render: (
             view,
             idx,
@@ -130,8 +127,6 @@ export const getToolbarConfig: FloatingToolbarHandler = (
         {
           type: 'custom',
           icon: TextColorIcon,
-          onClick: openColorPicker(),
-          selected: activePanelType === 'error',
           title: formatMessage(messages.error),
           render: (
             view,
@@ -142,7 +137,11 @@ export const getToolbarConfig: FloatingToolbarHandler = (
             | React.ReactElement<any>
             | null => {
             return (
-              <ColorPickerButton key={idx} view={view}></ColorPickerButton>
+              <ColorPickerButton
+                key={idx}
+                view={view}
+                panelState={panelState}
+              ></ColorPickerButton>
             );
           },
         },

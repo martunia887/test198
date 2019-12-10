@@ -47,9 +47,14 @@ const insertPanelTypeWithAnalytics = (
   return tr;
 };
 
-const insertPanelType = (panelType: PanelType, state: EditorState) =>
+const insertPanelType = (
+  panelType: PanelType,
+  state: EditorState,
+  panelIcon: string = '',
+  panelColor: string = '',
+) =>
   state.schema.nodes.panel.createChecked(
-    { panelType },
+    { panelType, panelIcon, panelColor },
     state.schema.nodes.paragraph.createChecked(),
   );
 
@@ -134,6 +139,19 @@ const panelPlugin = (): EditorPlugin => ({
         ),
         action(insert, state) {
           return insertPanelTypeWithAnalytics(PANEL_TYPE.ERROR, state, insert);
+        },
+      },
+      {
+        title: formatMessage(messages.emojiPanel),
+        description: formatMessage(messages.emojiPanelDescription),
+        keywords: ['emoji'],
+        priority: 1000,
+        icon: () => (
+          // here should probably be <Emoji key={1} emoji={grimacing} showTooltip={true}/>
+          <IconPanel label={formatMessage(messages.emojiPanel)} />
+        ),
+        action(insert, state) {
+          return insertPanelTypeWithAnalytics(PANEL_TYPE.EMOJI, state, insert);
         },
       },
     ],

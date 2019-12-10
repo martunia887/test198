@@ -146,12 +146,24 @@ export const messages = defineMessages({
   errorPanel: {
     id: 'fabric.editor.errorPanel',
     defaultMessage: 'Error panel',
-    description: 'Visually distinguishes your text by adding a error panel',
+    description: 'Visually distinguishes your text by adding an error panel',
   },
   errorPanelDescription: {
     id: 'fabric.editor.errorPanel.description',
     defaultMessage: 'Call out errors in a colored panel',
-    description: 'Visually distinguishes your text by adding a error panel',
+    description: 'Visually distinguishes your text by adding an error panel',
+  },
+  emojiPanel: {
+    id: 'fabric.editor.emojiPanel',
+    defaultMessage: 'Emoji panel',
+    description:
+      'Visually distinguishes your text by adding a panel with custom icon',
+  },
+  emojiPanelDescription: {
+    id: 'fabric.editor.emojiPanel.description',
+    defaultMessage: 'Add notes with custom icon',
+    description:
+      'Visually distinguishes your text by adding a panel with custom icon',
   },
   other: {
     id: 'fabric.editor.other',

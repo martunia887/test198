@@ -9,6 +9,9 @@ import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
 import TipIcon from '@atlaskit/icon/glyph/editor/hint';
 import { PanelType } from '@atlaskit/adf-schema';
+import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
+import { Emoji } from '../../../../../../elements/emoji/src';
+import { getEmojiRepository } from '../../../../../../elements/util-data-test/src/emoji/story-data';
 
 const panelIcons = {
   info: InfoIcon,
@@ -17,6 +20,7 @@ const panelIcons = {
   tip: TipIcon,
   warning: WarningIcon,
   error: ErrorIcon,
+  emoji: EmojiIcon,
 };
 
 const toDOM = (node: Node) =>
@@ -42,12 +46,31 @@ class PanelNodeView {
     this.dom = dom as HTMLElement;
     this.contentDOM = contentDOM as HTMLElement;
     this.icon = this.dom.querySelector('.ak-editor-panel__icon') as HTMLElement;
-    this.renderIcon(node.attrs.panelType as PanelType);
+    this.renderIcon(node.attrs.panelType as PanelType, node.attrs.panelIcon);
+
+    // set color here depending on panel type
+    // node.attrs.panelColor = '#00ff00';
+    if (node.attrs.panelColor) {
+      this.dom.setAttribute(
+        'style',
+        `background-color: ${node.attrs.panelColor};`,
+      );
+    }
   }
 
-  private renderIcon(panelType: PanelType) {
+  private renderIcon(panelType: PanelType, panelIcon?: string) {
     const Icon = panelIcons[panelType];
-    ReactDOM.render(<Icon label={`Panel ${panelType}`} />, this.icon);
+
+    if (panelType === 'emoji' && panelIcon) {
+      const emojiService = getEmojiRepository();
+      const emojiShortName = emojiService.findByShortName(panelIcon);
+      ReactDOM.render(
+        <Emoji key={1} emoji={emojiShortName} showTooltip={true} />,
+        this.icon,
+      );
+    } else {
+      ReactDOM.render(<Icon label={`Panel ${panelType}`} />, this.icon);
+    }
   }
 }
 

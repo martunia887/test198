@@ -44,13 +44,16 @@ export const panel: NodeSpec = {
       tag: 'div[data-panel-type]',
       getAttrs: dom => ({
         panelType: (dom as HTMLElement).getAttribute('data-panel-type')!,
+        panelIcon: (dom as HTMLElement).getAttribute('data-panel-icon')!,
       }),
     },
   ],
   toDOM(node: Node) {
     const panelType = node.attrs['panelType'];
+    const panelIcon = node.attrs['panelIcon'];
     const attrs: DOMAttributes = {
       'data-panel-type': panelType,
+      'data-panel-icon': panelIcon,
     };
     return ['div', attrs, ['div', {}, 0]];
   },

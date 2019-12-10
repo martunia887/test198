@@ -1,14 +1,16 @@
-import React, { Component, RefObject } from 'react';
+import React, { Component, RefObject, SyntheticEvent } from 'react';
 import { Button } from '../../../../../../core/button/src/components/Button';
-import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
 import MoreIcon from '@atlaskit/icon/glyph/editor/more';
-import { openEmojiPicker } from '../actions';
+import { changePanelType } from '../actions';
 
-import { Emoji } from '../../../../../../elements/emoji/src/element';
 import { EditorView } from 'prosemirror-view';
 import { emoji } from '@atlaskit/util-data-test';
 import Popup from '../../../../../editor-common/src/ui/Popup';
-import EmojiPicker from '../../../../../../elements/emoji/src';
+import EmojiPicker, {
+  EmojiId,
+  OptionalEmojiDescription,
+} from '../../../../../../elements/emoji/src';
+import { pluginKey as panelPluginKey } from '../pm-plugins/main';
 
 const { getEmojiResource } = emoji.storyData;
 
@@ -55,6 +57,13 @@ export default class EmojiPickerButton extends Component<Props, State> {
     );
   }
 
+  private updateEmoji = (emoji: EmojiId) => {
+    const editorView = this.props.view as EditorView<any>;
+    changePanelType('emoji', {
+      emoji: emoji,
+    })(editorView.state, editorView.dispatch);
+  };
+
   private renderPopup() {
     let target;
     if (this.buttonRef.current && this.buttonRef.current.button) {
@@ -78,7 +87,9 @@ export default class EmojiPickerButton extends Component<Props, State> {
       >
         <EmojiPicker
           emojiProvider={emojiProvider}
-          onSelection={() => {}}
+          onSelection={(emojiId: EmojiId) => {
+            this.updateEmoji(emojiId);
+          }}
           onPickerRef={() => {}}
         />
       </Popup>

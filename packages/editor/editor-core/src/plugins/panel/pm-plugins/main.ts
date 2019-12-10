@@ -5,11 +5,19 @@ import {
 } from 'prosemirror-utils';
 import { panelNodeView } from '../nodeviews/panel';
 import { Command, PMPluginFactoryParams } from '../../../types';
+import { EmojiId } from '../../../../../../elements/emoji/src';
 
 export type PanelState = {
   element?: HTMLElement;
   activePanelType?: string | undefined;
+  activePanelColor?: string | undefined;
+  activePanelIcon?: string | undefined;
   toolbarVisible?: boolean | undefined;
+};
+
+export type PanelOptions = {
+  color?: string;
+  emoji?: EmojiId;
 };
 
 export const getPluginState = (state: EditorState): PanelState => {
@@ -78,6 +86,8 @@ export const createPlugin = ({ dispatch }: PMPluginFactoryParams) =>
             setPluginState({
               element: parentDOM,
               activePanelType: parent && parent!.node.attrs['panelType'],
+              activePanelColor: parent && parent!.node.attrs['panelColor'],
+              activePanelIcon: parent && parent!.node.attrs['panelIcon'],
               toolbarVisible: !!parent,
             })(view.state, view.dispatch);
             return true;
