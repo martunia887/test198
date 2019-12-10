@@ -8,7 +8,8 @@ import {
 import { Card } from '@atlaskit/media-card';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
 import {
-  FileIdentifier, ExternalImageIdentifier,
+  FileIdentifier,
+  ExternalImageIdentifier,
 } from '@atlaskit/media-client';
 import Button from '@atlaskit/button';
 import Select, { ValueType } from '@atlaskit/select';
@@ -26,7 +27,7 @@ import {
   UploadEndEventPayload,
   UploadPreviewUpdateEventPayload,
   Popup,
-  MediaFile
+  MediaFile,
 } from '../src/types';
 import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 
@@ -70,7 +71,7 @@ export default class Example extends React.Component<{}, State> {
       uploadParams: {
         collection: defaultCollectionName,
       },
-      plugins: [unsplashPlugin, emojiPlugin, AIPlugin],
+      plugins: [emojiPlugin, AIPlugin],
     });
 
     popup.on('plugin-items-inserted', (items: PluginItemPayload[]) => {
