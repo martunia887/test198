@@ -5,10 +5,13 @@ import {
   ArchiveEntries,
   ArchiveWrapper,
   SelectedEntryWrapper,
+  CustomVideoPlayerWrapper,
 } from '../styled';
 import { MediaViewerError } from '../error';
 import { BaseViewer } from './base-viewer';
-import { ZipiZape, ZipEntry } from 'zipizape';
+import { ZipiZape, ZipEntry, EntryContent } from 'zipizape';
+import { InteractiveImg } from './image/interactive-img';
+import { CustomMediaPlayer } from '../../../../media-ui/src/customMediaPlayer';
 
 export type Props = {
   mediaClient: MediaClient;
@@ -21,7 +24,7 @@ export type Props = {
 
 type Content = {
   entries: ZipEntry[];
-  selectedEntry: ZipEntry;
+  selectedEntryContent: EntryContent;
 };
 
 export class ArchiveViewer extends BaseViewer<Content, Props> {
@@ -40,7 +43,7 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
       this.setState({
         content: Outcome.successful({
           entries,
-          selectedEntry: entries[0],
+          selectedEntryContent: await entries[0].getContent(), // TODO handle undefined
         }),
       });
     } else {
@@ -50,17 +53,16 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
 
   protected get initialState() {
     return {
-      content: Outcome.pending<string, MediaViewerError>(),
+      content: Outcome.pending<Content, MediaViewerError>(),
     };
   }
 
   protected release() {
-    return null;
+    return null; // TODO
   }
 
   protected renderSuccessful(content: Content) {
-    const { entries, selectedEntry } = content;
-    console.log({ selectedEntry });
+    const { entries, selectedEntryContent } = content;
     // TODO: handle empty entries
     const entriesContent = entries.map((entry, index) => {
       return (
@@ -70,10 +72,14 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
       );
     });
 
+    console.log({ entriesContent });
+
+    const selectedEntryViewer = this.renderEntryViewer(selectedEntryContent);
+
     return (
       <ArchiveWrapper>
         <ArchiveEntries>{entriesContent}</ArchiveEntries>
-        <SelectedEntryWrapper></SelectedEntryWrapper>
+        <SelectedEntryWrapper>{selectedEntryViewer}</SelectedEntryWrapper>
       </ArchiveWrapper>
     );
   }
@@ -81,12 +87,41 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
   private changeSelectedEntry = (
     entries: ZipEntry[],
     selectedEntry: ZipEntry,
-  ) => () => {
+  ) => async () => {
+    const selectedEntryContent = await selectedEntry.getContent();
     this.setState({
       content: Outcome.successful({
         entries,
-        selectedEntry,
+        selectedEntryContent: selectedEntryContent,
       }),
     });
   };
+
+  private renderEntryViewer(entryContent: EntryContent) {
+    const content = entryContent.getPreview()!.src;
+    switch (entryContent.type) {
+      case 'image':
+        return <InteractiveImg src={content} />;
+      case 'video':
+        return (
+          <CustomVideoPlayerWrapper data-testid="media-viewer-video-content">
+            <CustomMediaPlayer
+              type="video"
+              // isAutoPlay={isAutoPlay}
+              // onHDToggleClick={this.onHDChange}
+              // showControls={showControls}
+              src={content}
+              // isHDActive={isHDActive}
+              // isHDAvailable={isHDAvailable(item)}
+              // isShortcutEnabled={true}
+              // onCanPlay={onCanPlay}
+              // onFirstPlay={this.onFirstPlay}
+              // onError={onError}
+            />
+          </CustomVideoPlayerWrapper>
+        );
+      default:
+        return null;
+    }
+  }
 }

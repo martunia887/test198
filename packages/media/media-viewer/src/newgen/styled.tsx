@@ -340,8 +340,19 @@ export const CustomVideoPlayerWrapper = styled.div`
 `;
 
 export const ArchiveEntries = styled.div`
+  position: absolute;
+  top: 0;
+  padding: 20px;
+  left: 0;
+  width: 350px;
+  height: 100%;
+  background: white;
+  color: black;
+  z-index: 99999999999999999;
+`;
+
+export const ArchiveWrapper = styled.div`
   color: white;
 `;
 
-export const ArchiveWrapper = styled.div``;
 export const SelectedEntryWrapper = styled.div``;
