@@ -22,6 +22,14 @@ export const mockState: State = {
   recents: {
     items: [],
   },
+  activities: {
+    workedOn: {
+      nodes: [],
+    },
+    viewed: {
+      nodes: [],
+    },
+  },
   selectedItems: [],
   lastUploadIndex: 0,
   uploads: {},
