@@ -247,6 +247,7 @@ module.exports = {
         '@typescript-eslint/array-type': 'off',
         '@typescript-eslint/explicit-member-accessibility': 'off',
         '@typescript-eslint/interface-name-prefix': 'off',
+        '@typescript-eslint/no-empty-function': 'off', // ~108
         '@typescript-eslint/no-empty-interface': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-inferrable-types': 'off',
@@ -256,9 +257,10 @@ module.exports = {
         '@typescript-eslint/no-use-before-define': 'off',
         '@typescript-eslint/no-var-requires': 'off',
         '@typescript-eslint/prefer-interface': 'off',
+        '@typescript-eslint/ban-ts-ignore': 'off', // ~362
+        '@typescript-eslint/consistent-type-assertions': 'off', // ~20
 
         'no-useless-constructor': 'off',
-        'no-console': 'off', // FIXME: 8 files complaining, even though they have ignore comments.
 
         // TODO: Move out of override when js files no longer violate this
         'no-restricted-imports': [
@@ -421,6 +423,7 @@ module.exports = {
       rules: {
         'no-console': 'off',
         'max-classes-per-file': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
       },
     },
     {
@@ -451,6 +454,7 @@ module.exports = {
         'global-require': 'off',
         'no-restricted-imports': 'off',
         'max-classes-per-file': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
       },
     },
     {
