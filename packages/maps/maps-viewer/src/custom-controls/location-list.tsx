@@ -15,12 +15,14 @@ const getTitle = (location: Geolocation) => {
 
 export default ({ locations }: { locations: Geolocation[] }) => {
   return (
-    <div>
-      <Item
-        before={JiraCaptureIcon}
-        text={'Center All'}
-        onClick={() => centerAll()}
-      />
+    <div style={{ padding: 10 }}>
+      {locations.length > 1 && (
+        <Item
+          before={JiraCaptureIcon}
+          text={'Center All'}
+          onClick={() => centerAll()}
+        />
+      )}
       {locations.map((location, i) => {
         const title = getTitle(location);
         const icon = () => (
