@@ -191,7 +191,7 @@ interface ProviderResults {
 }
 
 function isTenantless(product: Product) {
-  return [Product.BITBUCKET, Product.TRELLO].includes(product);
+  return [Product.BITBUCKET, Product.TRELLO].indexOf(product) !== -1;
 }
 
 function asUserSiteDataProviderResult(
