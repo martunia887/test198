@@ -4,8 +4,6 @@ const path = require('path');
 const bolt = require('bolt');
 const git = require('./git');
 
-const { TARGET_BRANCH } = process.env;
-
 async function getChangedPackagesSinceCommit(commit) {
   const changedFiles = await git.getChangedFilesSince(commit, true);
   const project = await bolt.getProject();
@@ -54,14 +52,20 @@ async function getChangedPackagesSinceDevelop() {
   return getChangedPackagesSinceCommit(developRef);
 }
 
-async function getChangedPackages() {
-  const parent = TARGET_BRANCH || (await git.getParent());
-  if (parent) {
-    return parent === 'develop'
-      ? getChangedPackagesSinceDevelop()
-      : getChangedPackagesSinceMaster();
-  }
-  return getChangedPackagesSinceMaster();
+async function getChangedPackages(
+  targetBranch /*: ?string */,
+  sourceBranch /*: ?string */,
+) {
+  // TODO: This is duplicated in scheduled-releases folder because it is using js for now. To remove when we move all build packages in TS.
+  const ReleaseBranchPrefix = 'release-candidate/';
+  const branch = `${sourceBranch || ''}`.startsWith(ReleaseBranchPrefix)
+    ? 'master'
+    : targetBranch;
+
+  const parent = branch || (await git.getParentBranch());
+  return parent === 'develop'
+    ? getChangedPackagesSinceDevelop()
+    : getChangedPackagesSinceMaster();
 }
 
 module.exports = {

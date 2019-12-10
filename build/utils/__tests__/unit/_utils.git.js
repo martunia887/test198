@@ -34,7 +34,7 @@ async function createTmpRemoteRepository() {
   }
 }
 
-async function createTmpLocalRepository(tmpOriginRemotePath) {
+async function createTmpLocalRepository(tmpOriginRemotePath /*: string */) {
   try {
     const tmpLocalDir = fs.mkdtempSync(path.join(os.tmpdir(), 'git-local-'));
     // Make sure, we are running git inside the fake origin temp dir.
@@ -58,7 +58,7 @@ async function createTmpLocalRepository(tmpOriginRemotePath) {
   }
 }
 
-function cleanUp(folderPath) {
+function cleanUp(folderPath /*:string */) {
   fsExtra.remove(folderPath, err => {
     if (err !== null) {
       throw Error(

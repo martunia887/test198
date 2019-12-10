@@ -73,7 +73,7 @@ async function getChangedChangesetFilesSinceDevelop(
 }
 
 async function getChangesetFiles() {
-  const parent = await getParent();
+  const parent = await getParentBranch();
   return parent === 'develop'
     ? getChangedChangesetFilesSinceDevelop()
     : getChangedChangesetFilesSinceMaster();
@@ -85,12 +85,12 @@ async function getBranchName() {
 }
 
 async function getMasterRef() {
-  const gitCmd = await spawn('git', ['rev-parse', 'master']);
+  const gitCmd = await spawn('git', ['rev-parse', 'origin/master']);
   return gitCmd.stdout.trim().split('\n')[0];
 }
 
 async function getDevelopRef() {
-  const gitCmd = await spawn('git', ['rev-parse', 'develop']);
+  const gitCmd = await spawn('git', ['rev-parse', 'origin/develop']);
   return gitCmd.stdout.trim().split('\n')[0];
 }
 
@@ -328,10 +328,7 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
   return unpublishedCommits;
 }
 
-async function getMergeCommits(
-  branchName /*: string */,
-  reference /*: string */,
-) {
+async function getMergeBase(branchName /*: string */, reference /*: string */) {
   const gitCmd = await spawn('git', [
     'merge-base',
     `${branchName}`,
@@ -343,31 +340,31 @@ async function getMergeCommits(
   return commit;
 }
 
-async function branchContainsCommit(commitId /*:string */) {
+async function branchContainsCommit(
+  commitHash /*:string */,
+  branchName /*:string */,
+) {
   const gitCmd = await spawn('git', [
     'branch',
     '-r',
     '--contains',
-    `${commitId}`,
+    `${commitHash}`,
   ]);
 
   // eslint-disable-next-line no-shadow
-  const output = gitCmd.stdout.split('\n')[0];
-  return output;
+  const output = gitCmd.stdout.split('\n');
+  // We are coercing to a boolean if we find the branchname.
+  return !!output.find(b => b.includes(branchName));
 }
 
-async function getParent() {
+async function getParentBranch(ref /*: string */ = 'HEAD') {
   await fetch();
-  try {
-    const mergeDevelopCommit = await getMergeCommits('develop', 'HEAD');
-    const output = await branchContainsCommit(mergeDevelopCommit);
-    return output.includes('origin/master') ? 'master' : 'develop';
-  } catch (err) {
-    console.warn(
-      `In some cases, 'develop' is not found: ${err}, especially in the test, so we default to master`,
-    );
-    return 'master';
-  }
+  const developMergeBase = await getMergeBase('origin/develop', ref);
+  const isOriginMaster = await branchContainsCommit(
+    developMergeBase,
+    'origin/master',
+  );
+  return isOriginMaster ? 'master' : 'develop';
 }
 
 module.exports = {
@@ -396,5 +393,5 @@ module.exports = {
   getAllReleaseCommits,
   getAllChangesetCommits,
   getLastPublishCommit,
-  getParent,
+  getParentBranch,
 };

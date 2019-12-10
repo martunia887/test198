@@ -6,6 +6,8 @@ const {
 } = require('@atlaskit/build-utils/tools');
 const { getChangedPackages } = require('@atlaskit/build-utils/packages');
 
+const { TARGET_BRANCH } = process.env;
+
 /**
  * This is a helper script to return whether or not a certain tool should be run.
  * It works by returning a zero code if a tool should be run, so that the normal usage becomes:
@@ -46,7 +48,7 @@ const { getChangedPackages } = require('@atlaskit/build-utils/packages');
 
   const [packages, changedPackages] = await Promise.all([
     getPackagesInfo(cwd),
-    getChangedPackages(),
+    getChangedPackages(TARGET_BRANCH),
   ]);
 
   const changedPackageDirs = changedPackages.map(pkg => pkg.dir);
