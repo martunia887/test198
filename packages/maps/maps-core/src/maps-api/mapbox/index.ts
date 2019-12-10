@@ -68,9 +68,15 @@ export const createMarker = (
 export function goToCoords(
   map: MapboxMap,
   coords: LngLatLike,
-  zoom: number = DEFAULT_ZOOM,
+  setZoom?: number,
 ) {
-  map.easeTo({ center: coords, zoom });
+  const currentZoom = map.getZoom();
+  const useZoom = setZoom
+    ? setZoom
+    : currentZoom > DEFAULT_ZOOM
+    ? currentZoom
+    : DEFAULT_ZOOM;
+  map.easeTo({ center: coords, zoom: useZoom });
 }
 
 export function centerAll(map: MapboxMap, coords: LngLatLike[]) {
