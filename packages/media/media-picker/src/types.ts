@@ -130,3 +130,4 @@ export type MediaError = {
   readonly name: MediaErrorName;
   readonly description: string;
 };
+export { MediaPickerPlugin, PluginItemPayload } from './domain/plugin';

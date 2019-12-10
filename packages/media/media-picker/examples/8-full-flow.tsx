@@ -78,21 +78,8 @@ export default class Example extends React.Component<{}, State> {
       const { events } = this.state;
       const newEvents: TenantFileRecord[] = items.map(item => {
         const { pluginName } = item;
-        if (pluginName === 'unsplash') {
-          const metadata: UnsplashFileMetadata = item.pluginFile.metadata;
-
-          return {
-            src: metadata.src,
-          };
-        } else if (pluginName === 'emoji') {
-          const metadata = item.pluginFile.metadata;
-
-          return {
-            src: metadata.src,
-          };
-        }
-
-        return {};
+        console.log('Inserting from', pluginName);
+        return { src: item.pluginFile.metadata.src };
       });
 
       this.setState({

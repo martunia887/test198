@@ -296,7 +296,6 @@ export async function importFiles(
       );
     });
 
-  touchSelectedFiles(selectedUploadFiles, store);
   eventEmitter.emitPluginItemsInserted(selectedPluginItems);
 
   await Promise.all(

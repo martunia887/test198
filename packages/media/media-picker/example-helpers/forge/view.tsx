@@ -1,29 +1,11 @@
 import * as React from 'react';
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import styled from 'styled-components';
 import FieldText from '@atlaskit/field-text';
 
 import { BricksView, BrickItem } from '../../src/plugins/bricksPluginView';
 import { ForgeViewProps } from './types';
 import { ForgeClient } from './client';
-
-export const PluginWrapper = styled.div`
-  overflow: auto;
-`;
-export const PluginHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-
-  label {
-    display: none;
-  }
-
-  > div {
-    flex: initial;
-  }
-`;
+import { PluginWrapper, PluginHeader } from './styled';
 
 export const ForgeView = ({
   extensionOpts: { type, name, id },

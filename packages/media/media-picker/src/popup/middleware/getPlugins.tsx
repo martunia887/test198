@@ -1,16 +1,11 @@
 import * as React from 'react';
-import { useMemo } from 'react';
 import { Action, Dispatch, Store } from 'redux';
 import { State } from '../domain';
 import { getPluginsFullfilled, getPluginsFailed } from '../actions';
 import { isGetPluginsAction } from '../actions/getPlugins';
 import ImageIcon from '@atlaskit/icon/glyph/image';
 import { MediaPickerPlugin } from '../../domain/plugin';
-import {
-  ForgeView,
-  ForgeClient,
-  ForgeExtension,
-} from '../../../example-helpers/forge';
+import { ForgeView, ForgeExtension } from '../../../example-helpers/forge';
 
 const BASE_URL = 'https://api-private.stg.atlassian.com';
 const GRAPHQL_PATH = '/graphql';
@@ -22,7 +17,7 @@ const PLUGINS = `
     properties
 `;
 const PLUGINS_QUERY = `
-    query get_extensions {
+    query {
         extensionContexts(contextIds: ["${EXTENSIONS_ARI}"]) {
             extensionsByType(type: "platform:objectProvider") {
                 ${PLUGINS}
@@ -47,7 +42,6 @@ export const requestPlugins = (store: Store<State>): void => {
     method: 'POST',
     credentials: 'include',
     body: JSON.stringify({
-      operationName: 'get_extensions',
       query: PLUGINS_QUERY,
     }),
     headers: {
