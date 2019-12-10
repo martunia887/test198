@@ -1,6 +1,6 @@
 import * as mapbox from './mapbox';
 import { MapboxMap, Marker } from './mapbox';
-import { Location as Geolocation } from '../index';
+import { Geolocation } from '../';
 
 let locationsMarkers: Map<Geolocation, Marker>;
 let mapPromise: Promise<MapboxMap> | undefined;
