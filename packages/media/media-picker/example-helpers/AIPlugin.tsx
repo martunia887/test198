@@ -19,6 +19,7 @@ class AIView extends Component<{}, AIViewState> {
   };
 
   async componentDidMount() {
+    // @ts-ignore
     await new Promise(resolve => setTimeout(resolve, 5000));
 
     this.setState({ isLoading: false });
