@@ -329,7 +329,7 @@ export default class extends React.Component<{}, State> {
     return (
       <div>
         <h3>Select an apperance option to see its effects in contexts</h3>
-        <select onChange={this.setAppearance} value={this.state.appearance}>
+        <select onBlur={this.setAppearance} value={this.state.appearance}>
           {appearances.map(a => (
             <option key={a} value={a}>
               {a}

@@ -161,7 +161,7 @@ export default class Example extends Component<{}, State> {
                 </label>
               </p>
               <p>
-                <select onChange={this.handleThemeModeChange} value={themeMode}>
+                <select onBlur={this.handleThemeModeChange} value={themeMode}>
                   <option value="light">Light mode</option>
                   <option value="dark">Dark mode</option>
                   <option value="settings">Settings mode</option>

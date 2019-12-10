@@ -100,7 +100,7 @@ class Example extends React.Component<{}, ExampleState> {
               Use Orientation:&nbsp;
               <select
                 defaultValue={`${orientation}`}
-                onChange={this.onSelectOrientation}
+                onBlur={this.onSelectOrientation}
               >
                 <option value="0">From Image (if metadata available)</option>
                 <option value="1">1 (none)</option>

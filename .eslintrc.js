@@ -15,7 +15,7 @@ module.exports = {
     'prettier',
     'prettier/react',
     'plugin:compat/recommended',
-    // 'plugin:jsx-a11y/recommended' // adds 3 new failures which airbnb existing version doesn't seem to check `jsx-a11y/no-onchange`. TODO: Activate?
+    'plugin:jsx-a11y/recommended', // adds 3 new failures which airbnb existing version doesn't seem to check `jsx-a11y/no-onchange`. TODO: Activate?
   ],
   settings: {
     'import/extensions': ['.js', '.ts', '.tsx'],
