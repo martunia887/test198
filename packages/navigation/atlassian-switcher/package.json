@@ -47,7 +47,6 @@
     "@atlaskit/atlassian-switcher-test-utils": "^0.1.0",
     "@atlaskit/docs": "^8.1.8",
     "@atlaskit/drawer": "^5.1.0",
-    "@atlaskit/field-text": "^9.0.13",
     "@atlaskit/form": "^6.3.1",
     "@atlaskit/i18n-tools": "^0.6.0",
     "@atlaskit/inline-dialog": "^12.1.3",

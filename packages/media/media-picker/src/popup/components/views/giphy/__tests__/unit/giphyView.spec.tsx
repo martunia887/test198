@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 
 import Button from '@atlaskit/button';
 import Spinner from '@atlaskit/spinner';
-import FieldText from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 import { Card } from '@atlaskit/media-card';
 import { fakeIntl, mountWithIntlContext } from '@atlaskit/media-test-helpers';
 
@@ -136,7 +136,7 @@ describe('<ConnectedGiphyView />', () => {
       );
 
       expect(giphyView.find(Title)).toHaveLength(1);
-      expect(giphyView.find(FieldText)).toHaveLength(1);
+      expect(giphyView.find(TextField)).toHaveLength(1);
       expect(giphyView.find(ButtonContainer)).toHaveLength(1);
       expect(giphyView.find(Button)).toHaveLength(1);
     });
@@ -274,7 +274,7 @@ describe('<ConnectedGiphyView />', () => {
       );
 
       expect(giphyView.find(Title)).toHaveLength(1);
-      expect(giphyView.find(FieldText)).toHaveLength(1);
+      expect(giphyView.find(TextField)).toHaveLength(1);
       expect(giphyView.find(WarningImage)).toHaveLength(1);
       expect(giphyView.find(WarningContainer)).toHaveLength(1);
       expect(giphyView.find(WarningHeading)).toHaveLength(1);
@@ -336,7 +336,7 @@ describe('<ConnectedGiphyView />', () => {
       expect(giphyView.find(Button)).toHaveLength(0);
     });
 
-    it('should call onSearchQueryChange() when FieldText fires onChange after one second', () => {
+    it('should call onSearchQueryChange() when TextField fires onChange after one second', () => {
       const giphyView = shallow(
         <GiphyView
           intl={fakeIntl}
@@ -352,7 +352,7 @@ describe('<ConnectedGiphyView />', () => {
       );
 
       giphyView
-        .find(FieldText)
+        .find(TextField)
         .simulate('change', { currentTarget: { value: 'some-search-query' } });
       expect(onSearchQueryChange).toHaveBeenCalledTimes(1);
     });

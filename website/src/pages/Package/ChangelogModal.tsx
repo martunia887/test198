@@ -9,7 +9,7 @@ import CloseIcon from '@atlaskit/icon/glyph/cross';
 
 import Button from '@atlaskit/button';
 import { gridSize, math } from '@atlaskit/theme';
-import { FieldTextStateless as Input } from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 import Modal, { ModalHeader as OgModalHeader } from '@atlaskit/modal-dialog';
 
 import * as fs from '../../utils/fs';
@@ -62,14 +62,12 @@ const Header = ({
 }: HeaderProps) => (
   <ModalHeader showKeyline={showKeyline}>
     <FieldWrapper>
-      <Input
+      <TextField
         key="input"
         isInvalid={isInvalid}
-        isLabelHidden
         label="Semver Range"
         onChange={onChange}
         placeholder={'Semver Range: e.g. "> 1.0.6 <= 3.0.2"'}
-        shouldFitContainer
         value={value}
       />
     </FieldWrapper>

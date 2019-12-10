@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
-import FieldText from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
 import Spinner from '@atlaskit/spinner';
 import { Card } from '@atlaskit/media-card';
@@ -88,11 +88,9 @@ export class GiphyView extends Component<GiphyViewProps, GiphyViewState> {
     return (
       <Container id="mediapicker-giphy-container">
         <Title>GIPHY</Title>
-        <FieldText
-          label=""
+        <TextField
           placeholder={formatMessage(messages.search_all_gifs)}
           onChange={this.searchChangeHandler}
-          shouldFitContainer={true}
           value={query}
         />
         {this.getContent()}

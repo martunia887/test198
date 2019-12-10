@@ -50,7 +50,6 @@
     "@atlaskit/checkbox": "^10.1.2",
     "@atlaskit/docs": "^8.1.8",
     "@atlaskit/field-radio-group": "^6.0.14",
-    "@atlaskit/field-text": "^9.0.13",
     "@atlaskit/form": "^6.3.2",
     "@atlaskit/inline-dialog": "^12.1.5",
     "@atlaskit/select": "^11.0.0",

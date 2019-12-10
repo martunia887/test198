@@ -2,7 +2,7 @@ import React, { Component, FormEvent, ElementType } from 'react';
 import styled from 'styled-components';
 
 import Button from '@atlaskit/button';
-import { FieldTextStateless } from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 
 import { metadata } from '../src';
 import IconExplorerCell from './utils/IconExplorerCell';
@@ -95,15 +95,12 @@ class IconAllExample extends Component<{}, State> {
   render() {
     return (
       <div>
-        <FieldTextStateless
-          isLabelHidden
+        <TextField
           key="Icon search"
-          label=""
           onChange={(event: FormEvent<HTMLInputElement>) =>
             this.updateQuery(event.currentTarget.value)
           }
           placeholder="Search for an icon..."
-          shouldFitContainer
           value={this.state.query}
         />
         <IconGridWrapper>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import TextField from '@atlaskit/field-text';
+import { Label } from '@atlaskit/field-base';
+import TextField from '@atlaskit/textfield';
 import { InlineCardForbiddenView } from '../src/InlineCard/ForbiddenView';
 import { IntlProvider } from 'react-intl';
 
@@ -19,10 +20,9 @@ class Example extends React.Component {
         <Page>
           <Grid>
             <GridColumn>
+              <Label htmlFor="url" label="URL" />
               <TextField
-                autoFocus={true}
-                label="URL"
-                shouldFitContainer={true}
+                autoFocus
                 value={this.state.url}
                 onChange={this.handleUrlChange}
               />
