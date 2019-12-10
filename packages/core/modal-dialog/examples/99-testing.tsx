@@ -28,7 +28,7 @@ export default class ExampleBasic extends React.PureComponent<{}, State> {
     console.log(actions);
     return (
       <div>
-        <Button testId={'open-modal'} onClick={this.open}>
+        <Button testId="open-modal" onClick={this.open}>
           Open Modal
         </Button>
 
@@ -38,7 +38,7 @@ export default class ExampleBasic extends React.PureComponent<{}, State> {
               actions={actions}
               onClose={this.close}
               heading="Modal Title"
-              testId={'my-modal'}
+              testId="my-modal"
             >
               <Lorem count={2} />
             </Modal>

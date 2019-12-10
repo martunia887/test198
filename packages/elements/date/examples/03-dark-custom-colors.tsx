@@ -10,7 +10,7 @@ const DateInParagraph = ({ color }: { color?: Color }) => (
 );
 
 export default () => (
-  <AtlaskitThemeProvider mode={'dark'}>
+  <AtlaskitThemeProvider mode="dark">
     <DateInParagraph />
     <DateInParagraph color="red" />
     <DateInParagraph color="green" />

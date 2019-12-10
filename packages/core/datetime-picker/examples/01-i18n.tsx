@@ -118,7 +118,7 @@ export default class extends React.Component<Object, IntlState> {
           id="datepicker-1"
           onChange={onChange}
           locale={locale}
-          testId={'datePicker'}
+          testId="datePicker"
         />
 
         <Label
@@ -198,7 +198,7 @@ export default class extends React.Component<Object, IntlState> {
           onChange={onChange}
           timeIsEditable
           locale={locale}
-          testId={'timePicker'}
+          testId="timePicker"
         />
 
         <h3>Date / time picker</h3>
@@ -207,7 +207,7 @@ export default class extends React.Component<Object, IntlState> {
           id="datetimepicker-1"
           onChange={onChange}
           locale={locale}
-          testId={'dateTimePicker'}
+          testId="dateTimePicker"
         />
 
         <Label

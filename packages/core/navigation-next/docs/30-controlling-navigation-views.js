@@ -444,8 +444,8 @@ ${(
     title="Reducers should only be used as an escape hatch."
   >
     Recommended uses for this feature are pretty much limited to experiments and
-    legacy (non-React) integrations. If {`you're`} trying to create a stateful
-    view, either control the state externally and pass arguments to the{' '}
+    legacy (non-React) integrations. If you're trying to create a stateful view,
+    either control the state externally and pass arguments to the{' '}
     <code>getItems</code> function, or use a custom item in the view which
     manages some internal state.
   </SectionMessage>

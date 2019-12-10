@@ -54,7 +54,7 @@ describe('<Mention />', () => {
 
     it('should render a default lozenge if the user has CONTAINER permissions but is not being mentioned', () => {
       const mention = mountWithIntl(
-        <Mention {...mentionData} accessLevel={'CONTAINER'} />,
+        <Mention {...mentionData} accessLevel="CONTAINER" />,
       );
       expect(mention.find(MentionStyle).prop('mentionType')).toEqual(
         MentionType.DEFAULT,
@@ -72,7 +72,7 @@ describe('<Mention />', () => {
 
     it('should render a restricted style lozenge if the user has non-CONTAINER permissions', () => {
       const mention = mountWithIntl(
-        <Mention {...mentionData} accessLevel={'NONE'} />,
+        <Mention {...mentionData} accessLevel="NONE" />,
       );
       expect(mention.find(MentionStyle).prop('mentionType')).toEqual(
         MentionType.RESTRICTED,
@@ -118,7 +118,7 @@ describe('<Mention />', () => {
           onEvent={analyticsNextHandlerSpy}
           channel={ELEMENTS_CHANNEL}
         >
-          <Mention {...mentionData} accessLevel={'CONTAINER'} />
+          <Mention {...mentionData} accessLevel="CONTAINER" />
         </AnalyticsListenerNext>,
       );
       mention.find(MentionStyle).simulate('click');
@@ -165,7 +165,7 @@ describe('<Mention />', () => {
           onEvent={analyticsNextHandlerSpy}
           channel={ELEMENTS_CHANNEL}
         >
-          <Mention {...mentionData} accessLevel={'CONTAINER'} />
+          <Mention {...mentionData} accessLevel="CONTAINER" />
         </AnalyticsListenerNext>,
       );
       mention.find(MentionStyle).simulate('mouseenter');
@@ -184,7 +184,7 @@ describe('<Mention />', () => {
           onEvent={analyticsNextHandlerSpy}
           channel={ELEMENTS_CHANNEL}
         >
-          <Mention {...mentionData} accessLevel={'CONTAINER'} />
+          <Mention {...mentionData} accessLevel="CONTAINER" />
         </AnalyticsListenerNext>,
       );
       mention.find(MentionStyle).simulate('mouseenter');

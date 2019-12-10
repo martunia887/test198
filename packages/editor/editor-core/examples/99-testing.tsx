@@ -83,7 +83,7 @@ function withDarkMode<T>(
   Wrapper: React.ComponentType<T>,
 ): React.ComponentType<T> {
   return props => (
-    <AtlaskitThemeProvider mode={'dark'}>
+    <AtlaskitThemeProvider mode="dark">
       <Wrapper {...props} />{' '}
     </AtlaskitThemeProvider>
   );

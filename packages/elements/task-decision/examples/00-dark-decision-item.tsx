@@ -6,7 +6,7 @@ import DecisionItem from '../src/components/DecisionItem';
 import { dumpRef, document } from '../example-helpers/story-utils';
 
 export default () => (
-  <AtlaskitThemeProvider mode={'dark'}>
+  <AtlaskitThemeProvider mode="dark">
     <div style={{ padding: '10px' }}>
       <h3>Simple DecisionItem</h3>
       <DecisionItem contentRef={dumpRef}>

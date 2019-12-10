@@ -60,9 +60,9 @@ class InlineComment extends React.Component<InlineCommentProps> {
               presence="online"
             />
           }
-          key={'mike@atlassian.com'}
-          primaryText={'Mike Cannon-Brookes'}
-          secondaryText={'mike@atlassian.com'}
+          key="mike@atlassian.com"
+          primaryText="Mike Cannon-Brookes"
+          secondaryText="mike@atlassian.com"
         />
         <div style={{ padding: '8px' }}>{getCommentValue(comment.id)}</div>
         <div style={{ padding: '4px' }}>
@@ -186,7 +186,7 @@ export default class ExampleInlineCommentComponent extends React.Component<
         alignY="bottom"
         fitHeight={200}
         fitWidth={200}
-        alignX={'right'}
+        alignX="right"
         offset={[
           dom
             ? -(window.innerWidth - dom.getBoundingClientRect().right - 50)

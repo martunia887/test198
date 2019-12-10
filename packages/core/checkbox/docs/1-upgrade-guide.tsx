@@ -112,9 +112,8 @@ export default md`
 
   ${(
     <SectionMessage title="Deprecated Component" appearance="error">
-      {
-        'This component has been deprecated in favor of the conditionally controlled component pattern specified above.**'
-      }
+      This component has been deprecated in favor of the conditionally
+      controlled component pattern specified above.**
     </SectionMessage>
   )}
 

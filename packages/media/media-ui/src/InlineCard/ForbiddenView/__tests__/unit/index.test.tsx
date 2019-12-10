@@ -10,7 +10,7 @@ describe('Unauth view', () => {
   it('should do click if try again clicked', () => {
     const onRetrySpy = jest.fn();
     const element = mount(
-      <IntlProvider locale={'en'}>
+      <IntlProvider locale="en">
         <InlineCardForbiddenView url={URL} onAuthorise={onRetrySpy} />
       </IntlProvider>,
     );
@@ -22,7 +22,7 @@ describe('Unauth view', () => {
     const onClickSpy = jest.fn();
     const onRetrySpy = jest.fn();
     const element = mount(
-      <IntlProvider locale={'en'}>
+      <IntlProvider locale="en">
         <InlineCardForbiddenView
           url={URL}
           onAuthorise={onRetrySpy}

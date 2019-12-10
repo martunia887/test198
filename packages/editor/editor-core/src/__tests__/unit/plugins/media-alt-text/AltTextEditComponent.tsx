@@ -203,7 +203,7 @@ describe('AltTextEditComponent', () => {
         const view = new mockView();
         const intl = {} as InjectedIntl;
         const wrapper = mountWithIntl<{}, AltTextEditComponentState>(
-          <AltTextEditComponent view={view} value={'test'} intl={intl} />,
+          <AltTextEditComponent view={view} value="test" intl={intl} />,
         );
         expect(wrapper.state('showClearTextButton')).toBeTruthy();
         const input = wrapper.find('input');

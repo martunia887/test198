@@ -14,7 +14,7 @@ export default md`
 
   ${(
     <Props
-      heading={'Traverse#traverse'}
+      heading="Traverse#traverse"
       props={{
         kind: 'program',
         classes: [
@@ -153,7 +153,7 @@ export default md`
 
   ${(
     <Props
-      heading={'Traverse#map'}
+      heading="Traverse#map"
       props={{
         kind: 'program',
         classes: [
@@ -255,7 +255,7 @@ export default md`
 
   ${(
     <Props
-      heading={'Traverse#filter'}
+      heading="Traverse#filter"
       props={{
         kind: 'program',
         classes: [
@@ -361,7 +361,7 @@ export default md`
 
   ${(
     <Props
-      heading={'Traverse#reduce'}
+      heading="Traverse#reduce"
       props={{
         kind: 'program',
         classes: [

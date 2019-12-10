@@ -12,7 +12,7 @@ describe('<MemoryRouter />', () => {
   });
 
   it('should register an instance of memory history in the router store when mounted', () => {
-    mount(<MemoryRouter routes={[]}>{'hello world'}</MemoryRouter>);
+    mount(<MemoryRouter routes={[]}>hello world</MemoryRouter>);
 
     const { history } = getRouterState();
 

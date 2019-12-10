@@ -195,7 +195,7 @@ export default class AvatarGroupExample extends Component<{}, State> {
           size={avatarSize}
         />
 
-        <h5>On {'"More"'} Click</h5>
+        <h5>On "More" Click</h5>
         <div style={{ maxWidth: 380 }}>
           <Note>
             Circumvent the default dropdown menu behaviour by passing{' '}

@@ -6,7 +6,7 @@ import { AtlaskitThemeProvider } from '@atlaskit/theme';
 
 export default function Example(props: EditorProps & ExampleProps) {
   return (
-    <AtlaskitThemeProvider mode={'dark'}>
+    <AtlaskitThemeProvider mode="dark">
       <FullPageExample defaultValue={exampleDocument} {...props} />
     </AtlaskitThemeProvider>
   );

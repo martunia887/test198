@@ -550,7 +550,7 @@ class ToolbarInsertBlock extends React.PureComponent<
         content: labelAction,
         value: { name: 'action' },
         elemBefore: <TaskIcon label={labelAction} />,
-        elemAfter: <Shortcut>{'[]'}</Shortcut>,
+        elemAfter: <Shortcut>[]</Shortcut>,
         shortcut: '[]',
       });
     }

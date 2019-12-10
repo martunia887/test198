@@ -19,7 +19,7 @@ Wrapper.displayName = 'Wrapper';
 export default function Example() {
   return (
     <Wrapper>
-      <Editor defaultValue={exampleDocument} mode={'dark'} />
+      <Editor defaultValue={exampleDocument} mode="dark" />
     </Wrapper>
   );
 }

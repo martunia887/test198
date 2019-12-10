@@ -25,8 +25,8 @@ export default class HoverIntent extends React.Component<{}, State> {
     return (
       <React.Fragment>
         <p>
-          Click a target to toggle the position of the tooltips between{' '}
-          {`'bottom'`} and {`'mouse'`}.
+          Click a target to toggle the position of the tooltips between 'bottom'
+          and 'mouse'.
         </p>
         <div style={{ display: 'flex', marginTop: 10 }}>
           {colors.map((c, i) => (

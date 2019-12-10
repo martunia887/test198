@@ -198,7 +198,7 @@ describe('Media', () => {
 
     it('should pass shouldOpenMediaViewer=true if renderer appearance is not mobile', () => {
       const cardMobile = mount(
-        <MediaCard type="file" id="1" rendererAppearance={'mobile'} />,
+        <MediaCard type="file" id="1" rendererAppearance="mobile" />,
       );
       const cardNoMobile = mount(<MediaCard type="file" id="1" />);
 
@@ -227,7 +227,7 @@ describe('Media', () => {
           type="file"
           id="1"
           shouldOpenMediaViewer={true}
-          rendererAppearance={'mobile'}
+          rendererAppearance="mobile"
         />,
       );
 
@@ -270,7 +270,7 @@ describe('Media', () => {
           type="file"
           id="1"
           shouldOpenMediaViewer={false}
-          rendererAppearance={'mobile'}
+          rendererAppearance="mobile"
         />,
       );
 

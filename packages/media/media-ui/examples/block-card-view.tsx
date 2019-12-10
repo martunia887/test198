@@ -30,7 +30,7 @@ class Example extends React.Component {
 
   render() {
     return (
-      <IntlProvider locale={'en'}>
+      <IntlProvider locale="en">
         <Page>
           <Grid>
             <GridColumn>

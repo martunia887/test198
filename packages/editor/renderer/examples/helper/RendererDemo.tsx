@@ -93,9 +93,7 @@ const extensionHandlers: ExtensionHandlers = {
 
     switch (extensionKey) {
       case 'clock':
-        return (
-          <Clock format={'HH:mm:ss'} ticking={true} timezone={'US/Pacific'} />
-        );
+        return <Clock format="HH:mm:ss" ticking={true} timezone="US/Pacific" />;
       case 'mention':
         return [
           {
@@ -307,14 +305,14 @@ export default class RendererDemo extends React.Component<
       const expandButton = (
         <div>
           <Button
-            appearance={'link'}
-            spacing={'none'}
+            appearance="link"
+            spacing="none"
             onClick={this.toggleTruncated}
           >
             {this.state.truncated ? 'Expand text' : 'Collapse text'}
           </Button>
           &nbsp;&middot;&nbsp;
-          <Button appearance={'link'} spacing={'none'}>
+          <Button appearance="link" spacing="none">
             Do something else
           </Button>
         </div>

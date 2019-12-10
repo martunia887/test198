@@ -7,7 +7,7 @@ import TaskItem from '../src/components/TaskItem';
 import { dumpRef, action, document } from '../example-helpers/story-utils';
 
 export default () => (
-  <AtlaskitThemeProvider mode={'dark'}>
+  <AtlaskitThemeProvider mode="dark">
     <div style={{ padding: '10px' }}>
       <h3>Simple TaskItem</h3>
       <TaskItem

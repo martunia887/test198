@@ -53,7 +53,7 @@ export class DeleteUserOverviewScreen extends React.Component<
                 overviewMessages.paragraphLoseAccessSelf,
               )}
               values={{ fullName: user.fullName }}
-              tagName={'p'}
+              tagName="p"
             />
             <DropdownList accessibleSites={accessibleSites} />
           </>

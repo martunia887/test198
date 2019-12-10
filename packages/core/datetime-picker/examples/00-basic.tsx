@@ -178,7 +178,7 @@ export default () => {
       <DateTimePicker
         id="datetimepicker-1"
         onChange={onChange}
-        testId={'dateTimePicker'}
+        testId="dateTimePicker"
       />
 
       <Label

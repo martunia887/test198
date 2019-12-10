@@ -97,7 +97,7 @@ describe('ABTestProvider', () => {
 
   it('should only attempt to retrieve abtest data once no matter how many its updated', async () => {
     const wrapper = shallow(
-      <ABTestProvider {...defaultProps} key={'1'}>
+      <ABTestProvider {...defaultProps} key="1">
         {(abTest: ABTest) => <DummyComponent abTest={abTest} />}
       </ABTestProvider>,
     );

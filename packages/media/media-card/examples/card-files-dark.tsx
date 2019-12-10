@@ -157,7 +157,7 @@ const collectionConfigCards = [
 ];
 
 export default () => (
-  <AtlaskitThemeProvider mode={'dark'}>
+  <AtlaskitThemeProvider mode="dark">
     <div>
       <h1 style={{ margin: '10px 20px' }}>File cards</h1>
       <div style={{ margin: '20px 40px' }}>

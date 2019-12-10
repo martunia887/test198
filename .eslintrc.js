@@ -152,8 +152,9 @@ module.exports = {
     '@wordpress/react-no-unsafe-timeout': 'error',
 
     'react/sort-comp': 'off',
-    'react/jsx-curly-brace-presence': 'off', // FIXME: old, but doesn't seem to be disabled despite this line... maybe --fix able too. try remove this line..
-    'react/jsx-curly-newline': 'off', // TODO: new. fix in place? can try run with --fix for autofixing...
+    'react/jsx-curly-brace-presence': ['error', 'never'],
+    // Disabled as this rule fights against Prettier for multiline: https://github.com/prettier/eslint-config-prettier/issues/96.
+    'react/jsx-curly-newline': 'off', // ideally ['error', { multiline: 'require', singleline: 'forbid' }]
     'react/jsx-filename-extension': 'off',
     'react/jsx-fragments': 'off',
     'react/jsx-props-no-spreading': 'off',
@@ -389,8 +390,6 @@ module.exports = {
         'prefer-template': 'off',
         radix: 'off',
         'react/jsx-boolean-value': 'off',
-        // 'react/jsx-curly-brace-presence': 'off', // FIXME: old, but doesn't seem to be disabled despite this line... maybe --fix able too. try remove this line..
-        // 'react/jsx-curly-newline': 'off', // TODO: new. fix in place? can try run with --fix for autofixing...
         'react/jsx-no-bind': 'off',
         'react/jsx-no-target-blank': 'off',
         'react/no-array-index-key': 'off',

@@ -23,7 +23,7 @@ export function Nav({
   return (
     <Navigation
       isResizeable={false}
-      globalPrimaryItemHref={'/'}
+      globalPrimaryItemHref="/"
       globalPrimaryIcon={
         <Tooltip content="Home" position="right">
           <AtlaskitIcon />
@@ -32,8 +32,8 @@ export function Nav({
       containerHeaderComponent={() => (
         <AkContainerTitle
           icon={<AtlaskitIcon monochrome />}
-          text={'Atlaskit'}
-          href={'/'}
+          text="Atlaskit"
+          href="/"
         />
       )}
     >

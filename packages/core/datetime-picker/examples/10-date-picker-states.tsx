@@ -14,11 +14,7 @@ export default () => {
   return (
     <div>
       <Label label="Stock" />
-      <DatePicker
-        id="datepicker"
-        onChange={console.log}
-        testId={'datePicker'}
-      />
+      <DatePicker id="datepicker" onChange={console.log} testId="datePicker" />
 
       <Label label="Disabled input" />
       <DatePicker isDisabled onChange={console.log} />

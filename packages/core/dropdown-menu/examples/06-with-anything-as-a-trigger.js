@@ -33,7 +33,13 @@ export default () => (
     <Dropdown trigger={<span tabIndex="0">click me</span>}>
       {getDropDownData()}
     </Dropdown>
-    <Dropdown trigger={<span tabIndex="0">{<Avatar />}</span>}>
+    <Dropdown
+      trigger={
+        <span tabIndex="0">
+          <Avatar />
+        </span>
+      }
+    >
       {getDropDownData()}
     </Dropdown>
     <Dropdown

@@ -43,7 +43,7 @@ export default function Example() {
             />,
           ]}
           submitButton={submitButton}
-          learnMoreLink={''}
+          learnMoreLink=""
         />
       </IntlProvider>
     </React.Fragment>

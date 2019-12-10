@@ -46,12 +46,12 @@ export default class NestedDemo extends React.Component<{}, State> {
           ))}
         </ButtonGroup>
         <p>
-          For illustrative purposes three {'"stacked"'} modals can be opened in
-          this demo, though ADG3 recommends only two at any time.
+          For illustrative purposes three "stacked" modals can be opened in this
+          demo, though ADG3 recommends only two at any time.
         </p>
         <p>
-          Check the storybook{"'"}s {'"action logger"'} (or your console) to see
-          how you can make use of the <code>onStackChange</code> property.
+          Check the storybook's "action logger" (or your console) to see how you
+          can make use of the <code>onStackChange</code> property.
         </p>
 
         {sizes.map(name => {

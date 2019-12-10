@@ -42,7 +42,7 @@ export default class DeactivateDrawerExample extends React.Component {
               isOpen
               screens={[deactivateUserOverviewScreen]}
               submitButton={submitButton}
-              learnMoreLink={'https://hello.atlassian.net'}
+              learnMoreLink="https://hello.atlassian.net"
             />
           )}
         </React.Fragment>

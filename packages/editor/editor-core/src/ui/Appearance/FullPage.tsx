@@ -368,23 +368,21 @@ export default class Editor extends React.Component<
                 ].join(' ')}
               >
                 {customContentComponents}
-                {
-                  <PluginSlot
-                    editorView={editorView}
-                    editorActions={editorActions}
-                    eventDispatcher={eventDispatcher}
-                    providerFactory={providerFactory}
-                    appearance={this.props.appearance || this.appearance}
-                    items={contentComponents}
-                    contentArea={this.contentArea}
-                    popupsMountPoint={popupsMountPoint}
-                    popupsBoundariesElement={popupsBoundariesElement}
-                    popupsScrollableElement={popupsScrollableElement}
-                    disabled={!!disabled}
-                    containerElement={this.scrollContainer}
-                    dispatchAnalyticsEvent={dispatchAnalyticsEvent}
-                  />
-                }
+                <PluginSlot
+                  editorView={editorView}
+                  editorActions={editorActions}
+                  eventDispatcher={eventDispatcher}
+                  providerFactory={providerFactory}
+                  appearance={this.props.appearance || this.appearance}
+                  items={contentComponents}
+                  contentArea={this.contentArea}
+                  popupsMountPoint={popupsMountPoint}
+                  popupsBoundariesElement={popupsBoundariesElement}
+                  popupsScrollableElement={popupsScrollableElement}
+                  disabled={!!disabled}
+                  containerElement={this.scrollContainer}
+                  dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                />
                 {editorDOMElement}
               </div>
             </ContentArea>

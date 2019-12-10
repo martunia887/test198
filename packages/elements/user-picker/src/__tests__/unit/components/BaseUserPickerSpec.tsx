@@ -27,7 +27,7 @@ const getBasePicker = (props: Partial<UserPickerProps> = {}) => (
     SelectComponent={Select}
     styles={{}}
     components={getComponents(props.isMulti)}
-    width={'100%'}
+    width="100%"
     {...props}
   />
 );

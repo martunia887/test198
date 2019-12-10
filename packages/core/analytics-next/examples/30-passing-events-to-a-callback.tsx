@@ -63,12 +63,12 @@ const ButtonGroup = () => {
       </div>
       <div>
         <VerboseButton onClick={onClick}>
-          {`Using a function in the 'create event map' option`}
+          Using a function in the 'create event map' option
         </VerboseButton>
       </div>
       <div>
         <ShorthandButton onClick={onClick}>
-          {`Using the payload object shorthand in the 'create event map' option`}
+          Using the payload object shorthand in the 'create event map' option
         </ShorthandButton>
       </div>
     </div>

@@ -108,7 +108,7 @@ export default class DeleteUserDrawerExample extends React.Component {
                 this.renderDeleteUserContentPreviewScreen(),
               ]}
               submitButton={submitButton}
-              learnMoreLink={'https://hello.atlassian.net'}
+              learnMoreLink="https://hello.atlassian.net"
             />
           )}
         </React.Fragment>

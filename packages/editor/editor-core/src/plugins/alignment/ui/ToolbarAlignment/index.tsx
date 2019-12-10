@@ -84,7 +84,7 @@ class AlignmentToolbar extends React.Component<Props, State> {
                 <TriggerWrapper>
                   {iconMap[pluginState.align]}
                   <ExpandIconWrapper>
-                    <ExpandIcon label={'Alignment'} />
+                    <ExpandIcon label="Alignment" />
                   </ExpandIconWrapper>
                 </TriggerWrapper>
               }

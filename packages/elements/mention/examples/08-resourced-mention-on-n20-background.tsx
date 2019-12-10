@@ -41,7 +41,7 @@ export default function Example() {
           >
             <ResourcedMention
               {...mentionData}
-              accessLevel={'CONTAINER'}
+              accessLevel="CONTAINER"
               mentionProvider={mentionProvider}
               onClick={onMentionEvent}
               onMouseEnter={onMentionEvent}
@@ -62,7 +62,7 @@ export default function Example() {
         <div style={padding}>
           <ResourcedMention
             {...mentionData}
-            accessLevel={'NONE'}
+            accessLevel="NONE"
             mentionProvider={mentionProvider}
             onClick={onMentionEvent}
             onMouseEnter={onMentionEvent}

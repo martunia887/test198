@@ -11,13 +11,13 @@ const Example = () => (
     <Padding>
       <SectionMessage appearance="info" title="More">
         <p>I count the steps from one end of my island to the other</p>
-        <p>It{"'"}s a hundred steps from where I sleep to the sea</p>
+        <p>It's a hundred steps from where I sleep to the sea</p>
       </SectionMessage>
     </Padding>
     <Padding>
       <SectionMessage appearance="warning">
-        <p>And when I say I{"'"}ve learned all there is to know</p>
-        <p>Well there{"'"}s another little island lesson</p>
+        <p>And when I say I've learned all there is to know</p>
+        <p>Well there's another little island lesson</p>
         <p>Gramma Tala shows me</p>
       </SectionMessage>
     </Padding>
@@ -32,14 +32,14 @@ const Example = () => (
       <SectionMessage appearance="confirmation">
         <p>From the angle of the mountain</p>
         <p>To the sand on our island shore</p>
-        <p>I{"'"}ve been here before</p>
+        <p>I've been here before</p>
       </SectionMessage>
     </Padding>
     <Padding>
       <SectionMessage appearance="change">
         <p>From the angle of the mountain</p>
         <p>To the sand on our island shore</p>
-        <p>I{"'"}ve been here before</p>
+        <p>I've been here before</p>
       </SectionMessage>
     </Padding>
   </Fragment>

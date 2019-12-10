@@ -38,7 +38,7 @@ export default class extends React.Component {
       <ExampleWrapper>
         <Page>
           <HelpWrapper>
-            <LocaleIntlProvider locale={'en'}>
+            <LocaleIntlProvider locale="en">
               <Help
                 articleId="nbgju45fddcNAvvH9lhHc"
                 onGetArticle={this.onGetArticle}

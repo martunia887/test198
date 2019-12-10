@@ -21,7 +21,7 @@ describe('withRouter', () => {
   });
 
   test('should pass original props to the wrapped component', () => {
-    const wrapper = mount(<ComponentWithRouter foo={'bar'} />);
+    const wrapper = mount(<ComponentWithRouter foo="bar" />);
     expect(wrapper.find(ComponentToBeWrapped).prop('foo')).toEqual('bar');
   });
 
@@ -29,7 +29,7 @@ describe('withRouter', () => {
     const history = createMemoryHistory();
     const wrapper = mount(
       <Router history={history} routes={[]}>
-        <ComponentWithRouter foo={'bar'} />
+        <ComponentWithRouter foo="bar" />
       </Router>,
     );
     expect(wrapper.find(ComponentToBeWrapped).props()).toEqual({
@@ -74,7 +74,7 @@ describe('withRouter', () => {
     const wrapper = mount(
       // @ts-ignore
       <Router history={history} routes={routes}>
-        <ComponentWithRouter foo={'bar'} />
+        <ComponentWithRouter foo="bar" />
       </Router>,
     );
 
@@ -138,7 +138,7 @@ describe('withRouter', () => {
     const history = createMemoryHistory();
     const wrapper = mount(
       <Router history={history} routes={[]}>
-        <ComponentWithRouter foo={'bar'} />
+        <ComponentWithRouter foo="bar" />
       </Router>,
     );
     history.push('/blabla');
@@ -155,12 +155,12 @@ describe('withRouter', () => {
   });
 
   test('should set a displayName to the wrapped component', () => {
-    const wrapper = mount(<ComponentWithRouter foo={'bar'} />);
+    const wrapper = mount(<ComponentWithRouter foo="bar" />);
     expect(wrapper.find('withRouter(ComponentToBeWrapped)')).toHaveLength(1);
   });
 
   test('should render a RouterSubscriber', () => {
-    const wrapper = mount(<ComponentWithRouter foo={'bar'} />);
+    const wrapper = mount(<ComponentWithRouter foo="bar" />);
 
     expect(wrapper.find('RouterSubscriber')).toHaveLength(1);
   });

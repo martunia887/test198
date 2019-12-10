@@ -45,7 +45,7 @@ describe('feedbackDialogPlugin', () => {
         },
         primaryToolbarComponents: [
           <ToolbarFeedback
-            product={'bitbucket'}
+            product="bitbucket"
             key="toolbar-feedback"
             packageVersion="999.9.9"
           />,

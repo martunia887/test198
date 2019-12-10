@@ -25,7 +25,7 @@ function createFixture(props?: Partial<Props>) {
     <InteractiveImgComponent
       onLoad={jest.fn()}
       onError={jest.fn()}
-      src={''}
+      src=""
       onClose={onClose}
       onBlanketClicked={onBlanketClicked}
       {...props}

@@ -196,7 +196,7 @@ export default class Resizer extends React.Component<
               this.props.layout === 'wrap-right',
           },
         )}
-        handleWrapperClass={'mediaSingle-resize-wrapper'}
+        handleWrapperClass="mediaSingle-resize-wrapper"
         handleClasses={handles}
         handleStyles={handleStyles}
         enable={this.props.enable}

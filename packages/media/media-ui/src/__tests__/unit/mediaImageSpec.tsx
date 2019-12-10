@@ -85,7 +85,7 @@ describe('MediaImage', () => {
         previewOrientation={previewOrientation}
         onImageLoad={onImageLoad}
         onImageError={onImageError}
-        crossOrigin={'anonymous'}
+        crossOrigin="anonymous"
         alt={altText}
       />,
     );

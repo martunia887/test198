@@ -16,7 +16,7 @@ export class ProgressBar extends Component<ProgressBarProps, {}> {
     const progressBarStyle = { width: `${progress * 100}%` };
     return (
       <ProgressWrapper>
-        <div className={'progressBar'} style={progressBarStyle} />
+        <div className="progressBar" style={progressBarStyle} />
       </ProgressWrapper>
     );
   }

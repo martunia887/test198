@@ -148,7 +148,7 @@ export default class extends React.Component {
                 </ButtonGroup>
               </ButtonsWrapper>
               <RightSidePanel isOpen={isOpen} attachPanelTo="helpExample">
-                <LocaleIntlProvider locale={'en'}>
+                <LocaleIntlProvider locale="en">
                   <Help
                     articleIdSetter={this.articleIdSetter}
                     onButtonCloseClick={this.closeDrawer}

@@ -45,7 +45,7 @@ export default function Example() {
           >
             <Mention
               {...mentionData}
-              accessLevel={'CONTAINER'}
+              accessLevel="CONTAINER"
               onClick={handler}
               onMouseEnter={onMentionEvent}
               onMouseLeave={onMentionEvent}
@@ -64,7 +64,7 @@ export default function Example() {
         <div style={padding}>
           <Mention
             {...mentionData}
-            accessLevel={'NONE'}
+            accessLevel="NONE"
             onClick={onMentionEvent}
             onMouseEnter={onMentionEvent}
             onMouseLeave={onMentionEvent}

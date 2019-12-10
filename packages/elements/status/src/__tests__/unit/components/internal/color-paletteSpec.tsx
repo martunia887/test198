@@ -9,11 +9,7 @@ describe('ColorPalette', () => {
     const onClick = jest.fn();
     const onHover = jest.fn();
     const component = shallowWithIntl(
-      <ColorPalette
-        onClick={onClick}
-        onHover={onHover}
-        selectedColor={'red'}
-      />,
+      <ColorPalette onClick={onClick} onHover={onHover} selectedColor="red" />,
     ).dive();
 
     const colorComponent = component.find(Color);
@@ -24,7 +20,7 @@ describe('ColorPalette', () => {
 
   it('should select selected color', () => {
     const component = shallowWithIntl(
-      <ColorPalette onClick={jest.fn()} selectedColor={'red'} />,
+      <ColorPalette onClick={jest.fn()} selectedColor="red" />,
     ).dive();
 
     expect(

@@ -291,7 +291,7 @@ const ModalHeaderComp = ({
             appearance="subtle"
             iconBefore={<LinkIcon label="Link Icon" />}
             href={loaderUrl}
-            target={'_blank'}
+            target="_blank"
           />
         </Tooltip>
         <Tooltip content="Close" position="bottom">

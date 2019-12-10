@@ -82,7 +82,7 @@ export default class extends React.Component {
         <Page>
           <HelpWrapper>
             <AnalyticsListener channel="atlaskit" onEvent={handleEvent}>
-              <LocaleIntlProvider locale={'en'}>
+              <LocaleIntlProvider locale="en">
                 <Help
                   onWasHelpfulSubmit={this.onWasHelpfulSubmit}
                   articleId="00"

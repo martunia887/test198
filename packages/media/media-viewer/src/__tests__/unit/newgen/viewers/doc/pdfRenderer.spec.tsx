@@ -39,7 +39,7 @@ function createFixture(documentPromise: Promise<any>) {
   });
 
   const el = mountWithIntlContext<Props, State>(
-    <PDFRenderer src={''} onClose={onClose} onSuccess={onSuccess} />,
+    <PDFRenderer src="" onClose={onClose} onSuccess={onSuccess} />,
   );
   return { el, onClose, onSuccess };
 }

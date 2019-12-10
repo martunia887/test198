@@ -62,7 +62,7 @@ export default class ModalDemo extends React.Component<{}, State> {
         <ModalTransition>
           {isOpen === 'root' && (
             <StubDialog autoFocus heading="Boolean on dialog">
-              <p>The first {'"tabbable"'} element will be focused.</p>
+              <p>The first "tabbable" element will be focused.</p>
               <button>I am focused!</button>
               <button>I am NOT focused</button>
             </StubDialog>

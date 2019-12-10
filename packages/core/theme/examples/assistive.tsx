@@ -18,7 +18,7 @@ export default () => (
     </SectionMessage>
     <div>
       <span aria-hidden="true">TL;DR</span>
-      <AssitiveText>Too long; didn{"'"}t read</AssitiveText>
+      <AssitiveText>Too long; didn't read</AssitiveText>
     </div>
   </div>
 );

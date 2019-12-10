@@ -45,19 +45,19 @@ export class Switcher extends React.Component {
               <Section sectionId="second-section" title="Second Section">
                 <SwitcherItem
                   icon={<OneIcon theme="admin" />}
-                  description={'Item description'}
+                  description="Item description"
                 >
                   First Item
                 </SwitcherItem>
                 <SwitcherItem
                   icon={<TwoIcon theme="admin" />}
-                  description={'Item description'}
+                  description="Item description"
                 >
                   Second Item
                 </SwitcherItem>
                 <SwitcherItem
                   icon={<ThreeIcon theme="admin" />}
-                  description={'Item description'}
+                  description="Item description"
                 >
                   Third Item
                 </SwitcherItem>

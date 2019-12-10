@@ -193,7 +193,7 @@ export class MediaEditor extends React.Component<
           />
 
           <HiddenTextArea
-            autoComplete={'off'}
+            autoComplete="off"
             innerRef={this.handleHiddenTextAreaInnerRef}
           />
 

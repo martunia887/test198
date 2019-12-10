@@ -39,7 +39,7 @@ const handler = (
 export default function Example() {
   return (
     <IntlProvider locale="en">
-      <AtlaskitThemeProvider mode={'dark'}>
+      <AtlaskitThemeProvider mode="dark">
         <div style={padding}>
           <AnalyticsListener
             onEvent={listenerHandler}
@@ -47,7 +47,7 @@ export default function Example() {
           >
             <Mention
               {...mentionData}
-              accessLevel={'CONTAINER'}
+              accessLevel="CONTAINER"
               onClick={handler}
               onMouseEnter={onMentionEvent}
               onMouseLeave={onMentionEvent}
@@ -66,7 +66,7 @@ export default function Example() {
         <div style={padding}>
           <Mention
             {...mentionData}
-            accessLevel={'NONE'}
+            accessLevel="NONE"
             onClick={onMentionEvent}
             onMouseEnter={onMentionEvent}
             onMouseLeave={onMentionEvent}

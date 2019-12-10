@@ -18,6 +18,7 @@ const layerStyles = {
 
 const content = <div style={layerStyles}>LayerContent</div>;
 
+/* eslint-disable react/jsx-curly-brace-presence */
 export default () => (
   <div>
     <p>
@@ -53,3 +54,4 @@ export default () => (
     </div>
   </div>
 );
+/* eslint-enable react/jsx-curly-brace-presence */

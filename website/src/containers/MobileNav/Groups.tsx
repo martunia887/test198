@@ -56,7 +56,7 @@ export default class Groups extends React.Component<
             />
           }
           onClick={() => this.createDocumentationStack()}
-          key={'Documentation'}
+          key="Documentation"
         />,
         <AkNavigationItem
           text="Packages"
@@ -69,7 +69,7 @@ export default class Groups extends React.Component<
             />
           }
           onClick={() => this.createPackagesStack()}
-          key={'Packages'}
+          key="Packages"
         />,
       ],
     ],

@@ -161,10 +161,10 @@ class Example extends React.Component<{}, ExampleState> {
     return (
       <TableTree>
         <Headers>
-          <Header width={'30%'}>
+          <Header width="30%">
             {mode.substring(0, 1).toUpperCase() + mode.substring(1)}
           </Header>
-          <Header width={'70%'}>&nbsp;</Header>
+          <Header width="70%">&nbsp;</Header>
         </Headers>
         <Rows
           items={tree}
@@ -212,14 +212,14 @@ class Example extends React.Component<{}, ExampleState> {
           Render as:
         </Button>
         <Button
-          key={'render-mode-inline'}
+          key="render-mode-inline"
           isSelected={currentAppearanceMode === 'inline'}
           onClick={() => this.handleAppearanceClick('inline')}
         >
           inline card
         </Button>
         <Button
-          key={'render-mode-block'}
+          key="render-mode-block"
           isSelected={currentAppearanceMode === 'block'}
           onClick={() => this.handleAppearanceClick('block')}
         >

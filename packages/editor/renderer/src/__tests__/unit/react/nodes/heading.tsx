@@ -35,7 +35,7 @@ describe('<Heading />', () => {
       heading = mountWithIntl(
         <Heading
           level={1}
-          headingId={'This-is-a-Heading-1'}
+          headingId="This-is-a-Heading-1"
           showAnchorLink={false}
         >
           This is a Heading 1

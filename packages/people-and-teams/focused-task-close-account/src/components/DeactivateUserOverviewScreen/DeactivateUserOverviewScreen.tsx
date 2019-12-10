@@ -44,7 +44,7 @@ export class DeactivateUserOverviewScreen extends React.Component<
                 deactivateUserOverviewMessages.paragraphLoseAccessSelf,
               )}
               values={{ fullName: user.fullName }}
-              tagName={'p'}
+              tagName="p"
             />
             <Styled.AccessibleSitesWrapper>
               <DropdownList accessibleSites={accessibleSites} />

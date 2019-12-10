@@ -43,7 +43,7 @@ export default function Nav({ location }: RouteComponentProps) {
           <MenuIcon label="Menu" />
         </Tooltip>
       }
-      globalPrimaryItemHref={'/'}
+      globalPrimaryItemHref="/"
       globalPrimaryIcon={
         <Tooltip content="Home" position="right">
           <AtlaskitIcon />

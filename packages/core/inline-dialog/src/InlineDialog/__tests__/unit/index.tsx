@@ -210,7 +210,7 @@ describe('InlineDialogWithAnalytics', () => {
   });
 
   it('should mount without errors', () => {
-    mount(<InlineDialogWithAnalytics children={''} content={''} />);
+    mount(<InlineDialogWithAnalytics children="" content="" />);
     /* eslint-disable no-console */
     expect(console.warn).not.toHaveBeenCalled();
     expect(console.error).not.toHaveBeenCalled();

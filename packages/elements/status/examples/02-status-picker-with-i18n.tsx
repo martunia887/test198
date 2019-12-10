@@ -9,8 +9,8 @@ addLocaleData(frLocaleData);
 export default () => (
   <IntlProvider locale="fr" messages={fr}>
     <ManagedStatusPicker
-      initialSelectedColor={'green'}
-      initialText={'In progress'}
+      initialSelectedColor="green"
+      initialText="In progress"
     />
   </IntlProvider>
 );

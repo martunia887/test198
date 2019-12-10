@@ -54,7 +54,7 @@ export class CardWithURLRenderer extends React.PureComponent<CardProps> {
         onResolve={onResolve}
       />
     ) : (
-      <CardLinkView key={'chunk-placeholder'} link={url} />
+      <CardLinkView key="chunk-placeholder" link={url} />
     );
   }
 }

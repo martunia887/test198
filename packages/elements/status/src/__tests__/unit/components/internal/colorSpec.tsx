@@ -8,10 +8,10 @@ describe('Color', () => {
   it('should render color button', () => {
     const component = mountWithIntl(
       <Color
-        value={'red'}
+        value="red"
         onClick={jest.fn()}
-        backgroundColor={'backgroundColor'}
-        borderColor={'borderColor'}
+        backgroundColor="backgroundColor"
+        borderColor="borderColor"
       />,
     );
 
@@ -21,10 +21,10 @@ describe('Color', () => {
   it('should render done icon when selected', () => {
     const component = mountWithIntl(
       <Color
-        value={'red'}
+        value="red"
         onClick={jest.fn()}
-        backgroundColor={'backgroundColor'}
-        borderColor={'borderColor'}
+        backgroundColor="backgroundColor"
+        borderColor="borderColor"
         isSelected={true}
       />,
     );
@@ -35,10 +35,10 @@ describe('Color', () => {
   it('should not render done icon when not selected', () => {
     const component = mountWithIntl(
       <Color
-        value={'red'}
+        value="red"
         onClick={jest.fn()}
-        backgroundColor={'backgroundColor'}
-        borderColor={'borderColor'}
+        backgroundColor="backgroundColor"
+        borderColor="borderColor"
         isSelected={false}
       />,
     );
@@ -53,8 +53,8 @@ describe('Color', () => {
       <Color
         value={value}
         onClick={onClick}
-        backgroundColor={'backgroundColor'}
-        borderColor={'borderColor'}
+        backgroundColor="backgroundColor"
+        borderColor="borderColor"
         isSelected={false}
       />,
     );
@@ -86,8 +86,8 @@ describe('Color', () => {
           value={value}
           onClick={jest.fn()}
           onHover={onHover}
-          backgroundColor={'backgroundColor'}
-          borderColor={'borderColor'}
+          backgroundColor="backgroundColor"
+          borderColor="borderColor"
           isSelected={false}
         />,
       );

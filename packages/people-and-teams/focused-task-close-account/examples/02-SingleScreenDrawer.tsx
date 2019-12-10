@@ -42,7 +42,7 @@ export default class SingleScreenDrawerExample extends React.Component {
               isOpen
               screens={[deleteUserOverviewScreen]}
               submitButton={submitButton}
-              learnMoreLink={'https://hello.atlassian.net'}
+              learnMoreLink="https://hello.atlassian.net"
             />
           )}
         </React.Fragment>

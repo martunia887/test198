@@ -12,7 +12,7 @@ export default () => {
         id="timepicker"
         times={times}
         selectProps={{ classNamePrefix: 'timepicker-select' }}
-        testId={'timePicker'}
+        testId="timePicker"
       />
 
       <Label label="DateTimePicker - times" />

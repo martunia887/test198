@@ -57,7 +57,7 @@ export default class Search extends Component<Props, State> {
           value={defaultValue}
           onChange={onChange}
           placeholder={placeholder}
-          spacing={'compact'}
+          spacing="compact"
           menuPlacement="auto"
         />
       </SelectWrapper>

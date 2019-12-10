@@ -21,7 +21,7 @@ export function LazyCardWithUrlContent(props: CardWithUrlContentProps) {
       placeholder={
         <CardLinkView
           isSelected={isSelected}
-          key={'lazy-render-placeholder'}
+          key="lazy-render-placeholder"
           link={url}
         />
       }

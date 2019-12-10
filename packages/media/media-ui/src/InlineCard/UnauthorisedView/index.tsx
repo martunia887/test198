@@ -51,7 +51,6 @@ export class InlineCardUnauthorizedView extends React.Component<
           <ForbiddenWrapper>
             {` \u2011 `}
             <FormattedMessage {...messages.invalid_permissions} />
-            {` `}
           </ForbiddenWrapper>
         ) : (
           <>

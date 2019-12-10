@@ -10,8 +10,8 @@ describe('Expand', () => {
       const fireAnalyticsEvent = jest.fn();
       const expand = mountWithIntl(
         <Expand
-          title={'Cool cheese'}
-          nodeType={'expand'}
+          title="Cool cheese"
+          nodeType="expand"
           children={shallow(<HardBreak />)}
           fireAnalyticsEvent={fireAnalyticsEvent}
         />,
