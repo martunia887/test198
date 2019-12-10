@@ -1,5 +1,5 @@
-import { PluginActions } from '../../src/domain/plugin';
-import { SelectedItem } from '../../src/popup/domain';
+import { PluginActions } from '../../domain/plugin';
+import { SelectedItem } from '../../popup/domain';
 
 export type ForgeInvokeType = 'search' | 'lookup' | 'pattern';
 export type ForgeViewType = 'bricks' | 'directory';
@@ -17,6 +17,7 @@ export interface ForgePickerProperties {
   name: string;
   dataSource: ForgeInvokeType;
   view: ForgeViewType;
+  iconUrl: string;
 }
 
 export interface ForgeInvokeParams {

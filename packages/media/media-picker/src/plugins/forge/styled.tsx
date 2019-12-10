@@ -16,3 +16,7 @@ export const PluginHeader = styled.div`
     flex: initial;
   }
 `;
+export const PluginIcon = styled.img`
+  height: 24px;
+  width: 24px;
+`;

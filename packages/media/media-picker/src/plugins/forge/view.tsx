@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import FieldText from '@atlaskit/field-text';
+import ImageIcon from '@atlaskit/icon/glyph/image';
 
 import { ForgeViewProps } from './types';
 import { ForgeClient } from './client';
-import { PluginWrapper, PluginHeader } from './styled';
+import { PluginWrapper, PluginHeader, PluginIcon } from './styled';
 import { BrickItem, BricksView } from '../views/bricks';
 
 export const ForgeView = ({
@@ -82,4 +83,15 @@ export const ForgeView = ({
       {view}
     </PluginWrapper>
   );
+};
+
+export interface ForgeIconProps {
+  iconUrl: string;
+}
+export const ForgeIcon = (props: ForgeIconProps) => {
+  if (props.iconUrl) {
+    return <PluginIcon src={props.iconUrl} />;
+  } else {
+    return <ImageIcon label="image-icon" />;
+  }
 };

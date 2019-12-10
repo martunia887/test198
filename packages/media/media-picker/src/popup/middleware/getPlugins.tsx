@@ -3,9 +3,8 @@ import { Action, Dispatch, Store } from 'redux';
 import { State } from '../domain';
 import { getPluginsFullfilled, getPluginsFailed } from '../actions';
 import { isGetPluginsAction } from '../actions/getPlugins';
-import ImageIcon from '@atlaskit/icon/glyph/image';
 import { MediaPickerPlugin } from '../../domain/plugin';
-import { ForgeExtension, ForgeView } from '../../plugins/forge';
+import { ForgeExtension, ForgeView, ForgeIcon } from '../../plugins/forge';
 
 const BASE_URL = 'https://api-private.stg.atlassian.com';
 const GRAPHQL_PATH = '/graphql';
@@ -68,11 +67,12 @@ export const requestPlugins = (store: Store<State>): void => {
 
 export const transformForgeDescriptorToPlugin = ({
   id,
-  key,
-  properties: { picker },
+  properties: {
+    picker: { name, view, dataSource, iconUrl },
+  },
 }: ForgeExtension): MediaPickerPlugin => ({
-  name: picker.name,
-  icon: <ImageIcon label="image-icon" />,
+  name: name,
+  icon: <ForgeIcon iconUrl={iconUrl} />,
   render: (actions, selectedItems) => {
     return (
       <ForgeView
@@ -80,9 +80,9 @@ export const transformForgeDescriptorToPlugin = ({
         selectedItems={selectedItems}
         extensionOpts={{
           id,
-          name: picker.name,
-          view: picker.view,
-          type: picker.dataSource,
+          name: name,
+          view: view,
+          type: dataSource,
         }}
       />
     );
