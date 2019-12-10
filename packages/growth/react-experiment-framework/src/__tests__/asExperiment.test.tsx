@@ -171,7 +171,6 @@ describe('asExperiment', () => {
         experiments: {
           myExperimentKey: {
             isEnrollmentDecided: true,
-            enrollmentResolver,
             enrollmentDetails: {
               cohort: 'control',
               isEligible: true,
@@ -232,7 +231,6 @@ describe('asExperiment', () => {
         experiments: {
           myExperimentKey: {
             isEnrollmentDecided: true,
-            enrollmentResolver,
             enrollmentDetails: {
               cohort: 'variant',
               isEligible: true,
@@ -293,7 +291,6 @@ describe('asExperiment', () => {
         experiments: {
           myExperimentKey: {
             isEnrollmentDecided: true,
-            enrollmentResolver,
             enrollmentDetails: {
               cohort: 'variant',
               isEligible: false,
@@ -364,7 +361,6 @@ describe('asExperiment', () => {
           experiments: {
             myExperimentKey: {
               isEnrollmentDecided: true,
-              enrollmentResolver,
               enrollmentDetails: {
                 cohort: 'variant',
                 isEligible: true,
@@ -502,7 +498,6 @@ describe('asExperiment', () => {
           experiments: {
             myExperimentKey: {
               isEnrollmentDecided: true,
-              enrollmentResolver,
             },
           },
           options: enrollmentOptions,
@@ -571,7 +566,6 @@ describe('asExperiment', () => {
           experiments: {
             myExperimentKey: {
               isEnrollmentDecided: true,
-              enrollmentResolver,
               enrollmentDetails: {
                 cohort: 'nonExistentCohort',
                 isEligible: true,

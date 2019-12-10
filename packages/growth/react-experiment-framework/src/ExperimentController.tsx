@@ -72,7 +72,6 @@ class ExperimentController extends Component<Props, State> {
       this.setState({
         experiments: {
           [experimentKey]: {
-            ...this.state.experiments[experimentKey],
             isEnrollmentDecided: true,
             enrollmentDetails,
           },
