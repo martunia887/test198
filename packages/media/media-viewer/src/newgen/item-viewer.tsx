@@ -12,6 +12,7 @@ import { Outcome } from './domain';
 import { ImageViewer } from './viewers/image';
 import { VideoViewer } from './viewers/video';
 import { DocViewer } from './viewers/doc';
+import { ArchiveViewer } from './viewers/archive';
 import { Spinner } from './loading';
 import { Subscription } from 'rxjs/Subscription';
 import deepEqual from 'deep-equal';
@@ -183,6 +184,14 @@ export class ItemViewerBase extends React.Component<Props, State> {
           <DocViewer
             onSuccess={this.onCanPlay(item)}
             onError={this.onDocError(item)}
+            {...viewerProps}
+          />
+        );
+      case 'archive':
+        return (
+          <ArchiveViewer
+            onSuccess={this.onCanPlay(item)}
+            onError={this.onError(item)}
             {...viewerProps}
           />
         );

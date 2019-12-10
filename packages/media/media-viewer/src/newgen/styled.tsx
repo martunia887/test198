@@ -338,3 +338,10 @@ export const CustomVideoPlayerWrapper = styled.div`
     max-height: 100vh;
   }
 `;
+
+export const ArchiveEntries = styled.div`
+  color: white;
+`;
+
+export const ArchiveWrapper = styled.div``;
+export const SelectedEntryWrapper = styled.div``;

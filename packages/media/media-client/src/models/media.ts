@@ -6,7 +6,13 @@ export type MediaFileProcessingStatus = 'pending' | 'succeeded' | 'failed';
 
 // Warning! You can't add new media types!
 // See packages/media/media-core/src/__tests__/cache-backward-compatibility.spec.ts
-export type MediaType = 'doc' | 'audio' | 'video' | 'image' | 'unknown';
+export type MediaType =
+  | 'doc'
+  | 'audio'
+  | 'video'
+  | 'image'
+  | 'archive'
+  | 'unknown';
 
 export const isPreviewableType = (type: MediaType): boolean => {
   return ['audio', 'video', 'image'].indexOf(type) > -1;

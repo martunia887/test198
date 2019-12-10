@@ -29,6 +29,7 @@ import {
 import { MediaViewer } from '../src';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
 import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
+import { solarizedDark } from 'react-syntax-highlighter/dist/styles/hljs';
 addGlobalEventEmitterListeners();
 
 const mediaClientConfig = createStorybookMediaClientConfig();
@@ -38,7 +39,7 @@ export type State = {
 };
 
 export default class Example extends React.Component<{}, State> {
-  state: State = { selectedIdentifier: undefined };
+  state: State = { selectedIdentifier: zipItem };
 
   setItem = (selectedIdentifier: Identifier) => () => {
     this.setState({ selectedIdentifier });
@@ -61,7 +62,6 @@ export default class Example extends React.Component<{}, State> {
 
   render() {
     const { selectedIdentifier } = this.state;
-
     return (
       <I18NWrapper>
         <Container>
