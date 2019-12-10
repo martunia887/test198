@@ -5,7 +5,7 @@ import { Component } from 'react';
 import Spinner from '@atlaskit/spinner';
 import { UnsplashWrapper } from './styled';
 import { MediaPickerPlugin } from '../src/domain/plugin';
-import { SpinnerWrapper } from '../src/plugins/styled';
+import { SpinnerWrapper } from '../src/plugins/views/styled';
 
 export const PLUGIN_NAME = 'AI';
 

@@ -2,11 +2,10 @@ import * as React from 'react';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import FieldText from '@atlaskit/field-text';
 
-import { BricksView, BrickItem } from '../../src/plugins/bricksPluginView';
-``;
 import { ForgeViewProps } from './types';
 import { ForgeClient } from './client';
 import { PluginWrapper, PluginHeader } from './styled';
+import { BrickItem, BricksView } from '../views/bricks';
 
 export const ForgeView = ({
   extensionOpts: { type, name, id },

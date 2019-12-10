@@ -11,7 +11,7 @@ import {
   PluginActions,
   PluginFile,
 } from '../src/domain/plugin';
-import { BricksView, BrickItem } from '../src/plugins/bricksPluginView';
+import { BricksView, BrickItem } from '../src/plugins/views/bricks';
 
 export interface UnsplashViewState {
   results: SearchResponse[];

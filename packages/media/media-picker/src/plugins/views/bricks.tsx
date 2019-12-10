@@ -3,10 +3,10 @@ import { Component } from 'react';
 import { ExternalImageIdentifier } from '@atlaskit/media-client';
 import { Card } from '@atlaskit/media-card';
 import Spinner from '@atlaskit/spinner';
-import { Container, GridCell } from '../popup/components/views/giphy/styles';
-import { SelectedItem } from '../popup/domain';
-import { BricksLayout } from '../popup/components/views/giphy/bricksGrid';
-import gridCellScaler from '../popup/tools/gridCellScaler';
+import { Container, GridCell } from '../../popup/components/views/giphy/styles';
+import { SelectedItem } from '../../popup/domain';
+import { BricksLayout } from '../../popup/components/views/giphy/bricksGrid';
+import gridCellScaler from '../../popup/tools/gridCellScaler';
 import { SpinnerWrapper } from './styled';
 
 const NUMBER_OF_COLUMNS = 4;

@@ -10,7 +10,7 @@ import {
   PluginActions,
   PluginFile,
 } from '../src/domain/plugin';
-import { BricksView, BrickItem } from '../src/plugins/bricksPluginView';
+import { BricksView, BrickItem } from '../src/plugins/views/bricks';
 
 export type EmojiResult = { [key: string]: string };
 export interface EmojiViewState {
@@ -49,9 +49,9 @@ class EmojiView extends Component<EmojiViewProps, EmojiViewState> {
     const { query } = this.state;
     const results = EmojiView.allResults
       ? EmojiView.allResults
-      : ((await (await fetch(
-          'https://api.github.com/emojis',
-        )).json()) as EmojiResult);
+      : ((await (
+          await fetch('https://api.github.com/emojis')
+        ).json()) as EmojiResult);
 
     if (!EmojiView.allResults) {
       EmojiView.allResults = results;

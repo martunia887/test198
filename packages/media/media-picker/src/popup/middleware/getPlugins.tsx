@@ -5,7 +5,7 @@ import { getPluginsFullfilled, getPluginsFailed } from '../actions';
 import { isGetPluginsAction } from '../actions/getPlugins';
 import ImageIcon from '@atlaskit/icon/glyph/image';
 import { MediaPickerPlugin } from '../../domain/plugin';
-import { ForgeView, ForgeExtension } from '../../../example-helpers/forge';
+import { ForgeExtension, ForgeView } from '../../plugins/forge';
 
 const BASE_URL = 'https://api-private.stg.atlassian.com';
 const GRAPHQL_PATH = '/graphql';
@@ -62,7 +62,6 @@ export const requestPlugins = (store: Store<State>): void => {
       dispatch(getPluginsFullfilled(pluginsForMediaPicker));
     })
     .catch(err => {
-      console.error(err);
       dispatch(getPluginsFailed());
     });
 };
