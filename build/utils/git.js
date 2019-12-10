@@ -45,7 +45,7 @@ async function getChangedChangesetFilesSinceMaster(
   const files = cmd.stdout
     .trim()
     .split('\n')
-    .filter(file => !files.includes('README.md') && file.startsWith('changes'));
+    .filter(file => !file.includes('README.md') && file.startsWith('changes'));
   if (!fullPath) return files;
   return files.map(file => path.resolve(file));
 }
@@ -67,7 +67,7 @@ async function getChangedChangesetFilesSinceDevelop(
   const files = cmd.stdout
     .trim()
     .split('\n')
-    .filter(file => !files.includes('README.md') && file.startsWith('changes'));
+    .filter(file => !file.includes('README.md') && file.startsWith('changes'));
   if (!fullPath) return files;
   return files.map(file => path.resolve(file));
 }
