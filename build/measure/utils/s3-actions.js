@@ -167,7 +167,6 @@ function uploadToS3(pathToFile /*: string */, branch /*: string */) {
     s3Params: {
       Bucket: BUCKET_NAME,
       Key: bucketPath,
-      ACL: 'public-read',
     },
   };
 
