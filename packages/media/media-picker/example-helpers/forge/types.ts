@@ -1,4 +1,3 @@
-import { ForgeClient } from './client';
 import { PluginActions } from '../../src/domain/plugin';
 import { SelectedItem } from '../../src/popup/domain';
 

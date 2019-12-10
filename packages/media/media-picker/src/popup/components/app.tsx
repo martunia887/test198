@@ -199,7 +199,6 @@ export class App extends Component<AppProps, AppState> {
       proxyReactContext,
     } = this.props;
 
-    console.log({ selectedServiceName });
     const { isDropzoneActive } = this.state;
 
     return (
@@ -234,7 +233,6 @@ export class App extends Component<AppProps, AppState> {
 
   private renderCurrentView(selectedServiceName: ServiceName): ReactNode {
     const { plugins = [], onFileClick, selectedItems } = this.props;
-    console.log({ plugins });
     if (selectedServiceName === 'activity') {
       const { userMediaClient } = this.props;
       return (

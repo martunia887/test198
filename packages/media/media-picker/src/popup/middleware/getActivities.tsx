@@ -76,7 +76,7 @@ export const requestActivities = (store: Store<State>): void => {
     .then(response => {
       dispatch(getActivitiesFullfilled(response.data.myActivities));
     })
-    .catch(err => {
-      console.error({ activitiesResponseErr: err });
+    .catch((_err: any) => {
+      dispatch(getActivitiesFailed());
     });
 };

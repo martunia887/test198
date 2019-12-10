@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import FieldText from '@atlaskit/field-text';
 
 import { BricksView, BrickItem } from '../../src/plugins/bricksPluginView';
+``;
 import { ForgeViewProps } from './types';
 import { ForgeClient } from './client';
 import { PluginWrapper, PluginHeader } from './styled';
@@ -17,7 +18,6 @@ export const ForgeView = ({
   const [items, setItems] = useState<any[]>([]);
 
   const onUpdateItems = useCallback(async () => {
-    console.log('ForgeView -> onUpdateItems', client, type, query);
     const response = await client.invoke(type, { query });
     setItems(response.data);
   }, [client, type, query]);
@@ -67,7 +67,6 @@ export const ForgeView = ({
   }, [name, items, onFileClick, selectedItems]);
 
   useEffect(() => {
-    console.log('ForgeView -> useEffect');
     onUpdateItems();
   }, [onUpdateItems]);
 
