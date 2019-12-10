@@ -1,0 +1,34 @@
+{
+  "name": "@atlaskit/location-card",
+  "version": "0.0.1",
+  "description": "Geolocation Card Component",
+  "license": "Apache-2.0",
+  "atlaskit:src": "src/index.ts",
+  "module": "dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "author": "Atlassian Pty Ltd",
+  "maintainers": [
+    "Jose Nunez"
+  ],
+  "atlaskit": {
+    "name": "Location Card",
+    "team": "media"
+  },
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "dependencies": {
+    "@atlaskit/icon": "^19.0.8",
+    "@atlaskit/maps-viewer": "^0.0.1",
+    "@atlaskit/maps-core": "^0.0.1",
+    "@atlaskit/media-ui": "^11.7.0",
+    "@atlaskit/modal-dialog": "^10.4.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
+  },
+  "devDependencies": {
+    "@atlaskit/docs": "^8.1.8",
+    "@atlaskit/page": "^11.0.9",
+    "@types/react": "^16.8.0"
+  }
+}

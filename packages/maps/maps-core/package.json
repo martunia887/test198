@@ -1,0 +1,25 @@
+{
+  "name": "@atlaskit/maps-core",
+  "version": "0.0.1",
+  "description": "Maps library handlers and types",
+  "license": "Apache-2.0",
+  "atlaskit:src": "src/index.ts",
+  "module": "dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "author": "Atlassian Pty Ltd",
+  "maintainers": [
+    "Jose Nunez"
+  ],
+  "atlaskit": {
+    "name": "Maps Core",
+    "team": "media"
+  },
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "dependencies": {
+    "mapbox-gl": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/mapbox-gl": "^1.6.0"
+  }
+}

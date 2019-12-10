@@ -1,0 +1,33 @@
+{
+  "name": "@atlaskit/maps-viewer",
+  "version": "0.0.1",
+  "description": "Maps Viewer + Maps Modal + Maps Card",
+  "license": "Apache-2.0",
+  "atlaskit:src": "src/index.ts",
+  "module": "dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "author": "Atlassian Pty Ltd",
+  "maintainers": [
+    "Jose Nunez"
+  ],
+  "atlaskit": {
+    "name": "Map Viewer",
+    "team": "media"
+  },
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "dependencies": {
+    "@atlaskit/icon": "^19.0.8",
+    "@atlaskit/maps-core": "^0.0.1",
+    "@atlaskit/modal-dialog": "^10.4.0",
+    "@atlaskit/navigation-next": "^7.1.1"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
+  },
+  "devDependencies": {
+    "@atlaskit/button": "^13.3.3",
+    "@atlaskit/docs": "^8.1.8",
+    "@types/react": "^16.8.0"
+  }
+}

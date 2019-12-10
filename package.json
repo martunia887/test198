@@ -112,6 +112,7 @@
     "@types/lodash.noop": "^3.0.6",
     "@types/lodash.pick": "^4.4.0",
     "@types/lorem-ipsum": "^1.0.2",
+    "@types/mapbox-gl": "^1.6.0",
     "@types/mocha": "^2.2.39",
     "@types/prop-types": "^15.5.1",
     "@types/react-dom": "^16.8.0",
@@ -459,6 +460,7 @@
     "lodash.truncate": "^4.4.2",
     "lorem-ipsum": "^1.0.6",
     "lru-fast": "^0.2.2",
+    "mapbox-gl": "^1.6.0",
     "markdown-it": "^10.0.0",
     "markdown-it-table": "^2.0.4",
     "memoize-one": "^5.1.0",
@@ -594,8 +596,8 @@
   "resolutions": {
     "**/@atlaskit/theme/styled-components": "^3.2.6",
     "**/expand-range/fill-range": "2.2.3",
-    "react":"16.8.6",
-    "react-dom":"16.8.6"
+    "react": "16.8.6",
+    "react-dom": "16.8.6"
   },
   "engines": {
     "node": "^10.13.0"
