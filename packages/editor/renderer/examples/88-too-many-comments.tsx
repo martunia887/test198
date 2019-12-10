@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import RendererDemo from './helper/RendererDemo';
 import { Provider, Client } from '@atlaskit/smart-card';
-import { SwitchWidthDetectorProvider } from '@atlaskit/editor-common';
 
 const myComment = {
   version: 1,
@@ -66,18 +65,15 @@ export default function Example() {
           ? 'Click to use a version non-gluttonous of WidthDetector'
           : 'Click to use the current gluttonous WidthDetector'}
       </button>
-      <SwitchWidthDetectorProvider
-        value={{ shouldUseOldWidthProvider: oldWidthDetector }}
-      >
-        <RendererDemo
-          appearance="comment"
-          document={myComment}
-          allowColumnSorting={true}
-          serializer="react"
-          showHowManyCopies
-          copies={100}
-        />
-      </SwitchWidthDetectorProvider>
+
+      <RendererDemo
+        appearance="comment"
+        document={myComment}
+        allowColumnSorting={true}
+        serializer="react"
+        showHowManyCopies
+        copies={100}
+      />
     </Provider>
   );
 }
