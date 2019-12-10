@@ -23,6 +23,22 @@ const divideChangelog = changelog => {
     }, []);
 };
 
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions;
+
+  // This is being used by the config of @manypkg/gatsby-source-workspace to implement ChangelogEntry chunks
+  // This should likely be changed alongside that.
+  const typeDefs = `
+  type ChangelogEntry implements Node {
+    version: String
+    packageName: String
+    md: String
+  }
+  `;
+
+  createTypes(typeDefs);
+};
+
 exports.onCreateNode = async ({ node, actions }) => {
   const { createNode } = actions;
 

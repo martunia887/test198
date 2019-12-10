@@ -33,45 +33,6 @@ const divideChangelog = changelog => {
     }, []);
 };
 
-exports.onCreateNode = async ({ node, actions }) => {
-  const { createNode } = actions;
-
-  if (node.internal.type === 'workspaceInfo') {
-    const changelogBits = divideChangelog(node.rawChangelog);
-    for (const bit of changelogBits) {
-      const name = `${node.name}__${bit.version}`;
-
-      createNode({
-        id: name,
-        packageName: node.name,
-        ...bit,
-        internal: {
-          contentDigest: createContentDigest({
-            name,
-          }),
-          type: 'changelogEntry',
-        },
-      });
-    }
-  }
-};
-
-exports.createSchemaCustomization = ({ actions }) => {
-  const { createTypes } = actions;
-
-  // This is being used by the config of @manypkg/gatsby-source-workspace to implement ChangelogEntry chunks
-  // This should likely be changed alongside that.
-  const typeDefs = `
-  type ChangelogEntry implements Node {
-    version: String
-    packageName: String
-    md: String
-  }
-  `;
-
-  createTypes(typeDefs);
-};
-
 exports.onCreateWebpackConfig = ({ actions, loaders, getConfig }) => {
   actions.setWebpackConfig({
     resolve: {
