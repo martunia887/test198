@@ -2,16 +2,18 @@ import * as React from 'react';
 import { MediaClient, FileState } from '@atlaskit/media-client';
 import { Outcome } from '../domain';
 import {
-  ArchiveEntries,
+  ArchiveSideBar,
   ArchiveWrapper,
-  SelectedEntryWrapper,
+  ArchiveItemViewer,
   CustomVideoPlayerWrapper,
 } from '../styled';
-import { MediaViewerError } from '../error';
+import { MediaViewerError, ErrorName, ErrorMessage } from '../error';
 import { BaseViewer } from './base-viewer';
 import { ZipiZape, ZipEntry, EntryContent } from 'zipizape';
 import { InteractiveImg } from './image/interactive-img';
 import { CustomMediaPlayer } from '../../../../media-ui/src/customMediaPlayer';
+import { JSXElement } from '@babel/types';
+import { FormattedMessage } from 'react-intl';
 
 export type Props = {
   mediaClient: MediaClient;
@@ -64,6 +66,16 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
   protected renderSuccessful(content: Content) {
     const { entries, selectedEntryContent } = content;
     // TODO: handle empty entries
+
+    return (
+      <ArchiveWrapper>
+        {this.renderArchiveSideBar(entries)}
+        {this.renderArchiveItemViewer(selectedEntryContent)}
+      </ArchiveWrapper>
+    );
+  }
+
+  private renderArchiveSideBar(entries: ZipEntry[]) {
     const entriesContent = entries.map((entry, index) => {
       return (
         <div key={index} onClick={this.changeSelectedEntry(entries, entry)}>
@@ -72,16 +84,30 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
       );
     });
 
-    console.log({ entriesContent });
+    return <ArchiveSideBar>{entriesContent}</ArchiveSideBar>;
+  }
 
-    const selectedEntryViewer = this.renderEntryViewer(selectedEntryContent);
-
-    return (
-      <ArchiveWrapper>
-        <ArchiveEntries>{entriesContent}</ArchiveEntries>
-        <SelectedEntryWrapper>{selectedEntryViewer}</SelectedEntryWrapper>
-      </ArchiveWrapper>
-    );
+  private renderArchiveItemViewer(selectedEntryContent: EntryContent) {
+    const content = selectedEntryContent.getPreview()!.src; // TODO don't do this?
+    console.log({ content });
+    switch (selectedEntryContent.type) {
+      case 'image':
+        return (
+          <ArchiveItemViewer>
+            {this.renderExternalImage(content)}
+          </ArchiveItemViewer>
+        );
+      case 'video':
+        return (
+          <ArchiveItemViewer>{this.renderVideo(content)}</ArchiveItemViewer>
+        );
+      default:
+        return (
+          <ArchiveItemViewer>
+            <h1>UNSUPPORTED</h1>
+          </ArchiveItemViewer>
+        );
+    }
   }
 
   private changeSelectedEntry = (
@@ -89,6 +115,7 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
     selectedEntry: ZipEntry,
   ) => async () => {
     const selectedEntryContent = await selectedEntry.getContent();
+    console.log({ selectedEntryContent });
     this.setState({
       content: Outcome.successful({
         entries,
@@ -97,31 +124,11 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
     });
   };
 
-  private renderEntryViewer(entryContent: EntryContent) {
-    const content = entryContent.getPreview()!.src;
-    switch (entryContent.type) {
-      case 'image':
-        return <InteractiveImg src={content} />;
-      case 'video':
-        return (
-          <CustomVideoPlayerWrapper data-testid="media-viewer-video-content">
-            <CustomMediaPlayer
-              type="video"
-              // isAutoPlay={isAutoPlay}
-              // onHDToggleClick={this.onHDChange}
-              // showControls={showControls}
-              src={content}
-              // isHDActive={isHDActive}
-              // isHDAvailable={isHDAvailable(item)}
-              // isShortcutEnabled={true}
-              // onCanPlay={onCanPlay}
-              // onFirstPlay={this.onFirstPlay}
-              // onError={onError}
-            />
-          </CustomVideoPlayerWrapper>
-        );
-      default:
-        return null;
-    }
+  private renderExternalImage(content: string) {
+    return <InteractiveImg src={content} />;
+  }
+
+  private renderVideo(content: string) {
+    return <h1>VIDEO UNSUPPORTED</h1>;
   }
 }

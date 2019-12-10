@@ -339,7 +339,7 @@ export const CustomVideoPlayerWrapper = styled.div`
   }
 `;
 
-export const ArchiveEntries = styled.div`
+export const ArchiveSideBar = styled.div`
   position: absolute;
   top: 0;
   padding: 20px;
@@ -355,4 +355,4 @@ export const ArchiveWrapper = styled.div`
   color: white;
 `;
 
-export const SelectedEntryWrapper = styled.div``;
+export const ArchiveItemViewer = styled.div``;
