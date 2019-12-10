@@ -2,7 +2,6 @@ import { MediaPicker, isImagePreview } from '@atlaskit/media-picker';
 import {
   Popup,
   PopupConfig,
-  MediaFile,
   UploadPreviewUpdateEventPayload,
   UploadParams,
   UploadErrorEventPayload,
@@ -17,6 +16,7 @@ import {
   CustomMediaPicker,
   MobileUploadEndEventPayload,
 } from './types';
+import { PluginItemPayload } from '@atlaskit/media-picker/types';
 
 export type PickerType =
   | 'popup'
@@ -82,6 +82,7 @@ export default class PickerFacade {
       );
     }
 
+    (picker as any).on('plugin-items-inserted', this.handlePluginInsert);
     (picker as any).on('upload-preview-update', this.handleUploadPreviewUpdate);
     (picker as any).on('upload-processing', this.handleReady);
     // media picker not always fires upload-processing but always fires upload-end, and since handleReady() is idempotent it can be treated the same
@@ -107,6 +108,7 @@ export default class PickerFacade {
       return;
     }
 
+    (picker as any).removeAllListeners('plugin-items-inserted');
     (picker as any).removeAllListeners('upload-preview-update');
     (picker as any).removeAllListeners('upload-processing');
     (picker as any).removeAllListeners('upload-end');
@@ -166,6 +168,37 @@ export default class PickerFacade {
     this.onDragListeners.push(cb);
   }
 
+  public handlePluginInsert = (events: PluginItemPayload[]) => {
+    // Signal start of insertion - with initial state (?)
+    events.forEach(({ pluginFile }) => {
+      const state: MediaState = {
+        id: pluginFile.id,
+        src: pluginFile.metadata.src,
+        external: true,
+      };
+      this.eventListeners[pluginFile.id] = [];
+      this.onStartListeners.forEach(cb =>
+        cb(
+          state,
+          evt => this.subscribeStateChanged(pluginFile.id, evt),
+          this.analyticsName || this.pickerType,
+        ),
+      );
+    });
+    // Signal readiness - insert actual card (?)
+    events.forEach(({ pluginFile }) => {
+      const listeners = this.eventListeners[pluginFile.id];
+      if (listeners) {
+        listeners.forEach(cb =>
+          cb({
+            id: pluginFile.id,
+            status: 'ready',
+          }),
+        );
+      }
+    });
+  };
+
   public handleUploadPreviewUpdate = (
     event: UploadPreviewUpdateEventPayload,
   ) => {
@@ -187,17 +220,17 @@ export default class PickerFacade {
     this.onStartListeners.forEach(cb =>
       cb(
         state,
-        evt => this.subscribeStateChanged(file, evt),
+        evt => this.subscribeStateChanged(file.id, evt),
         this.analyticsName || this.pickerType,
       ),
     );
   };
 
   private subscribeStateChanged = (
-    file: MediaFile,
+    id: string,
     onStateChanged: MediaStateEventListener,
   ) => {
-    const subscribers = this.eventListeners[file.id];
+    const subscribers = this.eventListeners[id];
     if (!subscribers) {
       return;
     }

@@ -304,7 +304,11 @@ export class MediaPluginState {
     });
 
     if (
-      isMediaSingle(this.view.state.schema, mediaStateWithContext.fileMimeType)
+      isMediaSingle(
+        this.view.state.schema,
+        mediaStateWithContext.fileMimeType,
+        mediaStateWithContext.external,
+      )
     ) {
       insertMediaSingleNode(
         this.view,

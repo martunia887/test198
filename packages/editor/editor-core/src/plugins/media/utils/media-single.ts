@@ -112,8 +112,11 @@ function insertNodesWithOptionalParagraph(
   };
 }
 
-export const isMediaSingle = (schema: Schema, fileMimeType?: string) =>
-  !!schema.nodes.mediaSingle && isImage(fileMimeType);
+export const isMediaSingle = (
+  schema: Schema,
+  fileMimeType?: string,
+  external?: boolean,
+) => !!schema.nodes.mediaSingle && (isImage(fileMimeType) || external === true);
 
 export const insertMediaAsMediaSingle = (
   view: EditorView,
@@ -209,22 +212,31 @@ export const insertMediaSingleNode = (
 export const createMediaSingleNode = (schema: Schema, collection: string) => (
   mediaState: MediaSingleState,
 ) => {
-  const { id, dimensions, contextId, scaleFactor = 1 } = mediaState;
+  const { media, mediaSingle } = schema.nodes;
+  const { dimensions, scaleFactor = 1 } = mediaState;
   const { width, height } = dimensions || {
     height: undefined,
     width: undefined,
   };
-  const { media, mediaSingle } = schema.nodes;
-
-  const mediaNode = media.create({
-    id,
-    type: 'file',
-    collection,
-    contextId,
-    width: width && Math.round(width / scaleFactor),
-    height: height && Math.round(height / scaleFactor),
-  });
-
+  let mediaNode;
+  if (!mediaState.external) {
+    mediaNode = media.create({
+      id: mediaState.id,
+      type: 'file',
+      collection,
+      contextId: mediaState.contextId,
+      width: width && Math.round(width / scaleFactor),
+      height: height && Math.round(height / scaleFactor),
+    });
+  } else {
+    mediaNode = media.create({
+      url: mediaState.src,
+      type: 'external',
+      width: width && Math.round(width / scaleFactor),
+      height: height && Math.round(height / scaleFactor),
+      __external: true,
+    });
+  }
   copyOptionalAttrsFromMediaState(mediaState, mediaNode);
   return mediaSingle.createChecked({}, mediaNode);
 };

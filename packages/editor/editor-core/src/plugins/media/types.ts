@@ -31,6 +31,9 @@ export interface MediaState {
   /** still require to support Mobile */
   publicId?: string;
   contextId?: string;
+  /** for external files **/
+  src?: string;
+  external?: boolean;
 }
 
 export type Listener = (data: any) => void;
