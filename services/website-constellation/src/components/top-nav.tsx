@@ -58,6 +58,7 @@ const TopNav = () => {
                 // TODO: Complete search implementation
                 <Search
                   onClick={() =>
+                    // eslint-disable-next-line no-console
                     console.error(
                       'BC: we do not have a working search implementation - talk to me for more details',
                     )
