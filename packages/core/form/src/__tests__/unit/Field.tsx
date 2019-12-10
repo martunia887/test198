@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { render, fireEvent, act } from '@testing-library/react';
 import Button from '@atlaskit/button';
-import FieldText from '@atlaskit/field-text';
 import TextField from '@atlaskit/textfield';
 
 import Form, { Field, HelperMessage, ErrorMessage, ValidMessage } from '../..';
@@ -41,7 +40,7 @@ test('should not be dirty after mount', () => {
         <Field name="username" defaultValue="Joe Bloggs">
           {({ fieldProps, meta: { dirty } }) => (
             <>
-              <FieldText {...fieldProps} />
+              <TextField {...fieldProps} />
               <HelperMessage>
                 Field is {dirty === true ? 'dirty' : 'pristine'}
               </HelperMessage>
@@ -61,7 +60,7 @@ test('defaultValue should be correctly set by final-form', () => {
       {({ formProps }) => (
         <form {...formProps}>
           <Field name="username" defaultValue="Joe Bloggs">
-            {({ fieldProps }) => <FieldText {...fieldProps} />}
+            {({ fieldProps }) => <TextField {...fieldProps} />}
           </Field>
           <Button type="submit">Submit</Button>
         </form>
@@ -89,7 +88,7 @@ test('untouched field should not show validation error', () => {
         >
           {({ fieldProps, error }) => (
             <>
-              <FieldText {...fieldProps} />
+              <TextField {...fieldProps} />
               {error && (
                 <ErrorMessage>There is a problem with this field</ErrorMessage>
               )}
@@ -100,7 +99,7 @@ test('untouched field should not show validation error', () => {
     </Form>,
   );
   expect(wrapper.find(ErrorMessage)).toHaveLength(0);
-  expect(wrapper.find(FieldText).props()).toMatchObject({ isInvalid: false });
+  expect(wrapper.find(TextField).props()).toMatchObject({ isInvalid: false });
 });
 
 test('touched field should show validation error', () => {
@@ -114,7 +113,7 @@ test('touched field should show validation error', () => {
         >
           {({ fieldProps, error }) => (
             <>
-              <FieldText {...fieldProps} />
+              <TextField {...fieldProps} />
               {error && (
                 <ErrorMessage>There is a problem with this field</ErrorMessage>
               )}
@@ -128,7 +127,7 @@ test('touched field should show validation error', () => {
   touch(wrapper.find('input'));
 
   expect(wrapper.find(ErrorMessage)).toHaveLength(1);
-  expect(wrapper.find(FieldText).props()).toMatchObject({ isInvalid: true });
+  expect(wrapper.find(TextField).props()).toMatchObject({ isInvalid: true });
 });
 
 test('should show errors after submission', () => {
@@ -139,7 +138,7 @@ test('should show errors after submission', () => {
           <Field name="username" defaultValue="Joe Bloggs">
             {({ fieldProps, error }) => (
               <>
-                <FieldText {...fieldProps} />
+                <TextField {...fieldProps} />
                 {error === 'TAKEN_USERNAME' && (
                   <ErrorMessage>
                     There is a problem with this field
@@ -158,7 +157,7 @@ test('should show errors after submission', () => {
   return Promise.resolve().then(() => {
     wrapper.update();
     expect(wrapper.find(ErrorMessage)).toHaveLength(1);
-    expect(wrapper.find(FieldText).props()).toMatchObject({ isInvalid: true });
+    expect(wrapper.find(TextField).props()).toMatchObject({ isInvalid: true });
   });
 });
 
@@ -178,7 +177,7 @@ test('change in defaultValue should reset form field', () => {
               >
                 {({ fieldProps, error }) => (
                   <>
-                    <FieldText {...fieldProps} />
+                    <TextField {...fieldProps} />
                     {error && (
                       <ErrorMessage>
                         There is a problem with this field
@@ -200,7 +199,7 @@ test('change in defaultValue should reset form field', () => {
   return Promise.resolve().then(() => {
     wrapper.update();
     expect(wrapper.find(ErrorMessage)).toHaveLength(0);
-    expect(wrapper.find(FieldText).props()).toMatchObject({ value: 'jill' });
+    expect(wrapper.find(TextField).props()).toMatchObject({ value: 'jill' });
   });
 });
 
@@ -428,7 +427,7 @@ test('should persist submit error if field value has changed since it was submit
           <Field name="username" defaultValue="Jane Chan">
             {({ fieldProps, error }) => (
               <>
-                <FieldText {...fieldProps} />
+                <TextField {...fieldProps} />
                 {error === 'TAKEN_USERNAME' && (
                   <ErrorMessage>
                     There is a problem with this field
@@ -447,10 +446,10 @@ test('should persist submit error if field value has changed since it was submit
   return Promise.resolve().then(() => {
     wrapper.update();
     expect(wrapper.find(ErrorMessage)).toHaveLength(1);
-    expect(wrapper.find(FieldText).prop('isInvalid')).toBe(true);
+    expect(wrapper.find(TextField).prop('isInvalid')).toBe(true);
     wrapper.find('input').simulate('change', { target: { value: 'Jane Cha' } });
     expect(wrapper.find(ErrorMessage)).toHaveLength(1);
-    expect(wrapper.find(FieldText).prop('isInvalid')).toBe(true);
+    expect(wrapper.find(TextField).prop('isInvalid')).toBe(true);
   });
 });
 

@@ -2,7 +2,6 @@ import React from 'react';
 import Button from '@atlaskit/button';
 import TextField from '@atlaskit/textfield';
 import TextArea from '@atlaskit/textarea';
-import { FieldTextStateless } from '@atlaskit/field-text';
 import { FieldTextAreaStateless } from '@atlaskit/field-text-area';
 import Form, { Field, FormFooter } from '../src';
 
@@ -24,9 +23,7 @@ export default () => (
 
           <Field name="lastname" defaultValue="" label="Last name" isRequired>
             {({ fieldProps: { isRequired, isDisabled, ...others } }) => (
-              <FieldTextStateless
-                isLabelHidden
-                shouldFitContainer
+              <TextField
                 disabled={isDisabled}
                 required={isRequired}
                 {...others}
@@ -42,7 +39,11 @@ export default () => (
             {({ fieldProps }) => <TextArea {...fieldProps} />}
           </Field>
 
-          <Field name="comments" defaultValue="" label="Additional comments">
+          <Field<string, HTMLTextAreaElement>
+            name="comments"
+            defaultValue=""
+            label="Additional comments"
+          >
             {({ fieldProps: { isRequired, isDisabled, ...others } }) => (
               <FieldTextAreaStateless
                 isLabelHidden

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Label } from '@atlaskit/field-base';
-import FieldText from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 import { DatePicker, TimePicker, DateTimePicker } from '../src';
 
 interface State {
@@ -40,43 +40,56 @@ export default class MyComponent extends Component<{}, State> {
       timePickerValue,
       dateTimePickerValue,
     } = this.state;
+
     return (
       <div>
         <p>
           This demonstrates updating each pickers value via an external source.
         </p>
         <h3>Date picker</h3>
-        <FieldText
-          label="Input"
-          shouldFitContainer
+        <Label label="Input" htmlFor="date-picker-override" />
+        <TextField
+          id="date-picker-override"
           value={datePickerValue}
           onChange={this.onDatePickerChange}
         />
 
-        <Label label="Date" />
-        <DatePicker value={datePickerValue} isDisabled onChange={console.log} />
+        <Label label="Date" htmlFor="date-picker" />
+        <DatePicker
+          id="date-picker"
+          value={datePickerValue}
+          isDisabled
+          onChange={console.log}
+        />
 
         <h3>Time picker</h3>
-        <FieldText
-          label="Input"
-          shouldFitContainer
+        <Label label="Input" htmlFor="time-picker-override" />
+        <TextField
+          id="time-picker-override"
           value={timePickerValue}
           onChange={this.onTimePickerChange}
         />
 
-        <Label label="Date" />
-        <TimePicker value={timePickerValue} isDisabled onChange={console.log} />
+        <Label label="Date" htmlFor="time-picker" />
+        <TimePicker
+          id="time-picker"
+          value={timePickerValue}
+          isDisabled
+          onChange={console.log}
+        />
 
         <h3>Date / time picker</h3>
-        <FieldText
+        <Label label="Input" htmlFor="datetime-picker-override" />
+        <TextField
+          id="datetime-picker-override"
           label="Input"
-          shouldFitContainer
           value={dateTimePickerValue}
           onChange={this.onDateTimePickerChange}
         />
 
-        <Label label="Date" />
+        <Label label="Date" htmlFor="datetime-picker" />
         <DateTimePicker
+          id="datetime-picker"
           value={dateTimePickerValue}
           isDisabled
           onChange={console.log}

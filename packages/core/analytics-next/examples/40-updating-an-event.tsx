@@ -1,5 +1,5 @@
 import React, { Component, MouseEvent, FormEvent } from 'react';
-import FieldText from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
 
 import { UIAnalyticsEvent, AnalyticsListener } from '../src';
@@ -27,8 +27,9 @@ class Form extends Component<{}, { value: string }> {
   render() {
     return (
       <div>
-        <FieldText
+        <TextField
           label="Name"
+          width="small"
           onChange={this.handleInputChange}
           value={this.state.value}
         />

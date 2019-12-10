@@ -3,7 +3,7 @@ import * as H from 'history';
 import { match } from 'react-router';
 import styled from 'styled-components';
 import BackIcon from '@atlaskit/icon/glyph/arrow-left';
-import TextField from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 import Loadable from '../components/WrappedLoader';
 import Changelog, { NoMatch } from '../components/ChangeLog';
 import Page from '../components/Page';
@@ -82,7 +82,6 @@ export default class ChangelogExplorer extends React.Component<Props, State> {
           label="Semver Range"
           onChange={this.handleChange}
           placeholder={'e.g. "> 1.0.6 <= 3.0.2"'}
-          shouldFitContainer
           value={range}
         />
         {isInvalid ? (

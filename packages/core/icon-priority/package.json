@@ -36,7 +36,6 @@
     "@atlaskit/build-utils": "^2.2.5",
     "@atlaskit/button": "^13.1.6",
     "@atlaskit/docs": "^8.1.5",
-    "@atlaskit/field-text": "^9.0.11",
     "@atlaskit/icon-build-process": "^0.1.2",
     "@atlaskit/modal-dialog": "^10.1.9",
     "@atlaskit/ssr": "^0.1.1",
