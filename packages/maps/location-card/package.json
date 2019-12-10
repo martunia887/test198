@@ -13,7 +13,7 @@
   ],
   "atlaskit": {
     "name": "Location Card",
-    "team": "media"
+    "team": "maps"
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {

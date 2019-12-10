@@ -20,6 +20,7 @@
     "mapbox-gl": "^1.6.0"
   },
   "devDependencies": {
-    "@types/mapbox-gl": "^1.6.0"
+    "@types/mapbox-gl": "^1.6.0",
+    "@atlaskit/docs": "^8.1.8"
   }
 }

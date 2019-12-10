@@ -3,7 +3,7 @@ import Modal from '@atlaskit/modal-dialog';
 import MapViewer, { MapViewerProps } from './viewer';
 
 type MapModalProps = MapViewerProps & {
-  onClose: Function;
+  onClose: () => void;
 };
 
 export default class ExampleBasic extends React.PureComponent<

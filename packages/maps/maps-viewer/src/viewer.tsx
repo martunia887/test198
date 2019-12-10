@@ -18,12 +18,16 @@ export type State = {
 };
 
 export default class MapViewer extends React.Component<MapViewerProps> {
-  mapContainer: HTMLDivElement;
+  mapContainer: HTMLDivElement | null = null;
 
   componentDidMount() {
-    const allLocations = locationsManager.getLocations();
-    const { locations = allLocations, selected } = this.props;
-    openMap(this.mapContainer, locations, selected);
+    const {
+      locations = locationsManager.getLocations(),
+      selected,
+    } = this.props;
+    if (this.mapContainer) {
+      openMap(this.mapContainer, locations, selected);
+    }
   }
 
   componentWillUnmount() {
@@ -31,7 +35,7 @@ export default class MapViewer extends React.Component<MapViewerProps> {
   }
 
   render() {
-    const { locations } = this.props;
+    const { locations = locationsManager.getLocations() } = this.props;
     const style = {
       height: '100%',
       width: '100%',
