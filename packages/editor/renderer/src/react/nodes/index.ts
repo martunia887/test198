@@ -94,6 +94,15 @@ const InlineCard = Loadable({
   loading: () => null,
 });
 
+const InlineLocation = Loadable({
+  loader: () =>
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_InlineLocation" */
+      './inlineLocation'
+    ),
+  loading: () => null,
+});
+
 const BlockCard = Loadable({
   loader: () =>
     import(
@@ -155,6 +164,7 @@ export const nodeToReact: { [key: string]: React.ComponentType<any> } = {
   heading: Heading,
   image: Image,
   inlineCard: InlineCard,
+  inlineLocation: InlineLocation,
   inlineExtension: InlineExtension,
   layoutSection: LayoutSection,
   layoutColumn: LayoutColumn,
@@ -338,6 +348,7 @@ export {
   ListItem,
   Image,
   InlineCard,
+  InlineLocation,
   InlineExtension,
   InlineExtensionProps,
   LayoutSection,

@@ -43,6 +43,7 @@ const nodes = [
   'inlineCard',
   'unsupportedBlock',
   'unsupportedInline',
+  'inlineLocation',
 ];
 
 const marks = [

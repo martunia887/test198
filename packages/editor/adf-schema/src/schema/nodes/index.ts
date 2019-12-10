@@ -136,6 +136,7 @@ export { placeholder, PlaceholderDefinition } from './placeholder';
 export { layoutSection, LayoutSectionDefinition } from './layout-section';
 export { layoutColumn, LayoutColumnDefinition } from './layout-column';
 export { inlineCard, InlineCardDefinition } from './inline-card';
+export { inlineLocation, InlineLocationDefinition } from './inline-location';
 export {
   blockCard,
   UrlType,

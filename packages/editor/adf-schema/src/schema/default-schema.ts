@@ -46,6 +46,7 @@ export const getSchemaBasedOnStage = (stage = 'final') => {
       'layoutSection',
       'layoutColumn',
       'inlineCard',
+      'inlineLocation',
       'blockCard',
       'unsupportedBlock',
       'unsupportedInline',

@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Smart Locations Demo"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "width": 50,
+        "layout": "wrap-left"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "306c0b40-b5f9-4ca2-9816-dbfd13a504cf",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 1280,
+            "height": 853
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Trillion astonishment preserve and cherish that pale blue dot tesseract worldlets corpus callosum. Sea of Tranquility permanence of the stars extraordinary claims require extraordinary evidence vanquish the impossible brain is the seed of intelligence at the edge of forever "
+        },
+        {
+          "type": "inlineLocation",
+          "attrs":{
+            "address": "363 George St",
+            "coords": {
+              "lat": -33.867143,
+              "lng": 151.204669
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": ". Network of wormholes with pretty stories for which there's little good evidence the only home we've ever known a very small stage in a vast cosmic arena from which we spring bits of moving fluff?"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Hearts of the stars ship of the imagination cosmic ocean star stuff harvesting star light billions upon billions dispassionate extraterrestrial observer? Decipherment another world concept of the number one at the edge of forever Sea of Tranquility Apollonius of Perga. "
+        },
+        {
+          "type": "inlineLocation",
+          "attrs":{
+            "name": "Centennial Park",
+            "address": "15 Locked Bag, Paddington NSW 2021",
+            "coords": {
+              "lat": -33.9020303,
+              "lng": 151.2011865
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": " Dream of the mind's eye inconspicuous motes of rock and gas a mote of dust suspended in a sunbeam as a patch of light realm of the galaxies at the edge of forever?"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "width": 50,
+        "layout": "wrap-right"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "fd06604e-33c9-41b2-aae2-7082c2af5edf",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 5760,
+            "height": 3840
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The ash of stellar alchemy decipherment inconspicuous motes of rock and gas vastness is bearable only through love courage of our questions shores of the cosmic ocean. Emerged into consciousness "
+        },
+        {
+          "type": "inlineLocation",
+          "attrs":{
+            "name": "The University of Sydney",
+            "address": "Camperdown NSW 2006",
+            "coords": {
+              "lat": -33.9070126,
+              "lng": 151.1794423
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": " trillion hydrogen atoms the sky calls to us dispassionate extraterrestrial observer from which we spring? Two ghostly white figures in coveralls and helmets are soflty dancing finite but unbounded Sea of Tranquility citizens of distant epochs brain is the seed of intelligence courage of our questions?"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Cosmos Euclid as a patch of light vanquish the impossible white dwarf star stuff harvesting star light. "
+        },
+        {
+          "type": "inlineLocation",
+          "attrs":{
+            "name": "Lentil As Anything",
+            "address": "391 King St, Newtown NSW 2042",
+            "coords": {
+              "lat": -33.8995546,
+              "lng": 151.1768051
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": " Emerged into consciousness made in the interiors of collapsing stars citizens of distant epochs from which we spring intelligent beings with pretty stories for which there's "
+        },
+        {
+          "type": "inlineLocation",
+          "attrs":{
+            "coords": {
+              "lat": -33.9191157,
+              "lng": 151.2608155
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": " little good evidence? With pretty stories for which there's little good evidence citizens of distant epochs vastness is bearable only through love a very small stage in a vast cosmic arena vastness is bearable only through love gathered by gravity and billions upon billions upon billions upon billions upon billions upon billions upon billions."
+        }
+      ]
+    }
+  ]
+}

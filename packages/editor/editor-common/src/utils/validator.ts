@@ -299,6 +299,15 @@ export const getValidNode = (
         }
         break;
       }
+      case 'inlineLocation': {
+        if (attrs) {
+          return {
+            type,
+            attrs,
+          };
+        }
+        break;
+      }
       case 'bodiedExtension': {
         if (attrs && attrs.extensionType && attrs.extensionKey && content) {
           return {
