@@ -42,13 +42,14 @@ export default () => {
         <ul
           css={{
             maxWidth: '474px',
+            height: '328px',
             padding: 0,
             margin: '16px auto !important',
             div: { margin: '0' },
           }}
         >
           <StaggeredEntrance>
-            <ExitingPersistence>
+            <ExitingPersistence appear>
               {items.map(logo => (
                 // Gotcha #1 set propery keys YO
                 <FadeIn key={logo[1] as string}>

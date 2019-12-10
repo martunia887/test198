@@ -50,6 +50,9 @@ const PickerContainer = styled.div`
   padding: ${gridSize()}px 0;
   border-radius: ${borderRadius()}px;
   ${dropShadow};
+  input {
+    text-transform: uppercase;
+  }
 `;
 
 export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
@@ -195,23 +198,27 @@ export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
 
   private onColorClick = (color: Color) => {
     const { text, localId } = this.state;
-    this.setState({ color });
 
-    this.props.onSelect({
-      text,
-      color,
-      localId,
-    });
-
-    this.createStatusAnalyticsAndFireFunc({
-      action: 'clicked',
-      actionSubject: 'statusColorPicker',
-      attributes: {
+    if (color === this.state.color) {
+      this.createStatusAnalyticsAndFireFunc({
+        action: 'clicked',
+        actionSubject: 'statusColorPicker',
+        attributes: {
+          color,
+          localId,
+          state: analyticsState(this.props.isNew),
+        },
+      });
+      // closes status box and commits colour
+      this.onEnter();
+    } else {
+      this.setState({ color });
+      this.props.onSelect({
+        text,
         color,
         localId,
-        state: analyticsState(this.props.isNew),
-      },
-    });
+      });
+    }
   };
 
   private onTextChanged = (text: string) => {

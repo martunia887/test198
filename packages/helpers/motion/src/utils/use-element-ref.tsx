@@ -1,7 +1,7 @@
 import { useRef, useCallback } from 'react';
 
-type Element = HTMLElement | null;
-type CallbackRef = (instance: Element) => void;
+export type Element = HTMLElement | null;
+export type CallbackRef = (instance: Element) => void;
 
 /**
  * Will return a tuple of the element and the callback ref to set.

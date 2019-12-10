@@ -2,12 +2,12 @@ import React from 'react';
 import { ObjectInterpolation } from '@emotion/core';
 import { easeInOut } from '../utils/curves';
 import { largeDurationMs } from '../utils/durations';
-import EnteringMotion, { EnteringMotionProps } from './motion';
+import KeyframesMotion, { KeyframesMotionProps } from './keyframes-motion';
 
 export const fadeInAnimation = (): ObjectInterpolation<undefined> => ({
   from: {
     opacity: 0,
-    transform: 'translate3d(0, 10%, 0)',
+    transform: 'translate3d(0, calc(5% + 4px), 0)',
   },
   '50%': {
     opacity: 1,
@@ -24,23 +24,25 @@ export const fadeOutAnimation = (): ObjectInterpolation<undefined> => ({
   },
   to: {
     opacity: 0,
-    transform: 'translate3d(0, -10%, 0)',
+    transform: 'translate3d(0, calc(-5% + -4px), 0)',
   },
 });
 
-const FadeIn: React.FC<EnteringMotionProps> = ({
+const FadeIn: React.FC<KeyframesMotionProps> = ({
   children,
   duration = largeDurationMs,
-}: EnteringMotionProps) => {
+  ...props
+}: KeyframesMotionProps) => {
   return (
-    <EnteringMotion
+    <KeyframesMotion
       duration={duration}
       enteringAnimation={fadeInAnimation()}
       exitingAnimation={fadeOutAnimation()}
       animationTimingFunction={() => easeInOut}
+      {...props}
     >
       {children}
-    </EnteringMotion>
+    </KeyframesMotion>
   );
 };
 

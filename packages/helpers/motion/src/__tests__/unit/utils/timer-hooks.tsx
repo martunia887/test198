@@ -1,12 +1,12 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { replaceRaf } from 'raf-stub';
+import * as raf from '../../__utils__/raf';
 import {
   useRequestAnimationFrame,
   useSetTimeout,
 } from '../../../utils/timer-hooks';
 
-replaceRaf();
+raf.replace();
 
 describe('timer hooks', () => {
   beforeEach(() => jest.useRealTimers());
@@ -35,7 +35,7 @@ describe('timer hooks', () => {
       const callback = jest.fn();
       render(<Component cleanup="unmount" callback={callback} />);
 
-      (requestAnimationFrame as any).step();
+      raf.step();
 
       expect(callback).toHaveBeenCalled();
     });
@@ -47,7 +47,7 @@ describe('timer hooks', () => {
       );
       rerender(<Component cleanup="next-effect" callback={jest.fn()} />);
 
-      (requestAnimationFrame as any).step();
+      raf.step();
 
       expect(callback).not.toHaveBeenCalled();
     });
@@ -59,7 +59,7 @@ describe('timer hooks', () => {
       );
 
       unmount();
-      (requestAnimationFrame as any).step();
+      raf.step();
 
       expect(callback).not.toHaveBeenCalled();
     });

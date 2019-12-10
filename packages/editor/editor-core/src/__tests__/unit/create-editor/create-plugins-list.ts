@@ -28,9 +28,10 @@ const mockPlugins: { [name: string]: jest.Mock } = {
   quickInsertPlugin: jest.fn(),
   historyPlugin: jest.fn(),
   sharedContextPlugin: jest.fn(),
-  mobileScrollPlugin: jest.fn(),
+  iOSScrollPlugin: jest.fn(),
   listsPlugin: jest.fn(),
   isExpandInsertionEnabled: jest.fn(),
+  scrollIntoViewPlugin: jest.fn(),
 };
 jest.mock('../../../plugins', () => mockPlugins);
 
@@ -47,7 +48,8 @@ import {
   layoutPlugin,
   statusPlugin,
   historyPlugin,
-  mobileScrollPlugin,
+  iOSScrollPlugin,
+  scrollIntoViewPlugin,
 } from '../../../plugins';
 
 import createPluginsList from '../../../create-editor/create-plugins-list';
@@ -231,15 +233,44 @@ describe('createPluginsList', () => {
     expect(historyPlugin).not.toHaveBeenCalled();
   });
 
-  describe('mobileScrollPlugin', () => {
-    it('should add mobileScrollPlugin to mobile editor', () => {
-      createPluginsList({ appearance: 'mobile' });
-      expect(mobileScrollPlugin).toHaveBeenCalled();
+  describe('iOSScrollPlugin', () => {
+    let _webkit: any;
+
+    beforeEach(() => {
+      _webkit = (window as any).webkit;
     });
 
-    it('should not add mobileScrollPlugin to non-mobile editor', () => {
+    afterEach(() => {
+      (window as any).webkit = _webkit;
+    });
+
+    it('should add iOSScrollPlugin to mobile editor on iOS', () => {
+      (window as any).webkit = {};
+      createPluginsList({ appearance: 'mobile' });
+      expect(iOSScrollPlugin).toHaveBeenCalled();
+    });
+
+    it('should not add iOSScrollPlugin to mobile editor on Android', () => {
+      (window as any).webkit = undefined;
+      createPluginsList({ appearance: 'mobile' });
+      expect(iOSScrollPlugin).not.toHaveBeenCalled();
+    });
+
+    it('should not add iOSScrollPlugin to non-mobile editor', () => {
       createPluginsList({ appearance: 'full-page' });
-      expect(mobileScrollPlugin).not.toHaveBeenCalled();
+      expect(iOSScrollPlugin).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('scrollIntoViewPlugin', () => {
+    it('should add plugin by default', () => {
+      createPluginsList({ appearance: 'full-page' });
+      expect(scrollIntoViewPlugin).toHaveBeenCalled();
+    });
+
+    it('should not add plugin if props.autoScrollIntoView === false', () => {
+      createPluginsList({ appearance: 'full-page', autoScrollIntoView: false });
+      expect(scrollIntoViewPlugin).not.toHaveBeenCalled();
     });
   });
 });

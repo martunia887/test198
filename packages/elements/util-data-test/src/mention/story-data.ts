@@ -25,7 +25,7 @@ export const mentions = [
   },
   {
     id: '2234',
-    avatarUrl: 'https://cdn-img.fimfiction.net/user/xb2v-1431833233-195398-64',
+    avatarUrl: 'https://api.adorable.io/avatars/1',
     name: 'Jack Sparrow',
     mentionName: 'captainjack',
     lozenge: 'teammate',
@@ -36,8 +36,7 @@ export const mentions = [
   },
   {
     id: '55',
-    avatarUrl:
-      '//www.dystopianmovies.org/wp-content/uploads/malcolm-reynolds-serenity-nathon-fillion-64x64.jpg',
+    avatarUrl: 'https://api.adorable.io/avatars/2',
     name: 'Captain Mal',
     mentionName: 'captaintightpants',
     presence: {
@@ -47,7 +46,7 @@ export const mentions = [
   },
   {
     id: '11',
-    avatarUrl: '//66.media.tumblr.com/avatar_2072eeb45575_64.png',
+    avatarUrl: 'https://api.adorable.io/avatars/3',
     name: 'Doctor Who',
     mentionName: 'thedoctor',
     nickname: 'doctor',
@@ -59,8 +58,7 @@ export const mentions = [
   },
   {
     id: '27',
-    avatarUrl:
-      '//seatfleet.io/system/users/pictures/54a7/6630/7365/6111/ba00/0000/thumb/picard_s5hq_pbvariant.jpg?1420256904',
+    avatarUrl: 'https://api.adorable.io/avatars/4',
     name: 'Jean Luc Picard',
     mentionName: 'makeitso',
     lozenge: 'teammate',
@@ -72,8 +70,7 @@ export const mentions = [
   },
   {
     id: '1701',
-    avatarUrl:
-      '//cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/ab/abee9ce4fbd1c9c94b695b16062b8fdf57a21de7_medium.jpg',
+    avatarUrl: 'https://api.adorable.io/avatars/5',
     name: 'James T. Kirk',
     mentionName: 'wheresmyshirt',
     nickname: 'jim',
@@ -84,8 +81,7 @@ export const mentions = [
   },
   {
     id: '12312312',
-    avatarUrl:
-      'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/cf/cf845e576741bd2db28c079b279c6a81dcc33666_medium.jpg',
+    avatarUrl: 'https://api.adorable.io/avatars/6',
     name: "Dude with long name that doesn't seem to stop and should overflow",
     mentionName: "Dudewithlongnamethatdoesn'tseemtostopandshouldoverflow",
     nickname: 'Dude',
@@ -102,7 +98,7 @@ export const mentions = [
   },
   {
     id: '12312428',
-    avatarUrl: 'https://api.adorable.io/avatars/64/monkeytrousers.png',
+    avatarUrl: 'https://api.adorable.io/avatars/7',
     name: 'Monkey Trousers',
     lozenge: 'TEAM',
     mentionName: 'Monkey Trousers',

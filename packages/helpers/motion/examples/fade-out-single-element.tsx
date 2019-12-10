@@ -15,8 +15,8 @@ export default () => {
           {isIn ? 'Exit' : 'Enter'}
         </Button>
 
-        <Centered>
-          <ExitingPersistence>
+        <Centered css={{ height: '182px' }}>
+          <ExitingPersistence appear>
             {isIn && <FadeIn>{props => <Block {...props} />}</FadeIn>}
           </ExitingPersistence>
         </Centered>

@@ -16,13 +16,11 @@ import {
   FloatingToolbarHandler,
   FloatingToolbarItem,
 } from '../floating-toolbar/types';
-import {
-  updateExtensionLayout,
-  editExtension,
-  removeExtension,
-} from './actions';
-import { pluginKey, ExtensionState } from './plugin';
 import { hoverDecoration } from '../base/pm-plugins/decoration';
+import { editExtension } from './actions';
+import { pluginKey } from './plugin';
+import { ExtensionState } from './types';
+import { updateExtensionLayout, removeExtension } from './commands';
 
 export const messages = defineMessages({
   edit: {
@@ -38,7 +36,7 @@ const isLayoutSupported = (
 ) => {
   const {
     schema: {
-      nodes: { bodiedExtension, extension, layoutSection, table },
+      nodes: { bodiedExtension, extension, layoutSection, table, expand },
     },
     selection,
   } = state;
@@ -50,7 +48,9 @@ const isLayoutSupported = (
   return !!(
     (selectedExtNode.node.type === bodiedExtension ||
       (selectedExtNode.node.type === extension &&
-        !hasParentNodeOfType([bodiedExtension, table])(selection))) &&
+        !hasParentNodeOfType([bodiedExtension, table, expand].filter(Boolean))(
+          selection,
+        ))) &&
     !hasParentNodeOfType([layoutSection])(selection)
   );
 };
@@ -61,8 +61,11 @@ const breakoutOptions = (
   extensionState: ExtensionState,
   breakoutEnabled: boolean,
 ): Array<FloatingToolbarItem<Command>> => {
-  const { layout, allowBreakout, node } = extensionState;
-  return breakoutEnabled && allowBreakout && isLayoutSupported(state, node)
+  const { layout, allowBreakout, nodeWithPos } = extensionState;
+  return nodeWithPos &&
+    breakoutEnabled &&
+    allowBreakout &&
+    isLayoutSupported(state, nodeWithPos)
     ? [
         {
           type: 'button',
@@ -123,20 +126,29 @@ export const getToolbarConfig = (
       state.schema.nodes.bodiedExtension,
     ];
 
+    const editButtonArray = editButton(
+      formatMessage,
+      macroState,
+      extensionState,
+    );
+    const breakoutButtonArray = breakoutOptions(
+      state,
+      formatMessage,
+      extensionState,
+      breakoutEnabled,
+    );
+
     return {
       title: 'Extension floating controls',
       getDomRef: () => extensionState.element!.parentElement || undefined,
       nodeType,
       items: [
-        ...editButton(formatMessage, macroState, extensionState),
-        ...breakoutOptions(
-          state,
-          formatMessage,
-          extensionState,
-          breakoutEnabled,
-        ),
+        ...editButtonArray,
+        ...breakoutButtonArray,
         {
           type: 'separator',
+          hidden:
+            editButtonArray.length === 0 && breakoutButtonArray.length === 0,
         },
         {
           type: 'button',

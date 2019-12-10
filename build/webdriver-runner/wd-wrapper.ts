@@ -1,7 +1,5 @@
-// Current version of webdriverio have somewhat awkward state of type definitions.
-// You can't import specific types, but you rather import a workspace and later use `BrowserObject`
-// as a global type. This going to be fixed when we bump it's version as part of BUILDTOOLS-332
-import 'webdriverio';
+import WebdriverIOAsync from 'webdriverio';
+export type BrowserObject = WebdriverIOAsync.BrowserObject;
 
 const assert = require('assert').strict;
 /*
@@ -46,7 +44,7 @@ const defaultWaitingOptions: WaitingOptions = { timeout: WAIT_TIMEOUT };
 type Done<T> = (result: T) => any;
 
 export default class Page {
-  private browser: BrowserObject;
+  protected browser: BrowserObject;
 
   constructor(browserObject: BrowserObject) {
     this.browser = browserObject;

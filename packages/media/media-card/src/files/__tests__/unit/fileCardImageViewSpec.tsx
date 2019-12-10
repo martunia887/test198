@@ -402,6 +402,7 @@ describe('FileCardImageView', () => {
     expect(card.find(ProgressBarWrapper)).toHaveLength(1);
     expectToEqual(card.find(Ellipsify).props(), {
       text: mediaName,
+      testId: 'media-card-file-name',
       lines: 2,
     });
     expectToEqual(card.find(ProgressBar).props(), {
