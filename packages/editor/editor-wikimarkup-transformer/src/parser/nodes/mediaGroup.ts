@@ -8,15 +8,18 @@ export default function getMediaGroupNodeView(
 ): PMNode {
   const { media, mediaGroup } = schema.nodes;
 
+  // try to look up media ID from conversion context
   const id =
-    context.filenameConversion && context.filenameConversion[filename]
-      ? context.filenameConversion[filename]
+    context.mediaConversion && context.mediaConversion[filename]
+      ? context.mediaConversion[filename]
       : filename;
 
+  // try to look up collection from media context
+  const collection = context.media && context.media.targetCollectionId;
   const mediaNode = media.createChecked({
     id,
     type: 'file',
-    collection: '',
+    collection: collection || '',
   });
 
   return mediaGroup.createChecked({}, mediaNode);

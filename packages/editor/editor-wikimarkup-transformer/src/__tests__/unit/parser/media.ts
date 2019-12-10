@@ -60,18 +60,18 @@ yep`,
     ],
     [
       'should transform filename to id for embeddable attachments if present in context',
-      '!Screen Shot (9db1eca8-8257-4763-92fb-e6417f9e34c9)(2).jpeg!',
+      '!Screen Shot.jpeg!',
     ],
     [
       'should transform filename to id for attachment links if present in context',
       '[^document.pdf]',
-    ]
+    ],
   ];
 
   const context: Context = {
-    filenameConversion: {
-      'Screen Shot (9db1eca8-8257-4763-92fb-e6417f9e34c9)(2).jpeg': '1234',
-      'document.pdf': '5678',
+    mediaConversion: {
+      'Screen Shot.jpeg': '9db1eca8-8257-4763-92fb-e6417f9e34c9',
+      'document.pdf': '9db1eca8-8257-4763-92fb-abc12346',
     },
   };
 

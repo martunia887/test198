@@ -78,31 +78,21 @@ export interface PMNodeToken {
   readonly length: number;
 }
 
-export interface InlineCardConversion {
-  [key: string]: string;
-}
-
-export interface FilenameConversion {
-  [key: string]: string;
-}
-
 export type TokenErrCallback = (err: Error, tokenType: string) => void;
 
 export type Token = TextToken | PMNodeToken;
 
-export type TokenParser = (
-  {
-    input,
-    position,
-    schema,
-    context,
-  }: {
-    input: string;
-    position: number;
-    schema: Schema;
-    context: Context;
-  },
-) => Token;
+export type TokenParser = ({
+  input,
+  position,
+  schema,
+  context,
+}: {
+  input: string;
+  position: number;
+  schema: Schema;
+  context: Context;
+}) => Token;
 
 const tokenToTokenParserMapping: {
   [key: string]: TokenParser;

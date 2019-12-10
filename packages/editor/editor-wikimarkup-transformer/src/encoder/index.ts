@@ -16,15 +16,11 @@ import { blockCard } from './nodes/block-card';
 import { Context } from '../interfaces';
 
 export type MarkEncoder = (text: string, attrs: any) => string;
-export type NodeEncoder = NodeEncoderWithContext | NodeEncoderWithParent;
-export type NodeEncoderWithParent = (
-  node: PMNode,
-  parent?: Context | PMNode,
-) => string;
-export type NodeEncoderWithContext = (
-  node: PMNode,
-  context?: Context,
-) => string;
+export type NodeEncoder = (node: PMNode, opts?: NodeEncoderOpts) => string;
+export type NodeEncoderOpts = {
+  parent?: PMNode;
+  context?: Context;
+};
 
 const nodeEncoderMapping: { [key: string]: NodeEncoder } = {
   blockquote,
@@ -46,7 +42,7 @@ export function encode(node: PMNode, context?: Context): string {
   const encoder = nodeEncoderMapping[node.type.name];
   try {
     if (encoder) {
-      return encoder(node, context);
+      return encoder(node, { context });
     }
     return unknown(node);
   } catch (err) {

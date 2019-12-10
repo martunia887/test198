@@ -105,7 +105,7 @@ function getADF(wiki: string) {
       'ABC-30': 'https://instance.atlassian.net/browse/ABC-30',
       'ABC-40': 'https://instance.atlassian.net/browse/ABC-40',
     },
-    filenameConversion: {
+    mediaConversion: {
       'image.jpg': '1234',
     },
     mentionConversion: {

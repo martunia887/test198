@@ -7,6 +7,7 @@ import {
   mediaGroup,
   mediaSingle,
 } from '@atlaskit/editor-test-helpers';
+import { Context } from '../../../interfaces';
 
 describe('ADF => WikiMarkup - Media', () => {
   const transformer = new WikiMarkupTransformer();
@@ -57,5 +58,25 @@ describe('ADF => WikiMarkup - Media', () => {
       ),
     )(defaultSchema);
     expect(transformer.encode(node)).toMatchSnapshot();
+  });
+
+  test('should convert media with context', () => {
+    const context: Context = {
+      mediaConversion: {
+        'abc-123-uuid': 'file1.txt',
+      },
+    };
+    const node = doc(
+      mediaSingle()(
+        media({
+          id: 'abc-123-uuid',
+          type: 'file',
+          collection: 'tmp',
+          width: 100,
+          height: 100,
+        })(),
+      ),
+    )(defaultSchema);
+    expect(transformer.encode(node, context)).toMatchSnapshot();
   });
 });

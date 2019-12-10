@@ -62,8 +62,11 @@ export type TokenErrCallback = (err: Error, tokenType: string) => void;
 
 export interface Context {
   readonly inlineCardConversion?: ConversionMap;
-  readonly filenameConversion?: ConversionMap;
+  readonly mediaConversion?: ConversionMap;
   readonly mentionConversion?: ConversionMap;
   readonly issueKeyRegex?: RegExp | undefined;
   readonly tokenErrCallback?: TokenErrCallback;
+  readonly media?: {
+    targetCollectionId?: string;
+  };
 }
