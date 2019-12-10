@@ -59,6 +59,10 @@ import {
   createAndFireCustomMediaEvent,
   getFileAttributes,
 } from '../../utils/analytics';
+import {
+  shouldRefetchPreview,
+  ProcessedFileState,
+} from '../../../../media-client/src/models/file-state';
 
 export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
 export class CardBase extends Component<
@@ -265,6 +269,16 @@ export class CardBase extends Component<
           const { contextId, alt } = this.props;
           const metadata = extendMetadata(fileState, this.state.metadata);
 
+          if (!dataURI && (fileState as ProcessedFileState).dataURIPreview) {
+            this.notifyStateChange({
+              metadata,
+              status,
+              progress,
+              dataURI: (fileState as ProcessedFileState).dataURIPreview,
+              previewOrientation,
+            });
+          }
+
           if (!dataURI) {
             const { src, orientation } = await getDataURIFromFileState(
               fileState,
@@ -285,7 +299,7 @@ export class CardBase extends Component<
           }
 
           const shouldFetchRemotePreview =
-            !dataURI &&
+            (!dataURI || shouldRefetchPreview(fileState)) &&
             isImageRepresentationReady(fileState) &&
             metadata.mediaType &&
             isPreviewableType(metadata.mediaType);

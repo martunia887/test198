@@ -281,6 +281,26 @@ export class MediaStore {
     }).then(mapResponseToJson);
   };
 
+  getImages = (
+    descriptors: {
+      id: string;
+      collection?: string;
+      width?: number;
+      height?: number;
+    }[],
+    collectionName?: string,
+  ) =>
+    descriptors.length > 0
+      ? this.request('/images', {
+          method: 'POST',
+          body: JSON.stringify({ descriptors }),
+          headers: jsonHeaders,
+          authContext: { collectionName },
+        })
+          .then(mapResponseToJson)
+          .then(res => res.data)
+      : Promise.resolve([]);
+
   getImageMetadata = (
     id: string,
     params?: MediaStoreGetFileImageParams,

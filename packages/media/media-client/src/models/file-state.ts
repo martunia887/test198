@@ -61,6 +61,8 @@ export interface ProcessedFileState {
   mimeType: string;
   preview?: FilePreview | Promise<FilePreview>;
   representations?: MediaRepresentations;
+  dataURIPreview?: string;
+  shouldRefetchPreview?: boolean;
 }
 export interface ProcessingFailedState {
   status: 'failed-processing';
@@ -98,6 +100,15 @@ export const isImageRepresentationReady = (fileState: FileState): boolean => {
     case 'processed':
     case 'failed-processing':
       return !!(fileState.representations && fileState.representations.image);
+    default:
+      return false;
+  }
+};
+
+export const shouldRefetchPreview = (fileState: FileState): boolean => {
+  switch (fileState.status) {
+    case 'processed':
+      return !!fileState.shouldRefetchPreview;
     default:
       return false;
   }

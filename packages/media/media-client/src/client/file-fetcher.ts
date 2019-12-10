@@ -4,7 +4,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { publishReplay } from 'rxjs/operators/publishReplay';
 import uuid from 'uuid/v4';
 import Dataloader from 'dataloader';
-import { ProcessingFileState } from '../models/file-state';
+import { ProcessingFileState, ProcessedFileState } from '../models/file-state';
 import { AuthProvider, authToOwner } from '@atlaskit/media-core';
 import {
   MediaStore,
@@ -124,8 +124,24 @@ export interface FileFetcher {
   getFileBinaryURL(id: string, collectionName?: string): Promise<string>;
 }
 
+interface DataloaderImagesKey {
+  id: string;
+  collection?: string;
+  width?: number;
+  height?: number;
+}
+interface DataloaderImagesResult extends DataloaderImagesKey {
+  imageDataUri?: string;
+  width: number;
+  height: number;
+}
+
 export class FileFetcherImpl implements FileFetcher {
   private readonly dataloader: Dataloader<DataloaderKey, DataloaderResult>;
+  private readonly dataloaderImages: Dataloader<
+    DataloaderImagesKey,
+    DataloaderImagesResult
+  >;
 
   constructor(private readonly mediaStore: MediaStore) {
     this.dataloader = new Dataloader<DataloaderKey, DataloaderResult>(
@@ -134,7 +150,48 @@ export class FileFetcherImpl implements FileFetcher {
         maxBatchSize: maxNumberOfItemsPerCall,
       },
     );
+    this.dataloaderImages = new Dataloader<
+      DataloaderImagesKey,
+      DataloaderImagesResult
+    >(this.batchLoadImages, {
+      maxBatchSize: maxNumberOfItemsPerCall,
+    });
   }
+
+  private batchLoadImages = async (keys: DataloaderImagesKey[]) => {
+    const keysWithoutCollection = keys.filter(key => !key.collection);
+    const keysWithCollection = keys.filter(key => !!key.collection);
+
+    const keysByCollection = keysWithCollection.reduce(
+      (
+        collector: { [k: string]: DataloaderImagesKey[] },
+        key: DataloaderImagesKey,
+      ) => {
+        if (!!key.collection) {
+          if (!Array.isArray(collector[key.collection])) {
+            collector[key.collection] = [key];
+          } else {
+            collector[key.collection].push(key);
+          }
+        }
+        return collector;
+      },
+      {},
+    );
+
+    const results: DataloaderImagesResult[][] = await Promise.all([
+      this.mediaStore.getImages(keysWithoutCollection),
+      ...Object.keys(keysByCollection).map(collection =>
+        this.mediaStore.getImages(keysByCollection[collection], collection),
+      ),
+    ]);
+    let returnedImages: DataloaderImagesResult[] = [];
+    results.forEach(
+      (result: DataloaderImagesResult[]) =>
+        (returnedImages = returnedImages.concat(result)),
+    );
+    return returnedImages;
+  };
 
   // Returns an array of the same length as the keys filled with file items
   private batchLoadingFunc = async (keys: DataloaderKey[]) => {
@@ -221,12 +278,21 @@ export class FileFetcherImpl implements FileFetcher {
       const fetchFile = async () => {
         try {
           const response = await this.dataloader.load({ id, collection });
+          const imageResponse = await this.dataloaderImages.load({
+            id,
+            collection,
+          });
 
           if (!response) {
             return;
           }
 
           const fileState = mapMediaItemToFileState(id, response);
+          if (imageResponse.imageDataUri) {
+            (fileState as ProcessedFileState).dataURIPreview =
+              imageResponse.imageDataUri;
+            (fileState as ProcessedFileState).shouldRefetchPreview = true;
+          }
           observer.next(fileState);
 
           if (fileState.status === 'processing') {
