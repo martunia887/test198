@@ -11,9 +11,11 @@ const resolverPath = path.resolve(
 module.exports = {
   extends: [
     'airbnb',
+    'airbnb/hooks', // TODO: test turning these on.. no impact...
     'prettier',
     'prettier/react',
     'plugin:compat/recommended',
+    // 'plugin:jsx-a11y/recommended' // adds 3 new failures which airbnb existing version doesn't seem to check `jsx-a11y/no-onchange`. TODO: Activate?
   ],
   settings: {
     'import/extensions': ['.js', '.ts', '.tsx'],
@@ -133,20 +135,28 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-underscore-dangle': 'off',
     'no-use-before-define': 'off',
+    'max-classes-per-file': 'off', // TODO: new. fix in place?
 
     'arrow-body-style': 'off',
 
     'spaced-comment': 'off',
 
+    'no-async-promise-executor': 'off', // TODO: new. fix in place?
     'no-await-in-loop': 'off',
 
-    'no-mixed-operators': 'off',
+    'no-mixed-operators': 'off', // TODO: Confirm
     'no-plusplus': 'off',
+
+    'prefer-object-spread': 'off', // TODO: new. fix in place?
 
     '@wordpress/react-no-unsafe-timeout': 'error',
 
     'react/sort-comp': 'off',
+    'react/jsx-curly-brace-presence': 'off', // FIXME: old, but doesn't seem to be disabled despite this line... maybe --fix able too. try remove this line..
+    'react/jsx-curly-newline': 'off', // TODO: new. fix in place? can try run with --fix for autofixing...
     'react/jsx-filename-extension': 'off',
+    'react/jsx-fragments': 'off',
+    'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',
     // TODO: https://ecosystem.atlassian.net/browse/AK-6060
     // enable rules after fixing linting issue after upgrade
@@ -154,10 +164,16 @@ module.exports = {
     'react/default-props-match-prop-types': 'off',
     'react/no-unescaped-entities': 'off',
     'react/button-has-type': 'off',
+    'react/no-did-update-set-state': 'off', // FIXME: original lived in tslint block.
     'react/no-unused-state': 'off',
     'react/no-access-state-in-setstate': 'off',
+    'react/no-this-in-sfc': 'off', // TODO: This one seems important. fix in place?
     'react/prefer-stateless-function': 'off',
-    'jsx-a11y/label-has-for': 'off',
+    'react/static-property-placement': 'off', // TODO: new. fix in place?
+    'react/state-in-constructor': 'off', // TODO: new. fix in place?
+    'react/require-render-return': 'off', // TODO: new. fix in place? looks legit.
+    'jsx-a11y/control-has-associated-label': 'off', // TODO: fix in place?
+    // 'jsx-a11y/label-has-for': 'off', // TODO: COnfirm whether this is dsiabled by default now...
     'jsx-a11y/label-has-associated-control': 'off',
     'jsx-a11y/mouse-events-have-key-events': 'off',
 
@@ -314,8 +330,10 @@ module.exports = {
         'jsx-a11y/no-noninteractive-tabindex': 'off',
         'jsx-a11y/no-static-element-interactions': 'off',
         'lines-between-class-members': 'off',
+        // 'max-classes-per-file': 'off', // TODO: new. fix in place?
         'new-cap': 'off',
         'no-alert': 'off',
+        // 'no-async-promise-executor': 'off', // TODO: new. fix in place?
         'no-bitwise': 'off',
         'no-buffer-constructor': 'off',
         'no-case-declarations': 'off',
@@ -331,6 +349,7 @@ module.exports = {
         'no-lonely-if': 'off',
         'no-loop-func': 'off',
         'no-irregular-whitespace': 'off',
+        'no-misleading-character-class': 'off', // TODO: ne. fix in place?
         'no-multi-assign': 'off',
         'no-named-default': 'off',
         'no-nested-ternary': 'off',
@@ -344,12 +363,13 @@ module.exports = {
         'no-return-assign': 'off',
         'no-return-await': 'off',
         'no-script-url': 'off',
-        'no-self-assign': 'off',
+        'no-self-assign': 'off', // now has props
         'no-sequences': 'off',
         'no-shadow': 'off',
         'no-sparse-arrays': 'off',
         'no-unneeded-ternary': 'off',
         'no-unused-expressions': 'off',
+        // 'no-useless-catch': 'off', // TODO: Confirm whether this is needed
         'no-useless-concat': 'off',
         'no-useless-computed-key': 'off',
         'no-useless-escape': 'off',
@@ -360,24 +380,29 @@ module.exports = {
         'operator-assignment': 'off',
         'prefer-const': 'off',
         'prefer-destructuring': 'off',
+
         'prefer-promise-reject-errors': 'off',
         'prefer-rest-params': 'off',
         'prefer-spread': 'off',
         'prefer-template': 'off',
         radix: 'off',
         'react/jsx-boolean-value': 'off',
-        'react/jsx-curly-brace-presence': 'off',
+        // 'react/jsx-curly-brace-presence': 'off', // FIXME: old, but doesn't seem to be disabled despite this line... maybe --fix able too. try remove this line..
+        // 'react/jsx-curly-newline': 'off', // TODO: new. fix in place? can try run with --fix for autofixing...
         'react/jsx-no-bind': 'off',
         'react/jsx-no-target-blank': 'off',
         'react/no-array-index-key': 'off',
         'react/no-children-prop': 'off',
         'react/no-danger': 'off',
-        'react/no-did-update-set-state': 'off',
+        'react/no-did-update-set-state': 'off', // FIXME: Clone, do i need to move this up top?
         'react/no-will-update-set-state': 'off',
         'react/no-find-dom-node': 'off',
         'react/no-string-refs': 'off',
+        // 'react/no-this-in-sfc': 'off', // TODO: This one seems important. fix in place?
         'react/no-typos': 'off',
         'react/prop-types': 'off',
+        // 'react/state-in-constructor': 'off', // TODO: new. fix in place?
+        // 'react/static-property-placement': 'off', // TODO: new. fix in place?
         'react/style-prop-object': 'off',
         strict: 'off',
         'valid-typeof': 'off',
@@ -394,6 +419,7 @@ module.exports = {
       ],
       rules: {
         'no-console': 'off',
+        'max-classes-per-file': 'off',
       },
     },
     {
@@ -423,6 +449,7 @@ module.exports = {
       rules: {
         'global-require': 'off',
         'no-restricted-imports': 'off',
+        'max-classes-per-file': 'off',
       },
     },
     {
