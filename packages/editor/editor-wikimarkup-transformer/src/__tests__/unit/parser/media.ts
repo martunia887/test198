@@ -81,4 +81,18 @@ yep`,
       expect(transformer.parse(markup, context)).toMatchSnapshot();
     });
   }
+
+  it('should add collection from context', () => {
+    const markup = 'Hello! !Screen Shot.jpeg!';
+    const context: Context = {
+      mediaConversion: {
+        'Screen Shot.jpeg': '9db1eca8-8257-4763-92fb-e6417f9e34c9',
+      },
+      media: {
+        targetCollectionId: 'my-test-collection',
+      },
+    };
+    const transformer = new WikiMarkupTransformer();
+    expect(transformer.parse(markup, context)).toMatchSnapshot();
+  });
 });

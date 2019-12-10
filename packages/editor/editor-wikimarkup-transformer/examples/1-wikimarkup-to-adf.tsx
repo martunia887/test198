@@ -15,8 +15,8 @@ import {
   taskDecision,
 } from '@atlaskit/util-data-test';
 import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
-import { Context } from '../src/parser/tokenize';
 import { MentionProvider } from '@atlaskit/mention/types';
+import { Context } from '../src/interfaces';
 
 const Container = styled.div`
   display: grid;
@@ -109,7 +109,7 @@ function getADF(wiki: string) {
       'image.jpg': '1234',
     },
     mentionConversion: {
-      'accountId:9999': 9999,
+      'accountId:9999': '9999',
     },
   };
   const pmNode = wikiTransformer.parse(wiki, context);
