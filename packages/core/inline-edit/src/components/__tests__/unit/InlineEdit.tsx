@@ -373,6 +373,6 @@ describe('@atlaskit/inline-edit', () => {
     /* eslint-disable no-console */
     expect(console.warn).not.toHaveBeenCalled();
     expect(console.error).not.toHaveBeenCalled();
-    /* eslint-disable no-console */
+    /* eslint-enable no-console */
   });
 });

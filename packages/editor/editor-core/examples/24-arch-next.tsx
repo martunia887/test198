@@ -101,7 +101,6 @@ export default function Example() {
                   primaryToolbarComponents={[
                     <WithEditorActions
                       key="editor-actions-save"
-                      // tslint:disable-next-line:jsx-no-lambda
                       render={actions => (
                         <SaveAndCancelButtons editorActions={actions} />
                       )}

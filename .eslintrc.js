@@ -257,6 +257,7 @@ module.exports = {
         '@typescript-eslint/prefer-interface': 'off',
 
         'no-useless-constructor': 'off',
+        'no-console': 'off', // FIXME: 8 files complaining, even though they have ignore comments.
 
         // TODO: Move out of override when js files no longer violate this
         'no-restricted-imports': [
@@ -275,6 +276,7 @@ module.exports = {
         // https://github.com/benmosher/eslint-plugin-import/issues/1282
         'import/named': 'off',
 
+        // TODO: Experiment turning these back on?
         // disabled temporarily during tslint -> eslint transition
         'import/no-named-as-default': 'off',
         '@typescript-eslint/ban-types': 'off',

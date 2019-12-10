@@ -350,9 +350,7 @@ describe('mentionTypeahead', () => {
         // note that `expect.not.arrayContaining` is not supported in current Jest version yet.
         // @ts-ignore
         const renderedCall = createAnalyticsEvent.mock.calls.find(
-          (
-            call: any, // tslint:disable-line no-any
-          ) =>
+          (call: any) =>
             call[0] &&
             call[0].action === 'rendered' &&
             call[0].actionSubject === 'mentionTypeahead',
@@ -390,9 +388,7 @@ describe('mentionTypeahead', () => {
         // note that `expect.not.arrayContaining` is not supported in current Jest version yet.
         // @ts-ignore
         const renderedCall = createAnalyticsEvent.mock.calls.find(
-          (
-            call: any, // tslint:disable-line no-any
-          ) =>
+          (call: any) =>
             call[0] &&
             call[0].action === 'rendered' &&
             call[0].actionSubject === 'mentionTypeahead',
@@ -492,9 +488,7 @@ describe('mentionTypeahead', () => {
         // note that `expect.not.arrayContaining` is not supported in current Jest version yet.
         // @ts-ignore
         const renderedCall = createAnalyticsEvent.mock.calls.find(
-          (
-            call: any, // tslint:disable-line no-any
-          ) =>
+          (call: any) =>
             call[0] &&
             call[0].action === 'rendered' &&
             call[0].actionSubject === 'mentionTypeahead',
