@@ -46,6 +46,7 @@ export default class LocationCard extends React.Component<
         onClose={() => this.setSelected(false)}
         isOpen={isSelected}
         selected={this.props.location}
+        locations={locationsManager.getLocations()}
       />
     );
   };

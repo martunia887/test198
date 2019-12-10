@@ -27,8 +27,12 @@ export const initMap = (
 
   if (!selected) {
     var bounds = createBounds(markers.map(marker => marker.getLngLat()));
-    mapOptions.bounds = bounds;
-    mapOptions.fitBoundsOptions = { padding: MAP_PADDING };
+    if (bounds) {
+      mapOptions.bounds = bounds;
+      mapOptions.fitBoundsOptions = { padding: MAP_PADDING };
+    } else {
+      mapOptions.center = [0, 0];
+    }
   } else {
     // if(locations.indexOf(selected)===-1){
     //   console.log('dopes not exist')
@@ -51,10 +55,13 @@ export const removeMap = (map: MapboxMap) => {
   map.remove();
 };
 
-const createBounds = (coordsSet: LngLatLike[]): LngLatBounds =>
-  coordsSet.reduce(function(bounds, coords) {
-    return bounds.extend(LngLat.convert(coords));
-  }, new LngLatBounds(coordsSet[0], coordsSet[0]));
+const createBounds = (coordsSet: LngLatLike[]): LngLatBounds | void => {
+  if (coordsSet.length > 0) {
+    return coordsSet.reduce(function(bounds, coords) {
+      return bounds.extend(LngLat.convert(coords));
+    }, new LngLatBounds(coordsSet[0], coordsSet[0]));
+  }
+};
 
 export const createMarker = (
   coords: LngLatLike,

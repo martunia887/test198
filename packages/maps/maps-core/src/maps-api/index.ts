@@ -8,10 +8,10 @@ let map: MapboxMap | undefined;
 
 export const openMap = async (
   container: HTMLDivElement,
-  locations: Geolocation[],
+  locations?: Geolocation[],
   selected?: Geolocation,
 ) => {
-  locationsMarkers = createLocationsMarkers(locations);
+  locationsMarkers = createLocationsMarkers(locations || []);
   const allMarkers = getMarkers(locationsMarkers);
   mapPromise = mapbox.initMap(
     container,

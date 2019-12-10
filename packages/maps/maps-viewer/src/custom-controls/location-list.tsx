@@ -14,6 +14,10 @@ const getTitle = (location: Geolocation) => {
 };
 
 export default ({ locations }: { locations: Geolocation[] }) => {
+  if (locations.length === 0) {
+    return null;
+  }
+
   return (
     <div style={{ padding: 10 }}>
       {locations.length > 1 && (
