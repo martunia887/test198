@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { CSSProperties } from 'react';
 import {
-  Rectangle,
   Camera,
-  Vector2,
   getCssFromImageOrientation,
+  Rectangle,
+  Vector2,
 } from '@atlaskit/media-ui';
 import {
   withAnalyticsEvents,
@@ -17,6 +17,7 @@ import { ZoomControls } from '../../zoomControls';
 import { Outcome } from '../../domain';
 import { closedEvent } from '../../analytics/closed';
 import { channel } from '../../analytics';
+import { Spinner } from '../../loading';
 
 export function zoomLevelAfterResize(
   newCamera: Camera,
@@ -52,9 +53,11 @@ export type State = {
   camera: Outcome<Camera, never>;
   isDragging: boolean;
   cursorPos: Vector2;
+  isLoaded: boolean;
 };
 
 const initialState: State = {
+  isLoaded: false,
   zoomLevel: new ZoomLevel(1),
   camera: Outcome.pending(),
   isDragging: false,
@@ -89,7 +92,7 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
 
   render() {
     const { src, orientation, onError } = this.props;
-    const { zoomLevel, camera, isDragging } = this.state;
+    const { zoomLevel, camera, isDragging, isLoaded } = this.state;
 
     const canDrag = camera.match({
       successful: camera => zoomLevel.value > camera.scaleToFit,
@@ -103,8 +106,7 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
       failed: () => ({}),
     });
     if (orientation) {
-      const transform = getCssFromImageOrientation(orientation);
-      imgStyle.transform = transform;
+      imgStyle.transform = getCssFromImageOrientation(orientation);
     }
 
     return (
@@ -113,7 +115,9 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
         onClick={this.onImageClicked}
         innerRef={this.saveWrapperRef}
       >
+        {!isLoaded ? <Spinner /> : null}
         <Img
+          isVisible={isLoaded}
           data-testid="media-viewer-image"
           canDrag={canDrag}
           isDragging={isDragging}
@@ -145,6 +149,7 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
       this.setState({
         camera: Outcome.successful(camera),
         zoomLevel: new ZoomLevel(camera.scaleDownToFit),
+        isLoaded: true,
       });
       if (onLoad) {
         onLoad();

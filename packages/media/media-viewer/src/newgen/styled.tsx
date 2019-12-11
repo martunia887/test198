@@ -99,8 +99,8 @@ export const CloseButtonWrapper = styled.div`
   z-index: ${overlayZindex + 2};
 `;
 
-export const animationSpeedInMs = 350;
-export const animationDistanceInPercent = 50;
+export const animationSpeedInMs = 150;
+export const animationDistanceInPercent = 30;
 
 export const ZoomWrapper = styled.div`
   width: 100%;
@@ -253,12 +253,14 @@ export type ImgProps = {
   canDrag: boolean;
   isDragging: boolean;
   shouldPixelate: boolean;
+  isVisible: boolean;
 };
 
 export const Img = styled.img`
   display: inline-block;
   vertical-align: middle;
   position: relative;
+  ${({ isVisible }: ImgProps) => (isVisible ? '' : 'display: none;')};
   cursor: ${({ canDrag, isDragging }: ImgProps) => {
     if (canDrag && isDragging) {
       return 'grabbing';
@@ -431,7 +433,7 @@ export const ItemViewerWrapper = styled.div`
   .move-right &.item-viewer-enter-active {
     opacity: 1;
     transform: translateX(0);
-    transition: transform ${animationSpeedInMs}ms ease-out,
+    transition: transform ${animationSpeedInMs}ms,
       opacity ${animationSpeedInMs}ms;
   }
   .move-left &.item-viewer-exit,
@@ -443,13 +445,13 @@ export const ItemViewerWrapper = styled.div`
   .move-right &.item-viewer-exit-active {
     opacity: 0;
     transform: translateX(${animationDistanceInPercent}%);
-    transition: transform ${animationSpeedInMs}ms ease-out,
+    transition: transform ${animationSpeedInMs}ms,
       opacity ${animationSpeedInMs}ms;
   }
   .move-left &.item-viewer-exit-active {
     opacity: 0;
     transform: translateX(-${animationDistanceInPercent}%);
-    transition: transform ${animationSpeedInMs}ms ease-out,
+    transition: transform ${animationSpeedInMs}ms,
       opacity ${animationSpeedInMs}ms;
   }
 `;
