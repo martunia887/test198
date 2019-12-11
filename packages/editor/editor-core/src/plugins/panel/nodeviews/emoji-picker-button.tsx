@@ -84,6 +84,7 @@ export default class EmojiPickerButton extends Component<Props, State> {
             display: 'flex',
             background: 'none',
             height: '25px',
+            width: '30px',
           }}
           onClick={this.togglePopup}
           ref={this.buttonRef}

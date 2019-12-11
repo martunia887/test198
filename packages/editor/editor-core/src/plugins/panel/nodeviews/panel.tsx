@@ -51,7 +51,7 @@ class PanelNodeView {
     if (node.attrs.panelColor) {
       this.dom.setAttribute(
         'style',
-        `background-color: ${node.attrs.panelColor};align-items: center;`,
+        `background-color: ${node.attrs.panelColor};align-items: center;position: relative;`,
       );
     }
   }
@@ -63,12 +63,19 @@ class PanelNodeView {
       const emojiService = getEmojiRepository();
       const emojiShortName = emojiService.findByShortName(panelIcon);
       ReactDOM.render(
-        <Emoji
-          fitToHeight={20}
-          key={1}
-          emoji={emojiShortName}
-          showTooltip={true}
-        />,
+        <span
+          style={{
+            top: '10px',
+            position: 'absolute',
+          }}
+        >
+          <Emoji
+            fitToHeight={20}
+            key={1}
+            emoji={emojiShortName}
+            showTooltip={true}
+          />
+        </span>,
         this.icon,
       );
     } else {
