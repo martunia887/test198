@@ -44,7 +44,7 @@
     "@atlaskit/button": "^13.3.3",
     "@atlaskit/checkbox": "^10.1.2",
     "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/field-base": "^13.0.15",
+    "@atlaskit/label": "^0.1.0",
     "@atlaskit/field-radio-group": "^6.0.14",
     "@atlaskit/logo": "^12.2.1",
     "@atlaskit/modal-dialog": "^10.3.3",

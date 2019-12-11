@@ -37,7 +37,7 @@
     "@atlaskit/button": "^13.3.3",
     "@atlaskit/code": "^11.0.14",
     "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/field-base": "^13.0.15",
+    "@atlaskit/label": "^0.1.0",
     "@atlaskit/icon": "^19.0.6",
     "@atlaskit/ssr": "^0.1.1",
     "@atlaskit/toggle": "^8.1.2",

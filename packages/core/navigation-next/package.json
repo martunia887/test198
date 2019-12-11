@@ -56,7 +56,7 @@
     "@atlaskit/docs": "^8.1.8",
     "@atlaskit/drawer": "^5.0.13",
     "@atlaskit/dropdown-menu": "^8.1.4",
-    "@atlaskit/field-base": "^13.0.15",
+    "@atlaskit/label": "^0.1.0",
     "@atlaskit/global-navigation": "^8.0.4",
     "@atlaskit/icon-object": "^5.0.0",
     "@atlaskit/inline-dialog": "^12.1.5",

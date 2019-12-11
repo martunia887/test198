@@ -31,7 +31,7 @@
     "@atlaskit/badge": "^13.1.2",
     "@atlaskit/button": "^13.3.3",
     "@atlaskit/dropdown-menu": "^8.1.4",
-    "@atlaskit/field-base": "^13.0.15",
+    "@atlaskit/label": "^0.1.0",
     "@atlaskit/icon": "^19.0.6",
     "@atlaskit/lozenge": "^9.1.1",
     "@atlaskit/page": "^11.0.9",

@@ -519,6 +519,14 @@
         "../../core/item/src/types",
         "./packages/core/item/src/types"
       ],
+      "@atlaskit/label": [
+        "../../core/label/src/",
+        "./packages/core/label/src/"
+      ],
+      "@atlaskit/label/Label": [
+        "../../core/label/src/Label",
+        "./packages/core/label/src/Label"
+      ],
       "@atlaskit/layer": [
         "../../core/layer/src/",
         "./packages/core/layer/src/"
