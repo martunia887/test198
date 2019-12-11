@@ -15,6 +15,7 @@ import { ZipiZape, ZipEntry, EntryContent } from 'zipizape';
 import { InteractiveImg } from './image/interactive-img';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { PDFRenderer } from './doc/pdfRenderer';
+import { SidebarFolderEntry } from './sidebarFolderEntry';
 
 export type Props = {
   mediaClient: MediaClient;
@@ -79,15 +80,16 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
   }
 
   private renderArchiveSideBar(entries: ZipEntry[]) {
-    const entriesContent = entries.map((entry, index) => {
-      return (
-        <div key={index} onClick={this.changeSelectedEntry(entries, entry)}>
-          {entry.name}
-        </div>
-      );
-    });
-
-    return <ArchiveSideBar>{entriesContent}</ArchiveSideBar>;
+    return (
+      <ArchiveSideBar>
+        <SidebarFolderEntry
+          root=""
+          entries={entries}
+          onEntrySelected={this.changeSelectedEntry}
+          isDefaultOpen
+        />
+      </ArchiveSideBar>
+    );
   }
 
   private renderArchiveItemViewer(selectedEntryContent: EntryContent) {

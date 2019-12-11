@@ -25,6 +25,7 @@ import {
   verticalImageItem,
   videoSquareFileIdItem,
   zipItem,
+  zipWithNestedFolderItem,
 } from '../example-helpers';
 import { MediaViewer } from '../src';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
@@ -39,7 +40,7 @@ export type State = {
 };
 
 export default class Example extends React.Component<{}, State> {
-  state: State = { selectedIdentifier: zipItem };
+  state: State = { selectedIdentifier: zipWithNestedFolderItem };
 
   setItem = (selectedIdentifier: Identifier) => () => {
     this.setState({ selectedIdentifier });

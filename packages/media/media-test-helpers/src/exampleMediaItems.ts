@@ -120,6 +120,13 @@ export const archiveFileId = {
   collectionName,
 };
 
+export const zipFileWithNestedFolderId = {
+  id: 'd1730520-316c-482a-a8c8-2b34acbea00b',
+  // id: 'b41fad75-0033-434e-b413-cb5d165efd19',
+  mediaItemType: fileType,
+  collectionName,
+};
+
 export const zipFileId = {
   id: '3822aff2-9297-4ad9-93fd-ab1709f400ad',
   mediaItemType: fileType,

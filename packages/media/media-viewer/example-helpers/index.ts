@@ -18,6 +18,7 @@ import {
   videoSquareFileId,
   verticalImageFileId,
   zipFileId,
+  zipFileWithNestedFolderId,
 } from '@atlaskit/media-test-helpers';
 import { FileIdentifier } from '@atlaskit/media-client';
 
@@ -143,5 +144,10 @@ export const errorItem: FileIdentifier = {
 
 export const zipItem: FileIdentifier = {
   ...zipFileId,
+  occurrenceKey: 'testOccurrenceKey',
+};
+
+export const zipWithNestedFolderItem: FileIdentifier = {
+  ...zipFileWithNestedFolderId,
   occurrenceKey: 'testOccurrenceKey',
 };
