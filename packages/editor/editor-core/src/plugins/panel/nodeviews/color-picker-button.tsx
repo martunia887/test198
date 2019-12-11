@@ -23,31 +23,57 @@ import { pluginKey as panelPluginKey } from '../pm-plugins/main';
 import { changePanelType } from '../actions';
 import { PanelType } from '../../../../../adf-schema/src';
 
-const simplePalette = [
-  {
-    label: 'Purple',
-    value: colors.P200,
-  },
-  {
-    label: 'Blue',
-    value: colors.B200,
-  },
-  {
-    label: 'Green',
-    value: colors.G200,
-  },
-  {
-    label: 'Teal',
-    value: colors.T200,
-  },
-  {
-    label: 'Yellow',
-    value: colors.Y200,
-  },
-  {
-    label: 'Red',
-    value: colors.R200,
-  },
+// const simplePalette = [
+//   {
+//     label: 'Purple',
+//     value: colors.P200,
+//   },
+//   {
+//     label: 'Blue',
+//     value: colors.B200,
+//   },
+//   {
+//     label: 'Green',
+//     value: colors.G200,
+//   },
+//   {
+//     label: 'Teal',
+//     value: colors.T200,
+//   },
+//   {
+//     label: 'Yellow',
+//     value: colors.Y200,
+//   },
+//   {
+//     label: 'Red',
+//     value: colors.R200,
+//   },
+// ];
+
+const fadedPalette = [
+  { label: 'Dark blue', value: colors.N800 },
+  { label: 'Blue', value: colors.B500 },
+  { label: 'Light blue', value: colors.T500 },
+  { label: 'Green', value: colors.G500 },
+  { label: 'Orange', value: colors.Y500 },
+  { label: 'Red', value: colors.R500 },
+  { label: 'Purple', value: colors.P500 },
+
+  { label: 'Grey', value: colors.N80 },
+  { label: 'Blue', value: colors.B100 },
+  { label: 'Light blue', value: colors.T300 },
+  { label: 'Green', value: colors.G300 },
+  { label: 'Yellow', value: colors.Y200 },
+  { label: 'Red', value: colors.R300 },
+  { label: 'Purple', value: colors.P300 },
+
+  { label: 'White', value: colors.N0 },
+  { label: 'Blue', value: colors.B75 },
+  { label: 'Light blue', value: colors.T75 },
+  { label: 'Green', value: colors.G75 },
+  { label: 'Yellow', value: colors.Y75 },
+  { label: 'Red', value: colors.R75 },
+  { label: 'Purple', value: colors.P50 },
 ];
 
 export type Props = {
@@ -109,7 +135,7 @@ export default class ColorPickerButton extends Component<Props, State> {
         <ColorPicker
           style={{ height: '24px' }}
           label="Change color"
-          palette={simplePalette}
+          palette={fadedPalette}
           selectedColor={this.state.selectedColor}
           onChange={(newColor: string) => {
             this.setState({ selectedColor: newColor });
