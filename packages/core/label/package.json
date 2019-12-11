@@ -1,0 +1,40 @@
+{
+  "name": "@atlaskit/label",
+  "version": "0.1.0",
+  "description": "A generic label component to be used with form fields",
+  "license": "Apache-2.0",
+  "types": "dist/cjs/index.d.ts",
+  "module": "dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "atlaskit:src": "src/index.ts",
+  "atlaskit:designLink": "https://atlassian.design/guidelines/product/patterns/forms",
+  "sideEffects": false,
+  "author": "Atlassian Pty Ltd",
+  "maintainers": [
+    "Sean C",
+    "Daniel DC",
+    "Harsha I",
+    "Alex R"
+  ],
+  "atlaskit": {
+    "name": "Label",
+    "team": "core"
+  },
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "dependencies": {
+    "@atlaskit/theme": "^9.2.6",
+    "tslib": "^1.9.3"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "styled-components": "^3.2.6"
+  },
+  "devDependencies": {
+    "@atlaskit/docs": "^8.1.8",
+    "@atlaskit/textfield": "^3.1.3",
+    "@atlaskit/ssr": "^0.1.1",
+    "@atlaskit/visual-regression": "^0.1.3",
+    "@atlaskit/webdriver-runner": "^0.1.0",
+    "@testing-library/react": "^8.0.1"
+  }
+}
