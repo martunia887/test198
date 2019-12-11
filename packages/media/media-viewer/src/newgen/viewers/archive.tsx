@@ -6,6 +6,8 @@ import {
   ArchiveWrapper,
   ArchiveItemViewer,
   CustomVideoPlayerWrapper,
+  AudioPlayer,
+  CustomAudioPlayerWrapper,
 } from '../styled';
 import { MediaViewerError, ErrorName, ErrorMessage } from '../error';
 import { BaseViewer } from './base-viewer';
@@ -14,6 +16,7 @@ import { InteractiveImg } from './image/interactive-img';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { JSXElement } from '@babel/types';
 import { FormattedMessage } from 'react-intl';
+import { PDFRenderer } from './doc/pdfRenderer';
 
 export type Props = {
   mediaClient: MediaClient;
@@ -30,6 +33,8 @@ type Content = {
 };
 
 export class ArchiveViewer extends BaseViewer<Content, Props> {
+  private previews: Map<string, string> = new Map();
+
   protected async init() {
     const { item, collectionName, mediaClient } = this.props;
     if (item.status === 'processed') {
@@ -88,8 +93,21 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
   }
 
   private renderArchiveItemViewer(selectedEntryContent: EntryContent) {
-    const content = selectedEntryContent.getPreview()!.src; // TODO don't do this?
-    console.log({ content });
+    let content: string | undefined;
+    const currentPreview = this.previews.get(selectedEntryContent.name);
+
+    if (currentPreview) {
+      content = currentPreview;
+    } else {
+      const preview = selectedEntryContent.getPreview();
+      content = preview ? preview.src : undefined;
+      content && this.previews.set(selectedEntryContent.name, content);
+    }
+
+    if (!content) {
+      return null;
+    }
+
     switch (selectedEntryContent.type) {
       case 'image':
         return (
@@ -100,6 +118,14 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
       case 'video':
         return (
           <ArchiveItemViewer>{this.renderVideo(content)}</ArchiveItemViewer>
+        );
+      case 'audio':
+        return (
+          <ArchiveItemViewer>{this.renderAudio(content)}</ArchiveItemViewer>
+        );
+      case 'unknown':
+        return (
+          <ArchiveItemViewer>{this.renderDocument(content)}</ArchiveItemViewer>
         );
       default:
         return (
@@ -134,5 +160,29 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
         <CustomMediaPlayer type="video" isAutoPlay={false} src={content} />
       </CustomVideoPlayerWrapper>
     );
+  }
+
+  private renderAudio(content: string) {
+    return (
+      <AudioPlayer data-testid="media-viewer-audio-content">
+        {/* {this.renderCover()} */}
+        <CustomAudioPlayerWrapper>
+          <CustomMediaPlayer
+            type="audio"
+            isAutoPlay={false}
+            src={content}
+            // isShortcutEnabled={true}
+            // showControls={showControls}
+            // onCanPlay={onCanPlay}
+            // onFirstPlay={this.onFirstPlay}
+            // onError={onError}
+          />
+        </CustomAudioPlayerWrapper>
+      </AudioPlayer>
+    );
+  }
+
+  private renderDocument(content: string) {
+    return <PDFRenderer src={content} />;
   }
 }

@@ -121,7 +121,7 @@ export const archiveFileId = {
 };
 
 export const zipFileId = {
-  id: 'dec7b8cb-1908-4416-b63b-0dbb958ab0b5',
+  id: '3822aff2-9297-4ad9-93fd-ab1709f400ad',
   mediaItemType: fileType,
   collectionName,
 };
