@@ -5,7 +5,6 @@ import { EditorPlugin, Command } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
 import {
   cancelSearch,
-  find,
   replace,
   replaceAll,
   findNext,
@@ -13,6 +12,7 @@ import {
   unfocus,
 } from './commands';
 import FindReplaceToolbarButton from './ui/FindReplaceToolbarButton';
+import { findAll } from './utils';
 
 // todo: any options needed?
 export const findReplacePlugin = (): EditorPlugin => {
@@ -40,6 +40,7 @@ export const findReplacePlugin = (): EditorPlugin => {
       popupsScrollableElement,
       isToolbarReducedSpacing,
       editorView,
+      containerElement,
     }) {
       const fireCommand = (cmd: Command) => {
         const { state, dispatch } = editorView;
@@ -56,10 +57,12 @@ export const findReplacePlugin = (): EditorPlugin => {
       };
       const handleCancel = () => {
         fireCommand(cancelSearch());
+        editorView.focus();
       };
+      // todo: reduce duplication
       const handleFind = (keyword?: string) => {
         editorView.focus();
-        fireCommand(find(keyword));
+        findAll(editorView, keyword, containerElement);
         focusFindReplace();
       };
       const handleFindNext = () => {

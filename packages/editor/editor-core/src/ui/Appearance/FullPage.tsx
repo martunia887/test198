@@ -329,6 +329,7 @@ export default class Editor extends React.Component<
             popupsScrollableElement={popupsScrollableElement}
             disabled={!!disabled}
             dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+            containerElement={this.scrollContainer}
           />
           <MainToolbarCustomComponentsSlot>
             <Avatars

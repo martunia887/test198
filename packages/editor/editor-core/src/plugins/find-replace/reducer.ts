@@ -19,6 +19,12 @@ const reducer = (
         selectionPos: action.selectionPos || state.selectionPos,
       };
 
+    case FindReplaceActionTypes.UPDATE_DECORATIONS:
+      return {
+        ...state,
+        decorationSet: action.decorationSet,
+      };
+
     case FindReplaceActionTypes.FIND_NEXT:
       return {
         ...state,

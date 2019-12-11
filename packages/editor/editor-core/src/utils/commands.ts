@@ -7,6 +7,7 @@ import { GapCursorSelection } from '../plugins/gap-cursor';
 import { Command } from '../types';
 
 type Predicate = (state: EditorState, view?: EditorView) => boolean;
+type HigherOrderCommand = (command: Command) => Command;
 
 const filter = (predicates: Predicate[] | Predicate, cmd: Command): Command => {
   return function(state, dispatch, view): boolean {
@@ -206,10 +207,27 @@ const toggleMark = (
   return toggleMarkInRange(mark)(state, dispatch);
 };
 
+const withScrollIntoView: HigherOrderCommand = (command: Command): Command => (
+  state,
+  dispatch,
+  view,
+) =>
+  command(
+    state,
+    tr => {
+      tr.scrollIntoView();
+      if (dispatch) {
+        dispatch(tr);
+      }
+    },
+    view,
+  );
+
 export {
   // https://github.com/typescript-eslint/typescript-eslint/issues/131
   // eslint-disable-next-line no-undef
   Predicate,
+  HigherOrderCommand,
   filter,
   isEmptySelectionAtStart,
   isEmptySelectionAtEnd,
@@ -218,4 +236,5 @@ export {
   findCutBefore,
   toggleMark,
   applyMarkOnRange,
+  withScrollIntoView,
 };

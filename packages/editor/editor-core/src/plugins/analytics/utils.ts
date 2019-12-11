@@ -3,7 +3,6 @@ import { findParentNode } from 'prosemirror-utils';
 import { CellSelection } from 'prosemirror-tables';
 import { EditorState, Transaction, NodeSelection } from 'prosemirror-state';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { Command } from '../../types';
 import { InputRuleWithHandler } from '../../utils/input-rules';
 import { GapCursorSelection, Side } from '../gap-cursor/selection';
 import { analyticsPluginKey } from './plugin';
@@ -19,9 +18,9 @@ import {
   SELECTION_TYPE,
   SELECTION_POSITION,
 } from './types';
+import { HigherOrderCommand } from '../../utils/commands';
 
 export type DispatchAnalyticsEvent = (payload: AnalyticsEventPayload) => void;
-export type HigherOrderCommand = (command: Command) => Command;
 
 function getAnalyticsState(
   editorState: EditorState,

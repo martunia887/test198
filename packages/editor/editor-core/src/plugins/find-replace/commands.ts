@@ -4,29 +4,12 @@ import {
   Selection,
   Transaction,
 } from 'prosemirror-state';
+import { Decoration } from 'prosemirror-view';
 import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
-import { findMatches, findSearchIndex } from './utils';
-import { Command } from '../../types';
-import { HigherOrderCommand } from '../analytics';
-
-// todo: put in utils
-const withScrollIntoView: HigherOrderCommand = (command: Command): Command => (
-  state,
-  dispatch,
-  view,
-) =>
-  command(
-    state,
-    tr => {
-      tr.scrollIntoView();
-      if (dispatch) {
-        dispatch(tr);
-      }
-    },
-    view,
-  );
+import { findMatches, findSearchIndex, getSelectedText } from './utils';
+import { withScrollIntoView } from '../../utils/commands';
 
 export const activate = () =>
   createFindReplaceCommand(
@@ -74,20 +57,39 @@ export const find = (keyword?: string) =>
       (tr, state) => {
         const { selectionPos } = getFindReplacePluginState(state);
         const matches = keyword ? findMatches(state.doc, keyword) : [];
-        const index = findSearchIndex(selectionPos, matches);
-        return tr.setSelection(
-          TextSelection.create(state.doc, matches[index].start),
-        );
+        if (matches.length > 0) {
+          const index = findSearchIndex(selectionPos, matches);
+          return tr.setSelection(
+            TextSelection.create(state.doc, matches[index].start),
+          );
+        }
+        return tr;
       },
     ),
   );
 
+export const addDecorations = (decorations: Decoration[]) =>
+  createFindReplaceCommand((state: EditorState) => {
+    const { decorationSet } = getFindReplacePluginState(state);
+    return {
+      type: FindReplaceActionTypes.UPDATE_DECORATIONS,
+      decorationSet: decorationSet.add(state.doc, decorations),
+    };
+  });
+
+export const removeDecorations = (decorations: Decoration[]) =>
+  createFindReplaceCommand((state: EditorState) => {
+    const { decorationSet } = getFindReplacePluginState(state);
+    return {
+      type: FindReplaceActionTypes.UPDATE_DECORATIONS,
+      decorationSet: decorationSet.remove(decorations),
+    };
+  });
+
 export const findNext = () =>
   withScrollIntoView(
     createFindReplaceCommand(
-      {
-        type: FindReplaceActionTypes.FIND_NEXT,
-      },
+      { type: FindReplaceActionTypes.FIND_NEXT },
       (tr, state) => {
         const { matches, index } = getFindReplacePluginState(state);
         return tr.setSelection(
@@ -103,9 +105,7 @@ export const findNext = () =>
 export const findPrev = () =>
   withScrollIntoView(
     createFindReplaceCommand(
-      {
-        type: FindReplaceActionTypes.FIND_PREV,
-      },
+      { type: FindReplaceActionTypes.FIND_PREV },
       (tr, state) => {
         const { matches, index } = getFindReplacePluginState(state);
         return tr.setSelection(
@@ -170,12 +170,3 @@ export const unfocus = () =>
   createFindReplaceCommand({
     type: FindReplaceActionTypes.UNFOCUS,
   });
-
-const getSelectedText = (selection: TextSelection): string => {
-  let text = '';
-  const selectedContent = selection.content().content;
-  for (let i = 0; i < selectedContent.childCount; i++) {
-    text += selectedContent.child(i).textContent;
-  }
-  return text;
-};

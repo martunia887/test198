@@ -1,8 +1,10 @@
+import { DecorationSet } from 'prosemirror-view';
 import { Match } from './types';
 
 export enum FindReplaceActionTypes {
   ACTIVATE = 'ACTIVATE',
   FIND = 'FIND',
+  UPDATE_DECORATIONS = 'UPDATE_DECORATIONS',
   FIND_NEXT = 'FIND_NEXT',
   FIND_PREV = 'FIND_PREV',
   REPLACE = 'REPLACE',
@@ -53,6 +55,11 @@ export interface Unfocus {
   type: FindReplaceActionTypes.UNFOCUS;
 }
 
+export interface UpdateDecorations {
+  type: FindReplaceActionTypes.UPDATE_DECORATIONS;
+  decorationSet: DecorationSet;
+}
+
 export type FindReplaceAction =
   | Activate
   | Find
@@ -61,4 +68,5 @@ export type FindReplaceAction =
   | Replace
   | ReplaceAll
   | Cancel
-  | Unfocus;
+  | Unfocus
+  | UpdateDecorations;

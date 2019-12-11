@@ -1,6 +1,5 @@
 import { PluginKey, Plugin, Transaction } from 'prosemirror-state';
-import { Decoration, DecorationSet } from 'prosemirror-view';
-import { colors } from '@atlaskit/theme';
+import { DecorationSet } from 'prosemirror-view';
 import { pluginFactory } from '../../utils/plugin-state-factory';
 import reducer from './reducer';
 import { Dispatch } from '../../event-dispatcher';
@@ -23,21 +22,13 @@ export interface FindReplaceState {
   index: number;
   /** Positions of find results */
   matches: Match[];
-}
-
-export interface FindReplaceInitialState {
-  isActive: false;
-  shouldFocus: false;
-  findText: '';
-  replaceText: '';
-  selectionPos: 1;
-  index: 0;
-  matches: [];
+  /** Decorations for the search match highlights */
+  decorationSet: DecorationSet;
 }
 
 export const findReplacePluginKey = new PluginKey('findReplace');
 
-export const getInitialState = (): FindReplaceInitialState => ({
+export const getInitialState = (): FindReplaceState => ({
   isActive: false,
   shouldFocus: false,
   findText: '',
@@ -45,6 +36,7 @@ export const getInitialState = (): FindReplaceInitialState => ({
   index: 0,
   selectionPos: 1,
   matches: [],
+  decorationSet: DecorationSet.empty,
 });
 
 const handleDocChanged = (
@@ -53,9 +45,10 @@ const handleDocChanged = (
 ): FindReplaceState => {
   if (pluginState.isActive && pluginState.findText) {
     const matches = findMatches(tr.doc, pluginState.findText);
-    let { index, selectionPos } = pluginState;
+    let { index, selectionPos, decorationSet } = pluginState;
 
     // recalculate selected match index if matches have changed
+    // todo: delete from decorations
     if (matches.length !== pluginState.matches.length) {
       if (pluginState.matches[index]) {
         const selectedStart = tr.mapping.map(pluginState.matches[index].start);
@@ -67,10 +60,13 @@ const handleDocChanged = (
       }
     }
 
+    decorationSet = decorationSet.map(tr.mapping, tr.doc);
+
     return {
       ...pluginState,
       matches,
       index,
+      decorationSet,
     };
   }
   return pluginState;
@@ -80,7 +76,7 @@ export const {
   createCommand: createFindReplaceCommand,
   getPluginState: getFindReplacePluginState,
   createPluginState: createFindReplacePluginState,
-} = pluginFactory<FindReplaceState, FindReplaceAction, FindReplaceInitialState>(
+} = pluginFactory<FindReplaceState, FindReplaceAction, FindReplaceState>(
   findReplacePluginKey,
   reducer,
   { onDocChanged: handleDocChanged },
@@ -92,19 +88,11 @@ export const createPlugin = (dispatch: Dispatch) =>
     state: createFindReplacePluginState(dispatch, getInitialState()),
     props: {
       decorations(state) {
-        const pluginState = getFindReplacePluginState(state);
-        if (pluginState.isActive && pluginState.findText) {
-          const selectedIndex = pluginState.index;
-          return DecorationSet.create(
-            state.doc,
-            pluginState.matches.map(({ start, end }, index) =>
-              Decoration.inline(start, end, {
-                style: `background-color: ${
-                  index === selectedIndex ? colors.B100 : colors.B75
-                };`,
-              }),
-            ),
-          );
+        const { isActive, findText, decorationSet } = getFindReplacePluginState(
+          state,
+        );
+        if (isActive && findText) {
+          return decorationSet;
         }
       },
     },
