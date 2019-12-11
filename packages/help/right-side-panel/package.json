@@ -10,10 +10,7 @@
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Sean C",
-    "Daniel DC",
-    "Harsha I",
-    "Alex R"
+    "Mauro Alvarez"
   ],
   "atlaskit": {
     "name": "Right Side Panel",

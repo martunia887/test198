@@ -83,7 +83,7 @@ export default md`
       <Button
         onClick={() =>
           window.open(
-            '/examples/core/right-side-panel/0-Right-Side-Panel',
+            '/examples/help/right-side-panel/0-Right-Side-Panel',
             '_self',
           )
         }

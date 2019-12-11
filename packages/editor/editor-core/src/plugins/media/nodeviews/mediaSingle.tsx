@@ -24,7 +24,7 @@ import {
 import MediaItem from './media';
 import WithPluginState from '../../../ui/WithPluginState';
 import { pluginKey as widthPluginKey } from '../../width';
-import { setNodeSelection } from '../../../utils';
+import { setNodeSelection, setTextSelection } from '../../../utils';
 import ResizableMediaSingle from '../ui/ResizableMediaSingle';
 import { createDisplayGrid } from '../../../plugins/grid';
 import { EventDispatcher } from '../../../event-dispatcher';
@@ -37,6 +37,7 @@ import { MediaNodeUpdater } from './mediaNodeUpdater';
 import { DispatchAnalyticsEvent } from '../../analytics';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { EditorAppearance } from '../../../types';
+import { CellSelection } from 'prosemirror-tables';
 
 export interface MediaSingleNodeState {
   width?: number;
@@ -171,7 +172,25 @@ export default class MediaSingleNode extends Component<
     // We need to call "stopPropagation" here in order to prevent the browser from navigating to
     // another URL if the media node is wrapped in a link mark.
     event.stopPropagation();
-    setNodeSelection(this.props.view, this.props.getPos());
+
+    const propPos = this.props.getPos();
+    const { state } = this.props.view;
+
+    if (event.shiftKey) {
+      // don't select text if there is current selection in a table (as this would override selected cells)
+      if (state.selection instanceof CellSelection) {
+        return;
+      }
+
+      setTextSelection(
+        this.props.view,
+        state.selection.from < propPos ? state.selection.from : propPos,
+        // + 3 needed for offset of the media inside mediaSingle and cursor to make whole mediaSingle selected
+        state.selection.to > propPos ? state.selection.to : propPos + 3,
+      );
+    } else {
+      setNodeSelection(this.props.view, propPos);
+    }
   };
 
   updateSize = (width: number | null, layout: MediaSingleLayout) => {
