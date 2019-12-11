@@ -23,7 +23,7 @@ export default (props: MapModalProps) => {
     <ModalTransition>
       {isOpen && (
         <Modal {...modalProps}>
-          <MapViewer {...props} controls={{ list: true }} />
+          <MapViewer {...props} controls={{ geocoder: true }} />
         </Modal>
       )}
     </ModalTransition>

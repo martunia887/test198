@@ -4,10 +4,18 @@ import { Geolocation, MapHandler } from '@atlaskit/maps-core';
 import LocationList from './custom-controls/location-list';
 import Geocoder from './custom-controls/geocoder';
 
-export type MapViewerProps = Readonly<{
+export type MapViewerInternalProps = Readonly<{
+  controls?: {
+    list?: boolean;
+    geocoder?: boolean;
+  };
+}>;
+export type MapViewerExternalProps = Readonly<{
   selected?: Geolocation;
   locations?: Geolocation[];
 }>;
+
+export type MapViewerProps = MapViewerInternalProps & MapViewerExternalProps;
 
 export type State = {
   selected: Geolocation;
@@ -32,6 +40,8 @@ export default class MapViewer extends React.Component<MapViewerProps> {
   }
 
   render() {
+    const { controls = {} } = this.props;
+    const { list, geocoder } = controls;
     const style = {
       height: '100%',
       width: '100%',
@@ -60,8 +70,12 @@ export default class MapViewer extends React.Component<MapViewerProps> {
         />
         <div style={style} ref={el => (this.mapContainer = el)} />
         <div style={floatStyle}>
-          {/* {this.mapHandler && <LocationList mapHandler={this.mapHandler} />} */}
-          {this.mapHandler && <Geocoder mapHandler={this.mapHandler} />}
+          {list && this.mapHandler && (
+            <LocationList mapHandler={this.mapHandler} />
+          )}
+          {geocoder && this.mapHandler && (
+            <Geocoder mapHandler={this.mapHandler} />
+          )}
         </div>
       </div>
     );

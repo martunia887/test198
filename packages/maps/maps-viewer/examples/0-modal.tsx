@@ -46,8 +46,17 @@ export default class ExampleBasic extends React.PureComponent<{}, State> {
     const { isOpen } = this.state;
     const geolocations = locations.map(location => new Geolocation(location));
     return (
-      <div>
-        <Button onClick={this.open}>Open Modal</Button>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <Button onClick={this.open} appearance={'primary'}>
+          Open Modal
+        </Button>
         <MapModal
           isOpen={isOpen}
           onClose={this.close}
