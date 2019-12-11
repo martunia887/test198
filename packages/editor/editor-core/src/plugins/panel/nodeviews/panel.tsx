@@ -48,12 +48,10 @@ class PanelNodeView {
     this.icon = this.dom.querySelector('.ak-editor-panel__icon') as HTMLElement;
     this.renderIcon(node.attrs.panelType as PanelType, node.attrs.panelIcon);
 
-    // set color here depending on panel type
-    // node.attrs.panelColor = '#00ff00';
     if (node.attrs.panelColor) {
       this.dom.setAttribute(
         'style',
-        `background-color: ${node.attrs.panelColor};`,
+        `background-color: ${node.attrs.panelColor};align-items: center;`,
       );
     }
   }
@@ -65,7 +63,12 @@ class PanelNodeView {
       const emojiService = getEmojiRepository();
       const emojiShortName = emojiService.findByShortName(panelIcon);
       ReactDOM.render(
-        <Emoji key={1} emoji={emojiShortName} showTooltip={true} />,
+        <Emoji
+          fitToHeight={20}
+          key={1}
+          emoji={emojiShortName}
+          showTooltip={true}
+        />,
         this.icon,
       );
     } else {

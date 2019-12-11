@@ -66,13 +66,25 @@ export default class EmojiPickerButton extends Component<Props, State> {
         this.state.activeIcon,
       );
 
-      icon = <Emoji key={1} emoji={emojiShortName} showTooltip={true} />;
+      icon = (
+        <Emoji
+          fitToHeight={20}
+          key={1}
+          emoji={emojiShortName}
+          showTooltip={true}
+        />
+      );
     }
     return (
       <React.Fragment>
         <Button
           spacing="compact"
-          style={{ padding: 0, display: 'flex', background: 'none' }}
+          style={{
+            padding: 0,
+            display: 'flex',
+            background: 'none',
+            height: '25px',
+          }}
           onClick={this.togglePopup}
           ref={this.buttonRef}
         >
