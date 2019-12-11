@@ -58,9 +58,13 @@ async function getChangedPackages(
 ) {
   // TODO: This is duplicated in scheduled-releases folder because it is using js for now. To remove when we move all build packages in TS.
   const ReleaseBranchPrefix = 'release-candidate/';
-  const branch = `${sourceBranch || ''}`.startsWith(ReleaseBranchPrefix)
-    ? 'master'
-    : targetBranch;
+  const isReleaseBranch = `${sourceBranch || ''}`.startsWith(
+    ReleaseBranchPrefix,
+  );
+
+  const isDevelop = `${sourceBranch || ''}` === 'develop';
+
+  const branch = isReleaseBranch || isDevelop ? 'master' : targetBranch;
 
   const parent = branch || (await git.getParentBranch());
   return parent === 'develop'
