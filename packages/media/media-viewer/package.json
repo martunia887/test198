@@ -36,7 +36,7 @@
     "pdfjs-dist": "2.0.943",
     "perf-marks": "^1.5.0",
     "tslib": "^1.9.3",
-    "zipizape": "^0.0.10"
+    "zipizape": "^0.0.11"
   },
   "peerDependencies": {
     "react": "^16.8.0",
