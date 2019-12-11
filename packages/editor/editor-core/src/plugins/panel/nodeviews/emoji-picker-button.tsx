@@ -53,7 +53,14 @@ export default class EmojiPickerButton extends Component<Props, State> {
   render() {
     let icon = <MoreIcon label="Select Icon"></MoreIcon>;
 
-    if (this.state.activeIcon) {
+    let activeIcon = this.state.activeIcon;
+    const editorView = this.props.view as EditorView<any>;
+    const panelPluginState = panelPluginKey.getState(editorView.state);
+    if (!panelPluginState.activePanelIcon) {
+      activeIcon = '';
+    }
+
+    if (activeIcon) {
       const emojiService = getEmojiRepository();
       const emojiShortName = emojiService.findByShortName(
         this.state.activeIcon,
