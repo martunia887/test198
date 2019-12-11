@@ -9,13 +9,11 @@ import {
   AudioPlayer,
   CustomAudioPlayerWrapper,
 } from '../styled';
-import { MediaViewerError, ErrorName, ErrorMessage } from '../error';
+import { MediaViewerError } from '../error';
 import { BaseViewer } from './base-viewer';
 import { ZipiZape, ZipEntry, EntryContent } from 'zipizape';
 import { InteractiveImg } from './image/interactive-img';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
-import { JSXElement } from '@babel/types';
-import { FormattedMessage } from 'react-intl';
 import { PDFRenderer } from './doc/pdfRenderer';
 
 export type Props = {
@@ -141,6 +139,11 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
     selectedEntry: ZipEntry,
   ) => async () => {
     const selectedEntryContent = await selectedEntry.getContent();
+
+    if (selectedEntryContent.isFolder) {
+      return; // Do not change the currently-selected item
+    }
+
     console.log({ selectedEntryContent });
     this.setState({
       content: Outcome.successful({
@@ -167,16 +170,7 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
       <AudioPlayer data-testid="media-viewer-audio-content">
         {/* {this.renderCover()} */}
         <CustomAudioPlayerWrapper>
-          <CustomMediaPlayer
-            type="audio"
-            isAutoPlay={false}
-            src={content}
-            // isShortcutEnabled={true}
-            // showControls={showControls}
-            // onCanPlay={onCanPlay}
-            // onFirstPlay={this.onFirstPlay}
-            // onError={onError}
-          />
+          <CustomMediaPlayer type="audio" isAutoPlay={false} src={content} />
         </CustomAudioPlayerWrapper>
       </AudioPlayer>
     );
