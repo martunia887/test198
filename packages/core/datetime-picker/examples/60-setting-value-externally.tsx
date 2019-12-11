@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import TextField from '@atlaskit/textfield';
 import { DatePicker, TimePicker, DateTimePicker } from '../src';
 
@@ -47,14 +47,14 @@ export default class MyComponent extends Component<{}, State> {
           This demonstrates updating each pickers value via an external source.
         </p>
         <h3>Date picker</h3>
-        <Label label="Input" htmlFor="date-picker-override" />
+        <Label htmlFor="date-picker-override">Input</Label>
         <TextField
           id="date-picker-override"
           value={datePickerValue}
           onChange={this.onDatePickerChange}
         />
 
-        <Label label="Date" htmlFor="date-picker" />
+        <Label htmlFor="date-picker">Date</Label>
         <DatePicker
           id="date-picker"
           value={datePickerValue}
@@ -63,14 +63,14 @@ export default class MyComponent extends Component<{}, State> {
         />
 
         <h3>Time picker</h3>
-        <Label label="Input" htmlFor="time-picker-override" />
+        <Label htmlFor="time-picker-override">Input</Label>
         <TextField
           id="time-picker-override"
           value={timePickerValue}
           onChange={this.onTimePickerChange}
         />
 
-        <Label label="Date" htmlFor="time-picker" />
+        <Label htmlFor="time-picker">Date</Label>
         <TimePicker
           id="time-picker"
           value={timePickerValue}
@@ -79,7 +79,7 @@ export default class MyComponent extends Component<{}, State> {
         />
 
         <h3>Date / time picker</h3>
-        <Label label="Input" htmlFor="datetime-picker-override" />
+        <Label htmlFor="datetime-picker-override">Input</Label>
         <TextField
           id="datetime-picker-override"
           label="Input"
@@ -87,7 +87,7 @@ export default class MyComponent extends Component<{}, State> {
           onChange={this.onDateTimePickerChange}
         />
 
-        <Label label="Date" htmlFor="datetime-picker" />
+        <Label htmlFor="datetime-picker">Date</Label>
         <DateTimePicker
           id="datetime-picker"
           value={dateTimePickerValue}

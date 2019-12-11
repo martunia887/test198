@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import ArrowDown from '@atlaskit/icon/glyph/arrow-down';
 import ArrowUp from '@atlaskit/icon/glyph/arrow-up';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { ToggleStateless } from '@atlaskit/toggle';
 import { AVATAR_SIZES, SizeType } from '@atlaskit/avatar';
 import { Note, Code } from '../examples-util/helpers';
@@ -282,7 +282,7 @@ export default class AvatarGroupExample extends Component<{}, State> {
 
         <h5>Non-interactive</h5>
         <div>
-          <Label label="Enable tooltips" />
+          <Label htmlFor="">Enable tooltips</Label>
           <ToggleStateless
             isChecked={this.state.tooltipsEnabled}
             onChange={this.toggleTooltips}

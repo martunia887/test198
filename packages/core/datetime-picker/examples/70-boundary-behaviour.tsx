@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import FieldRange from '@atlaskit/field-range';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
 import Lorem from 'react-lorem-component';
@@ -88,7 +88,7 @@ export default class MyComponent extends Component<{}, State> {
         <ModalTransition>
           {isModalOpen && (
             <Modal onClose={this.closeModal}>
-              <Label label={`Paragraphs above: ${textAbove}`} />
+              <Label>Paragraphs above: ${textAbove}</Label>
               <FieldRange
                 value={textAbove}
                 min={0}
@@ -97,9 +97,9 @@ export default class MyComponent extends Component<{}, State> {
                 onChange={this.onTextAboveChange}
               />
               {textAbove > 0 ? <Lorem count={textAbove} /> : null}
-              <Label label="Date" />
+              <Label>Date</Label>
               <DateTimePicker defaultValue={dateTimePickerValue} />
-              <Label label={`Paragraphs below: ${textBelow}`} />
+              <Label>Paragraphs below: ${textBelow}</Label>
               <FieldRange
                 value={textBelow}
                 min={0}

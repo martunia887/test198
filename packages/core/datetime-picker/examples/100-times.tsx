@@ -1,5 +1,5 @@
 import React from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { DateTimePicker, TimePicker } from '../src';
 
 export default () => {
@@ -7,7 +7,7 @@ export default () => {
 
   return (
     <div>
-      <Label label="TimePicker - times" />
+      <Label>TimePicker - times</Label>
       <TimePicker
         id="timepicker"
         times={times}
@@ -15,7 +15,7 @@ export default () => {
         testId={'timePicker'}
       />
 
-      <Label label="DateTimePicker - times" />
+      <Label>DateTimePicker - times</Label>
       <DateTimePicker times={times} />
     </div>
   );

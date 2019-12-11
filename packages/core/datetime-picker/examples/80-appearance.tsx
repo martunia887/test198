@@ -1,34 +1,34 @@
 import React from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { DatePicker, DateTimePicker, TimePicker } from '../src';
 
 export default () => {
   return (
     <div>
-      <Label label="TimePicker - default no icon" />
+      <Label>TimePicker - default no icon</Label>
       <TimePicker onChange={console.log} />
 
-      <Label label="TimePicker - subtle appearance" />
+      <Label>TimePicker - subtle appearance</Label>
       <TimePicker onChange={console.log} appearance="subtle" />
-      <Label label="TimePicker - compact spacing" />
+      <Label>TimePicker - compact spacing</Label>
       <TimePicker onChange={console.log} spacing="compact" />
 
-      <Label label="DatePicker - default" />
+      <Label>DatePicker - default</Label>
       <DatePicker onChange={console.log} />
-      <Label label="DatePicker - hideIcon" />
+      <Label>DatePicker - hideIcon</Label>
       <DatePicker onChange={console.log} hideIcon />
-      <Label label="DatePicker - subtle appearance" />
+      <Label>DatePicker - subtle appearance</Label>
       <DatePicker onChange={console.log} appearance="subtle" />
-      <Label label="DatePicker - compact spacing" />
+      <Label>DatePicker - compact spacing</Label>
       <DatePicker onChange={console.log} spacing="compact" />
 
-      <Label label="DateTimePicker - default" />
+      <Label>DateTimePicker - default</Label>
       <DateTimePicker onChange={console.log} />
-      <Label label="DateTimePicker - hideIcon" />
+      <Label>DateTimePicker - hideIcon</Label>
       <DateTimePicker onChange={console.log} hideIcon />
-      <Label label="DateTimePicker - subtle appearance" />
+      <Label>DateTimePicker - subtle appearance</Label>
       <DateTimePicker onChange={console.log} appearance="subtle" />
-      <Label label="DateTimePicker - compact spacing" />
+      <Label>DateTimePicker - compact spacing</Label>
       <DateTimePicker onChange={console.log} spacing="compact" />
     </div>
   );

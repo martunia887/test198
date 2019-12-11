@@ -15,7 +15,7 @@ import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
 import { JiraIcon, JiraWordmark } from '@atlaskit/logo';
 import { gridSize as gridSizeFn } from '@atlaskit/theme';
 
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { ToggleStateless } from '@atlaskit/toggle';
 
 import {

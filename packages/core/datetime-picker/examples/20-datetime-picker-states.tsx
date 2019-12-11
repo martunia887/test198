@@ -1,17 +1,17 @@
 import React from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { DateTimePicker } from '../src';
 
 export default () => {
   return (
     <div>
-      <Label label="Stock" />
+      <Label>Stock</Label>
       <DateTimePicker onChange={console.log} />
 
-      <Label label="Disabled input" />
+      <Label>Disabled input</Label>
       <DateTimePicker isDisabled onChange={console.log} />
 
-      <Label label="Custom date format" />
+      <Label>Custom date format</Label>
       <DateTimePicker
         onChange={console.log}
         dateFormat="DD/MMM/YY"

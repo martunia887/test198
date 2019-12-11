@@ -1,5 +1,5 @@
 import React from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import LocaleSelect, { Locale } from '@atlaskit/locale/LocaleSelect';
 import { DatePicker, DateTimePicker, TimePicker } from '../src';
 
@@ -113,7 +113,7 @@ export default class extends React.Component<Object, IntlState> {
           defaultLocale={{ value: 'ja-JP', label: '日本語 (日本)' }}
         />
         <h3>Date picker</h3>
-        <Label htmlFor="react-select-datepicker-1--input" label="default" />
+        <Label htmlFor="react-select-datepicker-1--input">default</Label>
         <DatePicker
           id="datepicker-1"
           onChange={onChange}
@@ -121,10 +121,9 @@ export default class extends React.Component<Object, IntlState> {
           testId={'datePicker'}
         />
 
-        <Label
-          htmlFor="react-select-datepicker-2--input"
-          label="controlled (value)"
-        />
+        <Label htmlFor="react-select-datepicker-2--input">
+          controlled (value)
+        </Label>
         <Controlled initialValue="2018-01-02">
           {({ value, onValueChange, onBlur }) => (
             <DatePicker
@@ -137,10 +136,9 @@ export default class extends React.Component<Object, IntlState> {
           )}
         </Controlled>
 
-        <Label
-          htmlFor="react-select-datepicker-3--input"
-          label="uncontrolled (defaultValue)"
-        />
+        <Label htmlFor="react-select-datepicker-3--input">
+          uncontrolled (defaultValue)
+        </Label>
         <DatePicker
           id="datepicker-3"
           defaultValue="2018-01-02"
@@ -149,7 +147,7 @@ export default class extends React.Component<Object, IntlState> {
         />
 
         <h3>Time picker</h3>
-        <Label htmlFor="react-select-timepicker-1--input" label="default" />
+        <Label htmlFor="react-select-timepicker-1--input">default</Label>
         <TimePicker
           id="timepicker-1"
           onChange={onChange}
@@ -157,10 +155,9 @@ export default class extends React.Component<Object, IntlState> {
           locale={locale}
         />
 
-        <Label
-          htmlFor="react-select-timepicker-2--input"
-          label="controlled (value, isOpen)"
-        />
+        <Label htmlFor="react-select-timepicker-2--input">
+          controlled (value, isOpen)
+        </Label>
         <Controlled initialValue="14:30">
           {({ value, onValueChange, isOpen, onBlur }) => (
             <TimePicker
@@ -175,10 +172,9 @@ export default class extends React.Component<Object, IntlState> {
           )}
         </Controlled>
 
-        <Label
-          htmlFor="react-select-timepicker-3--input"
-          label="uncontrolled (defaultValue)"
-        />
+        <Label htmlFor="react-select-timepicker-3--input">
+          uncontrolled (defaultValue)
+        </Label>
         <TimePicker
           selectProps={{ classNamePrefix: 'timepicker-select' }}
           id="timepicker-3"
@@ -187,10 +183,7 @@ export default class extends React.Component<Object, IntlState> {
           locale={locale}
         />
 
-        <Label
-          htmlFor="react-select-timepicker-4--input"
-          label="editable times"
-        />
+        <Label htmlFor="react-select-timepicker-4--input">editable times</Label>
         <TimePicker
           selectProps={{ classNamePrefix: 'timepicker-select' }}
           id="timepicker-4"
@@ -202,7 +195,7 @@ export default class extends React.Component<Object, IntlState> {
         />
 
         <h3>Date / time picker</h3>
-        <Label htmlFor="react-select-datetimepicker-1--input" label="default" />
+        <Label htmlFor="react-select-datetimepicker-1--input">default</Label>
         <DateTimePicker
           id="datetimepicker-1"
           onChange={onChange}
@@ -210,10 +203,9 @@ export default class extends React.Component<Object, IntlState> {
           testId={'dateTimePicker'}
         />
 
-        <Label
-          htmlFor="react-select-datetimepicker-2--input"
-          label="controlled (UTC-08:00)"
-        />
+        <Label htmlFor="react-select-datetimepicker-2--input">
+          controlled (UTC-08:00)
+        </Label>
         <Controlled initialValue="2018-01-02T14:30-08:00">
           {({ value, onValueChange }) => (
             <DateTimePicker
@@ -225,10 +217,9 @@ export default class extends React.Component<Object, IntlState> {
           )}
         </Controlled>
 
-        <Label
-          htmlFor="react-select-datetimepicker-3--input"
-          label="uncontrolled (UTC+10:00)"
-        />
+        <Label htmlFor="react-select-datetimepicker-3--input">
+          uncontrolled (UTC+10:00)
+        </Label>
         <DateTimePicker
           id="datetimepicker-3"
           defaultValue="2018-01-02T14:30+10:00"
@@ -236,10 +227,9 @@ export default class extends React.Component<Object, IntlState> {
           locale={locale}
         />
 
-        <Label
-          htmlFor="react-select-datetimepicker-4--input"
-          label="editable times (UTC+10:00)"
-        />
+        <Label htmlFor="react-select-datetimepicker-4--input">
+          editable times (UTC+10:00)
+        </Label>
         <DateTimePicker
           id="datetimepicker-4"
           defaultValue="2018-01-02T14:30+10:00"

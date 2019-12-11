@@ -14,7 +14,7 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
 
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { ToggleStateless } from '@atlaskit/toggle';
 
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';

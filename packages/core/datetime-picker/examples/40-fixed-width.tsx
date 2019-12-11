@@ -1,22 +1,22 @@
 import React from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { gridSize } from '@atlaskit/theme';
 import { DatePicker, DateTimePicker, TimePicker } from '../src';
 
 export default () => {
   return (
     <div>
-      <Label label="Date picker" />
+      <Label>Date picker</Label>
       <DatePicker
         innerProps={{ style: { width: gridSize() * 20 } }}
         onChange={console.log}
       />
-      <Label label="Time picker" />
+      <Label>Time picker</Label>
       <TimePicker
         innerProps={{ style: { width: gridSize() * 20 } }}
         onChange={console.log}
       />
-      <Label label="Date / time picker" />
+      <Label>Date / time picker</Label>
       <DateTimePicker
         innerProps={{ style: { width: gridSize() * 40 } }}
         onChange={console.log}

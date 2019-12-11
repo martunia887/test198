@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import Button from '@atlaskit/button';
 import Item, { ItemGroup } from '@atlaskit/item';
 import DropList from '../src';

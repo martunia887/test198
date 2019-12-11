@@ -1,14 +1,14 @@
 import React from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { TimePicker } from '../src';
 
 export default () => {
   return (
     <div>
-      <Label label="Stock" />
+      <Label>Stock</Label>
       <TimePicker onChange={console.log} />
 
-      <Label label="Disabled input" />
+      <Label>Disabled input</Label>
       <TimePicker isDisabled onChange={console.log} />
     </div>
   );

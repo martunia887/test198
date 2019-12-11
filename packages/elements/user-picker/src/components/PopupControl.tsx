@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Label } from '@atlaskit/field-base';
+import Label from '@atlaskit/label';
 import { components, ControlProps } from '@atlaskit/select';
 import styled from 'styled-components';
 
@@ -17,7 +17,7 @@ export class PopupControl extends React.PureComponent<ControlProps<any>> {
 
     return (
       <ControlWrapper>
-        <Label label={popupTitle} />
+        <Label>{popupTitle}</Label>
         <components.Control {...this.props} />
       </ControlWrapper>
     );
