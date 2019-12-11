@@ -586,6 +586,9 @@ export class CardBase extends Component<
         mediaClientConfig={mediaClient.config}
         selectedItem={mediaViewerSelectedItem}
         onClose={this.onMediaViewerClose}
+        openerComponentRef={
+          this.cardRef.current ? this.cardRef.current.divRef : undefined
+        }
       />,
       document.body,
     );

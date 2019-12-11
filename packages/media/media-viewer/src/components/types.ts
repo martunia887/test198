@@ -1,6 +1,6 @@
 import { Identifier, MediaClient } from '@atlaskit/media-client';
 import { MediaViewerFeatureFlags } from '../newgen/domain';
-import { ReactNode } from 'react';
+import { ReactNode, RefObject } from 'react';
 
 export interface MediaViewerDataSource {
   list?: Array<Identifier>;
@@ -33,4 +33,5 @@ export interface MediaViewerProps {
 
   readonly featureFlags?: MediaViewerFeatureFlags;
   readonly extensions?: MediaViewerExtensions;
+  readonly openerComponentRef?: RefObject<any>;
 }

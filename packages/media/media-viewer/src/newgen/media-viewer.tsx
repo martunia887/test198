@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, RefObject } from 'react';
 import { MediaClient, Identifier } from '@atlaskit/media-client';
 import { IntlProvider, intlShape } from 'react-intl';
 import { Shortcut } from '@atlaskit/media-ui';
@@ -30,6 +30,7 @@ export type Props = {
   mediaClient: MediaClient;
   itemSource: ItemSource;
   extensions?: MediaViewerExtensions;
+  openerComponentRef?: RefObject<any>;
 } & WithAnalyticsEventsProps;
 
 export interface State {
@@ -53,6 +54,12 @@ export class MediaViewerComponent extends React.Component<Props, State> {
       ev.fire(channel);
     }
   };
+
+  componentDidMount() {
+    const { openerComponentRef } = this.props;
+
+    console.log({ openerComponentRef });
+  }
 
   UNSAFE_componentWillMount() {
     this.fireAnalytics(mediaViewerModalEvent());

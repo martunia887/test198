@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { MediaType } from '@atlaskit/media-client';
 import { layers, borderRadius } from '@atlaskit/theme/constants';
 import {
@@ -14,6 +14,17 @@ import { ellipsis, hideControlsClassName } from '@atlaskit/media-ui';
 
 const overlayZindex = layers.modal() + 10;
 const sidebarWidth = 350;
+const fadeInAnimation = keyframes`
+  0% {
+    transform: scale(0.5) translate(-50%, -50%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+`;
 
 export const mediaTypeIconColors = {
   image: Y200,
@@ -34,6 +45,8 @@ export const Blanket = styled.div`
   background-color: ${blanketColor};
   z-index: ${overlayZindex};
   display: flex;
+  opacity: 0;
+  animation: ${fadeInAnimation} 0.5s forwards;
 `;
 
 export const HeaderWrapper = styled.div`
