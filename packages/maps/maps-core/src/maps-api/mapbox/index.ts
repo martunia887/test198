@@ -5,13 +5,14 @@ import mapboxgl, {
   LngLatBounds,
   LngLat,
   LngLatLike,
+  MarkerOptions,
 } from 'mapbox-gl';
 import { DEFAULT_ZOOM, MAP_PADDING } from './deafult-options';
 
 mapboxgl.accessToken =
   'pk.eyJ1Ijoiam9zZS1udW5lei1hdGxhcyIsImEiOiJjazJ2NDc0bHQwMTZ3M2xwbThkNnBtaGhrIn0.HqY00u5U1a4juO9Md4lFMA';
 
-export { MapboxMap, Marker };
+export { MapboxMap, Marker, MarkerOptions };
 
 export const initMap = (
   container: HTMLDivElement,
@@ -65,9 +66,9 @@ const createBounds = (coordsSet: LngLatLike[]): LngLatBounds | void => {
 
 export const createMarker = (
   coords: LngLatLike,
-  iconColor?: string,
+  options: MarkerOptions,
 ): Marker => {
-  const marker = new Marker(iconColor ? { color: iconColor } : {});
+  const marker = new Marker(options);
   marker.setLngLat(coords);
   return marker;
 };

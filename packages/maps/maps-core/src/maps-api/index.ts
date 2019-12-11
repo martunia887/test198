@@ -1,5 +1,5 @@
 import * as mapbox from './mapbox';
-import { MapboxMap, Marker } from './mapbox';
+import { MapboxMap, Marker, MarkerOptions } from './mapbox';
 import { Geolocation } from '../';
 
 const getMarkers = (locationsMap: Map<Geolocation, Marker>) =>
@@ -20,9 +20,22 @@ const createLocationsMarkers = (
   return result;
 };
 
-const locationToMarker = (location: Geolocation): Marker => {
+const locationToMarker = (
+  location: Geolocation,
+  options?: MarkerOptions,
+): Marker => {
   const { iconColor, coords } = location;
-  return mapbox.createMarker(coords, iconColor);
+  const newMarker = mapbox.createMarker(coords, {
+    color: iconColor,
+    ...options,
+  });
+  if (options && options.draggable) {
+    newMarker.on('dragend', () => {
+      const { lat, lng } = newMarker.getLngLat();
+      location.coords = { lat, lng };
+    });
+  }
+  return newMarker;
 };
 
 const normaliseLocations = (
@@ -32,6 +45,11 @@ const normaliseLocations = (
   if (selected && locations.indexOf(selected) === -1) {
     return [selected, ...locations];
   } else return locations;
+};
+
+export type AddLocationOptions = {
+  draggable?: boolean;
+  goto?: boolean;
 };
 
 export default class MapHandler {
@@ -105,10 +123,13 @@ export default class MapHandler {
     this._setLocations(locations, selected, true);
   };
 
-  public addLocation = (location: Geolocation, goto: boolean = true) => {
+  public addLocation = (
+    location: Geolocation,
+    { goto = true, draggable = false }: AddLocationOptions,
+  ) => {
     if (!this.map) return;
     if (!this.locationsMarkers.get(location)) {
-      const newMarker = locationToMarker(location);
+      const newMarker = locationToMarker(location, { draggable });
       this.locationsMarkers.set(location, newMarker);
       mapbox.addMarkers(this.map, [newMarker]);
     }
