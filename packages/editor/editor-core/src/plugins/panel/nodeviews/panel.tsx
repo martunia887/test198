@@ -61,7 +61,7 @@ class PanelNodeView {
   private renderIcon(panelType: PanelType, panelIcon?: string) {
     const Icon = panelIcons[panelType];
 
-    if (panelType === 'emoji' && panelIcon) {
+    if (panelIcon) {
       const emojiService = getEmojiRepository();
       const emojiShortName = emojiService.findByShortName(panelIcon);
       ReactDOM.render(

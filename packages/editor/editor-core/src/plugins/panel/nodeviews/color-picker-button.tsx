@@ -72,25 +72,33 @@ export default class ColorPickerButton extends Component<Props, State> {
     this.buttonRef = React.createRef();
   }
 
+  componentDidMount() {
+    const editorView = this.props.view as EditorView<any>;
+    const panelPluginState = panelPluginKey.getState(editorView.state);
+    if (panelPluginState.activePanelColor) {
+      this.setState({ selectedColor: panelPluginState.activePanelColor });
+    }
+  }
+
   togglePopup = () => {
     this.setState({ popupIsOpened: !this.state.popupIsOpened });
   };
 
   render() {
-    let target;
     if (this.buttonRef.current && this.buttonRef.current.button) {
       target = (this.buttonRef.current.button as RefObject<HTMLButtonElement>)
         .current as HTMLButtonElement;
     }
     const editorView = this.props.view as EditorView<any>;
-    const pluginState = textColorPluginKey.getState(editorView.state);
+
+    const textColorPluginState = textColorPluginKey.getState(editorView.state);
     return (
       <React.Fragment>
         {/* <Button spacing="compact" onClick={this.togglePopup} ref={this.buttonRef}> </Button> */}
         {/* <TextColorIcon label='color'></TextColorIcon> */}
 
         {/* <ToolbarTextColor
-            pluginState={pluginState}
+            pluginState={textColorPluginState}
             isReducedSpacing={true}
             editorView={editorView}
             popupsMountPoint={target}
@@ -116,7 +124,6 @@ export default class ColorPickerButton extends Component<Props, State> {
 
   private updateColor = (color: string) => {
     const editorView = this.props.view as EditorView<any>;
-    const pluginState = panelPluginKey.getState(editorView.state);
 
     changePanelType(undefined, {
       color: color,
