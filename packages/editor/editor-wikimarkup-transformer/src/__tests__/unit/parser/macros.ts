@@ -169,10 +169,27 @@ linebreaks{noformat}`,
     ],
   ];
 
+  const context = {
+    mediaConversion: {
+      'attachment-file11.txt': 'attachment-file11.txt',
+      'attachment-file12.txt': 'attachment-file12.txt',
+      'attachment-file13.txt': 'attachment-file13.txt',
+      'attachment-file21.txt': 'attachment-file21.txt',
+      'attachment-file22.txt': 'attachment-file22.txt',
+      'attachment-file23.txt': 'attachment-file23.txt',
+      'attachment-file31.txt': 'attachment-file31.txt',
+      'attachment-file32.txt': 'attachment-file32.txt',
+      'attachment-file33.txt': 'attachment-file33.txt',
+      'attachment-file41.txt': 'attachment-file41.txt',
+      'attachment-file42.txt': 'attachment-file42.txt',
+      'attachment-file43.txt': 'attachment-file43.txt',
+    },
+  };
+
   for (const [testCaseDescription, markup] of testCases) {
     it(testCaseDescription, () => {
       const transformer = new WikiMarkupTransformer();
-      expect(transformer.parse(markup)).toMatchSnapshot();
+      expect(transformer.parse(markup, context)).toMatchSnapshot();
     });
   }
 });

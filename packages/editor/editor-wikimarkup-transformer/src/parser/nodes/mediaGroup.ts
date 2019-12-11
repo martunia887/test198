@@ -1,5 +1,6 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
 import { Context } from '../../interfaces';
+import { PREFIX_UNKNOWN_MEDIA } from '../../char';
 
 export default function getMediaGroupNodeView(
   schema: Schema,
@@ -12,7 +13,7 @@ export default function getMediaGroupNodeView(
   const id =
     context.mediaConversion && context.mediaConversion[filename]
       ? context.mediaConversion[filename]
-      : filename;
+      : PREFIX_UNKNOWN_MEDIA + filename;
 
   // try to look up collection from media context
   const collection = context.media && context.media.targetCollectionId;

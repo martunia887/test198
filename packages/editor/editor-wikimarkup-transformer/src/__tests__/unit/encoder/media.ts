@@ -11,31 +11,37 @@ import { Context } from '../../../interfaces';
 
 describe('ADF => WikiMarkup - Media', () => {
   const transformer = new WikiMarkupTransformer();
+  const context: Context = {
+    mediaConversion: {
+      'abc-123': 'file1.txt',
+      'def-456': 'file2.txt',
+    },
+  };
 
   test('should convert mediaGroup node', () => {
     const node = doc(
       mediaGroup(
-        media({ id: 'file1.txt', type: 'file', collection: 'tmp' })(),
-        media({ id: 'file2.txt', type: 'file', collection: 'tmp' })(),
+        media({ id: 'abc-123', type: 'file', collection: 'tmp' })(),
+        media({ id: 'def-456', type: 'file', collection: 'tmp' })(),
       ),
     )(defaultSchema);
-    expect(transformer.encode(node)).toMatchSnapshot();
+    expect(transformer.encode(node, context)).toMatchSnapshot();
   });
 
   test('should convert mediaSingle node with no width and height to thumbnail', () => {
     const node = doc(
       mediaSingle()(
-        media({ id: 'file1.txt', type: 'file', collection: 'tmp' })(),
+        media({ id: 'abc-123', type: 'file', collection: 'tmp' })(),
       ),
     )(defaultSchema);
-    expect(transformer.encode(node)).toMatchSnapshot();
+    expect(transformer.encode(node, context)).toMatchSnapshot();
   });
 
   test('should convert mediaSingle node with width and height', () => {
     const node = doc(
       mediaSingle()(
         media({
-          id: 'file1.txt',
+          id: 'abc-123',
           type: 'file',
           collection: 'tmp',
           width: 100,
@@ -43,7 +49,7 @@ describe('ADF => WikiMarkup - Media', () => {
         })(),
       ),
     )(defaultSchema);
-    expect(transformer.encode(node)).toMatchSnapshot();
+    expect(transformer.encode(node, context)).toMatchSnapshot();
   });
 
   test('should convert external image', () => {
@@ -57,15 +63,10 @@ describe('ADF => WikiMarkup - Media', () => {
         })(),
       ),
     )(defaultSchema);
-    expect(transformer.encode(node)).toMatchSnapshot();
+    expect(transformer.encode(node, context)).toMatchSnapshot();
   });
 
-  test('should convert media with context', () => {
-    const context: Context = {
-      mediaConversion: {
-        'abc-123-uuid': 'file1.txt',
-      },
-    };
+  test('should convert media with no context', () => {
     const node = doc(
       mediaSingle()(
         media({
@@ -77,6 +78,6 @@ describe('ADF => WikiMarkup - Media', () => {
         })(),
       ),
     )(defaultSchema);
-    expect(transformer.encode(node, context)).toMatchSnapshot();
+    expect(transformer.encode(node)).toMatchSnapshot();
   });
 });

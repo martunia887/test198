@@ -125,14 +125,14 @@ sadfsadf
       'should insert a if it is followed by an empty line',
       `
 - a
----- 
+----
 `,
     ],
     [
       'should continue list if rule is followed by text on next line',
       `
 - a
----- 
+----
 abc
 `,
     ],
@@ -149,7 +149,7 @@ abc
       'should create list of mentions with rule in middle',
       `- [~name1]
 - [~name2]
----- 
+----
 abc
 - [~name3]
 -- [~name4]
@@ -175,10 +175,25 @@ abc
     ],
   ];
 
+  const context = {
+    mediaConversion: {
+      'attached-image.gif': 'attached-image.gif',
+      'file.pdf': 'file.pdf',
+      'file1.pdf': 'file1.pdf',
+      'file2.pdf': 'file2.pdf',
+      'file3.pdf': 'file3.pdf',
+      'file4.pdf': 'file4.pdf',
+      'file5.pdf': 'file5.pdf',
+      'file6.pdf': 'file6.pdf',
+      'file7.pdf': 'file7.pdf',
+      'file8.pdf': 'file8.pdf',
+    },
+  };
+
   for (const [testCaseDescription, markup] of testCases) {
     it(testCaseDescription, () => {
       const transformer = new WikiMarkupTransformer();
-      expect(transformer.parse(markup)).toMatchSnapshot();
+      expect(transformer.parse(markup, context)).toMatchSnapshot();
     });
   }
 });

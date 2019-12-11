@@ -80,6 +80,10 @@ describe('ADF => WikiMarkup - List', () => {
         ),
       ),
     )(defaultSchema);
-    expect(transformer.encode(node)).toMatchSnapshot();
+    expect(
+      transformer.encode(node, {
+        mediaConversion: { 'file1.txt': 'file1.txt' },
+      }),
+    ).toMatchSnapshot();
   });
 });

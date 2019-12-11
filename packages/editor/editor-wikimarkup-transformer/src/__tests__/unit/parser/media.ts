@@ -59,19 +59,30 @@ yep`,
       '|colum 1 [^a-doc (jadsjdasjadsjkdasjk).pdf]\r\n[^not-empty (askjsajnkjknads).txt]|column 2|',
     ],
     [
-      'should transform filename to id for embeddable attachments if present in context',
+      'should transform filename to id for embeddable attachments if NOT present in context',
       '!Screen Shot.jpeg!',
     ],
     [
-      'should transform filename to id for attachment links if present in context',
+      'should transform filename to id for attachment links if NOT present in context',
       '[^document.pdf]',
     ],
   ];
 
   const context: Context = {
     mediaConversion: {
-      'Screen Shot.jpeg': '9db1eca8-8257-4763-92fb-e6417f9e34c9',
-      'document.pdf': '9db1eca8-8257-4763-92fb-abc12346',
+      'file1.txt': 'file1.txt',
+      'file2.txt': 'file2.txt',
+      'file3.txt': 'file3.txt',
+      'image.png': 'image.png',
+      'http://www.host.com/image.gif': 'http://www.host.com/image.gif',
+      'quicktime.mov': 'quicktime.mov',
+      'image.gif': 'image.gif',
+      'Kapture 2018-04-04 at 16.36.13.gif':
+        'Kapture 2018-04-04 at 16.36.13.gif',
+      'Screen Shot (9db1eca8-8257-4763-92fb-e6417f9e34c9).jpeg':
+        'Screen Shot (9db1eca8-8257-4763-92fb-e6417f9e34c9).jpeg',
+      'a-doc (jadsjdasjadsjkdasjk).pdf': 'a-doc (jadsjdasjadsjkdasjk).pdf',
+      'not-empty (askjsajnkjknads).txt': 'not-empty (askjsajnkjknads).txt',
     },
   };
 

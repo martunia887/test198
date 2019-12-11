@@ -8,7 +8,11 @@ describe('JIRA wiki markup - File Link', () => {
   for (const [testCaseDescription, markup] of testCases) {
     it(testCaseDescription, () => {
       const transformer = new WikiMarkupTransformer();
-      expect(transformer.parse(markup)).toMatchSnapshot();
+      expect(
+        transformer.parse(markup, {
+          mediaConversion: { 'file.pdf': 'file.pdf' },
+        }),
+      ).toMatchSnapshot();
     });
   }
 });

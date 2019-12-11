@@ -806,7 +806,7 @@ Object {
 }
 `;
 
-exports[`JIRA wiki markup - Images and attachments should transform filename to id for attachment links if present in context 1`] = `
+exports[`JIRA wiki markup - Images and attachments should transform filename to id for attachment links if NOT present in context 1`] = `
 Object {
   "content": Array [
     Object {
@@ -821,7 +821,7 @@ Object {
             "__fileSize": null,
             "collection": "",
             "height": null,
-            "id": "9db1eca8-8257-4763-92fb-abc12346",
+            "id": "UNKNOWN_MEDIA_document.pdf",
             "occurrenceKey": null,
             "type": "file",
             "url": null,
@@ -837,7 +837,7 @@ Object {
 }
 `;
 
-exports[`JIRA wiki markup - Images and attachments should transform filename to id for embeddable attachments if present in context 1`] = `
+exports[`JIRA wiki markup - Images and attachments should transform filename to id for embeddable attachments if NOT present in context 1`] = `
 Object {
   "content": Array [
     Object {
@@ -856,7 +856,7 @@ Object {
             "__fileSize": null,
             "collection": "",
             "height": 183,
-            "id": "9db1eca8-8257-4763-92fb-e6417f9e34c9",
+            "id": "UNKNOWN_MEDIA_Screen Shot.jpeg",
             "occurrenceKey": null,
             "type": "file",
             "url": null,
