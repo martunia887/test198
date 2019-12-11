@@ -63,6 +63,7 @@ import {
   shouldRefetchPreview,
   ProcessedFileState,
 } from '../../../../media-client/src/models/file-state';
+import { convertBase64ToBlob } from '../../../../media-client/src/utils/convertBase64ToBlob';
 
 export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
 export class CardBase extends Component<
@@ -274,7 +275,11 @@ export class CardBase extends Component<
               metadata,
               status,
               progress,
-              dataURI: (fileState as ProcessedFileState).dataURIPreview,
+              dataURI: URL.createObjectURL(
+                convertBase64ToBlob(
+                  (fileState as ProcessedFileState).dataURIPreview!,
+                ),
+              ),
               previewOrientation,
             });
           }

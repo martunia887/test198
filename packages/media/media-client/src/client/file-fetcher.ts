@@ -277,11 +277,15 @@ export class FileFetcherImpl implements FileFetcher {
 
       const fetchFile = async () => {
         try {
-          const response = await this.dataloader.load({ id, collection });
-          const imageResponse = await this.dataloaderImages.load({
-            id,
-            collection,
-          });
+          const metaAndImage = await Promise.all([
+            this.dataloader.load({ id, collection }),
+            this.dataloaderImages.load({
+              id,
+              collection,
+            }),
+          ]);
+          const response = metaAndImage[0];
+          const imageResponse = metaAndImage[1];
 
           if (!response) {
             return;
