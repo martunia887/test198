@@ -26,7 +26,12 @@ import {
 import { MediaViewer, MediaViewerDataSource } from '../src';
 import { videoFileId } from '@atlaskit/media-test-helpers';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
-import { Identifier, FileIdentifier, MediaStore } from '@atlaskit/media-client';
+import {
+  Identifier,
+  FileIdentifier,
+  MediaStore,
+  MediaCollectionItem,
+} from '@atlaskit/media-client';
 import { Card } from '@atlaskit/media-card';
 import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 
@@ -50,35 +55,40 @@ export default class Example extends React.Component<{}, State> {
     const firstDefaultCollectionItem = await this.getFirstCollectionItem(
       defaultCollectionName,
     );
-    this.setState({
-      firstItemFromDefaultCollection: {
-        id: firstDefaultCollectionItem.id,
-        mediaItemType: 'file',
-        occurrenceKey: firstDefaultCollectionItem.occurrenceKey,
-      },
-    });
+    if (firstDefaultCollectionItem) {
+      this.setState({
+        firstItemFromDefaultCollection: {
+          id: firstDefaultCollectionItem.id,
+          mediaItemType: 'file',
+          occurrenceKey: firstDefaultCollectionItem.occurrenceKey,
+        },
+      });
+    }
 
     const firstDefaultMPCollectionItem = await this.getFirstCollectionItem(
       defaultMediaPickerCollectionName,
     );
 
-    this.setState(
-      {
-        firstItemFromMediaPickerCollection: {
-          id: firstDefaultMPCollectionItem.id,
-          mediaItemType: 'file',
-          occurrenceKey: firstDefaultMPCollectionItem.occurrenceKey,
+    if (firstDefaultMPCollectionItem) {
+      this.setState(
+        {
+          firstItemFromMediaPickerCollection: {
+            id: firstDefaultMPCollectionItem.id,
+            mediaItemType: 'file',
+            occurrenceKey: firstDefaultMPCollectionItem.occurrenceKey,
+          },
         },
-      },
-      this.openList,
-    );
+        this.openList,
+      );
+    }
   }
 
-  getFirstCollectionItem = async (collectionName: string) => {
+  getFirstCollectionItem = async (
+    collectionName: string,
+  ): Promise<MediaCollectionItem | undefined> => {
     const store = new MediaStore(mediaClient.config);
     const items = (await store.getCollectionItems(collectionName, { limit: 1 }))
       .data.contents;
-
     return items[0];
   };
 
