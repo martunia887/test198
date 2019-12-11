@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ZipEntry } from 'zipizape';
 import { ArchiveSideBar } from '../styled';
-import { SidebarFolderEntry } from './sidebarFolderEntry';
+import { ArchiveSidebarFolderEntry } from './archive-sidebar-folder-entry';
 
 export interface ArchiveSidebarProps {
   entries: ZipEntry[];
@@ -14,7 +14,7 @@ export class ArchiveSidebar extends React.Component<ArchiveSidebarProps> {
 
     return (
       <ArchiveSideBar>
-        <SidebarFolderEntry
+        <ArchiveSidebarFolderEntry
           root=""
           name="/"
           entries={entries}

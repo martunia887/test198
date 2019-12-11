@@ -381,3 +381,23 @@ export const ArchiveSideBar = styled.div`
   color: black;
   z-index: 99999999999999999;
 `;
+
+export const ArchiveSidebarFolderWrapper = styled.div`
+  padding-left: 10px;
+`;
+
+export const ArchiveSidebarFolderHeader = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const ArchiveSidebarFileEntry = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const ArchiveSidebarEntryLabel = styled.div`
+  padding-left: 10px;
+`;
