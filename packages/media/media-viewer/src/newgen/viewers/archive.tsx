@@ -44,7 +44,7 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
       const blob = await response.blob();
 
       const zip = new ZipiZape();
-      const entries = await zip.readFile(blob);
+      const entries = await zip.readFile(blob as File);
       this.setState({
         content: Outcome.successful({
           entries,
@@ -92,8 +92,6 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
       content = preview ? preview.src : undefined;
       content && this.previews.set(selectedEntryContent.name, content);
     }
-
-    console.log({ content });
 
     if (!content) {
       return null;

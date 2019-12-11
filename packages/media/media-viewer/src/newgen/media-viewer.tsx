@@ -9,6 +9,7 @@ import {
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 import { mediaViewerModalEvent } from './analytics/media-viewer';
+import FolderIcon from '@atlaskit/icon/glyph/folder';
 import { closedEvent, ClosedInputType } from './analytics/closed';
 import { channel } from './analytics/index';
 import {
@@ -21,7 +22,10 @@ import { Collection } from './collection';
 import { Content } from './content';
 import { Blanket, SidebarWrapper } from './styled';
 import { start } from 'perf-marks';
-import { MediaViewerExtensions } from '../components/types';
+import {
+  MediaViewerExtensions,
+  MediaViewerExtensionsActions,
+} from '../components/types';
 
 export type Props = {
   onClose?: () => void;
@@ -105,7 +109,7 @@ export class MediaViewerComponent extends React.Component<Props, State> {
   }
 
   renderSidebar = () => {
-    const { extensions } = this.props;
+    const extensions = this.getExtensions();
     const { isSidebarVisible, selectedIdentifier } = this.state;
     const sidebardSelectedIdentifier =
       selectedIdentifier || this.defaultSelectedItem;
@@ -146,8 +150,26 @@ export class MediaViewerComponent extends React.Component<Props, State> {
     this.setState({ selectedIdentifier });
   };
 
+  private getDefaultExtension = (): MediaViewerExtensions => {
+    return {
+      sidebar: {
+        icon: <FolderIcon label="explore files" />,
+        renderer(
+          selectedIdentifier: Identifier,
+          actions: MediaViewerExtensionsActions,
+        ) {
+          return <div>Sidebar</div>;
+        },
+      },
+    };
+  };
+
+  private getExtensions = () => {
+    return this.props.extensions || this.getDefaultExtension();
+  };
+
   private renderContent() {
-    const { mediaClient, onClose, itemSource, extensions } = this.props;
+    const { mediaClient, onClose, itemSource } = this.props;
     const { isSidebarVisible } = this.state;
 
     if (itemSource.kind === 'COLLECTION') {
@@ -158,13 +180,14 @@ export class MediaViewerComponent extends React.Component<Props, State> {
           collectionName={itemSource.collectionName}
           mediaClient={mediaClient}
           onClose={onClose}
-          extensions={extensions}
+          extensions={this.getExtensions()}
           onNavigationChange={this.onNavigationChange}
           onSidebarButtonClick={this.toggleSidebar}
         />
       );
     } else if (itemSource.kind === 'ARRAY') {
       const { items } = itemSource;
+      // TODO: only show icon if Archive
 
       return (
         <List
@@ -172,7 +195,7 @@ export class MediaViewerComponent extends React.Component<Props, State> {
           items={items}
           mediaClient={mediaClient}
           onClose={onClose}
-          extensions={extensions}
+          extensions={this.getExtensions()}
           onNavigationChange={this.onNavigationChange}
           onSidebarButtonClick={this.toggleSidebar}
           isSidebarVisible={isSidebarVisible}
