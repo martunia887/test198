@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StaggeredEntrance, ZoomIn } from '@atlaskit/motion';
 import Button from '@atlaskit/button';
-import Rating, { Star, StarProps } from '../src/index';
+import { RatingGroup, Star, StarProps } from '../src';
 
 const ZoomInStar = (props: StarProps) => (
   <ZoomIn>{motion => <Star {...motion} {...props} />}</ZoomIn>
@@ -17,13 +17,13 @@ export default () => {
       </div>
 
       <StaggeredEntrance>
-        <Rating key={count} groupName="rating--motion">
-          <ZoomInStar label="Terrible" value="one" id="one" />
-          <ZoomInStar label="Meh" value="two" id="two" />
-          <ZoomInStar label="Good" value="three" id="three" />
-          <ZoomInStar label="Great" value="four" id="four" />
-          <ZoomInStar label="Fantastic!" value="five" id="five" />
-        </Rating>
+        <RatingGroup key={count} groupName="rating--motion">
+          <ZoomInStar label="Terrible" value="one" />
+          <ZoomInStar label="Meh" value="two" />
+          <ZoomInStar label="Good" value="three" />
+          <ZoomInStar label="Great" value="four" />
+          <ZoomInStar label="Fantastic!" value="five" />
+        </RatingGroup>
       </StaggeredEntrance>
     </div>
   );

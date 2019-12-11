@@ -1,157 +1,148 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
+import { useCallback } from 'react';
+import { jsx } from '@emotion/core';
 import { assistive } from '@atlaskit/theme';
-import { Fragment, Children, cloneElement, useState } from 'react';
+import Tooltip from '@atlaskit/tooltip';
+import { smallDurationMs, easeInOut } from '@atlaskit/motion';
+import { Fragment, forwardRef } from 'react';
+
+export type RatingRender = (props: { isChecked: boolean }) => React.ReactNode;
 
 export interface RatingProps {
   /**
-   * Callback that is called everytime the rating changes.
-   * Use this in conjunction with `value` for [controlled behaviour](https://reactjs.org/docs/forms.html#controlled-components).
+   * Label for the rating item.
+   * This will be read by screen readers as well as used in the tooltip when hovering over the item.
    */
-  onChange?: (value?: string) => void;
+  label: string;
 
   /**
-   * Group name for all of the child rating items.
-   * If you have **multiple ratings on the same page make sure to have a unique name** for each group.
+   * This is passed to the radio button input.
 
-   * Defaults to `"ak--rating-group"`.
+   * When using this with the `<Rating />` component this is handled for you.
    */
-  groupName?: string;
+  name?: string;
 
   /**
-   * Will set the default checked value for a child radio rating item.
-   * Use when wanting to use this in an [uncontrolled way](https://reactjs.org/docs/uncontrolled-components.html).
+   * Sets checked state on the rating item.
 
-   * Do not use with `value`.
+   * When using this with the `<Rating />` component this is handled for you.
    */
-  defaultValue?: string;
-
-  /**
-   * Value that is used to check a child rating item.
-   * Use when wanting to use this in a [controlled way](https://reactjs.org/docs/forms.html#controlled-components).
-
-   * Do not use with `defaultValue`.
-   */
-  value?: string;
+  isChecked?: boolean;
 
   /**
    A `testId` prop is provided for specified elements,
    which is a unique string that appears as a data attribute `data-testid` in the rendered code,
    serving as a hook for automated tests.
 
-   Will set these elements:
+   Will set two elements:
 
-   * The root container `"{testId}--root"`
-   * The empty input `"{testId}--input-empty"` which is used to signify "nothing is selected yet".
+   * The label as `"{testId}--label"`
+   * The radio button as `"{testId}--input"`
+   * The unchecked icon container `"{testId}--icon-container"`
+   * The checked icon container `"{testId}--icon-checked-container"`
+
+   When using this with the `<Rating />` component this will inherit its `testId` as `"{testId}--{index}--{element}"`,
+   for example label would be `"{testId}--{index}--label"`.
    */
   testId?: string;
 
   /**
-   * Pass in child rating items.
-   * This component expects the markup to be defined in a particular way,
-   * so if you pass extra wrapping markup expect undefined behaviour.
-
-   * You can have any amount of child rating items.
+   * Value of the rating item.
+   * This will be passed back in the `onChange()` handler when checked.
    */
-  children: JSX.Element | JSX.Element[];
+  value: string;
+
+  /**
+   * Id that is passed to both the label and the radio button element.
+   * This is needed to declare their relationship.
+
+   * When using this with the `<Rating />` component this is handled for you.
+   */
+  id?: string;
+
+  /**
+   * Handler that is called back whenever the radio button element changes its checked state.
+   * When checked will be passed the `value` -
+   * when unchecked will be passed `undefined`.
+
+   * When using this with the `<Rating />` component this is handled for you.
+   */
+  onChange?: (value?: string) => void;
 }
 
-export default function Rating({
-  groupName = 'ak--rating-group',
-  onChange,
-  defaultValue,
-  value,
-  testId,
-  children,
-}: RatingProps) {
-  const [currentValue, setValue] = useState(value || defaultValue);
-  const [firstSelectionMade, setFirstSelectionMade] = useState(!!currentValue);
-  const actualValue = value || currentValue;
-
-  const onChangeHandler = (value: string) => {
-    onChange && onChange(value);
-    setValue(value);
-
-    if (!firstSelectionMade) {
-      setFirstSelectionMade(true);
-    }
-  };
-
-  if (process.env.NODE_ENV !== 'production' && defaultValue && value) {
-    // eslint-disable-next-line no-console
-    console.error(`@atlaskit/rating
-Don't use "defaultValue" with "value" you're trying to mix uncontrolled and controlled modes.
-Use "defaultValue" or "value" happy days :-).
-`);
-  }
-
-  return (
-    <div
-      data-testid={testId && `${testId}--root`}
-      css={css`
-        display: inline-flex;
-        /* Because some children are inline-block we make the font-size zero to eliminate the implicit space between them. */
-        font-size: 0;
-
-        /* This implementation does some interesting tricks to keep it flowing LTR and ensuring accessibility. */
-        /* Instead of it starting in an empty state - it starts filled - and then uses the CSS sibling select "~" */
-        /* to then display the empty state for the star rating. */
-
-        [data-rating-icon-checked] {
-          display: inline-block;
-        }
-
-        [data-rating-icon] {
-          display: none;
-        }
-
-        label:hover
-          ~ label
-          [data-rating-icon-checked][data-rating-icon-checked],
-        input:checked ~ label [data-rating-icon-checked] {
-          display: none;
-        }
-
-        label:hover ~ label [data-rating-icon][data-rating-icon],
-        input:checked ~ label [data-rating-icon] {
-          display: inline-block;
-        }
-
-        /* When hovering reset all elements back to filled state. */
-        &:hover [data-rating-icon-checked][data-rating-icon-checked] {
-          display: inline-block;
-        }
-
-        &:hover [data-rating-icon][data-rating-icon] {
-          display: none;
-        }
-      `}
-    >
-      {!firstSelectionMade && (
-        <Fragment>
-          <label css={assistive} htmlFor={`${groupName}--empty`}></label>
-          <input
-            css={assistive}
-            id={`${groupName}--empty`}
-            data-testid={testId && `${testId}--input-empty`}
-            type="radio"
-            name={groupName}
-            checked={actualValue === undefined}
-            onChange={() => setValue(undefined)}
-            value={undefined}
-          />
-        </Fragment>
-      )}
-
-      {Children.map(children, (child, index) =>
-        cloneElement(child, {
-          onChange: onChangeHandler,
-          name: groupName,
-          id: `${groupName}--${index}`,
-          isChecked: actualValue === child.props.value,
-          testId: testId && `${testId}--${index}`,
-        }),
-      )}
-    </div>
-  );
+export interface InternalRatingProps extends RatingProps {
+  /**
+   * Render callback that should return a ReactNode.
+   * Is passed an argument which is an object with one property `isChecked`.
+   */
+  render: RatingRender;
 }
+
+const Rating = forwardRef<HTMLLabelElement, InternalRatingProps>(
+  (
+    { isChecked, name, testId, label, id, value, onChange, render, ...props },
+    ref,
+  ) => {
+    const onChangeHandler = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        onChange && onChange(e.target.checked ? value : undefined);
+      },
+      [onChange, value],
+    );
+
+    return (
+      <Fragment>
+        <label
+          {...props}
+          ref={ref}
+          htmlFor={id}
+          data-testid={testId && `${testId}--label`}
+          style={{
+            transition: `transform ${smallDurationMs}ms ${easeInOut}`,
+            transform: isChecked ? 'scale(1.2)' : undefined,
+          }}
+        >
+          <Tooltip
+            testId={testId && `${testId}--tooltip`}
+            content={label}
+            delay={10}
+          >
+            {/* When tooltip doesn't render markup move it above <label /> */}
+            <div>
+              <span css={assistive}>{label}</span>
+              {/* We render two slots for the two states of the radio button so we don't need to use react state. */}
+              <span
+                aria-hidden="true"
+                data-rating-icon
+                data-testid={testId && `${testId}--icon-container`}
+              >
+                {render({ isChecked: false })}
+              </span>
+              <span
+                aria-hidden="true"
+                data-rating-icon-checked
+                data-testid={testId && `${testId}--icon-checked-container`}
+              >
+                {render({ isChecked: true })}
+              </span>
+            </div>
+          </Tooltip>
+        </label>
+
+        {/* When tooltip doesn't render markup add another to the input so when it gains focus the tooltip is displayed */}
+        <input
+          id={id}
+          css={assistive}
+          onChange={onChangeHandler}
+          checked={!!isChecked}
+          value={value}
+          name={name}
+          data-testid={testId && `${testId}--input`}
+          type="radio"
+        />
+      </Fragment>
+    );
+  },
+);
+
+export default Rating;

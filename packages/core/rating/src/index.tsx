@@ -1,7 +1,11 @@
-export { default } from './components/rating';
+export {
+  default as RatingGroup,
+  RatingGroupProps,
+} from './components/rating-group';
 export { default as Star, StarProps } from './components/star';
 export {
-  default as RatingItem,
-  RatingItemProps,
-  RatingItemRender,
-} from './components/rating-item';
+  default as Rating,
+  InternalRatingProps,
+  RatingProps,
+  RatingRender,
+} from './components/rating';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { gridSize } from '@atlaskit/theme';
-import Rating, { RatingItem } from '../src/index';
+import { RatingGroup, Rating } from '../src';
 
 const Emoji = ({
   children,
@@ -29,44 +29,38 @@ export default () => {
         textAlign: 'center',
       }}
     >
-      <Rating groupName="rating--custom">
-        <RatingItem
+      <RatingGroup groupName="rating--custom">
+        <Rating
           render={props => <Emoji {...props}>😭</Emoji>}
           label="OMFG"
           value="omfg"
-          id="omfg"
         />
-        <RatingItem
-          render={props => <Emoji {...props}>😬</Emoji>}
+        <Rating
+          render={props => <Emoji {...props}>😞</Emoji>}
           label="Omg.."
           value="omg"
-          id="omg"
         />
-        <RatingItem
-          render={props => <Emoji {...props}>😞</Emoji>}
-          label="Meh"
-          value="meh"
-          id="meh"
+        <Rating
+          render={props => <Emoji {...props}>😬</Emoji>}
+          label="Hmm"
+          value="hmmm"
         />
-        <RatingItem
+        <Rating
           render={props => <Emoji {...props}>🙂</Emoji>}
           label="It's ok"
           value="its-ok"
-          id="its-ok"
         />
-        <RatingItem
+        <Rating
           render={props => <Emoji {...props}>😁</Emoji>}
           label="So good!"
           value="so-good"
-          id="so-good"
         />
-        <RatingItem
+        <Rating
           render={props => <Emoji {...props}>😍</Emoji>}
           label="I LOVE THIS"
           value="love-it"
-          id="love-it"
         />
-      </Rating>
+      </RatingGroup>
     </div>
   );
 };

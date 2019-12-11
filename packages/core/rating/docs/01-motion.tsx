@@ -11,7 +11,7 @@ export default md`
     <Example
       packageName="@atlaskit/rating"
       Component={require('../examples/with-motion').default}
-      title="Star rating composed with motion"
+      title="Star composed with motion"
       source={require('!!raw-loader!../examples/with-motion')}
     />
   )}

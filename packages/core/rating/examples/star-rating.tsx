@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
-import Rating, { Star } from '../src/index';
+import { RatingGroup, Star } from '../src';
 
 const sizes = [
   'small' as const,
@@ -39,37 +39,13 @@ export default () => {
       </ButtonGroup>
 
       <div style={{ margin: '16px 0 8px' }}>
-        <Rating groupName="rating--star">
-          <Star
-            size={size}
-            color={color}
-            label="Terrible"
-            value="one"
-            id="one"
-          />
-          <Star size={size} color={color} label="Meh" value="two" id="two" />
-          <Star
-            size={size}
-            color={color}
-            label="Good"
-            value="three"
-            id="three"
-          />
-          <Star
-            size={size}
-            color={color}
-            label="Great"
-            value="four"
-            id="four"
-          />
-          <Star
-            size={size}
-            color={color}
-            label="Fantastic!"
-            value="five"
-            id="five"
-          />
-        </Rating>
+        <RatingGroup groupName="rating--star">
+          <Star size={size} color={color} label="Terrible" value="one" />
+          <Star size={size} color={color} label="Meh" value="two" />
+          <Star size={size} color={color} label="Good" value="three" />
+          <Star size={size} color={color} label="Great" value="four" />
+          <Star size={size} color={color} label="Fantastic!" value="five" />
+        </RatingGroup>
       </div>
     </div>
   );

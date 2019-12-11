@@ -10,7 +10,9 @@
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Michael Dougall"
+    "Michael Dougall",
+    "Alex Su",
+    "Daniel Del Core"
   ],
   "atlaskit": {
     "name": "Rating",
