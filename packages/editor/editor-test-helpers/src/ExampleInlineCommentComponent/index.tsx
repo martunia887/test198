@@ -21,12 +21,12 @@ const getCommentValue = (id: string) => {
   );
 };
 
-type InlineCommentProps = {
+export type InlineCommentProps = {
   comment: AnnotationInfo;
   onDelete: (id: string) => void;
 };
 
-class InlineComment extends React.Component<InlineCommentProps> {
+export class InlineComment extends React.Component<InlineCommentProps> {
   onDelete = () => {
     const {
       comment: { id },
@@ -107,7 +107,7 @@ export default class ExampleInlineCommentComponent extends React.Component<
     // const { onCreate } = this.props;
     const { commentingValue } = this.state;
 
-    /* 
+    /*
       Component is responsible for creating the inline comment (sync or async),
       then passes the IC's identifier back to the Editor using onSuccess()
     */

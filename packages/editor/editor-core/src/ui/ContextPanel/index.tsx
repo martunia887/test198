@@ -7,7 +7,7 @@ export type Props = {
   width?: number;
 };
 
-const animSpeed = '0.5s;';
+const animSpeed = '0.2s;';
 const width = '300px';
 
 const Panel = styled.div`
@@ -53,11 +53,15 @@ class ContextPanelWithTheme extends React.Component<Props & { theme: any }> {
   }
 
   render() {
-    console.log('theme', this.props.theme);
+    // console.log('theme', this.props.theme);
     return (
       <Panel
         className={
-          this.state.mounted ? (this.props.visible ? 'visible' : 'hidden') : ''
+          this.state.mounted
+            ? this.props.visible || typeof this.props.visible === 'undefined'
+              ? 'visible'
+              : 'hidden'
+            : ''
         }
       >
         <Content>{this.props.children}</Content>

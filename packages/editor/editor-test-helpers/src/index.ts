@@ -125,6 +125,10 @@ export * from './constants';
 export { autoformattingProvider } from './autoformatting-provider';
 export { extensionHandlers } from './extensions';
 export { analyticsClient } from './analytics-client-mock';
-export { default as ExampleInlineCommentComponent } from './ExampleInlineCommentComponent';
+export {
+  default as ExampleInlineCommentComponent,
+  InlineComment,
+  InlineCommentProps,
+} from './ExampleInlineCommentComponent';
 
 export const testMediaFileId = 'a559980d-cd47-43e2-8377-27359fcb905f';
