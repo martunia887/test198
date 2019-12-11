@@ -3,6 +3,7 @@ import {
   fetchJoinableSites,
   transformExperimentSitesToSwitcherSites,
 } from '../../default-joinable-sites-fetch';
+import { ProductKey } from '../../../types';
 
 describe('default-joinable-sites-fetch', () => {
   const experimentApiSites = {
@@ -41,7 +42,7 @@ describe('default-joinable-sites-fetch', () => {
       // Apparently you have to wrap in a try catch -> https://github.com/facebook/jest/issues/1700
       async function testFetch() {
         try {
-          await fetchJoinableSites(['jira-software.ondemand']);
+          await fetchJoinableSites([ProductKey.JIRA_SOFTWARE]);
         } catch (e) {
           throw new Error('testFetchError');
         }
@@ -58,7 +59,7 @@ describe('default-joinable-sites-fetch', () => {
       );
 
       const joinableSites = await fetchJoinableSites([
-        'jira-software.ondemand',
+        ProductKey.JIRA_SOFTWARE,
       ]);
       expect(joinableSites).toStrictEqual(expectedTransformation);
     });
