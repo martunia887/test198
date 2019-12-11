@@ -26,6 +26,9 @@ export const isExternalImageIdentifier = (
   return identifier.mediaItemType === 'external-image';
 };
 
+export const isSameIdentifier = (a: Identifier, b: Identifier) =>
+  !isDifferentIdentifier(a, b);
+
 export const isDifferentIdentifier = (
   a: Identifier,
   b: Identifier,

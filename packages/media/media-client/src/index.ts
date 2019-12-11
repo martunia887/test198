@@ -120,6 +120,7 @@ export {
   isFileIdentifier,
   isExternalImageIdentifier,
   isDifferentIdentifier,
+  isSameIdentifier,
 } from './identifier';
 
 export {
