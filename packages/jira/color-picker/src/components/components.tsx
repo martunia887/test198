@@ -20,7 +20,10 @@ export const MenuList = (props: MenuListComponentProps<Color>) => {
   return (
     <ColorPaletteContainer
       style={{
-        maxWidth: cols ? cols * (COLOR_CARD_SIZE + 2) + gridSize() : undefined,
+        // COLOR_CARD_SIZE + left border + right border
+        maxWidth: cols
+          ? cols * (COLOR_CARD_SIZE + 2 + 2) + gridSize()
+          : undefined,
       }}
       innerRef={innerRef!}
       {...rest}
