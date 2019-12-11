@@ -5,7 +5,7 @@ import EditorContext from './../src/ui/EditorContext';
 import WithEditorActions from './../src/ui/WithEditorActions';
 import { ExampleEditor } from './5-full-page';
 
-import { ContextPanel, AnnotationComponentProps, EditorActions } from '../src';
+import { ContextPanel, AnnotationComponentProps } from '../src';
 import { InlineComment } from '@atlaskit/editor-test-helpers';
 import { exampleDocument } from '../example-helpers/example-doc-with-comments';
 
@@ -17,18 +17,31 @@ const sidebarAnnotationComponent = (
     AnnotationComponentProps
   > {
     componentDidMount() {
+      if (!contextPanel.current) {
+        return;
+      }
+
       contextPanel.current.setState({
         visible: true,
       });
     }
 
     componentWillUnmount() {
+      if (!contextPanel.current) {
+        return;
+      }
+
       contextPanel.current.setState({
         visible: false,
       });
     }
 
     render() {
+      // no where to render content
+      if (!portalRef.current) {
+        return null;
+      }
+
       const comments = this.props.annotations
         .filter(ann => ann.type === 'inlineComment')
         .map(comment => (
@@ -38,8 +51,6 @@ const sidebarAnnotationComponent = (
             onDelete={this.props.onDelete}
           />
         ));
-
-      console.log(comments, this.props);
 
       return ReactDOM.createPortal(comments, portalRef.current);
     }
@@ -61,14 +72,7 @@ class StatefulContextPanel extends React.Component<{
   }
 }
 
-class EditorWithSidebar extends React.Component<{
-  actions: EditorActions;
-}> {
-  state = {
-    sidebarVisible: true,
-    selectedTemplate: null,
-  };
-
+class EditorWithSidebar extends React.Component {
   panel = React.createRef<StatefulContextPanel>();
   panelContent = React.createRef<HTMLDivElement>();
 
@@ -96,7 +100,7 @@ export default function Example() {
       <div style={{ height: '100%' }}>
         <WithEditorActions
           render={actions => {
-            return <EditorWithSidebar actions={actions} />;
+            return <EditorWithSidebar />;
           }}
         />
       </div>
