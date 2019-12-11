@@ -195,6 +195,7 @@ export default class RendererDemo extends React.Component<
   inputBox?: HTMLTextAreaElement | null;
   inputCopies?: HTMLInputElement | null;
   emailTextareaRef?: any;
+  iframeLocation?: React.RefObject<HTMLDivElement>;
 
   constructor(props: DemoRendererProps) {
     super(props);
@@ -215,6 +216,8 @@ export default class RendererDemo extends React.Component<
       shouldUseEventHandlers: false,
       copies: props.copies || 1,
     };
+
+    this.iframeLocation = React.createRef();
   }
 
   private handlePortalRef = (portal: HTMLElement | null) => {
@@ -226,6 +229,7 @@ export default class RendererDemo extends React.Component<
       <Sidebar showSidebar={this.state.showSidebar}>
         {(additionalRendererProps: object) => (
           <div ref="root" style={{ padding: 20 }}>
+            <div ref={this.iframeLocation}></div>
             <fieldset style={{ marginBottom: 20 }}>
               <legend>Input</legend>
               <textarea
@@ -318,6 +322,7 @@ export default class RendererDemo extends React.Component<
       }
 
       props.appearance = this.props.appearance;
+      props.iframeWidthDetectorFallback = this.iframeLocation;
 
       const expandButton = (
         <div>

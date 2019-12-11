@@ -17,6 +17,7 @@ import {
   getResponseEndTime,
   startMeasure,
   stopMeasure,
+  SwitchWidthDetectorProvider,
 } from '@atlaskit/editor-common';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
@@ -61,6 +62,7 @@ export interface Props {
   allowColumnSorting?: boolean;
   shouldOpenMediaViewer?: boolean;
   UNSAFE_allowAltTextOnImages?: boolean;
+  iframeWidthDetectorFallback?: React.RefObject<HTMLDivElement>;
 }
 
 export class Renderer extends PureComponent<Props, {}> {
@@ -209,6 +211,7 @@ export class Renderer extends PureComponent<Props, {}> {
       truncated,
       maxHeight,
       fadeOutHeight,
+      iframeWidthDetectorFallback,
     } = this.props;
 
     try {
@@ -232,15 +235,22 @@ export class Renderer extends PureComponent<Props, {}> {
               }}
             >
               <SmartCardStorageProvider>
-                <RendererWrapper
-                  appearance={appearance}
-                  dynamicTextSizing={!!allowDynamicTextSizing}
-                  wrapperRef={ref => {
-                    this.editorRef = ref;
+                <SwitchWidthDetectorProvider
+                  value={{
+                    shouldUseOldWidthProvider: false,
+                    iframeWidthDetectorFallback,
                   }}
                 >
-                  {result}
-                </RendererWrapper>
+                  <RendererWrapper
+                    appearance={appearance}
+                    dynamicTextSizing={!!allowDynamicTextSizing}
+                    wrapperRef={ref => {
+                      this.editorRef = ref;
+                    }}
+                  >
+                    {result}
+                  </RendererWrapper>
+                </SwitchWidthDetectorProvider>
               </SmartCardStorageProvider>
             </AnalyticsContext.Provider>
           </IntlProvider>
