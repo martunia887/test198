@@ -14,6 +14,7 @@ import { createError, MediaViewerError } from '../../error';
 import { InteractiveImg } from './interactive-img';
 import { AnalyticViewerProps } from '../../analytics/item-viewer';
 import { BaseViewer } from '../base-viewer';
+import { clearlyTempAndExperimentalObjectUrlCache } from '../../list';
 
 export type ObjectUrl = string;
 
@@ -59,7 +60,12 @@ export class ImageViewer extends BaseViewer<
       let objectUrl: string;
 
       const { preview } = fileState;
-      if (preview) {
+      const cachedObject =
+        clearlyTempAndExperimentalObjectUrlCache[fileState.id];
+      if (cachedObject) {
+        objectUrl = cachedObject.objectUrl;
+        orientation = cachedObject.orientation;
+      } else if (preview) {
         const { value } = await preview;
         if (value instanceof Blob) {
           orientation = await getOrientation(value as File);
@@ -90,7 +96,10 @@ export class ImageViewer extends BaseViewer<
         });
         return;
       }
-
+      clearlyTempAndExperimentalObjectUrlCache[fileState.id] = {
+        objectUrl,
+        orientation,
+      };
       this.setState({
         content: Outcome.successful({ objectUrl, orientation }),
       });
@@ -110,10 +119,6 @@ export class ImageViewer extends BaseViewer<
     if (this.cancelImageFetch) {
       this.cancelImageFetch();
     }
-
-    this.state.content.whenSuccessful(({ objectUrl }) => {
-      this.revokeObjectUrl(objectUrl);
-    });
   }
 
   // This method is spied on by some test cases, so don't rename or remove it.

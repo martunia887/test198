@@ -42,6 +42,10 @@ export type State = {
   direction: NavigationDirection;
 };
 
+export const clearlyTempAndExperimentalObjectUrlCache: {
+  [key: string]: { objectUrl: string; orientation: number };
+} = {};
+
 export class List extends React.Component<Props, State> {
   state: State = {
     selectedItem: this.props.defaultSelectedItem,
@@ -69,6 +73,12 @@ export class List extends React.Component<Props, State> {
     });
   }
 
+  componentWillUnmount(): void {
+    Object.values(
+      clearlyTempAndExperimentalObjectUrlCache,
+    ).forEach(({ objectUrl }) => URL.revokeObjectURL(objectUrl));
+  }
+
   render() {
     const { items } = this.props;
 
@@ -90,7 +100,7 @@ export class List extends React.Component<Props, State> {
     );
 
     const prerenderItems: Identifier[] = [];
-    for (let i = selectedItemIndex - 1; i < selectedItemIndex + 2; i++) {
+    for (let i = selectedItemIndex - 2; i < selectedItemIndex + 3; i++) {
       if (i >= 0 && i < items.length && i !== selectedItemIndex) {
         prerenderItems.push(items[i]);
       }
