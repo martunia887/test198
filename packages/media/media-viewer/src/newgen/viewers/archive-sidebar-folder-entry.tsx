@@ -2,7 +2,8 @@ import * as React from 'react';
 import { ZipEntry } from 'zipizape';
 
 import { MediaType } from '@atlaskit/media-client';
-import FolderIcon from '@atlaskit/icon/glyph/media-services/unknown';
+import ChevronDown from '@atlaskit/icon/glyph/chevron-down';
+import ChevronRight from '@atlaskit/icon/glyph/chevron-right';
 import { MediaTypeIcon } from '../media-type-icon';
 import {
   ArchiveSidebarFolderHeader,
@@ -78,7 +79,12 @@ export class ArchiveSidebarFolderEntry extends React.Component<
       <React.Fragment>
         {root != '' ? (
           <ArchiveSidebarFolderHeader onClick={this.toggleOpen}>
-            <FolderIcon label="folder" size="large" />
+            {isOpen ? (
+              <ChevronDown label="folder" size="large" />
+            ) : (
+              <ChevronRight label="folder" size="large" />
+            )}
+
             <ArchiveSidebarEntryLabel>{name || root}</ArchiveSidebarEntryLabel>
           </ArchiveSidebarFolderHeader>
         ) : null}
