@@ -11,7 +11,7 @@ import { MediaViewerError, ErrorName, ErrorMessage } from '../error';
 import { BaseViewer } from './base-viewer';
 import { ZipiZape, ZipEntry, EntryContent } from 'zipizape';
 import { InteractiveImg } from './image/interactive-img';
-import { CustomMediaPlayer } from '../../../../media-ui/src/customMediaPlayer';
+import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { JSXElement } from '@babel/types';
 import { FormattedMessage } from 'react-intl';
 
@@ -129,6 +129,10 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
   }
 
   private renderVideo(content: string) {
-    return <h1>VIDEO UNSUPPORTED</h1>;
+    return (
+      <CustomVideoPlayerWrapper data-testid="media-viewer-video-content">
+        <CustomMediaPlayer type="video" isAutoPlay={false} src={content} />
+      </CustomVideoPlayerWrapper>
+    );
   }
 }
