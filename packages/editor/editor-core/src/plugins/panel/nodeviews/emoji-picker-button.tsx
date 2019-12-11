@@ -9,8 +9,10 @@ import Popup from '../../../../../editor-common/src/ui/Popup';
 import EmojiPicker, {
   EmojiId,
   OptionalEmojiDescription,
+  Emoji,
 } from '../../../../../../elements/emoji/src';
 import { pluginKey as panelPluginKey } from '../pm-plugins/main';
+import { getEmojiRepository } from '../../../../../../elements/util-data-test/src/emoji/story-data';
 
 const { getEmojiResource } = emoji.storyData;
 
@@ -21,36 +23,53 @@ export type Props = {
 
 export type State = {
   popupIsOpened?: Boolean;
+  activeIcon?: string;
 };
 
 export default class EmojiPickerButton extends Component<Props, State> {
   buttonRef: RefObject<Button>;
   state = {
     popupIsOpened: false,
+    activeIcon: '',
   };
 
   constructor(props: any) {
     super(props);
     this.buttonRef = React.createRef();
-    console.log(props);
   }
 
   togglePopup = () => {
     this.setState({ popupIsOpened: !this.state.popupIsOpened });
   };
 
+  componentDidMount() {
+    const editorView = this.props.view as EditorView<any>;
+    const panelPluginState = panelPluginKey.getState(editorView.state);
+    if (panelPluginState.activePanelIcon) {
+      this.setState({ activeIcon: panelPluginState.activePanelIcon });
+    }
+  }
+
   render() {
+    let icon = <MoreIcon label="Select Icon"></MoreIcon>;
+
+    if (this.state.activeIcon) {
+      const emojiService = getEmojiRepository();
+      const emojiShortName = emojiService.findByShortName(
+        this.state.activeIcon,
+      );
+
+      icon = <Emoji key={1} emoji={emojiShortName} showTooltip={true} />;
+    }
     return (
       <React.Fragment>
         <Button
           spacing="compact"
-          style={{ padding: 0, display: 'flex' }}
+          style={{ padding: 0, display: 'flex', background: 'none' }}
           onClick={this.togglePopup}
           ref={this.buttonRef}
         >
-          <MoreIcon label="Select Icon"></MoreIcon>
-          {/* this component could be used to display selected emoji
-                <Emoji key={1} emoji={grimacing} showTooltip={true}/> */}
+          {icon}
         </Button>
         {this.renderPopup()}
       </React.Fragment>
@@ -59,6 +78,10 @@ export default class EmojiPickerButton extends Component<Props, State> {
 
   private updateEmoji = (emoji: EmojiId) => {
     const editorView = this.props.view as EditorView<any>;
+    this.setState({
+      activeIcon: emoji.shortName,
+      popupIsOpened: !this.state.popupIsOpened,
+    });
     changePanelType('emoji', {
       emoji: emoji,
     })(editorView.state, editorView.dispatch);
