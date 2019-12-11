@@ -2,7 +2,6 @@ import * as React from 'react';
 import { MediaClient, FileState } from '@atlaskit/media-client';
 import { Outcome } from '../domain';
 import {
-  ArchiveSideBar,
   ArchiveWrapper,
   ArchiveItemViewer,
   CustomVideoPlayerWrapper,
@@ -18,7 +17,7 @@ import { ZipiZape, ZipEntry, EntryContent } from 'zipizape';
 import { InteractiveImg } from './image/interactive-img';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { PDFRenderer } from './doc/pdfRenderer';
-import { SidebarFolderEntry } from './sidebarFolderEntry';
+import { ArchiveSidebar } from './archive-sidebar';
 
 export type Props = {
   mediaClient: MediaClient;
@@ -73,22 +72,12 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
 
     return (
       <ArchiveWrapper>
-        {this.renderArchiveSideBar(entries)}
-        {this.renderArchiveItemViewer(selectedEntryContent)}
-      </ArchiveWrapper>
-    );
-  }
-
-  private renderArchiveSideBar(entries: ZipEntry[]) {
-    return (
-      <ArchiveSideBar>
-        <SidebarFolderEntry
-          root=""
+        <ArchiveSidebar
           entries={entries}
           onEntrySelected={this.changeSelectedEntry}
-          isDefaultOpen
         />
-      </ArchiveSideBar>
+        {this.renderArchiveItemViewer(selectedEntryContent)}
+      </ArchiveWrapper>
     );
   }
 
