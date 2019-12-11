@@ -13,15 +13,6 @@ export type State = {
   selected: Geolocation;
 };
 
-const normaliseLocations = (
-  locations: Geolocation[] = [],
-  selected?: Geolocation,
-) => {
-  if (selected && locations.indexOf(selected) === -1) {
-    return [...locations, selected];
-  } else return locations;
-};
-
 export default class MapViewer extends React.Component<MapViewerProps> {
   mapContainer: HTMLDivElement | null = null;
   mapHandler?: MapHandler;
@@ -29,11 +20,7 @@ export default class MapViewer extends React.Component<MapViewerProps> {
   componentDidMount() {
     const { locations, selected } = this.props;
     if (this.mapContainer) {
-      this.mapHandler = new MapHandler(
-        this.mapContainer,
-        normaliseLocations(locations, selected),
-        selected,
-      );
+      this.mapHandler = new MapHandler(this.mapContainer, locations, selected);
     }
   }
 

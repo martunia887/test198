@@ -28,24 +28,39 @@ const debouncedLoadOptions = debounce(loadOptions, 1000, {
 });
 
 // There is a problem with ValueType definition
-const showInMap = (mapHandler: MapHandler, selected: any) => {
-  if (selected && selected.value instanceof Geolocation) {
-    mapHandler.goTo(selected.value);
+const showInMap = (
+  mapHandler: MapHandler,
+  newSelected: Geolocation,
+  oldSelected?: Geolocation,
+) => {
+  if (oldSelected) {
+    mapHandler.removeLocation(oldSelected);
   }
+  mapHandler.addLocation(newSelected);
 };
 
-const AsyncExample = ({ mapHandler }: { mapHandler: MapHandler }) => (
-  <AsyncSelect
-    styles={styles}
-    className="async-select-with-callback"
-    classNamePrefix="react-select"
-    loadOptions={debouncedLoadOptions}
-    // loadOptions={loadOptions}
-    // defaultOptions
-    // options={loadOptions}
-    placeholder="Search for a place"
-    onChange={(selected: any) => showInMap(mapHandler, selected)}
-  />
-);
+export type GeocoderProps = {
+  mapHandler: MapHandler;
+};
 
-export default AsyncExample;
+const Geocoder = ({ mapHandler }: GeocoderProps) => {
+  const [selected, setSelected] = React.useState<Geolocation>();
+  return (
+    <AsyncSelect
+      styles={styles}
+      className="async-select-with-callback"
+      classNamePrefix="react-select"
+      loadOptions={debouncedLoadOptions}
+      // loadOptions={loadOptions}
+      // defaultOptions
+      // options={loadOptions}
+      placeholder="Search for a place"
+      onChange={(newSelected: any) => {
+        showInMap(mapHandler, newSelected.value, selected);
+        setSelected(newSelected.value);
+      }}
+    />
+  );
+};
+
+export default Geocoder;

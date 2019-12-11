@@ -45,7 +45,7 @@ export const initMap = (
   const map = new MapboxMap(mapOptions);
   return new Promise((resolve, reject) => {
     map.on('load', () => {
-      addMarkersToMap(map, markers);
+      addMarkers(map, markers);
       resolve(map);
     });
   });
@@ -93,6 +93,10 @@ export function centerAll(map: MapboxMap, coords: LngLatLike[]) {
   }
 }
 
-export const addMarkersToMap = (map: MapboxMap, markers: Marker[]) => {
+export const addMarkers = (map: MapboxMap, markers: Marker[]) => {
   markers.forEach(marker => marker.addTo(map));
+};
+
+export const removeMarkers = (markers: Marker[]) => {
+  markers.forEach(marker => marker.remove());
 };
