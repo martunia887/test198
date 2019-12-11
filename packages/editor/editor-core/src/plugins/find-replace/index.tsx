@@ -12,11 +12,12 @@ import {
   unfocus,
 } from './commands';
 import FindReplaceToolbarButton from './ui/FindReplaceToolbarButton';
-import { findAll } from './utils';
+import { BatchFinder } from './utils/batch-finder';
 
 // todo: any options needed?
 export const findReplacePlugin = (): EditorPlugin => {
   let findReplaceInputRef: React.RefObject<HTMLInputElement>;
+  const batchFinder = new BatchFinder();
 
   return {
     name: 'findReplace',
@@ -62,7 +63,7 @@ export const findReplacePlugin = (): EditorPlugin => {
       // todo: reduce duplication
       const handleFind = (keyword?: string) => {
         editorView.focus();
-        findAll(editorView, keyword, containerElement);
+        batchFinder.findAll(editorView, keyword, containerElement);
         focusFindReplace();
       };
       const handleFindNext = () => {
