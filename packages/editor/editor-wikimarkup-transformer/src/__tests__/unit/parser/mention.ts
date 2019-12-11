@@ -14,4 +14,11 @@ describe('WikiMarkup => ADF Formatters - citation', () => {
     const transformer = new WikiMarkupTransformer();
     expect(transformer.parse(wiki, context)).toMatchSnapshot();
   });
+
+  test('Should convert mention without context', () => {
+    const wiki = 'Hi [~accountid:78032763-2feb-4f5b-88c0-99b50613d53a],';
+
+    const transformer = new WikiMarkupTransformer();
+    expect(transformer.parse(wiki)).toMatchSnapshot();
+  });
 });
