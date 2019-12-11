@@ -7,6 +7,7 @@ import mapboxgl, {
   LngLatLike,
   MarkerOptions,
 } from 'mapbox-gl';
+import { Coords } from './../..';
 import { DEFAULT_ZOOM, MAP_PADDING } from './deafult-options';
 
 mapboxgl.accessToken =
@@ -100,4 +101,14 @@ export const addMarkers = (map: MapboxMap, markers: Marker[]) => {
 
 export const removeMarkers = (markers: Marker[]) => {
   markers.forEach(marker => marker.remove());
+};
+
+export const onMarkerDragEnd = (
+  marker: Marker,
+  callback: (coords: Coords) => void,
+) => {
+  marker.on('dragend', () => {
+    const { lat, lng } = marker.getLngLat();
+    callback({ lat, lng });
+  });
 };

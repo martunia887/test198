@@ -30,9 +30,8 @@ const locationToMarker = (
     ...options,
   });
   if (options && options.draggable) {
-    newMarker.on('dragend', () => {
-      const { lat, lng } = newMarker.getLngLat();
-      location.coords = { lat, lng };
+    mapbox.onMarkerDragEnd(newMarker, coords => {
+      location.coords = coords;
     });
   }
   return newMarker;
