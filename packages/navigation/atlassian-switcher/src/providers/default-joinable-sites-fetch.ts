@@ -49,7 +49,7 @@ export const transformExperimentSitesToSwitcherSites = (
 };
 
 export const fetchJoinableSites = (
-  products: string[],
+  products: ProductKey[],
   baseUrl: string = '',
   resultTransformer: (
     rawResponse: any,
