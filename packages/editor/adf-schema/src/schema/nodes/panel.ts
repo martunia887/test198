@@ -15,6 +15,8 @@ export type PanelType =
 
 export interface PanelAttributes {
   panelType: PanelType;
+  panelIcon: string;
+  panelColor: string;
 }
 
 /**
@@ -38,6 +40,8 @@ export const panel: NodeSpec = {
   content: '(paragraph | heading | bulletList | orderedList)+',
   attrs: {
     panelType: { default: 'info' },
+    panelIcon: { default: '' },
+    panelColor: { default: '' },
   },
   parseDOM: [
     {
