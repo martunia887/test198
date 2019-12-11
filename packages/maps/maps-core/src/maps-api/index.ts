@@ -2,34 +2,6 @@ import * as mapbox from './mapbox';
 import { MapboxMap, Marker } from './mapbox';
 import { Geolocation } from '../';
 
-let locationsMarkers: Map<Geolocation, Marker>;
-let mapPromise: Promise<MapboxMap> | undefined;
-let map: MapboxMap | undefined;
-
-export const openMap = async (
-  container: HTMLDivElement,
-  locations?: Geolocation[],
-  selected?: Geolocation,
-) => {
-  locationsMarkers = createLocationsMarkers(locations || []);
-  const allMarkers = getMarkers(locationsMarkers);
-  mapPromise = mapbox.initMap(
-    container,
-    allMarkers,
-    selected && locationsMarkers.get(selected),
-  );
-  map = await mapPromise;
-};
-
-export const removeMap = async () => {
-  if (mapPromise) {
-    const returnedMap = await mapPromise;
-    mapbox.removeMap(returnedMap);
-    map = undefined;
-    mapPromise = undefined;
-  }
-};
-
 const getMarkers = (locationsMap: Map<Geolocation, Marker>) =>
   Array.from(locationsMap.values());
 const getGeolocations = (locationsMap: Map<Geolocation, Marker>) =>
@@ -53,12 +25,53 @@ const locationToMarker = (location: Geolocation): Marker => {
   return mapbox.createMarker(coords, iconColor);
 };
 
-export const goTo = async (location: Geolocation) => {
-  if (!map) return;
-  mapbox.goToCoords(map, location.coords);
-};
+export default class {
+  mapPromise: Promise<MapboxMap> | undefined;
+  map: MapboxMap | undefined;
+  locationsMarkers: Map<Geolocation, Marker> = new Map();
 
-export const centerAll = async () => {
-  if (!map) return;
-  mapbox.centerAll(map, getCoordsSet(locationsMarkers));
-};
+  constructor(
+    container: HTMLDivElement,
+    locations?: Geolocation[],
+    selected?: Geolocation,
+  ) {
+    this.openMap(container, locations, selected);
+  }
+
+  openMap = async (
+    container: HTMLDivElement,
+    locations?: Geolocation[],
+    selected?: Geolocation,
+  ) => {
+    await this.closeMap();
+    this.locationsMarkers = createLocationsMarkers(locations || []);
+    const allMarkers = getMarkers(this.locationsMarkers);
+    this.mapPromise = mapbox.initMap(
+      container,
+      allMarkers,
+      selected && this.locationsMarkers.get(selected),
+    );
+    this.map = await this.mapPromise;
+  };
+
+  closeMap = async () => {
+    if (this.mapPromise) {
+      const returnedMap = await this.mapPromise;
+      mapbox.removeMap(returnedMap);
+      this.map = undefined;
+      this.mapPromise = undefined;
+    }
+  };
+
+  getLocations = () => getGeolocations(this.locationsMarkers);
+
+  goTo = async (location: Geolocation) => {
+    if (!this.map) return;
+    mapbox.goToCoords(this.map, location.coords);
+  };
+
+  centerAll = async () => {
+    if (!this.map) return;
+    mapbox.centerAll(this.map, getCoordsSet(this.locationsMarkers));
+  };
+}

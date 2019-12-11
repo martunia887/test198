@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Item } from '@atlaskit/navigation-next';
 import LocationIcon from '@atlaskit/icon/glyph/location';
 import JiraCaptureIcon from '@atlaskit/icon/glyph/jira/capture';
-import { Geolocation, goTo, centerAll } from '@atlaskit/maps-core';
+import { Geolocation, MapHandler } from '@atlaskit/maps-core';
 
 const round = (num: number, decimals: number = 2) =>
   Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
@@ -13,7 +13,8 @@ const getTitle = (location: Geolocation) => {
   return name || address || formatedTitleCoords;
 };
 
-export default ({ locations }: { locations: Geolocation[] }) => {
+export default ({ mapHandler }: { mapHandler: MapHandler }) => {
+  const locations = mapHandler.getLocations();
   if (locations.length === 0) {
     return null;
   }
@@ -24,7 +25,7 @@ export default ({ locations }: { locations: Geolocation[] }) => {
         <Item
           before={JiraCaptureIcon}
           text={'Center All'}
-          onClick={() => centerAll()}
+          onClick={() => mapHandler.centerAll()}
         />
       )}
       {locations.map((location, i) => {
@@ -37,7 +38,7 @@ export default ({ locations }: { locations: Geolocation[] }) => {
             key={i}
             before={icon}
             text={title}
-            onClick={() => goTo(location)}
+            onClick={() => mapHandler.goTo(location)}
           />
         );
       })}{' '}

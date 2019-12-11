@@ -1,5 +1,5 @@
 export { default as locationsManager } from './locations-manager';
-export * from './maps-api';
+export { default as MapHandler } from './maps-api';
 export * from './util';
 export * from './services';
 

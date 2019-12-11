@@ -1,6 +1,6 @@
 import React from 'react';
 import { AsyncSelect } from '@atlaskit/select';
-import { geocoder, Geolocation, goTo } from '@atlaskit/maps-core';
+import { geocoder, Geolocation, MapHandler } from '@atlaskit/maps-core';
 import debounce from 'lodash.debounce';
 
 const styles = {
@@ -28,13 +28,13 @@ const debouncedLoadOptions = debounce(loadOptions, 1000, {
 });
 
 // There is a problem with ValueType definition
-const showInMap = (selected: any) => {
+const showInMap = (mapHandler: MapHandler, selected: any) => {
   if (selected && selected.value instanceof Geolocation) {
-    goTo(selected.value);
+    mapHandler.goTo(selected.value);
   }
 };
 
-const AsyncExample = () => (
+const AsyncExample = ({ mapHandler }: { mapHandler: MapHandler }) => (
   <AsyncSelect
     styles={styles}
     className="async-select-with-callback"
@@ -44,7 +44,7 @@ const AsyncExample = () => (
     // defaultOptions
     // options={loadOptions}
     placeholder="Search for a place"
-    onChange={showInMap}
+    onChange={(selected: any) => showInMap(mapHandler, selected)}
   />
 );
 

@@ -88,7 +88,9 @@ export function goToCoords(
 
 export function centerAll(map: MapboxMap, coords: LngLatLike[]) {
   var bounds = createBounds(coords);
-  map.fitBounds(bounds, { padding: MAP_PADDING });
+  if (bounds) {
+    map.fitBounds(bounds, { padding: MAP_PADDING });
+  }
 }
 
 export const addMarkersToMap = (map: MapboxMap, markers: Marker[]) => {
