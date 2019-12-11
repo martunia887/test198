@@ -6,6 +6,7 @@ import ChevronUpIcon from '@atlaskit/icon/glyph/hipchat/chevron-up';
 import Textfield from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
+import debounce from 'lodash.debounce';
 
 const Wrapper = styled.div`
   display: flex;
@@ -118,9 +119,13 @@ class FindReplace extends React.PureComponent<
   };
 
   handleFindChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ findInputValue: event.target.value });
-    this.props.onFindChange(event.target.value);
+    this.updateFindValue(event.target.value);
   };
+
+  updateFindValue = debounce((value: string) => {
+    this.setState({ findInputValue: value });
+    this.props.onFindChange(value);
+  }, 50);
 
   handleFindKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {

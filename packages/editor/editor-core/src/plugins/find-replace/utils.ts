@@ -75,9 +75,12 @@ function addDecorationsBetween(
   endPos?: number,
 ) {
   const { matches, selectionPos } = getFindReplacePluginState(editorView.state);
-  const selectionIndex = findSearchIndex(selectionPos, matches);
   const matchesBetween = matches.filter(
     m => m.start >= startPos && (endPos === undefined || m.start < endPos),
+  );
+  const selectionMatch = matches.find(match => match.start >= selectionPos);
+  const selectionIndex = matchesBetween.findIndex(
+    match => match === selectionMatch,
   );
 
   return batchRequests(
@@ -87,10 +90,15 @@ function addDecorationsBetween(
         counter + batchIncrement,
       );
       if (matchesToDecorate.length > 0) {
-        addDecorations(createDecorations(selectionIndex, matchesToDecorate))(
-          editorView.state,
-          editorView.dispatch,
-        );
+        const useSelectionIndex =
+          selectionIndex >= counter &&
+          selectionIndex < counter + batchIncrement;
+        addDecorations(
+          createDecorations(
+            useSelectionIndex ? selectionIndex % batchIncrement : -1,
+            matchesToDecorate,
+          ),
+        )(editorView.state, editorView.dispatch);
       }
     },
     { increment: batchIncrement, until: matchesBetween.length },
@@ -179,13 +187,14 @@ export async function findAll(
   let dir = 0;
   let before = start;
   let after = start + diff;
+  await updateDecorationsBetween(editorView, start, end);
   while (before > 0 || after < maxPos) {
     if ((dir++ % 2 === 0 && before > 0) || after >= maxPos) {
+      before = Math.max(before - diff, 0);
       await updateDecorationsBetween(editorView, before, before + diff);
-      before -= diff;
     } else {
+      after = Math.min(after + diff, maxPos);
       await updateDecorationsBetween(editorView, after, after + diff);
-      after += diff;
     }
   }
 }
