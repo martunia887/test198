@@ -9,9 +9,15 @@ import {
   hideControlsClassName,
   WithShowControlMethodProp,
 } from '@atlaskit/media-ui';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { ItemViewer } from './item-viewer';
-import { HeaderWrapper, ListWrapper, ItemViewerWrapper } from './styled';
-import { Navigation } from './navigation';
+import {
+  HeaderWrapper,
+  ListWrapper,
+  ItemViewerWrapper,
+  animationSpeedInMs,
+} from './styled';
+import { Navigation, NavigationDirection } from './navigation';
 import Header from './header';
 import { MediaViewerExtensions } from '../components/types';
 
@@ -31,12 +37,14 @@ export type Props = Readonly<
 export type State = {
   selectedItem: Identifier;
   previewCount: number;
+  direction: NavigationDirection;
 };
 
 export class List extends React.Component<Props, State> {
   state: State = {
     selectedItem: this.props.defaultSelectedItem,
     previewCount: 0,
+    direction: 'next',
   };
 
   async componentDidMount() {
@@ -65,6 +73,38 @@ export class List extends React.Component<Props, State> {
 
     return this.renderContent(items);
   }
+
+  private renderViewer2 = () => {
+    const { showControls, mediaClient, onClose, isSidebarVisible } = this.props;
+    const { selectedItem } = this.state;
+
+    return (
+      <TransitionGroup
+        // className={
+        //   'todo-list ' +
+        //   (item.moveRight ? 'move-right' : 'move-left')
+        // }
+        component={React.Fragment}
+      >
+        <CSSTransition
+          key={generateIdentifierKey(selectedItem)}
+          timeout={animationSpeedInMs}
+          classNames="item-viewer"
+        >
+          <ItemViewerWrapper className="item-viewer-wrapper">
+            <ItemViewer
+              mediaClient={mediaClient}
+              identifier={selectedItem}
+              showControls={showControls}
+              onClose={onClose}
+              previewCount={this.state.previewCount}
+              isSidebarVisible={isSidebarVisible}
+            />
+          </ItemViewerWrapper>
+        </CSSTransition>
+      </TransitionGroup>
+    );
+  };
 
   private renderViewer = () => {
     const {
@@ -126,10 +166,12 @@ export class List extends React.Component<Props, State> {
       onSidebarButtonClick,
       isSidebarVisible,
     } = this.props;
-    const { selectedItem } = this.state;
+    const { selectedItem, direction } = this.state;
 
     return (
-      <ListWrapper>
+      <ListWrapper
+        className={direction === 'next' ? 'move-right' : 'move-left'}
+      >
         <HeaderWrapper className={hideControlsClassName}>
           <Header
             mediaClient={mediaClient}
@@ -140,7 +182,7 @@ export class List extends React.Component<Props, State> {
             isSidebarVisible={isSidebarVisible}
           />
         </HeaderWrapper>
-        {this.renderViewer()}
+        {this.renderViewer2()}
         <Navigation
           items={items}
           selectedItem={selectedItem}
@@ -150,7 +192,10 @@ export class List extends React.Component<Props, State> {
     );
   }
 
-  onNavigationChange = (selectedItem: Identifier) => {
+  onNavigationChange = (
+    selectedItem: Identifier,
+    direction: NavigationDirection,
+  ) => {
     const { onNavigationChange, showControls } = this.props;
     if (onNavigationChange) {
       onNavigationChange(selectedItem);
@@ -159,6 +204,10 @@ export class List extends React.Component<Props, State> {
       showControls();
     }
 
-    this.setState({ selectedItem, previewCount: this.state.previewCount + 1 });
+    this.setState({
+      selectedItem,
+      previewCount: this.state.previewCount + 1,
+      direction,
+    });
   };
 }

@@ -45,7 +45,6 @@ export interface Props extends WithAnalyticsEventsProps {
   onLoad?: () => void;
   onError?: () => void;
   onBlanketClicked?: () => void;
-  className?: string;
 }
 
 export type State = {
@@ -89,7 +88,7 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
   };
 
   render() {
-    const { src, orientation, onError, className } = this.props;
+    const { src, orientation, onError } = this.props;
     const { zoomLevel, camera, isDragging } = this.state;
 
     const canDrag = camera.match({
@@ -113,7 +112,6 @@ export class InteractiveImgComponent extends React.Component<Props, State> {
         data-testid="media-viewer-image-content"
         onClick={this.onImageClicked}
         innerRef={this.saveWrapperRef}
-        className={className}
       >
         <Img
           data-testid="media-viewer-image"

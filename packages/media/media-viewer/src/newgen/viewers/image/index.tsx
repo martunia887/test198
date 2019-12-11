@@ -22,7 +22,6 @@ export type ImageViewerProps = AnalyticViewerProps & {
   item: FileState;
   collectionName?: string;
   onClose?: () => void;
-  className?: string;
 };
 
 export interface ImageViewerContent {
@@ -123,10 +122,9 @@ export class ImageViewer extends BaseViewer<
   }
 
   protected renderSuccessful(content: ImageViewerContent) {
-    const { onClose, className } = this.props;
+    const { onClose } = this.props;
     return (
       <InteractiveImg
-        className={className}
         onLoad={this.onLoad}
         onError={this.onError}
         src={content.objectUrl}

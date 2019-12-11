@@ -86,6 +86,8 @@ export const CloseButtonWrapper = styled.div`
   z-index: ${overlayZindex + 2};
 `;
 
+export const animationSpeedInMs = 1000;
+
 export const ZoomWrapper = styled.div`
   width: 100%;
   position: absolute;
@@ -94,6 +96,28 @@ export const ZoomWrapper = styled.div`
   background-image: linear-gradient(to top, #0e1624, rgba(14, 22, 36, 0));
   opacity: 0.85;
   pointer-events: none;
+
+  //transition: opacity ${animationSpeedInMs}ms;
+  // .item-viewer-enter &{
+  //   bottom: -98px;
+  //   //transform: translateY(98px);
+  // }
+  // .item-viewer-enter-active &{
+  //   bottom: 0;
+  //   transition: bottom ${animationSpeedInMs}ms;
+  //   //transform: translateY(0px);
+  //   //transition: transform ${animationSpeedInMs}ms;
+  // }
+  // .item-viewer-exit &{
+  //   bottom: 0;
+  //   //transform: translateY(0px);
+  // }
+  // .item-viewer-exit-active &{
+  //   bottom: -98px;
+  //   transition: bottom ${animationSpeedInMs}ms;
+  //   //transform: translateY(98px);
+  //   //transition: transform ${animationSpeedInMs}ms;
+  // }
 `;
 
 export const ZoomControlsWrapper = styled.div`
@@ -203,8 +227,6 @@ export const ImageWrapper = styled.div`
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
-  position: absolute;
-  transition: transform 0.5s;
 `;
 
 export const BaselineExtend = styled.div`
@@ -369,24 +391,34 @@ export const SidebarWrapper = styled.div`
 export const ItemViewerWrapper = styled.div`
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 
-  .prev-prev-item {
-    transform: translateX(-200%);
-  }
-
-  .prev-item {
+  .move-right &.item-viewer-enter {
     transform: translateX(-100%);
   }
-
-  .current-item {
-    transform: translateX(0);
-  }
-
-  .next-item {
+  .move-left &.item-viewer-enter {
     transform: translateX(100%);
   }
 
-  .next-next-item {
-    transform: translateX(200%);
+  .move-left &.item-viewer-enter-active,
+  .move-right &.item-viewer-enter-active {
+    transform: translateX(0);
+    transition: transform ${animationSpeedInMs}ms;
+  }
+  .move-left &.item-viewer-exit,
+  .move-right &.item-viewer-exit {
+    transform: translateX(0);
+  }
+
+  .move-right &.item-viewer-exit-active {
+    transform: translateX(100%);
+    transition: transform ${animationSpeedInMs}ms;
+  }
+  .move-left &.item-viewer-exit-active {
+    transform: translateX(-100%);
+    transition: transform ${animationSpeedInMs}ms;
   }
 `;
+ItemViewerWrapper.displayName = 'ItemViewerWrapper';

@@ -23,7 +23,7 @@ export type NavigationDirection = 'prev' | 'next';
 export type NavigationProps = Readonly<{
   items: Identifier[];
   selectedItem: Identifier;
-  onChange: (item: Identifier) => void;
+  onChange: (item: Identifier, direction: NavigationDirection) => void;
 }> &
   WithAnalyticsEventsProps;
 
@@ -40,7 +40,7 @@ export class NavigationBase extends Component<NavigationProps, {}> {
 
       if (newItem) {
         this.fireAnalytics(createNavigationEvent(direction, source, newItem));
-        onChange(newItem);
+        onChange(newItem, direction);
       }
     };
   }
