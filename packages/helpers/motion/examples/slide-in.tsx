@@ -44,6 +44,7 @@ export default () => {
                       height: '95%',
                       width: '95%',
                       position: 'absolute',
+                      margin: 'auto',
                     }}
                   />
                 )}
