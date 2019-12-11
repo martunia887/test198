@@ -28118,10 +28118,10 @@ zip-stream@^2.0.1:
     compress-commons "^1.2.0"
     readable-stream "^2.0.0"
 
-zipizape@^0.0.8:
-  version "0.0.8"
-  resolved "https://packages.atlassian.com/api/npm/npm-remote/zipizape/-/zipizape-0.0.8.tgz#ba7df28542695dad10205c8448180c396aef4a0c"
-  integrity sha1-un3yhUJpXa0QIFyESBgMOWrvSgw=
+zipizape@^0.0.10:
+  version "0.0.10"
+  resolved "https://packages.atlassian.com/api/npm/npm-remote/zipizape/-/zipizape-0.0.10.tgz#b4f7b1a97c3456e2d737ab8c7ab501d38b6905de"
+  integrity sha1-tPexqXw0VuLXN6uMerUB04tpBd4=
   dependencies:
     jszip "^3.2.2"
     mime "^2.4.4"

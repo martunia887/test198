@@ -121,7 +121,7 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
         return (
           <ArchiveItemViewer>{this.renderAudio(content)}</ArchiveItemViewer>
         );
-      case 'unknown':
+      case 'doc':
         return (
           <ArchiveItemViewer>{this.renderDocument(content)}</ArchiveItemViewer>
         );
@@ -139,10 +139,6 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
     selectedEntry: ZipEntry,
   ) => async () => {
     const selectedEntryContent = await selectedEntry.getContent();
-
-    if (selectedEntryContent.isFolder) {
-      return; // Do not change the currently-selected item
-    }
 
     console.log({ selectedEntryContent });
     this.setState({
