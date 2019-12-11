@@ -99,7 +99,8 @@ export const CloseButtonWrapper = styled.div`
   z-index: ${overlayZindex + 2};
 `;
 
-export const animationSpeedInMs = 1000;
+export const animationSpeedInMs = 350;
+export const animationDistanceInPercent = 50;
 
 export const ZoomWrapper = styled.div`
   width: 100%;
@@ -408,30 +409,48 @@ export const ItemViewerWrapper = styled.div`
   top: 0;
   left: 0;
 
+  /* Next three is for things like spinner */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.hide-me {
+    opacity: 0;
+  }
+
   .move-right &.item-viewer-enter {
-    transform: translateX(-100%);
+    opacity: 0;
+    transform: translateX(-${animationDistanceInPercent}%);
   }
   .move-left &.item-viewer-enter {
-    transform: translateX(100%);
+    opacity: 0;
+    transform: translateX(${animationDistanceInPercent}%);
   }
 
   .move-left &.item-viewer-enter-active,
   .move-right &.item-viewer-enter-active {
+    opacity: 1;
     transform: translateX(0);
-    transition: transform ${animationSpeedInMs}ms;
+    transition: transform ${animationSpeedInMs}ms ease-out,
+      opacity ${animationSpeedInMs}ms;
   }
   .move-left &.item-viewer-exit,
   .move-right &.item-viewer-exit {
+    opacity: 1;
     transform: translateX(0);
   }
 
   .move-right &.item-viewer-exit-active {
-    transform: translateX(100%);
-    transition: transform ${animationSpeedInMs}ms;
+    opacity: 0;
+    transform: translateX(${animationDistanceInPercent}%);
+    transition: transform ${animationSpeedInMs}ms ease-out,
+      opacity ${animationSpeedInMs}ms;
   }
   .move-left &.item-viewer-exit-active {
-    transform: translateX(-100%);
-    transition: transform ${animationSpeedInMs}ms;
+    opacity: 0;
+    transform: translateX(-${animationDistanceInPercent}%);
+    transition: transform ${animationSpeedInMs}ms ease-out,
+      opacity ${animationSpeedInMs}ms;
   }
 `;
 ItemViewerWrapper.displayName = 'ItemViewerWrapper';

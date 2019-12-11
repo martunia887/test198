@@ -49,8 +49,8 @@ export class ImageViewer extends BaseViewer<
   private cancelImageFetch?: () => void;
 
   protected async init() {
-    const { item: file, mediaClient, collectionName } = this.props;
-    if (file.status === 'error') {
+    const { item: fileState, mediaClient, collectionName } = this.props;
+    if (fileState.status === 'error') {
       return;
     }
 
@@ -58,7 +58,7 @@ export class ImageViewer extends BaseViewer<
       let orientation = 1;
       let objectUrl: string;
 
-      const { preview } = file;
+      const { preview } = fileState;
       if (preview) {
         const { value } = await preview;
         if (value instanceof Blob) {
@@ -67,8 +67,8 @@ export class ImageViewer extends BaseViewer<
         } else {
           objectUrl = value;
         }
-      } else if (isImageRepresentationReady(file)) {
-        const item = processedFileStateToMediaItem(file);
+      } else if (isImageRepresentationReady(fileState)) {
+        const item = processedFileStateToMediaItem(fileState);
         const controller =
           typeof AbortController !== 'undefined'
             ? new AbortController()
@@ -98,7 +98,7 @@ export class ImageViewer extends BaseViewer<
       // TODO : properly handle aborted requests (MS-2843)
       if (!isAbortedRequestError(err)) {
         this.setState({
-          content: Outcome.failed(createError('previewFailed', err, file)),
+          content: Outcome.failed(createError('previewFailed', err, fileState)),
         });
         const errorMessage = err.message || err.name;
         this.props.onLoad({ status: 'error', errorMessage });

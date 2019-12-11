@@ -4,6 +4,7 @@ import {
   Identifier,
   isFileIdentifier,
   generateIdentifierKey,
+  isSameIdentifier,
 } from '@atlaskit/media-client';
 import {
   hideControlsClassName,
@@ -36,6 +37,7 @@ export type Props = Readonly<
 
 export type State = {
   selectedItem: Identifier;
+  prevSelectedItem?: Identifier;
   previewCount: number;
   direction: NavigationDirection;
 };
@@ -59,7 +61,6 @@ export class List extends React.Component<Props, State> {
       }
     });
     const resolvedFileIds = await Promise.all(fileIds);
-    console.log({ resolvedFileIds });
     // TODO: create filesToPreload(identifiers: Identifier[]): string[]
     resolvedFileIds.forEach(fileId => {
       if (fileId) {
@@ -74,87 +75,67 @@ export class List extends React.Component<Props, State> {
     return this.renderContent(items);
   }
 
-  private renderViewer2 = () => {
-    const { showControls, mediaClient, onClose, isSidebarVisible } = this.props;
+  private renderViewer = () => {
+    const {
+      showControls,
+      mediaClient,
+      onClose,
+      isSidebarVisible,
+      items,
+    } = this.props;
     const { selectedItem } = this.state;
 
+    const selectedItemIndex = items.findIndex(identifier =>
+      isSameIdentifier(identifier, selectedItem),
+    );
+
+    const prerenderItems: Identifier[] = [];
+    for (let i = selectedItemIndex - 1; i < selectedItemIndex + 2; i++) {
+      if (i >= 0 && i < items.length && i !== selectedItemIndex) {
+        prerenderItems.push(items[i]);
+      }
+    }
+
     return (
-      <TransitionGroup
-        // className={
-        //   'todo-list ' +
-        //   (item.moveRight ? 'move-right' : 'move-left')
-        // }
-        component={React.Fragment}
-      >
-        <CSSTransition
-          key={generateIdentifierKey(selectedItem)}
-          timeout={animationSpeedInMs}
-          classNames="item-viewer"
-        >
-          <ItemViewerWrapper className="item-viewer-wrapper">
+      <>
+        {prerenderItems.map((item, i) => (
+          <ItemViewerWrapper
+            key={generateIdentifierKey(item)}
+            className="item-viewer-wrapper hide-me"
+          >
             <ItemViewer
               mediaClient={mediaClient}
-              identifier={selectedItem}
+              identifier={item}
               showControls={showControls}
               onClose={onClose}
               previewCount={this.state.previewCount}
               isSidebarVisible={isSidebarVisible}
             />
           </ItemViewerWrapper>
-        </CSSTransition>
-      </TransitionGroup>
-    );
-  };
-
-  private renderViewer = () => {
-    const {
-      mediaClient,
-      onClose,
-      showControls,
-      isSidebarVisible,
-      items,
-    } = this.props;
-    const { selectedItem, previewCount } = this.state;
-    const selectedItemIndex = items.findIndex(identifier =>
-      isFileIdentifier(selectedItem) && isFileIdentifier(identifier)
-        ? selectedItem.id === identifier.id
-        : false,
-    );
-    // const nextItemIndex = selectedItemIndex !== -1 ? selectedItemIndex + 1 : -1;
-    // const nextItem = items[nextItemIndex];
-    const classnames = {
-      '-2': 'next-next-item',
-      '-1': 'next-item',
-      '0': 'current-item',
-      '1': 'prev-item',
-      '2': 'prev-prev-item',
-    };
-    const viewers = items.map((identifier, currentIndex) => {
-      const delta = selectedItemIndex - currentIndex;
-      if (Math.abs(delta) <= 2) {
-        const className = classnames[delta.toString()];
-        console.log(delta.toString(), { className });
-        const key = generateIdentifierKey(identifier);
-        console.log({ key });
-        return (
-          <ItemViewer
-            key={generateIdentifierKey(identifier)}
-            className={className}
-            mediaClient={mediaClient}
-            identifier={identifier}
-            showControls={showControls}
-            onClose={onClose}
-            previewCount={previewCount}
-            isSidebarVisible={isSidebarVisible}
-          />
-        );
-      }
-    });
-    // console.log({selectedItemIndex, nextItemIndex})
-    return (
-      <ItemViewerWrapper className="item-viewer-wrapper">
-        {viewers}
-      </ItemViewerWrapper>
+        ))}
+        <TransitionGroup component={React.Fragment}>
+          <CSSTransition
+            key={'CSSTransition-' + generateIdentifierKey(selectedItem)}
+            timeout={animationSpeedInMs}
+            classNames="item-viewer"
+          >
+            {/* "item-viewer-wrapper" here is for debugging purposes (easier to see) */}
+            <ItemViewerWrapper
+              key={generateIdentifierKey(selectedItem)}
+              className="item-viewer-wrapper"
+            >
+              <ItemViewer
+                mediaClient={mediaClient}
+                identifier={selectedItem}
+                showControls={showControls}
+                onClose={onClose}
+                previewCount={this.state.previewCount}
+                isSidebarVisible={isSidebarVisible}
+              />
+            </ItemViewerWrapper>
+          </CSSTransition>
+        </TransitionGroup>
+      </>
     );
   };
 
@@ -170,7 +151,7 @@ export class List extends React.Component<Props, State> {
 
     return (
       <ListWrapper
-        className={direction === 'next' ? 'move-right' : 'move-left'}
+        className={direction === 'next' ? 'move-left' : 'move-right'}
       >
         <HeaderWrapper className={hideControlsClassName}>
           <Header
@@ -182,7 +163,7 @@ export class List extends React.Component<Props, State> {
             isSidebarVisible={isSidebarVisible}
           />
         </HeaderWrapper>
-        {this.renderViewer2()}
+        {this.renderViewer()}
         <Navigation
           items={items}
           selectedItem={selectedItem}
@@ -204,10 +185,11 @@ export class List extends React.Component<Props, State> {
       showControls();
     }
 
-    this.setState({
+    this.setState(prevState => ({
       selectedItem,
+      prevSelectedItem: prevState.selectedItem,
       previewCount: this.state.previewCount + 1,
       direction,
-    });
+    }));
   };
 }
