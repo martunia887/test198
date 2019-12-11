@@ -353,7 +353,6 @@ export default class Editor extends React.Component<EditorProps, {}> {
                                 dispatchAnalyticsEvent,
                               }) => (
                                 <BaseTheme
-                                  appearance={this.props.appearance!}
                                   dynamicTextSizing={
                                     this.props.allowDynamicTextSizing &&
                                     this.props.appearance !== 'full-width'

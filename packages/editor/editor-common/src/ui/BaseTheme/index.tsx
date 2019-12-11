@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { fontSize } from '@atlaskit/theme';
 import { WidthConsumer, Breakpoints } from '../WidthProvider';
-import { EditorAppearance } from 'src/types';
 
 function mapBreakpointToFontSize(breakpoint: string) {
   switch (breakpoint) {
@@ -28,11 +27,9 @@ export function mapBreakpointToLayoutMaxWidth(breakpoint: string) {
 
 export function BaseTheme({
   children,
-  appearance,
   dynamicTextSizing,
 }: {
   children: React.ReactNode;
-  appearance: EditorAppearance;
   dynamicTextSizing?: boolean;
 }) {
   return (
@@ -40,7 +37,6 @@ export function BaseTheme({
       {({ breakpoint }) => (
         <ThemeProvider
           theme={{
-            appearance,
             baseFontSize: dynamicTextSizing
               ? mapBreakpointToFontSize(breakpoint)
               : mapBreakpointToFontSize(Breakpoints.S),
