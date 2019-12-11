@@ -8,7 +8,10 @@ import {
   CustomVideoPlayerWrapper,
   AudioPlayer,
   CustomAudioPlayerWrapper,
+  DefaultCoverWrapper,
+  blanketColor,
 } from '../styled';
+import AudioIcon from '@atlaskit/icon/glyph/media-services/audio';
 import { MediaViewerError } from '../error';
 import { BaseViewer } from './base-viewer';
 import { ZipiZape, ZipEntry, EntryContent } from 'zipizape';
@@ -104,6 +107,8 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
       content && this.previews.set(selectedEntryContent.name, content);
     }
 
+    console.log({ content });
+
     if (!content) {
       return null;
     }
@@ -166,11 +171,20 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
   private renderAudio(content: string) {
     return (
       <AudioPlayer data-testid="media-viewer-audio-content">
-        {/* {this.renderCover()} */}
+        {this.renderCover()}
         <CustomAudioPlayerWrapper>
           <CustomMediaPlayer type="audio" isAutoPlay={false} src={content} />
         </CustomAudioPlayerWrapper>
       </AudioPlayer>
+    );
+  }
+
+  private renderCover() {
+    // For now, always use default cover
+    return (
+      <DefaultCoverWrapper>
+        <AudioIcon label="cover" size="xlarge" primaryColor={blanketColor} />
+      </DefaultCoverWrapper>
     );
   }
 
