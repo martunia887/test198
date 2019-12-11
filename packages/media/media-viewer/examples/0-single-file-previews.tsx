@@ -40,7 +40,7 @@ export type State = {
 };
 
 export default class Example extends React.Component<{}, State> {
-  state: State = { selectedIdentifier: zipWithNestedFolderItem };
+  state: State = { selectedIdentifier: zipItem };
 
   setItem = (selectedIdentifier: Identifier) => () => {
     this.setState({ selectedIdentifier });
