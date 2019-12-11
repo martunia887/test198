@@ -37,7 +37,7 @@ const FullPageEditorWrapper = styled.div`
 `;
 FullPageEditorWrapper.displayName = 'FullPageEditorWrapper';
 
-const ScrollContainer = styled(ContentStyles)`
+export const ScrollContainer = styled(ContentStyles)`
   flex-grow: 1;
   overflow-y: scroll;
   position: relative;
@@ -48,7 +48,7 @@ const ScrollContainer = styled(ContentStyles)`
 `;
 ScrollContainer.displayName = 'ScrollContainer';
 
-const ContentArea = styled.div`
+export const ContentArea = styled.div`
   line-height: 24px;
   padding-top: 50px;
   padding-bottom: 55px;

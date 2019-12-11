@@ -46,6 +46,20 @@ export class MentionNodeView extends ReactNodeView<Props> {
   }
 }
 
+export function createNodeViews(
+  portalProviderAPI: PortalProviderAPI,
+  providerFactory: ProviderFactory,
+  options?: MentionPluginOptions,
+) {
+  if (!portalProviderAPI) {
+    return;
+  }
+
+  return {
+    mention: mentionNodeView(portalProviderAPI, providerFactory, options),
+  };
+}
+
 export default function mentionNodeView(
   portalProviderAPI: PortalProviderAPI,
   providerFactory: ProviderFactory,

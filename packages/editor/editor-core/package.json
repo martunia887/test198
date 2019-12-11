@@ -60,6 +60,7 @@
     "@atlaskit/type-helpers": "^4.2.1",
     "@atlaskit/util-service-support": "^5.0.0",
     "@atlaskit/width-detector": "^2.0.8",
+    "@marduke182/prosemirror-react-view": "file:.yalc/@marduke182/prosemirror-react-view",
     "@sentry/browser": "^4.6.3",
     "@types/prettier": "^1.18.3",
     "@types/prosemirror-collab": "^1.0.2",

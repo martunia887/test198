@@ -38,7 +38,7 @@ import {
 } from '../type-ahead/pm-plugins/main';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import ToolbarMention from './ui/ToolbarMention';
-import mentionNodeView from './nodeviews/mention';
+import { createNodeViews } from './nodeviews/mention';
 import {
   buildTypeAheadInsertedPayload,
   buildTypeAheadCancelPayload,
@@ -58,6 +58,7 @@ import {
 import { TypeAheadItem } from '../type-ahead/types';
 import { isTeamStats, isTeamType } from './utils';
 import { IconMention } from '../quick-insert/assets';
+import { MentionNode } from './ui/MentionNode';
 
 export interface TeamInfoAttrAnalytics {
   teamId: String;
@@ -486,9 +487,11 @@ function mentionPluginFactory(
       },
     } as StateField<MentionPluginState>,
     props: {
-      nodeViews: {
-        mention: mentionNodeView(portalProviderAPI, providerFactory, options),
+      // @ts-ignore
+      toReact: {
+        mention: MentionNode,
       },
+      nodeViews: createNodeViews(portalProviderAPI, providerFactory, options),
     },
     view(editorView) {
       const providerHandler = (

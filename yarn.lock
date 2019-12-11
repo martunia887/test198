@@ -3044,6 +3044,14 @@
     fs-extra "^8.1.0"
     get-workspaces "^0.5.0"
 
+"@marduke182/prosemirror-react-view@file:.yalc/@marduke182/prosemirror-react-view":
+  version "1.0.0-b80b6bb1"
+  dependencies:
+    "@types/prosemirror-model" "^1.7.2"
+    "@types/prosemirror-state" "^1.2.3"
+    prosemirror-model "^1.7.0"
+    prosemirror-state "^1.2.2"
+
 "@mdx-js/loader@^0.17.5":
   version "0.17.5"
   resolved "https://registry.yarnpkg.com/@mdx-js/loader/-/loader-0.17.5.tgz#26ce463142acaf66c9a286f2e794b04a510a4488"
@@ -3933,7 +3941,7 @@
     "@types/prosemirror-model" "*"
     "@types/prosemirror-state" "*"
 
-"@types/prosemirror-state@*", "@types/prosemirror-state@^1.2.0":
+"@types/prosemirror-state@*", "@types/prosemirror-state@^1.2.0", "@types/prosemirror-state@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@types/prosemirror-state/-/prosemirror-state-1.2.3.tgz#7f5f871acf7b8c22e1862ff0068f9bf7e9682c0e"
   integrity sha512-6m433Hubix9bx+JgcLW7zzyiZuzwjq5mBdSMYY4Yi5c5ZpV2RiVmg7Cy6f9Thtts8vuztilw+PczJAgDm1Frfw==
