@@ -7,6 +7,7 @@ import { ExampleEditor } from './5-full-page';
 
 import { ContextPanel, AnnotationComponentProps, EditorActions } from '../src';
 import { InlineComment } from '@atlaskit/editor-test-helpers';
+import { exampleDocument } from '../example-helpers/example-doc-with-comments';
 
 const sidebarAnnotationComponent = (
   portalRef: React.RefObject<HTMLDivElement>,
@@ -74,6 +75,7 @@ class EditorWithSidebar extends React.Component<{
   render() {
     return (
       <ExampleEditor
+        defaultValue={exampleDocument}
         contextPanel={
           <StatefulContextPanel
             ref={this.panel}
