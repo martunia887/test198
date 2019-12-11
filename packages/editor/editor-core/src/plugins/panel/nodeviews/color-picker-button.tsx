@@ -135,6 +135,7 @@ export default class ColorPickerButton extends Component<Props, State> {
         <ColorPicker
           style={{ height: '24px' }}
           label="Change color"
+          cols="7"
           palette={fadedPalette}
           selectedColor={this.state.selectedColor}
           onChange={(newColor: string) => {
