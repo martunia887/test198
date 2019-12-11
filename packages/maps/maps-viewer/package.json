@@ -20,7 +20,9 @@
     "@atlaskit/icon": "^19.0.8",
     "@atlaskit/maps-core": "^0.0.1",
     "@atlaskit/modal-dialog": "^10.4.0",
-    "@atlaskit/navigation-next": "^7.1.1"
+    "@atlaskit/navigation-next": "^7.1.1",
+    "@atlaskit/select": "^11.0.2",
+    "lodash.debounce": "^4.0.8"
   },
   "peerDependencies": {
     "react": "^16.8.0"

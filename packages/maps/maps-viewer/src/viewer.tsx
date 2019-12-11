@@ -1,7 +1,8 @@
 import * as React from 'react';
 // import 'mapbox-gl/dist/mapbox-gl.css'; // THIS SHOULD BE DYNAMICALLY LOADED
 import { Geolocation, openMap, removeMap } from '@atlaskit/maps-core';
-import LocationList from './custom-controls/location-list';
+// import LocationList from './custom-controls/location-list';
+import Geocoder from './custom-controls/geocoder';
 
 export type MapViewerProps = Readonly<{
   selected?: Geolocation;
@@ -51,7 +52,6 @@ export default class MapViewer extends React.Component<MapViewerProps> {
       left: '20px',
       // padding:'20px',
       backgroundColor: 'white',
-      maxWidth: '50%',
     };
 
     return (
@@ -63,7 +63,8 @@ export default class MapViewer extends React.Component<MapViewerProps> {
         />
         <div style={style} ref={el => (this.mapContainer = el)} />
         <div style={floatStyle}>
-          <LocationList locations={this.normalisedLocations()} />
+          {/* <LocationList locations={this.normalisedLocations()} /> */}
+          <Geocoder />
         </div>
       </div>
     );

@@ -1,6 +1,7 @@
 export { default as locationsManager } from './locations-manager';
 export * from './maps-api';
 export * from './util';
+export * from './services';
 
 export interface Coords {
   lat: number;
