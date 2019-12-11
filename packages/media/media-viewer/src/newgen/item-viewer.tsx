@@ -45,6 +45,7 @@ export type Props = Readonly<{
   mediaClient: MediaClient;
   onClose?: () => void;
   previewCount: number;
+  isSidebarVisible?: boolean;
 }> &
   WithAnalyticsEventsProps &
   WithShowControlMethodProp;
@@ -144,6 +145,7 @@ export class ItemViewerBase extends React.Component<Props, State> {
       showControls,
       onClose,
       previewCount,
+      isSidebarVisible,
     } = this.props;
     const collectionName = isFileIdentifier(identifier)
       ? identifier.collectionName
@@ -184,17 +186,12 @@ export class ItemViewerBase extends React.Component<Props, State> {
           <DocViewer
             onSuccess={this.onCanPlay(item)}
             onError={this.onDocError(item)}
+            isSidebarVisible={isSidebarVisible}
             {...viewerProps}
           />
         );
       case 'archive':
-        return (
-          <ArchiveViewer
-            onSuccess={this.onCanPlay(item)}
-            onError={this.onError(item)}
-            {...viewerProps}
-          />
-        );
+        return <ArchiveViewer {...viewerProps} />;
       default:
         return this.renderError('unsupported', item);
     }

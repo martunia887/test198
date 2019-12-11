@@ -24,9 +24,6 @@ export type Props = {
   mediaClient: MediaClient;
   item: FileState;
   collectionName?: string;
-  onClose?: () => void;
-  onError?: (error: Error) => void;
-  onSuccess?: () => void;
 };
 
 type Content = {
