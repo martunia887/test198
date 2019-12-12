@@ -28,41 +28,26 @@ const locations = [
   },
 ];
 
-interface State {
-  isOpen: boolean;
-}
-export default class ExampleBasic extends React.PureComponent<{}, State> {
-  state: State = { isOpen: true };
+export default () => {
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const close = () => setIsOpen(false);
+  const open = () => setIsOpen(true);
 
-  open = () => this.setState({ isOpen: true });
+  const geolocations = locations.map(location => new Geolocation(location));
 
-  close = () => {
-    this.setState({ isOpen: false });
-  };
-
-  secondaryAction = ({ target }: any) => console.log(target.innerText);
-
-  render() {
-    const { isOpen } = this.state;
-    const geolocations = locations.map(location => new Geolocation(location));
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-        }}
-      >
-        <Button onClick={this.open} appearance={'primary'}>
-          Open Modal
-        </Button>
-        <MapModal
-          isOpen={isOpen}
-          onClose={this.close}
-          locations={geolocations}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+      }}
+    >
+      <Button onClick={open} appearance={'primary'}>
+        Open Modal
+      </Button>
+      <MapModal isOpen={isOpen} onClose={close} locations={geolocations} />
+    </div>
+  );
+};

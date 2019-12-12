@@ -1,5 +1,5 @@
 export { default as locationsManager } from './locations-manager';
-export { default as MapHandler } from './maps-api';
+export * from './maps-api';
 export * from './util';
 export * from './services';
 
@@ -14,12 +14,13 @@ const round = (num: number, decimals: number = 2) =>
 const getRandomColor = () =>
   '#' + Math.floor(Math.random() * 16777215).toString(16);
 
+export type GeolocationUpdatedCallback = (location: Geolocation) => void;
+
 export type GeolocationOptions = {
   name?: string;
   address?: string;
   coords: Coords;
   iconColor?: string;
-  onDataUpdate?: (location: Geolocation) => void;
 };
 
 export class Geolocation {
@@ -27,15 +28,14 @@ export class Geolocation {
   private _name?: string;
   private _address?: string;
   private _iconColor?: string;
-  public onDataUpdate?: (location: Geolocation) => void;
+  private onUpdateCallbacks: GeolocationUpdatedCallback[] = [];
 
   constructor(options: GeolocationOptions) {
-    const { name, address, coords, iconColor, onDataUpdate } = options;
+    const { name, address, coords, iconColor } = options;
     this._name = name;
     this._address = address;
     this._coords = coords;
     this._iconColor = iconColor || getRandomColor();
-    this.onDataUpdate = onDataUpdate;
   }
 
   get title() {
@@ -46,8 +46,8 @@ export class Geolocation {
 
   set coords(coords: Coords) {
     this._coords = coords;
-    if (this.onDataUpdate) {
-      this.onDataUpdate(this);
+    if (this.onUpdate) {
+      this.notifyUpdate();
     }
   }
   get coords() {
@@ -56,8 +56,8 @@ export class Geolocation {
 
   set name(name: string | undefined) {
     this._name = name;
-    if (this.onDataUpdate) {
-      this.onDataUpdate(this);
+    if (this.onUpdate) {
+      this.notifyUpdate();
     }
   }
   get name() {
@@ -66,8 +66,8 @@ export class Geolocation {
 
   set address(address: string | undefined) {
     this._address = address;
-    if (this.onDataUpdate) {
-      this.onDataUpdate(this);
+    if (this.onUpdate) {
+      this.notifyUpdate();
     }
   }
   get address() {
@@ -76,11 +76,23 @@ export class Geolocation {
 
   set iconColor(iconColor: string | undefined) {
     this._iconColor = iconColor;
-    if (this.onDataUpdate) {
-      this.onDataUpdate(this);
+    if (this.onUpdate) {
+      this.notifyUpdate();
     }
   }
   get iconColor() {
     return this._iconColor;
+  }
+
+  public onUpdate(callback: GeolocationUpdatedCallback) {
+    if (!this.onUpdateCallbacks.includes(callback)) {
+      this.onUpdateCallbacks.push(callback);
+    }
+  }
+
+  private notifyUpdate() {
+    this.onUpdateCallbacks.forEach(callback => {
+      callback(this);
+    });
   }
 }

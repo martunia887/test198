@@ -51,10 +51,13 @@ export type AddLocationOptions = {
   goto?: boolean;
 };
 
-export default class MapHandler {
+export type GeolocationsUpdatedCallback = (locations: Geolocation[]) => void;
+
+export class MapHandler {
   private mapPromise: Promise<MapboxMap> | undefined;
   private map: MapboxMap | undefined;
   private locationsMarkers: Map<Geolocation, Marker> = new Map();
+  private onUpdateCallbacks: GeolocationsUpdatedCallback[] = [];
 
   public constructor(
     container: HTMLDivElement,
@@ -113,6 +116,7 @@ export default class MapHandler {
         this.goTo(getGeolocations(this.locationsMarkers)[0]);
       }
     }
+    this.notifyUpdate();
   };
 
   public setLocations = (
@@ -131,6 +135,7 @@ export default class MapHandler {
       const newMarker = locationToMarker(location, { draggable });
       this.locationsMarkers.set(location, newMarker);
       mapbox.addMarkers(this.map, [newMarker]);
+      this.notifyUpdate();
     }
     if (goto) {
       this.goTo(location);
@@ -143,6 +148,7 @@ export default class MapHandler {
     if (toRemove) {
       this.locationsMarkers.delete(location);
       mapbox.removeMarkers([toRemove]);
+      this.notifyUpdate();
     }
   };
 
@@ -157,4 +163,22 @@ export default class MapHandler {
     if (!this.map) return;
     mapbox.centerAll(this.map, getCoordsSet(this.locationsMarkers));
   };
+
+  public onUpdate(callback: GeolocationsUpdatedCallback) {
+    if (!this.onUpdateCallbacks.includes(callback)) {
+      this.onUpdateCallbacks.push(callback);
+    }
+  }
+  public offUpdate(callback: GeolocationsUpdatedCallback) {
+    const index = this.onUpdateCallbacks.indexOf(callback);
+    if (index > 0) {
+      this.onUpdateCallbacks.splice(index, 1);
+    }
+  }
+
+  private notifyUpdate() {
+    this.onUpdateCallbacks.forEach(callback => {
+      callback(getGeolocations(this.locationsMarkers));
+    });
+  }
 }

@@ -1,37 +1,31 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
 import LocationPicker from '../src/picker';
+import { Geolocation } from '@atlaskit/maps-core';
 
-interface State {
-  isOpen: boolean;
-}
-export default class ExampleBasic extends React.PureComponent<{}, State> {
-  state: State = { isOpen: true };
+export default () => {
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const close = () => setIsOpen(false);
+  const open = () => setIsOpen(true);
 
-  open = () => this.setState({ isOpen: true });
-
-  close = () => {
-    this.setState({ isOpen: false });
+  const onSelected = (location: Geolocation) => {
+    console.log('Selected', location);
+    close();
   };
 
-  secondaryAction = ({ target }: any) => console.log(target.innerText);
-
-  render() {
-    const { isOpen } = this.state;
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-        }}
-      >
-        <Button onClick={this.open} appearance={'primary'}>
-          Open Picker
-        </Button>
-        <LocationPicker isOpen={isOpen} onClose={this.close} />
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+      }}
+    >
+      <Button onClick={open} appearance={'primary'}>
+        Open Picker
+      </Button>
+      <LocationPicker isOpen={isOpen} onClose={close} onSelected={onSelected} />
+    </div>
+  );
+};

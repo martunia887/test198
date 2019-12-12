@@ -1,8 +1,11 @@
 import * as React from 'react';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
-import MapViewer, { MapViewerExternalProps } from './viewer';
+import MapViewer from './viewer';
+import { Geolocation } from '@atlaskit/maps-core';
 
-type MapModalProps = MapViewerExternalProps & {
+type MapModalProps = {
+  selected?: Geolocation;
+  locations?: Geolocation[];
   onClose: () => void;
   isOpen: boolean;
 };

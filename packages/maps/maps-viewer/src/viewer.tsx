@@ -1,21 +1,22 @@
 import * as React from 'react';
 // import 'mapbox-gl/dist/mapbox-gl.css'; // THIS SHOULD BE DYNAMICALLY LOADED
-import { Geolocation, MapHandler } from '@atlaskit/maps-core';
+import {
+  Geolocation,
+  MapHandler,
+  GeolocationsUpdatedCallback,
+} from '@atlaskit/maps-core';
 import LocationList from './custom-controls/location-list';
 import Geocoder from './custom-controls/geocoder';
 
-export type MapViewerInternalProps = Readonly<{
+export type MapViewerProps = Readonly<{
+  selected?: Geolocation;
+  locations?: Geolocation[];
+  onUpdate?: GeolocationsUpdatedCallback;
   controls?: {
     list?: boolean;
     geocoder?: boolean;
   };
 }>;
-export type MapViewerExternalProps = Readonly<{
-  selected?: Geolocation;
-  locations?: Geolocation[];
-}>;
-
-export type MapViewerProps = MapViewerInternalProps & MapViewerExternalProps;
 
 export type State = {
   selected: Geolocation;
@@ -26,9 +27,12 @@ export default class MapViewer extends React.Component<MapViewerProps> {
   mapHandler?: MapHandler;
 
   componentDidMount() {
-    const { locations, selected } = this.props;
+    const { locations, selected, onUpdate } = this.props;
     if (this.mapContainer) {
       this.mapHandler = new MapHandler(this.mapContainer, locations, selected);
+      if (onUpdate) {
+        this.mapHandler.onUpdate(onUpdate);
+      }
     }
   }
 

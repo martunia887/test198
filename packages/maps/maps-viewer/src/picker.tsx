@@ -1,15 +1,37 @@
 import * as React from 'react';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
-import MapViewer, { MapViewerExternalProps } from './viewer';
+import MapViewer from './viewer';
+import { Geolocation } from '@atlaskit/maps-core';
 
-type MapModalProps = MapViewerExternalProps & {
+type LocationPickerProps = {
+  selected?: Geolocation;
+  onSelected: (location: Geolocation) => void;
   onClose: () => void;
   isOpen: boolean;
 };
 
-export default (props: MapModalProps) => {
-  const { onClose, isOpen } = props;
-  const actions = [{ text: 'Close', onClick: onClose }];
+const ModalSelect = (props: LocationPickerProps) => {
+  const { onClose, selected: preSelected, onSelected } = props;
+  const [selected, setSelected] = React.useState<Geolocation>();
+
+  const onUpdate = (locations: Geolocation[]) => {
+    if (locations.length > 0) {
+      setSelected(locations[0]);
+    } else {
+      setSelected(undefined);
+    }
+  };
+
+  const actions = [
+    {
+      text: 'Select',
+      onClick: () => {
+        selected && onSelected(selected);
+      },
+      isDisabled: !selected,
+    },
+    { text: 'Cancel', onClick: onClose },
+  ];
 
   const modalProps = {
     height: '100%',
@@ -20,12 +42,19 @@ export default (props: MapModalProps) => {
   };
 
   return (
-    <ModalTransition>
-      {isOpen && (
-        <Modal {...modalProps}>
-          <MapViewer {...props} controls={{ geocoder: true }} />
-        </Modal>
-      )}
-    </ModalTransition>
+    <Modal {...modalProps}>
+      <MapViewer
+        selected={preSelected}
+        controls={{ geocoder: true }}
+        onUpdate={onUpdate}
+      />
+    </Modal>
+  );
+};
+
+export default (props: LocationPickerProps) => {
+  const { isOpen } = props;
+  return (
+    <ModalTransition>{isOpen && <ModalSelect {...props} />}</ModalTransition>
   );
 };

@@ -36,8 +36,9 @@ const showInMap = (
   if (oldSelected) {
     mapHandler.removeLocation(oldSelected);
   }
-  // newSelected.onDataUpdate = (loca)=>console.log('Actualizado',loca)
+  // newSelected.onUpdate((loca: Geolocation)=>console.log('Actualizado',loca))
   mapHandler.addLocation(newSelected, { draggable: true });
+  // mapHandler.setLocations([newSelected])
 };
 
 export type GeocoderProps = {
