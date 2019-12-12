@@ -35,35 +35,6 @@ export interface DOMAttributes {
   [propName: string]: string;
 }
 
-export const panelWithIconAndColor: NodeSpec = {
-  group: 'block',
-  content: '(paragraph | heading | bulletList | orderedList)+',
-  attrs: {
-    panelType: { default: 'info' },
-  },
-  parseDOM: [
-    {
-      tag: 'div[data-panel-type]',
-      getAttrs: dom => ({
-        panelType: (dom as HTMLElement).getAttribute('data-panel-type')!,
-        panelIcon: (dom as HTMLElement).getAttribute('data-panel-icon')!,
-        panelColor: (dom as HTMLElement).getAttribute('data-panel-color')!,
-      }),
-    },
-  ],
-  toDOM(node: Node) {
-    const panelType = node.attrs['panelType'];
-    const panelIcon = node.attrs['panelIcon'];
-    const panelColor = node.attrs['panelColor'];
-    const attrs: DOMAttributes = {
-      'data-panel-type': panelType,
-      'data-panel-icon': panelIcon,
-      'data-panel-color': panelColor,
-    };
-    return ['div', attrs, ['div', {}, 0]];
-  },
-};
-
 // TODO: add panelIcon and panelColor attributes here only depending on UNSAFE_allowCustomPanels flag
 export const panel: NodeSpec = {
   group: 'block',
@@ -85,9 +56,11 @@ export const panel: NodeSpec = {
   toDOM(node: Node) {
     const panelType = node.attrs['panelType'];
     const panelIcon = node.attrs['panelIcon'];
+    const panelColor = node.attrs['panelColor'];
     const attrs: DOMAttributes = {
       'data-panel-type': panelType,
       'data-panel-icon': panelIcon,
+      'data-panel-color': panelColor,
     };
     return ['div', attrs, ['div', {}, 0]];
   },
