@@ -4,7 +4,7 @@ import { md, DevPreviewWarning } from '@atlaskit/docs';
 export default md`
   ${(<DevPreviewWarning />)}
 
-  ## Goals
+  ## Currently working
 
   - Zero config SSR
   - Zero runtime

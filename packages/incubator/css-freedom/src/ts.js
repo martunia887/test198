@@ -61,10 +61,38 @@ const isJsxWithCssProp = node => {
   );
 };
 
-const processCssProperties = (properties, { cssVariableIds }) => {
+const processCssProperties = (
+  properties,
+  { cssVariableIds, scopedVariables },
+) => {
   let cssVariables = [];
 
   const css = properties.reduce((acc, prop) => {
+    // if is spread
+    if (ts.isSpreadAssignment(prop)) {
+      // Ok it's a spread e.g. "...prop"
+
+      // Reference to the identifier that we are spreading in, e.g. "prop".
+      const objectReferenceNode = scopedVariables[prop.expression.escapedText];
+      if (!objectReferenceNode) {
+        throw new Error('variable doesnt exist in scope');
+      }
+      // Spread can either be from an object, or a function. Probably not an array.
+
+      const result = processCssProperties(
+        objectReferenceNode.initializer.properties,
+        {
+          cssVariableIds,
+          scopedVariables,
+        },
+      );
+      cssVariables = cssVariables.concat(result.cssVariables);
+
+      return `${acc}
+      ${result.css}
+      `;
+    }
+
     const key = kebabCase(prop.symbol.escapedName);
     let value;
 
@@ -83,6 +111,7 @@ const processCssProperties = (properties, { cssVariableIds }) => {
     } else if (ts.isObjectLiteralExpression(prop.initializer)) {
       const result = processCssProperties(prop.initializer.properties, {
         cssVariableIds,
+        scopedVariables,
       });
       cssVariables = cssVariables.concat(result.cssVariables);
 
@@ -130,6 +159,8 @@ Have feedback? Post it to http://go/dst-sd
    */
   const transformer = context => {
     return sourceFile => {
+      const foundVariables = {};
+
       let rootNode = sourceFile;
       let needsCssTransform = false;
 
@@ -215,7 +246,17 @@ Have feedback? Post it to http://go/dst-sd
           return newNode;
         }
 
-        if (needsCssTransform && isJsxWithCssProp(node)) {
+        if (!needsCssTransform) {
+          return node;
+        }
+
+        if (ts.isVariableDeclaration(node)) {
+          // we may need this later, let's store it in a basic object for quick access.
+          foundVariables[node.name.escapedText] = node;
+          return ts.visitEachChild(node, visitor, context);
+        }
+
+        if (isJsxWithCssProp(node)) {
           // Grab the css prop node
           const cssPropNode = (
             node.attributes || node.openingElement.attributes
@@ -234,7 +275,7 @@ Have feedback? Post it to http://go/dst-sd
             // object literal found e..g css={{ fontSize: '20px' }}
             const processedCssObject = processCssProperties(
               cssPropNode.initializer.expression.properties,
-              { cssVariableIds },
+              { cssVariableIds, scopedVariables: foundVariables },
             );
             cssVariables = processedCssObject.cssVariables;
             compiledCss = stylis(`.${className}`, processedCssObject.css);
@@ -253,10 +294,11 @@ Have feedback? Post it to http://go/dst-sd
             // how do we handle mixins/function expressions?
             // can we execute functions somehow?
 
-            // TODO:
-            // 1. tagged templates with variables
-            // 2. function expressions
-            // 3. spreading values as props
+            // css prop TODO:
+            // - tagged templates with variables e.g. css={`color: ${redVar};`}
+            // - function expressions e.g. css={functionCall}
+            // - spreading values as props e.g. css={{ ...mixin, color: 'red' }}
+            // - remove types from object literals e.g. 'blah' as const - remove as const.
           }
 
           log('removing css prop');
@@ -319,6 +361,7 @@ Have feedback? Post it to http://go/dst-sd
 
           log('returning composed component with fragment');
 
+          // TODO: Why does const/let blow up but not var?????
           return ts.visitEachChild(newFragmentParent, visitor, context);
         }
 
