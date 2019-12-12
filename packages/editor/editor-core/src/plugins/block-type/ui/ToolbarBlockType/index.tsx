@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createElement } from 'react';
+import { createElement, memo } from 'react';
 import {
   defineMessages,
   injectIntl,

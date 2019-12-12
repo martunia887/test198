@@ -28,6 +28,7 @@ import { typeAheadPluginKey, TypeAheadPluginState } from '../type-ahead';
 import { analyticsService } from '../../analytics';
 import { TypeAheadItem } from '../type-ahead/types';
 import { EmojiContextProvider } from './ui/EmojiContextProvider';
+import { EmojiNode } from './ui/EmojiNode';
 
 export const defaultListLimit = 50;
 const isFullShortName = (query?: string) =>
@@ -308,6 +309,10 @@ export function emojiPluginFactory(
       },
     } as StateField<EmojiPluginState>,
     props: {
+      // @ts-ignore
+      toReact: {
+        emoji: EmojiNode,
+      },
       nodeViews: {
         emoji: emojiNodeView(portalProviderAPI, providerFactory, options),
       },

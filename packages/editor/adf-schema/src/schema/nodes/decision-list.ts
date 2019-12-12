@@ -45,7 +45,7 @@ export const decisionList: NodeSpec = {
     const attrs = {
       'data-node-type': name,
       'data-decision-list-local-id': localId || 'local-decision-list',
-      style: 'list-style: none; padding-left: 0',
+      // style: 'list-style: none; padding-left: 0',
     };
 
     return ['ol', attrs, 0];

@@ -42,6 +42,7 @@ import { findControlsHoverDecoration, updateResizeHandles } from '../utils';
 import { fixTables } from '../transforms';
 import { TableCssClassName as ClassName } from '../types';
 import reducer from '../reducer';
+import { TableNode } from '../ui/TableNode';
 
 export const pluginKey = new PluginKey('tablePlugin');
 
@@ -190,7 +191,10 @@ export const createPlugin = (
 
         return false;
       },
-
+      // @ts-ignore
+      toReact: {
+        table: TableNode,
+      },
       nodeViews: {
         table: (node, view, getPos) =>
           createTableView(node, view, getPos, portalProviderAPI, {

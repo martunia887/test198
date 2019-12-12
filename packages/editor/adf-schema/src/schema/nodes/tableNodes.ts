@@ -97,9 +97,8 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     if (ignored) {
       attrs.style = '';
     } else {
-      const color = isRgb(background) ? rgbToHex(background) : background;
-
-      attrs.style = `${attrs.style || ''}background-color: ${color};`;
+      // const color = isRgb(background) ? rgbToHex(background) : background;
+      // attrs.style = `${attrs.style || ''}background-color: ${color};`;
     }
   }
 

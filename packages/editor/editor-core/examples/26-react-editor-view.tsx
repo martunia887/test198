@@ -3,7 +3,7 @@ import * as React from 'react';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import ExamplesErrorBoundary from '../example-helpers/ExamplesErrorBoundary';
-
+import { IntlProvider } from 'react-intl';
 import {
   extensionHandlers,
   storyMediaProviderFactory,
@@ -12,10 +12,14 @@ import {
   autoformattingProvider,
 } from '@atlaskit/editor-test-helpers';
 import {
-  ProviderFactory,
   ExtensionProvider,
   combineExtensionProviders,
 } from '@atlaskit/editor-common';
+
+import {
+  ProviderFactoryProvider,
+  ProviderFactory,
+} from '@atlaskit/editor-common/provider-factory';
 
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import {
@@ -162,41 +166,6 @@ export interface ExampleProps {
 
 const smartCardProvider = new SmartCardClient('prod');
 
-export class ExampleEditorComponent extends React.Component<
-  EditorProps & ExampleProps,
-  State
-> {
-  state: State = {
-    disabled: true,
-    title: localStorage.getItem(LOCALSTORAGE_defaultTitleKey) || '',
-    appearance: this.props.appearance || getAppearance(),
-  };
-
-  render() {
-    return (
-      <ExamplesErrorBoundary>
-        <Wrapper>
-          <Content>
-            <SmartCardProvider client={smartCardProvider}>
-              <AKEditor
-                initialDoc={
-                  (localStorage &&
-                    localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
-                  undefined
-                }
-              />
-            </SmartCardProvider>
-          </Content>
-        </Wrapper>
-      </ExamplesErrorBoundary>
-    );
-  }
-}
-
-export const ExampleEditor = withSentry<EditorProps & ExampleProps>(
-  ExampleEditorComponent,
-);
-
 const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;
 const MockProfileClient = getMockProfileClientUtil(
   ProfileClient,
@@ -247,6 +216,45 @@ const providerFactory = ProviderFactory.create({
   taskDecisionProvider,
   contextIdentifierProvider,
 });
+
+export class ExampleEditorComponent extends React.Component<
+  EditorProps & ExampleProps,
+  State
+> {
+  state: State = {
+    disabled: true,
+    title: localStorage.getItem(LOCALSTORAGE_defaultTitleKey) || '',
+    appearance: this.props.appearance || getAppearance(),
+  };
+
+  render() {
+    return (
+      <IntlProvider locale={'en'}>
+        <ExamplesErrorBoundary>
+          <ProviderFactoryProvider value={providerFactory}>
+            <Wrapper>
+              <Content>
+                <SmartCardProvider client={smartCardProvider}>
+                  <AKEditor
+                    initialDoc={
+                      (localStorage &&
+                        localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
+                      undefined
+                    }
+                  />
+                </SmartCardProvider>
+              </Content>
+            </Wrapper>
+          </ProviderFactoryProvider>
+        </ExamplesErrorBoundary>
+      </IntlProvider>
+    );
+  }
+}
+
+export const ExampleEditor = withSentry<EditorProps & ExampleProps>(
+  ExampleEditorComponent,
+);
 
 const Renderer = (props: {
   document: any;

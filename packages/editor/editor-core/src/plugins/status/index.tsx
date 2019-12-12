@@ -133,7 +133,9 @@ const decorateWithPluginOptions = (
   return plugin;
 };
 
-const statusPlugin = (options: StatusPluginOptions): EditorPlugin =>
+const statusPlugin = (
+  options: StatusPluginOptions = { menuDisabled: true },
+): EditorPlugin =>
   decorateWithPluginOptions(baseStatusPlugin(options), options);
 
 export default statusPlugin;

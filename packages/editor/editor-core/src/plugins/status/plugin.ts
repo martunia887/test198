@@ -7,6 +7,7 @@ import { mayGetStatusAtSelection, isEmptyStatus } from './utils';
 import { Dispatch } from '../../event-dispatcher';
 import { PortalProviderAPI } from '../../ui/PortalProvider';
 import { StatusPluginOptions } from './index';
+import { StatusNode } from './ui/StatusNode';
 
 export const pluginKeyName = 'statusPlugin';
 export const pluginKey = new PluginKey('statusPlugin');
@@ -113,6 +114,10 @@ const createPlugin = (
     },
     key: pluginKey,
     props: {
+      // @ts-ignore
+      toReact: {
+        status: StatusNode,
+      },
       nodeViews: {
         status: statusNodeView(portalProviderAPI, options),
       },

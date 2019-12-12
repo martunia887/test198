@@ -28,7 +28,7 @@ import WidthEmitter from '../WidthEmitter';
 const SWOOP_ANIMATION = `0.5s ${akEditorSwoopCubicBezier}`;
 const TOTAL_PADDING = akEditorGutterPadding * 2;
 
-const FullPageEditorWrapper = styled.div`
+export const FullPageEditorWrapper = styled.div`
   min-width: 340px;
   height: 100%;
   display: flex;
@@ -158,7 +158,7 @@ interface MainToolbarProps {
   showKeyline: boolean;
 }
 
-const MainToolbar: React.ComponentClass<React.HTMLAttributes<{}> &
+export const MainToolbar: React.ComponentClass<React.HTMLAttributes<{}> &
   MainToolbarProps> = styled.div`
   position: relative;
   align-items: center;

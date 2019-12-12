@@ -11,6 +11,8 @@ import { taskItemNodeViewFactory } from '../nodeviews/taskItem';
 import { Command } from '../../../types';
 import { Dispatch } from '../../../event-dispatcher';
 import { nodesBetweenChanged } from '../../../utils';
+import { TaskItemNode } from '../ui/TaskItemNode';
+import { TaskListNode } from '../ui/TaskListNode';
 
 export const stateKey = new PluginKey('tasksAndDecisionsPlugin');
 
@@ -44,6 +46,11 @@ export function createPlugin(
 ) {
   return new Plugin({
     props: {
+      // @ts-ignore
+      toReact: {
+        taskList: TaskListNode,
+        taskItem: TaskItemNode,
+      },
       nodeViews: {
         taskItem: taskItemNodeViewFactory(portalProviderAPI, providerFactory),
         decisionItem: decisionItemNodeView(portalProviderAPI),
