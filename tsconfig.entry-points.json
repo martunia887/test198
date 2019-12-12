@@ -771,6 +771,10 @@
         "../../core/range/src/theme",
         "./packages/core/range/src/theme"
       ],
+      "@atlaskit/rating": [
+        "../../core/rating/src/",
+        "./packages/core/rating/src/"
+      ],
       "@atlaskit/section-message": [
         "../../core/section-message/src/",
         "./packages/core/section-message/src/"

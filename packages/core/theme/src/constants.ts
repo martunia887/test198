@@ -46,6 +46,22 @@ export const layers = {
   tooltip: () => 800,
 };
 
+export const visuallyHidden = () => ({
+  border: '0 !important',
+  clip: 'rect(1px, 1px, 1px, 1px) !important',
+  height: '1px !important',
+  overflow: 'hidden !important' as 'hidden',
+  padding: '0 !important',
+  position: 'absolute !important' as 'absolute',
+  width: '1px !important',
+  whiteSpace: 'nowrap !important' as 'nowrap',
+});
+
+/**
+ * Deprecated Styled Components mixin.
+ * Use visuallyHidden instead.
+ * @deprecated
+ */
 export const assistive = () => css`
   border: 0 !important;
   clip: rect(1px, 1px, 1px, 1px) !important;

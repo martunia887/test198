@@ -55,9 +55,9 @@ export default md`
     />
   )}
 
-  ### Assistive
+  ### Visually hidden
 
-  This [Styled Components](https://www.styled-components.com/) mixin will visually hide an element,
+  This agnostic mixin will visually hide an element,
   taking it out of the page flow,
   but still allow screen readers to read it.
 
