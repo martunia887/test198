@@ -79,8 +79,13 @@ export class BatchFinder {
     }
   }
 
+  /**
+   * Util to batch function calls by animation frames
+   * Passed in fn receives the counter as a param, return false if you want to
+   * skip waiting for the animation frame for the next call
+   */
   private batchRequests(
-    fn: (counter: number) => void,
+    fn: (counter: number) => void | undefined | false,
     opts: { increment: number; until: number },
   ): Promise<undefined> {
     let counter = 0;
@@ -88,7 +93,12 @@ export class BatchFinder {
 
     return new Promise(resolve => {
       const batchedFn = () => {
-        fn(counter);
+        let result = fn(counter);
+        while (result === false && counter < until) {
+          counter += increment;
+          result = fn(counter);
+        }
+
         if (counter < until) {
           counter += increment;
           this.rafId = requestAnimationFrame(batchedFn);
@@ -128,17 +138,18 @@ export class BatchFinder {
           counter,
           counter + batchIncrement,
         );
-        if (matchesToDecorate.length > 0) {
-          const useSelectionIndex =
-            selectionIndex >= counter &&
-            selectionIndex < counter + batchIncrement;
-          addDecorations(
-            createDecorations(
-              useSelectionIndex ? selectionIndex % batchIncrement : -1,
-              matchesToDecorate,
-            ),
-          )(editorView.state, editorView.dispatch);
+        if (matchesToDecorate.length === 0) {
+          return false;
         }
+        const useSelectionIndex =
+          selectionIndex >= counter &&
+          selectionIndex < counter + batchIncrement;
+        addDecorations(
+          createDecorations(
+            useSelectionIndex ? selectionIndex % batchIncrement : -1,
+            matchesToDecorate,
+          ),
+        )(editorView.state, editorView.dispatch);
       },
       { increment: batchIncrement, until: matchesBetween.length },
     );
@@ -158,7 +169,14 @@ export class BatchFinder {
 
     return this.batchRequests(
       counter => {
-        removeDecorations(decorations.slice(counter, counter + batchIncrement))(
+        const decorationsToRemove = decorations.slice(
+          counter,
+          counter + batchIncrement,
+        );
+        if (decorationsToRemove.length === 0) {
+          return false;
+        }
+        removeDecorations(decorationsToRemove)(
           editorView.state,
           editorView.dispatch,
         );
