@@ -661,4 +661,4 @@ pipelines:
             - source ./build-setup.sh
             - bolt install --frozen-lockfile
             - cd build/scheduled-releases
-            - for COMMIT in $Commits; do yarn update-pr "$COMMIT" "$BITBUCKET_REPO_FULL_NAME"; done
+            - for COMMIT in $Commits; do yarn update-pr "$COMMIT" "$BITBUCKET_REPO_FULL_NAME" --closedPrs; done

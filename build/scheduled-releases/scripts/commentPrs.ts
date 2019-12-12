@@ -50,10 +50,12 @@ function updateAllPrsWithRelease() {
 
 type Opts = {
   dryRun: boolean;
+  closedPrs: boolean;
 };
 
 const defaultOpts = {
   dryRun: false,
+  closedPrs: false,
 };
 
 /** Updates any pull requests relevant to scheduled releases with comments pertaining to the release that the PR will or has been released in.
@@ -77,6 +79,7 @@ export default async function main(
   const matchedPr: PullRequest | undefined = await getPrFromCommit(
     commitHash,
     repoFullName,
+    opts.closedPrs,
   );
   if (!matchedPr) {
     throw Error(`Cannot find PR for commit ${commitHash}`);
@@ -110,6 +113,7 @@ if (require.main === module) {
   const flags = args.filter(a => a.startsWith('--'));
   main(commitHash, repoFullName, {
     dryRun: flags.includes('--dryRun') || flags.includes('--dry-run'),
+    closedPrs: flags.includes('--closedPrs') || flags.includes('--closed-prs'),
   }).catch(e => {
     console.error(chalk.red(e));
     process.exit(1);

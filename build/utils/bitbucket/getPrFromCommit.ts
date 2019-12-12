@@ -39,6 +39,7 @@ function httpGetRequest(url: string) {
 export async function getPrFromCommit(
   commitHash: string,
   repoFullName: string,
+  closedPrs: boolean = false,
 ) {
   if (!commitHash || !repoFullName) {
     throw Error('Missing commitHash or repoFullName');
@@ -47,7 +48,9 @@ export async function getPrFromCommit(
   // We sort descending on created_on to get newest first and only look at open PRs
   let endpoint:
     | string
-    | undefined = `https://api.bitbucket.org/2.0/repositories/${repoFullName}/pullrequests?sort=-created_on&state=OPEN&pagelen=20`;
+    | undefined = `https://api.bitbucket.org/2.0/repositories/${repoFullName}/pullrequests?sort=-created_on${
+    closedPrs ? '' : '&state=OPEN'
+  }&pagelen=20`;
   let response: PaginatedPullRequests;
   let matchedPr: PullRequest | undefined;
 
