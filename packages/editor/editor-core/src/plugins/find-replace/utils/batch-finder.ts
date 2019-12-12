@@ -81,6 +81,7 @@ export class BatchFinder {
 
   /**
    * Util to batch function calls by animation frames
+   * A counter will start at 0 and increment by provided value until reaches limit
    * Passed in fn receives the counter as a param, return false if you want to
    * skip waiting for the animation frame for the next call
    */

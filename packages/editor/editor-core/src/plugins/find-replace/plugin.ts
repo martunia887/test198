@@ -11,6 +11,7 @@ import {
   nextIndex,
   removeDecorationsFromSet,
   findDecorationFromMatch,
+  findSearchIndex,
 } from './utils';
 import { findUniqueItemsIn } from '../../utils/array';
 
@@ -95,16 +96,20 @@ const handleDocChanged = (
       );
     }
 
-    // update selected match if previous selected match was deleted
+    // update selected match if it has changed
     const selectedMatch = matches[index];
-    if (
-      (selectedMatch &&
-        matchesToDelete.find(match => match.start === selectedMatch.start)) ||
-      !selectedMatch
-    ) {
+    let newIndex = newMatches.findIndex(
+      match => match.start === selectedMatch.start,
+    );
+    if (newIndex === undefined || newIndex === -1) {
+      newIndex = findSearchIndex(tr.selection.from, newMatches);
+    }
+    const newSelectedMatch = newMatches[newIndex];
+
+    if (selectedMatch.start !== newSelectedMatch.start) {
       const decorationToRemove = findDecorationFromMatch(
         decorationSet,
-        newMatches[index],
+        selectedMatch,
       );
       if (decorationToRemove) {
         decorationSet = removeDecorationsFromSet(
@@ -115,14 +120,14 @@ const handleDocChanged = (
       }
       decorationSet = decorationSet.add(
         tr.doc,
-        createDecorations(0, [newMatches[index]]),
+        createDecorations(0, [newSelectedMatch]),
       );
     }
 
     return {
       ...pluginState,
       matches: newMatches,
-      index,
+      index: newIndex,
       decorationSet,
     };
   }

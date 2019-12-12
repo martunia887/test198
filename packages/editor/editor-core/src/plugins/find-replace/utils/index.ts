@@ -90,10 +90,18 @@ export const removeDecorationsFromSet = (
   doc: PmNode,
 ): DecorationSet => {
   const decorations = decorationSet.find();
-  decorationSet = decorationSet.remove(decorationsToRemove);
+  // it is essential that we copy the decorations otherwise in some rare cases
+  // prosemirror-view will update our decorationsToRemove array to contain nulls
+  // instead of Decorations which ruins our check for lost decorations below
+  decorationSet = decorationSet.remove(
+    decorationsToRemove.map(decoration =>
+      decoration.copy(decoration.from, decoration.to),
+    ),
+  );
 
-  // there is a bug in prosemirror-view where it can't cope with deleting
-  // inline decorations from a set in some cases, and deletes more than it should
+  // there is a bug in prosemirror-view where it can't cope with deleting inline
+  // decorations from a set in some cases (where there are multiple levels of nested
+  // children arrays), and it deletes more decorations than it should
   // todo: ticket link
   if (
     decorationSet.find().length <
@@ -106,7 +114,7 @@ export const removeDecorationsFromSet = (
     ).filter(
       decoration =>
         !decorationsToRemove.find(
-          decorationToRemove => decoration === decorationToRemove,
+          decorationToRemove => decoration.from === decorationToRemove.from,
         ),
     );
     decorationSet = decorationSet.add(doc, lostDecorations);
