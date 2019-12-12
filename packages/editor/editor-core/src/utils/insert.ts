@@ -71,7 +71,7 @@ export const safeInsert = (content: InsertableContent, position?: number) => (
   tr: Transaction,
 ) => {
   const { nodes } = tr.doc.type.schema;
-  const whitelist = [nodes.rule, nodes.mediaSingle];
+  const whitelist = [nodes.rule, nodes.mediaSingle, nodes.inlineCard];
 
   // fallback if the node to insert is not in the whitelist, or if the insertion should happen within a list.
   if (

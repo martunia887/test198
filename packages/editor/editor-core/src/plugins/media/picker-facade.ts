@@ -17,6 +17,7 @@ import {
   MobileUploadEndEventPayload,
 } from './types';
 import { PluginItemPayload } from '@atlaskit/media-picker/types';
+import { MediaPluginState } from './types';
 
 export type PickerType =
   | 'popup'
@@ -171,8 +172,9 @@ export default class PickerFacade {
   public handlePluginInsert = (events: PluginItemPayload[]) => {
     // Signal start of insertion - with initial state (?)
     events.forEach(({ pluginFile }) => {
-      const state: MediaState = {
+      const state: MediaPluginState = {
         id: pluginFile.id,
+        type: pluginFile.metadata.type,
         src: pluginFile.metadata.src,
         external: true,
       };

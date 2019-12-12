@@ -9,7 +9,7 @@ import {
 } from '@atlaskit/editor-test-helpers';
 
 import { validator, ErrorCallback, ADFEntity } from '@atlaskit/adf-utils';
-import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { Provider as SmartCardProvider, Client } from '@atlaskit/smart-card';
 import { mention } from '@atlaskit/util-data-test';
 
 import Editor from './../src/editor';
@@ -39,6 +39,8 @@ export type Props = {
   extensionProviders?: ExtensionProvider[];
 };
 
+const client = new Client('prod');
+
 export type State = {
   editorView: EditorView;
 };
@@ -63,7 +65,7 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
       extensionProviders,
     } = this.props;
     return (
-      <SmartCardProvider>
+      <SmartCardProvider client={client}>
         <Editor
           appearance={appearance}
           analyticsHandler={analyticsHandler}

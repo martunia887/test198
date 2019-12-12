@@ -178,17 +178,20 @@ export const insertMediaSingleNode = (
   }
 
   if (shouldSplit) {
+    console.log({ shouldSplit });
     insertNodesWithOptionalParagraph([node], { fileExtension, inputMethod })(
       state,
       dispatch,
     );
   } else {
     const { allowNewInsertionBehaviour } = getEditorProps(view.state);
+    console.log({ allowNewInsertionBehaviour });
     let tr: Transaction<any> | null = null;
     if (allowNewInsertionBehaviour) {
       tr = safeInsert(node, state.selection.from)(state.tr);
     }
 
+    console.log({ tr });
     if (!tr) {
       const content = shouldAddParagraph(view.state)
         ? Fragment.fromArray([node, state.schema.nodes.paragraph.create()])
@@ -212,30 +215,37 @@ export const insertMediaSingleNode = (
 export const createMediaSingleNode = (schema: Schema, collection: string) => (
   mediaState: MediaSingleState,
 ) => {
-  const { media, mediaSingle } = schema.nodes;
+  console.log({ mediaState });
+  const { media, mediaSingle, inlineCard } = schema.nodes;
   const { dimensions, scaleFactor = 1 } = mediaState;
   const { width, height } = dimensions || {
     height: undefined,
     width: undefined,
   };
   let mediaNode;
-  if (!mediaState.external) {
-    mediaNode = media.create({
-      id: mediaState.id,
-      type: 'file',
-      collection,
-      contextId: mediaState.contextId,
-      width: width && Math.round(width / scaleFactor),
-      height: height && Math.round(height / scaleFactor),
+  if ((mediaState as any).type === 'link') {
+    return inlineCard.createChecked({
+      url: mediaState.src,
     });
   } else {
-    mediaNode = media.create({
-      url: mediaState.src,
-      type: 'external',
-      width: width && Math.round(width / scaleFactor),
-      height: height && Math.round(height / scaleFactor),
-      __external: true,
-    });
+    if (!mediaState.external) {
+      mediaNode = media.create({
+        id: mediaState.id,
+        type: 'file',
+        collection,
+        contextId: mediaState.contextId,
+        width: width && Math.round(width / scaleFactor),
+        height: height && Math.round(height / scaleFactor),
+      });
+    } else {
+      mediaNode = media.create({
+        url: mediaState.src,
+        type: 'external',
+        width: width && Math.round(width / scaleFactor),
+        height: height && Math.round(height / scaleFactor),
+        __external: true,
+      });
+    }
   }
   copyOptionalAttrsFromMediaState(mediaState, mediaNode);
   return mediaSingle.createChecked({}, mediaNode);

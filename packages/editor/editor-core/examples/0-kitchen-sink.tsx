@@ -26,7 +26,7 @@ import EditorContext from './../src/ui/EditorContext';
 import { EditorAppearance } from '../src/types';
 import { EditorActions } from '../src';
 
-import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { Provider as SmartCardProvider, Client } from '@atlaskit/smart-card';
 import ErrorReport, { Error } from '../example-helpers/ErrorReport';
 import KitchenSinkEditor from '../example-helpers/KitchenSinkEditor';
 import withSentry from '../example-helpers/withSentry';
@@ -37,7 +37,7 @@ import { getXProductExtensionProvider } from '../example-helpers/fake-x-product-
 addGlobalEventEmitterListeners();
 
 const extensionProviders = [getXProductExtensionProvider()];
-
+const client = new Client('prod');
 const Container = styled.div`
   display: flex;
   margin-top: 0.5em;
@@ -459,7 +459,7 @@ class FullPageRendererExample extends React.Component<Props, State> {
                         locale={this.getLocalTag(locale)}
                         messages={messages}
                       >
-                        <SmartCardProvider>
+                        <SmartCardProvider client={new Client('prod')}>
                           <ReactRenderer
                             allowHeadingAnchorLinks
                             document={this.state.adf}

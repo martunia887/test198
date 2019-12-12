@@ -35,6 +35,9 @@ export interface MediaState {
   src?: string;
   external?: boolean;
 }
+export interface MediaPluginState extends MediaState {
+  type: 'image' | 'link';
+}
 
 export type Listener = (data: any) => void;
 
