@@ -18,6 +18,8 @@ import {
   startMeasure,
   stopMeasure,
   SwitchWidthDetectorProvider,
+  IframeWrapperConsumer,
+  IframeWidthDetectorFallbackWrapper,
 } from '@atlaskit/editor-common';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
@@ -62,7 +64,7 @@ export interface Props {
   allowColumnSorting?: boolean;
   shouldOpenMediaViewer?: boolean;
   UNSAFE_allowAltTextOnImages?: boolean;
-  iframeWidthDetectorFallback?: React.RefObject<HTMLDivElement>;
+  useResizeObserverWidthProvider?: boolean;
 }
 
 export class Renderer extends PureComponent<Props, {}> {
@@ -211,7 +213,7 @@ export class Renderer extends PureComponent<Props, {}> {
       truncated,
       maxHeight,
       fadeOutHeight,
-      iframeWidthDetectorFallback,
+      useResizeObserverWidthProvider,
     } = this.props;
 
     try {
@@ -237,8 +239,7 @@ export class Renderer extends PureComponent<Props, {}> {
               <SmartCardStorageProvider>
                 <SwitchWidthDetectorProvider
                   value={{
-                    shouldUseOldWidthProvider: false,
-                    iframeWidthDetectorFallback,
+                    useResizeObserverWidthProvider,
                   }}
                 >
                   <RendererWrapper
@@ -319,19 +320,43 @@ type RendererWrapperProps = {
   wrapperRef?: (instance: React.RefObject<HTMLElement>) => void;
 } & { children?: React.ReactNode };
 
-export function RendererWrapper({
-  appearance,
-  children,
-  dynamicTextSizing,
-  wrapperRef,
-}: RendererWrapperProps) {
+const RendererWithIframeFallbackWrapper = React.memo(
+  (props: RendererWrapperProps & { subscribe: Function | null }) => {
+    const {
+      dynamicTextSizing,
+      wrapperRef,
+      appearance,
+      children,
+      subscribe,
+    } = props;
+    const renderer = (
+      <WidthProvider>
+        <BaseTheme dynamicTextSizing={dynamicTextSizing}>
+          <Wrapper innerRef={wrapperRef} appearance={appearance}>
+            {children}
+          </Wrapper>
+        </BaseTheme>
+      </WidthProvider>
+    );
+
+    if (!subscribe) {
+      return (
+        <IframeWidthDetectorFallbackWrapper>
+          {renderer}
+        </IframeWidthDetectorFallbackWrapper>
+      );
+    }
+
+    return renderer;
+  },
+);
+
+export function RendererWrapper(props: RendererWrapperProps) {
   return (
-    <WidthProvider>
-      <BaseTheme dynamicTextSizing={dynamicTextSizing}>
-        <Wrapper innerRef={wrapperRef} appearance={appearance}>
-          {children}
-        </Wrapper>
-      </BaseTheme>
-    </WidthProvider>
+    <IframeWrapperConsumer>
+      {({ subscribe }) => (
+        <RendererWithIframeFallbackWrapper {...props} subscribe={subscribe} />
+      )}
+    </IframeWrapperConsumer>
   );
 }

@@ -72,7 +72,8 @@ export default function Example() {
         allowColumnSorting={true}
         serializer="react"
         showHowManyCopies
-        copies={100}
+        copies={1}
+        useResizeObserverWidthProvider={!oldWidthDetector}
       />
     </Provider>
   );

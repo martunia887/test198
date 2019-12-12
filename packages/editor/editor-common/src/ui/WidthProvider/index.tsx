@@ -1,6 +1,10 @@
 import * as React from 'react';
 import rafSchedule from 'raf-schd';
 import {
+  IframeWrapperConsumer,
+  IframeWidthDetectorFallbackWrapper,
+} from './iframe-fallbacks';
+import {
   SwitchWidthDetector,
   SwitchWidthDetectorProvider,
 } from './SwitchWidthDetector';
@@ -45,11 +49,11 @@ export class WidthProvider extends React.Component<any, WidthProviderState> {
   render() {
     return (
       <>
-        <SwitchWidthDetector setWidth={this.setWidth}>
-          <Provider value={createWidthContext(this.state.width)}>
-            {this.props.children}
-          </Provider>
-        </SwitchWidthDetector>
+        <SwitchWidthDetector setWidth={this.setWidth} />
+
+        <Provider value={createWidthContext(this.state.width)}>
+          {this.props.children}
+        </Provider>
       </>
     );
   }
@@ -68,4 +72,9 @@ export class WidthProvider extends React.Component<any, WidthProviderState> {
   });
 }
 
-export { Consumer as WidthConsumer, SwitchWidthDetectorProvider };
+export {
+  Consumer as WidthConsumer,
+  SwitchWidthDetectorProvider,
+  IframeWrapperConsumer,
+  IframeWidthDetectorFallbackWrapper,
+};

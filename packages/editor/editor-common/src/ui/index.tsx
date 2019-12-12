@@ -38,6 +38,8 @@ export {
   WidthProvider,
   getBreakpoint,
   SwitchWidthDetectorProvider,
+  IframeWrapperConsumer,
+  IframeWidthDetectorFallbackWrapper,
 } from './WidthProvider';
 
 export {

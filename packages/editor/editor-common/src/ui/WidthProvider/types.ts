@@ -1,13 +1,7 @@
 export type ContextProps = {
-  iframeGlobalSuffix?: string;
-  shouldUseOldWidthProvider?: boolean;
-  iframeWidthDetectorFallback?:
-    | React.RefObject<HTMLDivElement>
-    | null
-    | undefined;
+  useResizeObserverWidthProvider?: boolean;
 };
 
 export type Props = {
   setWidth: (width: number) => void;
-  children: React.ReactNode;
 };

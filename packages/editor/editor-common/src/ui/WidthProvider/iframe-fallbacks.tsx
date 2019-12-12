@@ -1,154 +1,205 @@
-import React from 'react';
+import React, { FunctionComponent, useRef, useState, useEffect } from 'react';
 import { useInView } from './hooks';
 import { ContextProps, Props } from './types';
+import { browser } from '../../utils';
 
-const GLOBAL_IFRAME_PREFIX = 'ak-editor-common-global-iframe__';
-const NO_ID = 'no_id';
+type Unsubscribe = () => void;
+type SubscriptionCallback = (callback: Function) => Unsubscribe;
+type IframeContext = {
+  subscribe: SubscriptionCallback | null;
+};
+type SubscribeProps = {
+  subscribe: SubscriptionCallback;
+} & Props;
+type IframeWidthDetectorProps = {
+  useIntersectionObserver: boolean;
+} & Props &
+  ContextProps;
+type IframeProps = {
+  onResize: () => void;
+};
 
-function getId(id: string): string {
-  return `${GLOBAL_IFRAME_PREFIX}__${id}`;
-}
-function createGlobalIframe(id: string): HTMLObjectElement {
-  const object = document.createElement('object');
-  object.setAttribute('type', 'text/html');
-  object.setAttribute('aria-hidden', 'true');
-  object.setAttribute('tab-index', '-1');
-  object.setAttribute('id', getId(id));
+function Iframe(props: IframeProps) {
+  const { onResize } = props;
+  const ref = useRef<HTMLObjectElement>(null);
 
-  object.style.cssText = [`position: absolute;`, `width: 100%;`].join(' ');
-  object.data = 'about:blank';
-
-  return object;
-}
-
-function getIframe(
-  id: string,
-  target: HTMLDivElement,
-): HTMLObjectElement | null {
-  if (!document || !document.querySelector || !target) {
-    return null;
-  }
-
-  const element = document.querySelector(`object#${getId(id)}`);
-
-  if (element instanceof HTMLObjectElement) {
-    return element;
-  }
-
-  const iframe = createGlobalIframe(id);
-
-  target.style.cssText = [
-    `position: relative;`,
-    `height: 0;`,
-    `width: 100%;`,
-  ].join(' ');
-  target.appendChild(iframe);
-
-  return iframe;
-}
-
-type DestroyIframe = () => boolean;
-
-function globalIframe(
-  id: string,
-  target: HTMLDivElement,
-  onResize: () => void,
-): DestroyIframe | null {
-  const iframe = getIframe(id, target);
-
-  if (!iframe) {
-    return null;
-  }
-
-  if (!iframe.contentDocument || !iframe.contentDocument.defaultView) {
-    return null;
-  }
-
-  const iframeWindow = iframe.contentDocument.defaultView;
-  iframeWindow.addEventListener('resize', onResize);
-
-  return () => {
-    iframeWindow.removeEventListener('resize', onResize);
-    return true;
-  };
-}
-
-export function IframeWidthDetector({
-  iframeGlobalSuffix,
-  setWidth,
-  children,
-  iframeWidthDetectorFallback,
-}: Props & ContextProps) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    const onResize = () => {
-      if (ref && ref.current) {
-        const { current } = ref;
-        const width = current.offsetWidth;
-        setWidth(width);
-      }
-    };
-
-    if (
-      ref &&
-      ref.current &&
-      iframeWidthDetectorFallback &&
-      iframeWidthDetectorFallback.current
-    ) {
-      const { current } = ref;
-      const width = current.offsetWidth;
-      setWidth(width);
-
-      globalIframe(
-        iframeGlobalSuffix || NO_ID,
-        iframeWidthDetectorFallback.current,
-        onResize,
-      );
-    }
-  });
-
-  return <div ref={ref}>{children}</div>;
-}
-
-export function IframeWidthDetectorWithUseInView({
-  iframeGlobalSuffix,
-  setWidth,
-  children,
-  iframeWidthDetectorFallback,
-}: Props & ContextProps) {
-  const [inViewRef, inView, entry] = useInView({
-    /* Optional options */
-    threshold: 0,
-  });
-
-  React.useEffect(() => {
-    if (!inView || !entry || !(entry.target instanceof HTMLElement)) {
+  useEffect(() => {
+    if (!ref || !ref.current) {
       return;
     }
-    const { target } = entry;
 
-    const onResize = () => {
-      if (entry) {
+    const { current: iframe } = ref;
+
+    if (!iframe.contentDocument || !iframe.contentDocument.defaultView) {
+      return;
+    }
+
+    const iframeWindow = iframe.contentDocument.defaultView;
+    iframeWindow.addEventListener('resize', onResize);
+
+    return () => {
+      iframeWindow.removeEventListener('resize', onResize);
+    };
+  });
+
+  return (
+    <object
+      ref={ref}
+      data="about:blank"
+      type="text/html"
+      style={{ position: 'absolute', height: '0', width: '100%' }}
+      aria-hidden
+      tabIndex={-1}
+    />
+  );
+}
+
+const IframeWrapper: FunctionComponent = ({ children }) => (
+  <div
+    style={{
+      position: 'relative',
+      height: '0',
+      width: '100%',
+    }}
+  >
+    {children}
+  </div>
+);
+
+const emptySubscription: SubscriptionCallback = () => () => {};
+
+export const {
+  Consumer: IframeWrapperConsumer,
+  Provider: IframeWrapperProvider,
+} = React.createContext<IframeContext>({
+  subscribe: null,
+});
+
+const SubscribeIframeResize = React.memo(
+  ({ subscribe, setWidth }: SubscribeProps) => {
+    const ref = React.useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (ref && ref.current) {
+        const { current: target } = ref;
         const width = target.offsetWidth;
         setWidth(width);
       }
-    };
 
-    if (
-      target &&
-      iframeWidthDetectorFallback &&
-      iframeWidthDetectorFallback.current
-    ) {
-      const width = target.offsetWidth;
-      setWidth(width);
+      const unsubscribe = subscribe(() => {
+        if (ref && ref.current) {
+          const { current: target } = ref;
+          const width = target.offsetWidth;
+          setWidth(width);
+        }
+      });
 
-      globalIframe(
-        iframeGlobalSuffix || NO_ID,
-        iframeWidthDetectorFallback.current,
-        onResize,
-      );
-    }
-  });
+      return unsubscribe;
+    });
 
-  return <div ref={inViewRef}>{children}</div>;
+    return <div ref={ref} />;
+  },
+);
+
+const SubscribeIframeResizeWhenVisible = React.memo(
+  ({ subscribe, setWidth }: SubscribeProps) => {
+    const [inViewRef, inView, entry] = useInView({
+      /* Optional options */
+      threshold: 0,
+    });
+
+    useEffect(() => {
+      if (inView && entry && entry.target instanceof HTMLElement) {
+        const { target } = entry;
+        const width = target.offsetWidth;
+        setWidth(width);
+      }
+
+      const unsubscribe = subscribe(() => {
+        if (inView && entry && entry.target instanceof HTMLElement) {
+          const { target } = entry;
+          const width = target.offsetWidth;
+
+          setWidth(width);
+        }
+      });
+
+      return unsubscribe;
+    });
+
+    return <div ref={inViewRef} />;
+  },
+);
+
+function getSubscribeIframe(useIntersectionObserver: boolean) {
+  if (useIntersectionObserver) {
+    return SubscribeIframeResizeWhenVisible;
+  }
+
+  return SubscribeIframeResize;
 }
+
+export function IframeWidthDetector({
+  setWidth,
+  useIntersectionObserver,
+}: IframeWidthDetectorProps) {
+  const Component = getSubscribeIframe(useIntersectionObserver);
+
+  return (
+    <IframeWrapperConsumer>
+      {({ subscribe }) => (
+        <Component
+          setWidth={setWidth}
+          subscribe={subscribe || emptySubscription}
+        />
+      )}
+    </IframeWrapperConsumer>
+  );
+}
+
+const IframeWidthDetectorFallback = React.memo(
+  (props: { children?: React.ReactNode }) => {
+    const [listeners] = useState(new Map());
+    const subscribe = React.useCallback(
+      cb => {
+        listeners.set(cb, null);
+        return () => {
+          listeners.delete(cb);
+        };
+      },
+      [listeners],
+    );
+
+    const onResize = React.useCallback(() => {
+      listeners.forEach((_, cb) => cb());
+    }, [listeners]);
+
+    return (
+      <>
+        <IframeWrapper>
+          <Iframe onResize={onResize} />
+        </IframeWrapper>
+
+        <IframeWrapperProvider value={{ subscribe }}>
+          {props.children}
+        </IframeWrapperProvider>
+      </>
+    );
+  },
+);
+
+export const IframeWidthDetectorFallbackWrapper = React.memo(
+  (props: { children?: React.ReactNode }) => {
+    const { supportsResizeObserver, supportsIntersectionObserver } = browser;
+
+    if (supportsResizeObserver && supportsIntersectionObserver) {
+      return <>{props.children}</>;
+    }
+
+    return (
+      <IframeWidthDetectorFallback>
+        {props.children}
+      </IframeWidthDetectorFallback>
+    );
+  },
+);

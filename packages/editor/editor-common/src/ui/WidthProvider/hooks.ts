@@ -11,14 +11,6 @@ type State = {
   entry?: IntersectionObserverEntry;
 };
 
-export type ContextProps = {
-  shouldUseOldWidthProvider?: boolean;
-  iframeWidthDetectorFallback?:
-    | React.RefObject<HTMLDivElement>
-    | null
-    | undefined;
-};
-
 export function useInView(options: IntersectionObserverInit = {}): Response {
   const ref = React.useRef<Element>();
   const [state, setState] = React.useState<State>({
