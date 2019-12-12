@@ -227,6 +227,26 @@ Have feedback? Post it to http://go/dst-sd
             ),
           );
 
+          if (compiledCss.cssVariables) {
+            nodeToTransform.openingElement.attributes.properties.push(
+              ts.createJsxAttribute(
+                ts.createIdentifier('style'),
+                ts.createJsxExpression(
+                  undefined,
+                  ts.createObjectLiteral(
+                    compiledCss.cssVariables.map(variable => {
+                      return ts.createPropertyAssignment(
+                        ts.createStringLiteral(variable.var),
+                        variable.nodeReference,
+                      );
+                    }),
+                    false,
+                  ),
+                ),
+              ),
+            );
+          }
+
           // Create the style element that will precede the node that had the css prop.
           const styleNode = ts.createJsxElement(
             ts.createJsxOpeningElement(
