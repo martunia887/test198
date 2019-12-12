@@ -158,7 +158,7 @@ Have feedback? Post it to http://go/dst-sd
         )
       ) {
         // Okay so React doesn't exist anywhere. But the 'react' import could still be around. Let's do another search.
-        const reactImportNode = rootNode.statements.find((statement, index) => {
+        const reactImportNode = rootNode.statements.find(statement => {
           return (
             statement.moduleSpecifier &&
             statement.moduleSpecifier.text === 'react'
@@ -221,11 +221,30 @@ Have feedback? Post it to http://go/dst-sd
 
           // Compile the CSS from the styles object node.
           const className = classNameIds.next();
-          const processedCss = processCssProperties(
-            cssPropNode.initializer.expression.properties,
-            { cssVariableIds },
-          );
-          const compiledCss = stylis(`.${className}`, processedCss.css);
+          let compiledCss;
+          let cssVariables = [];
+
+          if (
+            ts.isObjectLiteralExpression(cssPropNode.initializer.expression)
+          ) {
+            const processedCssObject = processCssProperties(
+              cssPropNode.initializer.expression.properties,
+              { cssVariableIds },
+            );
+            cssVariables = processedCssObject.cssVariables;
+            compiledCss = stylis(`.${className}`, processedCssObject.css);
+          } else if (
+            ts.isNoSubstitutionTemplateLiteral(
+              cssPropNode.initializer.expression,
+            )
+          ) {
+            compiledCss = stylis(
+              `.${className}`,
+              cssPropNode.initializer.expression.text,
+            );
+          } else {
+            throw new Error('unsupported value in css prop');
+          }
 
           log('removing css prop');
 
@@ -241,14 +260,14 @@ Have feedback? Post it to http://go/dst-sd
             ),
           );
 
-          if (processedCss.cssVariables.length) {
+          if (cssVariables.length) {
             nodeToTransform.openingElement.attributes.properties.push(
               ts.createJsxAttribute(
                 ts.createIdentifier('style'),
                 ts.createJsxExpression(
                   undefined,
                   ts.createObjectLiteral(
-                    processedCss.cssVariables.map(variable => {
+                    cssVariables.map(variable => {
                       return ts.createPropertyAssignment(
                         ts.createStringLiteral(variable.var),
                         variable.nodeReference,
