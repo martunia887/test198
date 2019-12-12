@@ -109,7 +109,7 @@ const Rating = forwardRef<HTMLLabelElement, InternalRatingProps>(
           >
             {/* When tooltip doesn't render markup move it above <label /> */}
             <div>
-              <span css={assistive}>{label}</span>
+              <span css={visuallyHidden}>{label}</span>
               {/* We render two slots for the two states of the radio button so we don't need to use react state. */}
               <span
                 aria-hidden="true"
