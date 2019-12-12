@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Geolocation } from '@atlaskit/maps-core';
 import Button from '@atlaskit/button';
 import MapModal from '../src/modal';
+import Wrapper from './utils/wrapper';
 
 const locations = [
   {
@@ -36,18 +37,11 @@ export default () => {
   const geolocations = locations.map(location => new Geolocation(location));
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-      }}
-    >
+    <Wrapper>
       <Button onClick={open} appearance={'primary'}>
         Open Modal
       </Button>
       <MapModal isOpen={isOpen} onClose={close} locations={geolocations} />
-    </div>
+    </Wrapper>
   );
 };
