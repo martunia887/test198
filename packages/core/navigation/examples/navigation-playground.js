@@ -10,8 +10,9 @@ import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 import Page from '@atlaskit/page';
 import Tooltip from '@atlaskit/tooltip';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { FieldTextStateless } from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 import { Checkbox } from '@atlaskit/checkbox';
+import { Label } from '@atlaskit/field-base';
 // $FlowFixMe: cannot resolve TS module
 import { AkSearch } from '@atlaskit/quick-search';
 
@@ -191,11 +192,13 @@ class CustomDrawer extends Component<*, *> {
           <Button onClick={this.setWidthFull}>Full</Button>
         </ButtonGroup>
         <h3>Set iconOffset</h3>
-        <FieldTextStateless
+        <Label htmlFor="icon-offset" label="Stateless Text Input Example" />
+        <TextField
+          id="icon-offset"
           type="number"
-          label="Stateless Text Input Example"
           onChange={this.setIconOffset}
           value={iconOffset}
+          width="small"
         />
       </AkCustomDrawer>
     );
