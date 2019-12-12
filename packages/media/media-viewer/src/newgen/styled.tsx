@@ -371,15 +371,9 @@ export const ArchiveWrapper = styled.div`
 export const ArchiveItemViewer = styled.div``;
 
 export const ArchiveSideBar = styled.div`
-  position: absolute;
-  top: 0;
   padding: 20px;
-  left: 0;
-  width: 350px;
-  height: 100%;
   background: white;
   color: black;
-  z-index: 99999999999999999;
 `;
 
 export const ArchiveSidebarFolderWrapper = styled.div`
