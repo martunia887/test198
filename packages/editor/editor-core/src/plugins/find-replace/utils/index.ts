@@ -1,8 +1,10 @@
 import { Fragment, Node as PmNode } from 'prosemirror-model';
-import { Decoration } from 'prosemirror-view';
-import { TextSelection } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import { TextSelection, EditorState } from 'prosemirror-state';
 import { colors } from '@atlaskit/theme';
 import { Match } from '../types';
+import { getFindReplacePluginState } from '../plugin';
+import { findUniqueItemsIn } from '../../../utils/array';
 
 export function getSelectedText(selection: TextSelection): string {
   let text = '';
@@ -18,12 +20,17 @@ export const createDecorations = (
   matches: { start: number; end: number }[],
 ): Decoration[] =>
   matches.map(({ start, end }, i) =>
-    Decoration.inline(start, end, {
-      style: `background-color: ${
-        i === selectedIndex ? colors.B100 : colors.B75
-      };`,
-    }),
+    createDecoration(start, end, i === selectedIndex),
   );
+
+export const createDecoration = (
+  start: number,
+  end: number,
+  isSelected?: boolean,
+) =>
+  Decoration.inline(start, end, {
+    style: `background-color: ${isSelected ? colors.B100 : colors.B75};`,
+  });
 
 export function findMatches(
   content: PmNode | Fragment,
@@ -62,3 +69,48 @@ export function findSearchIndex(
     0,
   );
 }
+
+export const nextIndex = (currentIndex: number, total: number) =>
+  (currentIndex + 1) % total;
+
+export const prevIndex = (currentIndex: number, total: number) =>
+  (currentIndex - 1 + total) % total;
+
+export const findDecorationFromMatch = (
+  decorationSet: DecorationSet,
+  match: Match,
+): Decoration | undefined => {
+  const decorations = decorationSet.find(match.start, match.end);
+  return decorations.length ? decorations[0] : undefined;
+};
+
+export const removeDecorationsFromSet = (
+  decorationSet: DecorationSet,
+  decorationsToRemove: Decoration[],
+  doc: PmNode,
+): DecorationSet => {
+  const decorations = decorationSet.find();
+  decorationSet = decorationSet.remove(decorationsToRemove);
+
+  // there is a bug in prosemirror-view where it can't cope with deleting
+  // inline decorations from a set in some cases, and deletes more than it should
+  // todo: ticket link
+  if (
+    decorationSet.find().length <
+    decorations.length - decorationsToRemove.length
+  ) {
+    const lostDecorations = findUniqueItemsIn<Decoration>(
+      decorations,
+      decorationSet.find(),
+      (firstItem, secondItem) => firstItem.from === secondItem.from,
+    ).filter(
+      decoration =>
+        !decorationsToRemove.find(
+          decorationToRemove => decoration === decorationToRemove,
+        ),
+    );
+    decorationSet = decorationSet.add(doc, lostDecorations);
+  }
+
+  return decorationSet;
+};

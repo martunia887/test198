@@ -1,5 +1,6 @@
 import { FindReplaceState, getInitialState } from './plugin';
 import { FindReplaceActionTypes, FindReplaceAction } from './actions';
+import { nextIndex, prevIndex } from './utils';
 
 const reducer = (
   state: FindReplaceState,
@@ -16,7 +17,7 @@ const reducer = (
           action.findText !== undefined ? action.findText : state.findText,
         matches: action.matches || state.matches,
         index: action.index !== undefined ? action.index : state.index,
-        selectionPos: action.selectionPos || state.selectionPos,
+        selectionPos: action.selectionPos || state.selectionPos, // todo: does selectionPos have a point?
       };
 
     case FindReplaceActionTypes.UPDATE_DECORATIONS:
@@ -28,13 +29,15 @@ const reducer = (
     case FindReplaceActionTypes.FIND_NEXT:
       return {
         ...state,
-        index: (state.index + 1) % state.matches.length,
+        index: nextIndex(state.index, state.matches.length),
+        decorationSet: action.decorationSet,
       };
 
     case FindReplaceActionTypes.FIND_PREV:
       return {
         ...state,
-        index: (state.index - 1 + state.matches.length) % state.matches.length,
+        index: prevIndex(state.index, state.matches.length),
+        decorationSet: action.decorationSet,
       };
 
     case FindReplaceActionTypes.REPLACE:

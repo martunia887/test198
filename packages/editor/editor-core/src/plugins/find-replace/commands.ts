@@ -4,12 +4,22 @@ import {
   Selection,
   Transaction,
 } from 'prosemirror-state';
-import { Decoration } from 'prosemirror-view';
+import { Decoration, DecorationSet } from 'prosemirror-view';
 import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
-import { findMatches, findSearchIndex, getSelectedText } from './utils';
+import {
+  findMatches,
+  findSearchIndex,
+  getSelectedText,
+  createDecoration,
+  nextIndex,
+  prevIndex,
+  findDecorationFromMatch,
+  removeDecorationsFromSet,
+} from './utils';
 import { withScrollIntoView } from '../../utils/commands';
+import { findUniqueItemsIn } from '../../utils/array';
 
 export const activate = () =>
   createFindReplaceCommand(
@@ -82,20 +92,34 @@ export const removeDecorations = (decorations: Decoration[]) =>
     const { decorationSet } = getFindReplacePluginState(state);
     return {
       type: FindReplaceActionTypes.UPDATE_DECORATIONS,
-      decorationSet: decorationSet.remove(decorations),
+      decorationSet: removeDecorationsFromSet(
+        decorationSet,
+        decorations,
+        state.doc,
+      ),
     };
   });
 
 export const findNext = () =>
   withScrollIntoView(
     createFindReplaceCommand(
-      { type: FindReplaceActionTypes.FIND_NEXT },
+      (state: EditorState) => {
+        let { decorationSet, index, matches } = getFindReplacePluginState(
+          state,
+        );
+        decorationSet = updateSelectedHighlight(
+          state,
+          nextIndex(index, matches.length),
+        );
+
+        return { type: FindReplaceActionTypes.FIND_NEXT, decorationSet };
+      },
       (tr, state) => {
         const { matches, index } = getFindReplacePluginState(state);
         return tr.setSelection(
           TextSelection.create(
             state.doc,
-            matches[(index + 1) % matches.length].start,
+            matches[nextIndex(index, matches.length)].start,
           ),
         );
       },
@@ -105,13 +129,23 @@ export const findNext = () =>
 export const findPrev = () =>
   withScrollIntoView(
     createFindReplaceCommand(
-      { type: FindReplaceActionTypes.FIND_PREV },
+      (state: EditorState) => {
+        let { decorationSet, index, matches } = getFindReplacePluginState(
+          state,
+        );
+        decorationSet = updateSelectedHighlight(
+          state,
+          prevIndex(index, matches.length),
+        );
+
+        return { type: FindReplaceActionTypes.FIND_PREV, decorationSet };
+      },
       (tr, state) => {
         const { matches, index } = getFindReplacePluginState(state);
         return tr.setSelection(
           TextSelection.create(
             state.doc,
-            matches[(index - 1 + matches.length) % matches.length].start,
+            matches[prevIndex(index, matches.length)].start,
           ),
         );
       },
@@ -170,3 +204,36 @@ export const unfocus = () =>
   createFindReplaceCommand({
     type: FindReplaceActionTypes.UNFOCUS,
   });
+
+const updateSelectedHighlight = (
+  state: EditorState,
+  nextSelectedIndex: number,
+): DecorationSet => {
+  let { decorationSet, index, matches } = getFindReplacePluginState(state);
+  const currentSelectedMatch = matches[index];
+  const nextSelectedMatch = matches[nextSelectedIndex];
+  const currentSelectedDecoration = findDecorationFromMatch(
+    decorationSet,
+    currentSelectedMatch,
+  );
+  const nextSelectedDecoration = findDecorationFromMatch(
+    decorationSet,
+    nextSelectedMatch,
+  );
+
+  // Update decorations so the current selected match becomes a normal match
+  // and the next selected gets the selected styling
+  if (currentSelectedDecoration && nextSelectedDecoration) {
+    removeDecorationsFromSet(
+      decorationSet,
+      [currentSelectedDecoration, nextSelectedDecoration],
+      state.doc,
+    );
+  }
+  decorationSet = decorationSet.add(state.doc, [
+    createDecoration(currentSelectedMatch.start, currentSelectedMatch.end),
+    createDecoration(nextSelectedMatch.start, nextSelectedMatch.end, true),
+  ]);
+
+  return decorationSet;
+};

@@ -31,10 +31,12 @@ export interface Find {
 
 export interface FindNext {
   type: FindReplaceActionTypes.FIND_NEXT;
+  decorationSet: DecorationSet;
 }
 
 export interface FindPrev {
   type: FindReplaceActionTypes.FIND_PREV;
+  decorationSet: DecorationSet;
 }
 
 export interface Replace {

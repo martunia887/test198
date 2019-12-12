@@ -1,11 +1,18 @@
 import { PluginKey, Plugin, Transaction } from 'prosemirror-state';
-import { DecorationSet } from 'prosemirror-view';
+import { DecorationSet, Decoration } from 'prosemirror-view';
 import { pluginFactory } from '../../utils/plugin-state-factory';
 import reducer from './reducer';
 import { Dispatch } from '../../event-dispatcher';
 import { FindReplaceAction } from './actions';
 import { Match } from './types';
-import { findMatches, findSearchIndex } from './utils';
+import {
+  findMatches,
+  createDecorations,
+  nextIndex,
+  removeDecorationsFromSet,
+  findDecorationFromMatch,
+} from './utils';
+import { findUniqueItemsIn } from '../../utils/array';
 
 export interface FindReplaceState {
   /** Whether find/replace is isActive, i.e. displayed */
@@ -44,31 +51,82 @@ const handleDocChanged = (
   pluginState: FindReplaceState,
 ): FindReplaceState => {
   if (pluginState.isActive && pluginState.findText) {
-    const matches = findMatches(tr.doc, pluginState.findText);
-    let { index, selectionPos, decorationSet } = pluginState;
-
-    // recalculate selected match index if matches have changed
-    // todo: delete from decorations
-    if (matches.length !== pluginState.matches.length) {
-      if (pluginState.matches[index]) {
-        const selectedStart = tr.mapping.map(pluginState.matches[index].start);
-        index = matches.findIndex(match => match.start === selectedStart);
-      }
-
-      if (index === undefined || index === -1) {
-        index = findSearchIndex(selectionPos, matches);
-      }
-    }
+    let { index, selectionPos, decorationSet, matches } = pluginState;
+    const newMatches = findMatches(tr.doc, pluginState.findText);
 
     decorationSet = decorationSet.map(tr.mapping, tr.doc);
+    matches = matches.map(match => ({
+      start: tr.mapping.map(match.start),
+      end: tr.mapping.map(match.end),
+    }));
+
+    const comparitor = (firstMatch: Match, secondMatch: Match) =>
+      firstMatch.start === secondMatch.start;
+    const matchesToDelete = findUniqueItemsIn<Match>(
+      matches,
+      newMatches,
+      comparitor,
+    );
+    const matchesToAdd = findUniqueItemsIn<Match>(
+      newMatches,
+      matches,
+      comparitor,
+    );
+
+    // update decorations if matches changed following document update
+    if (matchesToDelete.length > 0) {
+      const decorationsToDelete = matchesToDelete.reduce(
+        (decorations: Decoration[], match) => [
+          ...decorations,
+          ...decorationSet.find(match.start, match.end),
+        ],
+        [],
+      );
+      decorationSet = removeDecorationsFromSet(
+        decorationSet,
+        decorationsToDelete,
+        tr.doc,
+      );
+    }
+    if (matchesToAdd.length > 0) {
+      decorationSet = decorationSet.add(
+        tr.doc,
+        createDecorations(selectionPos, matchesToAdd),
+      );
+    }
+
+    // update selected match if previous selected match was deleted
+    const selectedMatch = matches[index];
+    if (
+      (selectedMatch &&
+        matchesToDelete.find(match => match.start === selectedMatch.start)) ||
+      !selectedMatch
+    ) {
+      const decorationToRemove = findDecorationFromMatch(
+        decorationSet,
+        newMatches[index],
+      );
+      if (decorationToRemove) {
+        decorationSet = removeDecorationsFromSet(
+          decorationSet,
+          [decorationToRemove],
+          tr.doc,
+        );
+      }
+      decorationSet = decorationSet.add(
+        tr.doc,
+        createDecorations(0, [newMatches[index]]),
+      );
+    }
 
     return {
       ...pluginState,
-      matches,
+      matches: newMatches,
       index,
       decorationSet,
     };
   }
+
   return pluginState;
 };
 
