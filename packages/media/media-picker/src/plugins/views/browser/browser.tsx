@@ -28,7 +28,7 @@ export const BrowserView = ({
   onFolderClick,
   selectedItems,
 }: BrowserViewProps) => {
-  console.log({ items });
+  console.log('browserView', { items });
   if (!items) {
     return <SpinnerWrapper></SpinnerWrapper>;
   } else if (isUnauthorized(items.meta)) {

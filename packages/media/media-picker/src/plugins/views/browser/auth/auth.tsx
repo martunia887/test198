@@ -29,6 +29,7 @@ export const BrowserAuthView = ({
   onAuthSucceeded,
   onAuthFailed,
 }: BrowserAuthViewProps) => {
+  console.log({ services });
   const authUrl = services[0].url;
   const onClick = useCallback(() => {
     console.log('clicked auth, going to', authUrl);

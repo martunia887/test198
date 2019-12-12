@@ -13,6 +13,7 @@ export interface ForgeViewMapperProps {
   selectedItems: SelectedItem[];
   onUpdateItems: () => void;
   onFileClick: (id: string) => void;
+  onFolderClick: (id: string) => void;
   name: string;
 }
 export const ForgeViewMapper = ({
@@ -24,9 +25,11 @@ export const ForgeViewMapper = ({
   onFileClick,
   name,
 }: ForgeViewMapperProps) => {
+  console.log('forgeView', { items });
   const viewProps = {
     selectedItems,
     onFileClick,
+    onFolderClick: onFileClick,
     pluginName: name,
   };
   if (view === 'bricks') {
@@ -48,12 +51,12 @@ export const ForgeViewMapper = ({
       <BrowserView
         items={items}
         iconUrl={iconUrl}
-        onFolderClick={() => {}}
         onAuthSucceeded={onUpdateItems}
         onAuthFailed={(err: Error) => console.error(err)}
         {...viewProps}
       />
     );
   }
+  console.log('Unrecognised view...', view);
   return null;
 };

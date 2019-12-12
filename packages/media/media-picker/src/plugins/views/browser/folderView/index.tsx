@@ -58,7 +58,7 @@ export const FolderViewer = ({
   return (
     <FolderViewerContent>
       {data.map(item => {
-        const icon = mapMimeTypeToIcon(item.fileFormat!);
+        const icon = mapMimeTypeToIcon(item.fileFormat || '');
         const selectedIds = selectedItems.map(i => i.id);
         const isSelected = selectedIds.indexOf(item.url) > -1;
         if (item['@type'] === 'Collection') {

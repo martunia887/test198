@@ -24,6 +24,7 @@ export interface ForgePickerProperties {
 export interface ForgeInvokeParams {
   query?: string;
   resourceUrl?: string;
+  folderId?: string;
 }
 export interface ForgeInvokeResponse {
   data: {

@@ -42,6 +42,7 @@ export class ForgeClient {
             type,
             resourceUrl: params.resourceUrl,
             query: params.query,
+            folderId: params.folderId,
           },
         },
       },
@@ -55,6 +56,7 @@ export class ForgeClient {
       },
     });
     const responseAsJson = (await response.json()) as ForgeInvokeResponse;
+    console.log({ responseAsJson });
     const {
       auth,
       response: invokeResponse,

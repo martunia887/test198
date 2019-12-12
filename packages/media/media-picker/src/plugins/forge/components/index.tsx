@@ -25,20 +25,21 @@ export const ForgeView = ({
   actions,
   selectedItems,
 }: ForgeViewProps) => {
+  console.log({ name, view, type });
   const client = useMemo(() => new ForgeClient(id), [id]);
   const [loading, setLoading] = useState<boolean>(true);
   const [query, setQuery] = useState<string>();
   const [items, setItems] = useState<JsonLdCollection>(JsonLdCollectionEmpty);
 
   const onUpdateItems = useCallback(
-    debounce((query: string) => {
+    debounce((query: string, folderId?: string) => {
       setLoading(true);
-      client.invoke(type, { query }).then(response => {
+      client.invoke(type, { query, folderId }).then(response => {
         setItems(response);
         setLoading(false);
       });
-    }, 300),
-    [query, name],
+    }, 1000),
+    [name],
   );
   const onQueryChange: React.FormEventHandler<HTMLInputElement> = useCallback(
     evt => {
@@ -51,11 +52,15 @@ export const ForgeView = ({
     (id: string) => () => {
       const resource = items.data.find(r => r.url === id);
       if (resource) {
-        const metadata = getMetadata(id, resource);
-        actions.fileClick(metadata, name);
+        if (resource['@type'] === 'Collection') {
+          onUpdateItems(undefined, resource['@id']);
+        } else {
+          const metadata = getMetadata(id, resource);
+          actions.fileClick(metadata, name);
+        }
       }
     },
-    [actions, name, items],
+    [items.data, onUpdateItems, actions, name],
   );
   const onFileClick = useCallback((id: string) => onClick(id)(), [onClick]);
 
@@ -92,6 +97,7 @@ export const ForgeView = ({
         selectedItems={selectedItems}
         onUpdateItems={onUpdateItems}
         onFileClick={onFileClick}
+        onFolderClick={onFileClick}
         name={name}
       />
     </PluginContentContainer>
