@@ -177,16 +177,16 @@ abc
 
   const context = {
     mediaConversion: {
-      'attached-image.gif': 'attached-image.gif',
-      'file.pdf': 'file.pdf',
-      'file1.pdf': 'file1.pdf',
-      'file2.pdf': 'file2.pdf',
-      'file3.pdf': 'file3.pdf',
-      'file4.pdf': 'file4.pdf',
-      'file5.pdf': 'file5.pdf',
-      'file6.pdf': 'file6.pdf',
-      'file7.pdf': 'file7.pdf',
-      'file8.pdf': 'file8.pdf',
+      'attached-image.gif': 'abc-attached',
+      'file.pdf': 'abc-0',
+      'file1.pdf': 'abc-1',
+      'file2.pdf': 'abc-2',
+      'file3.pdf': 'abc-3',
+      'file4.pdf': 'abc-4',
+      'file5.pdf': 'abc-5',
+      'file6.pdf': 'abc-6',
+      'file7.pdf': 'abc-7',
+      'file8.pdf': 'abc-8',
     },
   };
 

@@ -95,7 +95,7 @@ describe('JIRA wiki markup - Links', () => {
       const transformer = new WikiMarkupTransformer();
       expect(
         transformer.parse(markup, {
-          mediaConversion: { 'image.jpg': 'image.jpg' },
+          mediaConversion: { 'image.jpg': 'abc-123' },
         }),
       ).toMatchSnapshot();
     });

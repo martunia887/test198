@@ -85,9 +85,9 @@ this is a new line text, not in the table`,
 
   const context = {
     mediaConversion: {
-      'a-doc (jadsjdasjadsjkdasjk).pdf': 'a-doc (jadsjdasjadsjkdasjk).pdf',
-      'not-empty (askjsajnkjknads).txt': 'not-empty (askjsajnkjknads).txt',
-      'quicktime.mov': 'quicktime.mov',
+      'a-doc (jadsjdasjadsjkdasjk).pdf': 'abc-123',
+      'not-empty (askjsajnkjknads).txt': 'abc-456',
+      'quicktime.mov': 'abc-789',
     },
   };
 

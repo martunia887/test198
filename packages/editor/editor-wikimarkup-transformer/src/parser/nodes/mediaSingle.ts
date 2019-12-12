@@ -9,7 +9,7 @@ export default function getMediaSingleNodeView(
   schema: Schema,
   filename: string,
   attrs: { [key: string]: string },
-  context: Context,
+  context: Context = {},
 ): PMNode {
   const { media, mediaSingle } = schema.nodes;
   let width = defaultWidth;

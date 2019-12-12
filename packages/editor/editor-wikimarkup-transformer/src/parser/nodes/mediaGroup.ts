@@ -4,7 +4,7 @@ import { Context } from '../../interfaces';
 export default function getMediaGroupNodeView(
   schema: Schema,
   filename: string,
-  context: Context,
+  context: Context = {},
 ): PMNode {
   const { media, mediaGroup } = schema.nodes;
 
