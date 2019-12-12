@@ -19,6 +19,7 @@
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
     "object-hash": "^2.0.1",
+    "stylis": "^3.5.4",
     "tslib": "^1.9.3",
     "typescript": "~3.6.2"
   },

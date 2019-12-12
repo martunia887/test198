@@ -1,4 +1,5 @@
 const ts = require('typescript');
+const stylis = require('stylis');
 
 const JSX_PRAGMA = 'jsx';
 const CSS_PROP = 'css';
@@ -71,11 +72,7 @@ const processCssProperties = (properties, className) => {
 
   return {
     className,
-    css: `
-    .${className} {
-      ${css}
-    }
-  `,
+    css: stylis(`.${className}`, css),
   };
 };
 
@@ -97,12 +94,13 @@ Have feedback? Post it to http://go/dst-sd
   const transformer = context => {
     return sourceFile => {
       let rootNode = sourceFile;
+      let needsCssTransform = false;
 
       if (
         // Only continue if the jsx pragma is enabled.
-        rootNode.localJsxNamespace !== JSX_PRAGMA ||
+        rootNode.localJsxNamespace === JSX_PRAGMA &&
         // Only continue if we've found an import for css-freedom.
-        !rootNode.statements.find(
+        rootNode.statements.find(
           statement =>
             (statement.moduleSpecifier &&
               statement.moduleSpecifier.text === '@atlaskit/css-freedom') ||
@@ -111,12 +109,11 @@ Have feedback? Post it to http://go/dst-sd
               statement.moduleSpecifier.text === '../src'),
         )
       ) {
-        console.log('bailing man!');
-        // Bail out early if this file doesn't have the JSX pragma enabled OR there wasn't a css-freedom import found.
-        return sourceFile;
+        needsCssTransform = true;
       }
 
       if (
+        needsCssTransform &&
         // Only add React if it's not found.
         !rootNode.statements.find(
           statement =>
@@ -149,7 +146,7 @@ Have feedback? Post it to http://go/dst-sd
           return newNode;
         }
 
-        if (isJsxWithCssProp(node)) {
+        if (needsCssTransform && isJsxWithCssProp(node)) {
           // Grab the css prop node
           const cssPropNode = node.openingElement.attributes.properties.find(
             prop => prop.name.escapedText === CSS_PROP,
