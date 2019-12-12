@@ -12,7 +12,6 @@
   "sideEffects": false,
   "dependencies": {
     "@atlaskit/theme": "^9.2.4",
-    "@babel/runtime": "^7.0.0",
     "memoize-one": "^5.1.0",
     "react-syntax-highlighter": "^10.0.1",
     "tslib": "^1.9.3"
