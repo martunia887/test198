@@ -36,9 +36,11 @@ const showInMap = (
   if (oldSelected) {
     mapHandler.removeLocation(oldSelected);
   }
-  // newSelected.onUpdate((loca: Geolocation)=>console.log('Actualizado',loca))
-  mapHandler.addLocation(newSelected, { draggable: true });
-  // mapHandler.setLocations([newSelected])
+  if (newSelected) {
+    // newSelected.onUpdate((loca: Geolocation)=>console.log('Actualizado',loca))
+    mapHandler.addLocation(newSelected, { draggable: true });
+    // mapHandler.setLocations([newSelected])
+  }
 };
 
 export type GeocoderProps = {
@@ -46,7 +48,7 @@ export type GeocoderProps = {
 };
 
 const Geocoder = ({ mapHandler }: GeocoderProps) => {
-  const [selected, setSelected] = React.useState<Geolocation>();
+  const [selected, setSelected] = React.useState<Geolocation | undefined>();
   return (
     <AsyncSelect
       styles={styles}
@@ -56,10 +58,12 @@ const Geocoder = ({ mapHandler }: GeocoderProps) => {
       // loadOptions={loadOptions}
       // defaultOptions
       // options={loadOptions}
+      isClearable={true}
       placeholder="Search for a place"
-      onChange={(newSelected: any) => {
-        showInMap(mapHandler, newSelected.value, selected);
-        setSelected(newSelected.value);
+      onChange={(selectedOption: any) => {
+        const { value: selectedLocation } = selectedOption || {};
+        showInMap(mapHandler, selectedLocation, selected);
+        setSelected(selectedLocation);
       }}
     />
   );
