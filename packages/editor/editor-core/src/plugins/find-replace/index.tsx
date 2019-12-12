@@ -43,51 +43,52 @@ export const findReplacePlugin = (): EditorPlugin => {
       editorView,
       containerElement,
     }) {
-      const fireCommand = (cmd: Command) => {
-        const { state, dispatch } = editorView;
-        cmd(state, dispatch);
-      };
-      const focusFindReplace = () => {
+      // we need the editor to be in focus for scrollIntoView() to work
+      // so we focus it while we run the command, then put focus back into
+      // find replace component
+      const runCommandWithEditorFocused = (fn: Function) => {
+        editorView.focus();
+        fn();
         if (findReplaceInputRef && findReplaceInputRef.current) {
           findReplaceInputRef.current.focus();
         }
       };
+      const dispatchCommand = (cmd: Command) => {
+        const { state, dispatch } = editorView;
+        cmd(state, dispatch);
+      };
 
-      const handleRefSet = (ref: React.RefObject<HTMLInputElement>) => {
-        findReplaceInputRef = ref;
-      };
-      const handleCancel = () => {
-        fireCommand(cancelSearch());
-        editorView.focus();
-      };
-      // todo: reduce duplication
       const handleFind = (keyword?: string) => {
-        editorView.focus();
-        batchFinder.findAll(editorView, keyword, containerElement);
-        focusFindReplace();
+        runCommandWithEditorFocused(() =>
+          batchFinder.findAll(editorView, keyword, containerElement),
+        );
       };
       const handleFindNext = () => {
-        editorView.focus();
-        fireCommand(findNext());
-        focusFindReplace();
+        runCommandWithEditorFocused(() => dispatchCommand(findNext()));
       };
       const handleFindPrev = () => {
-        editorView.focus();
-        fireCommand(findPrev());
-        focusFindReplace();
+        runCommandWithEditorFocused(() => dispatchCommand(findPrev()));
       };
       const handleReplace = (replaceWith: string) => {
-        editorView.focus();
-        fireCommand(replace(replaceWith));
-        focusFindReplace();
+        runCommandWithEditorFocused(() =>
+          dispatchCommand(replace(replaceWith)),
+        );
       };
       const handleReplaceAll = (replaceWith: string) => {
-        editorView.focus();
-        fireCommand(replaceAll(replaceWith));
-        focusFindReplace();
+        runCommandWithEditorFocused(() =>
+          dispatchCommand(replaceAll(replaceWith)),
+        );
       };
       const handleFindBlur = () => {
-        fireCommand(unfocus());
+        dispatchCommand(unfocus());
+      };
+      const handleCancel = () => {
+        batchFinder.cancelInProgress();
+        dispatchCommand(cancelSearch());
+        editorView.focus();
+      };
+      const handleRefSet = (ref: React.RefObject<HTMLInputElement>) => {
+        findReplaceInputRef = ref;
       };
 
       return (
@@ -95,7 +96,7 @@ export const findReplacePlugin = (): EditorPlugin => {
           plugins={{
             findReplaceState: findReplacePluginKey,
           }}
-          render={({ findReplaceState }): any => {
+          render={({ findReplaceState }) => {
             return (
               <FindReplaceToolbarButton
                 isActive={findReplaceState.isActive}
