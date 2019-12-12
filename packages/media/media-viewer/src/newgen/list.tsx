@@ -74,9 +74,12 @@ export class List extends React.Component<Props, State> {
   }
 
   componentWillUnmount(): void {
-    Object.values(
-      clearlyTempAndExperimentalObjectUrlCache,
-    ).forEach(({ objectUrl }) => URL.revokeObjectURL(objectUrl));
+    Object.keys(clearlyTempAndExperimentalObjectUrlCache).forEach(key => {
+      URL.revokeObjectURL(
+        clearlyTempAndExperimentalObjectUrlCache[key].objectUrl,
+      );
+      delete clearlyTempAndExperimentalObjectUrlCache[key];
+    });
   }
 
   render() {

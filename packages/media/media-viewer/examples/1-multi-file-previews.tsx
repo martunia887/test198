@@ -167,18 +167,6 @@ export default class Example extends React.Component<{}, State> {
     });
   };
 
-  private openCollection = (
-    identifier: Identifier,
-    collectionName: string,
-  ) => () => {
-    this.setState({
-      selected: {
-        dataSource: { collectionName },
-        identifier,
-      },
-    });
-  };
-
   private openNotFound = () => {
     this.setState({
       selected: {
@@ -256,10 +244,7 @@ export default class Example extends React.Component<{}, State> {
                       id: firstItemFromDefaultCollection.id,
                       mediaItemType: 'file',
                     }}
-                    onClick={this.openCollection(
-                      firstItemFromDefaultCollection,
-                      defaultCollectionName,
-                    )}
+                    shouldOpenMediaViewer={true}
                   />
                 ) : (
                   <AkSpinner />
@@ -275,10 +260,7 @@ export default class Example extends React.Component<{}, State> {
                       id: firstItemFromMediaPickerCollection.id,
                       mediaItemType: 'file',
                     }}
-                    onClick={this.openCollection(
-                      firstItemFromMediaPickerCollection,
-                      defaultMediaPickerCollectionName,
-                    )}
+                    shouldOpenMediaViewer={true}
                   />
                 ) : (
                   <AkSpinner />

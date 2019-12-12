@@ -30,7 +30,7 @@ export type Props = {
   mediaClient: MediaClient;
   itemSource: ItemSource;
   extensions?: MediaViewerExtensions;
-  openerComponentRef?: RefObject<any>;
+  openerComponentRef?: RefObject<HTMLDivElement>;
 } & WithAnalyticsEventsProps;
 
 export interface State {
@@ -134,8 +134,9 @@ export class MediaViewerComponent extends React.Component<Props, State> {
   };
 
   render() {
+    const { openerComponentRef } = this.props;
     const content = (
-      <Blanket data-testid="media-viewer-popup">
+      <Blanket data-testid="media-viewer-popup" doFadeIn={!!openerComponentRef}>
         {<Shortcut keyCode={27} handler={this.onShortcutClosed} />}
         <Content onClose={this.onContentClose}>{this.renderContent()}</Content>
         {this.renderSidebar()}

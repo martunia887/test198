@@ -13,15 +13,14 @@ import {
 import { ellipsis, hideControlsClassName } from '@atlaskit/media-ui';
 
 const overlayZindex = layers.modal() + 10;
+const flashCardZindex = overlayZindex + 10;
 const sidebarWidth = 350;
 const fadeInAnimation = keyframes`
   0% {
-    transform: scale(0.5) translate(-50%, -50%);
     opacity: 0;
   }
 
   100% {
-    transform: scale(1) translate(0, 0);
     opacity: 1;
   }
 `;
@@ -45,8 +44,13 @@ export const Blanket = styled.div`
   background-color: ${blanketColor};
   z-index: ${overlayZindex};
   display: flex;
-  opacity: 0;
-  animation: ${fadeInAnimation} 0.5s forwards;
+  ${({ doFadeIn }: { doFadeIn: boolean }) =>
+    doFadeIn
+      ? `
+    opacity: 0;
+    animation: ${fadeInAnimation} 0.5s forwards;
+  `
+      : ''}
 `;
 
 export const HeaderWrapper = styled.div`
