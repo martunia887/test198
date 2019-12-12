@@ -95,15 +95,17 @@ const processCssProperties = (properties, { classNameIds, cssVariableIds }) => {
 };
 
 // @flow
-module.exports = (config = {}) => {
-  console.log(`
-
-@atlaskit/css-freedom typescript transformer has been enabled.
-Have feedback? Post it to http://go/dst-sd
-`);
-
+module.exports = ({ debug } = {}) => {
+  const log = msg => debug && console.log(`  @atlaskit/css-freedom ==> ${msg}`);
   const classNameIds = new SequentialCharacterGenerator();
   const cssVariableIds = new SequentialCharacterGenerator();
+
+  debug &&
+    console.log(`
+
+@atlaskit/css-freedom typescript transformer has been enabled and has logging turned on.
+Have feedback? Post it to http://go/dst-sd
+`);
 
   /**
    * Built primarily using https://ts-ast-viewer.com, typescript typedefs, and google.
@@ -128,7 +130,7 @@ Have feedback? Post it to http://go/dst-sd
               statement.moduleSpecifier.text === '../src'),
         )
       ) {
-        console.log('==> file needs to be transformed');
+        log('file needs to be transformed');
 
         needsCssTransform = true;
       }
@@ -152,9 +154,7 @@ Have feedback? Post it to http://go/dst-sd
         });
 
         if (reactImportNode) {
-          console.log(
-            '==> react module found, ensuring it has a default export',
-          );
+          log('react module found, ensuring it has a default export');
 
           // Ok it exists, lets ensure it has the default export as "React".
           rootNode = ts.updateSourceFileNode(rootNode, [
@@ -170,7 +170,7 @@ Have feedback? Post it to http://go/dst-sd
             ...rootNode.statements,
           ]);
         } else {
-          console.log('==> react module not found, adding it');
+          log('react module not found, adding it');
 
           rootNode = ts.updateSourceFileNode(rootNode, [
             ts.createImportDeclaration(
@@ -186,7 +186,7 @@ Have feedback? Post it to http://go/dst-sd
 
       const visitor = node => {
         if (!needsCssTransform && isCssFreedomCompiledNode(node)) {
-          console.log(`==> setting ${UNCOMPILED_GUARD_NAME} variable to true`);
+          log(`setting ${UNCOMPILED_GUARD_NAME} variable to true`);
 
           // Reassign the variable declarations to `true` so it doesn't blow up at runtime.
           const newNode = ts.updateVariableDeclaration(
@@ -205,7 +205,7 @@ Have feedback? Post it to http://go/dst-sd
             prop => prop.name.escapedText === CSS_PROP,
           );
 
-          console.log('==> processing css');
+          log('processing css');
 
           // Compile the CSS from the styles object node.
           const compiledCss = processCssProperties(
@@ -213,14 +213,14 @@ Have feedback? Post it to http://go/dst-sd
             { classNameIds, cssVariableIds },
           );
 
-          console.log('==> removing css prop');
+          log('removing css prop');
 
           // Remove css prop from the react element.
-          const newNode = ts.getMutableClone(node);
-          newNode.openingElement.attributes.properties = newNode.openingElement.attributes.properties.filter(
+          const nodeToTransform = ts.getMutableClone(node);
+          nodeToTransform.openingElement.attributes.properties = nodeToTransform.openingElement.attributes.properties.filter(
             prop => prop.name.escapedText !== CSS_PROP,
           );
-          newNode.openingElement.attributes.properties.push(
+          nodeToTransform.openingElement.attributes.properties.push(
             ts.createJsxAttribute(
               ts.createIdentifier('className'),
               ts.createStringLiteral(compiledCss.className),
@@ -244,14 +244,14 @@ Have feedback? Post it to http://go/dst-sd
             [
               // important that the style goes before the node
               styleNode,
-              newNode,
+              nodeToTransform,
             ],
             ts.createJsxJsxClosingFragment(),
           );
 
-          console.log('==> returning composed component with fragment');
+          log('returning composed component with fragment');
 
-          return newFragmentParent;
+          return ts.visitEachChild(newFragmentParent, visitor, context);
         }
 
         return ts.visitEachChild(node, visitor, context);

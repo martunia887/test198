@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '../src';
 
-export default () => {
-  // const color = 'blue';
+const hey = 'ok';
 
+export default () => {
   return (
-    <div>
+    <div css={{ margin: '20px' }}>
       <div css={{ display: 'flex', fontSize: '20px', color }}>
         Hello, world!
       </div>

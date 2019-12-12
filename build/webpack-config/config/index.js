@@ -5,8 +5,8 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const createCssFreedomTransformer = require('../../../packages/incubator/css-freedom/src/ts');
 const moduleResolveMapBuilder = require('@atlaskit/multi-entry-tools/module-resolve-map-builder');
+const createCssFreedomTransformer = require('../../../packages/incubator/css-freedom/src/ts');
 const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
 
@@ -158,7 +158,7 @@ module.exports = async function createWebpackConfig(
               options: {
                 transpileOnly: true,
                 getCustomTransformers: () => ({
-                  before: [createCssFreedomTransformer()],
+                  before: [createCssFreedomTransformer({ debug: true })],
                 }),
               },
             },
