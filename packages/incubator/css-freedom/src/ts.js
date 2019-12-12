@@ -4,7 +4,7 @@ const stylis = require('stylis');
 const JSX_PRAGMA = 'jsx';
 const CSS_PROP = 'css';
 
-class StringIdGenerator {
+class SequentialCharacterGenerator {
   constructor(chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
     this._chars = chars;
     this._nextId = [0];
@@ -61,17 +61,35 @@ const isJsxWithCssProp = node => {
   );
 };
 
-const processCssProperties = (properties, className) => {
-  const css = properties.reduce((css, prop) => {
-    const key = kebabCase(prop.name.escapedText);
-    const value = prop.initializer.text;
+const processCssProperties = (properties, { classNameIds, cssVariableIds }) => {
+  const className = classNameIds.next();
+  const cssVariables = [];
 
-    return `${css}
+  const css = properties.reduce((acc, prop) => {
+    const key = kebabCase(prop.name.escapedText);
+    let value;
+
+    if (!prop.initializer || ts.isIdentifier(prop.initializer)) {
+      // We have a prop assignment using a variable, e.g. "fontSize: props.fontSize"
+      // Time to turn it into a css variable.
+      const cssVariable = `--${key}-${cssVariableIds.next()}`;
+      value = `var(${cssVariable})`;
+      cssVariables.push({
+        var: cssVariable,
+        nodeReference: prop.initializer || prop.name,
+      });
+    } else {
+      // We have a regular static assignment, e.g. "fontSize: '20px'"
+      value = prop.initializer.text;
+    }
+
+    return `${acc}
       ${key}: ${value};`;
   }, '');
 
   return {
     className,
+    cssVariables,
     css: stylis(`.${className}`, css),
   };
 };
@@ -84,7 +102,8 @@ module.exports = (config = {}) => {
 Have feedback? Post it to http://go/dst-sd
 `);
 
-  const ids = new StringIdGenerator();
+  const classNameIds = new SequentialCharacterGenerator();
+  const cssVariableIds = new SequentialCharacterGenerator();
 
   /**
    * Built primarily using https://ts-ast-viewer.com, typescript typedefs, and google.
@@ -155,7 +174,7 @@ Have feedback? Post it to http://go/dst-sd
           // Compile the CSS from the styles object node.
           const compiledCss = processCssProperties(
             cssPropNode.initializer.expression.properties,
-            ids.next(),
+            { classNameIds, cssVariableIds },
           );
 
           // Remove css prop from the react element.
