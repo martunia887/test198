@@ -1,4 +1,4 @@
-import { NodeSpec, Node } from 'prosemirror-model';
+import { NodeSpec, Node, AttributeSpec } from 'prosemirror-model';
 import { ParagraphDefinition as Paragraph } from './paragraph';
 import { OrderedListDefinition as OrderedList } from './ordered-list';
 import { BulletListDefinition as BulletList } from './bullet-list';
@@ -15,8 +15,8 @@ export type PanelType =
 
 export interface PanelAttributes {
   panelType: PanelType;
-  panelIcon: string;
-  panelColor: string;
+  panelIcon?: string;
+  panelColor?: string;
 }
 
 /**
@@ -35,13 +35,43 @@ export interface DOMAttributes {
   [propName: string]: string;
 }
 
+export const panelWithIconAndColor: NodeSpec = {
+  group: 'block',
+  content: '(paragraph | heading | bulletList | orderedList)+',
+  attrs: {
+    panelType: { default: 'info' },
+  },
+  parseDOM: [
+    {
+      tag: 'div[data-panel-type]',
+      getAttrs: dom => ({
+        panelType: (dom as HTMLElement).getAttribute('data-panel-type')!,
+        panelIcon: (dom as HTMLElement).getAttribute('data-panel-icon')!,
+        panelColor: (dom as HTMLElement).getAttribute('data-panel-color')!,
+      }),
+    },
+  ],
+  toDOM(node: Node) {
+    const panelType = node.attrs['panelType'];
+    const panelIcon = node.attrs['panelIcon'];
+    const panelColor = node.attrs['panelColor'];
+    const attrs: DOMAttributes = {
+      'data-panel-type': panelType,
+      'data-panel-icon': panelIcon,
+      'data-panel-color': panelColor,
+    };
+    return ['div', attrs, ['div', {}, 0]];
+  },
+};
+
+// TODO: add panelIcon and panelColor attributes here only depending on UNSAFE_allowCustomPanels flag
 export const panel: NodeSpec = {
   group: 'block',
   content: '(paragraph | heading | bulletList | orderedList)+',
   attrs: {
     panelType: { default: 'info' },
-    panelIcon: { default: '' },
-    panelColor: { default: '' },
+    panelIcon: { default: undefined },
+    panelColor: { default: undefined },
   },
   parseDOM: [
     {

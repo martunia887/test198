@@ -1,3 +1,4 @@
+import { panelWithIconAndColor } from './nodes/panel';
 import { createSchema, SchemaConfig } from './create-schema';
 import { Schema } from 'prosemirror-model';
 import { mediaWithAltText } from './nodes';
@@ -70,6 +71,7 @@ export const getSchemaBasedOnStage = (stage = 'final') => {
   if (stage === 'stage0') {
     config.customNodeSpecs = {
       media: mediaWithAltText,
+      panel: panelWithIconAndColor,
     };
   }
 

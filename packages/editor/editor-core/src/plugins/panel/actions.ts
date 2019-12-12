@@ -47,14 +47,6 @@ export const changePanelType = (
     tr,
   } = state;
 
-  // this is a hack to add atribute to the schema in the panel state, should be removed
-  nodes.panel.attrs.panelIcon = {
-    hasDefault: false,
-  };
-  nodes.panel.attrs.panelColor = {
-    hasDefault: false,
-  };
-
   let previousType: PANEL_TYPE = pluginKey.getState(state).activePanelType;
 
   const payload: AnalyticsEventPayload = {
@@ -73,14 +65,6 @@ export const changePanelType = (
 
   let previousColor = pluginKey.getState(state).activePanelColor;
   let previousEmoji = pluginKey.getState(state).activePanelIcon;
-
-  console.log(
-    '%cPREVIOUS PANEL OPTIONS:',
-    'color: tomato',
-    panelType,
-    previousColor,
-    previousEmoji,
-  );
 
   let panelIcon = '';
   let panelColor = '';

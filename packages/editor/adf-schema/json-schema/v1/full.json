@@ -821,6 +821,7 @@
           "properties": {
             "panelType": {
               "enum": [
+                "emoji",
                 "info",
                 "note",
                 "tip",
@@ -828,10 +829,18 @@
                 "error",
                 "success"
               ]
+            },
+            "panelIcon": {
+              "type": "string"
+            },
+            "panelColor": {
+              "type": "string"
             }
           },
           "required": [
-            "panelType"
+            "panelType",
+            "panelIcon",
+            "panelColor"
           ],
           "additionalProperties": false
         },

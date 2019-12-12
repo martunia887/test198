@@ -524,11 +524,11 @@ export const getValidNode = (
       case 'panel': {
         const types = ['info', 'note', 'tip', 'success', 'warning', 'error'];
         if (attrs && content) {
-          const { panelType } = attrs;
+          const { panelType, panelIcon, panelColor } = attrs;
           if (types.indexOf(panelType) > -1) {
             return {
               type,
-              attrs: { panelType },
+              attrs: { panelType, panelIcon, panelColor },
               content,
             };
           }
