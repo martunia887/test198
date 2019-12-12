@@ -653,3 +653,12 @@ pipelines:
           after-script:
             - bolt install --frozen-lockfile
             - yarn send:buildEvents
+    send-release-comment:
+      - variables:
+          - name: Commits
+      - step:
+          script:
+            - source ./build-setup.sh
+            - bolt install --frozen-lockfile
+            - cd build/scheduled-releases
+            - for COMMIT in $Commits; do yarn update-pr "$COMMIT" "$BITBUCKET_REPO_FULL_NAME"; done
