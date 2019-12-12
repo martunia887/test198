@@ -13,6 +13,7 @@ import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
 import { Emoji } from '../../../../../../elements/emoji/src';
 import { getEmojiRepository } from '../../../../../../elements/util-data-test/src/emoji/story-data';
 import { getPanelTextColorForCustomBackground } from '../../../../../editor-common/src/styles/shared/panel';
+import { PanelOptions } from '../pm-plugins/main';
 
 const panelIcons = {
   info: InfoIcon,
@@ -47,7 +48,10 @@ class PanelNodeView {
     this.dom = dom as HTMLElement;
     this.contentDOM = contentDOM as HTMLElement;
     this.icon = this.dom.querySelector('.ak-editor-panel__icon') as HTMLElement;
-    this.renderIcon(node.attrs.panelType as PanelType, node.attrs.panelIcon);
+    this.renderIcon(node.attrs.panelType as PanelType, {
+      emoji: node.attrs.panelIcon,
+      color: node.attrs.panelColor,
+    });
 
     if (node.attrs.panelColor) {
       const style = `background-color: ${node.attrs.panelColor};
@@ -59,12 +63,10 @@ class PanelNodeView {
     }
   }
 
-  private renderIcon(panelType: PanelType, panelIcon?: string) {
-    const Icon = panelIcons[panelType];
-
-    if (panelIcon) {
+  private renderIcon(panelType: PanelType, options: PanelOptions) {
+    if (options.emoji) {
       const emojiService = getEmojiRepository();
-      const emojiShortName = emojiService.findByShortName(panelIcon);
+      const emojiShortName = emojiService.findByShortName(options.emoji);
       ReactDOM.render(
         <span
           style={{
@@ -82,7 +84,14 @@ class PanelNodeView {
         this.icon,
       );
     } else {
-      ReactDOM.render(<Icon label={`Panel ${panelType}`} />, this.icon);
+      const Icon = panelIcons[panelType];
+      const textColor = options.color
+        ? getPanelTextColorForCustomBackground(options.color)
+        : null;
+      ReactDOM.render(
+        <Icon label={`Panel ${panelType}`} primaryColor={textColor} />,
+        this.icon,
+      );
     }
   }
 }
