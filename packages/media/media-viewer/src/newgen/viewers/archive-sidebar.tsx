@@ -5,7 +5,7 @@ import { ArchiveSidebarFolderEntry } from './archive-sidebar-folder-entry';
 
 export interface ArchiveSidebarProps {
   entries: ZipEntry[];
-  onEntrySelected: Function;
+  onEntrySelected: (selectedEntry: ZipEntry) => void;
 }
 
 export class ArchiveSidebar extends React.Component<ArchiveSidebarProps> {

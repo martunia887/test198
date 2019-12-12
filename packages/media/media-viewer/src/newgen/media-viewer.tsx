@@ -24,15 +24,16 @@ import { ItemSource, MediaViewerFeatureFlags } from './domain';
 import { List } from './list';
 import { Collection } from './collection';
 import { Content } from './content';
-import { Blanket, SidebarWrapper } from './styled';
+import { Blanket, SidebarWrapper, SpinnerWrapper } from './styled';
 import { start } from 'perf-marks';
 import {
   MediaViewerExtensions,
   MediaViewerExtensionsActions,
 } from '../components/types';
 import { ArchiveSidebar } from './viewers/archive-sidebar';
-import { ZipEntry } from 'zipizape';
+import { ZipEntry, EntryContent } from 'zipizape';
 import { getArchiveEntriesFromIdentifier } from './viewers/archive';
+import { Spinner } from './loading';
 
 export type Props = {
   onClose?: () => void;
@@ -47,6 +48,7 @@ export interface State {
   isSidebarVisible: boolean;
   selectedIdentifier?: Identifier;
   shouldRenderDefaultExtension?: boolean;
+  selectedArchiveEntryContent?: EntryContent;
 }
 
 export class MediaViewerComponent extends Component<Props, State> {
@@ -92,9 +94,19 @@ export class MediaViewerComponent extends Component<Props, State> {
       return;
     }
 
-    this.setState({
-      shouldRenderDefaultExtension: fileState.mediaType === 'archive',
-    });
+    const isArchive = fileState.mediaType === 'archive';
+    if (isArchive) {
+      const entries = await getArchiveEntriesFromIdentifier(
+        identifier,
+        mediaClient,
+      );
+      const selectedArchiveEntryContent = await entries[0].getContent();
+
+      this.setState({
+        shouldRenderDefaultExtension: true,
+        selectedArchiveEntryContent,
+      });
+    }
   };
 
   UNSAFE_componentWillMount() {
@@ -208,10 +220,21 @@ export class MediaViewerComponent extends Component<Props, State> {
             selectedIdentifier={selectedIdentifier}
             actions={actions}
             mediaClient={mediaClient}
+            onSelectedArchiveEntryContentChange={
+              this.onSelectedArchiveEntryContentChange
+            }
           />
         ),
       },
     };
+  };
+
+  private onSelectedArchiveEntryContentChange = (
+    selectedArchiveEntryContent: EntryContent,
+  ) => {
+    this.setState({
+      selectedArchiveEntryContent,
+    });
   };
 
   private getExtensions = () => {
@@ -220,7 +243,7 @@ export class MediaViewerComponent extends Component<Props, State> {
 
   private renderContent() {
     const { mediaClient, onClose, itemSource } = this.props;
-    const { isSidebarVisible } = this.state;
+    const { isSidebarVisible, selectedArchiveEntryContent } = this.state;
 
     if (itemSource.kind === 'COLLECTION') {
       return (
@@ -249,6 +272,7 @@ export class MediaViewerComponent extends Component<Props, State> {
           onNavigationChange={this.onNavigationChange}
           onSidebarButtonClick={this.toggleSidebar}
           isSidebarVisible={isSidebarVisible}
+          selectedArchiveEntryContent={selectedArchiveEntryContent}
         />
       );
     } else {
@@ -264,10 +288,12 @@ interface ArchiveSidebarRendererProps {
   selectedIdentifier: Identifier;
   actions: MediaViewerExtensionsActions;
   mediaClient: MediaClient;
+  onSelectedArchiveEntryContentChange: (entryContent: EntryContent) => void;
 }
 
 interface ArchiveSidebarRendererState {
   entries: ZipEntry[];
+  status: 'loading' | 'loaded';
 }
 
 class ArchiveSidebarRenderer extends Component<
@@ -276,6 +302,7 @@ class ArchiveSidebarRenderer extends Component<
 > {
   state: ArchiveSidebarRendererState = {
     entries: [],
+    status: 'loading',
   };
 
   async componentDidMount() {
@@ -285,13 +312,25 @@ class ArchiveSidebarRenderer extends Component<
       mediaClient,
     );
 
-    this.setState({ entries });
+    this.setState({ entries, status: 'loaded' });
   }
 
-  private changeSelectedEntry = () => {};
+  private changeSelectedEntry = async (selectedEntry: ZipEntry) => {
+    const { onSelectedArchiveEntryContentChange } = this.props;
+    const entryContent = await selectedEntry.getContent();
+
+    onSelectedArchiveEntryContentChange(entryContent);
+  };
 
   render() {
-    const { entries } = this.state;
+    const { entries, status } = this.state;
+    if (status === 'loading') {
+      return (
+        <SpinnerWrapper>
+          <Spinner />
+        </SpinnerWrapper>
+      );
+    }
 
     return (
       <ArchiveSidebar

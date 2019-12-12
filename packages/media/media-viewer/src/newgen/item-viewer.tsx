@@ -39,6 +39,7 @@ import {
 } from '@atlaskit/analytics-gas-types';
 import { AudioViewer } from './viewers/audio';
 import { InteractiveImg } from './viewers/image/interactive-img';
+import { EntryContent } from 'zipizape';
 
 export type Props = Readonly<{
   identifier: Identifier;
@@ -46,6 +47,7 @@ export type Props = Readonly<{
   onClose?: () => void;
   previewCount: number;
   isSidebarVisible?: boolean;
+  selectedArchiveEntryContent?: EntryContent;
 }> &
   WithAnalyticsEventsProps &
   WithShowControlMethodProp;
@@ -146,6 +148,7 @@ export class ItemViewerBase extends React.Component<Props, State> {
       onClose,
       previewCount,
       isSidebarVisible,
+      selectedArchiveEntryContent,
     } = this.props;
     const collectionName = isFileIdentifier(identifier)
       ? identifier.collectionName
@@ -191,7 +194,12 @@ export class ItemViewerBase extends React.Component<Props, State> {
           />
         );
       case 'archive':
-        return <ArchiveViewer {...viewerProps} />;
+        return (
+          <ArchiveViewer
+            selectedEntryContent={selectedArchiveEntryContent}
+            {...viewerProps}
+          />
+        );
       default:
         return this.renderError('unsupported', item);
     }

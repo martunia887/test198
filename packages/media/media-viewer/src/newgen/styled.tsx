@@ -372,8 +372,6 @@ export const ArchiveItemViewer = styled.div``;
 
 export const ArchiveSideBar = styled.div`
   padding: 20px;
-  background: white;
-  color: black;
 `;
 
 export const ArchiveSidebarFolderWrapper = styled.div`
@@ -394,4 +392,11 @@ export const ArchiveSidebarFileEntry = styled.div`
 
 export const ArchiveSidebarEntryLabel = styled.div`
   padding-left: 10px;
+`;
+
+export const SpinnerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;

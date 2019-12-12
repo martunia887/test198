@@ -31,7 +31,7 @@ import { MediaViewer } from '../src';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
 import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 
-addGlobalEventEmitterListeners();
+// addGlobalEventEmitterListeners();
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 

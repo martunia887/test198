@@ -15,7 +15,7 @@ import {
 export interface ArchiveSidebarFolderEntryProps {
   root: string;
   entries: ZipEntry[];
-  onEntrySelected: Function;
+  onEntrySelected: (selectedEntry: ZipEntry) => void;
   isDefaultOpen?: boolean;
   name?: string;
 }
@@ -46,6 +46,12 @@ export class ArchiveSidebarFolderEntry extends React.Component<
     this.setState({ isOpen: !this.state.isOpen });
   };
 
+  onEntryClick = (entry: ZipEntry) => () => {
+    const { onEntrySelected } = this.props;
+
+    onEntrySelected(entry);
+  };
+
   render() {
     const { isOpen } = this.state;
     const { root, onEntrySelected, entries, name } = this.props;
@@ -65,7 +71,7 @@ export class ArchiveSidebarFolderEntry extends React.Component<
             ) : (
               <ArchiveSidebarFileEntry
                 key={entry.name}
-                onClick={onEntrySelected(entries, entry)}
+                onClick={this.onEntryClick(entry)}
               >
                 <MediaTypeIcon type={entry.type as MediaType} />
                 <ArchiveSidebarEntryLabel>

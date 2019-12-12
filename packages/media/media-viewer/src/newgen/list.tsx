@@ -9,6 +9,7 @@ import { HeaderWrapper, ListWrapper } from './styled';
 import { Navigation } from './navigation';
 import Header from './header';
 import { MediaViewerExtensions } from '../components/types';
+import { EntryContent } from 'zipizape';
 
 export type Props = Readonly<
   {
@@ -20,6 +21,7 @@ export type Props = Readonly<
     extensions?: MediaViewerExtensions;
     onSidebarButtonClick?: () => void;
     isSidebarVisible?: boolean;
+    selectedArchiveEntryContent?: EntryContent;
   } & WithShowControlMethodProp
 >;
 
@@ -48,6 +50,7 @@ export class List extends React.Component<Props, State> {
       extensions,
       onSidebarButtonClick,
       isSidebarVisible,
+      selectedArchiveEntryContent,
     } = this.props;
     const { selectedItem } = this.state;
 
@@ -70,6 +73,7 @@ export class List extends React.Component<Props, State> {
           onClose={onClose}
           previewCount={this.state.previewCount}
           isSidebarVisible={isSidebarVisible}
+          selectedArchiveEntryContent={selectedArchiveEntryContent}
         />
         <Navigation
           items={items}

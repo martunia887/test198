@@ -22,16 +22,15 @@ import { ZipiZape, ZipEntry, EntryContent } from 'zipizape';
 import { InteractiveImg } from './image/interactive-img';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { PDFRenderer } from './doc/pdfRenderer';
-import { ArchiveSidebar } from './archive-sidebar';
 
 export type Props = {
   mediaClient: MediaClient;
   item: FileState;
+  selectedEntryContent?: EntryContent;
   collectionName?: string;
 };
 
 type Content = {
-  entries: ZipEntry[];
   selectedEntryContent: EntryContent;
 };
 
@@ -58,31 +57,30 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
   private previews: Map<string, string> = new Map();
 
   protected async init() {
-    const { item, collectionName, mediaClient } = this.props;
-    if (item.status === 'processed') {
-      const entries = await getArchiveEntriesFromIdentifier(
-        {
-          mediaItemType: 'file',
-          id: item.id,
-          collectionName,
-        },
-        mediaClient,
-      );
+    const { selectedEntryContent } = this.props;
+    const content = !selectedEntryContent
+      ? Outcome.pending<Content, MediaViewerError>()
+      : Outcome.successful<Content, MediaViewerError>({
+          selectedEntryContent,
+        });
 
-      this.setState({
-        content: Outcome.successful({
-          entries,
-          selectedEntryContent: await entries[0].getContent(), // TODO handle undefined
-        }),
-      });
-    } else {
-      // item.status is not 'processed'
-    }
+    this.setState({
+      content,
+    });
   }
 
   protected get initialState() {
+    const { selectedEntryContent } = this.props;
+    if (!selectedEntryContent) {
+      return {
+        content: Outcome.pending<Content, MediaViewerError>(),
+      };
+    }
+
     return {
-      content: Outcome.pending<Content, MediaViewerError>(),
+      content: Outcome.successful<Content, MediaViewerError>({
+        selectedEntryContent,
+      }),
     };
   }
 
@@ -90,9 +88,11 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
     return null; // TODO
   }
 
-  protected renderSuccessful(content: Content) {
-    const { selectedEntryContent } = content;
-    // TODO: handle empty entries
+  protected renderSuccessful() {
+    const { selectedEntryContent } = this.props;
+    if (!selectedEntryContent) {
+      return null;
+    }
 
     return (
       <ArchiveWrapper>
@@ -145,23 +145,16 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
     }
   }
 
-  private changeSelectedEntry = (
-    entries: ZipEntry[],
-    selectedEntry: ZipEntry,
-  ) => async () => {
-    const selectedEntryContent = await selectedEntry.getContent();
-
-    console.log({ selectedEntryContent });
-    this.setState({
-      content: Outcome.successful({
-        entries,
-        selectedEntryContent: selectedEntryContent,
-      }),
-    });
-  };
-
   private renderExternalImage(content: string) {
     return <InteractiveImg src={content} />;
+  }
+
+  protected needsReset(propsA: Props, propsB: Props): boolean {
+    if (propsA.selectedEntryContent !== propsB.selectedEntryContent) {
+      return true;
+    }
+
+    return false;
   }
 
   private renderVideo(content: string) {
