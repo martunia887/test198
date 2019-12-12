@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from '../src';
-import { useState } from 'react';
 
 export default () => {
   return (

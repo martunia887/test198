@@ -3,6 +3,7 @@ const stylis = require('stylis');
 
 const JSX_PRAGMA = 'jsx';
 const CSS_PROP = 'css';
+const UNCOMPILED_GUARD_NAME = 'IS_CSS_FREEDOM_COMPILED';
 
 class SequentialCharacterGenerator {
   constructor(chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
@@ -47,8 +48,7 @@ function kebabCase(str) {
 
 const isCssFreedomCompiledNode = node => {
   return (
-    ts.isVariableDeclaration(node) &&
-    node.name.text === 'IS_CSS_FREEDOM_COMPILED'
+    ts.isVariableDeclaration(node) && node.name.text === UNCOMPILED_GUARD_NAME
   );
 };
 
@@ -141,15 +141,48 @@ Have feedback? Post it to http://go/dst-sd
             statement.importClause.name.escapedText === 'React',
         )
       ) {
-        rootNode = ts.updateSourceFileNode(rootNode, [
-          ts.createImportDeclaration(
-            /* decorators */ undefined,
-            /* modifiers */ undefined,
-            ts.createImportClause(ts.createIdentifier('React'), undefined),
-            ts.createLiteral('react'),
-          ),
-          ...rootNode.statements,
-        ]);
+        // Okay so React doesn't exist anywhere. But the 'react' import could still be around. Let's do another search.
+        let foundIndex = -1;
+        const reactImportNode = rootNode.statements.find((statement, index) => {
+          if (
+            statement.moduleSpecifier &&
+            statement.moduleSpecifier.text === 'react'
+          ) {
+            foundIndex = index;
+            return true;
+          }
+
+          return false;
+        });
+
+        if (reactImportNode) {
+          console.log('found react import');
+          console.log(reactImportNode);
+
+          // Ok it exists, lets ensure it has the default export as "React".
+          rootNode = ts.updateSourceFileNode(rootNode, [
+            ts.createImportDeclaration(
+              /* decorators */ undefined,
+              /* modifiers */ undefined,
+              ts.createImportClause(
+                ts.createIdentifier('React'),
+                reactImportNode.namedBindings,
+              ),
+              ts.createLiteral('react'),
+            ),
+            ...rootNode.statements,
+          ]);
+        } else {
+          rootNode = ts.updateSourceFileNode(rootNode, [
+            ts.createImportDeclaration(
+              /* decorators */ undefined,
+              /* modifiers */ undefined,
+              ts.createImportClause(ts.createIdentifier('React'), undefined),
+              ts.createLiteral('react'),
+            ),
+            ...rootNode.statements,
+          ]);
+        }
       }
 
       const visitor = node => {
