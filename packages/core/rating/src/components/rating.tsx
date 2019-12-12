@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { useCallback } from 'react';
-import { jsx } from '@emotion/core';
-import { visuallyHidden } from '@atlaskit/theme';
+import { jsx } from '@atlaskit/css-freedom';
 import Tooltip from '@atlaskit/tooltip';
 import { smallDurationMs, easeInOut } from '@atlaskit/motion';
 import { Fragment, forwardRef } from 'react';
@@ -78,12 +77,12 @@ export interface InternalRatingProps extends RatingProps {
   render: RatingRender;
 }
 
-const Rating = forwardRef<HTMLLabelElement, InternalRatingProps>(
+var Rating = forwardRef<HTMLLabelElement, InternalRatingProps>(
   (
     { isChecked, name, testId, label, id, value, onChange, render, ...props },
     ref,
   ) => {
-    const onChangeHandler = useCallback(
+    var onChangeHandler = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange && onChange(e.target.checked ? value : undefined);
       },
@@ -109,7 +108,20 @@ const Rating = forwardRef<HTMLLabelElement, InternalRatingProps>(
           >
             {/* When tooltip doesn't render markup move it above <label /> */}
             <div>
-              <span css={visuallyHidden}>{label}</span>
+              <span
+                css={{
+                  border: '0 !important',
+                  clip: 'rect(1px, 1px, 1px, 1px) !important',
+                  height: '1px !important',
+                  overflow: 'hidden !important',
+                  padding: '0 !important',
+                  position: 'absolute !important',
+                  width: '1px !important',
+                  whiteSpace: 'nowrap !important',
+                }}
+              >
+                {label}
+              </span>
               {/* We render two slots for the two states of the radio button so we don't need to use react state. */}
               <span
                 aria-hidden="true"
@@ -132,7 +144,16 @@ const Rating = forwardRef<HTMLLabelElement, InternalRatingProps>(
         {/* When tooltip doesn't render markup add another to the input so when it gains focus the tooltip is displayed */}
         <input
           id={id}
-          css={visuallyHidden}
+          css={{
+            border: '0 !important',
+            clip: 'rect(1px, 1px, 1px, 1px) !important',
+            height: '1px !important',
+            overflow: 'hidden !important',
+            padding: '0 !important',
+            position: 'absolute !important',
+            width: '1px !important',
+            whiteSpace: 'nowrap !important',
+          }}
           onChange={onChangeHandler}
           checked={!!isChecked}
           value={value}

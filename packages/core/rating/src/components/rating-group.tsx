@@ -1,6 +1,5 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import { visuallyHidden } from '@atlaskit/theme';
+import { jsx } from '@atlaskit/css-freedom';
 import { Fragment, Children, cloneElement, useState } from 'react';
 
 export interface RatingGroupProps {
@@ -64,11 +63,11 @@ export default function RatingGroup({
   testId,
   children,
 }: RatingGroupProps) {
-  const [currentValue, setValue] = useState(value || defaultValue);
-  const [firstSelectionMade, setFirstSelectionMade] = useState(!!currentValue);
-  const actualValue = value || currentValue;
+  var [currentValue, setValue] = useState(value || defaultValue);
+  var [firstSelectionMade, setFirstSelectionMade] = useState(!!currentValue);
+  var actualValue = value || currentValue;
 
-  const onChangeHandler = (value: string) => {
+  var onChangeHandler = (value: string) => {
     onChange && onChange(value);
     setValue(value);
 
@@ -88,7 +87,7 @@ Use "defaultValue" or "value" happy days :-).
   return (
     <div
       data-testid={testId && `${testId}--root`}
-      css={css`
+      css={`
         display: inline-flex;
         /* Because some children are inline-block we make the font-size zero to eliminate the implicit space between them. */
         font-size: 0;
@@ -129,9 +128,30 @@ Use "defaultValue" or "value" happy days :-).
     >
       {!firstSelectionMade && (
         <Fragment>
-          <label css={visuallyHidden} htmlFor={`${groupName}--empty`}></label>
+          <label
+            css={{
+              border: '0 !important',
+              clip: 'rect(1px, 1px, 1px, 1px) !important',
+              height: '1px !important',
+              overflow: 'hidden !important',
+              padding: '0 !important',
+              position: 'absolute !important',
+              width: '1px !important',
+              whiteSpace: 'nowrap !important',
+            }}
+            htmlFor={`${groupName}--empty`}
+          ></label>
           <input
-            css={visuallyHidden}
+            css={{
+              border: '0 !important',
+              clip: 'rect(1px, 1px, 1px, 1px) !important',
+              height: '1px !important',
+              overflow: 'hidden !important',
+              padding: '0 !important',
+              position: 'absolute !important',
+              width: '1px !important',
+              whiteSpace: 'nowrap !important',
+            }}
             id={`${groupName}--empty`}
             data-testid={testId && `${testId}--input-empty`}
             type="radio"

@@ -20,6 +20,7 @@
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
+    "@atlaskit/css-freedom": "^0.0.0",
     "@atlaskit/icon": "^19.0.6",
     "@atlaskit/motion": "^0.0.4",
     "@atlaskit/theme": "^9.3.0",

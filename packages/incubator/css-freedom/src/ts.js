@@ -54,9 +54,9 @@ const isCssFreedomCompiledNode = node => {
 
 const isJsxWithCssProp = node => {
   return (
-    ts.isJsxElement(node) &&
-    node.openingElement.attributes.properties.find(
-      prop => prop.name.escapedText === CSS_PROP,
+    (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node)) &&
+    getJsxNodeAttributes(node).properties.find(
+      prop => prop.name && prop.name.escapedText === CSS_PROP,
     )
   );
 };
@@ -104,6 +104,10 @@ const processCssProperties = (properties, { cssVariableIds }) => {
     cssVariables,
     css,
   };
+};
+
+const getJsxNodeAttributes = node => {
+  return node.attributes || node.openingElement.attributes;
 };
 
 // @flow
@@ -213,9 +217,9 @@ Have feedback? Post it to http://go/dst-sd
 
         if (needsCssTransform && isJsxWithCssProp(node)) {
           // Grab the css prop node
-          const cssPropNode = node.openingElement.attributes.properties.find(
-            prop => prop.name.escapedText === CSS_PROP,
-          );
+          const cssPropNode = (
+            node.attributes || node.openingElement.attributes
+          ).properties.find(prop => prop.name.escapedText === CSS_PROP);
 
           log('processing css');
 
@@ -227,6 +231,7 @@ Have feedback? Post it to http://go/dst-sd
           if (
             ts.isObjectLiteralExpression(cssPropNode.initializer.expression)
           ) {
+            // object literal found e..g css={{ fontSize: '20px' }}
             const processedCssObject = processCssProperties(
               cssPropNode.initializer.expression.properties,
               { cssVariableIds },
@@ -234,6 +239,7 @@ Have feedback? Post it to http://go/dst-sd
             cssVariables = processedCssObject.cssVariables;
             compiledCss = stylis(`.${className}`, processedCssObject.css);
           } else if (
+            // static string literal found e.g. css={`font-size: 20px;`}
             ts.isNoSubstitutionTemplateLiteral(
               cssPropNode.initializer.expression,
             )
@@ -244,16 +250,25 @@ Have feedback? Post it to http://go/dst-sd
             );
           } else {
             throw new Error('unsupported value in css prop');
+            // how do we handle mixins/function expressions?
+            // can we execute functions somehow?
+
+            // TODO:
+            // 1. tagged templates with variables
+            // 2. function expressions
+            // 3. spreading values as props
           }
 
           log('removing css prop');
 
           // Remove css prop from the react element.
           const nodeToTransform = ts.getMutableClone(node);
-          nodeToTransform.openingElement.attributes.properties = nodeToTransform.openingElement.attributes.properties.filter(
-            prop => prop.name.escapedText !== CSS_PROP,
-          );
-          nodeToTransform.openingElement.attributes.properties.push(
+          getJsxNodeAttributes(
+            nodeToTransform,
+          ).properties = getJsxNodeAttributes(
+            nodeToTransform,
+          ).properties.filter(prop => prop.name.escapedText !== CSS_PROP);
+          getJsxNodeAttributes(nodeToTransform).properties.push(
             ts.createJsxAttribute(
               ts.createIdentifier('className'),
               ts.createStringLiteral(className),
@@ -261,7 +276,7 @@ Have feedback? Post it to http://go/dst-sd
           );
 
           if (cssVariables.length) {
-            nodeToTransform.openingElement.attributes.properties.push(
+            getJsxNodeAttributes(nodeToTransform).properties.push(
               ts.createJsxAttribute(
                 ts.createIdentifier('style'),
                 ts.createJsxExpression(
