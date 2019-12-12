@@ -10,45 +10,10 @@ import Popup from '../../../../../editor-common/src/ui/Popup';
 import ColorPicker from './../../../../../../jira/color-picker/src/components/ColorPicker';
 import { Button } from '../../../../../../core/button/src/components/Button';
 
-const { getEmojiResource } = emoji.storyData;
-
 import { colors } from '@atlaskit/theme';
-import ToolbarTextColor from '../../text-color/ui/ToolbarTextColor';
 import { PanelState } from '../pm-plugins/main';
-import {
-  TextColorPluginState,
-  pluginKey as textColorPluginKey,
-} from '../../../../src/plugins/text-color/pm-plugins/main';
 import { pluginKey as panelPluginKey } from '../pm-plugins/main';
 import { changePanelType } from '../actions';
-import { PanelType } from '../../../../../adf-schema/src';
-
-// const simplePalette = [
-//   {
-//     label: 'Purple',
-//     value: colors.P200,
-//   },
-//   {
-//     label: 'Blue',
-//     value: colors.B200,
-//   },
-//   {
-//     label: 'Green',
-//     value: colors.G200,
-//   },
-//   {
-//     label: 'Teal',
-//     value: colors.T200,
-//   },
-//   {
-//     label: 'Yellow',
-//     value: colors.Y200,
-//   },
-//   {
-//     label: 'Red',
-//     value: colors.R200,
-//   },
-// ];
 
 const fadedPalette = [
   { label: 'Dark blue', value: colors.N800 },
@@ -111,31 +76,12 @@ export default class ColorPickerButton extends Component<Props, State> {
   };
 
   render() {
-    if (this.buttonRef.current && this.buttonRef.current.button) {
-      target = (this.buttonRef.current.button as RefObject<HTMLButtonElement>)
-        .current as HTMLButtonElement;
-    }
-    const editorView = this.props.view as EditorView<any>;
-
-    const textColorPluginState = textColorPluginKey.getState(editorView.state);
     return (
       <React.Fragment>
-        {/* <Button spacing="compact" onClick={this.togglePopup} ref={this.buttonRef}> </Button> */}
-        {/* <TextColorIcon label='color'></TextColorIcon> */}
-
-        {/* <ToolbarTextColor
-            pluginState={textColorPluginState}
-            isReducedSpacing={true}
-            editorView={editorView}
-            popupsMountPoint={target}
-            popupsBoundariesElement={document.body}
-            popupsScrollableElement={document.body}
-        ></ToolbarTextColor> */}
-
         <ColorPicker
           style={{ height: '24px' }}
           label="Change color"
-          cols="7"
+          cols={7}
           palette={fadedPalette}
           selectedColor={this.state.selectedColor}
           onChange={(newColor: string) => {
@@ -143,8 +89,6 @@ export default class ColorPickerButton extends Component<Props, State> {
             this.updateColor(newColor);
           }}
         />
-
-        {/* {this.renderPopup()} */}
       </React.Fragment>
     );
   }
@@ -156,30 +100,4 @@ export default class ColorPickerButton extends Component<Props, State> {
       color: color,
     })(editorView.state, editorView.dispatch);
   };
-
-  private renderPopup() {
-    let target;
-    if (this.buttonRef.current && this.buttonRef.current.button) {
-      target = (this.buttonRef.current.button as RefObject<HTMLButtonElement>)
-        .current as HTMLButtonElement;
-    }
-    const emojiProvider = getEmojiResource();
-    if (!this.state.popupIsOpened || !emojiProvider) {
-      return null;
-    }
-
-    return (
-      <Popup
-        target={target}
-        fitHeight={350}
-        fitWidth={350}
-        offset={[0, 3]}
-        mountTo={document.body}
-        boundariesElement={document.body}
-        scrollableElement={document.body}
-      >
-        {/* color picker could be here */}
-      </Popup>
-    );
-  }
 }
