@@ -48,8 +48,8 @@ export async function getPrFromCommit(
   // We sort descending on created_on to get newest first and only look at open PRs
   let endpoint:
     | string
-    | undefined = `https://api.bitbucket.org/2.0/repositories/${repoFullName}/pullrequests?sort=-created_on${
-    closedPrs ? '' : '&state=OPEN'
+    | undefined = `https://api.bitbucket.org/2.0/repositories/${repoFullName}/pullrequests?sort=-created_on&state=${
+    closedPrs ? 'MERGED' : 'OPEN'
   }&pagelen=20`;
   let response: PaginatedPullRequests;
   let matchedPr: PullRequest | undefined;
@@ -65,18 +65,22 @@ export async function getPrFromCommit(
         `Response is not in the format we expected. Received:\n${response}`,
       );
     }
-    const openPRs = response.values.filter(
-      pr =>
-        pr.source &&
-        pr.source.commit &&
-        pr.source.commit.hash &&
-        commitHash.startsWith(pr.source.commit.hash),
-    );
-    if (openPRs.length === 1) {
-      matchedPr = openPRs[0];
-    } else if (openPRs.length > 1) {
+    const foundPrs = closedPrs
+      ? response.values.filter(
+          pr => pr.merge_commit && commitHash.startsWith(pr.merge_commit.hash),
+        )
+      : response.values.filter(
+          pr =>
+            pr.source &&
+            pr.source.commit &&
+            pr.source.commit.hash &&
+            commitHash.startsWith(pr.source.commit.hash),
+        );
+    if (foundPrs.length === 1) {
+      matchedPr = foundPrs[0];
+    } else if (foundPrs.length > 1) {
       throw Error(
-        `Found multiple open PRs for commit ${commitHash}. PR ids: ${openPRs.map(
+        `Found multiple open PRs for commit ${commitHash}. PR ids: ${foundPrs.map(
           pr => pr.id,
         )}`,
       );

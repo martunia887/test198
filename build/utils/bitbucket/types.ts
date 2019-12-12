@@ -35,7 +35,9 @@ export type PullRequest = {
   state: 'MERGED' | 'SUPERSEDED' | 'OPEN' | 'DECLINED';
   source: SourceOrDest;
   destination: SourceOrDest;
-  merge_commit: string;
+  merge_commit: {
+    hash: string;
+  };
   comment_count: number;
   task_count: number;
   close_source_branch: boolean;
