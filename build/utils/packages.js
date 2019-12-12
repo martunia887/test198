@@ -40,40 +40,31 @@ async function getChangedPackagesSincePublishCommit() {
 // it wont include staged/unstaged changes.
 //
 // Don't use this function in master branch as it returns nothing in that case.
-async function getChangedPackagesSinceMaster() {
-  const masterRef = await git.getMasterRef();
-  return getChangedPackagesSinceCommit(masterRef);
+async function getChangedPackagesSinceBranch(branch /*: string */) {
+  const ref = await git.getRef(branch);
+  return getChangedPackagesSinceCommit(ref);
 }
 
-// Note: This returns the packages that have changed AND been committed since develop,
-// it wont include staged/unstaged changes.
-async function getChangedPackagesSinceDevelop() {
-  const developRef = await git.getDevelopRef();
-  return getChangedPackagesSinceCommit(developRef);
-}
-
-async function getChangedPackages(
-  targetBranch /*: ?string */,
-  sourceBranch /*: ?string */,
-) {
+async function getChangedPackages(sourceBranch /*: ?string */) {
   // TODO: This is duplicated in scheduled-releases folder because it is using js for now. To remove when we move all build packages in TS.
   const ReleaseBranchPrefix = 'release-candidate/';
-  const isReleaseBranch = `${sourceBranch || ''}`.startsWith(
-    ReleaseBranchPrefix,
-  );
+  const isReleaseBranch =
+    sourceBranch && sourceBranch.startsWith(ReleaseBranchPrefix);
 
-  const isDevelop = `${sourceBranch || ''}` === 'develop';
+  const isDevelop = sourceBranch && sourceBranch === 'develop';
 
-  const branch = isReleaseBranch || isDevelop ? 'master' : targetBranch;
+  // If there is no source branch, play it safe and set base branch to master to avoid incorrectly setting changed packages to
+  // develop when running on a release/develop branch in an environment where source branch is not available, e.g. custom pipeline
+  const base =
+    isReleaseBranch || isDevelop || !sourceBranch
+      ? 'master'
+      : await git.getBaseBranch();
 
-  const parent = branch || (await git.getParentBranch());
-  return parent === 'develop'
-    ? getChangedPackagesSinceDevelop()
-    : getChangedPackagesSinceMaster();
+  return getChangedPackagesSinceBranch(base);
 }
 
 module.exports = {
   getChangedPackagesSincePublishCommit,
-  getChangedPackagesSinceMaster,
+  getChangedPackagesSinceBranch,
   getChangedPackages,
 };

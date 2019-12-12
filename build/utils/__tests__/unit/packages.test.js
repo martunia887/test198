@@ -12,8 +12,7 @@ mockGit.getChangedFilesSince.mockImplementation(commit => {
   }
   throw Error('Invalid commit');
 });
-mockGit.getMasterRef.mockImplementation(() => 'master');
-mockGit.getDevelopRef.mockImplementation(() => 'develop');
+mockGit.getRef.mockImplementation(branch => branch);
 
 bolt.getProject.mockImplementation(() => ({ dir: 'bar' }));
 bolt.getWorkspaces.mockImplementation(() => [
@@ -23,52 +22,37 @@ bolt.getWorkspaces.mockImplementation(() => [
 
 describe('getChangedPackages', () => {
   beforeEach(() => {
-    mockGit.getParentBranch.mockReset();
+    mockGit.getBaseBranch.mockReset();
   });
-  test('if target branch is not defined, it returns changed packages from calculated parent branch', async () => {
-    mockGit.getParentBranch.mockImplementationOnce(() => 'develop');
-    const changedPackagesFromDevelop = await getChangedPackages();
+  test('It returns changed packages from calculated base branch', async () => {
+    mockGit.getBaseBranch.mockImplementationOnce(() => 'develop');
+    const changedPackagesFromDevelop = await getChangedPackages('fix/bug');
     expect(changedPackagesFromDevelop).toMatchObject([{ dir: 'develop' }]);
 
-    mockGit.getParentBranch.mockImplementationOnce(() => 'master');
-    const changedPackagesFromMaster = await getChangedPackages();
+    mockGit.getBaseBranch.mockImplementationOnce(() => 'master');
+    const changedPackagesFromMaster = await getChangedPackages('fix/bug');
     expect(changedPackagesFromMaster).toMatchObject([{ dir: 'master' }]);
   });
-  test('if target branch is develop, it returns changed packages from develop', async () => {
-    const changedPackagesFromDevelop = await getChangedPackages('develop');
-    expect(changedPackagesFromDevelop).toMatchObject([{ dir: 'develop' }]);
-  });
-  test('if target branch is master, it returns changed packages from master', async () => {
-    const changedPackagesFromMaster = await getChangedPackages('master');
-    expect(changedPackagesFromMaster).toMatchObject([{ dir: 'master' }]);
-  });
-  test('if target branch is not defined but source branch is a release branch, it returns changed packages from master', async () => {
-    mockGit.getParentBranch.mockImplementationOnce(() => 'develop');
+  test('if source branch is a release branch, it returns changed packages from master', async () => {
+    mockGit.getBaseBranch.mockImplementationOnce(() => 'develop');
     const changedPackagesFromMaster = await getChangedPackages(
-      undefined,
       'release-candidate/foo',
     );
     expect(changedPackagesFromMaster).toMatchObject([{ dir: 'master' }]);
   });
-  test('if target branch is not defined and source branch is not a release branch, it returns changed packages from calculated branch', async () => {
-    mockGit.getParentBranch.mockImplementationOnce(() => 'develop');
-    const changedPackagesFromDevelop = await getChangedPackages(
-      undefined,
-      'feature/foo',
-    );
+  test('if source branch is develop, it returns changed packages from master', async () => {
+    mockGit.getBaseBranch.mockImplementationOnce(() => 'develop');
+    const changedPackagesFromMaster = await getChangedPackages('develop');
+    expect(changedPackagesFromMaster).toMatchObject([{ dir: 'master' }]);
+  });
+  test('if source branch is not a release branch, it returns changed packages from calculated branch', async () => {
+    mockGit.getBaseBranch.mockImplementationOnce(() => 'develop');
+    const changedPackagesFromDevelop = await getChangedPackages('feature/foo');
     expect(changedPackagesFromDevelop).toMatchObject([{ dir: 'develop' }]);
   });
-  test('if parent branch is not found, returns changed packages from master', async () => {
-    mockGit.getParentBranch.mockImplementationOnce(() => undefined);
-    const changedPackagesFromMaster = await getChangedPackages(undefined);
-    expect(changedPackagesFromMaster).toMatchObject([{ dir: 'master' }]);
-  });
-  test('if target branch is not defined but source branch is develop, it returns changed packages from master', async () => {
-    mockGit.getParentBranch.mockImplementationOnce(() => 'develop');
-    const changedPackagesFromMaster = await getChangedPackages(
-      undefined,
-      'develop',
-    );
-    expect(changedPackagesFromMaster).toMatchObject([{ dir: 'master' }]);
+  test('if source branch is not defined, it returns changed packages from master', async () => {
+    mockGit.getBaseBranch.mockImplementationOnce(() => 'develop');
+    const changedPackagesFromDevelop = await getChangedPackages();
+    expect(changedPackagesFromDevelop).toMatchObject([{ dir: 'master' }]);
   });
 });

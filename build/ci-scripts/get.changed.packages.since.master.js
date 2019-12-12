@@ -51,16 +51,13 @@ const cli = meow(
 );
 
 const displayChangedPackagesSinceMaster = async () => {
-  const { TARGET_BRANCH, BITBUCKET_BRANCH } = process.env;
+  const { BITBUCKET_BRANCH } = process.env;
 
   const cwd = process.cwd();
   const allPackages = await bolt.getWorkspaces({ cwd });
   // Changed packages that have been worked on since master.
 
-  const changedPackages = await packages.getChangedPackages(
-    TARGET_BRANCH,
-    BITBUCKET_BRANCH,
-  );
+  const changedPackages = await packages.getChangedPackages(BITBUCKET_BRANCH);
   let changedPackagesRelativePaths = changedPackages.map(
     pkg => pkg.relativeDir,
   );

@@ -28,55 +28,31 @@ async function getChangedFilesSince(
   return files.map(file => path.resolve(file));
 }
 
-async function getChangedChangesetFilesSinceMaster(
+async function getChangedChangesetFilesSinceBranch(
+  branch /*:string*/,
   fullPath /*:boolean*/ = false,
 ) {
-  const ref = await getMasterRef();
-  // First we need to find the commit where we diverged from `ref` at using `git merge-base`
-  let cmd = await spawn('git', ['merge-base', ref, 'HEAD']);
+  const ref = await getRef(branch);
   // Now we can find which files we added
-  cmd = await spawn('git', [
+  const cmd = await spawn('git', [
     'diff',
     '--name-only',
     '--diff-filter=d',
-    'master',
+    ref,
   ]);
 
   const files = cmd.stdout
     .trim()
     .split('\n')
-    .filter(file => !file.includes('README.md') && file.startsWith('changes'));
-  if (!fullPath) return files;
-  return files.map(file => path.resolve(file));
-}
-
-async function getChangedChangesetFilesSinceDevelop(
-  fullPath /*:boolean*/ = false,
-) {
-  const ref = await getDevelopRef();
-  // First we need to find the commit where we diverged from `ref` at using `git merge-base`
-  let cmd = await spawn('git', ['merge-base', ref, 'HEAD']);
-  // Now we can find which files we added
-  cmd = await spawn('git', [
-    'diff',
-    '--name-only',
-    '--diff-filter=d',
-    'develop',
-  ]);
-
-  const files = cmd.stdout
-    .trim()
-    .split('\n')
+    // TODO: This needs to be updated to handle changesets v2
     .filter(file => !file.includes('README.md') && file.startsWith('changes'));
   if (!fullPath) return files;
   return files.map(file => path.resolve(file));
 }
 
 async function getChangesetFiles() {
-  const parent = await getParentBranch();
-  return parent === 'develop'
-    ? getChangedChangesetFilesSinceDevelop()
-    : getChangedChangesetFilesSinceMaster();
+  const base = await getBaseBranch();
+  return getChangedChangesetFilesSinceBranch(base);
 }
 
 async function getBranchName() {
@@ -84,13 +60,12 @@ async function getBranchName() {
   return gitCmd.stdout.trim();
 }
 
-async function getMasterRef() {
-  const gitCmd = await spawn('git', ['rev-parse', 'origin/master']);
-  return gitCmd.stdout.trim().split('\n')[0];
+async function getOriginBranchName(branch /*: string */) {
+  return branch.startsWith('origin/') ? branch : `origin/${branch}`;
 }
 
-async function getDevelopRef() {
-  const gitCmd = await spawn('git', ['rev-parse', 'origin/develop']);
+async function getRef(branch /*:string*/) {
+  const gitCmd = await spawn('git', ['rev-parse', getOriginBranchName(branch)]);
   return gitCmd.stdout.trim().split('\n')[0];
 }
 
@@ -331,8 +306,8 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
 async function getMergeBase(branchName /*: string */, reference /*: string */) {
   const gitCmd = await spawn('git', [
     'merge-base',
-    `${branchName}`,
-    `${reference}`,
+    getOriginBranchName(branchName),
+    reference,
   ]);
 
   // eslint-disable-next-line no-shadow
@@ -354,16 +329,13 @@ async function branchContainsCommit(
   // eslint-disable-next-line no-shadow
   const output = gitCmd.stdout.split('\n');
   // We are coercing to a boolean if we find the branchname.
-  return !!output.find(b => b.includes(branchName));
+  return !!output.find(b => b.includes(getOriginBranchName(branchName)));
 }
 
-async function getParentBranch(ref /*: string */ = 'HEAD') {
+async function getBaseBranch(ref /*: string */ = 'HEAD') {
   await fetch();
-  const developMergeBase = await getMergeBase('origin/develop', ref);
-  const isOriginMaster = await branchContainsCommit(
-    developMergeBase,
-    'origin/master',
-  );
+  const developMergeBase = await getMergeBase('develop', ref);
+  const isOriginMaster = await branchContainsCommit(developMergeBase, 'master');
   return isOriginMaster ? 'master' : 'develop';
 }
 
@@ -372,8 +344,7 @@ module.exports = {
   getCommitsSince,
   getChangedFilesSince,
   getBranchName,
-  getMasterRef,
-  getDevelopRef,
+  getRef,
   add,
   branch,
   checkout,
@@ -387,11 +358,10 @@ module.exports = {
   rebase,
   rebaseAndPush,
   getUnpublishedChangesetCommits,
-  getChangedChangesetFilesSinceMaster,
-  getChangedChangesetFilesSinceDevelop,
+  getChangedChangesetFilesSinceBranch,
   getChangesetFiles,
   getAllReleaseCommits,
   getAllChangesetCommits,
   getLastPublishCommit,
-  getParentBranch,
+  getBaseBranch,
 };

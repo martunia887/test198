@@ -17,7 +17,9 @@ const codeCoverageByPackage = require('./jest.codeCoverageThreshold');
  * }
  * */
 (async () => {
-  const changedPackages = await packages.getChangedPackages();
+  const changedPackages = await packages.getChangedPackages(
+    process.env.BITBUCKET_BRANCH,
+  );
 
   const changedPackagesName = changedPackages.map(
     pkg => pkg.relativeDir && pkg.relativeDir.split('/').pop(),

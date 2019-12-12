@@ -11,8 +11,6 @@ const {
   getChangedPackagesSincePublishCommit,
 } = require('../utils/packages');
 
-const { TARGET_BRANCH } = process.env;
-
 async function getAllFSChangesets() {
   const projectRoot = (await bolt.getProject({ cwd: process.cwd() })).dir;
   const changesetBase = path.join(projectRoot, '.changeset');
@@ -81,7 +79,7 @@ async function getNewFSChangesets() {
   const changedPackages =
     branch === 'master'
       ? await getChangedPackagesSincePublishCommit()
-      : await getChangedPackages(TARGET_BRANCH);
+      : await getChangedPackages(process.env.BITBUCKET_BRANCH);
 
   const matched = !!changedPackages
     .concat(packagesToRelease)

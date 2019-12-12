@@ -3,7 +3,7 @@ const {
   branch,
   checkout,
   commit,
-  getParentBranch,
+  getBaseBranch,
   merge,
 } = require('./../../git');
 const {
@@ -36,14 +36,14 @@ afterAll(() => {
   cleanUp(tmpRemotePath);
 });
 
-describe('getParentBranch >', () => {
+describe('getBaseBranch >', () => {
   test('Master should return master as a parent', async () => {
-    const parent = await getParentBranch();
+    const parent = await getBaseBranch();
     expect(parent).toBe('master');
   });
 
   test('Develop should return develop as a parent', async () => {
-    const parent = await getParentBranch('origin/develop');
+    const parent = await getBaseBranch('origin/develop');
     expect(parent).toBe('develop');
   });
 
@@ -51,7 +51,7 @@ describe('getParentBranch >', () => {
     await checkout('develop');
     await branch('from-develop');
     await commit('Initial commit for develop temp origin');
-    const parent = await getParentBranch();
+    const parent = await getBaseBranch();
     expect(parent).toBe('develop');
   });
 
@@ -59,7 +59,7 @@ describe('getParentBranch >', () => {
     await checkout('master');
     await branch('from-master');
     await commit('Initial commit for from-master temp origin');
-    const parent = await getParentBranch();
+    const parent = await getBaseBranch();
     expect(parent).toBe('master');
   });
 
@@ -68,7 +68,7 @@ describe('getParentBranch >', () => {
     await branch('from-develop');
     await commit('Initial commit for develop temp origin');
     await merge('master');
-    const parent = await getParentBranch();
+    const parent = await getBaseBranch();
     expect(parent).toBe('develop');
   });
 });
