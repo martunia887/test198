@@ -1,5 +1,5 @@
 ---
-'@atlaskit/react-experiment-framework': patch
+'@atlaskit/react-experiment-framework': minor
 ---
 
 Converted from Flow to Typescript

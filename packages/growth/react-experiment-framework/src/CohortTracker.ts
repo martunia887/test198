@@ -1,14 +1,14 @@
 import { Component } from 'react';
 import { ExposureDetails, ExperimentEnrollmentOptions } from './types';
 
-type Props = {
+interface Props {
   exposureDetails: ExposureDetails;
   onExposure: (
     exposureDetails: ExposureDetails,
     options?: ExperimentEnrollmentOptions,
   ) => void;
   options?: ExperimentEnrollmentOptions;
-};
+}
 
 export default class CohortTracker extends Component<Props> {
   static displayName = 'CohortTracker';

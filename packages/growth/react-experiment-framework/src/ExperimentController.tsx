@@ -36,7 +36,7 @@ class ExperimentController extends Component<Props, State> {
     const { experimentEnrollmentConfig } = this.props;
 
     const intialExperiments = Object.keys(experimentEnrollmentConfig).reduce(
-      (cumulative: any, experimentKey: ExperimentKey) => ({
+      (cumulative: Experiments, experimentKey: ExperimentKey) => ({
         ...cumulative,
         [experimentKey]: {
           isEnrollmentDecided: false,

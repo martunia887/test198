@@ -1,4 +1,4 @@
-import React, { Component, ComponentClass, Fragment } from 'react';
+import React, { Component, Fragment, ComponentType } from 'react';
 
 import CohortTracker from './CohortTracker';
 import { ExperimentConsumer } from './ExperimentContext';
@@ -14,8 +14,8 @@ type State = {
 };
 
 export type ExperimentComponentMap = {
-  fallback: ComponentClass<any>;
-  [key: string]: ComponentClass<any>;
+  fallback: ComponentType;
+  [key: string]: ComponentType;
 };
 
 export default function asExperiment(
@@ -28,14 +28,11 @@ export default function asExperiment(
       options?: ExperimentEnrollmentOptions,
     ) => void;
   },
-  LoadingComponent?: ComponentClass<any>,
+  LoadingComponent?: ComponentType,
 ) {
   let contextOptions: EnrollmentOptions | undefined;
 
-  return class ExperimentSwitch extends Component<
-    { [key: string]: any },
-    State
-  > {
+  return class ExperimentSwitch extends Component<Record<string, any>, State> {
     static displayName = 'ExperimentSwitch';
 
     state = {

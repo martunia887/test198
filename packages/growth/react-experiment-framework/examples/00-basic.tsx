@@ -132,21 +132,21 @@ const scenarios: Scenario[] = [
 ];
 
 type State = {
-  showErrorHandlingScenarios: boolean;
+  areErrorScenariosActive: boolean;
 };
 
 export default class extends Component<{}, State> {
   state = {
-    showErrorHandlingScenarios: false,
+    areErrorScenariosActive: false,
   };
 
   handleErrorHandlingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ showErrorHandlingScenarios: !!event.target.checked });
+    this.setState({ areErrorScenariosActive: !!event.target.checked });
   };
 
   render() {
-    const { showErrorHandlingScenarios } = this.state;
-    const filteredScenarios = showErrorHandlingScenarios
+    const { areErrorScenariosActive } = this.state;
+    const filteredScenarios = areErrorScenariosActive
       ? scenarios
       : scenarios.filter(s => !s.hasError);
     return (
@@ -189,7 +189,7 @@ export default class extends Component<{}, State> {
               <label>
                 <input
                   type="checkbox"
-                  value={showErrorHandlingScenarios.toString()}
+                  value={areErrorScenariosActive.toString()}
                   onChange={this.handleErrorHandlingChange}
                 />
                 Show error handling scenarios
