@@ -1863,13 +1863,13 @@
         "../../home/notification-log-client/src/types",
         "./packages/home/notification-log-client/src/types"
       ],
-      "@atlaskit/css-freedom/babel": [
-        "../../incubator/css-freedom/src/babel",
-        "./packages/incubator/css-freedom/src/babel"
-      ],
       "@atlaskit/css-freedom": [
         "../../incubator/css-freedom/src/",
         "./packages/incubator/css-freedom/src/"
+      ],
+      "@atlaskit/css-freedom/ts": [
+        "../../incubator/css-freedom/src/ts",
+        "./packages/incubator/css-freedom/src/ts"
       ],
       "@atlaskit/color-picker/constants": [
         "../../jira/color-picker/src/constants",

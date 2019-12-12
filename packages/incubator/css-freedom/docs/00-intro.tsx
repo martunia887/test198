@@ -10,4 +10,5 @@ export default md`
   - Zero runtime
   - \`css\` prop
   - Best of emotion and linaria
+  - Simple delivery for a component library
 `;
