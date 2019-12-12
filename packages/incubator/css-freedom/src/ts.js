@@ -128,6 +128,8 @@ Have feedback? Post it to http://go/dst-sd
               statement.moduleSpecifier.text === '../src'),
         )
       ) {
+        console.log('==> file needs to be transformed');
+
         needsCssTransform = true;
       }
 
@@ -142,22 +144,17 @@ Have feedback? Post it to http://go/dst-sd
         )
       ) {
         // Okay so React doesn't exist anywhere. But the 'react' import could still be around. Let's do another search.
-        let foundIndex = -1;
         const reactImportNode = rootNode.statements.find((statement, index) => {
-          if (
+          return (
             statement.moduleSpecifier &&
             statement.moduleSpecifier.text === 'react'
-          ) {
-            foundIndex = index;
-            return true;
-          }
-
-          return false;
+          );
         });
 
         if (reactImportNode) {
-          console.log('found react import');
-          console.log(reactImportNode);
+          console.log(
+            '==> react module found, ensuring it has a default export',
+          );
 
           // Ok it exists, lets ensure it has the default export as "React".
           rootNode = ts.updateSourceFileNode(rootNode, [
@@ -173,6 +170,8 @@ Have feedback? Post it to http://go/dst-sd
             ...rootNode.statements,
           ]);
         } else {
+          console.log('==> react module not found, adding it');
+
           rootNode = ts.updateSourceFileNode(rootNode, [
             ts.createImportDeclaration(
               /* decorators */ undefined,
@@ -186,7 +185,9 @@ Have feedback? Post it to http://go/dst-sd
       }
 
       const visitor = node => {
-        if (isCssFreedomCompiledNode(node)) {
+        if (!needsCssTransform && isCssFreedomCompiledNode(node)) {
+          console.log(`==> setting ${UNCOMPILED_GUARD_NAME} variable to true`);
+
           // Reassign the variable declarations to `true` so it doesn't blow up at runtime.
           const newNode = ts.updateVariableDeclaration(
             node,
@@ -204,11 +205,15 @@ Have feedback? Post it to http://go/dst-sd
             prop => prop.name.escapedText === CSS_PROP,
           );
 
+          console.log('==> processing css');
+
           // Compile the CSS from the styles object node.
           const compiledCss = processCssProperties(
             cssPropNode.initializer.expression.properties,
             { classNameIds, cssVariableIds },
           );
+
+          console.log('==> removing css prop');
 
           // Remove css prop from the react element.
           const newNode = ts.getMutableClone(node);
@@ -236,9 +241,15 @@ Have feedback? Post it to http://go/dst-sd
           // Create a new fragment that will wrap both the style and the node we found initially.
           const newFragmentParent = ts.createJsxFragment(
             ts.createJsxOpeningFragment(),
-            [styleNode, newNode],
+            [
+              // important that the style goes before the node
+              styleNode,
+              newNode,
+            ],
             ts.createJsxJsxClosingFragment(),
           );
+
+          console.log('==> returning composed component with fragment');
 
           return newFragmentParent;
         }

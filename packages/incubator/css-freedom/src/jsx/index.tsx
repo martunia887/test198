@@ -42,5 +42,5 @@ You need to apply the typescript transform to use this, sorry!
 You can apply it from \`@atlaskit/css-freedom/ts\`.`);
   }
 
-  return createElement(type, props, children);
+  return createElement(type, props, ...children);
 }
