@@ -61,36 +61,48 @@ const isJsxWithCssProp = node => {
   );
 };
 
-const processCssProperties = (properties, { classNameIds, cssVariableIds }) => {
-  const className = classNameIds.next();
-  const cssVariables = [];
+const processCssProperties = (properties, { cssVariableIds }) => {
+  let cssVariables = [];
 
   const css = properties.reduce((acc, prop) => {
-    const key = kebabCase(prop.name.escapedText);
+    const key = kebabCase(prop.symbol.escapedName);
     let value;
 
-    if (!prop.initializer || ts.isIdentifier(prop.initializer)) {
+    if (
+      ts.isShorthandPropertyAssignment(prop) ||
+      ts.isIdentifier(prop.initializer)
+    ) {
       // We have a prop assignment using a variable, e.g. "fontSize: props.fontSize"
       // Time to turn it into a css variable.
       const cssVariable = `--${key}-${cssVariableIds.next()}`;
-      value = `var(${cssVariable})`;
+      value = `var(${cssVariable});`;
       cssVariables.push({
         var: cssVariable,
         nodeReference: prop.initializer || prop.name,
       });
+    } else if (ts.isObjectLiteralExpression(prop.initializer)) {
+      const result = processCssProperties(prop.initializer.properties, {
+        cssVariableIds,
+      });
+      cssVariables = cssVariables.concat(result.cssVariables);
+
+      return `${acc}
+      ${key} {
+        ${result.css}
+      }
+      `;
     } else {
       // We have a regular static assignment, e.g. "fontSize: '20px'"
-      value = prop.initializer.text;
+      value = `${prop.initializer.text};`;
     }
 
     return `${acc}
-      ${key}: ${value};`;
+      ${key}: ${value}`;
   }, '');
 
   return {
-    className,
     cssVariables,
-    css: stylis(`.${className}`, css),
+    css,
   };
 };
 
@@ -208,10 +220,12 @@ Have feedback? Post it to http://go/dst-sd
           log('processing css');
 
           // Compile the CSS from the styles object node.
-          const compiledCss = processCssProperties(
+          const className = classNameIds.next();
+          const processedCss = processCssProperties(
             cssPropNode.initializer.expression.properties,
-            { classNameIds, cssVariableIds },
+            { cssVariableIds },
           );
+          const compiledCss = stylis(`.${className}`, processedCss.css);
 
           log('removing css prop');
 
@@ -223,18 +237,18 @@ Have feedback? Post it to http://go/dst-sd
           nodeToTransform.openingElement.attributes.properties.push(
             ts.createJsxAttribute(
               ts.createIdentifier('className'),
-              ts.createStringLiteral(compiledCss.className),
+              ts.createStringLiteral(className),
             ),
           );
 
-          if (compiledCss.cssVariables) {
+          if (processedCss.cssVariables.length) {
             nodeToTransform.openingElement.attributes.properties.push(
               ts.createJsxAttribute(
                 ts.createIdentifier('style'),
                 ts.createJsxExpression(
                   undefined,
                   ts.createObjectLiteral(
-                    compiledCss.cssVariables.map(variable => {
+                    processedCss.cssVariables.map(variable => {
                       return ts.createPropertyAssignment(
                         ts.createStringLiteral(variable.var),
                         variable.nodeReference,
@@ -254,7 +268,7 @@ Have feedback? Post it to http://go/dst-sd
               [],
               ts.createJsxAttributes([]),
             ),
-            [ts.createJsxText(compiledCss.css)],
+            [ts.createJsxText(compiledCss)],
             ts.createJsxClosingElement(ts.createIdentifier('style')),
           );
 
