@@ -92,7 +92,10 @@ const mainDynamicStyles = (panelType: PanelType) => (props: any) => {
   `;
 };
 
-export const getPanelTypeBackground = (panelType: PanelType, props: any) => {
+export const getPanelTypeBackground = (
+  panelType: PanelType,
+  props: any,
+): string => {
   const light = lightPanelColor[panelType];
   const dark = hexToRgba(darkPanelColor[panelType], darkPanelOpacity);
   const darkText = darkTextColor[panelType];
