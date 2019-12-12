@@ -106,8 +106,7 @@ export const getToolbarConfig: FloatingToolbarHandler = (
         },
         {
           type: 'custom',
-          selected: activePanelType === 'emoji',
-          title: formatMessage(messages.emoji),
+          title: formatMessage(messages.emoji), // not supported
           render: (
             view,
             idx,
@@ -117,7 +116,11 @@ export const getToolbarConfig: FloatingToolbarHandler = (
             | React.ReactElement<any>
             | null => {
             return (
-              <EmojiPickerButton key={idx} view={view}></EmojiPickerButton>
+              <EmojiPickerButton
+                key={idx}
+                view={view}
+                isSelected={activePanelType === 'emoji'}
+              />
             );
           },
         },
@@ -126,8 +129,8 @@ export const getToolbarConfig: FloatingToolbarHandler = (
         },
         {
           type: 'custom',
-          icon: TextColorIcon,
-          title: formatMessage(messages.error),
+          // icon: TextColorIcon, // not supported
+          // title: formatMessage(messages.error), // not supported
           render: (
             view,
             idx,
