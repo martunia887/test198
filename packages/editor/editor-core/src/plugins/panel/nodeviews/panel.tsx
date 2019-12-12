@@ -87,7 +87,7 @@ class PanelNodeView {
       const Icon = panelIcons[panelType];
       const textColor = options.color
         ? getPanelTextColorForCustomBackground(options.color)
-        : null;
+        : undefined;
       ReactDOM.render(
         <Icon label={`Panel ${panelType}`} primaryColor={textColor} />,
         this.icon,
