@@ -107,10 +107,7 @@ export const getPanelTextColorForCustomBackground = (
   backgroundColor: string,
 ): string => {
   const color = Color(backgroundColor);
-  const contrastColor = color.isLight()
-    ? color.darken(0.75)
-    : color.lighten(0.75);
-  return contrastColor.hex();
+  return color.isLight() ? colors.N800A : colors.N0;
 };
 
 export const panelSharedStyles = css`
