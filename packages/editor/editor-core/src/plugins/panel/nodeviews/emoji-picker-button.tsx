@@ -19,6 +19,7 @@ const { getEmojiResource } = emoji.storyData;
 export type Props = {
   view?: EditorView<any>;
   idx?: any;
+  isSelected?: boolean;
 };
 
 export type State = {
@@ -27,6 +28,10 @@ export type State = {
 };
 
 export default class EmojiPickerButton extends Component<Props, State> {
+  static defaultProps = {
+    isSelected: false,
+  };
+
   buttonRef: RefObject<Button>;
   state = {
     popupIsOpened: false,
@@ -75,6 +80,7 @@ export default class EmojiPickerButton extends Component<Props, State> {
         />
       );
     }
+
     return (
       <React.Fragment>
         <Button
@@ -82,12 +88,12 @@ export default class EmojiPickerButton extends Component<Props, State> {
           style={{
             padding: 0,
             display: 'flex',
-            background: 'none',
             height: '25px',
             width: '30px',
           }}
           onClick={this.togglePopup}
           ref={this.buttonRef}
+          isSelected={this.props.isSelected}
         >
           {icon}
         </Button>
