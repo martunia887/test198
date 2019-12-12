@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import { assistive } from '@atlaskit/theme';
+import { visuallyHidden } from '@atlaskit/theme';
 import { Fragment, Children, cloneElement, useState } from 'react';
 
 export interface RatingGroupProps {
@@ -129,9 +129,9 @@ Use "defaultValue" or "value" happy days :-).
     >
       {!firstSelectionMade && (
         <Fragment>
-          <label css={assistive} htmlFor={`${groupName}--empty`}></label>
+          <label css={visuallyHidden} htmlFor={`${groupName}--empty`}></label>
           <input
-            css={assistive}
+            css={visuallyHidden}
             id={`${groupName}--empty`}
             data-testid={testId && `${testId}--input-empty`}
             type="radio"

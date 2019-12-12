@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { useCallback } from 'react';
 import { jsx } from '@emotion/core';
-import { assistive } from '@atlaskit/theme';
+import { visuallyHidden } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
 import { smallDurationMs, easeInOut } from '@atlaskit/motion';
 import { Fragment, forwardRef } from 'react';
@@ -132,7 +132,7 @@ const Rating = forwardRef<HTMLLabelElement, InternalRatingProps>(
         {/* When tooltip doesn't render markup add another to the input so when it gains focus the tooltip is displayed */}
         <input
           id={id}
-          css={assistive}
+          css={visuallyHidden}
           onChange={onChangeHandler}
           checked={!!isChecked}
           value={value}
