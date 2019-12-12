@@ -88,6 +88,8 @@ export const changePanelType = (
     if (!panelType && previousEmoji) {
       panelIcon = previousEmoji;
       panelType = 'emoji';
+    } else if (!panelType && previousType) {
+      panelType = previousType;
     }
   }
 
