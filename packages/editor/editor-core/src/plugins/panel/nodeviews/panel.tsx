@@ -12,6 +12,7 @@ import { PanelType } from '@atlaskit/adf-schema';
 import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
 import { Emoji } from '../../../../../../elements/emoji/src';
 import { getEmojiRepository } from '../../../../../../elements/util-data-test/src/emoji/story-data';
+import { getPanelTextColorForCustomBackground } from '../../../../../editor-common/src/styles/shared/panel';
 
 const panelIcons = {
   info: InfoIcon,
@@ -49,10 +50,12 @@ class PanelNodeView {
     this.renderIcon(node.attrs.panelType as PanelType, node.attrs.panelIcon);
 
     if (node.attrs.panelColor) {
-      this.dom.setAttribute(
-        'style',
-        `background-color: ${node.attrs.panelColor};align-items: center;position: relative;`,
-      );
+      const style = `background-color: ${node.attrs.panelColor};
+      color: ${getPanelTextColorForCustomBackground(node.attrs.panelColor)};
+      align-items: center;
+      position: relative;`;
+
+      this.dom.setAttribute('style', style);
     }
   }
 

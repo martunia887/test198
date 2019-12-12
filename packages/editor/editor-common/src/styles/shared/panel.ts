@@ -1,4 +1,5 @@
 import { css } from 'styled-components';
+import Color from 'color';
 import { gridSize, borderRadius, colors, themed } from '@atlaskit/theme';
 import { PanelType, hexToRgba } from '@atlaskit/adf-schema';
 import {
@@ -97,6 +98,16 @@ export const getPanelTypeBackground = (panelType: PanelType, props: any) => {
   const darkText = darkTextColor[panelType];
   const background = themed({ light, dark })(props);
   return background;
+};
+
+export const getPanelTextColorForCustomBackground = (
+  backgroundColor: string,
+): string => {
+  const color = Color(backgroundColor);
+  const contrastColor = color.isLight()
+    ? color.darken(0.75)
+    : color.lighten(0.75);
+  return contrastColor.hex();
 };
 
 export const panelSharedStyles = css`
