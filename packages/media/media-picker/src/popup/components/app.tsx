@@ -251,8 +251,6 @@ export class App extends Component<AppProps, AppState> {
           recentsCollection={RECENTS_COLLECTION}
         />
       );
-    } else if (selectedServiceName === 'giphy') {
-      return <GiphyView />;
     } else {
       const selectedPlugin = plugins.find(
         plugin => plugin.name === selectedServiceName,

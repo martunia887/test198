@@ -147,9 +147,8 @@ export class StatelessActivityView extends React.Component<ActivityViewProps> {
       activities &&
       activities.workedOn &&
       activities.workedOn.nodes &&
-      activities.workedOn.nodes
-        .slice(0, 9)
-        .map(({ object, containers, contributors, eventType }) => {
+      activities.workedOn.nodes.map(
+        ({ object, containers, contributors, eventType }) => {
           return (
             <ActivityRow
               href={object.url}
@@ -176,7 +175,8 @@ export class StatelessActivityView extends React.Component<ActivityViewProps> {
               />
             </ActivityRow>
           );
-        })
+        },
+      )
     );
   }
 

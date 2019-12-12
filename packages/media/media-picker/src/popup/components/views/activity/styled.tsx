@@ -3,6 +3,7 @@ import { colors } from '@atlaskit/theme';
 
 export const ActivityWrapper = styled.div`
   padding: 16px;
+  overflow: auto;
 `;
 
 export const WorkWrapper = styled.div``;

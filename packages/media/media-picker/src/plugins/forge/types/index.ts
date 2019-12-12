@@ -33,8 +33,16 @@ export interface ForgeInvokeResponse {
       response: {
         body: JsonLdCollection;
       };
+      success: boolean;
+      message: string;
+      statusCode: number;
     };
   };
+}
+export interface ForgeInvokeError {
+  name: string;
+  message: string;
+  status: number;
 }
 
 export interface ForgeViewProps {

@@ -2,6 +2,7 @@ import {
   ForgeInvokeType,
   ForgeInvokeParams,
   ForgeInvokeResponse,
+  ForgeInvokeError,
 } from './types';
 import { JsonLdCollection } from './types/types-json-ld';
 
@@ -59,15 +60,21 @@ export class ForgeClient {
     console.log({ responseAsJson });
     const {
       auth,
+      success,
+      message,
       response: invokeResponse,
     } = responseAsJson.data.invokeExtension;
-    const { meta, data } = invokeResponse.body;
-    return {
-      meta: {
-        ...meta,
-        auth: auth.filter(a => a.key !== 'atlassian-token-service-key'),
-      },
-      data,
-    };
+    if (success) {
+      const { meta, data } = invokeResponse.body;
+      return {
+        meta: {
+          ...meta,
+          auth: auth.filter(a => a.key !== 'atlassian-token-service-key'),
+        },
+        data,
+      };
+    } else {
+      throw new Error(message);
+    }
   }
 }
