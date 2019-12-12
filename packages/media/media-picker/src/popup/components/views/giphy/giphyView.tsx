@@ -9,7 +9,7 @@ import Button from '@atlaskit/button';
 import Spinner from '@atlaskit/spinner';
 import { Card } from '@atlaskit/media-card';
 import { ExternalImageIdentifier } from '@atlaskit/media-client';
-import { BricksLayout } from './bricksGrid';
+import { BricksLayout } from '../../../../plugins/views/bricks/grid';
 import { fileClick } from '../../../actions/fileClick';
 import { ImageCardModel } from '../../../tools/fetcher/fetcher';
 import gridCellScaler from '../../../tools/gridCellScaler';
@@ -17,7 +17,6 @@ import { State, SelectedItem } from '../../../domain';
 import { searchGiphy } from '../../../actions/searchGiphy';
 
 import {
-  Container,
   Title,
   ButtonContainer,
   GridCell,
@@ -27,6 +26,7 @@ import {
   WarningHeading,
   WarningSuggestion,
 } from './styles';
+import { PluginContentContainer } from '../../../../plugins/forge/components/styled';
 
 import { errorIcon } from '../../../../icons';
 
@@ -86,7 +86,7 @@ export class GiphyView extends Component<GiphyViewProps, GiphyViewState> {
     const { query } = this.state;
 
     return (
-      <Container id="mediapicker-giphy-container">
+      <PluginContentContainer id="mediapicker-giphy-container">
         <Title>GIPHY</Title>
         <FieldText
           label=""
@@ -96,7 +96,7 @@ export class GiphyView extends Component<GiphyViewProps, GiphyViewState> {
           value={query}
         />
         {this.getContent()}
-      </Container>
+      </PluginContentContainer>
     );
   }
 

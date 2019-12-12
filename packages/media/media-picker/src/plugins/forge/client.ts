@@ -3,6 +3,7 @@ import {
   ForgeInvokeParams,
   ForgeInvokeResponse,
 } from './types';
+import { JsonLdCollection } from './types/types-json-ld';
 
 const API_ENDPOINT = 'https://api-private.stg.atlassian.com';
 const API_PATH = '/graphql';
@@ -27,29 +28,44 @@ mutation invoke($input: InvokeExtensionInput!) {
 export class ForgeClient {
   constructor(private extensionId: string) {}
 
-  public async invoke(type: ForgeInvokeType, params: ForgeInvokeParams) {
+  public async invoke(
+    type: ForgeInvokeType,
+    params: ForgeInvokeParams,
+  ): Promise<JsonLdCollection> {
+    const request = {
+      query: QUERY_INVOKE,
+      variables: {
+        input: {
+          contextIds: [QUERY_ARI],
+          extensionId: this.extensionId,
+          payload: {
+            type,
+            resourceUrl: params.resourceUrl,
+            query: params.query,
+          },
+        },
+      },
+    };
     const response = await fetch(API_ENDPOINT + API_PATH, {
       method: 'POST',
       credentials: 'include',
-      body: JSON.stringify({
-        query: QUERY_INVOKE,
-        variables: {
-          input: {
-            contextIds: [QUERY_ARI],
-            extensionId: this.extensionId,
-            payload: {
-              type,
-              resourceUrl: params.resourceUrl,
-              query: params.query,
-            },
-          },
-        },
-      }),
+      body: JSON.stringify(request),
       headers: {
         'content-type': 'application/json',
       },
     });
     const responseAsJson = (await response.json()) as ForgeInvokeResponse;
-    return responseAsJson.data.invokeExtension.response.body;
+    const {
+      auth,
+      response: invokeResponse,
+    } = responseAsJson.data.invokeExtension;
+    const { meta, data } = invokeResponse.body;
+    return {
+      meta: {
+        ...meta,
+        auth: auth.filter(a => a.key !== 'atlassian-token-service-key'),
+      },
+      data,
+    };
   }
 }

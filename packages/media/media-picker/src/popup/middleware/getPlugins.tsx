@@ -10,6 +10,9 @@ const BASE_URL = 'https://api-private.stg.atlassian.com';
 const GRAPHQL_PATH = '/graphql';
 const EXTENSIONS_ARI =
   'ari:cloud:jira::site/adabbd0c-91c5-4229-9eb2-9915aa3abe49';
+const EXTENSIONS_DENY_LIST = [
+  'ari:cloud:ecosystem::extension/4a4fa7a9-0700-4ea3-9c21-66e273901b71/3d349a02-3be3-4b90-bdeb-9032d26ab118/static/google-object-provider',
+];
 
 const PLUGINS = `
     id
@@ -53,11 +56,13 @@ export const requestPlugins = (store: Store<State>): void => {
     .then(response => {
       const pluginsRawResponse = response.data.extensionContexts.shift();
       const pluginsAvailable: ForgeExtension[] = pluginsRawResponse.extensionsByType.filter(
-        (extension: any) => !!extension.properties.picker,
+        (extension: any) =>
+          !!extension.properties.picker &&
+          !EXTENSIONS_DENY_LIST.includes(extension.id),
       );
-      const pluginsForMediaPicker = pluginsAvailable.map(
-        transformForgeDescriptorToPlugin,
-      );
+      const pluginsForMediaPicker = pluginsAvailable
+        .map(transformForgeDescriptorToPlugin)
+        .sort((b, a) => b.name.localeCompare(a.name));
       dispatch(getPluginsFullfilled(pluginsForMediaPicker));
     })
     .catch(err => {
@@ -68,7 +73,7 @@ export const requestPlugins = (store: Store<State>): void => {
 export const transformForgeDescriptorToPlugin = ({
   id,
   properties: {
-    picker: { name, view, dataSource, iconUrl },
+    picker: { name, view, dataSource = 'search', iconUrl },
   },
 }: ForgeExtension): MediaPickerPlugin => ({
   name: name,
@@ -76,6 +81,7 @@ export const transformForgeDescriptorToPlugin = ({
   render: (actions, selectedItems) => {
     return (
       <ForgeView
+        key={id}
         actions={actions}
         selectedItems={selectedItems}
         extensionOpts={{
@@ -83,6 +89,7 @@ export const transformForgeDescriptorToPlugin = ({
           name: name,
           view: view,
           type: dataSource,
+          iconUrl,
         }}
       />
     );

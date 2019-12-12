@@ -1,8 +1,9 @@
-import { PluginActions } from '../../domain/plugin';
-import { SelectedItem } from '../../popup/domain';
+import { JsonLdCollection, JsonLdMetaAuth } from './types-json-ld';
+import { PluginActions } from '../../../domain/plugin';
+import { SelectedItem } from '../../../popup/domain';
 
 export type ForgeInvokeType = 'search' | 'lookup' | 'pattern';
-export type ForgeViewType = 'bricks' | 'directory';
+export type ForgeViewType = 'bricks' | 'folders';
 export interface ForgeExtension {
   id: string;
   key: string;
@@ -27,8 +28,9 @@ export interface ForgeInvokeParams {
 export interface ForgeInvokeResponse {
   data: {
     invokeExtension: {
+      auth: JsonLdMetaAuth[];
       response: {
-        body: any;
+        body: JsonLdCollection;
       };
     };
   };
@@ -39,8 +41,14 @@ export interface ForgeViewProps {
   selectedItems: SelectedItem[];
   extensionOpts: {
     id: string;
-    view: string;
+    view: ForgeViewType;
     type: ForgeInvokeType;
     name: string;
+    iconUrl: string;
   };
+}
+
+export interface ForgeViewBaseProps {
+  selectedItems: SelectedItem[];
+  pluginName: string;
 }

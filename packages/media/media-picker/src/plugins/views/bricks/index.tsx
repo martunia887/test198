@@ -3,11 +3,11 @@ import { Component } from 'react';
 import { ExternalImageIdentifier } from '@atlaskit/media-client';
 import { Card } from '@atlaskit/media-card';
 import Spinner from '@atlaskit/spinner';
-import { Container, GridCell } from '../../popup/components/views/giphy/styles';
-import { SelectedItem } from '../../popup/domain';
-import { BricksLayout } from '../../popup/components/views/giphy/bricksGrid';
-import gridCellScaler from '../../popup/tools/gridCellScaler';
-import { SpinnerWrapper } from './styled';
+import { GridCell } from '../../../popup/components/views/giphy/styles';
+import { BricksLayout } from './grid';
+import gridCellScaler from '../../../popup/tools/gridCellScaler';
+import { SpinnerWrapper } from '../styled';
+import { ForgeViewBaseProps } from '../../forge';
 
 const NUMBER_OF_COLUMNS = 4;
 const GAP_SIZE = 5;
@@ -20,34 +20,19 @@ export interface BrickItem {
   readonly name?: string;
 }
 
-export type BricksViewProps = {
+export type BricksViewProps = ForgeViewBaseProps & {
   items: BrickItem[];
-  selectedItems: SelectedItem[];
-  pluginName: string;
-  onFileClick(item: BrickItem): void;
+  onFileClick(id: string): void;
 };
 
 export class BricksView extends Component<BricksViewProps, {}> {
   render() {
-    return (
-      <Container
-        style={{ height: 'auto', overflowY: 'hidden' }}
-        id="mediapicker-bricks-container"
-      >
-        {this.getContent()}
-      </Container>
-    );
-  }
-
-  private getContent = () => {
     const { items } = this.props;
-
     if (items.length === 0) {
       return this.renderLoading();
     }
-
     return this.renderSearchResults();
-  };
+  }
 
   private renderLoading = () => {
     return (
@@ -110,6 +95,6 @@ export class BricksView extends Component<BricksViewProps, {}> {
   private createClickHandler = (item: BrickItem) => () => {
     const { onFileClick } = this.props;
 
-    onFileClick(item);
+    onFileClick(item.id);
   };
 }

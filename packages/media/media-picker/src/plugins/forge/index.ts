@@ -1,3 +1,3 @@
 export * from './types';
 export { ForgeClient } from './client';
-export { ForgeView, ForgeIcon } from './view';
+export { ForgeView, ForgeIcon } from './components';

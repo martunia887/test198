@@ -34,6 +34,7 @@
     "@atlaskit/media-editor": "^37.0.3",
     "@atlaskit/media-ui": "^11.7.0",
     "@atlaskit/modal-dialog": "^10.3.6",
+    "@atlaskit/outbound-auth-flow-client": "^2.0.8",
     "@atlaskit/spinner": "^12.1.1",
     "@atlaskit/theme": "^9.3.0",
     "bricks.js": "^1.8.0",

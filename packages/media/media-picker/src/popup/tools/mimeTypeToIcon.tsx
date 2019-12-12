@@ -22,7 +22,12 @@ const IconWrapper: React.ComponentClass<React.HTMLAttributes<{}> &
 `;
 
 function isFolder(mimeType: string) {
-  return mimeType === 'application/vnd.atlassian.mediapicker.folder';
+  return (
+    [
+      'application/vnd.atlassian.mediapicker.folder',
+      'application/vnd.google-apps.folder',
+    ].indexOf(mimeType) > -1
+  );
 }
 
 function isImage(mimeType: string) {
@@ -46,6 +51,7 @@ function isSpreadsheet(mimeType: string) {
     [
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'application/vnd.ms-excel',
+      'application/vnd.google-apps.spreadsheet',
       'application/x-iwork-keynote-sffnumbers',
     ].indexOf(mimeType) > -1
   );
@@ -56,6 +62,7 @@ function isPresentation(mimeType: string) {
     [
       'application/vnd.openxmlformats-officedocument.presentationml.presentation',
       'application/vnd.ms-powerpoint',
+      'application/vnd.google-apps.presentation',
       'application/x-iwork-keynote-sffkey',
     ].indexOf(mimeType) > -1
   );
