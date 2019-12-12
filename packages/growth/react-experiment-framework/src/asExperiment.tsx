@@ -14,8 +14,8 @@ type State = {
 };
 
 export type ExperimentComponentMap = {
-  fallback: ComponentType;
-  [key: string]: ComponentType;
+  fallback: ComponentType<any>;
+  [key: string]: ComponentType<any>;
 };
 
 export default function asExperiment(
