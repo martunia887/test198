@@ -378,16 +378,37 @@ export const ArchiveSidebarFolderWrapper = styled.div`
   padding-left: 10px;
 `;
 
+export interface ArchiveSidebarFolderHeaderProps {
+  isOpen: boolean;
+}
+
 export const ArchiveSidebarFolderHeader = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+
+  &:hover {
+    background-color: #1b2738;
+  }
+
+  > span {
+    transition: all 0.3s;
+    transform: ${({ isOpen }: ArchiveSidebarFolderHeaderProps) =>
+      isOpen ? 'rotate(0)' : 'rotate(-90deg)'};
+  }
 `;
 
 export const ArchiveSidebarFileEntry = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #1b2738;
+  }
 `;
 
 export const ArchiveSidebarEntryLabel = styled.div`

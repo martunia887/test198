@@ -103,6 +103,7 @@ export class MediaViewerComponent extends Component<Props, State> {
       const selectedArchiveEntryContent = await entries[0].getContent();
 
       this.setState({
+        isSidebarVisible: true,
         shouldRenderDefaultExtension: true,
         selectedArchiveEntryContent,
       });
