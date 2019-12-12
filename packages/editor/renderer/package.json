@@ -28,6 +28,7 @@
     "@atlaskit/editor-json-transformer": "^7.0.1",
     "@atlaskit/icon": "^19.0.11",
     "@atlaskit/location-card": "^0.0.1",
+    "@atlaskit/maps-core": "^0.0.1",
     "@atlaskit/media-card": "^66.1.0",
     "@atlaskit/media-client": "^4.1.1",
     "@atlaskit/media-filmstrip": "^36.0.0",

@@ -54,6 +54,7 @@ import {
   expandPlugin,
   isExpandInsertionEnabled,
   iOSScrollPlugin,
+  smartLocationPlugin,
 } from '../plugins';
 import { isFullPage as fullPageCheck } from '../utils/is-full-page';
 import { ScrollGutterPluginOptions } from '../plugins/base/pm-plugins/scroll-gutter';
@@ -88,6 +89,7 @@ export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
     floatingToolbarPlugin(),
     sharedContextPlugin(),
     codeBlockPlugin(),
+    smartLocationPlugin(),
   ];
 }
 

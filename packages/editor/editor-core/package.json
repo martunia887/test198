@@ -44,6 +44,7 @@
     "@atlaskit/icon": "^19.0.11",
     "@atlaskit/item": "^10.1.5",
     "@atlaskit/logo": "^12.2.2",
+    "@atlaskit/maps-viewer": "^0.0.1",
     "@atlaskit/media-card": "^66.1.0",
     "@atlaskit/media-client": "^4.1.1",
     "@atlaskit/media-editor": "^37.0.3",
