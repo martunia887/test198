@@ -20,6 +20,7 @@ export class ArchiveSidebar extends React.Component<ArchiveSidebarProps> {
           entries={entries}
           onEntrySelected={onEntrySelected}
           isDefaultOpen
+          hideHeader
         />
       </ArchiveSideBar>
     );

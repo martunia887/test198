@@ -10,11 +10,14 @@ import {
   ArchiveSidebarEntryLabel,
 } from '../styled';
 
+import { ArchiveSidebarArchiveEntry } from './archive-sidebar-archive-entry';
+
 export interface ArchiveSidebarFolderEntryProps {
   root: string;
   entries: ZipEntry[];
   onEntrySelected: (selectedEntry: ZipEntry) => void;
   isDefaultOpen?: boolean;
+  hideHeader?: boolean;
   name?: string;
 }
 
@@ -50,45 +53,64 @@ export class ArchiveSidebarFolderEntry extends React.Component<
     onEntrySelected(entry);
   };
 
+  renderEntry = (entry: ZipEntry) => {
+    const { root, entries, onEntrySelected } = this.props;
+
+    if (entry.isFolder) {
+      return (
+        <ArchiveSidebarFolderEntry
+          key={entry.name}
+          root={entry.name}
+          name={formatName(root, entry.name)}
+          entries={entries}
+          onEntrySelected={onEntrySelected}
+        />
+      );
+    }
+
+    if (entry.mimeType === 'application/zip') {
+      return (
+        <ArchiveSidebarArchiveEntry
+          key={entry.name}
+          entry={entry}
+          name={formatName(root, entry.name)}
+          onEntrySelected={onEntrySelected}
+        />
+      );
+    }
+
+    return (
+      <ArchiveSidebarFileEntry
+        key={entry.name}
+        onClick={this.onEntryClick(entry)}
+      >
+        <MediaTypeIcon type={entry.type as MediaType} />
+        <ArchiveSidebarEntryLabel>
+          {formatName(root, entry.name)}
+        </ArchiveSidebarEntryLabel>
+      </ArchiveSidebarFileEntry>
+    );
+  };
+
   render() {
     const { isOpen } = this.state;
-    const { root, onEntrySelected, entries, name } = this.props;
+    const { root, entries, name, hideHeader } = this.props;
 
     const entriesContent = isOpen
       ? entries
           .filter(entry => isDirectChild(root, entry))
-          .map(entry =>
-            entry.isFolder ? (
-              <ArchiveSidebarFolderEntry
-                key={entry.name}
-                root={entry.name}
-                name={formatName(root, entry.name)}
-                entries={entries}
-                onEntrySelected={onEntrySelected}
-              />
-            ) : (
-              <ArchiveSidebarFileEntry
-                key={entry.name}
-                onClick={this.onEntryClick(entry)}
-              >
-                <MediaTypeIcon type={entry.type as MediaType} />
-                <ArchiveSidebarEntryLabel>
-                  {formatName(root, entry.name)}
-                </ArchiveSidebarEntryLabel>
-              </ArchiveSidebarFileEntry>
-            ),
-          )
+          .map(this.renderEntry)
       : null;
     return (
       <React.Fragment>
-        {root != '' ? (
+        {!hideHeader ? (
           <ArchiveSidebarFolderHeader isOpen={isOpen} onClick={this.toggleOpen}>
             <ChevronDown
               css={{ backgroundColor: 'red' }}
               label="folder"
               size="large"
             />
-            <ArchiveSidebarEntryLabel>{name || root}</ArchiveSidebarEntryLabel>
+            {name || root}
           </ArchiveSidebarFolderHeader>
         ) : null}
         <ArchiveSidebarFolderWrapper>
