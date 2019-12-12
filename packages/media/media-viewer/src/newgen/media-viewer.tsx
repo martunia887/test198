@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { SyntheticEvent } from 'react';
-import { MediaClient, Identifier } from '@atlaskit/media-client';
+import { SyntheticEvent, Component } from 'react';
+import {
+  MediaClient,
+  Identifier,
+  isFileIdentifier,
+} from '@atlaskit/media-client';
 import { IntlProvider, intlShape } from 'react-intl';
 import { Shortcut } from '@atlaskit/media-ui';
 import {
@@ -26,6 +30,9 @@ import {
   MediaViewerExtensions,
   MediaViewerExtensionsActions,
 } from '../components/types';
+import { ArchiveSidebar } from './viewers/archive-sidebar';
+import { ZipEntry } from 'zipizape';
+import { getArchiveEntriesFromIdentifier } from './viewers/archive';
 
 export type Props = {
   onClose?: () => void;
@@ -39,9 +46,10 @@ export type Props = {
 export interface State {
   isSidebarVisible: boolean;
   selectedIdentifier?: Identifier;
+  shouldRenderDefaultExtension?: boolean;
 }
 
-export class MediaViewerComponent extends React.Component<Props, State> {
+export class MediaViewerComponent extends Component<Props, State> {
   state: State = {
     isSidebarVisible: false,
   };
@@ -56,6 +64,37 @@ export class MediaViewerComponent extends React.Component<Props, State> {
       const ev = createAnalyticsEvent(payload);
       ev.fire(channel);
     }
+  };
+
+  componentDidMount() {
+    if (!this.defaultSelectedItem) {
+      return;
+    }
+
+    this.checkShouldRenderDefaultExtension(this.defaultSelectedItem);
+  }
+
+  private checkShouldRenderDefaultExtension = async (
+    identifier: Identifier,
+  ) => {
+    const { mediaClient } = this.props;
+
+    if (!isFileIdentifier(identifier)) {
+      return;
+    }
+
+    const fileState = await mediaClient.file.getCurrentState(
+      await identifier.id,
+      { collectionName: identifier.collectionName },
+    );
+
+    if (fileState.status === 'error') {
+      return;
+    }
+
+    this.setState({
+      shouldRenderDefaultExtension: fileState.mediaType === 'archive',
+    });
   };
 
   UNSAFE_componentWillMount() {
@@ -146,20 +185,31 @@ export class MediaViewerComponent extends React.Component<Props, State> {
     );
   }
 
-  private onNavigationChange = (selectedIdentifier: Identifier) => {
+  private onNavigationChange = async (selectedIdentifier: Identifier) => {
     this.setState({ selectedIdentifier });
   };
 
-  private getDefaultExtension = (): MediaViewerExtensions => {
+  private getDefaultExtension = (): MediaViewerExtensions | undefined => {
+    const { shouldRenderDefaultExtension } = this.state;
+    const { mediaClient } = this.props;
+
+    if (!shouldRenderDefaultExtension) {
+      return undefined;
+    }
+
     return {
       sidebar: {
         icon: <FolderIcon label="explore files" />,
-        renderer(
+        renderer: (
           selectedIdentifier: Identifier,
           actions: MediaViewerExtensionsActions,
-        ) {
-          return <div>Sidebar</div>;
-        },
+        ) => (
+          <ArchiveSidebarRenderer
+            selectedIdentifier={selectedIdentifier}
+            actions={actions}
+            mediaClient={mediaClient}
+          />
+        ),
       },
     };
   };
@@ -208,3 +258,46 @@ export class MediaViewerComponent extends React.Component<Props, State> {
 }
 
 export const MediaViewer = withAnalyticsEvents()(MediaViewerComponent);
+
+// TODO: move into different file
+interface ArchiveSidebarRendererProps {
+  selectedIdentifier: Identifier;
+  actions: MediaViewerExtensionsActions;
+  mediaClient: MediaClient;
+}
+
+interface ArchiveSidebarRendererState {
+  entries: ZipEntry[];
+}
+
+class ArchiveSidebarRenderer extends Component<
+  ArchiveSidebarRendererProps,
+  ArchiveSidebarRendererState
+> {
+  state: ArchiveSidebarRendererState = {
+    entries: [],
+  };
+
+  async componentDidMount() {
+    const { selectedIdentifier, mediaClient } = this.props;
+    const entries = await getArchiveEntriesFromIdentifier(
+      selectedIdentifier,
+      mediaClient,
+    );
+
+    this.setState({ entries });
+  }
+
+  private changeSelectedEntry = () => {};
+
+  render() {
+    const { entries } = this.state;
+
+    return (
+      <ArchiveSidebar
+        entries={entries}
+        onEntrySelected={this.changeSelectedEntry}
+      />
+    );
+  }
+}

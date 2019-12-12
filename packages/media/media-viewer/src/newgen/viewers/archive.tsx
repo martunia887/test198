@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { MediaClient, FileState } from '@atlaskit/media-client';
+import {
+  MediaClient,
+  FileState,
+  Identifier,
+  isFileIdentifier,
+} from '@atlaskit/media-client';
 import { Outcome } from '../domain';
 import {
   ArchiveWrapper,
@@ -30,21 +35,40 @@ type Content = {
   selectedEntryContent: EntryContent;
 };
 
+export const getArchiveEntriesFromIdentifier = async (
+  identifier: Identifier,
+  mediaClient: MediaClient,
+): Promise<ZipEntry[]> => {
+  if (!isFileIdentifier(identifier)) {
+    return [];
+  }
+
+  const { id, collectionName } = identifier;
+  const url = await mediaClient.file.getFileBinaryURL(await id, collectionName);
+  const response = await fetch(url);
+  const blob = await response.blob();
+
+  const zip = new ZipiZape();
+  const entries = await zip.readFile(blob as File);
+
+  return entries;
+};
+
 export class ArchiveViewer extends BaseViewer<Content, Props> {
   private previews: Map<string, string> = new Map();
 
   protected async init() {
     const { item, collectionName, mediaClient } = this.props;
     if (item.status === 'processed') {
-      const url = await mediaClient.file.getFileBinaryURL(
-        item.id,
-        collectionName,
+      const entries = await getArchiveEntriesFromIdentifier(
+        {
+          mediaItemType: 'file',
+          id: item.id,
+          collectionName,
+        },
+        mediaClient,
       );
-      const response = await fetch(url);
-      const blob = await response.blob();
 
-      const zip = new ZipiZape();
-      const entries = await zip.readFile(blob as File);
       this.setState({
         content: Outcome.successful({
           entries,
@@ -67,15 +91,11 @@ export class ArchiveViewer extends BaseViewer<Content, Props> {
   }
 
   protected renderSuccessful(content: Content) {
-    const { entries, selectedEntryContent } = content;
+    const { selectedEntryContent } = content;
     // TODO: handle empty entries
 
     return (
       <ArchiveWrapper>
-        <ArchiveSidebar
-          entries={entries}
-          onEntrySelected={this.changeSelectedEntry}
-        />
         {this.renderArchiveItemViewer(selectedEntryContent)}
       </ArchiveWrapper>
     );

@@ -30,7 +30,7 @@ import {
 import { MediaViewer } from '../src';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
 import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
-import { solarizedDark } from 'react-syntax-highlighter/dist/styles/hljs';
+
 addGlobalEventEmitterListeners();
 
 const mediaClientConfig = createStorybookMediaClientConfig();
