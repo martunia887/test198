@@ -19,7 +19,6 @@ import {
   removeDecorationsFromSet,
 } from './utils';
 import { withScrollIntoView } from '../../utils/commands';
-import { findUniqueItemsIn } from '../../utils/array';
 
 export const activate = () =>
   createFindReplaceCommand(

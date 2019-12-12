@@ -58,23 +58,27 @@ export interface FindReplaceProps {
 
 export interface FindReplaceState {
   replaceText: string;
-  findInputValue: string;
+  findText: string;
 }
 
 class FindReplace extends React.PureComponent<
   FindReplaceProps,
   FindReplaceState
 > {
+  state: FindReplaceState = {
+    findText: '',
+    replaceText: '',
+  };
+
   private findTextfieldRef = React.createRef<HTMLInputElement>();
   private replaceTextfieldRef = React.createRef<HTMLInputElement>();
 
   constructor(props: FindReplaceProps) {
     super(props);
 
-    this.state = {
-      replaceText: props.replaceText || '',
-      findInputValue: props.findText || '',
-    };
+    if (props.findText) {
+      this.updateFindTextfieldValue(props.findText);
+    }
   }
 
   componentDidMount() {
@@ -84,7 +88,7 @@ class FindReplace extends React.PureComponent<
   componentWillReceiveProps(newProps: FindReplaceProps) {
     // findText could have been updated from outside this component, for example
     // if a user double clicks to highlight a word and then hits cmd+f
-    if (newProps.findText && newProps.findText !== this.state.findInputValue) {
+    if (newProps.findText && newProps.findText !== this.state.findText) {
       this.updateFindTextfieldValue(newProps.findText);
     }
 
@@ -98,10 +102,11 @@ class FindReplace extends React.PureComponent<
   }
 
   updateFindTextfieldValue = (value: string) => {
-    this.setState({ findInputValue: value });
+    this.setState({ findText: value });
     if (this.findTextfieldRef.current) {
       this.findTextfieldRef.current.value = value;
     }
+    this.updateFindValue(value);
   };
 
   focusFindTextfield = () => {
@@ -123,7 +128,7 @@ class FindReplace extends React.PureComponent<
   };
 
   updateFindValue = debounce((value: string) => {
-    this.setState({ findInputValue: value });
+    this.setState({ findText: value });
     this.props.onFindChange(value);
   }, 50);
 
