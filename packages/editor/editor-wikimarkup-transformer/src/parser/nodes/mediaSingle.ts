@@ -1,7 +1,6 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
 import { LINK_TEXT_REGEXP } from '../tokenize/link-text';
 import { Context } from '../../interfaces';
-import { PREFIX_UNKNOWN_MEDIA } from '../../char';
 
 const defaultWidth = 200;
 const defaultHeight = 183;
@@ -43,7 +42,7 @@ export default function getMediaSingleNodeView(
     const id =
       context.mediaConversion && context.mediaConversion[filename]
         ? context.mediaConversion[filename]
-        : PREFIX_UNKNOWN_MEDIA + filename;
+        : filename;
     // try to look up collection from media context
     const collection = context.media && context.media.targetCollectionId;
     const mediaNode = media.createChecked({

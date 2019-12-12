@@ -37,8 +37,8 @@ describe('ADF => WikiMarkup - Mention', () => {
         ', please take a look at this.',
       ),
     )(defaultSchema);
-    const wiki = transformer.encode(node, wikiContext);
-    const adf = transformer.parse(wiki, adfContext).toJSON();
+    const wiki = transformer.encode(node, adfContext);
+    const adf = transformer.parse(wiki, wikiContext).toJSON();
     expect(adf).toEqual(node.toJSON());
   });
 });

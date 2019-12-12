@@ -1,6 +1,5 @@
 import { Node as PMNode } from 'prosemirror-model';
 import { NodeEncoder, NodeEncoderOpts } from '..';
-import { PREFIX_UNKNOWN_MEDIA } from '../../char';
 
 export const media: NodeEncoder = (
   node: PMNode,
@@ -24,7 +23,7 @@ export const media: NodeEncoder = (
       context.mediaConversion &&
       context.mediaConversion[node.attrs.id]
         ? context.mediaConversion[node.attrs.id]
-        : PREFIX_UNKNOWN_MEDIA + node.attrs.id;
+        : node.attrs.id;
   }
   if (wikiAttrs.length) {
     return `!${fileName}|${wikiAttrs.join(',')}!`;
