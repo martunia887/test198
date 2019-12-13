@@ -1,6 +1,13 @@
 import * as React from 'react';
 import rafSchedule from 'raf-schd';
-import WidthDetector from '@atlaskit/width-detector';
+import {
+  IframeWrapperConsumer,
+  IframeWidthDetectorFallbackWrapper,
+} from './iframe-fallbacks';
+import {
+  SwitchWidthDetector,
+  SwitchWidthDetectorProvider,
+} from './SwitchWidthDetector';
 
 export const Breakpoints = {
   S: 'S',
@@ -42,19 +49,8 @@ export class WidthProvider extends React.Component<any, WidthProviderState> {
   render() {
     return (
       <>
-        <WidthDetector
-          containerStyle={{
-            height: '0',
-            borderStyle: 'none',
-          }}
-        >
-          {width => {
-            if (width) {
-              this.setWidth(width);
-            }
-            return null;
-          }}
-        </WidthDetector>
+        <SwitchWidthDetector setWidth={this.setWidth} />
+
         <Provider value={createWidthContext(this.state.width)}>
           {this.props.children}
         </Provider>
@@ -63,12 +59,22 @@ export class WidthProvider extends React.Component<any, WidthProviderState> {
   }
 
   setWidth = rafSchedule((width: number) => {
+    if (width === null || isNaN(width)) {
+      return;
+    }
+
     // Ignore changes that are less than SCROLLBAR_WIDTH, otherwise it can cause infinite re-scaling
     if (Math.abs(this.state.width - width) < SCROLLBAR_WIDTH) {
       return;
     }
+
     this.setState({ width });
   });
 }
 
-export { Consumer as WidthConsumer };
+export {
+  Consumer as WidthConsumer,
+  SwitchWidthDetectorProvider,
+  IframeWrapperConsumer,
+  IframeWidthDetectorFallbackWrapper,
+};

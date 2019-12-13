@@ -8,7 +8,32 @@ const result = {
   android: false,
   ios: false,
   webkit: false,
+  supportsIntersectionObserver: false,
+  supportsResizeObserver: false,
 };
+
+function supportsIntersectionObserver() {
+  if (
+    typeof window !== 'undefined' &&
+    'IntersectionObserver' in window &&
+    'IntersectionObserverEntry' in window &&
+    'intersectionRatio' in (window as any).IntersectionObserverEntry.prototype
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function supportsResizeObserver() {
+  if (
+    typeof window !== 'undefined' &&
+    'ResizeObserver' in window &&
+    'ResizeObserverEntry' in window
+  ) {
+    return true;
+  }
+  return false;
+}
 
 if (typeof navigator !== 'undefined') {
   const ieEdge = /Edge\/(\d+)/.exec(navigator.userAgent);
@@ -41,6 +66,8 @@ if (typeof navigator !== 'undefined') {
     !ie &&
     !!document.documentElement &&
     'WebkitAppearance' in document.documentElement.style;
+  result.supportsIntersectionObserver = supportsIntersectionObserver();
+  result.supportsResizeObserver = supportsResizeObserver();
 }
 
 export default result;
