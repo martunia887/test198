@@ -210,6 +210,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
       audio: messages.audio,
       video: messages.video,
       image: messages.image,
+      archive: messages.archive,
       unknown: messages.unknown,
     };
     const message = mediaTypeTranslationMap[mediaType || 'unknown'];

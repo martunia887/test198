@@ -81,7 +81,8 @@ export type MessageKey =
   | 'document'
   | 'audio'
   | 'video'
-  | 'image';
+  | 'image'
+  | 'archive';
 
 type Messages = { [K in MessageKey]: FormattedMessage.MessageDescriptor };
 
@@ -519,6 +520,11 @@ export const messages = defineMessages<Messages>({
   image: {
     id: 'fabric.media.image',
     defaultMessage: 'image',
+    description: '',
+  },
+  archive: {
+    id: 'fabric.media.archive',
+    defaultMessage: 'archive',
     description: '',
   },
 });
