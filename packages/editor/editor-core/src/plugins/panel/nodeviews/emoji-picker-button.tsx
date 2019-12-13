@@ -1,4 +1,4 @@
-import React, { Component, RefObject, SyntheticEvent } from 'react';
+import React, { Component, RefObject } from 'react';
 import { Button } from '../../../../../../core/button/src/components/Button';
 import MoreIcon from '@atlaskit/icon/glyph/editor/more';
 import { changePanelType } from '../actions';
@@ -8,7 +8,6 @@ import { emoji } from '@atlaskit/util-data-test';
 import Popup from '../../../../../editor-common/src/ui/Popup';
 import EmojiPicker, {
   EmojiId,
-  OptionalEmojiDescription,
   Emoji,
 } from '../../../../../../elements/emoji/src';
 import { pluginKey as panelPluginKey } from '../pm-plugins/main';

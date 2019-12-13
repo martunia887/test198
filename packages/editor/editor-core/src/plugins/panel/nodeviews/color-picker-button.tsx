@@ -1,5 +1,5 @@
 import React, { Component, RefObject } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { EditorView } from 'prosemirror-view';
 import ColorPicker from './../../../../../../jira/color-picker/src/components/ColorPicker';

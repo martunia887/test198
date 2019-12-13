@@ -5,7 +5,6 @@ import NoteIcon from '@atlaskit/icon/glyph/editor/note';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
-import TextColorIcon from '@atlaskit/icon/glyph/editor/text-color';
 
 import commonMessages from '../../messages';
 import { FloatingToolbarHandler } from '../floating-toolbar/types';
