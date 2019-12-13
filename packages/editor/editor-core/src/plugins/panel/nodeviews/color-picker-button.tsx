@@ -1,6 +1,7 @@
 import TextColorIcon from '@atlaskit/icon/glyph/editor/text-color';
 
 import React, { Component, RefObject } from 'react';
+import styled, { css } from 'styled-components';
 import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
 import MoreIcon from '@atlaskit/icon/glyph/editor/more';
 
@@ -41,6 +42,23 @@ const fadedPalette = [
   { label: 'Purple', value: colors.P50 },
 ];
 
+// Control the size of color picker buttons and preview
+const ColorPickerWrapper = styled.div`
+  // > ColorCardWrapper > ColorCardButton
+  > div > button {
+    width: 24px;
+    height: 24px;
+  }
+
+  // > ColorCardWrapper > ColorCardButton > ColorCardContent
+  > div > button > div {
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+  }
+`;
+
 export type Props = {
   view?: EditorView<any>;
   idx?: any;
@@ -77,9 +95,8 @@ export default class ColorPickerButton extends Component<Props, State> {
 
   render() {
     return (
-      <React.Fragment>
+      <ColorPickerWrapper>
         <ColorPicker
-          style={{ height: '24px' }}
           label="Change color"
           cols={7}
           palette={fadedPalette}
@@ -89,7 +106,7 @@ export default class ColorPickerButton extends Component<Props, State> {
             this.updateColor(newColor);
           }}
         />
-      </React.Fragment>
+      </ColorPickerWrapper>
     );
   }
 
