@@ -6,9 +6,11 @@ describe('WikiMarkup => ADF Formatters - citation', () => {
     const wiki = 'Hi [~qm:78032763-2feb-4f5b-88c0-99b50613d53a],';
 
     const context: Context = {
-      mentionConversion: {
-        'qm:78032763-2feb-4f5b-88c0-99b50613d53a':
-          '78032763-2feb-4f5b-88c0-99b50613d53a',
+      conversion: {
+        mentionConversion: {
+          'qm:78032763-2feb-4f5b-88c0-99b50613d53a':
+            '78032763-2feb-4f5b-88c0-99b50613d53a',
+        },
       },
     };
     const transformer = new WikiMarkupTransformer();

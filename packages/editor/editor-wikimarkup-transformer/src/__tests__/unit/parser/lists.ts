@@ -176,17 +176,19 @@ abc
   ];
 
   const context = {
-    mediaConversion: {
-      'attached-image.gif': 'abc-attached',
-      'file.pdf': 'abc-0',
-      'file1.pdf': 'abc-1',
-      'file2.pdf': 'abc-2',
-      'file3.pdf': 'abc-3',
-      'file4.pdf': 'abc-4',
-      'file5.pdf': 'abc-5',
-      'file6.pdf': 'abc-6',
-      'file7.pdf': 'abc-7',
-      'file8.pdf': 'abc-8',
+    conversion: {
+      mediaConversion: {
+        'attached-image.gif': 'abc-attached',
+        'file.pdf': 'abc-0',
+        'file1.pdf': 'abc-1',
+        'file2.pdf': 'abc-2',
+        'file3.pdf': 'abc-3',
+        'file4.pdf': 'abc-4',
+        'file5.pdf': 'abc-5',
+        'file6.pdf': 'abc-6',
+        'file7.pdf': 'abc-7',
+        'file8.pdf': 'abc-8',
+      },
     },
   };
 

@@ -31,7 +31,9 @@ export class WikiMarkupTransformer implements Transformer<string> {
     return context
       ? {
           ...context,
-          issueKeyRegex: buildIssueKeyRegex(context.inlineCardConversion),
+          issueKeyRegex: context.conversion
+            ? buildIssueKeyRegex(context.conversion.inlineCardConversion)
+            : undefined,
         }
       : {};
   }

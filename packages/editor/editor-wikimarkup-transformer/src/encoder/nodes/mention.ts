@@ -7,9 +7,10 @@ export const mention: NodeEncoder = (
 ): string => {
   const content =
     context &&
-    context.mentionConversion &&
-    context.mentionConversion[node.attrs.id]
-      ? context.mentionConversion[node.attrs.id]
+    context.conversion &&
+    context.conversion.mentionConversion &&
+    context.conversion.mentionConversion[node.attrs.id]
+      ? context.conversion.mentionConversion[node.attrs.id]
       : node.attrs.id;
   return `[~${content}]`;
 };

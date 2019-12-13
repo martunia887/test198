@@ -10,8 +10,10 @@ export function mentionLinkResolver(
   if (link.notLinkBody.startsWith('~')) {
     const mentionText = link.notLinkBody.substring(1);
     const id =
-      context.mentionConversion && context.mentionConversion[mentionText]
-        ? context.mentionConversion[mentionText]
+      context.conversion &&
+      context.conversion.mentionConversion &&
+      context.conversion.mentionConversion[mentionText]
+        ? context.conversion.mentionConversion[mentionText]
         : mentionText;
 
     return [

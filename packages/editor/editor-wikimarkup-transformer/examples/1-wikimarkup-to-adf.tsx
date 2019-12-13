@@ -99,17 +99,19 @@ const adfTransformer = new JSONTransformer();
 function getADF(wiki: string) {
   const context: Context = {
     tokenErrCallback: (err, type) => console.log(err, type),
-    inlineCardConversion: {
-      'ABC-10': 'https://instance.atlassian.net/browse/ABC-10',
-      'ABC-20': 'https://instance.atlassian.net/browse/ABC-20',
-      'ABC-30': 'https://instance.atlassian.net/browse/ABC-30',
-      'ABC-40': 'https://instance.atlassian.net/browse/ABC-40',
-    },
-    mediaConversion: {
-      'image.jpg': '1234',
-    },
-    mentionConversion: {
-      'accountId:9999': '9999',
+    conversion: {
+      inlineCardConversion: {
+        'ABC-10': 'https://instance.atlassian.net/browse/ABC-10',
+        'ABC-20': 'https://instance.atlassian.net/browse/ABC-20',
+        'ABC-30': 'https://instance.atlassian.net/browse/ABC-30',
+        'ABC-40': 'https://instance.atlassian.net/browse/ABC-40',
+      },
+      mediaConversion: {
+        'image.jpg': '1234',
+      },
+      mentionConversion: {
+        'accountId:9999': '9999',
+      },
     },
   };
   const pmNode = wikiTransformer.parse(wiki, context);

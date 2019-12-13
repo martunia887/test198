@@ -21,13 +21,17 @@ describe('ADF => WikiMarkup - Mention', () => {
 
   test('should convert mention node WITH context', () => {
     const adfContext = {
-      mentionConversion: {
-        supertong: 'prefix:supertong',
+      conversion: {
+        mentionConversion: {
+          supertong: 'prefix:supertong',
+        },
       },
     };
     const wikiContext = {
-      mentionConversion: {
-        'prefix:supertong': 'supertong',
+      conversion: {
+        mentionConversion: {
+          'prefix:supertong': 'supertong',
+        },
       },
     };
     const node = doc(

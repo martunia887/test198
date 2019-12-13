@@ -61,12 +61,16 @@ export interface ConversionMap {
 export type TokenErrCallback = (err: Error, tokenType: string) => void;
 
 export interface Context {
-  readonly inlineCardConversion?: ConversionMap;
-  readonly mediaConversion?: ConversionMap;
-  readonly mentionConversion?: ConversionMap;
   readonly issueKeyRegex?: RegExp | undefined;
   readonly tokenErrCallback?: TokenErrCallback;
-  readonly media?: {
-    targetCollectionId?: string;
+  readonly conversion?: {
+    readonly inlineCardConversion?: ConversionMap;
+    readonly mediaConversion?: ConversionMap;
+    readonly mentionConversion?: ConversionMap;
+  };
+  readonly hydration?: {
+    readonly media?: {
+      targetCollectionId?: string;
+    };
   };
 }

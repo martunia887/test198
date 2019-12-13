@@ -2,8 +2,10 @@ import WikiMarkupTransformer from '../../../..';
 
 describe('WikiMarkup => ADF Formatters - image media', () => {
   const context = {
-    mediaConversion: {
-      'image.jpg': 'abc-123',
+    conversion: {
+      mediaConversion: {
+        'image.jpg': 'abc-123',
+      },
     },
   };
 
