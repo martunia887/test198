@@ -88,6 +88,8 @@ export class CardBase extends Component<
     isPlayingFile: false,
   };
 
+  animationTimer?: number;
+
   // we add a listener for each of the cards on the page
   // and then check if the triggered listener is from the card
   // that contains a div in current window.getSelection()
@@ -168,6 +170,7 @@ export class CardBase extends Component<
     this.hasBeenMounted = false;
     this.unsubscribe();
     this.releaseDataURI();
+    clearTimeout(this.animationTimer);
     document.removeEventListener('copy', this.onCopyListener);
   }
 
@@ -502,7 +505,25 @@ export class CardBase extends Component<
 
       this.setState({
         mediaViewerSelectedItem,
+        animationState: 'start',
       });
+      if (
+        this.cardRef.current &&
+        this.cardRef.current.divRef &&
+        this.cardRef.current.divRef.current
+      ) {
+        this.cardRef.current.divRef.current.scrollTop;
+      }
+      this.animationTimer = window.setTimeout(() => {
+        this.setState({
+          animationState: 'progress',
+        });
+        this.animationTimer = window.setTimeout(() => {
+          this.setState({
+            animationState: undefined,
+          });
+        }, 500);
+      }, 1);
     }
   };
 
@@ -568,6 +589,7 @@ export class CardBase extends Component<
   renderMediaViewer = (): React.ReactPortal | undefined => {
     const { mediaViewerSelectedItem } = this.state;
     const { mediaClient, identifier, mediaViewerDataSource } = this.props;
+    // return;
     if (!mediaViewerSelectedItem) {
       return;
     }
@@ -607,7 +629,13 @@ export class CardBase extends Component<
       alt,
       testId,
     } = this.props;
-    const { progress, metadata, dataURI, previewOrientation } = this.state;
+    const {
+      progress,
+      metadata,
+      dataURI,
+      previewOrientation,
+      animationState,
+    } = this.state;
     const {
       onRetry,
       onCardViewClick,
@@ -619,6 +647,7 @@ export class CardBase extends Component<
 
     const card = (
       <CardView
+        animationState={animationState}
         status={status}
         metadata={metadata}
         dataURI={dataURI}

@@ -44,6 +44,7 @@ export class FileCard extends Component<FileCardProps, {}> {
       previewOrientation,
       alt,
       onDisplayImage,
+      animationState,
     } = this.props;
     const defaultDetails: FileDetails = {
       id: '',
@@ -59,6 +60,7 @@ export class FileCard extends Component<FileCardProps, {}> {
 
     return (
       <FileCardImageView
+        animationState={animationState}
         error={errorMessage}
         dimensions={dimensions}
         selectable={selectable}

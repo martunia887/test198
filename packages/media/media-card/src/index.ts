@@ -68,6 +68,7 @@ export interface SharedCardProps {
   readonly selected?: boolean;
   readonly alt?: string;
   readonly testId?: string;
+  readonly animationState?: CardState['animationState'];
 }
 
 export interface CardOnClickCallback {
@@ -105,6 +106,7 @@ export interface CardState {
   dataURI?: string;
   progress?: number;
   error?: Error;
+  animationState?: 'start' | 'progress' | 'finish';
 }
 
 export { CardLoading } from './utils/lightCards/cardLoading';

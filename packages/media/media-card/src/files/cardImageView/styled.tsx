@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { absolute, borderRadius, size } from '@atlaskit/media-ui';
 import { themed } from '@atlaskit/theme/components';
 import { N20, DN50, N0 } from '@atlaskit/theme/colors';
+import { layers } from '@atlaskit/theme/constants';
 import { Root, cardShadow } from '../../styles';
 import { getSelectedBorderStyle } from '../../styles/getSelectedBorderStyle';
 
@@ -52,6 +53,26 @@ export const Wrapper = styled(Root)`
       ${borderRadius}
     }
   }
+
+  &.is-expanding-animation-start {
+    position: absolute;
+    z-index: ${layers.modal() + 20};
+    opacity: 1;
+  }
+  &.is-expanding-animation-progress {
+    position: absolute;
+    z-index: ${layers.modal() + 20};
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: top 500ms, left 500ms, opacity 500ms, width 500ms, height 500ms;
+
+  }
+  //&.is-expanding-animation-finish {
+  //  opacity: 0;
+  //}
 `;
 
 export const PlayIconWrapper = styled.div`
@@ -93,7 +114,7 @@ export const ProgressBarWrapper = styled.div`
 
 export const Overlay = styled.div`
   ${absolute()}
-  ${size()} 
+  ${size()}
   border-radius: inherit;
   background-color: rgba(9, 30, 66, 0.5);
 `;

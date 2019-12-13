@@ -4,7 +4,7 @@ import { MediaType, ImageResizeMode } from '@atlaskit/media-client';
 import { Ellipsify, MediaImage } from '@atlaskit/media-ui';
 import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
 
-import { CardDimensions, CardStatus } from '../../index';
+import { CardDimensions, CardState, CardStatus } from '../../index';
 import { CardAction } from '../../actions';
 
 import { CardOverlay } from './cardOverlay';
@@ -53,18 +53,62 @@ export interface FileCardImageViewProps {
   readonly onRetry?: () => void;
   readonly onDisplayImage?: () => void;
   readonly previewOrientation?: number;
+  readonly animationState?: CardState['animationState'];
+}
+
+interface FileCardImageViewState {
+  absolutePositionData?: {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  };
 }
 
 export class FileCardImageViewBase extends Component<
   FileCardImageViewProps & WithAnalyticsEventsProps,
-  {}
+  FileCardImageViewState
 > {
+  state: FileCardImageViewState = {};
+  divRef: React.RefObject<HTMLDivElement> = React.createRef();
   private wasThumbnailDisplayed = false;
   private lastAnalyticsAction: AnalyticsLoadingAction | undefined;
   static defaultProps = {
     resizeMode: 'crop',
     disableOverlay: false,
   };
+
+  componentDidMount(): void {
+    this.updateAbsolutePositionData();
+  }
+
+  componentDidUpdate(
+    prevProps: Readonly<FileCardImageViewProps & WithAnalyticsEventsProps>,
+    prevState: Readonly<FileCardImageViewState>,
+    snapshot?: any,
+  ): void {
+    this.updateAbsolutePositionData();
+  }
+
+  private updateAbsolutePositionData() {
+    const { absolutePositionData } = this.state;
+    if (!absolutePositionData && this.divRef.current) {
+      const {
+        left,
+        top,
+        width,
+        height,
+      }: ClientRect = this.divRef.current.getBoundingClientRect();
+      this.setState({
+        absolutePositionData: {
+          left,
+          top,
+          width,
+          height,
+        },
+      });
+    }
+  }
 
   render() {
     const {
@@ -74,17 +118,50 @@ export class FileCardImageViewBase extends Component<
       mediaType,
       progress,
       status,
+      animationState,
     } = this.props;
+    const { absolutePositionData } = this.state;
+
+    const className = animationState
+      ? `is-expanding-animation-${animationState}`
+      : '';
+    let style: React.CSSProperties = {};
+    if (absolutePositionData) {
+      const { left, top, width, height } = absolutePositionData;
+      if (animationState === 'start') {
+        style['left'] = left;
+        style['top'] = top;
+        style['width'] = width;
+        style['height'] = height;
+      }
+      if (animationState === 'progress') {
+        const { innerHeight, innerWidth } = window;
+
+        const isScreenMoreLandscapy = innerWidth / innerHeight > width / height;
+        if (isScreenMoreLandscapy) {
+          style['height'] = innerHeight;
+          style['width'] = (style['height'] * width) / height;
+          style['top'] = 0;
+          style['left'] = innerWidth / 2 - style['width'] / 2;
+        } else {
+          throw new Error('Implement me!');
+        }
+      }
+    }
+
     return (
       <Wrapper
         data-testid="media-file-card-view"
         data-test-status={status}
         data-test-progress={progress}
         data-test-selected={selected ? true : undefined}
+        className={className}
+        style={style}
         disableOverlay={disableOverlay}
         selectable={selectable}
         selected={selected}
         mediaType={mediaType}
+        innerRef={this.divRef}
       >
         {this.renderCardContents()}
       </Wrapper>
@@ -202,6 +279,7 @@ export class FileCardImageViewBase extends Component<
       previewOrientation,
       onDisplayImage,
       alt,
+      animationState,
     } = this.props;
 
     if (!shouldDisplayImageThumbnail(dataURI, mediaType)) {
@@ -223,7 +301,7 @@ export class FileCardImageViewBase extends Component<
         dataURI={dataURI}
         alt={alt}
         crop={this.isCropped}
-        stretch={this.isStretched}
+        stretch={!!animationState || this.isStretched}
         previewOrientation={previewOrientation}
         onImageLoad={this.onImageLoad}
         onImageError={this.onImageError}

@@ -10,6 +10,7 @@ export interface WrapperProps {
   dimensions?: CardDimensions;
   appearance?: CardAppearance;
   breakpointSize?: BreakpointSizeValue;
+  isExpansionAnimation?: boolean;
 }
 
 const getWrapperHeight = (dimensions?: CardDimensions) =>

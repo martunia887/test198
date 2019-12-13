@@ -174,10 +174,12 @@ export class CardViewBase extends React.Component<
       previewOrientation,
       alt,
       onDisplayImage,
+      animationState,
     } = this.props;
 
     return (
       <FileCard
+        animationState={animationState}
         status={status}
         details={metadata}
         dataURI={dataURI}

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   externalImageIdentifier,
-  defaultCollectionName,
   createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
@@ -25,42 +24,27 @@ import {
   verticalImageItem,
   videoSquareFileIdItem,
 } from '../example-helpers';
-import { MediaViewer } from '../src';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
 import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 addGlobalEventEmitterListeners();
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 
-export type State = {
-  selectedIdentifier?: Identifier;
-};
-
-export default class Example extends React.Component<{}, State> {
-  state: State = { selectedIdentifier: undefined };
-
-  setItem = (selectedIdentifier: Identifier) => () => {
-    this.setState({ selectedIdentifier });
-  };
-
+export default class Example extends React.Component<{}> {
   createItem = (identifier: Identifier, title: string) => {
-    const onClick = this.setItem(identifier);
-
     return (
       <div>
         <h4>{title}</h4>
         <Card
           identifier={identifier}
           mediaClientConfig={mediaClientConfig}
-          onClick={onClick}
+          shouldOpenMediaViewer={true}
         />
       </div>
     );
   };
 
   render() {
-    const { selectedIdentifier } = this.state;
-
     return (
       <I18NWrapper>
         <Container>
@@ -118,15 +102,6 @@ export default class Example extends React.Component<{}, State> {
               <li>{this.createItem(emptyImage, 'Empty File (version: 0)')}</li>
             </ButtonList>
           </Group>
-          {selectedIdentifier && (
-            <MediaViewer
-              mediaClientConfig={mediaClientConfig}
-              selectedItem={selectedIdentifier}
-              dataSource={{ list: [selectedIdentifier] }}
-              collectionName={defaultCollectionName}
-              onClose={() => this.setState({ selectedIdentifier: undefined })}
-            />
-          )}
         </Container>
       </I18NWrapper>
     );
