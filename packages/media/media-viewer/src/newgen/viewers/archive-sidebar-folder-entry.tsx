@@ -101,6 +101,11 @@ export class ArchiveSidebarFolderEntry extends React.Component<
           .filter(entry => isDirectChild(root, entry))
           .map(this.renderEntry)
       : null;
+    const archiveSidebarFolder = entriesContent && (
+      <ArchiveSidebarFolderWrapper>
+        {entriesContent}
+      </ArchiveSidebarFolderWrapper>
+    );
     return (
       <React.Fragment>
         {!hideHeader ? (
@@ -113,9 +118,7 @@ export class ArchiveSidebarFolderEntry extends React.Component<
             {name || root}
           </ArchiveSidebarFolderHeader>
         ) : null}
-        <ArchiveSidebarFolderWrapper>
-          {entriesContent}
-        </ArchiveSidebarFolderWrapper>
+        {archiveSidebarFolder}
       </React.Fragment>
     );
   }

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { MediaType } from '@atlaskit/media-client';
 import { layers, borderRadius } from '@atlaskit/theme/constants';
 import {
@@ -374,8 +374,24 @@ export const ArchiveSideBar = styled.div`
   padding: 20px;
 `;
 
+const slideDown = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
 export const ArchiveSidebarFolderWrapper = styled.div`
   padding-left: 10px;
+  transform: translateY(-100%);
+  transition: all 1s;
+  opacity: 0;
+  animation: ${slideDown} 0.3s forwards;
 `;
 
 export interface ArchiveSidebarFolderHeaderProps {
