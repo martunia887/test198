@@ -262,6 +262,12 @@ export const ErrorMessage: ComponentClass<HTMLAttributes<{}>> = styled.div`
   white-space: nowrap;
 `;
 
+export const Description: ComponentClass<HTMLAttributes<{}>> = styled(
+  ErrorMessage,
+)`
+  font-weight: normal;
+`;
+
 export const Retry: ComponentClass<HTMLAttributes<{}>> = styled.div`
   ${antialiased} box-sizing: border-box;
   margin-left: 5px;

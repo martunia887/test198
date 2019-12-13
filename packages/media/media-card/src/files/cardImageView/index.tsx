@@ -48,6 +48,7 @@ export interface FileCardImageViewProps {
   readonly selected?: boolean;
 
   readonly error?: ReactNode;
+  readonly description?: string;
 
   readonly actions?: CardAction[];
   readonly onRetry?: () => void;
@@ -120,6 +121,7 @@ export class FileCardImageViewBase extends Component<
   private renderErrorContents = (): JSX.Element => {
     const {
       error,
+      description,
       mediaName,
       mediaType,
       onRetry,
@@ -135,6 +137,7 @@ export class FileCardImageViewBase extends Component<
           mediaName={mediaName}
           mediaType={mediaType}
           error={error}
+          description={description}
           onRetry={onRetry}
           actions={actions}
           subtitle={fileSize}

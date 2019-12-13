@@ -60,6 +60,7 @@ export class FileCard extends Component<FileCardProps, {}> {
     return (
       <FileCardImageView
         error={errorMessage}
+        description={alt}
         dimensions={dimensions}
         selectable={selectable}
         selected={selected}
