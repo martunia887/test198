@@ -60,7 +60,7 @@ async function getBranchName() {
   return gitCmd.stdout.trim();
 }
 
-async function getOriginBranchName(branch /*: string */) {
+function getOriginBranchName(branch /*: string */) {
   return branch.startsWith('origin/') ? branch : `origin/${branch}`;
 }
 
