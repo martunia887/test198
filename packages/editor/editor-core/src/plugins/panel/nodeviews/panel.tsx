@@ -70,7 +70,7 @@ class PanelNodeView {
       ReactDOM.render(
         <span
           style={{
-            top: '8px',
+            top: '10px',
             position: 'absolute',
           }}
         >
