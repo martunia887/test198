@@ -109,7 +109,8 @@ export default class Example extends React.Component<{}, State> {
           <Group>
             <h2>Archives</h2>
             <ButtonList>
-              <li>{this.createItem(zipItem, 'Zip Archive')}</li>
+              <li>{this.createItem(zipItem, 'Zip 1')}</li>
+              <li>{this.createItem(zipWithNestedFolderItem, 'Zip 2')}</li>
             </ButtonList>
           </Group>
           <Group>
