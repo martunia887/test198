@@ -1,13 +1,7 @@
-import TextColorIcon from '@atlaskit/icon/glyph/editor/text-color';
-
 import React, { Component, RefObject } from 'react';
 import styled, { css } from 'styled-components';
-import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
-import MoreIcon from '@atlaskit/icon/glyph/editor/more';
 
 import { EditorView } from 'prosemirror-view';
-import { emoji } from '@atlaskit/util-data-test';
-import Popup from '../../../../../editor-common/src/ui/Popup';
 import ColorPicker from './../../../../../../jira/color-picker/src/components/ColorPicker';
 import { Button } from '../../../../../../core/button/src/components/Button';
 
