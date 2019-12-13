@@ -99,7 +99,7 @@ export default function asExperiment<BaseProps extends {}>(
 
       return (
         <Fragment>
-          <View {...(this.props as BaseProps)} key="experimentView" />
+          <View {...this.props} key="experimentView" />
           <CohortTracker
             exposureDetails={exposureDetails}
             options={contextOptions}
@@ -122,7 +122,7 @@ export default function asExperiment<BaseProps extends {}>(
 
     renderFallback = () => {
       const FallbackView = experimentComponentMap.fallback;
-      return <FallbackView {...(this.props as BaseProps)} />;
+      return <FallbackView {...this.props} />;
     };
 
     render() {
