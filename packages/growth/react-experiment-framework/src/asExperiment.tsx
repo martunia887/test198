@@ -13,13 +13,13 @@ type State = {
   forceFallback: boolean;
 };
 
-export type ExperimentComponentMap = {
-  fallback: ComponentType<any>;
-  [key: string]: ComponentType<any>;
+export type ExperimentComponentMap<BaseProps> = {
+  fallback: ComponentType<BaseProps>;
+  [key: string]: ComponentType<BaseProps>;
 };
 
-export default function asExperiment(
-  experimentComponentMap: ExperimentComponentMap,
+export default function asExperiment<BaseProps extends {}>(
+  experimentComponentMap: ExperimentComponentMap<BaseProps>,
   experimentKey: string,
   callbacks: {
     onError: (error: Error, options?: ExperimentEnrollmentOptions) => void;
@@ -31,8 +31,7 @@ export default function asExperiment(
   LoadingComponent?: ComponentType,
 ) {
   let contextOptions: EnrollmentOptions | undefined;
-
-  return class ExperimentSwitch extends Component<Record<string, any>, State> {
+  return class ExperimentSwitch extends Component<BaseProps, State> {
     static displayName = 'ExperimentSwitch';
 
     state = {
@@ -100,7 +99,7 @@ export default function asExperiment(
 
       return (
         <Fragment>
-          <View {...this.props} key="experimentView" />
+          <View {...(this.props as BaseProps)} key="experimentView" />
           <CohortTracker
             exposureDetails={exposureDetails}
             options={contextOptions}
@@ -123,7 +122,7 @@ export default function asExperiment(
 
     renderFallback = () => {
       const FallbackView = experimentComponentMap.fallback;
-      return <FallbackView {...this.props} />;
+      return <FallbackView {...(this.props as BaseProps)} />;
     };
 
     render() {

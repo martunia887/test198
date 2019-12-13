@@ -42,7 +42,7 @@ describe('asExperiment', () => {
     experiments: Experiments;
     options?: ExperimentEnrollmentOptions;
   };
-  let componentMap: ExperimentComponentMap;
+  let componentMap: ExperimentComponentMap<{}>;
   let callbacks: { onError: onError; onExposure: onExposure };
   let onError: onError;
   let onExposure: onExposure;
