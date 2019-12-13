@@ -1,0 +1,528 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "f6a00609-c1a5-4f00-bc40-e99ee4ead450",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 1280,
+            "height": 191
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "We opened the doors to Atlassian’s new office at ",
+          "type": "text"
+        },
+        {
+          "type": "inlineLocation",
+          "attrs": {
+            "address": "888 Broadway",
+            "coords": {
+              "lat": 40.633621,
+              "lng": -73.714765
+            }
+          }
+        },
+        {
+          "text": ", New York on Monday, December 9!",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "8753f58b-94d3-4ba4-9e8d-6ca2d1c06448",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 2638,
+            "height": 1760
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "In our newest North America office, we have continued to experiment and iterate on the best ways to support the ever-evolving needs of Atlassians. Many of these ideas were inspired by what we’ve learned working closely with the NYC Atlassian team over the last 2+ years. ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph"
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Here are some of the things we really focused on in the design of this space::",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Accessibility",
+                  "type": "text"
+                },
+                {
+                  "text": " - a space universally accessible, regardless of one’s physical abilities, ",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Meeting overflow and acoustic nooks",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - we created “third” spaces for meeting overflow and continuity",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Acoustic zoning",
+                  "type": "text"
+                },
+                {
+                  "text": " - different zones to do your best work, whether it be quiet, ambient noise or background energy",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Location",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - a vibrant neighborhood, near a public transit hub",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph"
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Fun facts about the new space:",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Total Square Footage / Meters : 23,500 sq ft / 2,183+ sq m",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Conference Rooms: 13",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Phone Booths: 10",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Living Room Areas: 3",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Library: Quiet spot to bring your laptop, borrow a book, have a seat, and enjoy the silence!",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Parents Room: designed for the comfort of parents and baby Atlassians!",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "text": "Visiting Atlassian",
+          "type": "text"
+        },
+        {
+          "text": "'",
+          "type": "text"
+        },
+        {
+          "text": "s ",
+          "type": "text"
+        },
+        {
+          "text": "Traveling to NYC",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Come by and see for yourself!  Please ",
+          "type": "text"
+        },
+        {
+          "text": "log a ticket at go/experience",
+          "type": "text"
+        },
+        {
+          "text": " so we can arrange your building access and share all the important details to make your visit to 888 Broadway an awesome and enjoyable experience!",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "attrs": {
+        "panelType": "note"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "A quick note about traveling to the new NYC office:",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "If you're visiting NYC from elsewhere in the US, it would be great if you could fly with United Airlines from your home location to ",
+              "type": "text"
+            },
+            {
+              "type": "inlineLocation",
+              "attrs": {
+                "address": "EWR (Newark) Airport",
+                "coords": {
+                  "lat": 40.6927355,
+                  "lng": -74.173296
+                }
+              }
+            },
+            {
+              "text": " because United is one of Atlassian's preferred airlines.  ",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Yes, EWR is in New Jersey.  But, it actually will take about the same amount of time, either by car or public transit, to the new office at 888 Broadway as coming from JFK or LGA.  ",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Also, through ",
+              "type": "text"
+            },
+            {
+              "type": "date",
+              "attrs": {
+                "timestamp": "1585612800000"
+              }
+            },
+            {
+              "text": ", for United flights between SFO <--> EWR, Atlassians can earn 5x miles on top of what you're already earning with your MileagePlus status -- see ",
+              "type": "text"
+            },
+            {
+              "text": "this page",
+              "type": "text",
+              "marks": [
+                {
+                  "type": "link",
+                  "attrs": {
+                    "href": "https://hello.atlassian.net/wiki/spaces/ACTG/blog/2019/10/25/575728903/Global+Travel+Update+United+Airlines+Promotion"
+                  }
+                }
+              ]
+            },
+            {
+              "text": " for complete details.",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "Lastly, with our new location come new preferred / partner hotels.  A global list can be found at ",
+              "type": "text"
+            },
+            {
+              "text": "go/hotels",
+              "type": "text",
+              "marks": [
+                {
+                  "type": "link",
+                  "attrs": {
+                    "href": "https://hello.atlassian.net/wiki/spaces/ACTG/pages/451864580/Atlassian+Preferred+Hotels+by+Geo"
+                  }
+                }
+              ]
+            },
+            {
+              "text": " but here are the new ones for 888 Broadway:",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "inlineLocation",
+                      "attrs": {
+                        "address": "Hyatt Union Square",
+                        "coords": {
+                          "lat": 40.733518,
+                          "lng": -73.990003
+                        }
+                      }
+                    },
+                    {
+                      "text": ";",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "inlineLocation",
+                      "attrs": {
+                        "address": "The Walker Hotel – Greenwich Village",
+                        "coords": {
+                          "lat": 40.73618,
+                          "lng": -73.9966
+                        }
+                      }
+                    },
+                    {
+                      "text": "; and",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "inlineLocation",
+                  "attrs": {
+                    "address": "W New York - Union Square",
+                    "coords": {
+                      "lat": 40.736576,
+                      "lng": -73.988581
+                    }
+                  }
+                },
+                {
+                  "text": ".",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "The Atlassian rates for all of these properties are available on Egencia.",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "If you have any questions, please reach out to ",
+              "type": "text"
+            },
+            {
+              "type": "mention",
+              "attrs": {
+                "id": "557057:c8990a45-5fdd-4a9a-b7f3-f91c7730d0a8",
+                "text": "@Philip Braddock"
+              }
+            },
+            {
+              "text": " or ping #help-egencia-faqs in Slack.",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph"
+    }
+  ],
+  "version": 1
+}
