@@ -44,6 +44,6 @@ export const inlineLocation: NodeSpec = {
         ? JSON.stringify(node.attrs.data)
         : '',
     };
-    return ['a', attrs];
+    return ['a', { href: node.attrs.address, ...attrs }, node.attrs.address];
   },
 };

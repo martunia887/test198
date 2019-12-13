@@ -6,6 +6,9 @@ import { MapModal } from '@atlaskit/maps-viewer';
 
 export type LocationCardProps = {
   location: Geolocation;
+  // Viewer options
+  shouldOpenMapsViewer?: boolean;
+  registerToGlobals?: boolean;
 };
 
 type LocationCardState = {
@@ -16,12 +19,19 @@ export default class LocationCard extends React.Component<
   LocationCardProps,
   LocationCardState
 > {
+  static defaultProps = {
+    shouldOpenMapsViewer: true,
+    registerToGlobals: true,
+  };
   state: LocationCardState = {
     isSelected: false,
   };
 
   componentDidMount() {
-    locationsManager.register(this.props.location);
+    const { registerToGlobals, location } = this.props;
+    if (registerToGlobals) {
+      locationsManager.register(location);
+    }
   }
 
   componentDidUpdate(prevProps: LocationCardProps) {
@@ -41,18 +51,21 @@ export default class LocationCard extends React.Component<
 
   renderMapModal = () => {
     const { isSelected } = this.state;
+    const { registerToGlobals } = this.props;
+    const locations = registerToGlobals ? locationsManager.getLocations() : [];
     return (
       <MapModal
         onClose={() => this.setSelected(false)}
         isOpen={isSelected}
         selected={this.props.location}
-        locations={locationsManager.getLocations()}
+        locations={locations}
       />
     );
   };
 
   render = () => {
     const { title, iconColor } = this.props.location;
+    const { shouldOpenMapsViewer = true } = this.props;
     return (
       <>
         <InlineCardResolvedView
@@ -60,7 +73,7 @@ export default class LocationCard extends React.Component<
           icon={<LocationIcon label={title} primaryColor={iconColor} />}
           onClick={() => this.setSelected(true)}
         />
-        {this.renderMapModal()}
+        {shouldOpenMapsViewer && this.renderMapModal()}
       </>
     );
   };

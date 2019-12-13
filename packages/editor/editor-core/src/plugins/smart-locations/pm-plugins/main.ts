@@ -3,6 +3,7 @@ import { Dispatch } from '../../../event-dispatcher';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { pluginFactory } from '../../../utils/plugin-state-factory';
 export const pluginKey = new PluginKey('smartLocationPlugin');
+import { InlineLocationCard } from '../nodeviews/location';
 
 interface SmartLocationPluginState {
   modalOpen: boolean;
@@ -33,6 +34,19 @@ const createPlugin = (
   new Plugin({
     state: createPluginState(dispatch, { modalOpen: false }),
     key: pluginKey,
+    props: {
+      nodeViews: {
+        inlineLocation: (node, view, getPos) => {
+          return new InlineLocationCard(
+            node,
+            view,
+            getPos,
+            portalProviderAPI,
+            {},
+          ).init();
+        },
+      },
+    },
   });
 
 export { createCommand };

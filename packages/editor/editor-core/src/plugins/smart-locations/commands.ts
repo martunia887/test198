@@ -12,9 +12,10 @@ export const toggleModal = (): Command =>
 
 export const createLocation = (geo: any): Command => {
   return (state, dispatch) => {
+    debugger;
     const locNode = state.schema.nodes.inlineLocation.createChecked({
       address: geo.address,
-      coods: {
+      coords: {
         lat: geo.coords.lat,
         lng: geo.coords.lng,
       },
