@@ -1,5 +1,6 @@
 import { Schema, Node as PMNode } from 'prosemirror-model';
-import { Token, TokenParser, Context, InlineCardConversion } from './';
+import { Token, TokenParser } from './';
+import { Context, ConversionMap } from '../../interfaces';
 import { isNotBlank } from '../utils/text';
 
 /**
@@ -80,7 +81,7 @@ const isNotSpaceAndParenthese = (char: string): boolean =>
   !/\s|\(|\)/.test(char);
 
 export const buildIssueKeyRegex = (
-  inlineCardConversion?: InlineCardConversion,
+  inlineCardConversion?: ConversionMap,
 ): RegExp | undefined => {
   if (!inlineCardConversion) {
     return undefined;
