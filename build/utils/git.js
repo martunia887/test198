@@ -29,10 +29,10 @@ async function getChangedFilesSince(
 }
 
 async function getChangedChangesetFilesSinceBranch(
-  branch /*:string*/,
+  branchName /*:string*/,
   fullPath /*:boolean*/ = false,
 ) {
-  const ref = await getRef(branch);
+  const ref = await getRef(branchName);
   // Now we can find which files we added
   const cmd = await spawn('git', [
     'diff',
@@ -60,12 +60,15 @@ async function getBranchName() {
   return gitCmd.stdout.trim();
 }
 
-function getOriginBranchName(branch /*: string */) {
-  return branch.startsWith('origin/') ? branch : `origin/${branch}`;
+function getOriginBranchName(branchName /*: string */) {
+  return branchName.startsWith('origin/') ? branchName : `origin/${branchName}`;
 }
 
-async function getRef(branch /*:string*/) {
-  const gitCmd = await spawn('git', ['rev-parse', getOriginBranchName(branch)]);
+async function getRef(branchName /*:string*/) {
+  const gitCmd = await spawn('git', [
+    'rev-parse',
+    getOriginBranchName(branchName),
+  ]);
   return gitCmd.stdout.trim().split('\n')[0];
 }
 
