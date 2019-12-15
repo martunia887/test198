@@ -8,7 +8,7 @@ export type LocationCardProps = {
   location: Geolocation;
   // Viewer options
   shouldOpenMapsViewer?: boolean;
-  registerToGlobals?: boolean;
+  targetMap?: string | false;
 };
 
 type LocationCardState = {
@@ -21,28 +21,35 @@ export default class LocationCard extends React.Component<
 > {
   static defaultProps = {
     shouldOpenMapsViewer: true,
-    registerToGlobals: true,
+    targetMap: 'global',
   };
   state: LocationCardState = {
     isSelected: false,
   };
 
   componentDidMount() {
-    const { registerToGlobals, location } = this.props;
-    if (registerToGlobals) {
-      locationsManager.register(location);
+    const { targetMap, location } = this.props;
+    if (targetMap) {
+      locationsManager.register(location, targetMap);
     }
   }
 
   componentDidUpdate(prevProps: LocationCardProps) {
     if (prevProps.location !== this.props.location) {
-      locationsManager.unRegister(prevProps.location);
-      locationsManager.register(this.props.location);
+      if (prevProps.targetMap) {
+        locationsManager.unRegister(prevProps.location, prevProps.targetMap);
+      }
+      if (this.props.targetMap) {
+        locationsManager.register(this.props.location, this.props.targetMap);
+      }
     }
   }
 
   componentWillUnmount() {
-    locationsManager.unRegister(this.props.location);
+    const { location, targetMap } = this.props;
+    if (targetMap) {
+      locationsManager.unRegister(location, targetMap);
+    }
   }
 
   setSelected = (isSelected: boolean) => {
@@ -51,8 +58,8 @@ export default class LocationCard extends React.Component<
 
   renderMapModal = () => {
     const { isSelected } = this.state;
-    const { registerToGlobals } = this.props;
-    const locations = registerToGlobals ? locationsManager.getLocations() : [];
+    const { targetMap } = this.props;
+    const locations = targetMap ? locationsManager.getLocations(targetMap) : [];
     return (
       <MapModal
         onClose={() => this.setSelected(false)}

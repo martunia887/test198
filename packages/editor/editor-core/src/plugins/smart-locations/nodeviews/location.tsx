@@ -16,8 +16,8 @@ export class InlineCardComponent extends React.PureComponent<Props> {
     return (
       <LocationCard
         location={new Geolocation(locationData)}
-        shouldOpenMapsViewer={false}
-        registerToGlobals={false}
+        // shouldOpenMapsViewer={false}
+        targetMap={'editor'}
       />
     );
   }
