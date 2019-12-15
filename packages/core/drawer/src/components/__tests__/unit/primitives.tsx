@@ -4,9 +4,23 @@ import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 
 import DrawerPrimitive from '../../primitives';
 import { DrawerWidth } from '../../types';
-import { Slide } from '../../transitions';
+import { SlideIn } from '../../../../../../helpers/motion/src';
 
 const DrawerContent = () => <code>Drawer contents</code>;
+
+// https://jestjs.io/docs/en/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  };
+});
 
 describe('Drawer primitive', () => {
   const commonProps = {
@@ -124,7 +138,7 @@ describe('Drawer primitive', () => {
       onCloseComplete.mock.calls,
     );
 
-    const handler = wrapper.find(Slide).props().onExited;
+    const handler = wrapper.find(SlideIn).props().onExited;
     if (handler) handler((node as unknown) as HTMLElement);
 
     const callsAfterExited = onCloseComplete.mock.calls;
@@ -149,7 +163,7 @@ describe('Drawer primitive', () => {
 
     const node = document.createElement('div');
 
-    const handler = wrapper.find(Slide).props().onEntered;
+    const handler = wrapper.find(SlideIn).props().onEntered;
     if (handler) handler(node);
 
     expect(handler).toHaveBeenLastCalledWith(node);

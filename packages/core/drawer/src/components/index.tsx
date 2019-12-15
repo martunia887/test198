@@ -22,7 +22,7 @@ import {
 } from '../version.json';
 import drawerItemTheme from '../theme/drawer-item-theme';
 import FocusLock from './focus-lock';
-import { DrawerPrimitive } from './primitives';
+import DrawerPrimitive from './primitives';
 import { CloseTrigger, DrawerProps, DrawerWidth } from './types';
 
 const OnlyChild: FC<any> = ({ children }) =>

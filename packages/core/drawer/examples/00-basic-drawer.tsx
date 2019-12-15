@@ -19,17 +19,16 @@ export default class DrawersExample extends Component<{}, State> {
     });
 
   onClose = (...args: [SyntheticEvent<HTMLElement>, any]) => {
-    console.log('onClose', args);
     this.setState({
       isDrawerOpen: false,
     });
   };
 
   onCloseComplete = (...args: [HTMLElement]) =>
-    console.log('onCloseComplete', args);
+    console.log('onCloseCompleteMessage', args);
 
   onOpenComplete = (...args: [HTMLElement]) =>
-    console.log('onOpenComplete', args);
+    console.log('onOpenCompleteMessage', args);
 
   render() {
     return (

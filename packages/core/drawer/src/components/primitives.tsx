@@ -117,21 +117,29 @@ const IconWrapper: FC<IconWrapperProps> = props => (
   />
 );
 
-export class DrawerPrimitive extends Component<DrawerPrimitiveProps> {
+export default class DrawerPrimitive extends Component<DrawerPrimitiveProps> {
   render() {
-    const {
-      children,
-      icon: Icon,
-      onClose,
-      onCloseComplete,
-      onOpenComplete,
-      ...props
-    } = this.props;
+    const { children, icon: Icon, onClose, ...props } = this.props;
+
+    const onCloseComplete =
+      this.props.onCloseComplete !== undefined
+        ? this.props.onCloseComplete
+        : () => {};
+
+    const onOpenComplete =
+      this.props.onOpenComplete !== undefined
+        ? this.props.onOpenComplete
+        : () => {};
 
     return (
       <ExitingPersistence>
         {props.in && (
-          <SlideIn from="left">
+          <SlideIn
+            onFinish={direction => {
+              direction === 'entering' ? onOpenComplete() : onCloseComplete();
+            }}
+            from="left"
+          >
             {pr => {
               return (
                 <Wrapper

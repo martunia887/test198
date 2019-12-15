@@ -18,9 +18,9 @@ export interface BaseProps {
   /** Available drawer sizes */
   width?: DrawerWidth;
   /** A callback function that will be called when the drawer has finished its opening transition. */
-  onOpenComplete?: (node: HTMLElement) => void;
+  onOpenComplete?: () => void;
   /** A callback function that will be called when the drawer has finished its close transition. */
-  onCloseComplete?: (node: HTMLElement) => void;
+  onCloseComplete?: () => void;
   /** Boolean that controls if drawer should be retained/discarded */
   shouldUnmountOnExit?: boolean;
 }

@@ -41,7 +41,6 @@ export default class DrawersExample extends React.Component<{}, State> {
                 Notice that these search results are styled with the Drawer
                 theme!
               </p>
-
               <ResultItemGroup title="Object examples">
                 <ObjectResult
                   resultId="result_id_1"
