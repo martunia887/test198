@@ -3,7 +3,7 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 import { TextSelection, EditorState } from 'prosemirror-state';
 import { colors } from '@atlaskit/theme';
 import { Match } from '../types';
-import { getFindReplacePluginState } from '../plugin';
+import { getPluginState } from '../plugin';
 import { findUniqueItemsIn } from '../../../utils/array';
 
 export function getSelectedText(selection: TextSelection): string {

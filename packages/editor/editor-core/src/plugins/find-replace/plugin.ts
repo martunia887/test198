@@ -1,59 +1,37 @@
-import { PluginKey, Plugin, Transaction } from 'prosemirror-state';
+import { Plugin, Transaction } from 'prosemirror-state';
 import { DecorationSet, Decoration } from 'prosemirror-view';
 import { pluginFactory } from '../../utils/plugin-state-factory';
 import reducer from './reducer';
 import { Dispatch } from '../../event-dispatcher';
 import { FindReplaceAction } from './actions';
-import { Match } from './types';
+import { Match, FindReplacePluginState, findReplacePluginKey } from './types';
 import {
   findMatches,
   createDecorations,
-  nextIndex,
   removeDecorationsFromSet,
   findDecorationFromMatch,
   findSearchIndex,
 } from './utils';
 import { findUniqueItemsIn } from '../../utils/array';
 
-export interface FindReplaceState {
-  /** Whether find/replace is isActive, i.e. displayed */
-  isActive: boolean;
-  /** Whether we should set focus into and select all text of find textfield */
-  shouldFocus: boolean;
-  /** Search keyword */
-  findText: string;
-  /** Text to replace with */
-  replaceText: string;
-  /** User's selection.from position in editor */
-  selectionPos: number;
-  /** Index of selected word in array of matches, this gets updated as user finds next/prev */
-  index: number;
-  /** Positions of find results */
-  matches: Match[];
-  /** Decorations for the search match highlights */
-  decorationSet: DecorationSet;
-}
-
-export const findReplacePluginKey = new PluginKey('findReplace');
-
-export const getInitialState = (): FindReplaceState => ({
+export const getInitialState = (): FindReplacePluginState => ({
   isActive: false,
   shouldFocus: false,
   findText: '',
   replaceText: '',
   index: 0,
-  selectionPos: 1,
   matches: [],
   decorationSet: DecorationSet.empty,
 });
 
 const handleDocChanged = (
   tr: Transaction,
-  pluginState: FindReplaceState,
-): FindReplaceState => {
-  if (pluginState.isActive && pluginState.findText) {
-    let { index, selectionPos, decorationSet, matches } = pluginState;
-    const newMatches = findMatches(tr.doc, pluginState.findText);
+  pluginState: FindReplacePluginState,
+): FindReplacePluginState => {
+  const { isActive, findText } = pluginState;
+  if (isActive && findText) {
+    let { index, decorationSet, matches } = pluginState;
+    const newMatches = findMatches(tr.doc, findText);
 
     decorationSet = decorationSet.map(tr.mapping, tr.doc);
     matches = matches.map(match => ({
@@ -92,7 +70,7 @@ const handleDocChanged = (
     if (matchesToAdd.length > 0) {
       decorationSet = decorationSet.add(
         tr.doc,
-        createDecorations(selectionPos, matchesToAdd),
+        createDecorations(tr.selection.from, matchesToAdd),
       );
     }
 
@@ -106,7 +84,11 @@ const handleDocChanged = (
     }
     const newSelectedMatch = newMatches[newIndex];
 
-    if (selectedMatch.start !== newSelectedMatch.start) {
+    if (
+      selectedMatch &&
+      newSelectedMatch &&
+      selectedMatch.start !== newSelectedMatch.start
+    ) {
       const decorationToRemove = findDecorationFromMatch(
         decorationSet,
         selectedMatch,
@@ -136,24 +118,22 @@ const handleDocChanged = (
 };
 
 export const {
-  createCommand: createFindReplaceCommand,
-  getPluginState: getFindReplacePluginState,
-  createPluginState: createFindReplacePluginState,
-} = pluginFactory<FindReplaceState, FindReplaceAction, FindReplaceState>(
-  findReplacePluginKey,
-  reducer,
-  { onDocChanged: handleDocChanged },
-);
+  createCommand,
+  getPluginState,
+  createPluginState,
+} = pluginFactory<
+  FindReplacePluginState,
+  FindReplaceAction,
+  FindReplacePluginState
+>(findReplacePluginKey, reducer, { onDocChanged: handleDocChanged });
 
 export const createPlugin = (dispatch: Dispatch) =>
   new Plugin({
     key: findReplacePluginKey,
-    state: createFindReplacePluginState(dispatch, getInitialState()),
+    state: createPluginState(dispatch, getInitialState()),
     props: {
       decorations(state) {
-        const { isActive, findText, decorationSet } = getFindReplacePluginState(
-          state,
-        );
+        const { isActive, findText, decorationSet } = getPluginState(state);
         if (isActive && findText) {
           return decorationSet;
         }

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { createPlugin, findReplacePluginKey } from './plugin';
+import { createPlugin } from './plugin';
+import { findReplacePluginKey } from './types';
 import keymapPlugin from './keymap';
 import { EditorPlugin, Command } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
@@ -14,7 +15,6 @@ import {
 import FindReplaceToolbarButton from './ui/FindReplaceToolbarButton';
 import { BatchFinder } from './utils/batch-finder';
 
-// todo: any options needed?
 export const findReplacePlugin = (): EditorPlugin => {
   let findReplaceInputRef: React.RefObject<HTMLInputElement>;
   const batchFinder = new BatchFinder();
@@ -126,3 +126,5 @@ export const findReplacePlugin = (): EditorPlugin => {
   };
 };
 export default findReplacePlugin;
+
+export * from './types';

@@ -1,11 +1,13 @@
-import { FindReplaceState, getInitialState } from './plugin';
+import { getInitialState } from './plugin';
+import { FindReplacePluginState } from './types';
 import { FindReplaceActionTypes, FindReplaceAction } from './actions';
 import { nextIndex, prevIndex } from './utils';
 
 const reducer = (
-  state: FindReplaceState,
+  state: FindReplacePluginState,
   action: FindReplaceAction,
-): FindReplaceState => {
+): FindReplacePluginState => {
+  console.log('reducer', action.type);
   switch (action.type) {
     case FindReplaceActionTypes.ACTIVATE:
     case FindReplaceActionTypes.FIND:
@@ -13,11 +15,9 @@ const reducer = (
         ...state,
         isActive: true,
         shouldFocus: action.type === FindReplaceActionTypes.ACTIVATE,
-        findText:
-          action.findText !== undefined ? action.findText : state.findText,
-        matches: action.matches || state.matches,
-        index: action.index !== undefined ? action.index : state.index,
-        selectionPos: action.selectionPos || state.selectionPos, // todo: does selectionPos have a point?
+        findText: action.findText || '',
+        matches: action.matches || [],
+        index: action.index || 0,
       };
 
     case FindReplaceActionTypes.UPDATE_DECORATIONS:

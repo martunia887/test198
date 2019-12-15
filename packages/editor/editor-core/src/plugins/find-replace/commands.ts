@@ -1,11 +1,6 @@
-import {
-  EditorState,
-  TextSelection,
-  Selection,
-  Transaction,
-} from 'prosemirror-state';
+import { EditorState, TextSelection } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
-import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
+import { createCommand, getPluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
 import {
@@ -21,53 +16,47 @@ import {
 import { withScrollIntoView } from '../../utils/commands';
 
 export const activate = () =>
-  createFindReplaceCommand(
-    (state: EditorState) => {
-      const { selection } = state;
-      let findText: string | undefined;
-      let matches: Match[] | undefined;
-      let index: number | undefined;
+  createCommand((state: EditorState) => {
+    const { selection } = state;
+    let findText: string | undefined;
+    let matches: Match[] | undefined;
+    let index: number | undefined;
 
-      // if user has selected text and hit cmd-f, set that as the keyword
-      if (selection instanceof TextSelection && !selection.empty) {
-        findText = getSelectedText(selection);
-        matches = findMatches(state.doc, findText);
-        index = findSearchIndex(selection.from, matches);
-      }
+    // if user has selected text and hit cmd-f, set that as the keyword
+    if (selection instanceof TextSelection && !selection.empty) {
+      findText = getSelectedText(selection);
+      matches = findMatches(state.doc, findText);
+      index = findSearchIndex(selection.from, matches);
+    }
 
-      return {
-        type: FindReplaceActionTypes.ACTIVATE,
-        findText,
-        matches,
-        index,
-        selectionPos: selection.from,
-      };
-    },
-    (tr: Transaction) => tr.setSelection(Selection.atStart(tr.doc)),
-  );
+    return {
+      type: FindReplaceActionTypes.ACTIVATE,
+      findText,
+      matches,
+      index,
+    };
+  });
 
 export const find = (keyword?: string) =>
   withScrollIntoView(
-    createFindReplaceCommand(
+    createCommand(
       (state: EditorState) => {
-        const { selectionPos } = getFindReplacePluginState(state);
-
+        const { selection } = state;
         const matches = keyword ? findMatches(state.doc, keyword) : [];
-        const index = findSearchIndex(selectionPos, matches);
+        const index = findSearchIndex(selection.from, matches);
 
         return {
           type: FindReplaceActionTypes.FIND,
           findText: keyword || '',
           matches,
           index,
-          selectionPos: matches[index] ? matches[index].start : 1,
         };
       },
       (tr, state) => {
-        const { selectionPos } = getFindReplacePluginState(state);
+        const { selection } = state;
         const matches = keyword ? findMatches(state.doc, keyword) : [];
         if (matches.length > 0) {
-          const index = findSearchIndex(selectionPos, matches);
+          const index = findSearchIndex(selection.from, matches);
           return tr.setSelection(
             TextSelection.create(state.doc, matches[index].start),
           );
@@ -77,35 +66,11 @@ export const find = (keyword?: string) =>
     ),
   );
 
-export const addDecorations = (decorations: Decoration[]) =>
-  createFindReplaceCommand((state: EditorState) => {
-    const { decorationSet } = getFindReplacePluginState(state);
-    return {
-      type: FindReplaceActionTypes.UPDATE_DECORATIONS,
-      decorationSet: decorationSet.add(state.doc, decorations),
-    };
-  });
-
-export const removeDecorations = (decorations: Decoration[]) =>
-  createFindReplaceCommand((state: EditorState) => {
-    const { decorationSet } = getFindReplacePluginState(state);
-    return {
-      type: FindReplaceActionTypes.UPDATE_DECORATIONS,
-      decorationSet: removeDecorationsFromSet(
-        decorationSet,
-        decorations,
-        state.doc,
-      ),
-    };
-  });
-
 export const findNext = () =>
   withScrollIntoView(
-    createFindReplaceCommand(
+    createCommand(
       (state: EditorState) => {
-        let { decorationSet, index, matches } = getFindReplacePluginState(
-          state,
-        );
+        let { decorationSet, index, matches } = getPluginState(state);
         decorationSet = updateSelectedHighlight(
           state,
           nextIndex(index, matches.length),
@@ -114,7 +79,7 @@ export const findNext = () =>
         return { type: FindReplaceActionTypes.FIND_NEXT, decorationSet };
       },
       (tr, state) => {
-        const { matches, index } = getFindReplacePluginState(state);
+        const { matches, index } = getPluginState(state);
         return tr.setSelection(
           TextSelection.create(
             state.doc,
@@ -127,11 +92,9 @@ export const findNext = () =>
 
 export const findPrev = () =>
   withScrollIntoView(
-    createFindReplaceCommand(
+    createCommand(
       (state: EditorState) => {
-        let { decorationSet, index, matches } = getFindReplacePluginState(
-          state,
-        );
+        let { decorationSet, index, matches } = getPluginState(state);
         decorationSet = updateSelectedHighlight(
           state,
           prevIndex(index, matches.length),
@@ -140,7 +103,7 @@ export const findPrev = () =>
         return { type: FindReplaceActionTypes.FIND_PREV, decorationSet };
       },
       (tr, state) => {
-        const { matches, index } = getFindReplacePluginState(state);
+        const { matches, index } = getPluginState(state);
         return tr.setSelection(
           TextSelection.create(
             state.doc,
@@ -153,13 +116,13 @@ export const findPrev = () =>
 
 export const replace = (replaceText: string) =>
   withScrollIntoView(
-    createFindReplaceCommand(
+    createCommand(
       {
         type: FindReplaceActionTypes.REPLACE,
         replaceText,
       },
       (tr, state) => {
-        const { matches, index } = getFindReplacePluginState(state);
+        const { matches, index } = getPluginState(state);
         if (matches[index]) {
           const { start, end } = matches[index];
           tr.insertText(replaceText, start, end).setSelection(
@@ -176,13 +139,13 @@ export const replace = (replaceText: string) =>
   );
 
 export const replaceAll = (replaceText: string) =>
-  createFindReplaceCommand(
+  createCommand(
     {
       type: FindReplaceActionTypes.REPLACE_ALL,
       replaceText: replaceText,
     },
     (tr, state) => {
-      const pluginState = getFindReplacePluginState(state);
+      const pluginState = getPluginState(state);
       pluginState.matches.forEach(match => {
         tr.insertText(
           replaceText,
@@ -194,13 +157,35 @@ export const replaceAll = (replaceText: string) =>
     },
   );
 
+export const addDecorations = (decorations: Decoration[]) =>
+  createCommand((state: EditorState) => {
+    const { decorationSet } = getPluginState(state);
+    return {
+      type: FindReplaceActionTypes.UPDATE_DECORATIONS,
+      decorationSet: decorationSet.add(state.doc, decorations),
+    };
+  });
+
+export const removeDecorations = (decorations: Decoration[]) =>
+  createCommand((state: EditorState) => {
+    const { decorationSet } = getPluginState(state);
+    return {
+      type: FindReplaceActionTypes.UPDATE_DECORATIONS,
+      decorationSet: removeDecorationsFromSet(
+        decorationSet,
+        decorations,
+        state.doc,
+      ),
+    };
+  });
+
 export const cancelSearch = () =>
-  createFindReplaceCommand({
+  createCommand({
     type: FindReplaceActionTypes.CANCEL,
   });
 
 export const unfocus = () =>
-  createFindReplaceCommand({
+  createCommand({
     type: FindReplaceActionTypes.UNFOCUS,
   });
 
@@ -208,7 +193,7 @@ const updateSelectedHighlight = (
   state: EditorState,
   nextSelectedIndex: number,
 ): DecorationSet => {
-  let { decorationSet, index, matches } = getFindReplacePluginState(state);
+  let { decorationSet, index, matches } = getPluginState(state);
   const currentSelectedMatch = matches[index];
   const nextSelectedMatch = matches[nextSelectedIndex];
   const currentSelectedDecoration = findDecorationFromMatch(

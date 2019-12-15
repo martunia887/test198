@@ -1,6 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 import { find, addDecorations, removeDecorations } from '../commands';
-import { getFindReplacePluginState } from '../plugin';
+import { getPluginState } from '../plugin';
 import { createDecorations } from './index';
 
 const batchIncrement = 100;
@@ -118,9 +118,8 @@ export class BatchFinder {
     startPos: number,
     endPos?: number,
   ) {
-    const { matches, selectionPos } = getFindReplacePluginState(
-      editorView.state,
-    );
+    const { selection } = editorView.state;
+    const { matches } = getPluginState(editorView.state);
     if (matches.length === 0) {
       return;
     }
@@ -128,7 +127,7 @@ export class BatchFinder {
     const matchesBetween = matches.filter(
       m => m.start >= startPos && (endPos === undefined || m.start < endPos),
     );
-    const selectionMatch = matches.find(match => match.start >= selectionPos);
+    const selectionMatch = matches.find(match => match.start >= selection.from);
     const selectionIndex = matchesBetween.findIndex(
       match => match === selectionMatch,
     );
@@ -161,7 +160,7 @@ export class BatchFinder {
     startPos: number,
     endPos?: number,
   ) {
-    const { decorationSet } = getFindReplacePluginState(editorView.state);
+    const { decorationSet } = getPluginState(editorView.state);
     const decorations = decorationSet.find(startPos, endPos);
 
     if (decorations.length === 0) {
