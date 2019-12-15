@@ -7,6 +7,10 @@ export const tasksAndDecisionsStyles = css`
     min-width: ${akEditorTableCellMinWidth}px;
   }
 
+  .ProseMirror .decisionItemView-content-wrap {
+    margin-top: 0;
+  }
+
   div[data-task-list-local-id] {
     margin: 12px 0 0 0;
   }
