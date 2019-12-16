@@ -11,7 +11,7 @@
         "deploy:production": "netlify deploy --auth $NETLIFY_TOKEN --site $CONSTELLATION_ID --prod"
     },
     "dependencies": {
-        "@atlaskit/atlassian-navigation": "^0.7.1",
+        "@atlaskit/atlassian-navigation": "^0.8.0",
         "@atlaskit/avatar": "^17.1.4",
         "@atlaskit/css-reset": "^5.0.9",
         "@atlaskit/gatsby-theme-brisk": "^0.0.0",
