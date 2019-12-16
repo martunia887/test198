@@ -23,6 +23,7 @@ export const Popup: FC<PopupProps> = memo(
     offset,
     placement,
     shouldFlip = true,
+    closeOnClickAway = true,
     testId,
     content: Content,
     trigger,
@@ -37,7 +38,13 @@ export const Popup: FC<PopupProps> = memo(
     );
 
     useFocusManager({ initialFocusRef, popupRef });
-    useCloseManager({ isOpen, onClose, popupRef, triggerRef });
+    useCloseManager({
+      isOpen,
+      onClose,
+      popupRef,
+      triggerRef,
+      closeOnClickAway,
+    });
 
     return (
       <div css={containerCSS}>
