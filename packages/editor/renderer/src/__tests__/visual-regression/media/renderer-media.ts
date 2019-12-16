@@ -47,7 +47,8 @@ describe('Snapshot Test: Media', () => {
 
   describe('layout', () => {
     devices.forEach(device => {
-      it(`should correctly render for ${device}`, async () => {
+      // TODO: ED-8011
+      it.skip(`should correctly render for ${device}`, async () => {
         await initRenderer(page, layoutAdf, device);
       });
     });
