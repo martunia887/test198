@@ -4,6 +4,7 @@ import { P200 } from '@atlaskit/theme/colors';
 import TopNav from '../components/top-nav';
 import cssReset from '@atlaskit/css-reset';
 import { gridSize as gridSizeFn } from '@atlaskit/theme';
+import { N30 } from '@atlaskit/theme/colors';
 
 const gridSize = gridSizeFn();
 
@@ -17,7 +18,8 @@ const Layout = ({ children, SideNavContents = () => <div /> }) => (
     <div
       css={{
         display: 'grid',
-        grid: `${gridSize * 7}px 1fr 50px / 200px 1fr`,
+        minHeight: '100vh',
+        grid: `${gridSize * 7}px 1fr 50px / ${gridSize * 40}px 1fr`,
         gridTemplateAreas: `"head head"
                         "nav main"
                         "nav foot"`,
@@ -33,7 +35,10 @@ const Layout = ({ children, SideNavContents = () => <div /> }) => (
       <div
         css={{
           gridArea: 'nav',
+          borderRight: `1px solid ${N30}`,
           paddingTop: gridSize * 2,
+          overflowY: 'auto',
+          maxHeight: 'calc(100vh - 56px)',
         }}
       >
         <SideNavContents />
