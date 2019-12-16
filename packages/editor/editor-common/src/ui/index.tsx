@@ -50,3 +50,9 @@ export {
   ExpandIconWrapper,
   ExpandLayoutWrapper,
 } from './Expand';
+
+export {
+  IframeWidthObserverFallbackWrapper,
+  IframeWrapperConsumer,
+  WidthObserver,
+} from './WidthObserver';
