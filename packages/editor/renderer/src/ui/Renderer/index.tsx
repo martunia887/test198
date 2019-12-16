@@ -17,6 +17,8 @@ import {
   getResponseEndTime,
   startMeasure,
   stopMeasure,
+  IframeWidthObserverFallbackWrapper,
+  IframeWrapperConsumer,
 } from '@atlaskit/editor-common';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
@@ -309,19 +311,50 @@ type RendererWrapperProps = {
   wrapperRef?: (instance: React.RefObject<HTMLElement>) => void;
 } & { children?: React.ReactNode };
 
-export function RendererWrapper({
-  appearance,
-  children,
-  dynamicTextSizing,
-  wrapperRef,
-}: RendererWrapperProps) {
+const RendererWithIframeFallbackWrapper = React.memo(
+  (props: RendererWrapperProps & { subscribe: Function | null }) => {
+    const {
+      dynamicTextSizing,
+      wrapperRef,
+      appearance,
+      children,
+      subscribe,
+    } = props;
+    const renderer = (
+      <WidthProvider>
+        <BaseTheme dynamicTextSizing={dynamicTextSizing}>
+          <Wrapper innerRef={wrapperRef} appearance={appearance}>
+            {children}
+          </Wrapper>
+        </BaseTheme>
+      </WidthProvider>
+    );
+
+    if (!subscribe) {
+      return (
+        <IframeWidthObserverFallbackWrapper>
+          {renderer}
+        </IframeWidthObserverFallbackWrapper>
+      );
+    }
+
+    return renderer;
+  },
+);
+
+/**
+ * When the product doesn't provide a IframeWidthObserverFallbackWrapper,
+ * we will give one to the renderer,
+ *
+ * so if we have more than one `WidthProvider` on the content,
+ * only one iframe will be created on the older browsers.
+ */
+export function RendererWrapper(props: RendererWrapperProps) {
   return (
-    <WidthProvider>
-      <BaseTheme dynamicTextSizing={dynamicTextSizing}>
-        <Wrapper innerRef={wrapperRef} appearance={appearance}>
-          {children}
-        </Wrapper>
-      </BaseTheme>
-    </WidthProvider>
+    <IframeWrapperConsumer>
+      {({ subscribe }) => (
+        <RendererWithIframeFallbackWrapper {...props} subscribe={subscribe} />
+      )}
+    </IframeWrapperConsumer>
   );
 }
