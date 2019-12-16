@@ -348,14 +348,14 @@ describe('CollectionFetcher', () => {
     it('should propagate the change in cached observable', async () => {
       const { collectionFetcher } = setup();
 
-      const updatedItems = await new Promise(async resolve => {
+      const updatedItems = await new Promise(resolve => {
         collectionCache['some-collection-name'].subject.subscribe({
           next: items => {
             resolve(items);
           },
         });
 
-        await collectionFetcher.removeFile(
+        collectionFetcher.removeFile(
           'some-id',
           'some-collection-name',
           'some-occurrence-key',

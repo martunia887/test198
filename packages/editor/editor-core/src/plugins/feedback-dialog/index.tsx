@@ -25,35 +25,33 @@ const hashFeedbackInfo = (feedbackInfo: FeedbackInfo): string => {
   return [product, packageName, packageVersion, ...(labels || [])].join('|');
 };
 
-export const openFeedbackDialog = async (feedbackInfo?: FeedbackInfo) =>
-  new Promise(async (resolve, reject) => {
-    const combinedFeedbackInfo = {
-      ...defaultFeedbackInfo,
-      ...feedbackInfo,
-    };
-    const newFeedbackInfoHash = hashFeedbackInfo(combinedFeedbackInfo);
-    if (!showJiraCollectorDialog || feedbackInfoHash !== newFeedbackInfoHash) {
-      try {
-        showJiraCollectorDialog = await loadJiraCollectorDialogScript(
-          [
-            combinedFeedbackInfo.product || 'n/a',
-            ...(combinedFeedbackInfo.labels || []),
-          ],
-          combinedFeedbackInfo.packageName || '',
-          coreVersion,
-          combinedFeedbackInfo.packageVersion || '',
-        );
+export const openFeedbackDialog = async (feedbackInfo?: FeedbackInfo) => {
+  const combinedFeedbackInfo = {
+    ...defaultFeedbackInfo,
+    ...feedbackInfo,
+  };
+  const newFeedbackInfoHash = hashFeedbackInfo(combinedFeedbackInfo);
+  if (!showJiraCollectorDialog || feedbackInfoHash !== newFeedbackInfoHash) {
+    try {
+      showJiraCollectorDialog = await loadJiraCollectorDialogScript(
+        [
+          combinedFeedbackInfo.product || 'n/a',
+          ...(combinedFeedbackInfo.labels || []),
+        ],
+        combinedFeedbackInfo.packageName || '',
+        coreVersion,
+        combinedFeedbackInfo.packageVersion || '',
+      );
 
-        feedbackInfoHash = newFeedbackInfoHash;
-      } catch (err) {
-        reject(err);
-      }
+      feedbackInfoHash = newFeedbackInfoHash;
+    } catch (err) {
+      return Promise.reject(err);
     }
-
-    const timeoutId = window.setTimeout(showJiraCollectorDialog, 0);
-    // Return the timoutId for consumers to call clearTimeout if they need to.
-    resolve(timeoutId);
-  });
+  }
+  const timeoutId = window.setTimeout(showJiraCollectorDialog, 0);
+  // Return the timoutId for consumers to call clearTimeout if they need to.
+  return Promise.resolve(timeoutId);
+};
 
 const feedbackDialog = (feedbackInfo: FeedbackInfo): EditorPlugin => {
   defaultFeedbackInfo = feedbackInfo;

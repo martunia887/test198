@@ -132,7 +132,8 @@ const getPreviewByService = (
       });
     }
   } else if (serviceName === 'recent_files' && isPreviewableType(mediaType)) {
-    return new Promise<FilePreview>(async resolve => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise<FilePreview>(async (resolve, reject) => {
       // We fetch a good size image, since it can be opened later on in MV
       const blob = await userMediaClient.getImage(
         fileId,
@@ -143,7 +144,6 @@ const getPreviewByService = (
         undefined,
         true,
       );
-
       resolve({ value: blob });
     });
   }

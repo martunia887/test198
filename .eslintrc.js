@@ -142,8 +142,7 @@ module.exports = {
 
     'spaced-comment': 'off',
 
-    'no-async-promise-executor': 'off', // ~11
-    'no-await-in-loop': 'off',
+    'no-await-in-loop': 'off', // ~37
 
     'no-mixed-operators': 'off',
     'no-plusplus': 'off',

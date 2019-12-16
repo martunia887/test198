@@ -292,13 +292,14 @@ export class FileFetcherImpl implements FileFetcher {
     const deferredBlob = fetch(url)
       .then(response => response.blob())
       .catch(() => undefined);
-    const preview = new Promise<FilePreview>(async (resolve, reject) => {
-      const blob = await deferredBlob;
-      if (!blob) {
-        reject('Could not fetch the blob');
-      }
 
-      resolve({ value: blob as Blob });
+    const preview = new Promise<FilePreview>((resolve, reject) => {
+      return deferredBlob
+        .then(blob => {
+          if (blob) return resolve({ value: blob as Blob });
+          return reject('Could not fetch the blob');
+        })
+        .catch(error => reject(error));
     });
     const name = url.split('/').pop() || '';
     // we create a initial fileState with the minimum info that we have at this point
@@ -316,39 +317,43 @@ export class FileFetcherImpl implements FileFetcher {
     // we save it into the cache as soon as possible, in case someone subscribes
     getFileStreamsCache().set(id, subject);
 
-    return new Promise<ExternalUploadPayload>(async (resolve, reject) => {
-      const blob = await deferredBlob;
-      if (!blob) {
-        return reject('Could not download remote file');
-      }
+    return new Promise<ExternalUploadPayload>((resolve, reject) => {
+      return deferredBlob
+        .then(blob => {
+          if (!blob) return reject('Could not download remote file');
+          const { type, size } = blob;
+          const file: UploadableFile = {
+            content: blob,
+            mimeType: type,
+            collection,
+            name,
+          };
+          const mediaType = getMediaTypeFromMimeType(type);
 
-      const { type, size } = blob;
-      const file: UploadableFile = {
-        content: blob,
-        mimeType: type,
-        collection,
-        name,
-      };
-      const mediaType = getMediaTypeFromMimeType(type);
+          // we emit a richer state after the blob is fetched
+          subject.next({
+            status: 'processing',
+            name,
+            size,
+            mediaType,
+            mimeType: type,
+            id,
+            occurrenceKey,
+            preview,
+          });
+          // we don't want to wait for the file to be upload
+          this.upload(file, undefined, uploadableFileUpfrontIds);
 
-      // we emit a richer state after the blob is fetched
-      subject.next({
-        status: 'processing',
-        name,
-        size,
-        mediaType,
-        mimeType: type,
-        id,
-        occurrenceKey,
-        preview,
-      });
-      // we don't want to wait for the file to be upload
-      this.upload(file, undefined, uploadableFileUpfrontIds);
-      const dimensions = await getDimensionsFromBlob(blob);
-      resolve({
-        dimensions,
-        uploadableFileUpfrontIds,
-      });
+          return getDimensionsFromBlob(blob)
+            .then(dimensions =>
+              resolve({
+                dimensions,
+                uploadableFileUpfrontIds,
+              }),
+            )
+            .catch(error => reject(error));
+        })
+        .catch(error => reject(error));
     });
   }
 

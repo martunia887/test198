@@ -119,71 +119,68 @@ async function rerunFailedTests(results) {
   return runJest(failingTestPaths);
 }
 
-function runTestsWithRetry() {
-  return new Promise(async resolve => {
-    let results;
-    let code = 0;
-    try {
-      results = await runJest();
-      const perfStats = results.testResults
-        .filter(result => {
-          const timeTaken =
-            (result.perfStats.end - result.perfStats.start) / 3600;
-          return timeTaken > LONG_RUNNING_TESTS_THRESHOLD_SECS;
-        })
-        .map(result => {
-          return {
-            testFilePath: result.testFilePath.replace(process.cwd(), ''),
-            timeTaken: +(
-              (result.perfStats.end - result.perfStats.start) /
-              3600
-            ).toFixed(2),
-          };
-        });
+async function runTestsWithRetry() {
+  let results;
+  let code = 0;
+  try {
+    results = await runJest();
+    const perfStats = results.testResults
+      .filter(result => {
+        const timeTaken =
+          (result.perfStats.end - result.perfStats.start) / 3600;
+        return timeTaken > LONG_RUNNING_TESTS_THRESHOLD_SECS;
+      })
+      .map(result => {
+        return {
+          testFilePath: result.testFilePath.replace(process.cwd(), ''),
+          timeTaken: +(
+            (result.perfStats.end - result.perfStats.start) /
+            3600
+          ).toFixed(2),
+        };
+      });
 
-      if (perfStats.length) {
-        await reporting.reportLongRunningTests(
-          perfStats,
-          LONG_RUNNING_TESTS_THRESHOLD_SECS,
-        );
-      }
-
-      code = getExitCode(results);
-
-      // Only retry and report results in CI.
-      if (code !== 0 && process.env.CI) {
-        let snapshotsAdded = false;
-        if (results.testResults) {
-          snapshotsAdded =
-            results.testResults.filter(testResult =>
-              isSnapshotAddedFailure(testResult),
-            ).length > 0;
-        }
-        results = await rerunFailedTests(results);
-
-        code = snapshotsAdded ? 1 : getExitCode(results);
-
-        /**
-         * If the re-run succeeds,
-         * log the previously failed tests to indicate flakiness
-         */
-        if (code === 0) {
-          await reporting.reportInconsistency(results);
-        } else {
-          await reporting.reportFailure(
-            results,
-            'atlaskit.qa.integration_test.failure',
-          );
-        }
-      }
-    } catch (err) {
-      console.error(err.toString());
-      resolve(1);
-      return;
+    if (perfStats.length) {
+      await reporting.reportLongRunningTests(
+        perfStats,
+        LONG_RUNNING_TESTS_THRESHOLD_SECS,
+      );
     }
 
-    resolve(code);
-  });
+    code = getExitCode(results);
+
+    // Only retry and report results in CI.
+    if (code !== 0 && process.env.CI) {
+      let snapshotsAdded = false;
+      if (results.testResults) {
+        snapshotsAdded =
+          results.testResults.filter(testResult =>
+            isSnapshotAddedFailure(testResult),
+          ).length > 0;
+      }
+      results = await rerunFailedTests(results);
+
+      code = snapshotsAdded ? 1 : getExitCode(results);
+
+      /**
+       * If the re-run succeeds,
+       * log the previously failed tests to indicate flakiness
+       */
+      if (code === 0) {
+        await reporting.reportInconsistency(results);
+      } else {
+        await reporting.reportFailure(
+          results,
+          'atlaskit.qa.integration_test.failure',
+        );
+      }
+    }
+  } catch (err) {
+    console.error(err.toString());
+    return Promise.resolve(1);
+  }
+
+  return Promise.resolve(code);
 }
 
 function initClient() {

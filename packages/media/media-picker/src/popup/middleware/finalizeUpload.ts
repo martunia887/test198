@@ -66,56 +66,55 @@ const emitProcessedState = async (
   destinationFile: MediaClientFile,
   store: Store<State>,
 ) => {
-  return new Promise(async resolve => {
+  return new Promise((resolve, reject) => {
     const { tenantMediaClient, config } = store.getState();
     const collection = config.uploadParams && config.uploadParams.collection;
     const tenantSubject = tenantMediaClient.file.getFileState(
       destinationFile.id,
     ) as ReplaySubject<FileState>;
-    const response = (
-      await tenantMediaClient.mediaStore.getItems(
-        [destinationFile.id],
-        collection,
-      )
-    ).data;
-    const firstItem = response.items[0];
 
-    // We need this check since the return type of getFileState might not be a ReplaySubject and won't have "next"
-    if (
-      firstItem &&
-      firstItem.details.processingStatus === 'succeeded' &&
-      tenantSubject &&
-      tenantSubject.next
-    ) {
-      const subscription = tenantSubject.subscribe({
-        next(currentState) {
-          safeUnsubscribe(subscription);
-          setTimeout(() => {
-            const {
-              artifacts,
-              mediaType,
-              mimeType,
-              name,
-              size,
-              representations,
-            } = firstItem.details;
-            // we emit a new state which extends the existing one + the remote fields
-            // fields like "artifacts" will be later on required on MV and we don't have it locally beforehand
-            tenantSubject.next({
-              ...currentState,
-              status: 'processed',
-              artifacts,
-              mediaType,
-              mimeType,
-              name,
-              size,
-              representations,
-            });
-            resolve();
-          }, 0);
-        },
-      });
-    }
+    tenantMediaClient.mediaStore
+      .getItems([destinationFile.id], collection)
+      .then(({ data: response }) => {
+        const firstItem = response.items[0];
+        // We need this check since the return type of getFileState might not be a ReplaySubject and won't have "next"
+        if (
+          firstItem &&
+          firstItem.details.processingStatus === 'succeeded' &&
+          tenantSubject &&
+          tenantSubject.next
+        ) {
+          const subscription = tenantSubject.subscribe({
+            next(currentState) {
+              safeUnsubscribe(subscription);
+              setTimeout(() => {
+                const {
+                  artifacts,
+                  mediaType,
+                  mimeType,
+                  name,
+                  size,
+                  representations,
+                } = firstItem.details;
+                // we emit a new state which extends the existing one + the remote fields
+                // fields like "artifacts" will be later on required on MV and we don't have it locally beforehand
+                tenantSubject.next({
+                  ...currentState,
+                  status: 'processed',
+                  artifacts,
+                  mediaType,
+                  mimeType,
+                  name,
+                  size,
+                  representations,
+                });
+                resolve();
+              }, 0);
+            },
+          });
+        }
+      })
+      .catch(error => reject(error));
   });
 };
 

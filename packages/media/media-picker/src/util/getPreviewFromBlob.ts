@@ -6,7 +6,7 @@ export const getPreviewFromBlob = (
   file: Blob,
   mediaType: MediaType,
 ): Promise<Preview> =>
-  new Promise(async (resolve, reject) => {
+  new Promise((resolve, reject) => {
     const src = URL.createObjectURL(file);
 
     if (mediaType === 'image') {
@@ -27,15 +27,19 @@ export const getPreviewFromBlob = (
       img.onerror = reject;
     } else if (mediaType === 'video') {
       const snapshoter = new VideoSnapshot(file);
-      const dimensions = await snapshoter.getDimensions();
-      const preview: ImagePreview = {
-        file,
-        dimensions,
-        scaleFactor: 1,
-      };
+      snapshoter
+        .getDimensions()
+        .then(dimensions => {
+          const preview: ImagePreview = {
+            file,
+            dimensions,
+            scaleFactor: 1,
+          };
 
-      snapshoter.end();
-      resolve(preview);
+          snapshoter.end();
+          resolve(preview);
+        })
+        .catch(error => reject(error));
     } else {
       resolve({ file });
     }

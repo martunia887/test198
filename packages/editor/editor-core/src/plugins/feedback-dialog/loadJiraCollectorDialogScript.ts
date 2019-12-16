@@ -17,7 +17,7 @@ const loadJiraCollectorDialogScript = (
   coreVersion: string,
   packageVersion: string,
 ): Promise<() => void> => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (window.jQuery) {
       window.ATL_JQ_PAGE_PROPS = {
         triggerFunction: (showCollectorDialog: () => void) => {

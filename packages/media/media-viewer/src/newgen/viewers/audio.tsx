@@ -126,7 +126,7 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
   }
 
   private loadCover = (coverUrl: string) => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const img = new Image();
 
       img.src = coverUrl;
