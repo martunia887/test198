@@ -1683,6 +1683,999 @@ exports[`Renderer - EmailSerializer should render media single correctly: html 1
 </div>
 `;
 
+exports[`Renderer - EmailSerializer should render nested task list correctly with mock enabled: mock-embeddedImages 1`] = `Array []`;
+
+exports[`Renderer - EmailSerializer should render nested task list correctly with mock enabled: mock-html 1`] = `
+<div
+  class="csg-wrapper"
+  style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; line-height: 24px; vertical-align: baseline;"
+>
+  <div
+    class="csg-taskList"
+    style="margin-top: 12px;"
+  >
+    <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      class=" csg-commonTable"
+      style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+      width="100%"
+    >
+      <tbody>
+        <tr>
+          <td
+            class="csg-taskItem-wrapper"
+            style="padding: 4px 0px 4px 0;"
+          >
+            <table
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              class="csg-taskItem-mainContent csg-commonTable"
+              style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+              width="100%"
+            >
+              <tbody>
+                <tr>
+                  <td
+                    class="csg-taskItem-iconTd"
+                    height="24"
+                    style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                    valign="top"
+                    width="24"
+                  >
+                    <img
+                      class="csg-taskItem-img"
+                      height="16"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABo0lEQVRoBe2aPU7DQBCFdxcb7IhISKTBhQvEj6i4glsKOu4AR4ATwBHgDnQUSFS5AwUiUKUIEj8SUkic4NUuHkdW0iTNQ2aNZgvHnmhm33xvXK2lKFeSeM2OWNNKrVjP+GXYpV+pVeYZM+7viE/RbmvSJguB0WEjDNKWNVq5JHieFqk8k47Cd9G7GUqRkw+7XlSKv74839rd3ojz1ibNzatSddwK+/j00j06OXumrYsmYt2TzShpZctilYIfD7enjSA4pntX13A0ulrfO7ggff63+FI08/RA5F0XTzpJI2mle9Kuyhe2GBuK1mCVWkn79KV1beYXgZzROm1gUYLD/3EDf20OO8AOgAR4hECAcDo7ACMEC7ADIEA4nR2AEYIF2AEQIJzODsAIwQLsAAgQTmcHYIRgAXYABAinswMwQrAAOwAChNPZARghWIAdAAHC6ewAjBAs8I8cyM9hQRjVpc9oVXR8TzvTIXJ1CrCdSq2kvfYH3fX/1KAws8YfeywVDfQ7md6PB+GrUNYqmV8ncWxUfz2bZt7XNh1smjdxfzemDX4AMpiOvlfrSYUAAAAASUVORK5CYII="
+                      style="width: 16px; height: 16px;"
+                      width="16"
+                    />
+                  </td>
+                  <td
+                    class="csg-taskItem-textTd"
+                    style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                  >
+                    just text
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      class="csg-taskList csg-nestedTaskList"
+      style="margin-top: 0px; margin-left: 48px;"
+    >
+      <table
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        class=" csg-commonTable"
+        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+        width="100%"
+      >
+        <tbody>
+          <tr>
+            <td
+              class="csg-taskItem-wrapper"
+              style="padding: 4px 0px 4px 0;"
+            >
+              <table
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                class="csg-taskItem-mainContent csg-commonTable"
+                style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      class="csg-taskItem-iconTd"
+                      height="24"
+                      style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                      valign="top"
+                      width="24"
+                    >
+                      <img
+                        class="csg-taskItem-img"
+                        height="16"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABo0lEQVRoBe2aPU7DQBCFdxcb7IhISKTBhQvEj6i4glsKOu4AR4ATwBHgDnQUSFS5AwUiUKUIEj8SUkic4NUuHkdW0iTNQ2aNZgvHnmhm33xvXK2lKFeSeM2OWNNKrVjP+GXYpV+pVeYZM+7viE/RbmvSJguB0WEjDNKWNVq5JHieFqk8k47Cd9G7GUqRkw+7XlSKv74839rd3ojz1ibNzatSddwK+/j00j06OXumrYsmYt2TzShpZctilYIfD7enjSA4pntX13A0ulrfO7ggff63+FI08/RA5F0XTzpJI2mle9Kuyhe2GBuK1mCVWkn79KV1beYXgZzROm1gUYLD/3EDf20OO8AOgAR4hECAcDo7ACMEC7ADIEA4nR2AEYIF2AEQIJzODsAIwQLsAAgQTmcHYIRgAXYABAinswMwQrAAOwAChNPZARghWIAdAAHC6ewAjBAs8I8cyM9hQRjVpc9oVXR8TzvTIXJ1CrCdSq2kvfYH3fX/1KAws8YfeywVDfQ7md6PB+GrUNYqmV8ncWxUfz2bZt7XNh1smjdxfzemDX4AMpiOvlfrSYUAAAAASUVORK5CYII="
+                        style="width: 16px; height: 16px;"
+                        width="16"
+                      />
+                    </td>
+                    <td
+                      class="csg-taskItem-textTd"
+                      style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                    >
+                      <span
+                        class="csg-mention"
+                        style="background: #EFEFF2; border: 1px solid transparent; border-radius: 20px; color: #42526E; padding: 0 4px 2px 3px; white-space: nowrap;"
+                      >
+                        @Carolyn
+                      </span>
+                        with mention
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        class="csg-taskList csg-nestedTaskList"
+        style="margin-top: 0px; margin-left: 48px;"
+      >
+        <table
+          border="0"
+          cellpadding="0"
+          cellspacing="0"
+          class=" csg-commonTable"
+          style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+          width="100%"
+        >
+          <tbody>
+            <tr>
+              <td
+                class="csg-taskItem-wrapper"
+                style="padding: 4px 0px 4px 0;"
+              >
+                <table
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  class="csg-taskItem-mainContent csg-commonTable"
+                  style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                  width="100%"
+                >
+                  <tbody>
+                    <tr>
+                      <td
+                        class="csg-taskItem-iconTd"
+                        height="24"
+                        style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                        valign="top"
+                        width="24"
+                      >
+                        <img
+                          class="csg-taskItem-img"
+                          height="16"
+                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABo0lEQVRoBe2aPU7DQBCFdxcb7IhISKTBhQvEj6i4glsKOu4AR4ATwBHgDnQUSFS5AwUiUKUIEj8SUkic4NUuHkdW0iTNQ2aNZgvHnmhm33xvXK2lKFeSeM2OWNNKrVjP+GXYpV+pVeYZM+7viE/RbmvSJguB0WEjDNKWNVq5JHieFqk8k47Cd9G7GUqRkw+7XlSKv74839rd3ojz1ibNzatSddwK+/j00j06OXumrYsmYt2TzShpZctilYIfD7enjSA4pntX13A0ulrfO7ggff63+FI08/RA5F0XTzpJI2mle9Kuyhe2GBuK1mCVWkn79KV1beYXgZzROm1gUYLD/3EDf20OO8AOgAR4hECAcDo7ACMEC7ADIEA4nR2AEYIF2AEQIJzODsAIwQLsAAgQTmcHYIRgAXYABAinswMwQrAAOwAChNPZARghWIAdAAHC6ewAjBAs8I8cyM9hQRjVpc9oVXR8TzvTIXJ1CrCdSq2kvfYH3fX/1KAws8YfeywVDfQ7md6PB+GrUNYqmV8ncWxUfz2bZt7XNh1smjdxfzemDX4AMpiOvlfrSYUAAAAASUVORK5CYII="
+                          style="width: 16px; height: 16px;"
+                          width="16"
+                        />
+                      </td>
+                      <td
+                        class="csg-taskItem-textTd"
+                        style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                      >
+                        <span
+                          class="csg-date csg-date-red"
+                          style="border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; box-sizing: border-box; display: inline-block; font-size: 14px; font-weight: 400; line-height: 1; max-width: 100%; vertical-align: baseline; border-width: 3px; padding: 2px 4px 3px 4px; background-color: #FFEBE6; color: #BF2600;"
+                        >
+                          05 Apr 2019
+                        </span>
+                         with date
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          class="csg-taskList csg-nestedTaskList"
+          style="margin-top: 0px; margin-left: 48px;"
+        >
+          <table
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            class=" csg-commonTable"
+            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+            width="100%"
+          >
+            <tbody>
+              <tr>
+                <td
+                  class="csg-taskItem-wrapper"
+                  style="padding: 4px 0px 4px 0;"
+                >
+                  <table
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    class="csg-taskItem-mainContent csg-commonTable"
+                    style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                    width="100%"
+                  >
+                    <tbody>
+                      <tr>
+                        <td
+                          class="csg-taskItem-iconTd"
+                          height="24"
+                          style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                          valign="top"
+                          width="24"
+                        >
+                          <img
+                            class="csg-taskItem-img"
+                            height="16"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABo0lEQVRoBe2aPU7DQBCFdxcb7IhISKTBhQvEj6i4glsKOu4AR4ATwBHgDnQUSFS5AwUiUKUIEj8SUkic4NUuHkdW0iTNQ2aNZgvHnmhm33xvXK2lKFeSeM2OWNNKrVjP+GXYpV+pVeYZM+7viE/RbmvSJguB0WEjDNKWNVq5JHieFqk8k47Cd9G7GUqRkw+7XlSKv74839rd3ojz1ibNzatSddwK+/j00j06OXumrYsmYt2TzShpZctilYIfD7enjSA4pntX13A0ulrfO7ggff63+FI08/RA5F0XTzpJI2mle9Kuyhe2GBuK1mCVWkn79KV1beYXgZzROm1gUYLD/3EDf20OO8AOgAR4hECAcDo7ACMEC7ADIEA4nR2AEYIF2AEQIJzODsAIwQLsAAgQTmcHYIRgAXYABAinswMwQrAAOwAChNPZARghWIAdAAHC6ewAjBAs8I8cyM9hQRjVpc9oVXR8TzvTIXJ1CrCdSq2kvfYH3fX/1KAws8YfeywVDfQ7md6PB+GrUNYqmV8ncWxUfz2bZt7XNh1smjdxfzemDX4AMpiOvlfrSYUAAAAASUVORK5CYII="
+                            style="width: 16px; height: 16px;"
+                            width="16"
+                          />
+                        </td>
+                        <td
+                          class="csg-taskItem-textTd"
+                          style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                        >
+                          with emoji 🙂 
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="csg-taskList"
+    style="margin-top: 12px;"
+  >
+    <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      class=" csg-commonTable"
+      style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+      width="100%"
+    >
+      <tbody>
+        <tr>
+          <td
+            class="csg-taskItem-wrapper"
+            style="padding: 4px 0px 4px 0;"
+          >
+            <table
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              class="csg-taskItem-mainContent csg-commonTable"
+              style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+              width="100%"
+            >
+              <tbody>
+                <tr>
+                  <td
+                    class="csg-taskItem-iconTd"
+                    height="24"
+                    style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                    valign="top"
+                    width="24"
+                  >
+                    <img
+                      class="csg-taskItem-img"
+                      height="16"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC+UlEQVRoBe2aTWgTQRTH/7tJLJIaxR4M1JutIBZabKoieBGk+IFowF4ET4J61rZoQcGilx4ED1JvftwsTRQR9K7QQ4sUAtUWD0KxCEVraRVp4jpvtxubZSczu3G/ZAeSyezOm/3933szmYRRYJYzk2ehYIg1O9grYV4OWV1hPCVouI1ibozYFB0wPzUKaBf1z1F5UzCK8dxlBYbnn0aFu4ZTQ5+6njY11yPTYCmvMljK+aiWDhIQ1gkr49QECYh0iQUEHb44AnEEGvRA5FMo2aAD/on5/vY0Bk9n0dqSwtv3KxgeW8DSKu3bxCVwAcf2bUVxYBeaUsa+8gATc3hPMw5d/4ByRRMqCDSFCP7Z4F94k7anLY2jnRmzWbcOTIAJvylpeN5Kmd0mlxyBCDi+7nke/G+WOW9mVqyabNu+CyD4IksbHjxRXn00j7mFX7bA1ou+CpCBH3g8j7svvlg5uW3fBJzoFnue4Eeey8OTKkcCFDbfWrYkkUrYTzyemwi+wJbKemnjBt6RgIO705i5txeLDzvx7UkXruWzIEGi4iU8PVtqrdrenMTLoTZQTSXdpOLOuVY9Gv0s7Brn+8ZreGKRSqHerkwVnozMcuXUDoyc32kbiZM579LGfD7VUgI4DtbHsRNB8OP93uT8RnhpAa/efcfictlqW21vFOEnPAEoyE/Wc3AVkibx6xvtyGzm/4lRmFgCCfBitamCWD5ICyA7GRGW8WuabpfKmkEsDak5YNpMzK6i99Ycln/K7dVNO6q9gKdxHQkgAzcivIJ3JcCpCC/hXQuQFeE1fEMCRCL8gG9YgCniyM1ZTH38QU18/rqGC/c/Od5V6sYu3hwto6LxaZdaZj+neHsjkb2b+1KbOdmB1yT+RZAdS7af42VUdmC/+sUC/PI07zlxBHie8ev6fxEB51tLv9wrfk6FIlAS9wttj5KqH5wILZ8AjB36UI1TH8oDQdfw3abDHuzEijGJC92XWCT6GOU0e4V5ThDbtM7KTqqQV/8AG6v0NgjN/m0AAAAASUVORK5CYII="
+                      style="width: 16px; height: 16px;"
+                      width="16"
+                    />
+                  </td>
+                  <td
+                    class="csg-taskItem-textTd"
+                    style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                  >
+                    ticked off plain text
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      class="csg-taskList csg-nestedTaskList"
+      style="margin-top: 0px; margin-left: 48px;"
+    >
+      <table
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        class=" csg-commonTable"
+        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+        width="100%"
+      >
+        <tbody>
+          <tr>
+            <td
+              class="csg-taskItem-wrapper"
+              style="padding: 4px 0px 4px 0;"
+            >
+              <table
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                class="csg-taskItem-mainContent csg-commonTable"
+                style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      class="csg-taskItem-iconTd"
+                      height="24"
+                      style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                      valign="top"
+                      width="24"
+                    >
+                      <img
+                        class="csg-taskItem-img"
+                        height="16"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC+UlEQVRoBe2aTWgTQRTH/7tJLJIaxR4M1JutIBZabKoieBGk+IFowF4ET4J61rZoQcGilx4ED1JvftwsTRQR9K7QQ4sUAtUWD0KxCEVraRVp4jpvtxubZSczu3G/ZAeSyezOm/3933szmYRRYJYzk2ehYIg1O9grYV4OWV1hPCVouI1ibozYFB0wPzUKaBf1z1F5UzCK8dxlBYbnn0aFu4ZTQ5+6njY11yPTYCmvMljK+aiWDhIQ1gkr49QECYh0iQUEHb44AnEEGvRA5FMo2aAD/on5/vY0Bk9n0dqSwtv3KxgeW8DSKu3bxCVwAcf2bUVxYBeaUsa+8gATc3hPMw5d/4ByRRMqCDSFCP7Z4F94k7anLY2jnRmzWbcOTIAJvylpeN5Kmd0mlxyBCDi+7nke/G+WOW9mVqyabNu+CyD4IksbHjxRXn00j7mFX7bA1ou+CpCBH3g8j7svvlg5uW3fBJzoFnue4Eeey8OTKkcCFDbfWrYkkUrYTzyemwi+wJbKemnjBt6RgIO705i5txeLDzvx7UkXruWzIEGi4iU8PVtqrdrenMTLoTZQTSXdpOLOuVY9Gv0s7Brn+8ZreGKRSqHerkwVnozMcuXUDoyc32kbiZM579LGfD7VUgI4DtbHsRNB8OP93uT8RnhpAa/efcfictlqW21vFOEnPAEoyE/Wc3AVkibx6xvtyGzm/4lRmFgCCfBitamCWD5ICyA7GRGW8WuabpfKmkEsDak5YNpMzK6i99Ycln/K7dVNO6q9gKdxHQkgAzcivIJ3JcCpCC/hXQuQFeE1fEMCRCL8gG9YgCniyM1ZTH38QU18/rqGC/c/Od5V6sYu3hwto6LxaZdaZj+neHsjkb2b+1KbOdmB1yT+RZAdS7af42VUdmC/+sUC/PI07zlxBHie8ev6fxEB51tLv9wrfk6FIlAS9wttj5KqH5wILZ8AjB36UI1TH8oDQdfw3abDHuzEijGJC92XWCT6GOU0e4V5ThDbtM7KTqqQV/8AG6v0NgjN/m0AAAAASUVORK5CYII="
+                        style="width: 16px; height: 16px;"
+                        width="16"
+                      />
+                    </td>
+                    <td
+                      class="csg-taskItem-textTd"
+                      style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                    >
+                      <span
+                        class="csg-mention"
+                        style="background: #EFEFF2; border: 1px solid transparent; border-radius: 20px; color: #42526E; padding: 0 4px 2px 3px; white-space: nowrap;"
+                      >
+                        @Carolyn
+                      </span>
+                       ticked off mention
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        class="csg-taskList csg-nestedTaskList"
+        style="margin-top: 0px; margin-left: 48px;"
+      >
+        <table
+          border="0"
+          cellpadding="0"
+          cellspacing="0"
+          class=" csg-commonTable"
+          style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+          width="100%"
+        >
+          <tbody>
+            <tr>
+              <td
+                class="csg-taskItem-wrapper"
+                style="padding: 4px 0px 4px 0;"
+              >
+                <table
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  class="csg-taskItem-mainContent csg-commonTable"
+                  style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                  width="100%"
+                >
+                  <tbody>
+                    <tr>
+                      <td
+                        class="csg-taskItem-iconTd"
+                        height="24"
+                        style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                        valign="top"
+                        width="24"
+                      >
+                        <img
+                          class="csg-taskItem-img"
+                          height="16"
+                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC+UlEQVRoBe2aTWgTQRTH/7tJLJIaxR4M1JutIBZabKoieBGk+IFowF4ET4J61rZoQcGilx4ED1JvftwsTRQR9K7QQ4sUAtUWD0KxCEVraRVp4jpvtxubZSczu3G/ZAeSyezOm/3933szmYRRYJYzk2ehYIg1O9grYV4OWV1hPCVouI1ibozYFB0wPzUKaBf1z1F5UzCK8dxlBYbnn0aFu4ZTQ5+6njY11yPTYCmvMljK+aiWDhIQ1gkr49QECYh0iQUEHb44AnEEGvRA5FMo2aAD/on5/vY0Bk9n0dqSwtv3KxgeW8DSKu3bxCVwAcf2bUVxYBeaUsa+8gATc3hPMw5d/4ByRRMqCDSFCP7Z4F94k7anLY2jnRmzWbcOTIAJvylpeN5Kmd0mlxyBCDi+7nke/G+WOW9mVqyabNu+CyD4IksbHjxRXn00j7mFX7bA1ou+CpCBH3g8j7svvlg5uW3fBJzoFnue4Eeey8OTKkcCFDbfWrYkkUrYTzyemwi+wJbKemnjBt6RgIO705i5txeLDzvx7UkXruWzIEGi4iU8PVtqrdrenMTLoTZQTSXdpOLOuVY9Gv0s7Brn+8ZreGKRSqHerkwVnozMcuXUDoyc32kbiZM579LGfD7VUgI4DtbHsRNB8OP93uT8RnhpAa/efcfictlqW21vFOEnPAEoyE/Wc3AVkibx6xvtyGzm/4lRmFgCCfBitamCWD5ICyA7GRGW8WuabpfKmkEsDak5YNpMzK6i99Ycln/K7dVNO6q9gKdxHQkgAzcivIJ3JcCpCC/hXQuQFeE1fEMCRCL8gG9YgCniyM1ZTH38QU18/rqGC/c/Od5V6sYu3hwto6LxaZdaZj+neHsjkb2b+1KbOdmB1yT+RZAdS7af42VUdmC/+sUC/PI07zlxBHie8ev6fxEB51tLv9wrfk6FIlAS9wttj5KqH5wILZ8AjB36UI1TH8oDQdfw3abDHuzEijGJC92XWCT6GOU0e4V5ThDbtM7KTqqQV/8AG6v0NgjN/m0AAAAASUVORK5CYII="
+                          style="width: 16px; height: 16px;"
+                          width="16"
+                        />
+                      </td>
+                      <td
+                        class="csg-taskItem-textTd"
+                        style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                      >
+                        <span
+                          class="csg-date csg-date-neutral"
+                          style="border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; box-sizing: border-box; display: inline-block; font-size: 14px; font-weight: 400; line-height: 1; max-width: 100%; vertical-align: baseline; border-width: 3px; padding: 2px 4px 3px 4px; background-color: #DFE1E6; color: #42526E;"
+                        >
+                          05 Apr 2019
+                        </span>
+                         ticked off date
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          class="csg-taskList csg-nestedTaskList"
+          style="margin-top: 0px; margin-left: 48px;"
+        >
+          <table
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            class=" csg-commonTable"
+            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+            width="100%"
+          >
+            <tbody>
+              <tr>
+                <td
+                  class="csg-taskItem-wrapper"
+                  style="padding: 4px 0px 4px 0;"
+                >
+                  <table
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    class="csg-taskItem-mainContent csg-commonTable"
+                    style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                    width="100%"
+                  >
+                    <tbody>
+                      <tr>
+                        <td
+                          class="csg-taskItem-iconTd"
+                          height="24"
+                          style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                          valign="top"
+                          width="24"
+                        >
+                          <img
+                            class="csg-taskItem-img"
+                            height="16"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC+UlEQVRoBe2aTWgTQRTH/7tJLJIaxR4M1JutIBZabKoieBGk+IFowF4ET4J61rZoQcGilx4ED1JvftwsTRQR9K7QQ4sUAtUWD0KxCEVraRVp4jpvtxubZSczu3G/ZAeSyezOm/3933szmYRRYJYzk2ehYIg1O9grYV4OWV1hPCVouI1ibozYFB0wPzUKaBf1z1F5UzCK8dxlBYbnn0aFu4ZTQ5+6njY11yPTYCmvMljK+aiWDhIQ1gkr49QECYh0iQUEHb44AnEEGvRA5FMo2aAD/on5/vY0Bk9n0dqSwtv3KxgeW8DSKu3bxCVwAcf2bUVxYBeaUsa+8gATc3hPMw5d/4ByRRMqCDSFCP7Z4F94k7anLY2jnRmzWbcOTIAJvylpeN5Kmd0mlxyBCDi+7nke/G+WOW9mVqyabNu+CyD4IksbHjxRXn00j7mFX7bA1ou+CpCBH3g8j7svvlg5uW3fBJzoFnue4Eeey8OTKkcCFDbfWrYkkUrYTzyemwi+wJbKemnjBt6RgIO705i5txeLDzvx7UkXruWzIEGi4iU8PVtqrdrenMTLoTZQTSXdpOLOuVY9Gv0s7Brn+8ZreGKRSqHerkwVnozMcuXUDoyc32kbiZM579LGfD7VUgI4DtbHsRNB8OP93uT8RnhpAa/efcfictlqW21vFOEnPAEoyE/Wc3AVkibx6xvtyGzm/4lRmFgCCfBitamCWD5ICyA7GRGW8WuabpfKmkEsDak5YNpMzK6i99Ycln/K7dVNO6q9gKdxHQkgAzcivIJ3JcCpCC/hXQuQFeE1fEMCRCL8gG9YgCniyM1ZTH38QU18/rqGC/c/Od5V6sYu3hwto6LxaZdaZj+neHsjkb2b+1KbOdmB1yT+RZAdS7af42VUdmC/+sUC/PI07zlxBHie8ev6fxEB51tLv9wrfk6FIlAS9wttj5KqH5wILZ8AjB36UI1TH8oDQdfw3abDHuzEijGJC92XWCT6GOU0e4V5ThDbtM7KTqqQV/8AG6v0NgjN/m0AAAAASUVORK5CYII="
+                            style="width: 16px; height: 16px;"
+                            width="16"
+                          />
+                        </td>
+                        <td
+                          class="csg-taskItem-textTd"
+                          style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                        >
+                          with emoji 🙂 
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Renderer - EmailSerializer should render nested task list correctly: embeddedImages 1`] = `
+Array [
+  Object {
+    "contentId": "csg-icon-taskItemUnchecked",
+    "contentType": "image/png",
+    "data": "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABo0lEQVRoBe2aPU7DQBCFdxcb7IhISKTBhQvEj6i4glsKOu4AR4ATwBHgDnQUSFS5AwUiUKUIEj8SUkic4NUuHkdW0iTNQ2aNZgvHnmhm33xvXK2lKFeSeM2OWNNKrVjP+GXYpV+pVeYZM+7viE/RbmvSJguB0WEjDNKWNVq5JHieFqk8k47Cd9G7GUqRkw+7XlSKv74839rd3ojz1ibNzatSddwK+/j00j06OXumrYsmYt2TzShpZctilYIfD7enjSA4pntX13A0ulrfO7ggff63+FI08/RA5F0XTzpJI2mle9Kuyhe2GBuK1mCVWkn79KV1beYXgZzROm1gUYLD/3EDf20OO8AOgAR4hECAcDo7ACMEC7ADIEA4nR2AEYIF2AEQIJzODsAIwQLsAAgQTmcHYIRgAXYABAinswMwQrAAOwAChNPZARghWIAdAAHC6ewAjBAs8I8cyM9hQRjVpc9oVXR8TzvTIXJ1CrCdSq2kvfYH3fX/1KAws8YfeywVDfQ7md6PB+GrUNYqmV8ncWxUfz2bZt7XNh1smjdxfzemDX4AMpiOvlfrSYUAAAAASUVORK5CYII=",
+  },
+  Object {
+    "contentId": "csg-icon-taskItemChecked",
+    "contentType": "image/png",
+    "data": "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC+UlEQVRoBe2aTWgTQRTH/7tJLJIaxR4M1JutIBZabKoieBGk+IFowF4ET4J61rZoQcGilx4ED1JvftwsTRQR9K7QQ4sUAtUWD0KxCEVraRVp4jpvtxubZSczu3G/ZAeSyezOm/3933szmYRRYJYzk2ehYIg1O9grYV4OWV1hPCVouI1ibozYFB0wPzUKaBf1z1F5UzCK8dxlBYbnn0aFu4ZTQ5+6njY11yPTYCmvMljK+aiWDhIQ1gkr49QECYh0iQUEHb44AnEEGvRA5FMo2aAD/on5/vY0Bk9n0dqSwtv3KxgeW8DSKu3bxCVwAcf2bUVxYBeaUsa+8gATc3hPMw5d/4ByRRMqCDSFCP7Z4F94k7anLY2jnRmzWbcOTIAJvylpeN5Kmd0mlxyBCDi+7nke/G+WOW9mVqyabNu+CyD4IksbHjxRXn00j7mFX7bA1ou+CpCBH3g8j7svvlg5uW3fBJzoFnue4Eeey8OTKkcCFDbfWrYkkUrYTzyemwi+wJbKemnjBt6RgIO705i5txeLDzvx7UkXruWzIEGi4iU8PVtqrdrenMTLoTZQTSXdpOLOuVY9Gv0s7Brn+8ZreGKRSqHerkwVnozMcuXUDoyc32kbiZM579LGfD7VUgI4DtbHsRNB8OP93uT8RnhpAa/efcfictlqW21vFOEnPAEoyE/Wc3AVkibx6xvtyGzm/4lRmFgCCfBitamCWD5ICyA7GRGW8WuabpfKmkEsDak5YNpMzK6i99Ycln/K7dVNO6q9gKdxHQkgAzcivIJ3JcCpCC/hXQuQFeE1fEMCRCL8gG9YgCniyM1ZTH38QU18/rqGC/c/Od5V6sYu3hwto6LxaZdaZj+neHsjkb2b+1KbOdmB1yT+RZAdS7af42VUdmC/+sUC/PI07zlxBHie8ev6fxEB51tLv9wrfk6FIlAS9wttj5KqH5wILZ8AjB36UI1TH8oDQdfw3abDHuzEijGJC92XWCT6GOU0e4V5ThDbtM7KTqqQV/8AG6v0NgjN/m0AAAAASUVORK5CYII=",
+  },
+]
+`;
+
+exports[`Renderer - EmailSerializer should render nested task list correctly: html 1`] = `
+<div
+  class="csg-wrapper"
+  style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; line-height: 24px; vertical-align: baseline;"
+>
+  <div
+    class="csg-taskList"
+    style="margin-top: 12px;"
+  >
+    <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      class=" csg-commonTable"
+      style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+      width="100%"
+    >
+      <tbody>
+        <tr>
+          <td
+            class="csg-taskItem-wrapper"
+            style="padding: 4px 0px 4px 0;"
+          >
+            <table
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              class="csg-taskItem-mainContent csg-commonTable"
+              style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+              width="100%"
+            >
+              <tbody>
+                <tr>
+                  <td
+                    class="csg-taskItem-iconTd"
+                    height="24"
+                    style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                    valign="top"
+                    width="24"
+                  >
+                    <img
+                      class="csg-taskItem-img"
+                      height="16"
+                      src="cid:csg-icon-taskItemUnchecked"
+                      style="width: 16px; height: 16px;"
+                      width="16"
+                    />
+                  </td>
+                  <td
+                    class="csg-taskItem-textTd"
+                    style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                  >
+                    just text
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      class="csg-taskList csg-nestedTaskList"
+      style="margin-top: 0px; margin-left: 48px;"
+    >
+      <table
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        class=" csg-commonTable"
+        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+        width="100%"
+      >
+        <tbody>
+          <tr>
+            <td
+              class="csg-taskItem-wrapper"
+              style="padding: 4px 0px 4px 0;"
+            >
+              <table
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                class="csg-taskItem-mainContent csg-commonTable"
+                style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      class="csg-taskItem-iconTd"
+                      height="24"
+                      style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                      valign="top"
+                      width="24"
+                    >
+                      <img
+                        class="csg-taskItem-img"
+                        height="16"
+                        src="cid:csg-icon-taskItemUnchecked"
+                        style="width: 16px; height: 16px;"
+                        width="16"
+                      />
+                    </td>
+                    <td
+                      class="csg-taskItem-textTd"
+                      style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                    >
+                      <span
+                        class="csg-mention"
+                        style="background: #EFEFF2; border: 1px solid transparent; border-radius: 20px; color: #42526E; padding: 0 4px 2px 3px; white-space: nowrap;"
+                      >
+                        @Carolyn
+                      </span>
+                        with mention
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        class="csg-taskList csg-nestedTaskList"
+        style="margin-top: 0px; margin-left: 48px;"
+      >
+        <table
+          border="0"
+          cellpadding="0"
+          cellspacing="0"
+          class=" csg-commonTable"
+          style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+          width="100%"
+        >
+          <tbody>
+            <tr>
+              <td
+                class="csg-taskItem-wrapper"
+                style="padding: 4px 0px 4px 0;"
+              >
+                <table
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  class="csg-taskItem-mainContent csg-commonTable"
+                  style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                  width="100%"
+                >
+                  <tbody>
+                    <tr>
+                      <td
+                        class="csg-taskItem-iconTd"
+                        height="24"
+                        style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                        valign="top"
+                        width="24"
+                      >
+                        <img
+                          class="csg-taskItem-img"
+                          height="16"
+                          src="cid:csg-icon-taskItemUnchecked"
+                          style="width: 16px; height: 16px;"
+                          width="16"
+                        />
+                      </td>
+                      <td
+                        class="csg-taskItem-textTd"
+                        style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                      >
+                        <span
+                          class="csg-date csg-date-red"
+                          style="border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; box-sizing: border-box; display: inline-block; font-size: 14px; font-weight: 400; line-height: 1; max-width: 100%; vertical-align: baseline; border-width: 3px; padding: 2px 4px 3px 4px; background-color: #FFEBE6; color: #BF2600;"
+                        >
+                          05 Apr 2019
+                        </span>
+                         with date
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          class="csg-taskList csg-nestedTaskList"
+          style="margin-top: 0px; margin-left: 48px;"
+        >
+          <table
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            class=" csg-commonTable"
+            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+            width="100%"
+          >
+            <tbody>
+              <tr>
+                <td
+                  class="csg-taskItem-wrapper"
+                  style="padding: 4px 0px 4px 0;"
+                >
+                  <table
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    class="csg-taskItem-mainContent csg-commonTable"
+                    style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                    width="100%"
+                  >
+                    <tbody>
+                      <tr>
+                        <td
+                          class="csg-taskItem-iconTd"
+                          height="24"
+                          style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                          valign="top"
+                          width="24"
+                        >
+                          <img
+                            class="csg-taskItem-img"
+                            height="16"
+                            src="cid:csg-icon-taskItemUnchecked"
+                            style="width: 16px; height: 16px;"
+                            width="16"
+                          />
+                        </td>
+                        <td
+                          class="csg-taskItem-textTd"
+                          style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                        >
+                          with emoji 🙂 
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="csg-taskList"
+    style="margin-top: 12px;"
+  >
+    <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      class=" csg-commonTable"
+      style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+      width="100%"
+    >
+      <tbody>
+        <tr>
+          <td
+            class="csg-taskItem-wrapper"
+            style="padding: 4px 0px 4px 0;"
+          >
+            <table
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              class="csg-taskItem-mainContent csg-commonTable"
+              style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+              width="100%"
+            >
+              <tbody>
+                <tr>
+                  <td
+                    class="csg-taskItem-iconTd"
+                    height="24"
+                    style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                    valign="top"
+                    width="24"
+                  >
+                    <img
+                      class="csg-taskItem-img"
+                      height="16"
+                      src="cid:csg-icon-taskItemChecked"
+                      style="width: 16px; height: 16px;"
+                      width="16"
+                    />
+                  </td>
+                  <td
+                    class="csg-taskItem-textTd"
+                    style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                  >
+                    ticked off plain text
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      class="csg-taskList csg-nestedTaskList"
+      style="margin-top: 0px; margin-left: 48px;"
+    >
+      <table
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        class=" csg-commonTable"
+        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+        width="100%"
+      >
+        <tbody>
+          <tr>
+            <td
+              class="csg-taskItem-wrapper"
+              style="padding: 4px 0px 4px 0;"
+            >
+              <table
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                class="csg-taskItem-mainContent csg-commonTable"
+                style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                width="100%"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      class="csg-taskItem-iconTd"
+                      height="24"
+                      style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                      valign="top"
+                      width="24"
+                    >
+                      <img
+                        class="csg-taskItem-img"
+                        height="16"
+                        src="cid:csg-icon-taskItemChecked"
+                        style="width: 16px; height: 16px;"
+                        width="16"
+                      />
+                    </td>
+                    <td
+                      class="csg-taskItem-textTd"
+                      style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                    >
+                      <span
+                        class="csg-mention"
+                        style="background: #EFEFF2; border: 1px solid transparent; border-radius: 20px; color: #42526E; padding: 0 4px 2px 3px; white-space: nowrap;"
+                      >
+                        @Carolyn
+                      </span>
+                       ticked off mention
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        class="csg-taskList csg-nestedTaskList"
+        style="margin-top: 0px; margin-left: 48px;"
+      >
+        <table
+          border="0"
+          cellpadding="0"
+          cellspacing="0"
+          class=" csg-commonTable"
+          style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+          width="100%"
+        >
+          <tbody>
+            <tr>
+              <td
+                class="csg-taskItem-wrapper"
+                style="padding: 4px 0px 4px 0;"
+              >
+                <table
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  class="csg-taskItem-mainContent csg-commonTable"
+                  style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                  width="100%"
+                >
+                  <tbody>
+                    <tr>
+                      <td
+                        class="csg-taskItem-iconTd"
+                        height="24"
+                        style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                        valign="top"
+                        width="24"
+                      >
+                        <img
+                          class="csg-taskItem-img"
+                          height="16"
+                          src="cid:csg-icon-taskItemChecked"
+                          style="width: 16px; height: 16px;"
+                          width="16"
+                        />
+                      </td>
+                      <td
+                        class="csg-taskItem-textTd"
+                        style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                      >
+                        <span
+                          class="csg-date csg-date-neutral"
+                          style="border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; box-sizing: border-box; display: inline-block; font-size: 14px; font-weight: 400; line-height: 1; max-width: 100%; vertical-align: baseline; border-width: 3px; padding: 2px 4px 3px 4px; background-color: #DFE1E6; color: #42526E;"
+                        >
+                          05 Apr 2019
+                        </span>
+                         ticked off date
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          class="csg-taskList csg-nestedTaskList"
+          style="margin-top: 0px; margin-left: 48px;"
+        >
+          <table
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            class=" csg-commonTable"
+            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+            width="100%"
+          >
+            <tbody>
+              <tr>
+                <td
+                  class="csg-taskItem-wrapper"
+                  style="padding: 4px 0px 4px 0;"
+                >
+                  <table
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    class="csg-taskItem-mainContent csg-commonTable"
+                    style="border-radius: 3px; table-layout: fixed; line-height: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: 400; margin: 0px; padding: 0px; display: table; border-spacing: 0px; width: 100%;"
+                    width="100%"
+                  >
+                    <tbody>
+                      <tr>
+                        <td
+                          class="csg-taskItem-iconTd"
+                          height="24"
+                          style="vertical-align: top; padding: 10px 0px 0px 8px; line-height: 20px; width: 24px; height: 24px;"
+                          valign="top"
+                          width="24"
+                        >
+                          <img
+                            class="csg-taskItem-img"
+                            height="16"
+                            src="cid:csg-icon-taskItemChecked"
+                            style="width: 16px; height: 16px;"
+                            width="16"
+                          />
+                        </td>
+                        <td
+                          class="csg-taskItem-textTd"
+                          style="font-size: 14px; line-height: 20px; padding: 8px 8px 8px 0;"
+                        >
+                          with emoji 🙂 
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Renderer - EmailSerializer should render nothing for image node: html 1`] = `
 <div
   class="csg-wrapper"
