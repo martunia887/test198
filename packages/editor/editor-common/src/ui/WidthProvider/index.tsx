@@ -30,6 +30,8 @@ const { Provider, Consumer } = React.createContext(createWidthContext());
 
 const RelativeContainer = React.memo(styled.div`
   position: relative;
+  height: 100%;
+  width: 100%;
 `);
 
 export type WidthProviderState = {
