@@ -10,7 +10,8 @@ import {
   TelepointerData,
   Participant,
 } from './types';
-import { Channel } from './channel';
+// import { Channel } from './channel';
+import { Channel } from './socket-channel';
 import { logger } from './';
 import { getParticipant } from './mock-users';
 
@@ -24,24 +25,31 @@ export class CollabProvider implements CollabEditProvider {
 
   private participants: Map<string, Participant> = new Map();
 
+  private sid?: string;
+
   constructor(config: Config, pubSubClient: PubSubClient) {
     this.config = config;
-    this.channel = new Channel(config, pubSubClient);
+    // this.channel = new Channel(config, pubSubClient);
+    this.channel = new Channel(config);
   }
 
   initialize(getState: () => any) {
     this.getState = getState;
 
     this.channel
-      .on('connected', ({ doc, version }) => {
+      .on('connected', ({ doc, version, sid }) => {
         logger(`Joined collab-session. The document version is ${version}`);
-        const { userId } = this.config;
+        // const { userId } = this.config;
 
-        this.emit('init', { sid: userId, doc, version }) // Set initial document
-          .emit('connected', { sid: userId }); // Let the plugin know that we're connected an ready to go
+        this.sid = sid;
+
+        this.emit('init', { sid, doc, version }) // Set initial document
+          .emit('connected', { sid }); // Let the plugin know that we're connected an ready to go
       })
       .on('data', this.onReceiveData)
-      .on('telepointer', this.onReceiveTelepointer)
+      .on('participant:telepointer', this.onParticipantTelepointer)
+      .on('participant:joined', this.onParticipantJoined)
+      .on('participant:left', this.onParticipantLeft)
       .connect();
 
     return this;
@@ -67,11 +75,11 @@ export class CollabProvider implements CollabEditProvider {
       return;
     }
 
-    const { type } = data;
+    const { type, ...rest } = data;
     switch (type) {
       case 'telepointer':
         this.channel.sendTelepointer({
-          ...data,
+          ...rest,
           timestamp: new Date().getTime(),
         });
     }
@@ -201,6 +209,83 @@ export class CollabProvider implements CollabEditProvider {
     }
   };
 
+  /**
+   * Called when a participant joins the session.
+   *
+   * We keep track of participants internally in this class, and emit the `presence` event to update
+   * the active avatars in the editor.
+   *
+   */
+  private onParticipantJoined = ({ sessionId, timestamp }: any) => {
+    logger(`Participant joined`);
+    this.updateParticipant({ sessionId, timestamp });
+
+    // We should let the new particpant know about us!
+    this.channel.broadcast('participant:updated', { sessionId: this.sid });
+  };
+
+  private onParticipantUpdated = ({ sessionId, timestamp }: any) => {
+    logger(`Participant updated`);
+    this.updateParticipant({ sessionId, timestamp });
+  };
+
+  /**
+   * Called when a participant leavs the session.
+   *
+   * We emit the `presence` event to update the active avatars in the editor.
+   */
+  private onParticipantLeft = ({ sessionId }: any) => {
+    logger(`Participant left`);
+
+    this.participants.delete(sessionId);
+    this.emit('presence', { left: [{ sessionId }] });
+  };
+
+  private onParticipantTelepointer = ({ sessionId, timestamp, data }: any) => {
+    if (sessionId === this.sid) {
+      return;
+    }
+
+    const participant = this.participants.get(sessionId);
+
+    // Ignore old telepointer events.
+    if (participant && participant.lastActive > timestamp) {
+      return;
+    }
+
+    logger(`Remote telepointer from ${sessionId}.`);
+
+    // Set last active
+    this.updateParticipant({ sessionId, timestamp });
+    this.emit('telepointer', data);
+  };
+
+  private updateParticipant = (
+    { sessionId, timestamp }: any,
+    isLeader?: boolean,
+  ) => {
+    const { name = '', email = '', avatar = '' } = getParticipant(sessionId);
+
+    this.participants.set(sessionId, {
+      name,
+      email,
+      avatar,
+      sessionId,
+      lastActive: timestamp,
+    });
+
+    // Collab-plugin expects an array of users that joined.
+    const joined = [this.participants.get(sessionId)];
+
+    // Filter out participants that's been inactive for more than 5 minutes.
+    const now = new Date().getTime();
+    const left = Array.from(this.participants.values()).filter(
+      p => (now - p.lastActive) / 1000 > 300,
+    );
+    left.forEach(p => this.participants.delete(p.sessionId));
+    this.emit('presence', { joined, left });
+  };
+
   private onReceiveTelepointer = (
     data: TelepointerData & { timestamp: number },
   ) => {
@@ -209,6 +294,8 @@ export class CollabProvider implements CollabEditProvider {
     if (sessionId === this.config.userId) {
       return;
     }
+
+    console.log({ sessionId });
 
     const participant = this.participants.get(sessionId);
 
@@ -222,33 +309,6 @@ export class CollabProvider implements CollabEditProvider {
 
     this.emit('telepointer', data);
   };
-
-  private updateParticipant(userId: string, timestamp: number) {
-    // TODO: Make batch-request to backend to resolve participants
-    const { name = '', email = '', avatar = '' } = getParticipant(userId);
-
-    this.participants.set(userId, {
-      name,
-      email,
-      avatar,
-      sessionId: userId,
-      lastActive: timestamp,
-    });
-
-    const joined = [this.participants.get(userId)];
-
-    // Filter out participants that's been inactive for
-    // more than 5 minutes.
-
-    const now = new Date().getTime();
-    const left = Array.from(this.participants.values()).filter(
-      p => (now - p.lastActive) / 1000 > 300,
-    );
-
-    left.forEach(p => this.participants.delete(p.sessionId));
-
-    this.emit('presence', { joined, left });
-  }
 
   /**
    * Emit events to subscribers
