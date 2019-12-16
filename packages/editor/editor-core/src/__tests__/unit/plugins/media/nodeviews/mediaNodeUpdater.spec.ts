@@ -252,6 +252,7 @@ describe('MediaNodeUpdater', () => {
         {
           id: 'copied-file-id',
           collection: 'destination-collection',
+          __contextId: 'object-id',
         },
         false,
       );
