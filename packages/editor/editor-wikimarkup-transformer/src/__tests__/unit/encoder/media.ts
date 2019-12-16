@@ -12,9 +12,11 @@ import { Context } from '../../../interfaces';
 describe('ADF => WikiMarkup - Media', () => {
   const transformer = new WikiMarkupTransformer();
   const context: Context = {
-    mediaConversion: {
-      'abc-123': 'file1.txt',
-      'def-456': 'file2.txt',
+    conversion: {
+      mediaConversion: {
+        'abc-123': 'file1.txt',
+        'def-456': 'file2.txt',
+      },
     },
   };
 

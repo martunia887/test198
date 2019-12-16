@@ -10,7 +10,9 @@ describe('JIRA wiki markup - File Link', () => {
       const transformer = new WikiMarkupTransformer();
       expect(
         transformer.parse(markup, {
-          mediaConversion: { 'file.pdf': 'abc-123' },
+          conversion: {
+            mediaConversion: { 'file.pdf': 'abc-123' },
+          },
         }),
       ).toMatchSnapshot();
     });

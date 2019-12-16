@@ -247,42 +247,44 @@ describe('Renderer - EmailSerializer', () => {
 
   it('should render media based on given context', () => {
     const context: MetaDataContext = {
-      mediaMetaData: {
-        'media-type-image': {
-          name: 'Dark wallpaper theme.jpg',
-          mediaType: 'image',
-          mimeType: 'image/jpeg',
-          size: 54981,
-        },
-        'media-type-doc': {
-          name: 'My bachelor thesis.pdf',
-          mediaType: 'doc',
-          mimeType: 'application/pdf',
-          size: 12345,
-        },
-        'media-type-video': {
-          name: 'Metallica full concert.mpeg',
-          mediaType: 'video',
-          mimeType: 'vide/mpeg',
-          size: 982347,
-        },
-        'media-type-audio': {
-          name: 'The sound of silence.mp3',
-          mediaType: 'audio',
-          mimeType: 'audio/mpeg',
-          size: 98734,
-        },
-        'media-type-archive': {
-          name: 'The Slackening.zip',
-          mediaType: 'archive',
-          mimeType: 'application/zip',
-          size: 4383,
-        },
-        'media-type-unknown': {
-          name: 'unknown',
-          mediaType: 'unknown',
-          mimeType: 'unknown',
-          size: 54981,
+      hydration: {
+        mediaMetaData: {
+          'media-type-image': {
+            name: 'Dark wallpaper theme.jpg',
+            mediaType: 'image',
+            mimeType: 'image/jpeg',
+            size: 54981,
+          },
+          'media-type-doc': {
+            name: 'My bachelor thesis.pdf',
+            mediaType: 'doc',
+            mimeType: 'application/pdf',
+            size: 12345,
+          },
+          'media-type-video': {
+            name: 'Metallica full concert.mpeg',
+            mediaType: 'video',
+            mimeType: 'vide/mpeg',
+            size: 982347,
+          },
+          'media-type-audio': {
+            name: 'The sound of silence.mp3',
+            mediaType: 'audio',
+            mimeType: 'audio/mpeg',
+            size: 98734,
+          },
+          'media-type-archive': {
+            name: 'The Slackening.zip',
+            mediaType: 'archive',
+            mimeType: 'application/zip',
+            size: 4383,
+          },
+          'media-type-unknown': {
+            name: 'unknown',
+            mediaType: 'unknown',
+            mimeType: 'unknown',
+            size: 54981,
+          },
         },
       },
     };

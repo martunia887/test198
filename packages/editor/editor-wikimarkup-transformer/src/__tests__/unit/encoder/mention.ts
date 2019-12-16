@@ -20,8 +20,10 @@ describe('ADF => WikiMarkup - Mention', () => {
 
   test('should convert mention node with context', () => {
     const context: Context = {
-      mentionConversion: {
-        'abc-123': 'randomPrefix:abc-123',
+      conversion: {
+        mentionConversion: {
+          'abc-123': 'randomPrefix:abc-123',
+        },
       },
     };
     const node = doc(

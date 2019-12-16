@@ -20,9 +20,10 @@ export const media: NodeEncoder = (
   } else {
     fileName =
       context &&
-      context.mediaConversion &&
-      context.mediaConversion[node.attrs.id]
-        ? context.mediaConversion[node.attrs.id]
+      context.conversion &&
+      context.conversion.mediaConversion &&
+      context.conversion.mediaConversion[node.attrs.id]
+        ? context.conversion.mediaConversion[node.attrs.id]
         : node.attrs.id;
   }
   if (wikiAttrs.length) {

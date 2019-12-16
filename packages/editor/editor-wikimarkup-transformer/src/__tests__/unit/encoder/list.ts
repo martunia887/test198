@@ -82,7 +82,9 @@ describe('ADF => WikiMarkup - List', () => {
     )(defaultSchema);
     expect(
       transformer.encode(node, {
-        mediaConversion: { 'abc-123': 'file1.txt' },
+        conversion: {
+          mediaConversion: { 'abc-123': 'file1.txt' },
+        },
       }),
     ).toMatchSnapshot();
   });

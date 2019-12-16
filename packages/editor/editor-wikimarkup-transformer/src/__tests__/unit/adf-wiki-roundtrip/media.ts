@@ -5,17 +5,21 @@ import { doc, mediaGroup, media } from '@atlaskit/editor-test-helpers';
 import { Context } from '../../../interfaces';
 
 const wikiContext: Context = {
-  mediaConversion: {
-    'file1.txt': 'abc-1',
-    'file2.txt': 'abc-2',
-    'file3.txt': 'abc-3',
+  conversion: {
+    mediaConversion: {
+      'file1.txt': 'abc-1',
+      'file2.txt': 'abc-2',
+      'file3.txt': 'abc-3',
+    },
   },
 };
 const adfContext: Context = {
-  mediaConversion: {
-    'abc-1': 'file1.txt',
-    'abc-2': 'file2.txt',
-    'abc-3': 'file3.txt',
+  conversion: {
+    mediaConversion: {
+      'abc-1': 'file1.txt',
+      'abc-2': 'file2.txt',
+      'abc-3': 'file3.txt',
+    },
   },
 };
 //roundtripping currently doesn't take into account centering

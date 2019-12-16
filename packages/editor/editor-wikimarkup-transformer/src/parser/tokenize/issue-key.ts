@@ -60,8 +60,10 @@ const fallback = (input: string, position: number): Token => ({
 });
 
 export const getIssue = (context: Context, key: string): Issue | null =>
-  context.inlineCardConversion && context.inlineCardConversion[key]
-    ? { key, url: context.inlineCardConversion[key] }
+  context.conversion &&
+  context.conversion.inlineCardConversion &&
+  context.conversion.inlineCardConversion[key]
+    ? { key, url: context.conversion.inlineCardConversion[key] }
     : null;
 
 export const buildInlineCard = (schema: Schema, issue: Issue): PMNode[] => {
