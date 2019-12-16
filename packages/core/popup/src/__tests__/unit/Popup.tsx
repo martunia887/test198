@@ -231,6 +231,34 @@ describe('Popup', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it('does not call onClose after clicking on the trigger when the popup is opened and closeOnClickAway is false', () => {
+    const onClose = jest.fn();
+    const trigger = () => <button>trigger</button>;
+    const { getByText, rerender } = render(
+      <Popup
+        {...defaultProps}
+        isOpen={false}
+        onClose={onClose}
+        trigger={trigger}
+        closeOnClickAway={false}
+      />,
+    );
+
+    rerender(
+      <Popup
+        {...defaultProps}
+        isOpen
+        onClose={onClose}
+        trigger={trigger}
+        closeOnClickAway={false}
+      />,
+    );
+
+    fireEvent.click(getByText('trigger'));
+
+    expect(onClose).toHaveBeenCalledTimes(0);
+  });
+
   it('calls onClose after clicking outside of the popup when the popup is open', () => {
     const onClose = jest.fn();
     const { baseElement } = render(
@@ -252,6 +280,30 @@ describe('Popup', () => {
     fireEvent.click(baseElement);
 
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not call onClose after clicking outside of the popup when the popup is opened and closeOnClickAway is false', () => {
+    const onClose = jest.fn();
+    const { baseElement, rerender } = render(
+      <Popup
+        {...defaultProps}
+        isOpen={false}
+        onClose={onClose}
+        closeOnClickAway={false}
+      />,
+    );
+    rerender(
+      <Popup
+        {...defaultProps}
+        isOpen
+        onClose={onClose}
+        closeOnClickAway={false}
+      />,
+    );
+
+    fireEvent.click(baseElement);
+
+    expect(onClose).toHaveBeenCalledTimes(0);
   });
 
   it('calls onClose when calling onClose within the content', () => {

@@ -1,6 +1,7 @@
 /** @jsx jsx */
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
 import Button from '@atlaskit/button';
+import { Checkbox } from '@atlaskit/checkbox';
 import { Placement } from '@atlaskit/popper';
 import { jsx } from '@emotion/core';
 
@@ -22,9 +23,16 @@ const sizedContentCSS = {
 type PopupProps = {
   setPosition(): void;
   placement: string;
+  clickAwayClose: boolean;
+  onClickawayChange(): void;
 };
 
-const PopupContent: FC<PopupProps> = ({ setPosition, placement }) => {
+const PopupContent: FC<PopupProps> = ({
+  setPosition,
+  placement,
+  clickAwayClose,
+  onClickawayChange,
+}) => {
   return (
     <div id="popup-content" css={sizedContentCSS}>
       <Button onClick={() => setPosition()}>Toggle Position</Button>
@@ -35,6 +43,13 @@ const PopupContent: FC<PopupProps> = ({ setPosition, placement }) => {
       <p>Scroll down.</p>
       <Button>Button 5</Button>
       <Button>Button 6</Button>
+      <Checkbox
+        isChecked={clickAwayClose}
+        value="clickaway"
+        label="Close popup on click away"
+        onChange={onClickawayChange}
+        name="clickaway-checkbox"
+      />
     </div>
   );
 };
@@ -60,6 +75,7 @@ const placements: Placement[] = [
 export default () => {
   const [idx, setIdx] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [clickAwayClose, setClickAwayClose] = useState(true);
 
   const placement = placements[idx];
 
@@ -71,13 +87,22 @@ export default () => {
     }
   };
 
+  const onClickawayChange = useCallback(() => {
+    setClickAwayClose(!clickAwayClose);
+  }, [clickAwayClose]);
+
   return (
     <div css={spacerCSS}>
       <Popup
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         content={() => (
-          <PopupContent setPosition={setPlacement} placement={placement} />
+          <PopupContent
+            setPosition={setPlacement}
+            placement={placement}
+            clickAwayClose={clickAwayClose}
+            onClickawayChange={onClickawayChange}
+          />
         )}
         trigger={triggerProps => (
           <Button
@@ -89,6 +114,7 @@ export default () => {
           </Button>
         )}
         placement={placement}
+        closeOnClickAway={clickAwayClose}
       />
     </div>
   );
