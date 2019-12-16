@@ -103,7 +103,7 @@ export const CloseButtonWrapper = styled.div`
   z-index: ${overlayZindex + 2};
 `;
 
-export const animationSpeedInMs = 150;
+export const animationSpeedInMs = 250;
 export const animationDistanceInPercent = 30;
 
 export const ZoomWrapper = styled.div`

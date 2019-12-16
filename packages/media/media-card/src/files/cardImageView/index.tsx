@@ -93,12 +93,8 @@ export class FileCardImageViewBase extends Component<
   private updateAbsolutePositionData() {
     const { absolutePositionData } = this.state;
     if (!absolutePositionData && this.divRef.current) {
-      const {
-        left,
-        top,
-        width,
-        height,
-      }: ClientRect = this.divRef.current.getBoundingClientRect();
+      const obj = this.divRef.current.getBoundingClientRect();
+      const { left, top, width, height }: ClientRect = obj;
       this.setState({
         absolutePositionData: {
           left,
@@ -128,6 +124,7 @@ export class FileCardImageViewBase extends Component<
     let style: React.CSSProperties = {};
     if (absolutePositionData) {
       const { left, top, width, height } = absolutePositionData;
+
       if (animationState === 'start') {
         style['left'] = left;
         style['top'] = top;
@@ -136,7 +133,7 @@ export class FileCardImageViewBase extends Component<
       }
       if (animationState === 'progress') {
         const { innerHeight, innerWidth } = window;
-
+        console.log({ left, top, width, height, innerHeight, innerWidth });
         const isScreenMoreLandscapy = innerWidth / innerHeight > width / height;
         if (isScreenMoreLandscapy) {
           style['height'] = innerHeight;

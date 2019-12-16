@@ -55,12 +55,12 @@ export const Wrapper = styled(Root)`
   }
 
   &.is-expanding-animation-start {
-    position: absolute;
+    position: fixed;
     z-index: ${layers.modal() + 20};
     opacity: 1;
   }
   &.is-expanding-animation-progress {
-    position: absolute;
+    position: fixed;
     z-index: ${layers.modal() + 20};
     opacity: 0;
     top: 0;
