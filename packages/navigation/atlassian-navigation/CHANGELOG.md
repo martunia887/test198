@@ -1,5 +1,26 @@
 # @atlaskit/atlassian-navigation
 
+## 0.8.0
+
+### Minor Changes
+
+- [minor][df31cc4fb4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/df31cc4fb4):
+
+  Changed the ProductHome theme to remove all the button styles. Instead us the PrimaryButton styles.
+
+### Patch Changes
+
+- Updated dependencies [308708081a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/308708081a):
+  - @atlaskit/logo@12.3.0
+
+## 0.7.1
+
+### Patch Changes
+
+- [patch][72ceb0c548](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72ceb0c548):
+
+  Fixes Skeleton for atlassian navigation, which had broken earlier due to the ProductHome re-write
+
 ## 0.7.0
 
 ### Minor Changes

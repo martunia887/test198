@@ -72,4 +72,26 @@ export default memo(({ title }) => (
       props={require('!!extract-react-types-loader!../src/resizing/height')}
     />
   )}
+
+  ### \`<ResizingHeight />\`
+
+  Component which consumes the \`useResizingHook()\` under-the-hood.
+  Its props are the same as the hooks opts.
+
+  ${code`
+import { ResizingHeight } from '@atlaskit/motion';
+
+<ResizingHeight>
+  {props => <div {...props} />}
+</ResizingHeight>
+  `}
+
+  #### Props
+
+  ${(
+    <Props
+      heading=""
+      props={require('!!extract-react-types-loader!../src/resizing/height')}
+    />
+  )}
 `;

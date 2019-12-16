@@ -201,11 +201,12 @@ export const createFakeExtensionManifest = ({
   },
 });
 
-export const createFakeExtensionProvider = (
+export function createFakeExtensionProvider<T>(
   extensionType: ExtensionType,
   extensionKey: ExtensionKey,
   extensionHandler: (...args: any) => JSX.Element,
-) => {
+  extensionUpdater?: (parameters: T) => Promise<T>,
+) {
   const macroManifest = createFakeExtensionManifest({
     title: 'fake extension provider',
     type: extensionType,
@@ -219,10 +220,11 @@ export const createFakeExtensionProvider = (
 
   macroManifest.modules.nodes.default.render = () =>
     Promise.resolve(FakeES6Module);
+  macroManifest.modules.nodes.default.update = extensionUpdater;
 
   const confluenceMacrosExtensionProvider = new DefaultExtensionProvider([
     macroManifest,
   ]);
 
   return confluenceMacrosExtensionProvider;
-};
+}

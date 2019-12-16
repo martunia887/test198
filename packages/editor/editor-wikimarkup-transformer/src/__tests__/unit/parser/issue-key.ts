@@ -1,5 +1,5 @@
 import WikiMarkupTransformer from '../../../index';
-import { Context } from '../../../parser/tokenize';
+import { Context } from '../../../interfaces';
 
 describe('JIRA wiki markup - Issue key (smart card)', () => {
   const testCases: Array<[string, string]> = [
@@ -53,9 +53,12 @@ describe('JIRA wiki markup - Issue key (smart card)', () => {
   ];
 
   const context: Context = {
-    inlineCardConversion: {
-      'ABC-10': 'https://instance.atlassian.net/browse/ABC-10',
-      'ABC-20': 'https://instance.atlassian.net/browse/ABC-20',
+    conversion: {
+      inlineCardConversion: {
+        'ABC-10': 'https://instance.atlassian.net/browse/ABC-10',
+        'ABC-20': 'https://instance.atlassian.net/browse/ABC-20',
+      },
+      mediaConversion: { 'ABC-10': 'abc-123' },
     },
   };
 

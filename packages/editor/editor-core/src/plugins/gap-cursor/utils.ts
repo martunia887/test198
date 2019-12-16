@@ -4,7 +4,8 @@ import { findPositionOfNodeBefore, findDomRefAtPos } from 'prosemirror-utils';
 import { GapCursorSelection, Side } from './selection';
 import { TableCssClassName } from '../table/types';
 import { tableInsertColumnButtonSize } from '../table/ui/styles';
-import { closestElement } from '../../utils';
+import { closestElement, containsClassName } from '../../utils';
+import { expandClassNames } from '../expand/ui/class-names';
 
 // Returns DOM node's vertical margin. It descents into the node and reads margins of nested DOM nodes
 const getDomNodeVerticalMargin = (
@@ -220,6 +221,17 @@ export const fixCursorAlignment = (view: EditorView) => {
       !!targetNodeRef.parentElement &&
       /td|th/i.test(targetNodeRef.parentElement.nodeName);
 
+    const isInLayout =
+      !!targetNodeRef.parentElement &&
+      targetNodeRef.parentElement.dataset.layoutContent;
+
+    const isInExpand =
+      !!targetNodeRef.parentElement &&
+      containsClassName(
+        targetNodeRef.parentElement as HTMLElement,
+        expandClassNames.content,
+      );
+
     height = parseInt(css.height!, 10);
     width = parseInt(css.width!, 10);
 
@@ -231,7 +243,13 @@ export const fixCursorAlignment = (view: EditorView) => {
     // padding is cumulative
     paddingLeft += parseInt(css.paddingLeft!, 10);
 
-    if (previousSibling || isMediaWithWrapping || isInTableCell) {
+    if (
+      previousSibling ||
+      isMediaWithWrapping ||
+      isInTableCell ||
+      isInLayout ||
+      isInExpand
+    ) {
       const curNodeMarginTop = getDomNodeVerticalMargin(targetNodeRef, 'top');
       if (curNodeMarginTop > prevNodeMarginBottom) {
         marginTop = curNodeMarginTop - prevNodeMarginBottom;

@@ -1661,6 +1661,17 @@ describe('paste plugins', () => {
       );
     });
 
+    it('only converts numbered list when followed by spaces', () => {
+      const { editorView } = editor(doc(p('{<>}')));
+      const html = '<span>1.line 1<br />2.line 2<br />3.line 3</span>';
+
+      dispatchPasteEvent(editorView, { html });
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(p('1.line 1', hardBreak(), '2.line 2', hardBreak(), '3.line 3')),
+      );
+    });
+
     it('converts markdown-style numbered list (one without ordering)', () => {
       const { editorView } = editor(doc(p('{<>}')));
       const html = '<span>1. line 1<br />1. line 2<br />1. line 3</span>';

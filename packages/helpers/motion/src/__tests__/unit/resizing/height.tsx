@@ -1,18 +1,14 @@
 import React, { forwardRef } from 'react';
 import { render } from '@testing-library/react';
-import { replaceRaf } from 'raf-stub';
 import { useResizingHeight } from '../../../resizing/height';
 import { isReducedMotion } from '../../../utils/accessibility';
 import { mediumDurationMs } from '../../../utils/durations';
 import { easeInOut } from '../../../utils/curves';
+import * as raf from '../../__utils__/raf';
 
 jest.mock('../../../utils/accessibility');
 
-replaceRaf();
-
-const nextFrame = () => {
-  (window.requestAnimationFrame as any).step();
-};
+raf.replace();
 
 const Container = forwardRef<HTMLElement, { id: string; height: number }>(
   ({ id, height, ...props }, ref) => {
@@ -100,8 +96,8 @@ describe('<ResizingHeight />', () => {
     rerender(<TestComponent height={500} />);
 
     // Two ticks to start the motion.
-    nextFrame();
-    nextFrame();
+    raf.step();
+    raf.step();
 
     expect(getByTestId('element').style).toMatchObject({
       height: '500px',
@@ -114,8 +110,8 @@ describe('<ResizingHeight />', () => {
     rerender(<TestComponent height={500} />);
 
     // Two ticks to start the motion.
-    nextFrame();
-    nextFrame();
+    raf.step();
+    raf.step();
     // Run the timeout to cleanup the motion.
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
@@ -128,15 +124,15 @@ describe('<ResizingHeight />', () => {
     const { rerender, unmount } = render(<TestComponent height={100} />);
     rerender(<TestComponent height={500} />);
     // Two ticks to start the motion.
-    nextFrame();
-    nextFrame();
+    raf.step();
+    raf.step();
 
     unmount();
 
     expect(() => {
       // Two ticks to start the motion.
-      nextFrame();
-      nextFrame();
+      raf.step();
+      raf.step();
       // Run the timeout so we cleanup the motion.
       jest.runOnlyPendingTimers();
       jest.useRealTimers();

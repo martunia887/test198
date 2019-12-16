@@ -28,26 +28,31 @@ async function getChangedFilesSince(
   return files.map(file => path.resolve(file));
 }
 
-async function getChangedChangesetFilesSinceMaster(
+async function getChangedChangesetFilesSinceBranch(
+  branchName /*:string*/,
   fullPath /*:boolean*/ = false,
 ) {
-  const ref = await getMasterRef();
-  // First we need to find the commit where we diverged from `ref` at using `git merge-base`
-  let cmd = await spawn('git', ['merge-base', ref, 'HEAD']);
+  const ref = await getRef(branchName);
   // Now we can find which files we added
-  cmd = await spawn('git', [
+  const cmd = await spawn('git', [
     'diff',
     '--name-only',
     '--diff-filter=d',
-    'master',
+    ref,
   ]);
 
   const files = cmd.stdout
     .trim()
     .split('\n')
-    .filter(file => file.includes('changes.json'));
+    // TODO: This needs to be updated to handle changesets v2
+    .filter(file => !file.includes('README.md') && file.startsWith('changes'));
   if (!fullPath) return files;
   return files.map(file => path.resolve(file));
+}
+
+async function getChangesetFiles() {
+  const base = await getBaseBranch();
+  return getChangedChangesetFilesSinceBranch(base);
 }
 
 async function getBranchName() {
@@ -55,8 +60,15 @@ async function getBranchName() {
   return gitCmd.stdout.trim();
 }
 
-async function getMasterRef() {
-  const gitCmd = await spawn('git', ['rev-parse', 'master']);
+function getOriginBranchName(branchName /*: string */) {
+  return branchName.startsWith('origin/') ? branchName : `origin/${branchName}`;
+}
+
+async function getRef(branchName /*:string*/) {
+  const gitCmd = await spawn('git', [
+    'rev-parse',
+    getOriginBranchName(branchName),
+  ]);
   return gitCmd.stdout.trim().split('\n')[0];
 }
 
@@ -65,13 +77,13 @@ async function add(pathToFile /*: string */) {
   return gitCmd.code === 0;
 }
 
-async function checkout(pathToFile /*: string */) {
-  const gitCmd = await spawn('git', ['checkout', pathToFile]);
+async function branch(branchName /*: string */) {
+  const gitCmd = await spawn('git', ['checkout', '-b', branchName]);
   return gitCmd.code === 0;
 }
 
-async function branch(branchName /*: string */) {
-  const gitCmd = await spawn('git', ['checkout', '-b', branchName]);
+async function checkout(pathToFile /*: string */) {
+  const gitCmd = await spawn('git', ['checkout', pathToFile]);
   return gitCmd.code === 0;
 }
 
@@ -80,8 +92,28 @@ async function commit(message /*: string */) {
   return gitCmd.code === 0;
 }
 
+async function fetch() {
+  const gitCmd = await spawn('git', ['fetch']);
+  return gitCmd.code === 0;
+}
+
+async function init() {
+  const gitCmd = await spawn('git', ['init']);
+  return gitCmd.code === 0;
+}
+
+async function merge(branchName /*: string */) {
+  const gitCmd = await spawn('git', ['merge', `${branchName}`]);
+  return gitCmd.code === 0;
+}
+
 async function push(args /*: Array<any>*/ = []) {
   const gitCmd = await spawn('git', ['push', ...args]);
+  return gitCmd.code === 0;
+}
+
+async function remote(name /*: string */, url /*: string */) {
+  const gitCmd = await spawn('git', ['remote', 'add', `${name}`, `${url}`]);
   return gitCmd.code === 0;
 }
 
@@ -274,23 +306,65 @@ async function getUnpublishedChangesetCommits(since /*: any */) {
   return unpublishedCommits;
 }
 
+async function getMergeBase(branchName /*: string */, reference /*: string */) {
+  const gitCmd = await spawn('git', [
+    'merge-base',
+    getOriginBranchName(branchName),
+    reference,
+  ]);
+
+  // eslint-disable-next-line no-shadow
+  const commit = gitCmd.stdout.split('\n')[0];
+  return commit;
+}
+
+async function branchContainsCommit(
+  commitHash /*:string */,
+  branchName /*:string */,
+) {
+  const gitCmd = await spawn('git', [
+    'branch',
+    '-r',
+    '--contains',
+    `${commitHash}`,
+  ]);
+
+  // eslint-disable-next-line no-shadow
+  const output = gitCmd.stdout.split('\n');
+  // We are coercing to a boolean if we find the branchname.
+  return !!output.find(b => b.includes(getOriginBranchName(branchName)));
+}
+
+async function getBaseBranch(ref /*: string */ = 'HEAD') {
+  await fetch();
+  const developMergeBase = await getMergeBase('develop', ref);
+  const isOriginMaster = await branchContainsCommit(developMergeBase, 'master');
+  return isOriginMaster ? 'master' : 'develop';
+}
+
 module.exports = {
   getCommitThatAddsFile,
   getCommitsSince,
   getChangedFilesSince,
   getBranchName,
-  getMasterRef,
+  getRef,
   add,
   branch,
   checkout,
   commit,
+  fetch,
+  init,
+  merge,
   push,
+  remote,
   tag,
   rebase,
   rebaseAndPush,
   getUnpublishedChangesetCommits,
-  getChangedChangesetFilesSinceMaster,
+  getChangedChangesetFilesSinceBranch,
+  getChangesetFiles,
   getAllReleaseCommits,
   getAllChangesetCommits,
   getLastPublishCommit,
+  getBaseBranch,
 };
