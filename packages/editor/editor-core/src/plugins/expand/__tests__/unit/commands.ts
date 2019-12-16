@@ -9,7 +9,7 @@ describe('Expand Commands', () => {
     return createEditor({
       doc,
       editorProps: {
-        UNSAFE_allowExpand: true,
+        allowExpand: true,
       },
     });
   };

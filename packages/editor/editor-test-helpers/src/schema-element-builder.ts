@@ -103,10 +103,8 @@ export const pmNodeFactory: object = {
     inlineCard({ url: 'https://product-fabric.atlassian.net/browse/ED-1' }),
   blockCard: () =>
     blockCard({ url: 'https://product-fabric.atlassian.net/browse/ED-1' }),
-  expand: (content: any) =>
-    expand({ title: 'Give this expand a title...' })(content),
-  nestedExpand: (content: any) =>
-    nestedExpand({ title: 'Give this expand a title...' })(content),
+  expand: expand({ title: 'Give this expand a title...' }),
+  nestedExpand: nestedExpand({ title: 'Give this expand a title...' }),
 };
 
 export const pmNodeBuilder: object = {
@@ -177,6 +175,10 @@ export const pmNodeBuilder: object = {
   inlineCard: inlineCard({
     url: 'https://product-fabric.atlassian.net/browse/ED-1',
   }),
+  expand: expand({ title: 'Give this expand a title...' })(p('fake expand')),
+  nestedExpand: nestedExpand({ title: 'Give this expand a title...' })(
+    p('fake nested expand'),
+  ),
 };
 
 export const pmMarkBuilder: object = {
