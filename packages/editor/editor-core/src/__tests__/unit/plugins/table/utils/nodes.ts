@@ -9,12 +9,20 @@ import {
   tdEmpty,
   tdCursor,
   thEmpty,
+  sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
 import { TablePluginState } from '../../../../../plugins/table/types';
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
-import { containsHeaderColumn } from '../../../../../plugins/table/utils/nodes';
+import {
+  toggleHeaderColumn,
+  toggleHeaderRow,
+} from '../../../../../plugins/table/commands/toggle';
+import {
+  containsHeaderColumn,
+  containsHeaderRow,
+} from '../../../../../plugins/table/utils/nodes';
 
-describe('table merging logic', () => {
+describe('table utils', () => {
   const createEditor = createEditorFactory<TablePluginState>();
 
   const editor = (doc: any) =>
@@ -37,9 +45,7 @@ describe('table merging logic', () => {
       );
 
       const TableWithPos = findTable(editorView.state.selection)!;
-      expect(containsHeaderColumn(editorView.state, TableWithPos.node)).toEqual(
-        true,
-      );
+      expect(containsHeaderColumn(TableWithPos.node)).toEqual(true);
     });
 
     it('should return true when first col has a rowspan', () => {
@@ -54,9 +60,49 @@ describe('table merging logic', () => {
       );
 
       const TableWithPos = findTable(editorView.state.selection)!;
-      expect(containsHeaderColumn(editorView.state, TableWithPos.node)).toEqual(
-        true,
-      );
+      expect(containsHeaderColumn(TableWithPos.node)).toEqual(true);
+    });
+
+    describe('when undo header column', () => {
+      it('should return false', () => {
+        const { editorView } = editor(
+          doc(
+            table()(
+              tr(tdEmpty, tdEmpty, tdEmpty),
+              tr(tdEmpty, tdCursor, tdEmpty),
+              tr(tdEmpty, tdEmpty),
+            ),
+          ),
+        );
+
+        toggleHeaderColumn(editorView.state, editorView.dispatch);
+        sendKeyToPm(editorView, 'Mod-z');
+
+        const TableWithPos = findTable(editorView.state.selection)!;
+        expect(containsHeaderColumn(TableWithPos.node)).toEqual(false);
+      });
+    });
+  });
+
+  describe('#containsHeaderRow', () => {
+    describe('when undo header row', () => {
+      it('should return false', () => {
+        const { editorView } = editor(
+          doc(
+            table()(
+              tr(tdEmpty, tdEmpty, tdEmpty),
+              tr(tdEmpty, tdCursor, tdEmpty),
+              tr(tdEmpty, tdEmpty),
+            ),
+          ),
+        );
+
+        toggleHeaderRow(editorView.state, editorView.dispatch);
+        sendKeyToPm(editorView, 'Mod-z');
+
+        const TableWithPos = findTable(editorView.state.selection)!;
+        expect(containsHeaderRow(TableWithPos.node)).toEqual(false);
+      });
     });
   });
 });

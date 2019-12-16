@@ -16,6 +16,8 @@ import {
   createColumnControlsDecoration,
   createColumnSelectedDecorations,
   TableSortStep,
+  checkIfHeaderRowEnabled,
+  checkIfHeaderColumnEnabled,
 } from './utils';
 import { findColumnControlSelectedDecoration } from './utils/decoration';
 // #endregion
@@ -99,6 +101,8 @@ export const handleDocOrSelectionChanged = (
       targetCellPosition,
       tableNode,
       ordering,
+      isHeaderRowEnabled: checkIfHeaderRowEnabled(tr.selection),
+      isHeaderColumnEnabled: checkIfHeaderColumnEnabled(tr.selection),
     };
 
     return nextPluginState;

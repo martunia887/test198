@@ -99,8 +99,8 @@ export const setTableRef = (ref?: HTMLElement | null) =>
           tableNode,
           tableWrapperTarget,
           layout: layout || 'default',
-          isHeaderRowEnabled: checkIfHeaderRowEnabled(state),
-          isHeaderColumnEnabled: checkIfHeaderColumnEnabled(state),
+          isHeaderRowEnabled: checkIfHeaderRowEnabled(state.selection),
+          isHeaderColumnEnabled: checkIfHeaderColumnEnabled(state.selection),
           decorationSet,
         },
       };
@@ -164,7 +164,7 @@ export const triggerUnlessTableHeader = (command: Command): Command => (
 
   if (selection instanceof CellSelection) {
     const rect = getSelectionRect(selection);
-    if (!checkIfHeaderRowEnabled(state) || (rect && rect.top > 0)) {
+    if (!checkIfHeaderRowEnabled(selection) || (rect && rect.top > 0)) {
       return command(state, dispatch);
     }
   }

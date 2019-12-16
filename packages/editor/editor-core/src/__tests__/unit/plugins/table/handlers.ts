@@ -39,6 +39,7 @@ describe('table action handlers', () => {
       editorHasFocus: true,
       isHeaderColumnEnabled: false,
       isHeaderRowEnabled: true,
+      ordering: undefined,
     };
   });
 
@@ -74,6 +75,7 @@ describe('table action handlers', () => {
         ...defaultTableSelection,
         tableNode: editorView.state.doc.firstChild,
         targetCellPosition: cursorPos - 2,
+        isHeaderRowEnabled: false,
       });
     });
 

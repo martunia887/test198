@@ -76,7 +76,7 @@ export const getToolbarConfig: FloatingToolbarHandler = (
             {
               title: formatMessage(messages.numberedColumn),
               onClick: toggleNumberColumnWithAnalytics(),
-              selected: checkIfNumberColumnEnabled(state),
+              selected: checkIfNumberColumnEnabled(state.selection),
               hidden: !pluginConfig.allowNumberColumn,
             },
           ],

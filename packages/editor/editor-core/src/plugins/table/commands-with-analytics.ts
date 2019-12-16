@@ -372,7 +372,7 @@ export const toggleNumberColumnWithAnalytics = () =>
       actionSubject: ACTION_SUBJECT.TABLE,
       actionSubjectId: null,
       attributes: {
-        newState: !checkIfNumberColumnEnabled(state),
+        newState: !checkIfNumberColumnEnabled(state.selection),
         totalRowCount,
         totalColumnCount,
       },

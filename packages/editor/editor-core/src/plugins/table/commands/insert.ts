@@ -32,7 +32,7 @@ export const insertColumn = (column: number): Command => (state, dispatch) => {
 
 export const insertRow = (row: number): Command => (state, dispatch) => {
   // Don't clone the header row
-  const headerRowEnabled = checkIfHeaderRowEnabled(state);
+  const headerRowEnabled = checkIfHeaderRowEnabled(state.selection);
   const clonePreviousRow =
     (headerRowEnabled && row > 1) || (!headerRowEnabled && row > 0);
 

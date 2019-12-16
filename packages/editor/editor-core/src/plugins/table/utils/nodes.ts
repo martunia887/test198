@@ -8,10 +8,7 @@ export const isIsolating = (node: PmNode): boolean => {
   return !!node.type.spec.isolating;
 };
 
-export const containsHeaderColumn = (
-  state: EditorState,
-  table: PmNode,
-): boolean => {
+export const containsHeaderColumn = (table: PmNode): boolean => {
   const map = TableMap.get(table);
   // Get cell positions for first column.
   const cellPositions = map.cellsInRect({
@@ -24,7 +21,7 @@ export const containsHeaderColumn = (
   for (let i = 0; i < cellPositions.length; i++) {
     try {
       const cell = table.nodeAt(cellPositions[i]);
-      if (cell && cell.type !== state.schema.nodes.tableHeader) {
+      if (cell && cell.type !== cell.type.schema.nodes.tableHeader) {
         return false;
       }
     } catch (e) {
@@ -35,31 +32,28 @@ export const containsHeaderColumn = (
   return true;
 };
 
-export const containsHeaderRow = (
-  state: EditorState,
-  table: PmNode,
-): boolean => {
+export const containsHeaderRow = (table: PmNode): boolean => {
   const map = TableMap.get(table);
   for (let i = 0; i < map.width; i++) {
     const cell = table.nodeAt(map.map[i]);
-    if (cell && cell.type !== state.schema.nodes.tableHeader) {
+    if (cell && cell.type !== cell.type.schema.nodes.tableHeader) {
       return false;
     }
   }
   return true;
 };
 
-export const checkIfHeaderColumnEnabled = (state: EditorState): boolean =>
-  filterNearSelection(state, findTable, containsHeaderColumn, false);
+export const checkIfHeaderColumnEnabled = (selection: Selection): boolean =>
+  filterNearSelection(selection, findTable, containsHeaderColumn, false);
 
-export const checkIfHeaderRowEnabled = (state: EditorState): boolean =>
-  filterNearSelection(state, findTable, containsHeaderRow, false);
+export const checkIfHeaderRowEnabled = (selection: Selection): boolean =>
+  filterNearSelection(selection, findTable, containsHeaderRow, false);
 
-export const checkIfNumberColumnEnabled = (state: EditorState): boolean =>
+export const checkIfNumberColumnEnabled = (selection: Selection): boolean =>
   filterNearSelection(
-    state,
+    selection,
     findTable,
-    (_, table) => !!table.attrs.isNumberColumnEnabled,
+    table => !!table.attrs.isNumberColumnEnabled,
     false,
   );
 
@@ -110,17 +104,17 @@ export const tablesHaveDifferentNoOfColumns = (
 };
 
 function filterNearSelection<T, U>(
-  state: EditorState,
+  selection: Selection,
   findNode: (selection: Selection) => { pos: number; node: PmNode } | undefined,
-  predicate: (state: EditorState, node: PmNode, pos?: number) => T,
+  predicate: (node: PmNode, pos?: number) => T,
   defaultValue: U,
 ): T | U {
-  const found = findNode(state.selection);
+  const found = findNode(selection);
   if (!found) {
     return defaultValue;
   }
 
-  return predicate(state, found.node, found.pos);
+  return predicate(found.node, found.pos);
 }
 
 function getTableWidths(node: PmNode): number[] {

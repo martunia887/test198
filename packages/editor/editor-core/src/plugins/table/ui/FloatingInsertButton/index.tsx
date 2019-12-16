@@ -122,7 +122,9 @@ class FloatingInsertButton extends React.Component<
     const index: number =
       type === 'column' ? insertColumnButtonIndex! : insertRowButtonIndex!;
 
-    const hasNumberedColumns = checkIfNumberColumnEnabled(editorView.state);
+    const hasNumberedColumns = checkIfNumberColumnEnabled(
+      editorView.state.selection,
+    );
 
     return (
       <Popup
