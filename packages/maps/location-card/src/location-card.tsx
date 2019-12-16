@@ -2,12 +2,12 @@ import React from 'react';
 import { InlineCardResolvedView } from '@atlaskit/media-ui';
 import LocationIcon from '@atlaskit/icon/glyph/location';
 import { Geolocation, locationsManager } from '@atlaskit/maps-core';
-import { MapModal } from '@atlaskit/maps-viewer';
+import { MapModal, LocationPicker } from '@atlaskit/maps-viewer';
 
 export type LocationCardProps = {
   location: Geolocation;
   // Viewer options
-  shouldOpenMapsViewer?: boolean;
+  useViewer?: 'standard' | 'picker' | false;
   targetMap?: string | false;
 };
 
@@ -19,8 +19,8 @@ export default class LocationCard extends React.Component<
   LocationCardProps,
   LocationCardState
 > {
-  static defaultProps = {
-    shouldOpenMapsViewer: true,
+  static defaultProps: Partial<LocationCardProps> = {
+    useViewer: 'standard',
     targetMap: 'global',
   };
   state: LocationCardState = {
@@ -56,7 +56,7 @@ export default class LocationCard extends React.Component<
     this.setState({ isSelected });
   };
 
-  renderMapModal = () => {
+  renderMapViewer = () => {
     const { isSelected } = this.state;
     const { targetMap } = this.props;
     const locations = targetMap ? locationsManager.getLocations(targetMap) : [];
@@ -70,9 +70,26 @@ export default class LocationCard extends React.Component<
     );
   };
 
+  renderGeolocator = () => {
+    const { isSelected } = this.state;
+    const { targetMap } = this.props;
+    const locations = targetMap ? locationsManager.getLocations(targetMap) : [];
+    return (
+      <LocationPicker
+        onClose={() => this.setSelected(false)}
+        isOpen={isSelected}
+        selected={this.props.location}
+        locations={locations}
+        onSelected={() => {
+          console.log('I changed my mind');
+        }}
+      />
+    );
+  };
+
   render = () => {
     const { title, iconColor } = this.props.location;
-    const { shouldOpenMapsViewer = true } = this.props;
+    const { useViewer } = this.props;
     return (
       <>
         <InlineCardResolvedView
@@ -80,7 +97,8 @@ export default class LocationCard extends React.Component<
           icon={<LocationIcon label={title} primaryColor={iconColor} />}
           onClick={() => this.setSelected(true)}
         />
-        {shouldOpenMapsViewer && this.renderMapModal()}
+        {useViewer === 'standard' && this.renderMapViewer()}
+        {useViewer === 'picker' && this.renderGeolocator()}
       </>
     );
   };

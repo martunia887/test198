@@ -29,7 +29,9 @@ export default class MapViewer extends React.Component<MapViewerProps> {
   componentDidMount() {
     const { locations, selected, onUpdate } = this.props;
     if (this.mapContainer) {
-      this.mapHandler = new MapHandler(this.mapContainer, locations, selected);
+      this.mapHandler = new MapHandler(this.mapContainer, locations, selected, {
+        draggable: true,
+      });
       if (onUpdate) {
         this.mapHandler.onUpdate(onUpdate);
       }
@@ -44,7 +46,7 @@ export default class MapViewer extends React.Component<MapViewerProps> {
   }
 
   render() {
-    const { controls = {} } = this.props;
+    const { controls = {}, selected } = this.props;
     const { list, geocoder } = controls;
     const style = {
       height: '100%',
@@ -78,7 +80,7 @@ export default class MapViewer extends React.Component<MapViewerProps> {
             <LocationList mapHandler={this.mapHandler} />
           )}
           {geocoder && this.mapHandler && (
-            <Geocoder mapHandler={this.mapHandler} />
+            <Geocoder mapHandler={this.mapHandler} selected={selected} />
           )}
         </div>
       </div>

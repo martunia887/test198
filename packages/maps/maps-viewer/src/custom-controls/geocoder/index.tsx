@@ -45,16 +45,21 @@ const showInMap = (
 
 export type GeocoderProps = {
   mapHandler: MapHandler;
+  selected?: Geolocation;
 };
 
-const Geocoder = ({ mapHandler }: GeocoderProps) => {
-  const [selected, setSelected] = React.useState<Geolocation | undefined>();
+const Geocoder = ({ mapHandler, selected: preSelected }: GeocoderProps) => {
+  const [selected, setSelected] = React.useState<Geolocation | undefined>(
+    preSelected,
+  );
+  console.log(`Habemus papam? ${preSelected && preSelected.title}`);
   return (
     <AsyncSelect
       styles={styles}
       className="async-select-with-callback"
       classNamePrefix="react-select"
       loadOptions={debouncedLoadOptions}
+      value={preSelected && preSelected.title}
       // loadOptions={loadOptions}
       // defaultOptions
       // options={loadOptions}

@@ -8,15 +8,16 @@ type LocationPickerProps = {
   onSelected: (location: Geolocation) => void;
   onClose: () => void;
   isOpen: boolean;
+  locations: Geolocation[];
 };
 
 const ModalSelect = (props: LocationPickerProps) => {
-  const { onClose, selected: preSelected, onSelected } = props;
+  const { onClose, selected: preSelected, onSelected, locations = [] } = props;
   const [selected, setSelected] = React.useState<Geolocation>();
 
-  const onUpdate = (locations: Geolocation[]) => {
-    if (locations.length > 0) {
-      setSelected(locations[0]);
+  const onUpdate = (updatedLocations: Geolocation[]) => {
+    if (updatedLocations.length > 0) {
+      setSelected(updatedLocations[0]);
     } else {
       setSelected(undefined);
     }
@@ -47,6 +48,7 @@ const ModalSelect = (props: LocationPickerProps) => {
         selected={preSelected}
         controls={{ geocoder: true }}
         onUpdate={onUpdate}
+        locations={locations}
       />
     </Modal>
   );

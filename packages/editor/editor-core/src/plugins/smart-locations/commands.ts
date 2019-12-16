@@ -1,6 +1,6 @@
 import { createCommand, pluginKey } from './pm-plugins/main';
 import { Command } from '../../types';
-import { Slice, Fragment } from 'prosemirror-model';
+// import { Slice, Fragment } from 'prosemirror-model';
 
 export const toggleModal = (): Command =>
   createCommand(
@@ -12,7 +12,6 @@ export const toggleModal = (): Command =>
 
 export const createLocation = (geo: any): Command => {
   return (state, dispatch) => {
-    debugger;
     const locNode = state.schema.nodes.inlineLocation.createChecked({
       address: geo.address,
       coords: {

@@ -51,29 +51,38 @@ export type AddLocationOptions = {
   goto?: boolean;
 };
 
-export type GeolocationsUpdatedCallback = (locations: Geolocation[]) => void;
+export type GeolocationsUpdatedCallback = (
+  locations?: Geolocation[],
+  selected?: Geolocation,
+) => void;
 
 export class MapHandler {
   private mapPromise: Promise<MapboxMap> | undefined;
   private map: MapboxMap | undefined;
   private locationsMarkers: Map<Geolocation, Marker> = new Map();
+  private selected: Geolocation;
   private onUpdateCallbacks: GeolocationsUpdatedCallback[] = [];
 
   public constructor(
     container: HTMLDivElement,
     locations?: Geolocation[],
     selected?: Geolocation,
+    selectedOptions?: AddLocationOptions,
   ) {
-    this.openMap(container, locations, selected);
+    this.openMap(container, locations, selected, selectedOptions);
   }
 
   public openMap = async (
     container: HTMLDivElement,
     locations?: Geolocation[],
     selected?: Geolocation,
+    selectedOptions?: AddLocationOptions,
   ) => {
     await this.closeMap();
     this.updateMarkers(locations, selected);
+    if (selected && selectedOptions && selectedOptions.draggable) {
+      this.setDraggable(selected, selectedOptions.draggable);
+    }
     const allMarkers = getMarkers(this.locationsMarkers);
     this.mapPromise = mapbox.initMap(
       container,
@@ -181,4 +190,11 @@ export class MapHandler {
       callback(getGeolocations(this.locationsMarkers));
     });
   }
+
+  public setDraggable = (location: Geolocation, draggable: boolean) => {
+    const marker = this.locationsMarkers.get(location);
+    if (marker) {
+      marker.setDraggable(draggable);
+    }
+  };
 }

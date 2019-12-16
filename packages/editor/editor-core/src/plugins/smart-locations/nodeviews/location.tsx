@@ -16,7 +16,7 @@ export class InlineCardComponent extends React.PureComponent<Props> {
     return (
       <LocationCard
         location={new Geolocation(locationData)}
-        // shouldOpenMapsViewer={false}
+        useViewer={'picker'}
         targetMap={'editor'}
       />
     );
