@@ -42,27 +42,42 @@ const invalidBorder = (iconTokens: ThemeIconTokens) => ({
   strokeWidth: iconTokens.borderWidth,
 });
 
+const invalidAndCheckedBorder = (iconTokens: ThemeIconTokens) => ({
+  stroke: iconTokens.borderColor.invalidAndChecked,
+  strokeWidth: iconTokens.borderWidth,
+});
+
 const getBorderColor = ({ tokens, ...props }: IconWrapperCSSProps) => {
+  // Being disabled removes borders in all states
   if (props.isDisabled) {
     return disabledBorder(tokens.icon);
   }
+  // Being takes precedence
   if (props.isActive) {
     return activeBorder(tokens.icon);
   }
-  if (props.isHovered && props.isChecked) {
-    return hoveredAndCheckedBorder(tokens.icon);
-  }
-  if (props.isHovered) {
-    return hoveredBorder(tokens.icon);
-  }
-  if (props.isChecked) {
-    return checkedBorder(tokens.icon);
-  }
+  // Then being focused
   if (props.isFocused) {
     return focusedBorder(tokens.icon);
   }
+  // Then being invalid
   if (props.isInvalid) {
+    if (props.isChecked) {
+      return invalidAndCheckedBorder(tokens.icon);
+    }
     return invalidBorder(tokens.icon);
+  }
+
+  // Then hoverstates
+  if (props.isHovered) {
+    if (props.isChecked) {
+      return hoveredAndCheckedBorder(tokens.icon);
+    }
+    return hoveredBorder(tokens.icon);
+  }
+
+  if (props.isChecked) {
+    return checkedBorder(tokens.icon);
   }
 
   return {
