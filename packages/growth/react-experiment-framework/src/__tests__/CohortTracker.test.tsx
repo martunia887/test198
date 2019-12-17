@@ -1,17 +1,13 @@
-// @flow
-
 import React from 'react';
-import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { shallow } from 'enzyme';
 
 import CohortTracker from '../CohortTracker';
-
-configure({ adapter: new Adapter() });
+import { ExposureDetails, EnrollmentOptions } from '../types';
 
 describe('CohortTracker', () => {
-  let mockExposureDetails;
-  let mockEnrollmentOptions;
-  let mockOnExposure;
+  let mockExposureDetails: ExposureDetails;
+  let mockEnrollmentOptions: EnrollmentOptions;
+  let mockOnExposure: () => void;
 
   beforeEach(() => {
     mockExposureDetails = {

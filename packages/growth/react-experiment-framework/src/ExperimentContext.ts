@@ -1,7 +1,5 @@
-// @flow
-
 import { createContext } from 'react';
-import type { ExperimentContext } from './types';
+import { ExperimentContext } from './types';
 
 const initialContext: ExperimentContext = {
   experiments: {},

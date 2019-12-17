@@ -1,16 +1,16 @@
 /* eslint-disable react/no-multi-comp */
-// @flow
 
-import React, { Component } from 'react';
-import { mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import React, { Component, ReactNode, ComponentType } from 'react';
+import { mount } from 'enzyme';
 
 import { ExperimentProvider } from '../ExperimentContext';
-import asExperiment from '../asExperiment';
-import type {
+import asExperiment, { ExperimentComponentMap } from '../asExperiment';
+import {
   ExperimentEnrollmentResolver,
   Experiments,
   ExperimentEnrollmentOptions,
+  EnrollmentOptions,
+  ExposureDetails,
 } from '../types';
 import CohortTracker from '../CohortTracker';
 
@@ -29,23 +29,26 @@ class LoadingComponent extends Component<{}> {
     return <div>Loading...</div>;
   }
 }
-
-configure({ adapter: new Adapter() });
+type onError = (error: Error, options?: ExperimentEnrollmentOptions) => void;
+type onExposure = (
+  exposureDetails: ExposureDetails,
+  options?: ExperimentEnrollmentOptions,
+) => void;
 
 describe('asExperiment', () => {
   let enrollmentResolver: ExperimentEnrollmentResolver;
-  let enrollmentOptions;
+  let enrollmentOptions: EnrollmentOptions;
   let experiments: {
-    experiments: Experiments,
-    options?: ExperimentEnrollmentOptions,
+    experiments: Experiments;
+    options?: ExperimentEnrollmentOptions;
   };
-  let componentMap;
-  let callbacks;
-  let onError;
-  let onExposure;
-  let ControlComponent;
-  let VariantComponent;
-  let FallbackComponent;
+  let componentMap: ExperimentComponentMap;
+  let callbacks: { onError: onError; onExposure: onExposure };
+  let onError: onError;
+  let onExposure: onExposure;
+  let ControlComponent: ComponentType;
+  let VariantComponent: ComponentType;
+  let FallbackComponent: ComponentType;
 
   beforeEach(() => {
     enrollmentResolver = jest.fn();
@@ -145,11 +148,13 @@ describe('asExperiment', () => {
       const mockOptions = {
         example: 'value',
       };
-      const mockOptionsResolver = experimentKey => {
-        return {
+      const mockOptionsResolver = (
+        experimentKey: string,
+      ): EnrollmentOptions => {
+        return ({
           myExperimentKey: mockOptions,
           differentExperiment: 'this should not get returned',
-        }[experimentKey];
+        } as any)[experimentKey];
       };
       const mockExperiments = {
         ...experiments,
@@ -172,7 +177,6 @@ describe('asExperiment', () => {
         experiments: {
           myExperimentKey: {
             isEnrollmentDecided: true,
-            enrollmentResolver,
             enrollmentDetails: {
               cohort: 'control',
               isEligible: true,
@@ -233,7 +237,6 @@ describe('asExperiment', () => {
         experiments: {
           myExperimentKey: {
             isEnrollmentDecided: true,
-            enrollmentResolver,
             enrollmentDetails: {
               cohort: 'variant',
               isEligible: true,
@@ -294,7 +297,6 @@ describe('asExperiment', () => {
         experiments: {
           myExperimentKey: {
             isEnrollmentDecided: true,
-            enrollmentResolver,
             enrollmentDetails: {
               cohort: 'variant',
               isEligible: false,
@@ -355,7 +357,7 @@ describe('asExperiment', () => {
     describe('Variant but component is broken', () => {
       // eslint-disable-next-line react/require-render-return
       class BrokenComponent extends Component<{}> {
-        render() {
+        render(): ReactNode {
           throw new Error('Exploded');
         }
       }
@@ -365,7 +367,6 @@ describe('asExperiment', () => {
           experiments: {
             myExperimentKey: {
               isEnrollmentDecided: true,
-              enrollmentResolver,
               enrollmentDetails: {
                 cohort: 'variant',
                 isEligible: true,
@@ -503,7 +504,6 @@ describe('asExperiment', () => {
           experiments: {
             myExperimentKey: {
               isEnrollmentDecided: true,
-              enrollmentResolver,
             },
           },
           options: enrollmentOptions,
@@ -572,7 +572,6 @@ describe('asExperiment', () => {
           experiments: {
             myExperimentKey: {
               isEnrollmentDecided: true,
-              enrollmentResolver,
               enrollmentDetails: {
                 cohort: 'nonExistentCohort',
                 isEligible: true,
