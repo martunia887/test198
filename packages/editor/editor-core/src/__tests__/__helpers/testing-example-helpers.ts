@@ -7,14 +7,28 @@ import {
   copyAsHTMLButton,
 } from '../integration/_helpers';
 
-export async function mountEditor(page: Page, props: EditorProps) {
+type MountOptions = {
+  i18n?: { locale: string };
+};
+
+export async function loadLocale(page: Page, locales: Array<string>) {
+  await page.executeAsync((locales, done) => {
+    (window as any).__loadReactIntlLocale(locales, done);
+  }, locales);
+}
+
+export async function mountEditor(
+  page: Page,
+  props: EditorProps,
+  options?: MountOptions,
+) {
   await page.waitForSelector('#editor-container');
-  await page.$eval(
-    '#editor-container',
-    (_: HTMLElement | null, props?: EditorProps) => {
-      (window as any).__mountEditor(props);
+  await page.execute(
+    (props?: EditorProps, options?: MountOptions) => {
+      (window as any).__mountEditor(props, options || {});
     },
     props,
+    options || {},
   );
   await page.waitForSelector('.ProseMirror', { timeout: 500 });
   await page.click('.ProseMirror');
