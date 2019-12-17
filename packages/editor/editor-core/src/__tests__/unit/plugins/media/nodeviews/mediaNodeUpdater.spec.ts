@@ -203,6 +203,16 @@ describe('MediaNodeUpdater', () => {
     });
   });
 
+  describe('hasDifferentContextId()', () => {
+    it('should return true if current node context id is different than page context id', async () => {
+      const { mediaNodeUpdater } = setup();
+
+      expect(mediaNodeUpdater.getNodeContextId()).toEqual('source-context-id');
+      expect(await mediaNodeUpdater.getObjectId()).toEqual('object-id');
+      expect(mediaNodeUpdater.hasDifferentContextId()).toBeTruthy();
+    });
+  });
+
   describe('copyNode()', () => {
     it('should use getAuthFromContext to get auth', async () => {
       const { mediaNodeUpdater, uploadMediaClientConfig } = setup();
