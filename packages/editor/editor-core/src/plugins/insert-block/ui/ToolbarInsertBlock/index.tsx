@@ -824,7 +824,11 @@ class ToolbarInsertBlock extends React.PureComponent<
         return false;
       }
       const listType = name === 'action' ? 'taskList' : 'decisionList';
-      insertTaskDecision(editorView, listType, inputMethod);
+      insertTaskDecision(
+        editorView,
+        listType,
+        inputMethod,
+      )(editorView.state, editorView.dispatch);
       return true;
     });
 

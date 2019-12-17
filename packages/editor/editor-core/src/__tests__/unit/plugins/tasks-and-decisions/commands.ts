@@ -1,4 +1,5 @@
 import { NodeSelection } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 import {
   compareSelection,
   createEditorFactory,
@@ -32,6 +33,8 @@ describe('tasks and decisions - commands', () => {
 
   let createAnalyticsEvent: CreateUIAnalyticsEvent;
   let providerFactory: ProviderFactory;
+  let editorView: EditorView;
+  let sel: number;
 
   beforeEach(() => {
     uuid.setStatic('local-uuid');
@@ -62,6 +65,12 @@ describe('tasks and decisions - commands', () => {
     });
   };
 
+  const insertTaskDecisionCommand = (listType: TaskDecisionListType) =>
+    insertTaskDecision(editorView, listType)(
+      editorView.state,
+      editorView.dispatch,
+    );
+
   describe('insertTaskDecision', () => {
     const scenarios = [
       {
@@ -85,9 +94,8 @@ describe('tasks and decisions - commands', () => {
       ({ name, listName, list, item, listProps, itemProps }) => {
         describe(name, () => {
           it(`can convert paragraph node to ${name}`, () => {
-            const { editorView } = editorFactory(doc(p('Hello{<>} World')));
-
-            expect(insertTaskDecision(editorView, listName)).toBe(true);
+            ({ editorView } = editorFactory(doc(p('Hello{<>} World'))));
+            insertTaskDecisionCommand(listName);
 
             const expectedDoc = doc(
               list(listProps)(item(itemProps)('Hello{<>} World')),
@@ -97,8 +105,8 @@ describe('tasks and decisions - commands', () => {
           });
 
           it(`can convert empty paragraph node to ${name}`, () => {
-            const { editorView } = editorFactory(doc(p('{<>}')));
-            expect(insertTaskDecision(editorView, listName)).toBe(true);
+            ({ editorView } = editorFactory(doc(p('{<>}'))));
+            insertTaskDecisionCommand(listName);
 
             const expectedDoc = doc(list(listProps)(item(itemProps)('{<>}')));
             expect(editorView.state.doc).toEqualDocument(expectedDoc);
@@ -106,10 +114,9 @@ describe('tasks and decisions - commands', () => {
           });
 
           it(`can convert empty paragraph (below another paragraph node) to a selected ${name} node`, () => {
-            const { editorView } = editorFactory(
-              doc(p('Hello World'), p('{<>}')),
-            );
-            expect(insertTaskDecision(editorView, listName)).toBe(true);
+            ({ editorView } = editorFactory(doc(p('Hello World'), p('{<>}'))));
+            insertTaskDecisionCommand(listName);
+
             const expectedDoc = doc(
               p('Hello World'),
               list(listProps)(item(itemProps)('{<>}')),
@@ -119,20 +126,21 @@ describe('tasks and decisions - commands', () => {
           });
 
           it(`can convert blockquote to ${name}`, () => {
-            const { editorView } = editorFactory(
+            ({ editorView } = editorFactory(
               doc(blockquote(p('Hello{<>} World'))),
-            );
-            expect(insertTaskDecision(editorView, listName)).toBe(true);
+            ));
+            insertTaskDecisionCommand(listName);
+
             expect(editorView.state.doc).toEqualDocument(
               doc(list(listProps)(item(itemProps)('Hello World'))),
             );
           });
 
           it(`can convert content with hardbreaks to ${name}`, () => {
-            const { editorView } = editorFactory(
+            ({ editorView } = editorFactory(
               doc(p('Hello', br(), ' World{<>}')),
-            );
-            expect(insertTaskDecision(editorView, listName)).toBe(true);
+            ));
+            insertTaskDecisionCommand(listName);
 
             const expectedDoc = doc(
               list(listProps)(item(itemProps)('Hello', br(), ' World{<>}')),
@@ -142,7 +150,7 @@ describe('tasks and decisions - commands', () => {
           });
 
           it(`cannot convert media node to ${name}`, () => {
-            const { editorView } = editorFactory(
+            ({ editorView } = editorFactory(
               doc(
                 mediaGroup(
                   media({
@@ -152,17 +160,17 @@ describe('tasks and decisions - commands', () => {
                   })(),
                 ),
               ),
-            );
-            const { state } = editorView;
-            const { tr } = state;
+            ));
+            const { tr } = editorView.state;
             tr.setSelection(new NodeSelection(tr.doc.resolve(1)));
-            expect(insertTaskDecision(editorView, listName)).toBe(false);
+
+            expect(insertTaskDecisionCommand(listName)).toBe(false);
           });
 
           describe('when cursor is inside of a block node', () => {
             it(`should append an empty ${name} list after the parent block node`, () => {
-              const { editorView } = editorFactory(doc(panel()(p('te{<>}xt'))));
-              insertTaskDecision(editorView, listName);
+              ({ editorView } = editorFactory(doc(panel()(p('te{<>}xt')))));
+              insertTaskDecisionCommand(listName);
 
               const expectedDoc = doc(
                 panel()(p('text')),
@@ -175,10 +183,10 @@ describe('tasks and decisions - commands', () => {
 
           describe(`when cursor is inside non-empty ${name} item`, () => {
             it(`should add a task item to ${name} list`, () => {
-              const { editorView } = editorFactory(
+              ({ editorView } = editorFactory(
                 doc(list(listProps)(item(itemProps)('Hello World{<>}'))),
-              );
-              insertTaskDecision(editorView, listName);
+              ));
+              insertTaskDecisionCommand(listName);
 
               const expectedDoc = doc(
                 list(listProps)(
@@ -191,159 +199,194 @@ describe('tasks and decisions - commands', () => {
               compareSelection(editorFactory, expectedDoc, editorView);
             });
           });
+
+          const convertTo =
+            listName === 'taskList' ? scenarios[1] : scenarios[0];
+          describe(`${listName} <-> ${convertTo.listName}`, () => {
+            it(`can convert ${name} to ${convertTo.name}`, () => {
+              ({ editorView } = editorFactory(
+                doc(list(listProps)(item(itemProps)('Hello World{<>}'))),
+              ));
+              insertTaskDecisionCommand(convertTo.listName);
+              expect(editorView.state).toEqualDocumentAndSelection(
+                doc(
+                  convertTo.list(convertTo.listProps)(
+                    convertTo.item(convertTo.itemProps)('Hello World{<>}'),
+                  ),
+                ),
+              );
+            });
+
+            it(`can convert first ${name} to ${convertTo.name} when multiple`, () => {
+              ({ editorView } = editorFactory(
+                doc(
+                  list(listProps)(
+                    item(itemProps)('{<>}First'),
+                    item(itemProps)('Second'),
+                    item(itemProps)('Third'),
+                  ),
+                ),
+              ));
+              insertTaskDecisionCommand(convertTo.listName);
+
+              expect(editorView.state).toEqualDocumentAndSelection(
+                doc(
+                  convertTo.list(convertTo.listProps)(
+                    convertTo.item(convertTo.itemProps)('{<>}First'),
+                  ),
+                  list(listProps)(
+                    item(itemProps)('Second'),
+                    item(itemProps)('Third'),
+                  ),
+                ),
+              );
+            });
+
+            it(`can convert second ${name} to ${convertTo.name} when multiple`, () => {
+              ({ editorView } = editorFactory(
+                doc(
+                  list(listProps)(
+                    item(itemProps)('First'),
+                    item(itemProps)('Second{<>}'),
+                    item(itemProps)('Third'),
+                  ),
+                ),
+              ));
+              insertTaskDecisionCommand(convertTo.listName);
+
+              expect(editorView.state).toEqualDocumentAndSelection(
+                doc(
+                  list(listProps)(item(itemProps)('First')),
+                  convertTo.list(convertTo.listProps)(
+                    convertTo.item(convertTo.itemProps)('Second{<>}'),
+                  ),
+                  list(listProps)(item(itemProps)('Third')),
+                ),
+              );
+            });
+
+            it(`can convert last ${name} to ${convertTo.name} when multiple`, () => {
+              ({ editorView } = editorFactory(
+                doc(
+                  list(listProps)(
+                    item(itemProps)('First'),
+                    item(itemProps)('Second'),
+                    item(itemProps)('Third{<>}'),
+                  ),
+                ),
+              ));
+              insertTaskDecisionCommand(convertTo.listName);
+
+              expect(editorView.state).toEqualDocumentAndSelection(
+                doc(
+                  list(listProps)(
+                    item(itemProps)('First'),
+                    item(itemProps)('Second'),
+                  ),
+                  convertTo.list(convertTo.listProps)(
+                    convertTo.item(convertTo.itemProps)('Third{<>}'),
+                  ),
+                ),
+              );
+            });
+
+            it(`can convert ${name} in between ${convertTo.name} lists to ${name}`, () => {
+              ({ editorView } = editorFactory(
+                doc(
+                  convertTo.list(convertTo.listProps)(
+                    convertTo.item(convertTo.itemProps)('First'),
+                  ),
+                  list(listProps)(item(itemProps)('Second{<>}')),
+                  convertTo.list(convertTo.listProps)(
+                    convertTo.item(convertTo.itemProps)('Third'),
+                  ),
+                ),
+              ));
+              insertTaskDecisionCommand(convertTo.listName);
+
+              expect(editorView.state).toEqualDocumentAndSelection(
+                doc(
+                  convertTo.list(convertTo.listProps)(
+                    convertTo.item(convertTo.itemProps)('First'),
+                    convertTo.item(convertTo.itemProps)('Second{<>}'),
+                    convertTo.item(convertTo.itemProps)('Third'),
+                  ),
+                ),
+              );
+            });
+
+            it(`should change p -> ${listName} -> ${convertTo.listName} -> ${listName}`, () => {
+              ({ editorView } = editorFactory(doc(p('Hello{<>}'))));
+
+              insertTaskDecisionCommand(listName);
+              expect(editorView.state).toEqualDocumentAndSelection(
+                doc(list(listProps)(item(itemProps)('Hello{<>}'))),
+              );
+
+              insertTaskDecisionCommand(convertTo.listName);
+              expect(editorView.state).toEqualDocumentAndSelection(
+                doc(
+                  convertTo.list(convertTo.listProps)(
+                    convertTo.item(convertTo.itemProps)('Hello{<>}'),
+                  ),
+                ),
+              );
+
+              insertTaskDecisionCommand(listName);
+              expect(editorView.state).toEqualDocumentAndSelection(
+                doc(list(listProps)(item(itemProps)('Hello{<>}'))),
+              );
+            });
+          });
+
+          describe('analytics', () => {
+            const generatePayload = (position: number, listSize: number) => ({
+              action: 'inserted',
+              actionSubject: 'document',
+              actionSubjectId: name,
+              eventType: 'track',
+              attributes: {
+                inputMethod: 'toolbar',
+                containerAri: 'DUMMY-CONTAINER-ID',
+                objectAri: 'DUMMY-OBJECT-ID',
+                localId: 'local-uuid',
+                listLocalId: 'local-uuid',
+                userContext: 'edit',
+                position,
+                listSize,
+              },
+            });
+
+            it('should fire analytics event when add new item when no parent list', async () => {
+              ({ editorView } = editorFactory(doc(p('{<>}'))));
+              await contextIdentifierProvider;
+              insertTaskDecisionCommand(listName);
+              expect(createAnalyticsEvent).toBeCalledWith(
+                expect.objectContaining(generatePayload(0, 1)),
+              );
+            });
+
+            it('should fire analytics event when add item to existing list', async () => {
+              ({ editorView, sel } = editorFactory(doc(p('{<>}'))));
+              await contextIdentifierProvider;
+              insertTaskDecisionCommand(listName);
+              insertText(editorView, 'task 1', sel + 1);
+              insertTaskDecisionCommand(listName);
+              insertText(editorView, 'task 2', sel + 9);
+
+              expect(createAnalyticsEvent).toBeCalledWith(
+                expect.objectContaining(generatePayload(1, 2)),
+              );
+
+              insertTaskDecisionCommand(listName);
+
+              expect(createAnalyticsEvent).toBeCalledWith(
+                expect.objectContaining(generatePayload(2, 3)),
+              );
+            });
+          });
         });
       },
     );
-
-    describe('action/decisions', () => {
-      it('can convert decision item to action', () => {
-        const { editorView } = editorFactory(
-          doc(
-            decisionList({ localId: 'local-list' })(
-              decisionItem({ localId: 'local-item' })('Hello World'),
-            ),
-          ),
-        );
-        expect(insertTaskDecision(editorView, 'taskList')).toBe(true);
-        expect(editorView.state.doc).toEqualDocument(
-          doc(
-            taskList({ localId: 'local-uuid' })(
-              taskItem({ localId: 'local-uuid', state: 'TODO' })('Hello World'),
-            ),
-          ),
-        );
-        // TODO FS-2896 - change in behaviour
-      });
-
-      it('can convert action item to decision', () => {
-        const { editorView } = editorFactory(
-          doc(
-            taskList({ localId: 'local-uuid' })(
-              taskItem({ localId: 'local-uuid' })('Hello World'),
-            ),
-          ),
-        );
-        expect(insertTaskDecision(editorView, 'decisionList')).toBe(true);
-        expect(editorView.state.doc).toEqualDocument(
-          doc(
-            decisionList({ localId: 'local-uuid' })(
-              decisionItem({ localId: 'local-uuid' })('Hello World'),
-            ),
-          ),
-        );
-        // TODO FS-2896 - change in behaviour
-      });
-    });
-
-    describe('switching back and forth between types is possible FS-2800', () => {
-      it('should change p -> taskList -> decisionList -> taskList', () => {
-        const { editorView } = editorFactory(doc(p('Hello{<>}')));
-
-        expect(insertTaskDecision(editorView, 'taskList')).toBe(true);
-        expect(editorView.state.doc).toEqualDocument(
-          doc(
-            taskList({ localId: 'local-uuid' })(
-              taskItem({ localId: 'local-uuid', state: 'TODO' })('Hello'),
-            ),
-          ),
-        );
-
-        expect(insertTaskDecision(editorView, 'decisionList')).toBe(true);
-        expect(editorView.state.doc).toEqualDocument(
-          doc(
-            decisionList({ localId: 'local-uuid' })(
-              decisionItem({ localId: 'local-uuid', state: 'DECIDED' })(
-                'Hello',
-              ),
-            ),
-          ),
-        );
-
-        expect(insertTaskDecision(editorView, 'taskList')).toBe(true);
-        expect(editorView.state.doc).toEqualDocument(
-          doc(
-            taskList({ localId: 'local-uuid' })(
-              taskItem({ localId: 'local-uuid', state: 'TODO' })('Hello'),
-            ),
-          ),
-        );
-      });
-    });
-
-    it('should change p -> decisionList -> taskList -> decisionList', () => {
-      const { editorView } = editorFactory(doc(p('Hello{<>}')));
-
-      expect(insertTaskDecision(editorView, 'decisionList')).toBe(true);
-      expect(editorView.state.doc).toEqualDocument(
-        doc(
-          decisionList({ localId: 'local-uuid' })(
-            decisionItem({ localId: 'local-uuid', state: 'DECIDED' })('Hello'),
-          ),
-        ),
-      );
-
-      expect(insertTaskDecision(editorView, 'taskList')).toBe(true);
-      expect(editorView.state.doc).toEqualDocument(
-        doc(
-          taskList({ localId: 'local-uuid' })(
-            taskItem({ localId: 'local-uuid', state: 'TODO' })('Hello'),
-          ),
-        ),
-      );
-
-      expect(insertTaskDecision(editorView, 'decisionList')).toBe(true);
-      expect(editorView.state.doc).toEqualDocument(
-        doc(
-          decisionList({ localId: 'local-uuid' })(
-            decisionItem({ localId: 'local-uuid', state: 'DECIDED' })('Hello'),
-          ),
-        ),
-      );
-    });
-
-    describe('analytics', () => {
-      const generatePayload = (position: number, listSize: number) => ({
-        action: 'inserted',
-        actionSubject: 'document',
-        actionSubjectId: 'action',
-        eventType: 'track',
-        attributes: {
-          inputMethod: 'toolbar',
-          containerAri: 'DUMMY-CONTAINER-ID',
-          objectAri: 'DUMMY-OBJECT-ID',
-          localId: 'local-uuid',
-          listLocalId: 'local-uuid',
-          userContext: 'edit',
-          position,
-          listSize,
-        },
-      });
-
-      it('should fire analytics event when add new item when no parent list', async () => {
-        const { editorView } = editorFactory(doc(p('{<>}')));
-        await contextIdentifierProvider;
-        insertTaskDecision(editorView, 'taskList');
-        expect(createAnalyticsEvent).toBeCalledWith(
-          expect.objectContaining(generatePayload(0, 1)),
-        );
-      });
-
-      it('should fire analytics event when add item to existing list', async () => {
-        const { editorView, sel } = editorFactory(doc(p('{<>}')));
-        await contextIdentifierProvider;
-        insertTaskDecision(editorView, 'taskList');
-        insertText(editorView, 'task 1', sel + 1);
-        insertTaskDecision(editorView, 'taskList');
-        insertText(editorView, 'task 2', sel + 9);
-        expect(createAnalyticsEvent).toBeCalledWith(
-          expect.objectContaining(generatePayload(1, 2)),
-        );
-
-        insertTaskDecision(editorView, 'taskList');
-        expect(createAnalyticsEvent).toBeCalledWith(
-          expect.objectContaining(generatePayload(2, 3)),
-        );
-      });
-    });
   });
 });
