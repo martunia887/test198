@@ -24,6 +24,7 @@ const BasicUsageExample = class extends PureComponent<void, State> {
           label="Basic checkbox"
           onChange={this.onChange}
           name="checkbox-basic"
+          testId="cb-basic"
         />
         <Checkbox
           defaultChecked
@@ -31,6 +32,7 @@ const BasicUsageExample = class extends PureComponent<void, State> {
           value="Checked by default"
           onChange={this.onChange}
           name="checkbox-checked"
+          testId="cb-default-checked"
         />
         <Checkbox
           isDisabled
@@ -38,6 +40,7 @@ const BasicUsageExample = class extends PureComponent<void, State> {
           value="Disabled"
           onChange={this.onChange}
           name="checkbox-disabled"
+          testId="cb-disabled"
         />
         <Checkbox
           isInvalid
@@ -45,6 +48,7 @@ const BasicUsageExample = class extends PureComponent<void, State> {
           value="Invalid"
           onChange={this.onChange}
           name="checkbox-invalid"
+          testId="cb-invalid"
         />
         <Checkbox
           isFullWidth
@@ -52,6 +56,7 @@ const BasicUsageExample = class extends PureComponent<void, State> {
           value="Full Width"
           onChange={this.onChange}
           name="checkbox-fullwidth"
+          testId="cd-fullwidth"
         />
 
         <div
