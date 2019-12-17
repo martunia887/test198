@@ -231,7 +231,7 @@ describe('Popup', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('does not call onClose after clicking on the trigger when the popup is opened and closeOnClickAway is false', () => {
+  it('does not call onClose after clicking on the trigger when the popup is opened and shouldCloseOnBodyClick is false', () => {
     const onClose = jest.fn();
     const trigger = () => <button>trigger</button>;
     const { getByText, rerender } = render(
@@ -240,7 +240,7 @@ describe('Popup', () => {
         isOpen={false}
         onClose={onClose}
         trigger={trigger}
-        closeOnClickAway={false}
+        shouldCloseOnBodyClick={false}
       />,
     );
 
@@ -250,7 +250,7 @@ describe('Popup', () => {
         isOpen
         onClose={onClose}
         trigger={trigger}
-        closeOnClickAway={false}
+        shouldCloseOnBodyClick={false}
       />,
     );
 
@@ -282,14 +282,14 @@ describe('Popup', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('does not call onClose after clicking outside of the popup when the popup is opened and closeOnClickAway is false', () => {
+  it('does not call onClose after clicking outside of the popup when the popup is opened and shouldCloseOnBodyClick is false', () => {
     const onClose = jest.fn();
     const { baseElement, rerender } = render(
       <Popup
         {...defaultProps}
         isOpen={false}
         onClose={onClose}
-        closeOnClickAway={false}
+        shouldCloseOnBodyClick={false}
       />,
     );
     rerender(
@@ -297,7 +297,7 @@ describe('Popup', () => {
         {...defaultProps}
         isOpen
         onClose={onClose}
-        closeOnClickAway={false}
+        shouldCloseOnBodyClick={false}
       />,
     );
 

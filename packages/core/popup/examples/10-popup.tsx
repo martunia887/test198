@@ -114,7 +114,7 @@ export default () => {
           </Button>
         )}
         placement={placement}
-        closeOnClickAway={clickAwayClose}
+        shouldCloseOnBodyClick={clickAwayClose}
       />
     </div>
   );

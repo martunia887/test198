@@ -50,7 +50,7 @@ export type PopupProps = {
    * fit in the viewport. */
   shouldFlip?: boolean;
   /** Allows the popup to stay open when clicking away from the popup or trigger */
-  closeOnClickAway?: boolean;
+  shouldCloseOnBodyClick?: boolean;
   /** testId maps to data-testid for testing in your application */
   testId?: string;
   /** Content to display in the Popup */
@@ -70,7 +70,7 @@ export type PopupProps = {
 export type CloseManagerHook = Pick<PopupProps, 'isOpen' | 'onClose'> & {
   popupRef: PopupRef;
   triggerRef: TriggerRef;
-  closeOnClickAway: boolean;
+  shouldCloseOnBodyClick: boolean;
 };
 
 export type FocusManagerHook = {

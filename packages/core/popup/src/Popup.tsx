@@ -23,7 +23,7 @@ export const Popup: FC<PopupProps> = memo(
     offset,
     placement,
     shouldFlip = true,
-    closeOnClickAway = true,
+    shouldCloseOnBodyClick = true,
     testId,
     content: Content,
     trigger,
@@ -43,7 +43,7 @@ export const Popup: FC<PopupProps> = memo(
       onClose,
       popupRef,
       triggerRef,
-      closeOnClickAway,
+      shouldCloseOnBodyClick,
     });
 
     return (

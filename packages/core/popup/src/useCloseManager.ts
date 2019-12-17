@@ -6,7 +6,7 @@ export const useCloseManager = ({
   onClose,
   popupRef,
   triggerRef,
-  closeOnClickAway,
+  shouldCloseOnBodyClick,
 }: CloseManagerHook): void => {
   useEffect(() => {
     const closePopup = () => {
@@ -20,7 +20,7 @@ export const useCloseManager = ({
       const isClickOnTrigger =
         triggerRef && triggerRef.contains(target as Node);
 
-      if (closeOnClickAway && !isClickOnPopup && !isClickOnTrigger) {
+      if (shouldCloseOnBodyClick && !isClickOnPopup && !isClickOnTrigger) {
         closePopup();
       }
     };
@@ -41,5 +41,5 @@ export const useCloseManager = ({
       document.removeEventListener('click', onClick, true);
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [closeOnClickAway, isOpen, onClose, popupRef, triggerRef]);
+  }, [shouldCloseOnBodyClick, isOpen, onClose, popupRef, triggerRef]);
 };
