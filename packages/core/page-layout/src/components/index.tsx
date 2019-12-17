@@ -1,16 +1,37 @@
 /** @jsx jsx */
 import React from 'react';
-import { jsx, css, CSSObject } from '@emotion/core';
+import { jsx, CSSObject } from '@emotion/core';
 
-export const ThemeContext = React.createContext(null);
+const noop: (args: any) => void = Function;
+const defaultThemeContext = {
+  setBannerHeight: noop,
+  bannerStyles: {},
+  setNavHeight: noop,
+  navStyles: {},
+  setLeftSidebarWidth: noop,
+  leftSidebarStyles: {},
+  setLeftPanelWidth: noop,
+  leftPanelStyles: {},
+  setRightPanelWidth: noop,
+  rightPanelStyles: {},
+  setRightSidebarWidth: noop,
+  rightSidebarStyles: {},
+};
+export const ThemeContext = React.createContext(defaultThemeContext);
 
-const getFixedStyles = (isFixed: boolean, fixedStyles: CSSObject) =>
+const getFixedStyles = (isFixed: boolean = false, fixedStyles: CSSObject) =>
   isFixed ? { position: 'fixed', ...fixedStyles } : {};
 
 const div = 'div';
 export default div;
+type SlotProps = {
+  children: React.ReactNode;
+  height?: number;
+  width?: number;
+  isFixed?: boolean;
+};
 
-const Banner = props => {
+const Banner = (props: SlotProps) => {
   const { children, height, isFixed } = props;
   const { setBannerHeight, bannerStyles } = React.useContext(ThemeContext);
 
@@ -29,7 +50,7 @@ const Banner = props => {
   );
 };
 
-const Nav = props => {
+const Nav = (props: SlotProps) => {
   const { children, height, isFixed } = props;
   const { setNavHeight, navStyles } = React.useContext(ThemeContext);
   setNavHeight(height);
@@ -46,7 +67,7 @@ const Nav = props => {
     </div>
   );
 };
-const LeftSideBar = props => {
+const LeftSideBar = (props: SlotProps) => {
   const { children, width, isFixed } = props;
   const { setLeftSidebarWidth, leftSidebarStyles } = React.useContext(
     ThemeContext,
@@ -67,7 +88,7 @@ const LeftSideBar = props => {
   );
 };
 
-const LeftPanel = props => {
+const LeftPanel = (props: SlotProps) => {
   const { children, width, isFixed } = props;
   const { setLeftPanelWidth, leftPanelStyles } = React.useContext(ThemeContext);
 
@@ -85,7 +106,7 @@ const LeftPanel = props => {
     </div>
   );
 };
-const RightPanel = props => {
+const RightPanel = (props: SlotProps) => {
   const { children, width, isFixed } = props;
   const { setRightPanelWidth, rightPanelStyles } = React.useContext(
     ThemeContext,
@@ -106,7 +127,7 @@ const RightPanel = props => {
   );
 };
 
-const Grid = props => {
+const Grid = (props: SlotProps) => {
   const { children } = props;
   const [bannerHeight, setBannerHeight] = React.useState(0);
   const [navHeight, setNavHeight] = React.useState(0);
@@ -130,7 +151,6 @@ const Grid = props => {
     >
       <ThemeContext.Provider
         value={{
-          backgroundColor: 'red',
           setBannerHeight,
           setNavHeight,
           setLeftPanelWidth,
