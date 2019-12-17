@@ -16555,10 +16555,10 @@ junk@2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/junk/-/junk-2.1.0.tgz#f431b4b7f072dc500a5f10ce7f4ec71930e70134"
 
-kakapo@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/kakapo/-/kakapo-4.0.3.tgz#8da110022b46232ae14a1314c8dda462716852ce"
-  integrity sha512-5XOUfS/F7GzCNR96o4GPq1MiYLMkRRdHQFTICJLs92DzUC6a2eorqOJV9kYt6TiFdU20Rupb3xA84Blr7PYZgQ==
+kakapo@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/kakapo/-/kakapo-4.0.4.tgz#de11b5ab9ab20044986f2f0519a50515c1c593e7"
+  integrity sha512-Fn6H6rGaW8L76BYpXrl/b77Z7DLiaRjRnF7aYuPOcLLby8z1hpAqCQcnZdGyrqS7AOM5KScDujsRQ/aIdlhs2A==
   dependencies:
     faker "^3.1.0"
     lodash.filter "^4.6.0"
