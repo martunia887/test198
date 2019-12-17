@@ -1,5 +1,29 @@
 # @atlaskit/motion
 
+## 0.1.0
+
+### Minor Changes
+
+- [minor][5c3fc52da7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5c3fc52da7):
+
+  The internal `Motion` component is now called `KeyframesMotion`.- [minor][1dd6a6d6ac](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1dd6a6d6ac):
+
+  `ExitingPersistence` now has an `appear` prop.
+  Previously entering motions would always appear when mounting - now you have to opt into the behaviour.
+
+  ```diff
+  -<ExitingPersistence>
+  +<ExitingPersistence appear>
+    ...
+  </ExitingPersistence>
+  ```
+
+### Patch Changes
+
+- [patch][f175c8088f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f175c8088f):
+
+  Fixes non-exiting elements from re-rendering unnecessarily.
+
 ## 0.0.4
 
 ### Patch Changes
@@ -17,12 +41,12 @@
 
 - [patch][94abe7f41a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/94abe7f41a):
 
-  ## New `useResizingHeight()` hook
+  New `useResizingHeight()` hook
 
   This is a small yet powerful hook which you can consume to enable an element to resize its `height` when it changes after a state transition.
   It uses CSS under-the-hood to maximize performance.
 
-  ```js
+  ```
   import { useResizingHeight } from '@atlaskit/motion';
 
   ({ text }) => <div {...useResizingHeight()}>{text}</div>;
