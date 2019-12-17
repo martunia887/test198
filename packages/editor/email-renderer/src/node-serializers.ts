@@ -33,6 +33,7 @@ import layoutSection from './nodes/layoutSection';
 import bodiedExtension from './nodes/bodiedExtension';
 import inlineExtension from './nodes/inlineExtension';
 import date from './nodes/date';
+import expand from './nodes/expand';
 
 const renderNothing = (): string => '';
 
@@ -73,4 +74,6 @@ export const nodeSerializers: { [key: string]: NodeSerializer } = {
   unknownBlock,
   status,
   date,
+  expand,
+  nestedExpand: expand,
 };

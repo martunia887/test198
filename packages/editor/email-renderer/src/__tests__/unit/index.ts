@@ -25,6 +25,7 @@ import * as mediaGroup from './__fixtures__/media-group.adf.json';
 import * as mediaGroupAllTypes from './__fixtures__/media-group-all-types.adf.json';
 import * as lists from './__fixtures__/lists.adf.json';
 import * as text from './__fixtures__/text.adf.json';
+import * as expand from './__fixtures__/expand.adf.json';
 
 import * as image from './__fixtures__/image.adf.json';
 import * as placeholder from './__fixtures__/placeholder.adf.json';
@@ -237,6 +238,11 @@ describe('Renderer - EmailSerializer', () => {
 
   it('should render lists', () => {
     const { result } = render(lists);
+    expect(result).toMatchSnapshot('html');
+  });
+
+  it('should render expands', () => {
+    const { result } = render(expand);
     expect(result).toMatchSnapshot('html');
   });
 
