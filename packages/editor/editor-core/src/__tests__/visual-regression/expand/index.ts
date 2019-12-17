@@ -143,7 +143,7 @@ describe.skip('Expand: allowInteractiveExpand', () => {
         Device.LaptopMDPI,
         undefined,
         {
-          UNSAFE_allowExpand: {
+          allowExpand: {
             allowInteractiveExpand: false,
           },
         },

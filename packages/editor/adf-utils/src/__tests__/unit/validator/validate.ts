@@ -57,12 +57,7 @@ describe('validate', () => {
     invalid.forEach((file: any) => {
       it(`${schemaType} schema does not validate '${file.name}'`, async () => {
         // Validator is built for stage-0, so these will pass validation.
-        const ignorelist = [
-          'media-with-alt-text-value.json',
-          'expand.json',
-          'nestedExpand.json',
-          'expand-with-nestedExpand.json',
-        ];
+        const ignorelist = ['media-with-alt-text-value.json'];
         expect(true).toBe(true);
         if (!ignorelist.includes(file.name)) {
           const run = () => {

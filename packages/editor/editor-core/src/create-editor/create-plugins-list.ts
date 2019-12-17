@@ -158,7 +158,7 @@ export default function createPluginsList(
     plugins.push(rulePlugin());
   }
 
-  if (props.UNSAFE_allowExpand) {
+  if (props.allowExpand) {
     plugins.push(
       expandPlugin({ allowInsertion: isExpandInsertionEnabled(props) }),
     );

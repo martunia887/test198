@@ -184,7 +184,7 @@ export interface EditorProps {
 
   UNSAFE_cards?: CardOptions;
 
-  UNSAFE_allowExpand?:
+  allowExpand?:
     | boolean
     | { allowInsertion?: boolean; allowInteractiveExpand?: boolean };
 
