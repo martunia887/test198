@@ -3744,6 +3744,11 @@
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.29.tgz#a1e514adfbd92f03a224ba54d693111dbf1f3754"
   integrity sha1-oeUUrfvZLwOiJLpU1pMRHb8fN1Q=
 
+"@types/deep-equal@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/deep-equal/-/deep-equal-1.0.1.tgz#71cfabb247c22bcc16d536111f50c0ed12476b03"
+  integrity sha512-mMUu4nWHLBlHtxXY17Fg6+ucS/MnndyOWyOe7MmwkoMYxvfQU2ajtRaEvqSUv+aVkMqH/C0NCI8UoVfRNQ10yg==
+
 "@types/enzyme@^3.1.15":
   version "3.1.15"
   resolved "https://registry.yarnpkg.com/@types/enzyme/-/enzyme-3.1.15.tgz#fc9a9695ba9f90cd50c4967e64a8c66ec96913d1"
@@ -7093,10 +7098,10 @@ bolt@^0.20.6:
     typeable-promisify "^2.0.1"
     yarn "^1.6.0"
 
-bolt@^0.24.3:
-  version "0.24.3"
-  resolved "https://registry.yarnpkg.com/bolt/-/bolt-0.24.3.tgz#425da5330aedf145b330ad1f3a779c01cd846db5"
-  integrity sha512-lvSfUBsH1Hko6tUiqmrzZGqheQKD8imCvDNuND7EjO+mhGpu1Ejbz65ur20GqpFG+BtubrgDTDFK5rewpLM1pw==
+bolt@^0.24.4:
+  version "0.24.4"
+  resolved "https://registry.yarnpkg.com/bolt/-/bolt-0.24.4.tgz#0b6080b8dff84415f194e6e3067e9361042f3514"
+  integrity sha512-Y4adoDkT/HtdlGWaMM35qi7JV30dAGCyseNnUvKT5BJVlsBODMOCEkNLTDtKwtyuCuUhWaDdIuLwYQgW8HdMlw==
   dependencies:
     array-includes "^3.0.3"
     babel-runtime "^6.25.0"
