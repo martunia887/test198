@@ -29,6 +29,7 @@ export const altTextButton = (
     type: 'button',
     onClick: openMediaAltTextMenu,
     showTitle: true,
+    testId: 'alt-text-edit-button',
     tooltipContent: keymaps.renderTooltipContent(title, keymaps.addAltText),
   };
 };

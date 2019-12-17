@@ -136,6 +136,7 @@ export class AltTextEditComponent extends React.Component<
             />
           </BackButtonWrapper>
           <PanelTextInput
+            testId="alt-text-input"
             placeholder={formatMessage(messages.placeholder)}
             defaultValue={value ? value : ''}
             onCancel={this.dispatchCancelEvent}
