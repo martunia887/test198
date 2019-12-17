@@ -42,10 +42,6 @@ import {
   EditorProps,
 } from '../types';
 import { PortalProviderAPI } from '../ui/PortalProvider';
-import {
-  EditorDisabledPluginState,
-  pluginKey as editorDisabledPluginKey,
-} from '../plugins/editor-disabled';
 import { analyticsService } from '../analytics';
 import {
   createErrorReporter,
@@ -148,24 +144,11 @@ export default class ReactEditorView<T = {}> extends React.Component<
     });
   }
 
-  private broadcastDisabled = (disabled: boolean) => {
-    const editorView = this.view;
-    if (editorView) {
-      const tr = editorView.state.tr.setMeta(editorDisabledPluginKey, {
-        editorDisabled: disabled,
-      } as EditorDisabledPluginState);
-
-      tr.setMeta('isLocal', true);
-      editorView.dispatch(tr);
-    }
-  };
-
   UNSAFE_componentWillReceiveProps(nextProps: EditorViewProps) {
     if (
       this.view &&
       this.props.editorProps.disabled !== nextProps.editorProps.disabled
     ) {
-      this.broadcastDisabled(!!nextProps.editorProps.disabled);
       // Disables the contentEditable attribute of the editor if the editor is disabled
       this.view.setProps({
         editable: _state => !nextProps.editorProps.disabled,
@@ -508,9 +491,6 @@ export default class ReactEditorView<T = {}> extends React.Component<
       ) {
         this.focusTimeoutId = handleEditorFocus(view);
       }
-
-      // Set the state of the EditorDisabled plugin to the current value
-      this.broadcastDisabled(!!this.props.editorProps.disabled);
 
       // Force React to re-render so consumers get a reference to the editor view
       this.forceUpdate();

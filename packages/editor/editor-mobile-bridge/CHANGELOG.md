@@ -1,5 +1,82 @@
 # @atlaskit/editor-mobile-bridge
 
+## 11.1.0
+
+### Minor Changes
+
+- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  FM-2744 Implement native side for Hybrid Editor/Renderer Analytics events- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  FM-2593 feat: expose getVersion to renderer bridge
+
+### Patch Changes
+
+- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  Elevate parsing exceptions in cross platform promises- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [7ee2d3281f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7ee2d3281f):
+- Updated dependencies [7ee2d3281f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7ee2d3281f):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+  - @atlaskit/renderer@53.2.1
+  - @atlaskit/editor-common@43.1.0
+  - @atlaskit/editor-core@115.2.0
+  - @atlaskit/media-client@4.2.0
+  - @atlaskit/select@11.0.3
+  - @atlaskit/form@7.0.0
+  - @atlaskit/textfield@3.1.4
+  - @atlaskit/smart-card@12.6.2
+  - @atlaskit/textarea@2.2.3
+  - @atlaskit/status@0.9.18
+
+## 11.0.2
+
+### Patch Changes
+
+- [patch][f9f9b6bf1b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9f9b6bf1b):
+
+  ED-8290 fix: avoid sending superfluous arguments to remote when args is undefined- Updated dependencies [768bac6d81](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/768bac6d81):
+
+- Updated dependencies [768bac6d81](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/768bac6d81):
+- Updated dependencies [7bf6a29563](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7bf6a29563):
+- Updated dependencies [fbff0b7e41](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/fbff0b7e41):
+- Updated dependencies [7519b2a816](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7519b2a816):
+- Updated dependencies [9902932114](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9902932114):
+  - @atlaskit/editor-test-helpers@10.3.1
+  - @atlaskit/editor-core@115.1.0
+
 ## 11.0.1
 
 ### Patch Changes

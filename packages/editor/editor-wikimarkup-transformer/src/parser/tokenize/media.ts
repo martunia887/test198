@@ -15,6 +15,7 @@ export const media: TokenParser = ({ input, position, schema, context }) => {
       schema,
       rawContent,
       parseAttrs(rawAttrs, ','),
+      context,
     );
 
     return {

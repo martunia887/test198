@@ -49,6 +49,15 @@ export type Options = {
   createAnalyticsEvent?: CreateUIAnalyticsEvent;
 };
 
+export type EditorInstanceWithPlugin<T> = EditorInstance & {
+  portalProviderAPI: PortalProviderAPI;
+  refs: Refs;
+  sel: number;
+  plugin: any;
+  pluginState: T;
+  editorProps: EditorProps;
+};
+
 export default function createEditorFactoryForTests<T = any>() {
   let place: HTMLDivElement;
   let wrapper: ReactWrapper;
@@ -73,14 +82,7 @@ export default function createEditorFactoryForTests<T = any>() {
     providerFactory,
     pluginKey,
     createAnalyticsEvent,
-  }: Options): EditorInstance & {
-    portalProviderAPI: PortalProviderAPI;
-    refs: Refs;
-    sel: number;
-    plugin: any;
-    pluginState: T;
-    editorProps: EditorProps;
-  } => {
+  }: Options): EditorInstanceWithPlugin<T> => {
     let portalProviderAPI: PortalProviderAPI | undefined;
     const plugins = editorPlugins
       ? [...getDefaultPluginsList(editorProps), ...editorPlugins]

@@ -93,7 +93,13 @@ describe('JIRA wiki markup - Links', () => {
   for (const [testCaseDescription, markup] of testCases) {
     fit(testCaseDescription, () => {
       const transformer = new WikiMarkupTransformer();
-      expect(transformer.parse(markup)).toMatchSnapshot();
+      expect(
+        transformer.parse(markup, {
+          conversion: {
+            mediaConversion: { 'image.jpg': 'abc-123' },
+          },
+        }),
+      ).toMatchSnapshot();
     });
   }
 });

@@ -70,7 +70,7 @@ describe('ADF => WikiMarkup - List', () => {
           p('item 2'),
           mediaSingle()(
             media({
-              id: 'file1.txt',
+              id: 'abc-123',
               type: 'file',
               collection: 'tmp',
               width: 100,
@@ -80,6 +80,12 @@ describe('ADF => WikiMarkup - List', () => {
         ),
       ),
     )(defaultSchema);
-    expect(transformer.encode(node)).toMatchSnapshot();
+    expect(
+      transformer.encode(node, {
+        conversion: {
+          mediaConversion: { 'abc-123': 'file1.txt' },
+        },
+      }),
+    ).toMatchSnapshot();
   });
 });

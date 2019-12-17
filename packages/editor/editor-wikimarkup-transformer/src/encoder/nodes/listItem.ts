@@ -5,14 +5,19 @@ import { paragraph } from './paragraph';
 import { unknown } from './unknown';
 import { codeBlock } from './code-block';
 import { mediaGroup } from './media-group';
+import { Context } from '../../interfaces';
 
-export const listItem = (node: PMNode, prefix: string): string => {
+export const listItem = (
+  node: PMNode,
+  prefix: string,
+  context?: Context,
+): string => {
   const result: string[] = [];
   let contentBuffer: string[] = [];
   node.forEach(n => {
     switch (n.type.name) {
       case 'paragraph': {
-        contentBuffer.push(paragraph(n));
+        contentBuffer.push(paragraph(n, { context }));
         break;
       }
       case 'bulletList':
@@ -21,7 +26,7 @@ export const listItem = (node: PMNode, prefix: string): string => {
           result.push(`${prefix} ${contentBuffer.join('\n')}`);
           contentBuffer = [];
         }
-        const nestedList = encode(n)
+        const nestedList = encode(n, context)
           .split('\n')
           .map(line => {
             if (['#', '*'].indexOf(line.substr(0, 1)) !== -1) {
@@ -39,7 +44,7 @@ export const listItem = (node: PMNode, prefix: string): string => {
       }
       case 'mediaSingle': {
         // mediaSingle and mediaGroup are holding the same conversion logic
-        contentBuffer.push(mediaGroup(n));
+        contentBuffer.push(mediaGroup(n, { context }));
         break;
       }
       default:

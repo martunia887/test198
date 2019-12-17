@@ -27,7 +27,7 @@ describe('validate', () => {
       return;
     }
     valid.forEach((file: any) => {
-      it(`validates '${file.name}'`, async () => {
+      it(`${schemaType} schema validates '${file.name}'`, async () => {
         // TODO: remove ignore list once this issue is fixed.
         // Added because of expect.hasAssertions()
         expect(true).toBe(true);
@@ -55,8 +55,14 @@ describe('validate', () => {
       return;
     }
     invalid.forEach((file: any) => {
-      it(`does not validate '${file.name}'`, async () => {
-        const ignorelist = ['media-with-alt-text-value.json'];
+      it(`${schemaType} schema does not validate '${file.name}'`, async () => {
+        // Validator is built for stage-0, so these will pass validation.
+        const ignorelist = [
+          'media-with-alt-text-value.json',
+          'expand.json',
+          'nestedExpand.json',
+          'expand-with-nestedExpand.json',
+        ];
         expect(true).toBe(true);
         if (!ignorelist.includes(file.name)) {
           const run = () => {

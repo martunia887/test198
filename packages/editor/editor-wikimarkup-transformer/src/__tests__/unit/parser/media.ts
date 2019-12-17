@@ -1,4 +1,5 @@
 import WikiMarkupTransformer from '../../../index';
+import { Context } from '../../../interfaces';
 
 describe('JIRA wiki markup - Images and attachments', () => {
   const testCases: Array<[string, string]> = [
@@ -57,12 +58,57 @@ yep`,
       '[CS-1404] should parse attachments inside tables as single media group',
       '|colum 1 [^a-doc (jadsjdasjadsjkdasjk).pdf]\r\n[^not-empty (askjsajnkjknads).txt]|column 2|',
     ],
+    [
+      'should transform filename to id for embeddable attachments if NOT present in context',
+      '!Screen Shot.jpeg!',
+    ],
+    [
+      'should transform filename to id for attachment links if NOT present in context',
+      '[^document.pdf]',
+    ],
   ];
+
+  const context: Context = {
+    conversion: {
+      mediaConversion: {
+        'file1.txt': 'uuid-file1',
+        'file2.txt': 'uuid-file2',
+        'file3.txt': 'uuid-file3',
+        'image.png': 'uuid-image',
+        'http://www.host.com/image.gif': 'uuid-http://www.host.com/image',
+        'quicktime.mov': 'uuid-quicktime',
+        'image.gif': 'uuid-image',
+        'Kapture 2018-04-04 at 16.36.13.gif': 'uuid-Kapture',
+        'Screen Shot (9db1eca8-8257-4763-92fb-e6417f9e34c9).jpeg':
+          'uuid-ScreenShot',
+        'a-doc (jadsjdasjadsjkdasjk).pdf': 'uuid-a-doc (jadsjdasjadsjkdasjk)',
+        'not-empty (askjsajnkjknads).txt': 'uuid-not-empty (askjsajnkjknads)',
+      },
+    },
+  };
 
   for (const [testCaseDescription, markup] of testCases) {
     it(testCaseDescription, () => {
       const transformer = new WikiMarkupTransformer();
-      expect(transformer.parse(markup)).toMatchSnapshot();
+      expect(transformer.parse(markup, context)).toMatchSnapshot();
     });
   }
+
+  it('should add collection from context', () => {
+    const markup = 'Hello! !Screen Shot.jpeg!';
+    const context: Context = {
+      conversion: {
+        mediaConversion: {
+          'Screen Shot.jpeg': '9db1eca8-8257-4763-92fb-e6417f9e34c9',
+        },
+      },
+      hydration: {
+        media: {
+          targetCollectionId: 'my-test-collection',
+        },
+      },
+    };
+    const transformer = new WikiMarkupTransformer();
+    expect(transformer.parse(markup, context)).toMatchSnapshot();
+  });
 });

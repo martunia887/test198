@@ -6,8 +6,8 @@ import { NavigationTheme } from '../../theme';
 
 const gridSize = gridSizeFn();
 
-export const containerCSS = ({
-  mode: { productHome },
+export const productHomeButtonCSS = ({
+  mode: { primaryButton },
 }: NavigationTheme): CSSObject => {
   return {
     alignItems: 'center',
@@ -18,12 +18,15 @@ export const containerCSS = ({
     display: 'flex',
     cursor: 'pointer',
     color: 'inherit',
+    '&:first-of-type': {
+      marginLeft: 0,
+    },
     '&::-moz-focus-inner': {
       border: 0,
     },
-    '&:hover': productHome.hover,
-    '&:focus': { ...(productHome.focus as CSSObject), outline: 0 },
-    '&:active': productHome.active,
+    '&:hover': primaryButton.hover,
+    '&:focus': { ...(primaryButton.focus as CSSObject), outline: 0 },
+    '&:active': primaryButton.active,
     'div&': {
       pointerEvents: 'none',
     },
@@ -36,7 +39,7 @@ export const containerCSS = ({
   };
 };
 
-export const containerSkeletonCSS = containerCSS;
+export const productHomeButtonSkeletonCSS = productHomeButtonCSS;
 
 const iconHeight = 28;
 
@@ -49,7 +52,7 @@ export const productIconCSS = {
   // productHome is aligned correctly
   '& > *': {
     display: 'flex',
-    height: `${iconHeight}px`,
+    maxHeight: 24,
   },
   [`@media (min-width: ${PRODUCT_HOME_BREAKPOINT}px)`]: {
     display: 'none',
@@ -74,7 +77,7 @@ export const productLogoCSS = {
   // productHome is aligned correctly
   '& > *': {
     display: 'flex',
-    height: `${iconHeight}px`,
+    maxHeight: 24,
   },
   [`@media (max-width: ${PRODUCT_HOME_BREAKPOINT - 1}px)`]: {
     display: 'none',
@@ -118,7 +121,7 @@ export const siteTitleSkeletonCSS = (theme: NavigationTheme) => ({
 
 export const productLogoSkeletonCSS = (theme: NavigationTheme) => ({
   width: '120px',
-  height: iconHeight,
+  height: 24,
   ...heightCSS,
   ...productLogoCSS,
   ...skeletonCSS(theme),

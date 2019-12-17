@@ -19,11 +19,16 @@ export default function media(node: NodeSerializerOpts) {
   const { context, attrs } = node;
 
   // Without metadata, we render a generic lozenge
-  if (!context || !context.mediaMetaData || !context.mediaMetaData[attrs.id]) {
+  if (
+    !context ||
+    !context.hydration ||
+    !context.hydration.mediaMetaData ||
+    !context.hydration.mediaMetaData[attrs.id]
+  ) {
     return renderLozenge();
   }
 
-  const metadata = context.mediaMetaData[attrs.id];
+  const metadata = context.hydration.mediaMetaData[attrs.id];
   switch (metadata.mediaType) {
     case 'image':
       return renderImage(node, metadata);

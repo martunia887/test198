@@ -1,5 +1,25 @@
 # @atlaskit/analytics-next
 
+## 6.3.3
+
+### Patch Changes
+
+- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  Fixes useAnalyticsEvents() not having a stable function reference.- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  Fixes data type to Object- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  - @atlaskit/field-text@9.0.14
+
+## 6.3.2
+
+### Patch Changes
+
+- [patch][768bac6d81](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/768bac6d81):
+
+  Remove redundant object check (which was previously required to appease type checking)
+
 ## 6.3.1
 
 ### Patch Changes

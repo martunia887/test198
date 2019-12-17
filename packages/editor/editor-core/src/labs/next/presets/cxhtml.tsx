@@ -88,6 +88,9 @@ export function useCXHTMLPreset({
         allowMediaGroup: true,
         allowAnnotation: true,
         allowResizing: true,
+        allowLinking: true,
+        allowResizingInTables: true,
+        UNSAFE_allowAltTextOnImages: true,
       },
     ]);
   }
