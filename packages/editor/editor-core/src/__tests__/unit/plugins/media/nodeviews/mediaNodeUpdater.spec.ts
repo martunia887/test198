@@ -209,7 +209,24 @@ describe('MediaNodeUpdater', () => {
 
       expect(mediaNodeUpdater.getNodeContextId()).toEqual('source-context-id');
       expect(await mediaNodeUpdater.getObjectId()).toEqual('object-id');
-      expect(mediaNodeUpdater.hasDifferentContextId()).toBeTruthy();
+      expect(await mediaNodeUpdater.hasDifferentContextId()).toBeTruthy();
+    });
+
+    it('should return false if current node context id is the same as page context id', async () => {
+      const { mediaNodeUpdater } = setup({
+        node: {
+          attrs: {
+            id: 'some-source-file-id',
+            collection: 'source-collection',
+            __contextId: 'object-id',
+            type: 'file',
+          },
+        } as any,
+      });
+
+      expect(mediaNodeUpdater.getNodeContextId()).toEqual('object-id');
+      expect(await mediaNodeUpdater.getObjectId()).toEqual('object-id');
+      expect(await mediaNodeUpdater.hasDifferentContextId()).toBeFalsy();
     });
   });
 
