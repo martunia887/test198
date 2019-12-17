@@ -1,4 +1,4 @@
-import * as uuid from 'uuid';
+import uuid from 'uuid/v4';
 
 export type ChunkId = string;
 
@@ -9,7 +9,7 @@ export type Chunk = {
 
 export function createChunk(): Chunk {
   return {
-    id: uuid.v4(),
+    id: uuid(),
     blob: new Blob(),
   };
 }

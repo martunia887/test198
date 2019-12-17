@@ -2,7 +2,7 @@ import * as path from 'path';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
 import { gotoPopupSimplePage } from '../../../pages/popup-simple-page';
-import { PopupSimpleBackdoor } from '../../../examples/6-popup-simple';
+import { MediaMockControlsBackdoor } from '../../../examples/6-popup-simple';
 //
 BrowserTestCase(
   'local-upload.ts: MediaPicker - insert newly fully uploaded file',
@@ -43,13 +43,17 @@ BrowserTestCase(
     const page = await gotoPopupSimplePage(client);
 
     await page.waitUntil(
-      async () => await page.execute(() => (window as any).backdoor),
+      async () =>
+        await page.execute(() => (window as any).mediaMockControlsBackdoor),
     );
 
     await page.execute(() => {
-      ((window as any).backdoor as PopupSimpleBackdoor).resetMediaMock({
-        isSlowServer: true,
-      });
+      ((window as any)
+        .mediaMockControlsBackdoor as MediaMockControlsBackdoor).resetMediaMock(
+        {
+          isSlowServer: true,
+        },
+      );
     });
 
     const filename = 'popup.png';
@@ -74,9 +78,12 @@ BrowserTestCase(
     });
 
     await page.execute(() => {
-      ((window as any).backdoor as PopupSimpleBackdoor).resetMediaMock({
-        isSlowServer: false,
-      });
+      ((window as any)
+        .mediaMockControlsBackdoor as MediaMockControlsBackdoor).resetMediaMock(
+        {
+          isSlowServer: false,
+        },
+      );
     });
   },
 );

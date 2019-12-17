@@ -16,18 +16,18 @@ import { MediaMockConfig } from '@atlaskit/media-test-helpers';
 
 mediaMock.enable();
 
-export interface PopupSimpleBackdoor {
+export interface MediaMockControlsBackdoor {
   resetMediaMock: (config?: MediaMockConfig) => void;
 }
 
-const backdoor: PopupSimpleBackdoor = {
+const mediaMockControlsBackdoor: MediaMockControlsBackdoor = {
   resetMediaMock: (config = {}) => {
     mediaMock.disable();
     mediaMock.enable(config);
   },
 };
 
-(window as any).backdoor = backdoor;
+(window as any).mediaMockControlsBackdoor = mediaMockControlsBackdoor;
 
 const mediaClientConfig: MediaClientConfig = {
   authProvider: defaultMediaPickerAuthProvider,
