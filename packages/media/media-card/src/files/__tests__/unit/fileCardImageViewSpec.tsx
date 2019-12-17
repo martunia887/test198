@@ -78,7 +78,7 @@ describe('FileCardImageView', () => {
       card = mount(
         <FileCardImageView
           error={errorStr}
-          description="this is an alt text"
+          alt="this is an alt text"
           status="error"
           onRetry={onRetry}
           onDisplayImage={onDisplayImage}
@@ -103,7 +103,7 @@ describe('FileCardImageView', () => {
         mediaType,
         actions,
         subtitle: fileSize,
-        description: 'this is an alt text',
+        alt: 'this is an alt text',
       });
     });
   });

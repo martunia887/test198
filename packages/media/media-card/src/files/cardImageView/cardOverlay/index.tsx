@@ -31,7 +31,7 @@ import {
   Subtitle,
   Metadata,
   ErrorWrapper,
-  Description,
+  AltWrapper,
 } from './styled';
 
 type RetryProps = React.HTMLAttributes<HTMLDivElement> &
@@ -59,7 +59,7 @@ export interface CardOverlayProps {
   persistent: boolean;
 
   error?: ReactNode;
-  description?: string;
+  alt?: string;
   noHover?: boolean;
   onRetry?: () => void;
 
@@ -149,16 +149,16 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
   }
 
   errorLine() {
-    const { error, description } = this.props;
+    const { error, alt } = this.props;
     return (
       error && (
         <>
           <ErrorLine>
-            <ErrorMessage>{this.props.error}</ErrorMessage>
+            <ErrorMessage>{error}</ErrorMessage>
           </ErrorLine>
-          {description && (
+          {alt && (
             <ErrorLine>
-              <Description>{description}</Description>
+              <AltWrapper>{alt}</AltWrapper>
             </ErrorLine>
           )}
         </>

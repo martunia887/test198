@@ -84,14 +84,6 @@ describe('FileCard', () => {
     ).toEqual('Failed to load');
   });
 
-  it('should pass alt as description to "image" card view', () => {
-    const card = shallow(
-      <FileCard appearance="image" status="error" alt="testing" />,
-    );
-
-    expect(card.find(FileCardImageView).prop('description')).toEqual('testing');
-  });
-
   it('should pass "disableOverlay" prop to <FileCardImageView /> when appearance is "image"', () => {
     const card = shallow(
       <FileCard appearance="image" status="complete" disableOverlay={true} />,

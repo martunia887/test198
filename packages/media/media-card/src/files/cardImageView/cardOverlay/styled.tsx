@@ -262,7 +262,7 @@ export const ErrorMessage: ComponentClass<HTMLAttributes<{}>> = styled.div`
   white-space: nowrap;
 `;
 
-export const Description: ComponentClass<HTMLAttributes<{}>> = styled(
+export const AltWrapper: ComponentClass<HTMLAttributes<{}>> = styled(
   ErrorMessage,
 )`
   font-weight: normal;
