@@ -14,6 +14,7 @@ export interface Props {
   onKeyDown?: (e: KeyboardEvent<any>) => void;
   onBlur?: Function;
   width?: number;
+  maxLength?: number;
 }
 
 export interface State {
@@ -59,7 +60,7 @@ export default class PanelTextInput extends PureComponent<Props, State> {
   };
 
   render() {
-    const { placeholder, width } = this.props;
+    const { placeholder, width, maxLength } = this.props;
     const { value } = this.state;
     return (
       <Input
@@ -72,7 +73,7 @@ export default class PanelTextInput extends PureComponent<Props, State> {
         onBlur={this.onBlur}
         innerRef={this.handleRef}
         width={width}
-        maxLength={510}
+        maxLength={maxLength}
       />
     );
   }

@@ -141,6 +141,7 @@ export class AltTextEditComponent extends React.Component<
             onCancel={this.dispatchCancelEvent}
             onChange={this.handleOnChange}
             onSubmit={this.closeMediaAltTextMenu}
+            maxLength={510}
             autoFocus
           />
           {showClearTextButton && (
