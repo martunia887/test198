@@ -2,8 +2,8 @@ import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
 import { EditorPlugin, MessageDescriptor } from '../../types';
-import { isEmptyDocument } from '../../utils';
-import { isInEmptyLine } from '../../utils/document';
+// import { isEmptyDocument } from '../../utils';
+import { isInEmptyLine, isEmptyDocument } from '../../utils/document';
 
 export const pluginKey = new PluginKey('placeholderPlugin');
 
@@ -59,6 +59,16 @@ function applyPlaceholderIfEmpty(view: EditorView, event: Event) {
   return false;
 }
 
+function setPlaceHolderState(
+  placeholderText: string,
+  pos?: number,
+): PlaceHolderState {
+  return {
+    hasPlaceholder: true,
+    placeholderText,
+    pos: pos ? pos : 1,
+  };
+}
 interface PlaceHolderState {
   hasPlaceholder: boolean;
   placeholderText?: string;
@@ -88,11 +98,7 @@ export function createPlugin(
     state: {
       init: (_, state) => {
         if (isEmptyDocument(state.doc)) {
-          return {
-            hasPlaceholder: true,
-            placeholderText: defaultPlaceholderText,
-            pos: 1,
-          };
+          return setPlaceHolderState(defaultPlaceholderText);
         }
         return {
           hasPlaceholder: false,
@@ -109,37 +115,26 @@ export function createPlugin(
           if (
             meta.applyPlaceholderIfEmpty &&
             isEmptyDocument(newEditorState.doc)
-          ) {
-            return {
-              hasPlaceholder: true,
-              placeholderText: defaultPlaceholderText,
-              pos: 1,
-            };
-          }
-        }
-
-        // non-plugin specific transaction; don't excessively recalculate
-        // if the document is empty
-        if (!tr.docChanged) {
-          return _oldPluginState;
+          )
+            return setPlaceHolderState(defaultPlaceholderText);
         }
 
         if (isEmptyDocument(newEditorState.doc)) {
-          return {
-            hasPlaceholder: true,
-            placeholderText: defaultPlaceholderText,
-            pos: 1,
-          };
+          return setPlaceHolderState(defaultPlaceholderText);
         }
 
         if (isInEmptyLine(newEditorState)) {
           const { $from } = newEditorState.selection;
-          return {
-            hasPlaceholder: true,
-            placeholderText: messages.slashCommand.defaultMessage,
-            pos: $from.pos,
-          };
+          return setPlaceHolderState(
+            messages.slashCommand.defaultMessage,
+            $from.pos,
+          );
         }
+        // non-plugin specific transaction; don't excessively recalculate
+        // if the document is empty
+        // if (!tr.docChanged) {
+        //   return _oldPluginState;
+        // }
 
         return {
           hasPlaceholder: false,

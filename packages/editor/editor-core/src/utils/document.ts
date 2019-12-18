@@ -98,7 +98,6 @@ function isEmptyParagraph2(node: Node) {
  */
 export function isEmptyDocument(node: Node): boolean {
   const nodeChild = node.content.firstChild;
-
   if (node.childCount !== 1 || !nodeChild) {
     return false;
   }
