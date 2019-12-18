@@ -140,6 +140,7 @@ export class AltTextEditComponent extends React.Component<
             defaultValue={value ? value : ''}
             onCancel={this.dispatchCancelEvent}
             onChange={this.handleOnChange}
+            onBlur={this.handleOnBlur}
             onSubmit={this.closeMediaAltTextMenu}
             autoFocus
           />
@@ -200,6 +201,15 @@ export class AltTextEditComponent extends React.Component<
       showClearTextButton: Boolean(newAltText),
     });
     this.updateAltText(newAltText);
+  };
+
+  private handleOnBlur = () => {
+    // Handling the trimming onBlur() because PanelTextInput doesn't sync
+    // defaultValue properly during unmount
+    const { value } = this.props;
+    const newAltText = (value ? value : '').trim();
+
+    this.handleOnChange(newAltText);
   };
 
   private handleClearText = () => {
