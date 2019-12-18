@@ -19,6 +19,8 @@ import {
   TAP_TO_LOAD_PROMISE,
 } from './constants';
 
+import { eventDispatcher } from '../dispatcher';
+
 // create standard translated error messages here????
 
 export class MacroComponent extends React.Component<
@@ -220,6 +222,8 @@ export class MacroComponent extends React.Component<
   };
 
   tapToRefreshPage = () => {
+    // Emit a refresh event
+    eventDispatcher.emit('tapToRefresh');
     // on button click
     // do not set state to loading
     createPromise(TAP_TO_REFRESH_PAGE_PROMISE.name)
@@ -284,6 +288,14 @@ export class MacroComponent extends React.Component<
 
     return { ...cardProps, ...newProps };
   };
+
+  componentDidMount() {
+    eventDispatcher.on('tapToRefresh', () => {
+      this.setState({
+        retryCount: 0,
+      });
+    });
+  }
 
   render() {
     let cardProps: CreateMacro = {
