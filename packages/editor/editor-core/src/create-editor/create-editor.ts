@@ -6,7 +6,6 @@ import { AnalyticsHandler, analyticsService } from '../analytics';
 import {
   EditorPlugin,
   EditorConfig,
-  EditorProps,
   PluginsOptions,
   PMPluginCreateConfig,
 } from '../types';
