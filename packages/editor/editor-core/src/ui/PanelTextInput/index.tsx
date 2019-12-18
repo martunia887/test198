@@ -72,6 +72,7 @@ export default class PanelTextInput extends PureComponent<Props, State> {
         onBlur={this.onBlur}
         innerRef={this.handleRef}
         width={width}
+        maxLength={510}
       />
     );
   }
