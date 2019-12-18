@@ -1,5 +1,5 @@
 import React from 'react';
-import { Props } from './types';
+import { WidthObserverProps } from './types';
 import { browser } from './utils';
 import {
   IframeWidthObserver,
@@ -43,7 +43,7 @@ import { WidthDetectorObserver } from './width-detector-observer';
  *  </IframeWidthObserverFallbackWrapper>
  * ```
  */
-export const WidthObserver = React.memo((props: Props) => {
+export const WidthObserver = React.memo((props: WidthObserverProps) => {
   const { supportsResizeObserver, supportsIntersectionObserver } = browser;
 
   if (!supportsResizeObserver) {

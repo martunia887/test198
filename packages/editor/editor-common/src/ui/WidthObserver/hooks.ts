@@ -26,7 +26,7 @@ export function useInView(options: IntersectionObserverInit = {}): Response {
   const setRef = React.useCallback(
     node => {
       const { supportsIntersectionObserver } = browser;
-      if (typeof window === 'undefined' || !supportsIntersectionObserver) {
+      if (!supportsIntersectionObserver) {
         setState({
           inView: true,
           entry: undefined,
@@ -37,24 +37,24 @@ export function useInView(options: IntersectionObserverInit = {}): Response {
 
       const currentObserver = new IntersectionObserver(
         (entries: IntersectionObserverEntry[]) => {
-          entries &&
-            entries.forEach(intersection => {
-              const { isIntersecting, intersectionRatio } = intersection;
+          if (entries && entries.length) {
+            const intersection = entries[0];
+            const { isIntersecting, intersectionRatio } = intersection;
 
-              if (intersectionRatio >= 0) {
-                let inView = intersectionRatio >= (threshold || 0);
+            if (intersectionRatio >= 0) {
+              let inView = intersectionRatio >= (threshold || 0);
 
-                if (isIntersecting !== undefined) {
-                  inView = inView && isIntersecting;
-                }
-
-                setState({
-                  inView,
-                  entry: intersection,
-                  target: node,
-                });
+              if (isIntersecting !== undefined) {
+                inView = inView && isIntersecting;
               }
-            });
+
+              setState({
+                inView,
+                entry: intersection,
+                target: node,
+              });
+            }
+          }
         },
         {
           threshold,

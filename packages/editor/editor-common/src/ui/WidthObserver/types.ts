@@ -2,6 +2,6 @@ export type ContextProps = {
   useResizeObserverWidthProvider?: boolean;
 };
 
-export type Props = {
+export type WidthObserverProps = {
   setWidth: (width: number) => void;
 };

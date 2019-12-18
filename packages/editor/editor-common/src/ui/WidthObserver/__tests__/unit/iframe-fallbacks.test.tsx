@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { mount } from 'enzyme';
 
@@ -174,7 +173,7 @@ describe('Iframe fallbacks', () => {
       ${false}                | ${'SubscribeIframeResize'}            | ${SubscribeIframeResize}
       ${true}                 | ${'SubscribeIframeResizeWhenVisible'} | ${SubscribeIframeResizeWhenVisible}
     `(
-      'when useIntersectionObserver is $a',
+      'when useIntersectionObserver is $componentName',
       ({ useIntersectionObserver, componentName, expected }) => {
         it(`should use ${componentName} as fallback`, () => {
           const wrapper = mount(

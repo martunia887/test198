@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useRef, useState, useEffect } from 'react';
 
 import { useInView } from './hooks';
-import { Props } from './types';
+import { WidthObserverProps } from './types';
 import { browser as browserVersion } from '../../utils';
 import { browser } from './utils';
 
@@ -14,10 +14,10 @@ type IframeContext = {
 };
 type SubscribeProps = {
   subscribe: SubscriptionCallback;
-} & Props;
+} & WidthObserverProps;
 type IframeWidthObserverProps = {
   useIntersectionObserver: boolean;
-} & Props;
+} & WidthObserverProps;
 type IframeProps = {
   onResize: () => void;
 };
@@ -50,7 +50,7 @@ function ObjectIframe(props: IframeProps) {
     return () => {
       iframeWindow.removeEventListener('resize', onResize);
     };
-  });
+  }, [ref, onResize]);
 
   return (
     <object
@@ -141,7 +141,7 @@ const SubscribeIframeResize = React.memo(
       });
 
       return unsubscribe;
-    });
+    }, [ref, subscribe, setWidth]);
     return <div ref={ref} />;
   },
 );
@@ -170,7 +170,7 @@ const SubscribeIframeResizeWhenVisible = React.memo(
       });
 
       return unsubscribe;
-    });
+    }, [inView, entry, setWidth, subscribe, target]);
 
     return (
       <div
