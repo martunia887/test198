@@ -6,9 +6,15 @@ import { HeadingItem } from './side-nav/heading-item';
 
 import { Location } from '@reach/router';
 
-const ComponentNavItem = ({ docsDisplayName }: { docsDisplayName: string }) => (
+const ComponentNavItem = ({
+  docsDisplayName,
+  passedLocation,
+}: {
+  docsDisplayName: string;
+  passedLocation: { pathname?: string };
+}) => (
   <NavItem
-    isSelected={`/components/${docsDisplayName}` === location.pathname}
+    isSelected={`/components/${docsDisplayName}` === passedLocation.pathname}
     key={docsDisplayName}
     text={docsDisplayName}
     to={`/components/${docsDisplayName}`}
@@ -16,8 +22,9 @@ const ComponentNavItem = ({ docsDisplayName }: { docsDisplayName: string }) => (
 );
 
 const ComponentNav = ({ components }) => (
+  // BC: location is undefined in SSR calls, so we are defaulting it to an empty object
   <Location>
-    {({ location }) => (
+    {({ location = {} }) => (
       <>
         <HeadingItem>Components</HeadingItem>
         <NavSection>
@@ -47,7 +54,10 @@ const ComponentNav = ({ components }) => (
             */
             docsDisplayName === 'avatar' ? (
               <>
-                <ComponentNavItem docsDisplayName={docsDisplayName} />
+                <ComponentNavItem
+                  docsDisplayName={docsDisplayName}
+                  passedLocation={location}
+                />
                 <NavSection>
                   <NavItem
                     isSelected={
@@ -88,7 +98,10 @@ const ComponentNav = ({ components }) => (
                 </NavSection>
               </>
             ) : (
-              <ComponentNavItem docsDisplayName={docsDisplayName} />
+              <ComponentNavItem
+                docsDisplayName={docsDisplayName}
+                passedLocation={location}
+              />
             ),
           )}
         </NavSection>

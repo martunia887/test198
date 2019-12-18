@@ -42,8 +42,9 @@ const TopNav = () => {
           width: '100%',
         }}
       >
+        {/* BC: location is undefined in SSR calls, so we are defaulting it to an empty object */}
         <Location>
-          {({ location }) => (
+          {({ location = {} }) => (
             <AtlassianNavigation
               theme={theme}
               renderProductHome={() => (
