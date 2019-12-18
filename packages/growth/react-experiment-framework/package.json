@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "module": "dist/esm/index.js",
   "main": "dist/cjs/index.js",
-  "atlaskit:src": "src/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "atlaskit:src": "src/index.ts",
   "author": "Atlassian Pty Ltd",
   "maintainers": [
     "Growth team",
@@ -23,7 +24,6 @@
   },
   "devDependencies": {
     "@atlaskit/docs": "^8.1.8",
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.15.1"
+    "enzyme": "^3.10.0"
   }
 }

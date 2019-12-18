@@ -2,7 +2,7 @@ import { defaultSchema } from '@atlaskit/adf-schema';
 import { Node as PMNode, Schema } from 'prosemirror-model';
 import { encode } from './encoder';
 import AbstractTree from './parser/abstract-tree';
-import { Context } from './parser/tokenize';
+import { Context } from './interfaces';
 import { buildIssueKeyRegex } from './parser/tokenize/issue-key';
 
 interface Transformer<T> {
@@ -17,8 +17,8 @@ export class WikiMarkupTransformer implements Transformer<string> {
     this.schema = schema;
   }
 
-  encode(node: PMNode): string {
-    return encode(node);
+  encode(node: PMNode, context?: Context): string {
+    return encode(node, context);
   }
 
   parse(wikiMarkup: string, context?: Context): PMNode {
@@ -31,7 +31,9 @@ export class WikiMarkupTransformer implements Transformer<string> {
     return context
       ? {
           ...context,
-          issueKeyRegex: buildIssueKeyRegex(context.inlineCardConversion),
+          issueKeyRegex: context.conversion
+            ? buildIssueKeyRegex(context.conversion.inlineCardConversion)
+            : undefined,
         }
       : {};
   }

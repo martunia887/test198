@@ -20,6 +20,8 @@ export interface ProgressTrackerProps {
   render: ProgressTrackerStageRenderProp;
   /** Turns off transition animations if set to false */
   animated: boolean;
+  /** A `testId` prop is provided for specified elements, which is a unique string that appears as a data attribute `data-testid` in the rendered code, serving as a hook for automated tests */
+  testId?: string;
 }
 
 interface State {
@@ -48,22 +50,26 @@ export default class ProgressTracker extends PureComponent<
     columns: this.props.items.length * 2,
   });
 
-  UNSAFE_componentWillMount() {
-    this.setState({
-      prevStages: this.props.items.map(stage => ({
-        ...stage,
-        percentageComplete: 0,
-      })),
-    });
-  }
+  state = {
+    prevStages: this.props.items.map((stage, index) => ({
+      ...stage,
+      percentageComplete: 0,
+    })),
+  };
 
-  UNSAFE_componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps(nextProps: ProgressTrackerProps) {
+    const prevStages = nextProps.items.map(stage => {
+      const oldStage = this.props.items.find(st => st.id === stage.id);
+      return oldStage !== undefined ? oldStage : stage;
+    });
+
     this.setState({
-      prevStages: this.props.items,
+      prevStages,
     });
   }
 
   render() {
+    const { testId } = this.props;
     const progressChanges = this.props.items.filter(
       (stage, index) =>
         stage.percentageComplete !==
@@ -120,7 +126,7 @@ export default class ProgressTracker extends PureComponent<
 
     return (
       <ThemeProvider theme={this.createTheme()}>
-        <Grid>
+        <Grid testId={testId}>
           <ProgressTrackerContainer>{items}</ProgressTrackerContainer>
         </Grid>
       </ThemeProvider>

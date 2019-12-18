@@ -44,7 +44,7 @@ const defaultWaitingOptions: WaitingOptions = { timeout: WAIT_TIMEOUT };
 type Done<T> = (result: T) => any;
 
 export default class Page {
-  private browser: BrowserObject;
+  protected browser: BrowserObject;
 
   constructor(browserObject: BrowserObject) {
     this.browser = browserObject;
@@ -549,9 +549,8 @@ export default class Page {
     return this.waitForSelector(selector, options, reverse);
   }
 
-  waitUntil(predicate: () => boolean | Promise<boolean> | Promise<unknown>) {
-    // TODO This is not right. this.browser.waitUntil can't take `() => Promise<boolean>`
-    return this.browser.waitUntil(predicate as any, WAIT_TIMEOUT);
+  waitUntil(predicate: () => Promise<boolean>) {
+    return this.browser.waitUntil(predicate, WAIT_TIMEOUT);
   }
 
   // Window

@@ -1,3 +1,7 @@
+import {
+  waitForTooltip,
+  waitForNoTooltip,
+} from '@atlaskit/visual-regression/helper';
 import { Device, snapshot, initFullPageEditorWithAdf } from '../_utils';
 import * as adfWithExpand from './__fixtures__/simple-expand.adf.json';
 import { Page } from '../../__helpers/page-objects/_types';
@@ -32,18 +36,21 @@ describe('Expand: tab navigation', () => {
     describe('when tab is pressed twice', () => {
       it('should focus on the button', async () => {
         await pressKey(page, ['Tab', 'Tab']);
+        await waitForTooltip(page);
       });
 
       describe('when button is focused', () => {
         describe('and enter is pressed', () => {
           it('should collapse the expand', async () => {
             await pressKey(page, ['Tab', 'Tab', 'Enter']);
+            await waitForTooltip(page);
           });
         });
 
         describe('and space is pressed', () => {
           it('should collapse the expand', async () => {
             await pressKey(page, ['Tab', 'Tab', 'Space']);
+            await waitForTooltip(page);
           });
         });
       });
@@ -52,6 +59,7 @@ describe('Expand: tab navigation', () => {
     describe('when tab is pressed thrice', () => {
       it('should focus on title', async () => {
         await pressKey(page, ['Tab', 'Tab', 'Tab']);
+        await waitForNoTooltip(page);
         await page.keyboard.type('I am here');
       });
     });
@@ -60,6 +68,7 @@ describe('Expand: tab navigation', () => {
       describe('when expand is opened', () => {
         it('should focus on content', async () => {
           await pressKey(page, ['Tab', 'Tab', 'Tab', 'Tab']);
+          await waitForNoTooltip(page);
           await page.keyboard.type('I am here');
         });
       });
@@ -67,6 +76,7 @@ describe('Expand: tab navigation', () => {
       describe('when expand is closed', () => {
         it('should focus outside', async () => {
           await pressKey(page, ['Tab', 'Tab', 'Space', 'Tab', 'Tab']);
+          await waitForNoTooltip(page);
           await page.keyboard.type('I am here');
         });
       });

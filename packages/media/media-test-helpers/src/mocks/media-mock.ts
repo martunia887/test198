@@ -1,35 +1,51 @@
-import { Server } from 'kakapo';
+import { Server, Router, Database } from 'kakapo';
 import * as exenv from 'exenv';
 import uuid from 'uuid/v4';
 
 import { MediaFile, MediaType } from '@atlaskit/media-client';
 
 import { createApiRouter, createMediaPlaygroundRouter } from './routers';
-import { createDatabase } from './database';
+import { createDatabase, MediaDatabaseSchema } from './database';
 import { mapDataUriToBlob } from '../utils';
 
 export type MockCollections = {
   [key: string]: Array<MediaFile & { blob: Blob }>;
 };
+
+export interface MediaMockConfig {
+  isSlowServer?: boolean;
+}
+
 export class MediaMock {
-  private server = new Server();
+  private server = new Server<MediaDatabaseSchema>();
+  private routers: Router<MediaDatabaseSchema>[] = [];
+  private dbs: Database<MediaDatabaseSchema>[] = [];
 
   constructor(readonly collections?: MockCollections) {}
 
-  enable(): void {
+  enable(config: MediaMockConfig = {}): void {
+    const { isSlowServer } = config;
     if (!exenv.canUseDOM) {
       return;
     }
+    this.routers = [
+      createMediaPlaygroundRouter(),
+      createApiRouter(isSlowServer),
+    ];
 
-    this.server.use(createDatabase(this.collections));
-    this.server.use(createMediaPlaygroundRouter());
-    this.server.use(createApiRouter());
+    this.dbs = [createDatabase(this.collections)];
+
+    [...this.routers, ...this.dbs].forEach(this.server.use.bind(this.server));
   }
 
   disable(): void {
-    // TODO: add teardown logic to kakapo server
-    /* eslint-disable no-console */
-    console.warn('Disabling logic is not implemented in MediaMock');
+    [...this.routers, ...this.dbs].forEach(
+      (this.server as any).remove.bind(this.server),
+    );
+    this.routers.forEach(router => (router as any).reset());
+    this.dbs.forEach(db => db.reset());
+    this.routers = [];
+    this.dbs = [];
   }
 }
 

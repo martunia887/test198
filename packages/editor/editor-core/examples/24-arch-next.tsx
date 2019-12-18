@@ -4,6 +4,11 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 
 import { WithEditorActions, EditorActions, EditorContext } from '../src';
 import { TitleArea } from '../example-helpers/PageElements';
+import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+
+export const mediaProvider = storyMediaProviderFactory({
+  includeUserAuthProvider: true,
+});
 
 /**
  * arch next imports
@@ -83,7 +88,10 @@ export default function Example() {
               Toggle Mount
             </button>
             {mounted ? (
-              <EditorPresetCXHTML placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule.">
+              <EditorPresetCXHTML
+                placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
+                mediaProvider={mediaProvider}
+              >
                 <FullPageEditor
                   defaultValue={
                     (localStorage &&

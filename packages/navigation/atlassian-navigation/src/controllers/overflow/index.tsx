@@ -12,10 +12,15 @@ import throttle from 'lodash.throttle';
 
 import { OverflowProviderProps } from './types';
 
-const THROTTLE_INTERVAL = 100;
-// approx width of "More" button
-const ITEM_APPROX_MINWIDTH = 66;
+// Prevent width detector from triggering too many re-renders
+const THROTTLE_INTERVAL = 16 * 4;
+// Approx min width of items (based of "More" size)
+const ITEM_APPROX_MINWIDTH = 70;
 const calculateHash = (w: number, n: number) => w + '#' + n;
+const updateHashRef = (currentRef: string[], value: string) => {
+  currentRef.unshift(value);
+  currentRef.length = 3;
+};
 
 const OverflowContext = createContext({
   isVisible: true,
@@ -42,8 +47,10 @@ export const useOverflowController = (nodes: ReactNode | ReactNode[]) => {
   const [width, setWidth] = useState(9999);
   const [itemsLimit, setItemsLimit] = useState(items.length);
   const [forceEffectValue, triggerForceEffect] = useState({});
+  // Storing items approximate width so we can try expanding when there is enough room
   const itemsWidths = useRef<number[]>([]).current;
-  const hashRef = useRef('');
+  // Storing a couple of width + items count in order to stabilize
+  const hashRef = useRef<string[]>([]);
 
   const throttleSetWidth = useCallback(throttle(setWidth, THROTTLE_INTERVAL), [
     setWidth,
@@ -54,20 +61,20 @@ export const useOverflowController = (nodes: ReactNode | ReactNode[]) => {
     const wasJustLimited = lastItemWidth < 0;
     const currentHash = calculateHash(width, itemsLimit);
 
-    if (hashRef.current === currentHash) {
-      // after removing an item, if width has not changed yet we shedule a force update
+    if (hashRef.current[0] === currentHash) {
+      // After removing an item, if width has not changed yet we shedule a force update
       // to handle case where removing an item does not actually trigger width change
       const t = setTimeout(() => {
-        hashRef.current = '';
+        updateHashRef(hashRef.current, '');
         triggerForceEffect({});
-      }, THROTTLE_INTERVAL + 50);
+      }, THROTTLE_INTERVAL * 1.5);
       return () => clearTimeout(t);
     }
 
     if (wasJustLimited) {
-      // width was updated either via resize or after changing the limit
+      // Width was updated either via resize or after changing the limit
       // we cap the width between ITEM_APPROX_MINWIDTH and 2*ITEM_APPROX_MINWIDTH
-      // because width is throttled so when expanding/resizing it fast, partialWidth
+      // because width is throttled as when fast expanding/resizing partialWidth
       // will not be reliable (edge case)
       const partialWidth = Math.max(
         Math.min(width + lastItemWidth, ITEM_APPROX_MINWIDTH * 2),
@@ -77,13 +84,16 @@ export const useOverflowController = (nodes: ReactNode | ReactNode[]) => {
     }
 
     if (width < ITEM_APPROX_MINWIDTH * 0.9 && itemsLimit) {
-      // if current width is less than an item approx width we remove an item
+      // If current width is less than an item approx width we remove an item
       // marking the width as negative so we will calculate it on width update
-      // plus we set the has to stabilise not removing more than one element
+      // plus we set the hash to stabilise and not removing more than one element
       // until we are sure width was updated
-      setItemsLimit(itemsLimit - 1);
-      itemsWidths[itemsLimit - 1] = -(width || 1);
-      hashRef.current = calculateHash(width, itemsLimit - 1);
+      const nextHash = calculateHash(width, itemsLimit - 1);
+      if (hashRef.current.indexOf(nextHash) === -1) {
+        setItemsLimit(itemsLimit - 1);
+        itemsWidths[itemsLimit - 1] = -(width || 1);
+        updateHashRef(hashRef.current, nextHash);
+      }
       return;
     }
 
@@ -91,9 +101,13 @@ export const useOverflowController = (nodes: ReactNode | ReactNode[]) => {
       width - itemsWidths[itemsLimit] > ITEM_APPROX_MINWIDTH * 1.1 &&
       itemsLimit < items.length
     ) {
-      // if we have enough room to accomodate next item width we increase the limit
-      setItemsLimit(itemsLimit + 1);
-      hashRef.current = calculateHash(width, itemsLimit + 1);
+      // If we have enough room to accomodate next item width we increase the limit
+      // unless it has been recently removed
+      const nextHash = calculateHash(width, itemsLimit + 1);
+      if (hashRef.current.indexOf(nextHash) === -1) {
+        setItemsLimit(itemsLimit + 1);
+        updateHashRef(hashRef.current, nextHash);
+      }
       return;
     }
   }, [width, hashRef, itemsLimit, itemsWidths, forceEffectValue, items.length]);

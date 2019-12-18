@@ -10,6 +10,7 @@ interface Props {
   spacing?: 'cosy' | 'comfortable' | 'compact';
   layout?: 'fixed' | 'fluid';
   theme?: ThemeProps;
+  testId?: string;
 }
 
 export default withTheme(
@@ -35,9 +36,10 @@ export default withTheme(
     });
 
     render() {
+      const { layout, spacing, testId } = this.props;
       return (
         <ThemeProvider theme={this.getTheme(this.props)}>
-          <Grid spacing={this.props.spacing} layout={this.props.layout}>
+          <Grid data-testid={testId} spacing={spacing} layout={layout}>
             {this.props.children}
           </Grid>
         </ThemeProvider>

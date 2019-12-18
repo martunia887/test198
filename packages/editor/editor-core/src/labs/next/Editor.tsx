@@ -9,6 +9,7 @@ import {
 import {
   EditorSharedConfig,
   EditorSharedConfigConsumer,
+  useEditorSharedConfig,
 } from './internal/context/shared-config';
 import { EditorContent } from './internal/components/EditorContent';
 import { EditorProps } from './internal/editor-props-type';
@@ -54,13 +55,13 @@ function Editor(props: EditorProps) {
  * Public API Exports.
  *
  */
-
 export {
   // Components
   PresetProvider,
   Editor,
   EditorContent,
   EditorSharedConfigConsumer,
+  useEditorSharedConfig,
   // Types
   EditorProps,
   EditorSharedConfig,

@@ -28,6 +28,7 @@ import {
   mountWithIntl,
   Refs,
   storyContextIdentifierProviderFactory,
+  RefsNode,
 } from '@atlaskit/editor-test-helpers';
 
 import {
@@ -52,10 +53,26 @@ import {
   testCollectionName,
   temporaryFileId,
 } from '../../../../__tests__/unit/plugins/media/_utils';
-import { MediaAttributes, MediaSingleAttributes } from '@atlaskit/adf-schema';
-import { ReactWrapper } from 'enzyme';
+import {
+  MediaAttributes,
+  MediaSingleAttributes,
+  defaultSchema,
+  ExternalMediaAttributes,
+} from '@atlaskit/adf-schema';
+import { ReactWrapper, mount } from 'enzyme';
 import { ClipboardWrapper } from '../../../../plugins/media/ui/MediaPicker/ClipboardWrapper';
 import { INPUT_METHOD } from '../../../../plugins/analytics';
+import MediaSingleNode from '../../nodeviews/mediaSingle';
+import MediaItem, { MediaNodeProps } from '../../nodeviews/media';
+import {
+  CardEvent,
+  CardOnClickCallback,
+} from '../../../../../../../media/media-card/src';
+import { FileDetails } from '../../../../../../../media/media-client/src';
+import { Schema } from '../../../../../../editor-test-helpers/src/schema';
+import { CellSelection } from 'prosemirror-tables';
+import { TextSelection } from 'prosemirror-state';
+import { EditorInstanceWithPlugin } from '../../../../../../editor-test-helpers/src/create-editor';
 
 const pdfFile = {
   id: `${randomId()}`,
@@ -147,7 +164,6 @@ describe('Media plugin', () => {
 
       it('should be false when an image is inserted', function() {
         mediaPluginState.insertFile(foo, () => {});
-
         expect(mediaPluginState.allUploadsFinished).toBe(false);
       });
 
@@ -930,6 +946,152 @@ describe('Media plugin', () => {
         expect(pluginState.element!.className).toBe(
           'mediaSingleView-content-wrap ProseMirror-selectednode',
         );
+      });
+
+      describe('while holding the shift key', () => {
+        let mediaSingleNode: (schema: Schema<any, any>) => RefsNode,
+          shiftClickEvent: CardEvent,
+          wrapper: ReactWrapper;
+        const mediaData: MediaAttributes | ExternalMediaAttributes = {
+          id: 'media_test',
+          type: 'file',
+          width: 100,
+          height: 100,
+          collection: testCollectionName,
+        };
+        beforeEach(() => {
+          mediaSingleNode = mediaSingle({ layout: 'wrap-left' })(
+            media(mediaData)(),
+          );
+          shiftClickEvent = {
+            event: ({
+              shiftKey: true,
+              stopPropagation: jest.fn(),
+            } as unknown) as React.MouseEvent<HTMLElement>,
+            mediaItemDetails: {} as FileDetails,
+          };
+        });
+
+        afterEach(() => {
+          if (wrapper) {
+            wrapper.unmount();
+          }
+        });
+
+        function setupWrapper(
+          editorInstance: EditorInstanceWithPlugin<MediaPluginState>,
+        ): {
+          mediaItem: ReactWrapper<MediaNodeProps>;
+          onClickHandler: CardOnClickCallback;
+        } {
+          wrapper = mount(
+            <MediaSingleNode
+              view={editorInstance.editorView}
+              eventDispatcher={editorInstance.eventDispatcher}
+              node={mediaSingleNode(defaultSchema)}
+              lineLength={680}
+              getPos={() => editorInstance.refs['startMediaSingle']}
+              width={123}
+              selected={() => 1}
+              mediaOptions={{ allowResizing: false }}
+              contextIdentifierProvider={contextIdentifierProvider}
+              mediaPluginState={editorInstance.pluginState}
+            />,
+          );
+
+          const mediaItem = wrapper.find(MediaItem);
+          const onClickHandler = mediaItem.prop(
+            'onClick',
+          ) as CardOnClickCallback;
+
+          return { mediaItem, onClickHandler };
+        }
+
+        describe('should include media into text selection', () => {
+          [
+            {
+              name: 'when text selection is before media',
+              doc: doc(
+                p('{<}test{>}'),
+                '{startMediaSingle}',
+                mediaSingle()(media(mediaData)()),
+                '{endMediaSingle}',
+                p('test'),
+              ),
+              expectedFromRef: '<',
+              expectedToRef: 'endMediaSingle',
+            },
+            {
+              name: 'when text selection is after media',
+              doc: doc(
+                p('test'),
+                '{startMediaSingle}',
+                mediaSingle()(media(mediaData)()),
+                '{endMediaSingle}',
+                p('{<}test{>}'),
+              ),
+              expectedFromRef: 'startMediaSingle',
+              expectedToRef: '>',
+            },
+            {
+              name: 'when text selection is around media',
+              doc: doc(
+                p('{<}test'),
+                '{startMediaSingle}',
+                mediaSingle()(media(mediaData)()),
+                '{endMediaSingle}',
+                p('test{>}'),
+              ),
+              expectedFromRef: '<',
+              expectedToRef: '>',
+            },
+          ].forEach(testCase => {
+            it(testCase.name, () => {
+              const editorInstance = editor(testCase.doc);
+              const { onClickHandler } = setupWrapper(editorInstance);
+
+              onClickHandler(shiftClickEvent);
+
+              expect(shiftClickEvent.event.stopPropagation).toHaveBeenCalled();
+              expect(
+                editorInstance.editorView.state.selection instanceof
+                  TextSelection,
+              ).toBe(true);
+
+              const selectedRange =
+                editorInstance.editorView.state.selection.ranges[0];
+              expect(selectedRange.$from.pos).toBe(
+                editorInstance.refs[testCase.expectedFromRef],
+              );
+              expect(selectedRange.$to.pos).toBe(
+                editorInstance.refs[testCase.expectedToRef],
+              );
+            });
+          });
+        });
+
+        it('should not select if media is within a table and cells are selected', () => {
+          const editorInstance = editor(
+            doc(
+              table()(
+                tr(
+                  td({})(p('{<cell}text1')),
+                  td({})(
+                    '{startMediaSingle}',
+                    mediaSingleNode,
+                    p('{cell>}text2'),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          setupWrapper(editorInstance);
+
+          expect(
+            editorInstance.editorView.state.selection instanceof CellSelection,
+          ).toBe(true);
+        });
       });
     });
 

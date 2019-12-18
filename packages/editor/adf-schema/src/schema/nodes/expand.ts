@@ -4,7 +4,6 @@ import { BreakoutMarkDefinition } from '../marks';
 
 /**
  * @name expand_node
- * @stage 0
  */
 export interface ExpandDefinition {
   type: 'expand';

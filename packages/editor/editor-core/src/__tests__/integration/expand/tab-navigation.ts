@@ -13,7 +13,7 @@ const startEditor = async (client: any, closedExpand?: boolean) => {
 
   await mountEditor(page, {
     appearance: fullpage.appearance,
-    UNSAFE_allowExpand: true,
+    allowExpand: true,
     quickInsert: true,
     allowTables: true,
     defaultValue: closedExpand ? closedExpandAdf : emptyExpandAdf,

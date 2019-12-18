@@ -12,8 +12,22 @@ import Button from '@atlaskit/button';
 import { MediaPicker } from '../src';
 import { Popup } from '../src/types';
 import { MediaClientConfig } from '@atlaskit/media-core';
+import { MediaMockConfig } from '@atlaskit/media-test-helpers';
 
 mediaMock.enable();
+
+export interface MediaMockControlsBackdoor {
+  resetMediaMock: (config?: MediaMockConfig) => void;
+}
+
+const mediaMockControlsBackdoor: MediaMockControlsBackdoor = {
+  resetMediaMock: (config = {}) => {
+    mediaMock.disable();
+    mediaMock.enable(config);
+  },
+};
+
+(window as any).mediaMockControlsBackdoor = mediaMockControlsBackdoor;
 
 const mediaClientConfig: MediaClientConfig = {
   authProvider: defaultMediaPickerAuthProvider,

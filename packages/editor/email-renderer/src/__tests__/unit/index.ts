@@ -13,6 +13,7 @@ import * as panels from './__fixtures__/panels.adf.json';
 import * as link from './__fixtures__/link.adf.json';
 import * as decisionList from './__fixtures__/decision-list.adf.json';
 import * as taskList from './__fixtures__/task-list.adf.json';
+import * as nestedTaskList from './__fixtures__/nested-task-list.adf.json';
 import * as blockCards from './__fixtures__/block-cards.adf.json';
 import * as inlineCards from './__fixtures__/inline-cards.adf.json';
 import * as status from './__fixtures__/status.adf.json';
@@ -136,6 +137,20 @@ describe('Renderer - EmailSerializer', () => {
     expect(embeddedImages).toMatchSnapshot('mock-embeddedImages');
   });
 
+  it('should render nested task list correctly', () => {
+    const { result, embeddedImages } = render(nestedTaskList);
+    expect(result).toMatchSnapshot('html');
+    expect(embeddedImages).toMatchSnapshot('embeddedImages');
+  });
+
+  it('should render nested task list correctly with mock enabled', () => {
+    const { result, embeddedImages } = render(nestedTaskList, {
+      isImageStubEnabled: true,
+    });
+    expect(result).toMatchSnapshot('mock-html');
+    expect(embeddedImages).toMatchSnapshot('mock-embeddedImages');
+  });
+
   it('should render block cards correctly', () => {
     const { result } = render(blockCards);
     expect(result).toMatchSnapshot('html');
@@ -247,42 +262,44 @@ describe('Renderer - EmailSerializer', () => {
 
   it('should render media based on given context', () => {
     const context: MetaDataContext = {
-      mediaMetaData: {
-        'media-type-image': {
-          name: 'Dark wallpaper theme.jpg',
-          mediaType: 'image',
-          mimeType: 'image/jpeg',
-          size: 54981,
-        },
-        'media-type-doc': {
-          name: 'My bachelor thesis.pdf',
-          mediaType: 'doc',
-          mimeType: 'application/pdf',
-          size: 12345,
-        },
-        'media-type-video': {
-          name: 'Metallica full concert.mpeg',
-          mediaType: 'video',
-          mimeType: 'vide/mpeg',
-          size: 982347,
-        },
-        'media-type-audio': {
-          name: 'The sound of silence.mp3',
-          mediaType: 'audio',
-          mimeType: 'audio/mpeg',
-          size: 98734,
-        },
-        'media-type-archive': {
-          name: 'The Slackening.zip',
-          mediaType: 'archive',
-          mimeType: 'application/zip',
-          size: 4383,
-        },
-        'media-type-unknown': {
-          name: 'unknown',
-          mediaType: 'unknown',
-          mimeType: 'unknown',
-          size: 54981,
+      hydration: {
+        mediaMetaData: {
+          'media-type-image': {
+            name: 'Dark wallpaper theme.jpg',
+            mediaType: 'image',
+            mimeType: 'image/jpeg',
+            size: 54981,
+          },
+          'media-type-doc': {
+            name: 'My bachelor thesis.pdf',
+            mediaType: 'doc',
+            mimeType: 'application/pdf',
+            size: 12345,
+          },
+          'media-type-video': {
+            name: 'Metallica full concert.mpeg',
+            mediaType: 'video',
+            mimeType: 'vide/mpeg',
+            size: 982347,
+          },
+          'media-type-audio': {
+            name: 'The sound of silence.mp3',
+            mediaType: 'audio',
+            mimeType: 'audio/mpeg',
+            size: 98734,
+          },
+          'media-type-archive': {
+            name: 'The Slackening.zip',
+            mediaType: 'archive',
+            mimeType: 'application/zip',
+            size: 4383,
+          },
+          'media-type-unknown': {
+            name: 'unknown',
+            mediaType: 'unknown',
+            mimeType: 'unknown',
+            size: 54981,
+          },
         },
       },
     };

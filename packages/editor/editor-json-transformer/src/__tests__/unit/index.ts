@@ -79,7 +79,7 @@ describe('JSONTransformer:', () => {
           allowPanel: true,
           allowRule: true,
           allowTables: true,
-          UNSAFE_allowExpand: true,
+          allowExpand: true,
         },
         providerFactory: ProviderFactory.create({ emojiProvider }),
       });

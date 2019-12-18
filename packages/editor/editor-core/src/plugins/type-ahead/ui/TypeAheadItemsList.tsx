@@ -164,7 +164,9 @@ export class TypeAheadItemComponent extends React.Component<
   };
 
   setCurrentIndex = () => {
-    this.props.setCurrentIndex(this.props.index);
+    if (!this.isSelected(this.props)) {
+      this.props.setCurrentIndex(this.props.index);
+    }
   };
 
   handleRef = (ref: HTMLElement | null) => {
@@ -182,7 +184,11 @@ export class TypeAheadItemComponent extends React.Component<
   render() {
     const { item } = this.props;
     return item.render ? (
-      <div ref={this.handleRef} style={{ overflow: 'hidden' }}>
+      <div
+        onMouseMove={this.setCurrentIndex}
+        ref={this.handleRef}
+        style={{ overflow: 'hidden' }}
+      >
         <item.render
           onClick={this.insertByIndex}
           onHover={this.setCurrentIndex}
@@ -192,7 +198,7 @@ export class TypeAheadItemComponent extends React.Component<
     ) : (
       <Item
         onClick={this.insertByIndex}
-        onMouseEnter={this.setCurrentIndex}
+        onMouseMove={this.setCurrentIndex}
         elemBefore={
           <ItemIcon>
             {item.icon ? item.icon() : fallbackIcon(item.title)}
