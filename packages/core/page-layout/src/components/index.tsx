@@ -19,15 +19,13 @@ const Banner = (props: SlotProps) => {
     right: 'var(--rightPanelWidth)',
   };
   const fixedStyles = isFixed ? styles : {};
-
+  const bannerStyles = css({
+    gridArea: 'banner',
+    background: 'red',
+    ...fixedStyles,
+  });
   return (
-    <div
-      css={{
-        gridArea: 'banner',
-        background: 'red',
-        ...fixedStyles,
-      }}
-    >
+    <div css={bannerStyles}>
       <Global
         styles={css`
           :root {
@@ -50,15 +48,14 @@ const Nav = (props: SlotProps) => {
     right: 'var(--rightPanelWidth)',
   };
   const fixedStyles = isFixed ? styles : {};
+  const navStyles = css({
+    gridArea: 'nav',
+    background: 'blue',
+    ...fixedStyles,
+  });
 
   return (
-    <div
-      css={{
-        gridArea: 'nav',
-        background: 'blue',
-        ...fixedStyles,
-      }}
-    >
+    <div css={navStyles}>
       <Global
         styles={css`
           :root {
@@ -81,15 +78,14 @@ const LeftSidebar = (props: SlotProps) => {
     width: 'var(--leftSidebarWidth)',
   };
   const fixedStyles = isFixed ? styles : {};
+  const leftSidebarStyles = css({
+    gridArea: 'left-sidebar',
+    background: 'green',
+    ...fixedStyles,
+  });
 
   return (
-    <div
-      css={{
-        gridArea: 'left-sidebar',
-        background: 'green',
-        ...fixedStyles,
-      }}
-    >
+    <div css={leftSidebarStyles}>
       <Global
         styles={css`
           :root {
@@ -112,15 +108,14 @@ const RightSidebar = (props: SlotProps) => {
     width: 'var(--rightSidebarWidth)',
   };
   const fixedStyles = isFixed ? styles : {};
+  const rightSideBarStyles = css({
+    gridArea: 'right-sidebar',
+    background: 'green',
+    ...fixedStyles,
+  });
 
   return (
-    <div
-      css={{
-        gridArea: 'right-sidebar',
-        background: 'green',
-        ...fixedStyles,
-      }}
-    >
+    <div css={rightSideBarStyles}>
       <Global
         styles={css`
           :root {
@@ -143,15 +138,14 @@ const LeftPanel = (props: SlotProps) => {
     width: 'var(--leftPanelWidth)',
   };
   const fixedStyles = isFixed ? styles : {};
+  const leftPanelStyles = css({
+    gridArea: 'left-panel',
+    background: 'grey',
+    ...fixedStyles,
+  });
 
   return (
-    <div
-      css={{
-        gridArea: 'left-panel',
-        background: 'grey',
-        ...fixedStyles,
-      }}
-    >
+    <div css={leftPanelStyles}>
       <Global
         styles={css`
           :root {
@@ -166,14 +160,13 @@ const LeftPanel = (props: SlotProps) => {
 
 const RightPanel = (props: SlotProps) => {
   const { children, width } = props;
+  const rightPanelStyles = css({
+    gridArea: 'right-panel',
+    background: 'grey',
+  });
 
   return (
-    <div
-      css={{
-        gridArea: 'right-panel',
-        background: 'grey',
-      }}
-    >
+    <div css={rightPanelStyles}>
       <Global
         styles={css`
           :root {
@@ -192,16 +185,16 @@ const Grid = (props: SlotProps) => {
   const areas = `"left-panel banner banner banner right-panel"
                  "left-panel nav nav nav right-panel"
                  "left-panel left-sidebar main right-sidebar right-panel"`;
+  const gridStyles = css({
+    display: 'grid',
+    height: '100vh',
+    gridTemplateColumns: `var(--leftPanelWidth) var(--leftSidebarWidth) auto var(--rightSidebarWidth) var(--rightPanelWidth)`,
+    gridTemplateRows: `var(--bannerHeight) var(--navHeight) auto`,
+    gridTemplateAreas: areas,
+  });
+
   return (
-    <div
-      css={{
-        display: 'grid',
-        height: '100vh',
-        gridTemplateColumns: `var(--leftPanelWidth) var(--leftSidebarWidth) auto var(--rightSidebarWidth) var(--rightPanelWidth)`,
-        gridTemplateRows: `var(--bannerHeight) var(--navHeight) auto`,
-        gridTemplateAreas: areas,
-      }}
-    >
+    <div css={gridStyles}>
       <Global
         styles={css`
           :root {
