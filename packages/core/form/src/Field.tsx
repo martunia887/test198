@@ -44,6 +44,7 @@ export interface FieldProps<
   onBlur: () => void;
   onFocus: () => void;
   value: FieldValue;
+  name: string;
   'aria-invalid': 'true' | 'false';
   'aria-labelledby': string;
 }
