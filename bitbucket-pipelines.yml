@@ -189,7 +189,7 @@ pipelines:
   # Pipelines that can be scheduled or triggered manually.
   custom:
     # Currently this is being set up to be called manually for testing - schedule will change based on decisions in constellation
-    build-constellation-website:
+    build-constellation-staging:
       - step:
           script:
             - source ./build-setup.sh
@@ -197,6 +197,19 @@ pipelines:
             - cd services/website-constellation
             - yarn build
             - yarn deploy:staging
+          after-script:
+            - yarn send:buildEvents
+          caches:
+            - node
+    # Currently this is being set up to be called manually for testing - schedule will change based on decisions in constellation
+    build-constellation-production:
+      - step:
+          script:
+            - source ./build-setup.sh
+            - bolt install --frozen-lockfile
+            - cd services/website-constellation
+            - yarn build
+            - yarn deploy:production
           after-script:
             - yarn send:buildEvents
           caches:
