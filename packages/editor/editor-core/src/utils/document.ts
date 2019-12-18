@@ -1,5 +1,5 @@
 import { Node, Schema, ResolvedPos } from 'prosemirror-model';
-import { Transaction, EditorState } from 'prosemirror-state';
+import { Transaction, EditorState, TextSelection } from 'prosemirror-state';
 import { validator, ADFEntity, ValidationError } from '@atlaskit/adf-utils';
 import { analyticsService } from '../analytics';
 import { ContentNodeWithPos } from 'prosemirror-utils';
@@ -84,6 +84,15 @@ export function isNodeEmpty(node?: Node): boolean {
   );
 }
 
+function isEmptyParagraph2(node: Node) {
+  return (
+    node.type.name === 'paragraph' &&
+    !node.childCount &&
+    node.nodeSize === 2 &&
+    (!node.marks || node.marks.length === 0)
+  );
+}
+
 /**
  * Checks if a node looks like an empty document
  */
@@ -93,12 +102,25 @@ export function isEmptyDocument(node: Node): boolean {
   if (node.childCount !== 1 || !nodeChild) {
     return false;
   }
-  return (
-    nodeChild.type.name === 'paragraph' &&
-    !nodeChild.childCount &&
-    nodeChild.nodeSize === 2 &&
-    (!nodeChild.marks || nodeChild.marks.length === 0)
-  );
+  return isEmptyParagraph2(nodeChild);
+}
+
+export function isInEmptyLine(state: EditorState) {
+  const { doc, selection } = state;
+
+  const { $cursor } = selection as TextSelection;
+
+  if (!$cursor) {
+    return false;
+  }
+
+  const node = doc.nodeAt($cursor.pos - 1);
+
+  if (!node) {
+    return false;
+  }
+
+  return isEmptyParagraph2(node);
 }
 
 function wrapWithUnsupported(

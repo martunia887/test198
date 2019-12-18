@@ -63,7 +63,12 @@ import { ScrollGutterPluginOptions } from '../plugins/base/pm-plugins/scroll-gut
  * Returns list of plugins that are absolutely necessary for editor to work
  */
 export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
-  const { appearance, textFormatting, placeholder } = props;
+  const {
+    appearance,
+    textFormatting,
+    placeholder,
+    enablePlaceHolderHint,
+  } = props;
   const isFullPage = fullPageCheck(appearance);
 
   return [
@@ -81,7 +86,7 @@ export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
       lastNodeMustBeParagraph: appearance === 'comment',
       allowBlockType: props.allowBlockType,
     }),
-    placeholderPlugin({ placeholder }),
+    placeholderPlugin({ placeholder, enablePlaceHolderHint }),
     clearMarksOnChangeToEmptyDocumentPlugin(),
     hyperlinkPlugin(),
     textFormattingPlugin(textFormatting || {}),

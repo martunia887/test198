@@ -281,4 +281,6 @@ export interface EditorProps {
   // New extension API
   // This eventually is going to replace `quickInsert.provider`, `extensionHandlers`, `macroProvider`.
   extensionProviders?: Array<ExtensionProvider>;
+
+  enablePlaceHolderHint?: boolean;
 }

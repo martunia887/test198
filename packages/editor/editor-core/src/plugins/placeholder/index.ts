@@ -1,14 +1,16 @@
 import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
-import { EditorPlugin } from '../../types';
+import { EditorPlugin, MessageDescriptor } from '../../types';
 import { isEmptyDocument } from '../../utils';
+import { isInEmptyLine } from '../../utils/document';
 
 export const pluginKey = new PluginKey('placeholderPlugin');
 
 export function createPlaceholderDecoration(
   doc: Node,
   placeholderText: string,
+  pos: number = 1,
 ): DecorationSet {
   const placeholderDecoration = document.createElement('span');
   placeholderDecoration.className = 'placeholder-decoration';
@@ -16,7 +18,7 @@ export function createPlaceholderDecoration(
   placeholderNode.textContent = placeholderText;
   placeholderDecoration.appendChild(placeholderNode);
   return DecorationSet.create(doc, [
-    Decoration.widget(1, placeholderDecoration, {
+    Decoration.widget(pos, placeholderDecoration, {
       side: -1,
       key: 'placeholder',
     }),
@@ -57,25 +59,62 @@ function applyPlaceholderIfEmpty(view: EditorView, event: Event) {
   return false;
 }
 
-export function createPlugin(placeholderText?: string): Plugin | undefined {
-  if (!placeholderText) {
+interface PlaceHolderState {
+  hasPlaceholder: boolean;
+  placeholderText?: string;
+  pos?: number;
+}
+
+type AvailableMessages = 'slashCommand';
+
+const messages: Record<AvailableMessages, MessageDescriptor> = {
+  slashCommand: {
+    id: 'slash-placheholder',
+    defaultMessage: "Type '/' to insert content.",
+    description: 'Message to be shown when the user is in a new empty line.',
+  },
+};
+
+export function createPlugin(
+  defaultPlaceholderText?: string,
+  enablePlaceHolderHint?: boolean,
+): Plugin | undefined {
+  if (!defaultPlaceholderText) {
     return;
   }
 
-  return new Plugin({
+  return new Plugin<PlaceHolderState>({
     key: pluginKey,
     state: {
-      init: (_, state) => isEmptyDocument(state.doc),
+      init: (_, state) => {
+        if (isEmptyDocument(state.doc)) {
+          return {
+            hasPlaceholder: true,
+            placeholderText: defaultPlaceholderText,
+            pos: 1,
+          };
+        }
+        return {
+          hasPlaceholder: false,
+        };
+      },
       apply: (tr, _oldPluginState, _oldEditorState, newEditorState) => {
         const meta = tr.getMeta(pluginKey);
 
         if (meta) {
           if (meta.removePlaceholder) {
-            return false;
+            return { hasPlaceholder: false };
           }
 
-          if (meta.applyPlaceholderIfEmpty) {
-            return isEmptyDocument(newEditorState.doc);
+          if (
+            meta.applyPlaceholderIfEmpty &&
+            isEmptyDocument(newEditorState.doc)
+          ) {
+            return {
+              hasPlaceholder: true,
+              placeholderText: defaultPlaceholderText,
+              pos: 1,
+            };
           }
         }
 
@@ -85,15 +124,40 @@ export function createPlugin(placeholderText?: string): Plugin | undefined {
           return _oldPluginState;
         }
 
-        return isEmptyDocument(newEditorState.doc);
+        if (isEmptyDocument(newEditorState.doc)) {
+          return {
+            hasPlaceholder: true,
+            placeholderText: defaultPlaceholderText,
+            pos: 1,
+          };
+        }
+
+        if (isInEmptyLine(newEditorState)) {
+          const { $from } = newEditorState.selection;
+          return {
+            hasPlaceholder: true,
+            placeholderText: messages.slashCommand.defaultMessage,
+            pos: $from.pos,
+          };
+        }
+
+        return {
+          hasPlaceholder: false,
+        };
       },
     },
     props: {
       decorations(editorState): DecorationSet | undefined {
-        const havePlaceholder = pluginKey.getState(editorState);
+        const { hasPlaceholder, placeholderText, pos } = pluginKey.getState(
+          editorState,
+        ) as PlaceHolderState;
 
-        if (havePlaceholder) {
-          return createPlaceholderDecoration(editorState.doc, placeholderText);
+        if (hasPlaceholder && placeholderText && pos !== undefined) {
+          return createPlaceholderDecoration(
+            editorState.doc,
+            placeholderText,
+            pos,
+          );
         }
         return;
       },
