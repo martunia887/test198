@@ -83,10 +83,20 @@ this is a new line text, not in the table`,
     ],
   ];
 
+  const context = {
+    conversion: {
+      mediaConversion: {
+        'a-doc (jadsjdasjadsjkdasjk).pdf': 'abc-123',
+        'not-empty (askjsajnkjknads).txt': 'abc-456',
+        'quicktime.mov': 'abc-789',
+      },
+    },
+  };
+
   for (const [testCaseDescription, markup] of testCases) {
     it(testCaseDescription, () => {
       const transformer = new WikiMarkupTransformer();
-      expect(transformer.parse(markup)).toMatchSnapshot();
+      expect(transformer.parse(markup, context)).toMatchSnapshot();
     });
   }
 

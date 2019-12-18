@@ -188,6 +188,8 @@ export async function push(
 https://bitbucket.org/atlassian/atlaskit-mk-2/branch/${atlaskitBranchName}
 
 This commit was auto-generated.
+
+atlaskit-commit-hash: ${atlaskitCommitHash}
   `;
 
   await createVersionFile(atlaskitCommitHash);

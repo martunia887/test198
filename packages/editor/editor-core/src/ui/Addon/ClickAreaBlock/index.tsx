@@ -34,7 +34,7 @@ export default class ClickAreaBlock extends React.Component<Props> {
     const contentArea = event.currentTarget.querySelector(
       '.ak-editor-content-area',
     );
-    const editorFocused = view!.hasFocus();
+    const editorFocused = !!(view && view.hasFocus());
     const target = event.target as HTMLElement;
 
     // @see https://product-fabric.atlassian.net/browse/ED-4287

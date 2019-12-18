@@ -25,7 +25,6 @@
     "@atlaskit/analytics-next": "^6.3.3",
     "@atlaskit/popper": "^3.1.8",
     "@atlaskit/theme": "^9.2.4",
-    "@babel/runtime": "^7.0.0",
     "react-node-resolver": "^1.0.1",
     "tslib": "^1.9.3"
   },

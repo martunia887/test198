@@ -269,7 +269,11 @@ export class FileCardImageViewBase extends Component<
       <ProgressBarWrapper>
         <Overlay>
           <Title>
-            <Ellipsify text={mediaName || ''} lines={2} />
+            <Ellipsify
+              testId="media-card-file-name"
+              text={mediaName || ''}
+              lines={2}
+            />
           </Title>
           <Body>
             <ProgressWrapper>

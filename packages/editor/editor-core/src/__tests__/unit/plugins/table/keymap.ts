@@ -64,6 +64,7 @@ describe('table keymap', () => {
         allowRule: true,
         allowPanel: true,
         allowTasksAndDecisions: true,
+        allowExpand: true,
         media: { allowMediaSingle: true },
       },
       pluginKey,

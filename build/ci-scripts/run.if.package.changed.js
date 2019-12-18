@@ -7,7 +7,7 @@ const path = require('path');
 const bolt = require('bolt');
 const git = require('@atlaskit/build-utils/git');
 const {
-  getChangedPackagesSinceMaster,
+  getChangedPackages,
   getChangedPackagesSincePublishCommit,
 } = require('../utils/packages');
 
@@ -31,7 +31,7 @@ async function getAllFSChangesets() {
 
 async function getNewFSChangesets() {
   const projectRoot = (await bolt.getProject({ cwd: process.cwd() })).dir;
-  const paths = await git.getChangedChangesetFilesSinceMaster();
+  const paths = await git.getChangesetFiles();
   // $StringLitteral
   return paths.map(filePath => require(path.join(projectRoot, filePath)));
 }
@@ -79,7 +79,7 @@ async function getNewFSChangesets() {
   const changedPackages =
     branch === 'master'
       ? await getChangedPackagesSincePublishCommit()
-      : await getChangedPackagesSinceMaster();
+      : await getChangedPackages(process.env.BITBUCKET_BRANCH);
 
   const matched = !!changedPackages
     .concat(packagesToRelease)

@@ -278,7 +278,7 @@ export default class Editor extends React.Component<EditorProps, {}> {
 
       this.providerFactory.setProvider(
         'quickInsertProvider',
-        Promise.resolve(quickInsertProvider),
+        quickInsertProvider,
       );
     }
   }

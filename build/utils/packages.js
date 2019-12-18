@@ -37,15 +37,34 @@ async function getChangedPackagesSincePublishCommit() {
 }
 
 // Note: This returns the packages that have changed AND been committed since master,
-// it wont include staged/unstaged changes
+// it wont include staged/unstaged changes.
 //
 // Don't use this function in master branch as it returns nothing in that case.
-async function getChangedPackagesSinceMaster() {
-  const masterRef = await git.getMasterRef();
-  return getChangedPackagesSinceCommit(masterRef);
+async function getChangedPackagesSinceBranch(branch /*: string */) {
+  const ref = await git.getRef(branch);
+  return getChangedPackagesSinceCommit(ref);
+}
+
+async function getChangedPackages(sourceBranch /*: ?string */) {
+  // TODO: This is duplicated in scheduled-releases folder because it is using js for now. To remove when we move all build packages in TS.
+  const ReleaseBranchPrefix = 'release-candidate/';
+  const isReleaseBranch =
+    sourceBranch && sourceBranch.startsWith(ReleaseBranchPrefix);
+
+  const isDevelop = sourceBranch && sourceBranch === 'develop';
+
+  // If there is no source branch, play it safe and set base branch to master to avoid incorrectly setting changed packages to
+  // develop when running on a release/develop branch in an environment where source branch is not available, e.g. custom pipeline
+  const base =
+    isReleaseBranch || isDevelop || !sourceBranch
+      ? 'master'
+      : await git.getBaseBranch();
+
+  return getChangedPackagesSinceBranch(base);
 }
 
 module.exports = {
   getChangedPackagesSincePublishCommit,
-  getChangedPackagesSinceMaster,
+  getChangedPackagesSinceBranch,
+  getChangedPackages,
 };

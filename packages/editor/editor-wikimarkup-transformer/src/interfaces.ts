@@ -54,3 +54,23 @@ export interface AddCellArgs extends AddArgs {
   style: string;
   content: PMNode[];
 }
+
+export interface ConversionMap {
+  [key: string]: string;
+}
+export type TokenErrCallback = (err: Error, tokenType: string) => void;
+
+export interface Context {
+  readonly issueKeyRegex?: RegExp | undefined;
+  readonly tokenErrCallback?: TokenErrCallback;
+  readonly conversion?: {
+    readonly inlineCardConversion?: ConversionMap;
+    readonly mediaConversion?: ConversionMap;
+    readonly mentionConversion?: ConversionMap;
+  };
+  readonly hydration?: {
+    readonly media?: {
+      targetCollectionId?: string;
+    };
+  };
+}

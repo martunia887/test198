@@ -120,7 +120,13 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
         <TopRow className={'top-row'}>
           {this.errorLine()}
           <TitleWrapper className={'title'}>
-            <Ellipsify text={titleText} lines={2} />
+            {titleText ? (
+              <Ellipsify
+                testId="media-card-file-name"
+                text={titleText}
+                lines={2}
+              />
+            ) : null}
           </TitleWrapper>
           {this.tickBox()}
         </TopRow>

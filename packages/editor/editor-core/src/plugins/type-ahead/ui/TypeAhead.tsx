@@ -34,6 +34,29 @@ export type TypeAheadProps = {
 };
 
 export class TypeAhead extends React.Component<TypeAheadProps> {
+  composing: boolean = false;
+
+  handleKeyPress = () => {
+    // When user starts typing, they are not using their mouse
+    // Marks as composing, to prevent false positive mouse events
+    this.composing = true;
+  };
+
+  handleMouseMove = () => {
+    // User is actively moving mouse, hence can enable mouse events again
+    this.composing = false;
+  };
+
+  componentDidMount = () => {
+    window.addEventListener('keypress', this.handleKeyPress);
+    window.addEventListener('mousemove', this.handleMouseMove);
+  };
+
+  componentWillUnmount = () => {
+    window.removeEventListener('keypress', this.handleKeyPress);
+    window.removeEventListener('mousemove', this.handleMouseMove);
+  };
+
   insertByIndex = (index: number) => {
     selectByIndex(index)(
       this.props.editorView.state,
@@ -42,6 +65,11 @@ export class TypeAhead extends React.Component<TypeAheadProps> {
   };
 
   setCurrentIndex = (index: number) => {
+    if (this.composing) {
+      // User is typing, mouse events are false positives
+      return;
+    }
+
     if (index !== this.props.currentIndex) {
       setCurrentIndex(index)(
         this.props.editorView.state,

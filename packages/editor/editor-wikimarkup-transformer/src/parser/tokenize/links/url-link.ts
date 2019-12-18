@@ -1,5 +1,6 @@
 import { ContentLink } from './link-parser';
-import { TokenType, Context } from '../index';
+import { TokenType } from '../index';
+import { Context } from '../../../interfaces';
 import { isSafeUrl } from '@atlaskit/adf-schema';
 import { parseString } from '../../text';
 import { hasAnyOfMarks } from '../../utils/text';
