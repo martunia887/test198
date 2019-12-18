@@ -32,25 +32,21 @@ export const openFeedbackDialog = async (feedbackInfo?: FeedbackInfo) => {
   };
   const newFeedbackInfoHash = hashFeedbackInfo(combinedFeedbackInfo);
   if (!showJiraCollectorDialog || feedbackInfoHash !== newFeedbackInfoHash) {
-    try {
-      showJiraCollectorDialog = await loadJiraCollectorDialogScript(
-        [
-          combinedFeedbackInfo.product || 'n/a',
-          ...(combinedFeedbackInfo.labels || []),
-        ],
-        combinedFeedbackInfo.packageName || '',
-        coreVersion,
-        combinedFeedbackInfo.packageVersion || '',
-      );
+    showJiraCollectorDialog = await loadJiraCollectorDialogScript(
+      [
+        combinedFeedbackInfo.product || 'n/a',
+        ...(combinedFeedbackInfo.labels || []),
+      ],
+      combinedFeedbackInfo.packageName || '',
+      coreVersion,
+      combinedFeedbackInfo.packageVersion || '',
+    );
 
-      feedbackInfoHash = newFeedbackInfoHash;
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    feedbackInfoHash = newFeedbackInfoHash;
   }
   const timeoutId = window.setTimeout(showJiraCollectorDialog, 0);
   // Return the timoutId for consumers to call clearTimeout if they need to.
-  return Promise.resolve(timeoutId);
+  return timeoutId;
 };
 
 const feedbackDialog = (feedbackInfo: FeedbackInfo): EditorPlugin => {

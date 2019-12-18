@@ -177,10 +177,10 @@ async function runTestsWithRetry() {
     }
   } catch (err) {
     console.error(err.toString());
-    return Promise.resolve(1);
+    return 1;
   }
 
-  return Promise.resolve(code);
+  return code;
 }
 
 function initClient() {

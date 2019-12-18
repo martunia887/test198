@@ -18,9 +18,7 @@ import {
 import { observableToPromise } from '../../utils/observableToPromise';
 jest.mock('../../utils/getDimensionsFromBlob', () => {
   return {
-    getDimensionsFromBlob: () => {
-      return { width: 1, height: 1 };
-    },
+    getDimensionsFromBlob: () => Promise.resolve({ width: 1, height: 1 }),
   };
 });
 jest.mock('../../utils/getMediaTypeFromMimeType', () => {
