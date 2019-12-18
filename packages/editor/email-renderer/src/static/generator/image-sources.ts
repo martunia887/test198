@@ -77,4 +77,9 @@ export default [
     input: 'document-attachment',
     exportSize: '28:28',
   },
+  {
+    name: 'expand',
+    input: 'expand',
+    exportSize: '24:24',
+  },
 ];
