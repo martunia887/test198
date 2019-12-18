@@ -37,7 +37,6 @@ export type PluginState = {
   upKeyCount: number;
   downKeyCount: number;
   highlight?: JSX.Element | null;
-  headless: boolean;
 };
 
 export const ACTIONS = {
@@ -52,7 +51,6 @@ export const ACTIONS = {
 export function createInitialPluginState(
   prevActiveState = false,
   isAllowed = true,
-  headless = false,
 ): PluginState {
   return {
     isAllowed,
@@ -68,7 +66,6 @@ export function createInitialPluginState(
     queryStarted: 0,
     upKeyCount: 0,
     downKeyCount: 0,
-    headless,
   };
 }
 
@@ -411,10 +408,6 @@ export function defaultActionHandler({
     upKeyCount: 0,
     downKeyCount: 0,
     highlight,
-    headless:
-      typeof typeAheadHandler.headless === 'boolean'
-        ? typeAheadHandler.headless
-        : false,
   };
 
   dispatch(pluginKey, newPluginState);

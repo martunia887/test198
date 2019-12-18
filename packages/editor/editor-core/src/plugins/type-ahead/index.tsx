@@ -54,7 +54,10 @@ const typeAheadPlugin = (): EditorPlugin => ({
         }: {
           typeAhead: TypeAheadPluginState;
         }) => {
-          if (typeAhead.headless) {
+          if (
+            typeAhead.typeAheadHandler &&
+            typeAhead.typeAheadHandler.headless
+          ) {
             return null;
           }
 
