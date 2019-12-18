@@ -22,24 +22,35 @@ export const PrimaryItemsContainer = ({
   theme,
 }: PrimaryItemsContainerProps & { theme: NavigationTheme }) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [shouldCloseOnBodyClick, setShouldCloseOnBodyClick] = useState(true);
   const { updateWidth, visibleItems, overflowItems } = useOverflowController(
     items,
   );
 
-  const content = useCallback(
-    () => (
-      <OverflowProvider isVisible={false}>{overflowItems}</OverflowProvider>
-    ),
-    [overflowItems],
-  );
-
   const onMoreClick = useCallback(() => {
     setIsMoreOpen(!isMoreOpen);
-  }, [isMoreOpen, setIsMoreOpen]);
+  }, [isMoreOpen]);
 
   const onMoreClose = useCallback(() => {
     setIsMoreOpen(false);
-  }, [setIsMoreOpen]);
+  }, []);
+
+  const setCloseOnBodyClick = useCallback(
+    value => setShouldCloseOnBodyClick(value),
+    [],
+  );
+
+  const content = useCallback(
+    () => (
+      <OverflowProvider
+        isVisible={false}
+        setCloseOnBodyClick={setCloseOnBodyClick}
+      >
+        {overflowItems}
+      </OverflowProvider>
+    ),
+    [overflowItems, setCloseOnBodyClick],
+  );
 
   const trigger = useCallback(
     (triggerProps: TriggerProps) => (
@@ -56,13 +67,16 @@ export const PrimaryItemsContainer = ({
 
   return (
     <div css={containerCSS(theme)}>
-      <OverflowProvider isVisible>{visibleItems}</OverflowProvider>
+      <OverflowProvider isVisible setCloseOnBodyClick={setCloseOnBodyClick}>
+        {visibleItems}
+      </OverflowProvider>
       {overflowItems.length > 0 && (
         <Popup
           content={content}
           isOpen={isMoreOpen}
           onClose={onMoreClose}
           trigger={trigger}
+          shouldCloseOnBodyClick={shouldCloseOnBodyClick}
         />
       )}
       {Create && <Create />}

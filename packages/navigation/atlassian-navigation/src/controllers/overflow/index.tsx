@@ -19,14 +19,19 @@ const calculateHash = (w: number, n: number) => w + '#' + n;
 
 const OverflowContext = createContext({
   isVisible: true,
+  setCloseOnBodyClick: (_: boolean) => {},
 });
 
 export const OverflowProvider = ({
   children,
   isVisible,
+  setCloseOnBodyClick,
 }: OverflowProviderProps) => {
   const { Provider } = OverflowContext;
-  const value = useMemo(() => ({ isVisible }), [isVisible]);
+  const value = useMemo(() => ({ isVisible, setCloseOnBodyClick }), [
+    isVisible,
+    setCloseOnBodyClick,
+  ]);
   return <Provider value={value}>{children}</Provider>;
 };
 
