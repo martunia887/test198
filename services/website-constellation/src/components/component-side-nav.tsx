@@ -8,13 +8,13 @@ import { Location } from '@reach/router';
 
 const ComponentNavItem = ({
   docsDisplayName,
-  passedLocation,
+  location,
 }: {
   docsDisplayName: string;
-  passedLocation: { pathname?: string };
+  location: { pathname?: string };
 }) => (
   <NavItem
-    isSelected={`/components/${docsDisplayName}` === passedLocation.pathname}
+    isSelected={`/components/${docsDisplayName}` === location.pathname}
     key={docsDisplayName}
     text={docsDisplayName}
     to={`/components/${docsDisplayName}`}
@@ -56,7 +56,7 @@ const ComponentNav = ({ components }) => (
               <>
                 <ComponentNavItem
                   docsDisplayName={docsDisplayName}
-                  passedLocation={location}
+                  location={location}
                 />
                 <NavSection>
                   <NavItem
@@ -100,7 +100,7 @@ const ComponentNav = ({ components }) => (
             ) : (
               <ComponentNavItem
                 docsDisplayName={docsDisplayName}
-                passedLocation={location}
+                location={location}
               />
             ),
           )}
