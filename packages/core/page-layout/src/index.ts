@@ -3,6 +3,7 @@ export {
   Nav,
   LeftPanel,
   RightPanel,
-  LeftSideBar,
+  RightSidebar,
+  LeftSidebar,
   Grid,
 } from './components';

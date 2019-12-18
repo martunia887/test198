@@ -1,50 +1,40 @@
 /** @jsx jsx */
 import React from 'react';
-import { jsx, CSSObject } from '@emotion/core';
+import { jsx, Global, css } from '@emotion/core';
 
-const noop: (args: any) => void = Function;
-const defaultThemeContext = {
-  setBannerHeight: noop,
-  bannerStyles: {},
-  setNavHeight: noop,
-  navStyles: {},
-  setLeftSidebarWidth: noop,
-  leftSidebarStyles: {},
-  setLeftPanelWidth: noop,
-  leftPanelStyles: {},
-  setRightPanelWidth: noop,
-  rightPanelStyles: {},
-  setRightSidebarWidth: noop,
-  rightSidebarStyles: {},
-};
-export const ThemeContext = React.createContext(defaultThemeContext);
-
-const getFixedStyles = (isFixed: boolean = false, fixedStyles: CSSObject) =>
-  isFixed ? { position: 'fixed', ...fixedStyles } : {};
-
-const div = 'div';
-export default div;
 type SlotProps = {
   children: React.ReactNode;
-  height?: number;
-  width?: number;
+  height?: string;
+  width?: string;
   isFixed?: boolean;
 };
 
 const Banner = (props: SlotProps) => {
   const { children, height, isFixed } = props;
-  const { setBannerHeight, bannerStyles } = React.useContext(ThemeContext);
-
-  setBannerHeight(height);
+  const styles = {
+    position: 'fixed',
+    top: 0,
+    left: 'var(--leftPanelWidth)',
+    bottom: 'calc(100vh - var(--bannerHeight))',
+    right: 'var(--rightPanelWidth)',
+  };
+  const fixedStyles = isFixed ? styles : {};
 
   return (
     <div
       css={{
-        background: 'red',
         gridArea: 'banner',
-        ...getFixedStyles(isFixed, bannerStyles),
+        background: 'red',
+        ...fixedStyles,
       }}
     >
+      <Global
+        styles={css`
+          :root {
+            --bannerHeight: ${height};
+          }
+        `}
+      />
       {children}
     </div>
   );
@@ -52,37 +42,92 @@ const Banner = (props: SlotProps) => {
 
 const Nav = (props: SlotProps) => {
   const { children, height, isFixed } = props;
-  const { setNavHeight, navStyles } = React.useContext(ThemeContext);
-  setNavHeight(height);
+  const styles = {
+    position: 'fixed',
+    top: 'var(--bannerHeight)',
+    left: 'var(--leftPanelWidth)',
+    bottom: 'calc(100vh - var(--bannerHeight) - var(--navHeight))',
+    right: 'var(--rightPanelWidth)',
+  };
+  const fixedStyles = isFixed ? styles : {};
 
   return (
     <div
       css={{
-        background: 'blue',
         gridArea: 'nav',
-        ...getFixedStyles(isFixed, navStyles),
+        background: 'blue',
+        ...fixedStyles,
       }}
     >
+      <Global
+        styles={css`
+          :root {
+            --navHeight: ${height};
+          }
+        `}
+      />
       {children}
     </div>
   );
 };
-const LeftSideBar = (props: SlotProps) => {
-  const { children, width, isFixed } = props;
-  const { setLeftSidebarWidth, leftSidebarStyles } = React.useContext(
-    ThemeContext,
-  );
 
-  setLeftSidebarWidth(width);
+const LeftSidebar = (props: SlotProps) => {
+  const { children, width, isFixed } = props;
+  const styles = {
+    position: 'fixed',
+    top: 'calc(var(--bannerHeight) + var(--navHeight))',
+    left: 'var(--leftPanelWidth)',
+    bottom: 0,
+    width: 'var(--leftSidebarWidth)',
+  };
+  const fixedStyles = isFixed ? styles : {};
 
   return (
     <div
       css={{
         gridArea: 'left-sidebar',
-        background: 'lightgray',
-        ...getFixedStyles(isFixed, leftSidebarStyles),
+        background: 'green',
+        ...fixedStyles,
       }}
     >
+      <Global
+        styles={css`
+          :root {
+            --leftSidebarWidth: ${width};
+          }
+        `}
+      />
+      {children}
+    </div>
+  );
+};
+
+const RightSidebar = (props: SlotProps) => {
+  const { children, width, isFixed } = props;
+  const styles = {
+    position: 'fixed',
+    top: 'calc(var(--bannerHeight) + var(--navHeight))',
+    right: 'var(--rightPanelWidth)',
+    bottom: 0,
+    width: 'var(--rightSidebarWidth)',
+  };
+  const fixedStyles = isFixed ? styles : {};
+
+  return (
+    <div
+      css={{
+        gridArea: 'right-sidebar',
+        background: 'green',
+        ...fixedStyles,
+      }}
+    >
+      <Global
+        styles={css`
+          :root {
+            --rightSidebarWidth: ${width};
+          }
+        `}
+      />
       {children}
     </div>
   );
@@ -90,38 +135,52 @@ const LeftSideBar = (props: SlotProps) => {
 
 const LeftPanel = (props: SlotProps) => {
   const { children, width, isFixed } = props;
-  const { setLeftPanelWidth, leftPanelStyles } = React.useContext(ThemeContext);
-
-  setLeftPanelWidth(width);
+  const styles = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: 'var(--leftPanelWidth)',
+  };
+  const fixedStyles = isFixed ? styles : {};
 
   return (
     <div
       css={{
         gridArea: 'left-panel',
         background: 'grey',
-        ...getFixedStyles(isFixed, leftPanelStyles),
+        ...fixedStyles,
       }}
     >
+      <Global
+        styles={css`
+          :root {
+            --leftPanelWidth: ${width};
+          }
+        `}
+      />
       {children}
     </div>
   );
 };
-const RightPanel = (props: SlotProps) => {
-  const { children, width, isFixed } = props;
-  const { setRightPanelWidth, rightPanelStyles } = React.useContext(
-    ThemeContext,
-  );
 
-  setRightPanelWidth(width);
+const RightPanel = (props: SlotProps) => {
+  const { children, width } = props;
 
   return (
     <div
       css={{
         gridArea: 'right-panel',
-        background: 'rebeccapurple',
-        ...getFixedStyles(isFixed, rightPanelStyles),
+        background: 'grey',
       }}
     >
+      <Global
+        styles={css`
+          :root {
+            --rightPanelWidth: ${width};
+          }
+        `}
+      />
       {children}
     </div>
   );
@@ -129,12 +188,6 @@ const RightPanel = (props: SlotProps) => {
 
 const Grid = (props: SlotProps) => {
   const { children } = props;
-  const [bannerHeight, setBannerHeight] = React.useState(0);
-  const [navHeight, setNavHeight] = React.useState(0);
-  const [leftPanelWidth, setLeftPanelWidth] = React.useState(0);
-  const [leftSidebarWidth, setLeftSidebarWidth] = React.useState(0);
-  const [rightPanelWidth, setRightPanelWidth] = React.useState(0);
-  const [rightSidebarWidth, setRightSidebarWidth] = React.useState(0);
 
   const areas = `"left-panel banner banner banner right-panel"
                  "left-panel nav nav nav right-panel"
@@ -144,65 +197,26 @@ const Grid = (props: SlotProps) => {
       css={{
         display: 'grid',
         height: '100vh',
-        gridTemplateColumns: `${leftPanelWidth}px ${leftSidebarWidth}px auto ${rightSidebarWidth} ${rightPanelWidth}px`,
-        gridTemplateRows: `${bannerHeight}px ${navHeight}px auto`,
+        gridTemplateColumns: `var(--leftPanelWidth) var(--leftSidebarWidth) auto var(--rightSidebarWidth) var(--rightPanelWidth)`,
+        gridTemplateRows: `var(--bannerHeight) var(--navHeight) auto`,
         gridTemplateAreas: areas,
       }}
     >
-      <ThemeContext.Provider
-        value={{
-          setBannerHeight,
-          setNavHeight,
-          setLeftPanelWidth,
-          setLeftSidebarWidth,
-          setRightPanelWidth,
-          setRightSidebarWidth,
-          bannerStyles: {
-            top: 0,
-            right: rightPanelWidth,
-            bottom: 'auto',
-            left: leftPanelWidth,
-            height: bannerHeight,
-          },
-          navStyles: {
-            top: bannerHeight,
-            right: rightPanelWidth,
-            bottom: 'auto',
-            left: leftPanelWidth,
-            height: navHeight,
-          },
-          leftPanelStyles: {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 'auto',
-            width: leftPanelWidth,
-          },
-          leftSidebarStyles: {
-            top: bannerHeight + navHeight,
-            right: leftPanelWidth + leftSidebarWidth,
-            bottom: 0,
-            left: leftPanelWidth,
-          },
-          rightPanelStyles: {
-            top: 0,
-            left: 'auto',
-            right: 0,
-            bottom: 0,
-            width: rightPanelWidth,
-          },
-          rightSidebarStyles: {
-            top: bannerHeight + navHeight,
-            right: rightPanelWidth,
-            bottom: 0,
-            left: 'auto',
-            width: rightSidebarWidth,
-          },
-        }}
-      >
-        {children}
-      </ThemeContext.Provider>
+      <Global
+        styles={css`
+          :root {
+            --leftPanelWidth: 0;
+            --leftSidebarWidth: 0;
+            --rightSidebarWidth: 0;
+            --rightPanelWidth: 0;
+            --navHeight: 0;
+            --bannerHeight: 0;
+          }
+        `}
+      />
+      {children}
     </div>
   );
 };
-export { Banner, Nav, LeftPanel, RightPanel, LeftSideBar, Grid };
+
+export { Banner, Nav, LeftPanel, RightPanel, LeftSidebar, RightSidebar, Grid };

@@ -1,22 +1,35 @@
 import React from 'react';
 
-import { Grid, LeftPanel, Banner, Nav, LeftSideBar, RightPanel } from '../src';
+import {
+  Grid,
+  LeftPanel,
+  Banner,
+  Nav,
+  LeftSidebar,
+  RightSidebar,
+  RightPanel,
+} from '../src';
 
 const PageLayoutExample = () => {
   return (
     <Grid>
-      <LeftPanel width={200} isFixed>
+      <LeftPanel width="50px" isFixed>
         Left
       </LeftPanel>
-      <Banner height={50} isFixed>
+      <Banner height="50px" isFixed>
         Banner
       </Banner>
-      <Nav height={100} isFixed>
+      <Nav height="100px" isFixed>
         Nav bar here
       </Nav>
-      <LeftSideBar width={200}>Sidebar</LeftSideBar>
-      <main css={{ gridArea: 'main' }}>Lorem Ipsum</main>
-      <RightPanel width={200} isFixed>
+      <LeftSidebar width="80px" isFixed>
+        Sidebar
+      </LeftSidebar>
+      <main css={{ gridArea: 'main' }}></main>
+      <RightSidebar width="120px" isFixed>
+        Sidebar
+      </RightSidebar>
+      <RightPanel width="90px" isFixed>
         Right
       </RightPanel>
     </Grid>
