@@ -86,6 +86,7 @@ export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
     hyperlinkPlugin(),
     textFormattingPlugin(textFormatting || {}),
     widthPlugin(),
+    quickInsertPlugin(),
     typeAheadPlugin(),
     unsupportedContentPlugin(),
     editorDisabledPlugin(),
@@ -188,6 +189,7 @@ export default function createPluginsList(
         createAnalyticsEvent,
         sanitizePrivateContent: props.sanitizePrivateContent,
         mentionInsertDisplayName: props.mentionInsertDisplayName,
+        headless: isMobile,
         useInlineWrapper: isMobile,
         allowZeroWidthSpaceAfter: !isMobile,
       }),
@@ -198,6 +200,7 @@ export default function createPluginsList(
     plugins.push(
       emojiPlugin({
         createAnalyticsEvent,
+        headless: isMobile,
         useInlineWrapper: isMobile,
         allowZeroWidthSpaceAfter: !isMobile,
       }),
@@ -349,10 +352,6 @@ export default function createPluginsList(
       nativeStatusSupported: !statusMenuDisabled,
     }),
   );
-
-  if (!isMobile) {
-    plugins.push(quickInsertPlugin());
-  }
 
   if (isMobile) {
     plugins.push(historyPlugin());

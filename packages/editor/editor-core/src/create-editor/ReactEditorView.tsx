@@ -341,6 +341,7 @@ export default class ReactEditorView<T = {}> extends React.Component<
         options.props.createAnalyticsEvent,
       ),
     );
+
     const schema = createSchema(this.config);
 
     const {

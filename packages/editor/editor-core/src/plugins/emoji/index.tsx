@@ -40,6 +40,7 @@ export interface EmojiPluginOptions {
   createAnalyticsEvent?: CreateUIAnalyticsEvent;
   allowZeroWidthSpaceAfter?: boolean;
   useInlineWrapper?: boolean;
+  headless?: boolean;
 }
 
 const emojiPlugin = (options?: EmojiPluginOptions): EditorPlugin => ({
@@ -98,6 +99,7 @@ const emojiPlugin = (options?: EmojiPluginOptions): EditorPlugin => ({
       // Custom regex must have a capture group around trigger
       // so it's possible to use it without needing to scan through all triggers again
       customRegex: '\\(?(:)',
+      headless: options ? options.headless : undefined,
       getItems(query, state, _intl, { prevActive, queryChanged }) {
         if (!prevActive && queryChanged) {
           analyticsService.trackEvent(

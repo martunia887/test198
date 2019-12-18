@@ -71,6 +71,7 @@ export interface MentionPluginOptions {
   mentionInsertDisplayName?: boolean;
   useInlineWrapper?: boolean;
   allowZeroWidthSpaceAfter?: boolean;
+  headless?: boolean;
 }
 
 const mentionsPlugin = (options?: MentionPluginOptions): EditorPlugin => {
@@ -162,6 +163,7 @@ const mentionsPlugin = (options?: MentionPluginOptions): EditorPlugin => {
         // Custom regex must have a capture group around trigger
         // so it's possible to use it without needing to scan through all triggers again
         customRegex: '\\(?(@)',
+        headless: options ? options.headless : undefined,
         getHighlight: (state: EditorState) => {
           const pluginState = getMentionPluginState(state);
           const provider = pluginState.mentionProvider;

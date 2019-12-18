@@ -126,6 +126,11 @@ export default function mobileEditor(props: Props) {
             allowAnalyticsGASV3={true}
             allowExpand={true}
             taskDecisionProvider={Promise.resolve(createTaskDecisionProvider())}
+            quickInsert={{
+              provider: Promise.resolve({
+                getItems: async () => [],
+              }),
+            }}
             {...props}
           />
         </AtlaskitThemeProvider>

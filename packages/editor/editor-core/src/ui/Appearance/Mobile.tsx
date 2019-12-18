@@ -60,6 +60,7 @@ export default class Editor extends React.Component<
       editorView,
       eventDispatcher,
       providerFactory,
+      contentComponents,
       customContentComponents,
       maxHeight,
       disabled,
@@ -68,6 +69,7 @@ export default class Editor extends React.Component<
     } = this.props;
     const maxContentSizeReached =
       maxContentSize && maxContentSize.maxContentSizeReached;
+
     return (
       <WithFlash animate={maxContentSizeReached}>
         <MobileEditor
@@ -78,13 +80,14 @@ export default class Editor extends React.Component<
             <ContentArea innerRef={this.handleRef}>
               {customContentComponents}
               <PluginSlot
-                editorView={editorView}
-                eventDispatcher={eventDispatcher}
-                providerFactory={providerFactory}
                 appearance={this.appearance}
+                items={contentComponents}
                 containerElement={this.containerElement}
                 disabled={!!disabled}
                 dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                editorView={editorView}
+                eventDispatcher={eventDispatcher}
+                providerFactory={providerFactory}
               />
               {editorDOMElement}
             </ContentArea>
