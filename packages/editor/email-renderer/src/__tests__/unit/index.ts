@@ -13,6 +13,7 @@ import * as panels from './__fixtures__/panels.adf.json';
 import * as link from './__fixtures__/link.adf.json';
 import * as decisionList from './__fixtures__/decision-list.adf.json';
 import * as taskList from './__fixtures__/task-list.adf.json';
+import * as nestedTaskList from './__fixtures__/nested-task-list.adf.json';
 import * as blockCards from './__fixtures__/block-cards.adf.json';
 import * as inlineCards from './__fixtures__/inline-cards.adf.json';
 import * as status from './__fixtures__/status.adf.json';
@@ -130,6 +131,20 @@ describe('Renderer - EmailSerializer', () => {
 
   it('should render task list correctly with mock enabled', () => {
     const { result, embeddedImages } = render(taskList, {
+      isImageStubEnabled: true,
+    });
+    expect(result).toMatchSnapshot('mock-html');
+    expect(embeddedImages).toMatchSnapshot('mock-embeddedImages');
+  });
+
+  it('should render nested task list correctly', () => {
+    const { result, embeddedImages } = render(nestedTaskList);
+    expect(result).toMatchSnapshot('html');
+    expect(embeddedImages).toMatchSnapshot('embeddedImages');
+  });
+
+  it('should render nested task list correctly with mock enabled', () => {
+    const { result, embeddedImages } = render(nestedTaskList, {
       isImageStubEnabled: true,
     });
     expect(result).toMatchSnapshot('mock-html');
