@@ -207,7 +207,7 @@ export class AltTextEditComponent extends React.Component<
     // Handling the trimming onBlur() because PanelTextInput doesn't sync
     // defaultValue properly during unmount
     const { value } = this.props;
-    const newAltText = (value ? value : '').trim();
+    const newAltText = (value || '').trim();
 
     this.handleOnChange(newAltText);
   };
