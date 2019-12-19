@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { mount, ReactWrapper } from 'enzyme';
+import { ReactWrapper } from 'enzyme';
 import {
+  mountWithIntl,
   createEditorFactory,
   doc,
   taskList,
@@ -46,7 +47,7 @@ describe('date plugin', () => {
         month: date.getMonth(),
         day: date.getDate() - 2,
       })(view.state, view.dispatch);
-      const dateNode = mount(
+      const dateNode = mountWithIntl(
         <DateNodeView
           view={view}
           node={view.state.doc.nodeAt(view.state.selection.$from.pos)!}
@@ -73,7 +74,7 @@ describe('date plugin', () => {
         month: date.getMonth(),
         day: date.getDate() - 2,
       })(view.state, view.dispatch);
-      const dateNode = mount(
+      const dateNode = mountWithIntl(
         <DateNodeView
           view={view}
           node={view.state.doc.nodeAt(view.state.selection.$from.pos)!}
