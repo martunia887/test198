@@ -143,6 +143,7 @@ export const createMediaSpec = (
         return {
           type: 'external',
           url: (dom as HTMLElement).getAttribute('src') || '',
+          alt: (dom as HTMLElement).getAttribute('alt') || '',
         } as ExternalMediaAttributes;
       },
     },
