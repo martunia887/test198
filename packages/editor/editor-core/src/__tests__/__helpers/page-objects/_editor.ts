@@ -1,4 +1,5 @@
 import { Page } from './_types';
+import { ElementHandle } from 'puppeteer';
 
 export const selectors = {
   editor: '.ProseMirror',
@@ -43,15 +44,15 @@ export const clickElementWithText = async ({
   tag,
   text,
 }: {
-  page: any;
+  page: Page;
   tag: string;
   text: string;
 }) => {
   const elementPath = getElementPathWithText(text, tag);
-  await page.waitForXPath(elementPath, { timeout: 5000 });
-  const target = await page.$x(elementPath);
-  expect(target.length).toBeGreaterThan(0);
-  await target[0].click();
+  const target: ElementHandle = await page.waitForXPath(elementPath, {
+    timeout: 5000,
+  });
+  await target.click();
 };
 
 export const hoverElementWithText = async ({
@@ -59,7 +60,7 @@ export const hoverElementWithText = async ({
   tag,
   text,
 }: {
-  page: any;
+  page: Page;
   tag: string;
   text: string;
 }) => {
