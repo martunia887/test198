@@ -61,3 +61,103 @@ exports.onCreateNode = async ({ node, actions }) => {
     }
   }
 };
+
+async function getMdx({ name, packageName, mdxPath }, { actions, graphql }) {
+  // get all Mdx for the package
+  const globPath = `${mdxPath}/**`;
+
+  const { data } = await graphql(`
+    query {
+      allMdx(filter: {fileAbsolutePath: {glob: "${globPath}"}}) {
+        edges {
+          node {
+            parent {
+               ... on File {
+                absolutePath
+                name
+                dir
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  // for each mdx node
+  if (data.allMdx.edges.length > 0) {
+    data.allMdx.edges.forEach(({ node }) => {
+      const { name: nodeName, dir } = node.parent;
+      // if it's the index folder, render at the top level
+      if (dir.indexOf('index') !== -1) {
+        actions.createPage({
+          path: `components/${name}`,
+          component: require.resolve(`./src/templates/component-page.tsx`),
+          context: { name: packageName, mdxPath: `${mdxPath}/index/*` },
+        });
+      }
+
+      // if it's a subfolder, render tabs
+      else if (dir !== mdxPath) {
+        const folderName = dir.split(mdxPath)[1];
+        actions.createPage({
+          path: `components/${name}${folderName}`,
+          component: require.resolve(`./src/templates/component-page.tsx`),
+          context: { name: packageName, mdxPath: `${dir}/*` },
+        });
+      }
+
+      // if it is a subpage (top-level pages other than index), render the single mdx
+      else if (dir === mdxPath && nodeName !== 'index') {
+        // create the page
+        actions.createPage({
+          path: `components/${name}/${nodeName}`,
+          component: require.resolve(`./src/templates/component-page.tsx`),
+          context: { name: packageName, mdxPath: `${mdxPath}/${nodeName}.mdx` },
+        });
+      }
+
+      // else, only load in the index.mdx
+      else {
+        actions.createPage({
+          path: `components/${name}`,
+          component: require.resolve(`./src/templates/component-page.tsx`),
+          context: { name: packageName, mdxPath: `${mdxPath}/index.mdx` },
+        });
+      }
+    });
+  }
+}
+
+exports.createPages = async function createComponentPages(
+  { actions, graphql },
+  { docsFolder },
+) {
+  const { data } = await graphql(`
+    query {
+      allWorkspaceInfo {
+        edges {
+          node {
+            name
+            docsDisplayName
+            dir
+          }
+        }
+      }
+    }
+  `);
+
+  data.allWorkspaceInfo.edges.forEach(edge => {
+    const name = edge.node.docsDisplayName;
+    const packageName = edge.node.name;
+    const mdxPath = `${edge.node.dir}/${docsFolder}`;
+
+    const info = {
+      mdxPath,
+      name,
+      packageName,
+    };
+
+    getMdx(info, { actions, graphql });
+  });
+};
