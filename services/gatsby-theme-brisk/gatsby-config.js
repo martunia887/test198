@@ -6,6 +6,7 @@ module.exports = ({ packages }) => {
   return {
     plugins: [
       `gatsby-plugin-typescript`,
+      `gatsby-plugin-emotion`,
       `gatsby-plugin-react-helmet`,
       {
         resolve: '@manypkg/gatsby-source-workspace',

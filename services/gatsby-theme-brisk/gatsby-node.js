@@ -61,3 +61,27 @@ exports.onCreateNode = async ({ node, actions }) => {
     }
   }
 };
+
+exports.createPages = async function({ actions, graphql }) {
+  const { data } = await graphql(`
+    query {
+      allWorkspaceInfo {
+        edges {
+          node {
+            name
+            docsDisplayName
+          }
+        }
+      }
+    }
+  `);
+  data.allWorkspaceInfo.edges.forEach(edge => {
+    const slug = edge.node.docsDisplayName;
+    const name = edge.node.name;
+    actions.createPage({
+      path: `components/${slug}`,
+      component: require.resolve(`./src/templates/component.tsx`),
+      context: { name: name },
+    });
+  });
+};
