@@ -87,7 +87,7 @@ exports.createPages = async function({ actions, graphql }, options) {
 
     actions.createPage({
       path: `components/${slug}`,
-      component: require.resolve(`./src/templates/component.tsx`),
+      component: require.resolve(`./src/templates/component-page.tsx`),
       context: { name: name, mdxPath: mdxPath },
     });
   });
