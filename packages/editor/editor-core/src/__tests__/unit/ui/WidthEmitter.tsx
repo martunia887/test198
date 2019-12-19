@@ -2,9 +2,8 @@ import { name } from '../../../version.json';
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { Plugin } from 'prosemirror-state';
-import WidthDetector from '@atlaskit/width-detector';
 import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
-import { WidthProvider } from '@atlaskit/editor-common';
+import { WidthProvider, WidthObserver } from '@atlaskit/editor-common';
 
 import {
   pluginKey as widthPluginKey,
@@ -16,7 +15,23 @@ describe(name, () => {
   const createEditor = createEditorFactory();
 
   describe('WidthBroadcaster', () => {
+    const fakeWidth = 500;
+
     beforeEach(() => {
+      /**
+       * JSDOM doesn't support offsetWidth. Also we can't set it directly, it will throw with
+       * TypeError: Cannot set property offsetWidth of [object Object] which has only a getter
+       */
+      Object.defineProperties(window.HTMLElement.prototype, {
+        offsetWidth: {
+          get: function() {
+            return (
+              parseFloat(window.getComputedStyle(this).width || '') || fakeWidth
+            );
+          },
+        },
+      });
+
       jest.useFakeTimers();
     });
 
@@ -53,17 +68,6 @@ describe(name, () => {
         </WidthProvider>,
       );
 
-      const elm = wrapper.find(WidthDetector).getDOMNode();
-      /**
-       * JSDOM doesn't support offsetWidth. Also we can't set it directly, it will throw with
-       * TypeError: Cannot set property offsetWidth of [object Object] which has only a getter
-       */
-      Object.defineProperties(elm, {
-        offsetWidth: {
-          get: () => 500,
-        },
-      });
-
       const event = new Event('resize');
       window.dispatchEvent(event);
       // This is to trigger `requestAnimationFrame`. It's from `raf-stub` package that we are using inside `SizeDetector`
@@ -73,7 +77,7 @@ describe(name, () => {
 
       jest.runOnlyPendingTimers();
 
-      expect(width).toBe(500);
+      expect(width).toBe(fakeWidth);
       wrapper.unmount();
       editorView.destroy();
     });
