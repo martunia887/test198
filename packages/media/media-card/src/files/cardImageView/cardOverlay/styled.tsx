@@ -225,31 +225,31 @@ export const Overlay: ComponentClass<HTMLAttributes<{}> &
   }
 `;
 
-export const ErrorLine: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const ErrorLine = styled.div`
   height: 24px;
   display: flex;
   align-items: center;
 `;
 
-export const LeftColumn: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const LeftColumn = styled.div`
   width: 100%;
   position: relative;
   box-sizing: border-box;
   vertical-align: middle;
 `;
 
-export const TopRow: ComponentClass<HTMLAttributes<{}>> = styled.div``;
+export const TopRow = styled.div``;
 
-export const BottomRow: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const BottomRow = styled.div`
   display: flex;
   align-items: center;
   z-index: 1;
   height: 16px;
 `;
 
-export const RightColumn: ComponentClass<HTMLAttributes<{}>> = styled.div``;
+export const RightColumn = styled.div``;
 
-export const ErrorMessage: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const ErrorMessage = styled.div`
   ${antialiased} display: inline-block;
   vertical-align: middle;
   font-weight: bold;
@@ -262,13 +262,11 @@ export const ErrorMessage: ComponentClass<HTMLAttributes<{}>> = styled.div`
   white-space: nowrap;
 `;
 
-export const AltWrapper: ComponentClass<HTMLAttributes<{}>> = styled(
-  ErrorMessage,
-)`
+export const AltWrapper = styled(ErrorMessage)`
   font-weight: normal;
 `;
 
-export const Retry: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const Retry = styled.div`
   ${antialiased} box-sizing: border-box;
   margin-left: 5px;
   font-weight: bold;
@@ -282,11 +280,11 @@ export const Retry: ComponentClass<HTMLAttributes<{}>> = styled.div`
   }
 `;
 
-export const ErrorWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const ErrorWrapper = styled.div`
   display: flex;
 `;
 
-export const TitleWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const TitleWrapper = styled.div`
   box-sizing: border-box;
   word-wrap: break-word;
   color: ${themed({ light: colors.N800, dark: colors.DN900 })};
@@ -294,12 +292,12 @@ export const TitleWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   line-height: 18px;
 `;
 
-export const Subtitle: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const Subtitle = styled.div`
   ${ellipsis('100px')} font-size: 12px;
   color: #5e6c84;
 `;
 
-export const Metadata: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const Metadata = styled.div`
   display: flex;
   align-items: center;
 `;
