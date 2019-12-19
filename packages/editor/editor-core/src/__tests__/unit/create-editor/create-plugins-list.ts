@@ -28,7 +28,7 @@ const mockPlugins: { [name: string]: jest.Mock } = {
   quickInsertPlugin: jest.fn(),
   historyPlugin: jest.fn(),
   sharedContextPlugin: jest.fn(),
-  iOSScrollPlugin: jest.fn(),
+  mobileScrollPlugin: jest.fn(),
   listsPlugin: jest.fn(),
   isExpandInsertionEnabled: jest.fn(),
   scrollIntoViewPlugin: jest.fn(),
@@ -48,8 +48,8 @@ import {
   layoutPlugin,
   statusPlugin,
   historyPlugin,
-  iOSScrollPlugin,
   scrollIntoViewPlugin,
+  mobileScrollPlugin,
 } from '../../../plugins';
 
 import createPluginsList from '../../../create-editor/create-plugins-list';
@@ -233,32 +233,15 @@ describe('createPluginsList', () => {
     expect(historyPlugin).not.toHaveBeenCalled();
   });
 
-  describe('iOSScrollPlugin', () => {
-    let _webkit: any;
-
-    beforeEach(() => {
-      _webkit = (window as any).webkit;
-    });
-
-    afterEach(() => {
-      (window as any).webkit = _webkit;
-    });
-
-    it('should add iOSScrollPlugin to mobile editor on iOS', () => {
-      (window as any).webkit = {};
+  describe('mobileScrollPlugin', () => {
+    it('should add mobileScrollPlugin to mobile editor', () => {
       createPluginsList({ appearance: 'mobile' });
-      expect(iOSScrollPlugin).toHaveBeenCalled();
+      expect(mobileScrollPlugin).toHaveBeenCalled();
     });
 
-    it('should not add iOSScrollPlugin to mobile editor on Android', () => {
-      (window as any).webkit = undefined;
-      createPluginsList({ appearance: 'mobile' });
-      expect(iOSScrollPlugin).not.toHaveBeenCalled();
-    });
-
-    it('should not add iOSScrollPlugin to non-mobile editor', () => {
+    it('should not add mobileScrollPlugin to non-mobile editor', () => {
       createPluginsList({ appearance: 'full-page' });
-      expect(iOSScrollPlugin).not.toHaveBeenCalled();
+      expect(mobileScrollPlugin).not.toHaveBeenCalled();
     });
   });
 

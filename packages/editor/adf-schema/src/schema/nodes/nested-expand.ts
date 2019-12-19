@@ -3,7 +3,6 @@ import { NestedExpandContent } from './doc';
 
 /**
  * @name nestedExpand_node
- * @stage 0
  */
 export interface NestedExpandDefinition {
   type: 'nestedExpand';
@@ -15,7 +14,7 @@ export interface NestedExpandDefinition {
 
 export const nestedExpand: NodeSpec = {
   inline: false,
-  group: 'block',
+
   content:
     '(paragraph | heading | mediaSingle | mediaGroup | unsupportedBlock)+',
   isolating: true,

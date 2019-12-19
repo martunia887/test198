@@ -1,6 +1,6 @@
 import { Node as PMNode, ResolvedPos, Schema } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { findPositionOfNodeBefore, findDomRefAtPos } from 'prosemirror-utils';
+import { findDomRefAtPos, findPositionOfNodeBefore } from 'prosemirror-utils';
 import { GapCursorSelection, Side } from './selection';
 import { TableCssClassName } from '../table/types';
 import { tableInsertColumnButtonSize } from '../table/ui/styles';

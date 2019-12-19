@@ -3,9 +3,7 @@ import { ObjectInterpolation } from '@emotion/core';
 import { easeOut, easeIn } from '../utils/curves';
 import { mediumDurationMs } from '../utils/durations';
 import KeyframesMotion, { KeyframesMotionProps } from './keyframes-motion';
-import { Direction } from './types';
-
-export type From = 'top' | 'right' | 'bottom' | 'left';
+import { Direction, From } from './types';
 
 export const slideInAnimation = (
   from: From,

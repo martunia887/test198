@@ -1,12 +1,9 @@
 // eslint-disable-line no-console
 import {
   Router,
-  Response,
-  Request,
-  Record,
-  RouterOptions,
-  RequestHandler,
-  InterceptorOptions,
+  KakapoResponse,
+  KakapoRequest,
+  RouterHandler,
   Database,
 } from 'kakapo';
 import uuid from 'uuid/v4';
@@ -14,30 +11,26 @@ import uuid from 'uuid/v4';
 import { TouchFileDescriptor } from '@atlaskit/media-client';
 
 import {
-  DatabaseSchema,
+  MediaDatabaseSchema,
   createCollection,
   createCollectionItem,
 } from '../database';
 import { defaultBaseUrl } from '../..';
-import { Chunk } from '../database/chunk';
 import { createUpload } from '../database/upload';
 import { mockDataUri } from '../database/mockData';
 import { mapDataUriToBlob } from '../../utils';
 
-class RouterWithLogging<M extends DatabaseSchema> extends Router<M> {
-  constructor(
-    interceptorOptions?: InterceptorOptions,
-    options?: RouterOptions,
+class RouterWithLogging<M> extends Router<M> {
+  register(
+    method: string,
+    path: string,
+    originalHandler: RouterHandler<MediaDatabaseSchema>,
   ) {
-    super(interceptorOptions, options);
-  }
-
-  register(method: string, path: string, originalHandler: RequestHandler<M>) {
-    const handler: RequestHandler<M> = (
-      request: Request,
-      database: Database<M>,
+    const handler: RouterHandler<MediaDatabaseSchema> = (
+      request: KakapoRequest,
+      database: Database<MediaDatabaseSchema>,
     ) => {
-      let response: Response;
+      let response: KakapoResponse;
       let requestWithBodyObject: any;
       let error: any;
 
@@ -72,11 +65,15 @@ class RouterWithLogging<M extends DatabaseSchema> extends Router<M> {
   }
 }
 
-export function createApiRouter(): Router<DatabaseSchema> {
-  const router = new RouterWithLogging<DatabaseSchema>(
+export function createApiRouter(
+  isSlowServer?: boolean,
+): Router<MediaDatabaseSchema> {
+  const requestDelay = isSlowServer ? 500 : 10;
+
+  const router = new RouterWithLogging<MediaDatabaseSchema>(
     {
       host: defaultBaseUrl,
-      requestDelay: 10,
+      requestDelay,
     },
     { strategies: ['fetch'] },
   );
@@ -137,7 +134,7 @@ export function createApiRouter(): Router<DatabaseSchema> {
       blob = record.data.blob;
     }
 
-    return new Response(200, blob, {
+    return new KakapoResponse(200, blob, {
       'content-type': blob.type,
       'content-length': blob.size.toString(),
       'cache-control': `private, max-age=${maxAge}`,
@@ -166,9 +163,9 @@ export function createApiRouter(): Router<DatabaseSchema> {
   router.head('/chunk/:chunkId', ({ params }, database) => {
     const { chunkId } = params;
     if (database.findOne('chunk', { id: chunkId })) {
-      return new Response(200, undefined, {});
+      return new KakapoResponse(200, undefined, {});
     } else {
-      return new Response(404, undefined, {});
+      return new KakapoResponse(404, undefined, {});
     }
   });
 
@@ -180,12 +177,12 @@ export function createApiRouter(): Router<DatabaseSchema> {
       blob: body,
     });
 
-    return new Response(201, undefined, {});
+    return new KakapoResponse(201, undefined, {});
   });
 
   router.post('/chunk/probe', ({ body }, database) => {
     const requestedChunks = body.chunks;
-    const allChunks: Record<Chunk>[] = database.all('chunk') as any;
+    const allChunks = database.all('chunk');
     const existingChunks: string[] = [];
     const nonExistingChunks: string[] = [];
 
@@ -197,7 +194,7 @@ export function createApiRouter(): Router<DatabaseSchema> {
       }
     });
 
-    return new Response(
+    return new KakapoResponse(
       200,
       {
         data: {
@@ -228,11 +225,15 @@ export function createApiRouter(): Router<DatabaseSchema> {
 
     const record = database.findOne('upload', { id: uploadId });
 
-    database.update('upload', record.id, {
-      chunks: [...record.data.chunks, ...chunks],
-    });
+    if (record) {
+      database.update('upload', record.id, {
+        chunks: [...record.data.chunks, ...chunks],
+      });
 
-    return new Response(200, undefined, {});
+      return new KakapoResponse(200, undefined, {});
+    } else {
+      return new KakapoResponse(404, undefined, {});
+    }
   });
 
   router.post('/file', ({ query }, database) => {
@@ -241,7 +242,7 @@ export function createApiRouter(): Router<DatabaseSchema> {
       collectionName: collection,
     });
     database.push('collectionItem', item);
-    return new Response(
+    return new KakapoResponse(
       201,
       {
         data: {
@@ -291,7 +292,7 @@ export function createApiRouter(): Router<DatabaseSchema> {
         },
       };
     } else {
-      return new Response(404, undefined, {});
+      return new KakapoResponse(404, undefined, {});
     }
   });
 
@@ -320,7 +321,7 @@ export function createApiRouter(): Router<DatabaseSchema> {
         },
       };
     } else {
-      return new Response(404, undefined, {});
+      return new KakapoResponse(404, undefined, {});
     }
   });
 
@@ -338,25 +339,30 @@ export function createApiRouter(): Router<DatabaseSchema> {
       collectionName: sourceFile.collection,
     });
 
-    const { details, blob } = sourceRecord.data;
-
     const existingRecord = database.findOne('collectionItem', {
       id: replaceFileId,
       collectionName: destinationCollection,
       occurrenceKey,
     });
-    const record = database.update('collectionItem', existingRecord.id, {
-      id: replaceFileId,
-      insertedAt: sourceRecord.data.insertedAt,
-      occurrenceKey,
-      details,
-      blob,
-      collectionName: destinationCollection,
-    });
 
-    return {
-      data: record.data,
-    };
+    if (sourceRecord && existingRecord) {
+      const { details, blob } = sourceRecord.data;
+
+      const record = database.update('collectionItem', existingRecord.id, {
+        id: replaceFileId,
+        insertedAt: sourceRecord.data.insertedAt,
+        occurrenceKey,
+        details,
+        blob,
+        collectionName: destinationCollection,
+      });
+
+      return {
+        data: record.data,
+      };
+    } else {
+      return new KakapoResponse(404, undefined, {});
+    }
   });
 
   router.post('/upload/createWithFiles', ({ body }, database) => {

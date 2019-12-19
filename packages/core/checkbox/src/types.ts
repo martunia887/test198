@@ -131,17 +131,17 @@ export interface CheckboxIconProps {
   secondaryColor?: any;
   /** The label for icon to be displayed */
   label: any;
-  /** 
+  /**
    A prop for adding targeted customisations to the `CheckboxIcon` component.
    Similar to the overrides prop on the `Checkbox` component, but with a subset of the properties (`Icon`, `IconIndeterminate` and `IconWrapper`)
-   
-   For a detailed explanation of how to use this prop, 
-   please see the overrides section of the `@atlaskit/checkbox` documentation. 
+
+   For a detailed explanation of how to use this prop,
+   please see the overrides section of the `@atlaskit/checkbox` documentation.
   */
   overrides?: CheckboxIconOverrides;
   /**
    A prop for making thematic changes to the `CheckboxIcon` component using component tokens.
-   For more information on how theming works for this component, please see the theming guide in the `@atlaskit/checkbox` documentation. 
+   For more information on how theming works for this component, please see the theming guide in the `@atlaskit/checkbox` documentation.
    */
   theme?: ThemeFn;
 }
@@ -188,20 +188,20 @@ export interface CheckboxProps extends WithAnalyticsEventsProps {
    * be called with an object containing the react synthetic event. Use currentTarget to get value, name and checked
    */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => any;
-  /** 
-   A prop for adding targeted customisations to the Checkbox component 
-   For a detailed explanation of how to use this prop, 
-   please see the overrides section of the @atlaskit/checkbox documentation. 
+  /**
+   A prop for adding targeted customisations to the Checkbox component
+   For a detailed explanation of how to use this prop,
+   please see the overrides section of the @atlaskit/checkbox documentation.
   */
   overrides?: OverridesType;
   /**
    A prop for making thematic changes to the `Checkbox` component using component tokens.
-   For more information on how theming works for this component, please see the theming guide in the @atlaskit/checkbox documentation. 
+   For more information on how theming works for this component, please see the theming guide in the @atlaskit/checkbox documentation.
    */
   theme?: ThemeFn;
   /** The value to be used in the checkbox input. This is the value that will be returned on form submission. */
   value?: number | string;
-  /** 
+  /**
     A `testId` prop is provided for specified elements, which is a unique string that appears as a data attribute `data-testid` in the rendered code, serving as a hook for automated tests
     we have 2 different testid generated based on the one you pass to the Checkbox component:
      - `{testId}--hidden-checkbox` to check if it got changed to checked/unchecked.
@@ -251,6 +251,7 @@ export interface ComponentTokens {
       focused?: TokenValue;
       hovered?: TokenValue;
       hoveredAndChecked?: TokenValue;
+      invalidAndChecked?: TokenValue;
     };
     boxColor?: {
       rest?: TokenValue;
@@ -286,6 +287,7 @@ export interface ThemeIconTokens {
     focused: string;
     hovered: string;
     hoveredAndChecked: string;
+    invalidAndChecked: string;
   };
   boxColor: {
     rest: string;

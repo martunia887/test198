@@ -1,12 +1,15 @@
 import { css } from 'styled-components';
-import { fontSize } from '@atlaskit/theme';
 import { akEditorTableCellMinWidth } from '..';
 
 export const tasksAndDecisionsStyles = css`
   .ProseMirror .taskItemView-content-wrap,
   .ProseMirror .decisionItemView-content-wrap {
-    font-size: ${fontSize()}px;
+    position: relative;
     min-width: ${akEditorTableCellMinWidth}px;
+  }
+
+  .ProseMirror .decisionItemView-content-wrap {
+    margin-top: 0;
   }
 
   div[data-task-list-local-id] {

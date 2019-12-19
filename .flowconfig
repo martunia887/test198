@@ -17,6 +17,7 @@
 # in atlaskit components from npm. Talk to Ben Conolly if this is still needed by end of January 2020 as it means things
 # have not gone according to plan.
 .*/services/website-constellation/.*
+.*/services/gatsby-theme-brisk/.*
 <PROJECT_ROOT>/node_modules/@atlaskit/.*
 <PROJECT_ROOT>/node_modules/graphql/.*
 <PROJECT_ROOT>/node_modules/express-graphql/.*

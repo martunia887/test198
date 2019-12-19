@@ -24,6 +24,7 @@ import { styles as mediaSingleStyles } from '../nodes/media-single';
 import { styles as tableStyles } from '../nodes/table';
 import { styles as taskListStyles } from '../nodes/task-list';
 import { styles as decisionListStyles } from '../nodes/decision-list';
+import { styles as expandStyles } from '../nodes/expand';
 import { styles as tableUtilStyles } from '../table-util';
 import { styles as alignmentStyles } from '../marks/alignment';
 import { styles as codeStyles } from '../marks/code';
@@ -80,6 +81,7 @@ const styles = `
   ${strikeStyles}
   ${strongStyles}
   ${underlineStyles}
+  ${expandStyles}
 
   /* Hacks to bypass diff styles */
 

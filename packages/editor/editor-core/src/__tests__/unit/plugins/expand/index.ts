@@ -26,7 +26,7 @@ describe('expand actions', () => {
       doc,
       editorProps: {
         allowAnalyticsGASV3: true,
-        UNSAFE_allowExpand: { allowInsertion: true },
+        allowExpand: { allowInsertion: true },
         quickInsert: true,
         allowTables: true,
       },

@@ -10,14 +10,14 @@ import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 
 import commonMessages from '../../messages';
 import { MessageDescriptor } from '../../types/i18n';
-import { Command } from '../../../src/types';
+import { Command } from '../../types';
 import {
   FloatingToolbarConfig,
   FloatingToolbarItem,
   FloatingToolbarSeparator,
   FloatingToolbarButton,
   Icon,
-} from '../../../src/plugins/floating-toolbar/types';
+} from '../../plugins/floating-toolbar/types';
 import {
   setPresetLayout,
   deleteActiveLayoutNode,

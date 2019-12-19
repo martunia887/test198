@@ -199,13 +199,13 @@ export class ExpandNodeView implements NodeView {
       return false;
     }
 
-    if (typeof editorProps.UNSAFE_allowExpand === 'boolean') {
+    if (typeof editorProps.allowExpand === 'boolean') {
       return true;
     } else if (
-      typeof editorProps.UNSAFE_allowExpand === 'object' &&
-      typeof editorProps.UNSAFE_allowExpand.allowInteractiveExpand === 'boolean'
+      typeof editorProps.allowExpand === 'object' &&
+      typeof editorProps.allowExpand.allowInteractiveExpand === 'boolean'
     ) {
-      return editorProps.UNSAFE_allowExpand.allowInteractiveExpand;
+      return editorProps.allowExpand.allowInteractiveExpand;
     }
 
     return true;

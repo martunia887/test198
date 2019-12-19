@@ -84,15 +84,15 @@ export default class MediaGroup extends React.Component<
         isMediaSingle: false,
       });
 
-      const contextId = mediaNodeUpdater.getCurrentContextId();
+      const contextId = mediaNodeUpdater.getNodeContextId();
       if (!contextId) {
         await mediaNodeUpdater.updateContextId();
       }
 
-      const isNodeFromDifferentCollection = await mediaNodeUpdater.isNodeFromDifferentCollection();
+      const hasDifferentContextId = await mediaNodeUpdater.hasDifferentContextId();
 
-      if (isNodeFromDifferentCollection) {
-        mediaNodeUpdater.copyNode();
+      if (hasDifferentContextId) {
+        await mediaNodeUpdater.copyNode();
       }
     });
   }

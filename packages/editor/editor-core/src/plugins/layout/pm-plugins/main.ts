@@ -146,7 +146,7 @@ export default (
       let changes: Change[] = [];
       transactions.forEach(prevTr => {
         // remap change segments across the transaction set
-        changes.map(change => {
+        changes.forEach(change => {
           return {
             from: prevTr.mapping.map(change.from),
             to: prevTr.mapping.map(change.to),

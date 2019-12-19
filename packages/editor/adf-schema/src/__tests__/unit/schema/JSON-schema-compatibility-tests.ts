@@ -36,8 +36,6 @@ const unsupportedNodes = [
   'inlineCard',
   'blockCard',
   'status',
-  'expand',
-  'nestedExpand',
 ];
 
 const unsupportedMarks = [
