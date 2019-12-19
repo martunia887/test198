@@ -15,7 +15,6 @@ import {
 import { CellSelection } from 'prosemirror-tables';
 import { canMoveDown, canMoveUp } from '../utils';
 import { Command } from '../types';
-import { EditorView } from 'prosemirror-view';
 import {
   withAnalytics,
   EVENT_TYPE,
@@ -211,14 +210,6 @@ export function createParagraphAtEnd(): Command {
     }
     return true;
   };
-}
-
-export interface Command {
-  (
-    state: EditorState,
-    dispatch: (tr: Transaction) => void,
-    view?: EditorView,
-  ): boolean;
 }
 
 export const changeImageAlignment = (align?: AlignmentState): Command => (

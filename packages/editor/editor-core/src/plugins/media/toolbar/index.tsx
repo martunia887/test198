@@ -2,13 +2,14 @@ import { InjectedIntl } from 'react-intl';
 import { EditorState } from 'prosemirror-state';
 import { removeSelectedNode } from 'prosemirror-utils';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
+import { ProviderFactory } from '@atlaskit/editor-common';
 
 import commonMessages from '../../../messages';
-import { Command } from '../../../../src/types';
+import { Command } from '../../../types';
 import {
   FloatingToolbarConfig,
   FloatingToolbarItem,
-} from '../../../../src/plugins/floating-toolbar/types';
+} from '../../../plugins/floating-toolbar/types';
 import { stateKey, MediaPluginState } from '../pm-plugins/main';
 import { hoverDecoration } from '../../base/pm-plugins/decoration';
 import { renderAnnotationButton } from './annotation';
@@ -18,7 +19,6 @@ import {
   shouldShowMediaLinkToolbar,
 } from './linking';
 import buildLayoutButtons from './buildMediaLayoutButtons';
-import { ProviderFactory } from '@atlaskit/editor-common';
 import { MediaLinkingState, getMediaLinkingState } from '../pm-plugins/linking';
 import { getPluginState as getMediaAltTextPluginState } from '../pm-plugins/alt-text';
 import { altTextButton, getAltTextToolbar } from './alt-text';
