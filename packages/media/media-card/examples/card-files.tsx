@@ -53,6 +53,17 @@ const errorCards = [
       />
     ),
   },
+  {
+    title: 'Image with alt text',
+    content: (
+      <Card
+        identifier={errorFileId}
+        mediaClientConfig={mediaClientConfig}
+        alt="When an image fails to load, you will see the alt text value here (if present)"
+        appearance="image"
+      />
+    ),
+  },
 ];
 
 const menuCards = [
