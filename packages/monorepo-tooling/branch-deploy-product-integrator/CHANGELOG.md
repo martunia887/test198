@@ -1,5 +1,46 @@
 # @atlaskit/branch-deploy-product-integrator
 
+## 2.0.1
+
+### Patch Changes
+
+- [patch][6195035473](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6195035473):
+
+  Update integrator to merge with master and reset package.json/yarn.lock with master.
+  This fixes two issues:
+
+  1. Branch becoming out of date with master
+  2. Stale branch deploys of packages lingering in package.json when those packages are not in the latest branch deploy
+
+## 2.0.0
+
+### Major Changes
+
+- [major][756b40834f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/756b40834f):
+
+  - The branch-deploy-product-integrator now has sub-commands to allow further commands in the future such as reporting build statuses.
+
+    The default behaviour now resides under the `push` command and has some API changes of itself.
+
+    The two mandatory `atlaskitBranchName` and `atlaskitCommitHash` flags are now positional arguments.
+
+    Changes:
+
+    Old: `branch-deploy-product-integrator --atlaskitBranchName foo --atlaskitCommitHash abcdefg --cmd add`
+    New: `branch-deploy-product-integrator push foo abcdefg --cmd add`
+
+### Minor Changes
+
+- [minor][48f9d44824](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/48f9d44824):
+
+  - The `push` command will now add a `.atlaskit-version` file to product repos with information pertaining to the atlaskit commit that was branch deployed. Currently it contains the atlaskit commit hash. This aids in linking branch deploys in products back to atlaskit commits.
+
+### Patch Changes
+
+- [patch][cafc62d2e4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cafc62d2e4):
+
+  Don't trigger product CI if no changes were committed. This prevents an issue where a product CI branch build is created when a git branch hasn't been created
+
 ## 1.3.0
 
 ### Minor Changes

@@ -36,7 +36,7 @@ function collectAvailableProductLinks(
 ): SwitcherItemType[] | undefined {
   if (availableProducts) {
     if (isError(availableProducts)) {
-      return [];
+      throw availableProducts.error;
     }
     if (isComplete(availableProducts)) {
       return getAvailableProductLinks(availableProducts.data, cloudId);
@@ -190,6 +190,10 @@ interface ProviderResults {
   productRecommendations: ProviderResult<RecommendationsEngineResponse>;
 }
 
+function isTenantless(product: Product) {
+  return [Product.BITBUCKET, Product.TRELLO].includes(product);
+}
+
 function asUserSiteDataProviderResult(
   availableProductsProvider: ProviderResult<AvailableProductsResponse>,
   cloudId: string | null | undefined,
@@ -204,8 +208,8 @@ function asUserSiteDataProviderResult(
         site =>
           (cloudId && site.cloudId === cloudId) ||
           (product &&
-            product === Product.BITBUCKET &&
-            site.cloudId === Product.BITBUCKET),
+            isTenantless(product) &&
+            isTenantless(site.cloudId as Product)),
       );
 
       if (!site) {

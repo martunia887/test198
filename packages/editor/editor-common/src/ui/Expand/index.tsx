@@ -49,7 +49,7 @@ export const ExpandIconWrapper = styled.div<{ expanded: boolean }>`
   }
 `;
 
-export const ExpandTooltipWrapper = styled.div`
+export const ExpandLayoutWrapper = styled.div`
   width: ${gridSize() * 3}px;
   height: ${gridSize() * 3}px;
 `;
@@ -71,7 +71,6 @@ const ContainerStyles = css<StyleProps>`
 
   transition: background 0.3s ${akEditorSwoopCubicBezier};
   padding: ${gridSize}px;
-  cursor: pointer;
 
   &:hover {
     border: 1px solid ${colors.N50A};
@@ -101,7 +100,8 @@ const ContentStyles = css<StyleProps>`
     padding-top: ${expanded ? gridSize() : 0}px;
     padding-right: ${gridSize()}px;
     padding-left: ${gridSize() * 4 - gridSize() / 2}px;
-    overflow: hidden;
+    display: table;
+    display: flow-root;
 
     ${
       !expanded
@@ -114,6 +114,7 @@ const ContentStyles = css<StyleProps>`
         overflow: hidden;
         clip: rect(1px, 1px, 1px, 1px);
         white-space: nowrap;
+        user-select: none;
       }
     `
         : ''
@@ -144,7 +145,7 @@ const TitleInputStyles = `
 const TitleContainerStyles = `
   padding: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   background: none;
   border: none;
   font-size: ${fontSize()}px;
@@ -152,6 +153,8 @@ const TitleContainerStyles = `
   color: ${colors.N300A};
   overflow: hidden;
   cursor: pointer;
+  // Prevent browser selection being inside the title container
+  user-select: none;
 
   /* TODO: Fix outline for keyboard navigation */
   &:focus {

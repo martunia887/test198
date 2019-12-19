@@ -1,8 +1,9 @@
 import { isSafeUrl } from '@atlaskit/adf-schema';
+import { decode } from '../utils/url';
 import { Token, TokenParser } from './';
 
-// https://www.atlassian.com
-export const LINK_TEXT_REGEXP = /^(https?:\/\/|irc:\/\/|mailto:)([\w.?\/\\#-=@]+)/;
+// the regex should exclude the period and exclamation mark as the last character
+export const LINK_TEXT_REGEXP = /^((?:(?:https?|ftps?):\/\/)|irc:\/\/|mailto:)([\w?!~^\/\\#$%&'()*+,\-.\/:;<=@]*[\w~^\/\\#$%&'()*+,\-\/:;<=@])/i;
 
 export const linkText: TokenParser = ({ input, position, schema }) => {
   const match = input.substring(position).match(LINK_TEXT_REGEXP);
@@ -13,14 +14,16 @@ export const linkText: TokenParser = ({ input, position, schema }) => {
 
   // Remove mailto:
   const textRepresentation = match[1] === 'mailto:' ? match[2] : match[0];
-  const url = decodeURI(unescape(match[0]));
+  // parse and correctly encode any illegal characters, and
+  // so no longer need to be encoded when used below
+  const url = decode(unescape(match[0]));
 
   if (!isSafeUrl(url)) {
     return fallback(input, position);
   }
 
   const mark = schema.marks.link.create({
-    href: encodeURI(url),
+    href: url,
   });
   const textNode = schema.text(textRepresentation, [mark]);
 

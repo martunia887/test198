@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import Drawer from '@atlaskit/drawer';
-import Button from '@atlaskit/button';
 import { DropdownItem, DropdownItemGroup } from '@atlaskit/dropdown-menu';
 import { JiraIcon, JiraLogo } from '@atlaskit/logo';
 import Popup from '@atlaskit/popup';
@@ -22,53 +21,17 @@ import {
   ProductHome,
   Search,
   Settings,
-  atlassianTheme,
   _itemTheme,
 } from '../src';
 import { useOverflowStatus } from '../src/controllers/overflow';
 
-const Icon = () => {
-  const {
-    mode: { productHome },
-  } = atlassianTheme;
-  return (
-    <Button
-      appearance="subtle-link"
-      href="#"
-      iconBefore={
-        <JiraIcon
-          iconGradientStart={productHome.gradientStart}
-          iconGradientStop={productHome.gradientStop}
-          iconColor={productHome.iconColor}
-          textColor={productHome.color}
-        />
-      }
-    />
-  );
-};
-
-const Logo = () => {
-  const {
-    mode: { productHome },
-  } = atlassianTheme;
-  return (
-    <Button
-      appearance="subtle-link"
-      href="#"
-      iconBefore={
-        <JiraLogo
-          iconGradientStart={productHome.gradientStart}
-          iconGradientStop={productHome.gradientStop}
-          iconColor={productHome.iconColor}
-          textColor={productHome.color}
-        />
-      }
-    />
-  );
-};
-
 const ProductHomeExample = () => (
-  <ProductHome icon={Icon} logo={Logo} siteTitle="Hello" />
+  <ProductHome
+    onClick={console.log}
+    icon={JiraIcon}
+    logo={JiraLogo}
+    siteTitle="Hello"
+  />
 );
 
 const SearchDrawer = () => {
@@ -106,7 +69,7 @@ const SettingsDrawer = () => {
   return (
     <ThemeProvider theme={_itemTheme}>
       <Fragment>
-        <Settings onClick={onClick} tooltip="Settings" />
+        <Settings isSelected={isOpen} onClick={onClick} tooltip="Settings" />
         <Drawer isOpen={isOpen} onClose={onClose}>
           settings drawer
         </Drawer>
@@ -235,7 +198,18 @@ const PrimaryDropdown = (props: PrimaryDropdownProps) => {
 };
 
 const primaryItems = [
-  <PrimaryButton href="#">Home</PrimaryButton>,
+  <PrimaryButton
+    href="http://www.atlassian.com"
+    onClick={e => {
+      if (e.ctrlKey || e.metaKey) {
+        return;
+      }
+      e.preventDefault();
+      console.log('onClick fired');
+    }}
+  >
+    Home
+  </PrimaryButton>,
   <PrimaryDropdown content={ProjectsContent} text="Projects" />,
   <PrimaryDropdown
     isHighlighted

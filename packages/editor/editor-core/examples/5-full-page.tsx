@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import * as React from 'react';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import ExamplesErrorBoundary from '../example-helpers/ExamplesErrorBoundary';
 
 import {
   cardProviderStaging,
@@ -12,7 +13,11 @@ import {
   macroProvider,
   autoformattingProvider,
 } from '@atlaskit/editor-test-helpers';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import {
+  ProviderFactory,
+  ExtensionProvider,
+  combineExtensionProviders,
+} from '@atlaskit/editor-common';
 
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import {
@@ -32,7 +37,7 @@ import WithEditorActions from './../src/ui/WithEditorActions';
 import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
 import { DevTools } from '../example-helpers/DevTools';
 import { TitleInput } from '../example-helpers/PageElements';
-import { EditorActions } from './../src';
+import { EditorActions, MentionProvider } from './../src';
 import withSentry from '../example-helpers/withSentry';
 import BreadcrumbsMiscActions from '../example-helpers/breadcrumbs-misc-actions';
 import {
@@ -162,6 +167,8 @@ export interface ExampleProps {
   setMode?: (isEditing: boolean) => void;
 }
 
+const smartCardProvider = new SmartCardClient('prod');
+
 export class ExampleEditorComponent extends React.Component<
   EditorProps & ExampleProps,
   State
@@ -191,107 +198,110 @@ export class ExampleEditorComponent extends React.Component<
 
   render() {
     return (
-      <Wrapper>
-        <Content>
-          <SmartCardProvider client={new SmartCardClient('prod')}>
-            <Editor
-              analyticsHandler={analyticsHandler}
-              allowAnalyticsGASV3={true}
-              quickInsert={{ provider: Promise.resolve(quickInsertProvider) }}
-              allowCodeBlocks={{ enableKeybindingsForIDE: true }}
-              allowLists={true}
-              allowTextColor={true}
-              allowTables={{
-                advanced: true,
-                allowColumnSorting: true,
-              }}
-              allowBreakout={true}
-              allowJiraIssue={true}
-              allowUnsupportedContent={true}
-              allowPanel={true}
-              allowExtension={{
-                allowBreakout: true,
-              }}
-              allowRule={true}
-              allowDate={true}
-              allowLayouts={{
-                allowBreakout: true,
-                UNSAFE_addSidebarLayouts: true,
-              }}
-              allowTextAlignment={true}
-              allowIndentation={true}
-              allowDynamicTextSizing={true}
-              allowTemplatePlaceholders={{ allowInserting: true }}
-              UNSAFE_cards={{
-                provider: Promise.resolve(cardProviderStaging),
-              }}
-              UNSAFE_allowExpand={true}
-              annotationProvider={{
-                component: ExampleInlineCommentComponent,
-              }}
-              allowStatus={true}
-              allowNestedTasks
-              {...providers}
-              media={{
-                provider: mediaProvider,
-                allowMediaSingle: true,
-                allowResizing: true,
-                allowAnnotation: true,
-                allowLinking: true,
-                allowResizingInTables: true,
-                UNSAFE_allowAltTextOnImages: true,
-              }}
-              allowHelpDialog
-              placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
-              shouldFocus={false}
-              disabled={this.state.disabled}
-              defaultValue={
-                (localStorage &&
-                  localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
-                undefined
-              }
-              contentComponents={
-                <WithEditorActions
-                  render={actions => (
-                    <>
-                      <BreadcrumbsMiscActions
-                        appearance={this.state.appearance}
-                        onFullWidthChange={this.setFullWidthMode}
+      <ExamplesErrorBoundary>
+        <Wrapper>
+          <Content>
+            <SmartCardProvider client={smartCardProvider}>
+              <Editor
+                analyticsHandler={analyticsHandler}
+                allowAnalyticsGASV3={true}
+                quickInsert={{ provider: Promise.resolve(quickInsertProvider) }}
+                allowTextColor={true}
+                allowTables={{
+                  advanced: true,
+                  allowColumnSorting: true,
+                }}
+                allowBreakout={true}
+                allowJiraIssue={true}
+                allowUnsupportedContent={true}
+                allowPanel={true}
+                allowExtension={{
+                  allowBreakout: true,
+                }}
+                allowRule={true}
+                allowDate={true}
+                allowLayouts={{
+                  allowBreakout: true,
+                  UNSAFE_addSidebarLayouts: true,
+                }}
+                allowTextAlignment={true}
+                allowIndentation={true}
+                allowDynamicTextSizing={true}
+                allowTemplatePlaceholders={{ allowInserting: true }}
+                UNSAFE_cards={{
+                  provider: Promise.resolve(cardProviderStaging),
+                }}
+                UNSAFE_allowExpand={{
+                  allowInsertion: true,
+                  allowInteractiveExpand: true,
+                }}
+                annotationProvider={{
+                  component: ExampleInlineCommentComponent,
+                }}
+                allowStatus={true}
+                allowNestedTasks
+                {...providers}
+                media={{
+                  provider: mediaProvider,
+                  allowMediaSingle: true,
+                  allowResizing: true,
+                  allowAnnotation: true,
+                  allowLinking: true,
+                  allowResizingInTables: true,
+                  UNSAFE_allowAltTextOnImages: true,
+                }}
+                allowHelpDialog
+                placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
+                shouldFocus={false}
+                disabled={this.state.disabled}
+                defaultValue={
+                  (localStorage &&
+                    localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
+                  undefined
+                }
+                contentComponents={
+                  <WithEditorActions
+                    render={actions => (
+                      <>
+                        <BreadcrumbsMiscActions
+                          appearance={this.state.appearance}
+                          onFullWidthChange={this.setFullWidthMode}
+                        />
+                        <TitleInput
+                          value={this.state.title}
+                          onChange={this.handleTitleChange}
+                          innerRef={this.handleTitleRef}
+                          onFocus={this.handleTitleOnFocus}
+                          onBlur={this.handleTitleOnBlur}
+                          onKeyDown={(e: KeyboardEvent) => {
+                            this.onKeyPressed(e, actions);
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                }
+                primaryToolbarComponents={[
+                  <WithEditorActions
+                    key={1}
+                    render={actions => (
+                      <SaveAndCancelButtons
+                        editorActions={actions}
+                        setMode={this.props.setMode}
                       />
-                      <TitleInput
-                        value={this.state.title}
-                        onChange={this.handleTitleChange}
-                        innerRef={this.handleTitleRef}
-                        onFocus={this.handleTitleOnFocus}
-                        onBlur={this.handleTitleOnBlur}
-                        onKeyDown={(e: KeyboardEvent) => {
-                          this.onKeyPressed(e, actions);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              }
-              primaryToolbarComponents={[
-                <WithEditorActions
-                  key={1}
-                  render={actions => (
-                    <SaveAndCancelButtons
-                      editorActions={actions}
-                      setMode={this.props.setMode}
-                    />
-                  )}
-                />,
-              ]}
-              onSave={SAVE_ACTION}
-              insertMenuItems={customInsertMenuItems}
-              extensionHandlers={extensionHandlers}
-              {...this.props}
-              appearance={this.state.appearance}
-            />
-          </SmartCardProvider>
-        </Content>
-      </Wrapper>
+                    )}
+                  />,
+                ]}
+                onSave={SAVE_ACTION}
+                insertMenuItems={customInsertMenuItems}
+                extensionHandlers={extensionHandlers}
+                {...this.props}
+                appearance={this.state.appearance}
+              />
+            </SmartCardProvider>
+          </Content>
+        </Wrapper>
+      </ExamplesErrorBoundary>
     );
   }
   private onKeyPressed = (e: KeyboardEvent, actions: EditorActions) => {
@@ -344,7 +354,7 @@ const mentionProvider = Promise.resolve({
   shouldHighlightMention(mention: { id: string }) {
     return mention.id === 'ABCDE-ABCDE-ABCDE-ABCDE';
   },
-});
+} as MentionProvider);
 
 const emojiProvider = emoji.storyData.getEmojiResource();
 
@@ -388,34 +398,45 @@ const providerFactory = ProviderFactory.create({
 const Renderer = (props: {
   document: any;
   setMode: (mode: boolean) => void;
-}) => (
-  <div
-    style={{
-      margin: '30px 0',
-    }}
-  >
-    <Button
-      appearance="primary"
-      onClick={() => props.setMode(true)}
+  extensionProviders?: ExtensionProvider[];
+}) => {
+  if (props.extensionProviders && props.extensionProviders.length > 0) {
+    providerFactory.setProvider(
+      'extensionProvider',
+      Promise.resolve(combineExtensionProviders(props.extensionProviders)),
+    );
+  }
+
+  return (
+    <div
       style={{
-        position: 'absolute',
-        right: '0',
-        margin: '0 20px',
-        zIndex: 100,
+        margin: '30px 0',
       }}
     >
-      Edit
-    </Button>
-    <ReactRenderer
-      allowHeadingAnchorLinks
-      adfStage="stage0"
-      dataProviders={providerFactory}
-      extensionHandlers={extensionHandlers}
-      document={props.document && JSON.parse(props.document)}
-      appearance="full-page"
-    />
-  </div>
-);
+      <Button
+        appearance="primary"
+        onClick={() => props.setMode(true)}
+        style={{
+          position: 'absolute',
+          right: '0',
+          margin: '0 20px',
+          zIndex: 100,
+        }}
+      >
+        Edit
+      </Button>
+      <ReactRenderer
+        allowHeadingAnchorLinks
+        UNSAFE_allowAltTextOnImages
+        adfStage="stage0"
+        dataProviders={providerFactory}
+        extensionHandlers={extensionHandlers}
+        document={props.document && JSON.parse(props.document)}
+        appearance="full-page"
+      />
+    </div>
+  );
+};
 
 export default function Example(props: EditorProps & ExampleProps) {
   const [isEditingMode, setMode] = React.useState(true);
@@ -430,7 +451,11 @@ export default function Example(props: EditorProps & ExampleProps) {
         {isEditingMode ? (
           <ExampleEditor {...props} setMode={setMode} />
         ) : (
-          <Renderer document={document} setMode={setMode} />
+          <Renderer
+            document={document}
+            setMode={setMode}
+            extensionProviders={props.extensionProviders}
+          />
         )}
       </div>
     </EditorContext>

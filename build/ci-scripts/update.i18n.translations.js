@@ -1,8 +1,10 @@
+// @flow
 const fetch = require('node-fetch');
 const path = require('path');
+// $FlowFixMe - There is a type issue with projector spawn.
 const spawn = require('projector-spawn');
-const changeset = require('../utils/changeset');
-const git = require('../utils/git');
+const changeset = require('@atlaskit/build-utils/changeset');
+const git = require('@atlaskit/build-utils/git');
 
 /**
  * `packages` defines the packages to be updated and set the reviewers for the changes.
@@ -20,6 +22,12 @@ const packages = [
 
 const APP_USER = process.env.i18n_PR_BOT_USERNAME || '';
 const APP_KEY = process.env.i18n_PR_BOT_ACCESS || '';
+
+const { BITBUCKET_REPO_FULL_NAME } = process.env;
+
+if (!BITBUCKET_REPO_FULL_NAME) {
+  throw Error('$BITBUCKET_REPO_FULL_NAME environment variable is not set');
+}
 
 const push = async ({ packagePath }) => {
   try {
@@ -67,6 +75,7 @@ const pull = async ({ packagePath, maintainers, targetBranch = 'master' }) => {
   try {
     // Add content and create pull request
     await changeset.createChangeset(
+      // $FlowFixMe - type issue
       [{ name: `@atlaskit/${packageName}`, type: 'patch' }],
       message,
     );
@@ -114,13 +123,14 @@ async function createPullRequest(
   };
 
   await fetch(
-    'https://api.bitbucket.org/2.0/repositories/atlassian/atlaskit-mk-2/pullrequests',
+    `https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_FULL_NAME}/pullrequests`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization:
-          'Basic ' + Buffer.from(APP_USER + ':' + APP_KEY).toString('base64'),
+        Authorization: `Basic ${Buffer.from(`${APP_USER}:${APP_KEY}`).toString(
+          'base64',
+        )}`,
       },
       body: JSON.stringify(data),
     },
@@ -134,8 +144,8 @@ async function createPullRequest(
 
 (async () => {
   const operation = {
-    push: push,
-    pull: pull,
+    push,
+    pull,
   }[process.argv[2]];
 
   if (!operation) {

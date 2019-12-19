@@ -1,6 +1,6 @@
 import * as React from 'react';
-// @ts-ignore
-import { withAnalytics, FireAnalyticsEvent } from '@atlaskit/analytics';
+import keycode from 'keycode';
+import { withAnalytics } from '@atlaskit/analytics';
 import { ResultData, SelectedResultId, ResultId } from './Results/types';
 import AkSearch from './Search/Search';
 import {
@@ -108,8 +108,7 @@ export type Props = {
   /** Optional way of being notified when the selected result changes due to keyboard nav */
   onSelectedResultIdChanged?: (id: SelectedResultId) => void;
   // Internal: injected by withAnalytics(). Fire a private analytics event
-  // @ts-ignore
-  firePrivateAnalyticsEvent?: FireAnalyticsEvent;
+  firePrivateAnalyticsEvent?: (eventName: string, eventData: Object) => void;
   /** React component to be used for rendering links */
   linkComponent?: React.ComponentType<any>;
   /** The elements to render to the right of the search input. */
@@ -352,13 +351,15 @@ export class QuickSearch extends React.Component<Props, State> {
 
     this.lastKeyPressed = event.key;
 
-    if (event.key === 'ArrowUp') {
+    // Need to check for keyCode for up/down/enter in case user is composing using an IME
+    // fixes https://ecosystem.atlassian.net/browse/DS-6518
+    if (event.key === 'ArrowUp' && event.keyCode === keycode('up')) {
       event.preventDefault(); // Don't move cursor around in search input field
       this.selectPrevious();
-    } else if (event.key === 'ArrowDown') {
+    } else if (event.key === 'ArrowDown' && event.keyCode === keycode('down')) {
       event.preventDefault(); // Don't move cursor around in search input field
       this.selectNext();
-    } else if (event.key === 'Enter') {
+    } else if (event.key === 'Enter' && event.keyCode === keycode('enter')) {
       // shift key pressed or no result selected
       if (event.shiftKey || !this.state.selectedResultId) {
         if (firePrivateAnalyticsEvent) {

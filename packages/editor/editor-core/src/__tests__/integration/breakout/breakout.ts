@@ -14,13 +14,12 @@ const centerBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutFixedW
 
 BrowserTestCase(
   'breakout: should be able to switch to wide mode',
-  {},
+  { skip: ['ie'] },
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
     await mountEditor(page, {
       appearance: 'full-page',
-      allowCodeBlocks: true,
       allowBreakout: true,
     });
 
@@ -37,13 +36,12 @@ BrowserTestCase(
 
 BrowserTestCase(
   'breakout: should be able to switch to full-width mode',
-  {},
+  { skip: ['ie'] },
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
     await mountEditor(page, {
       appearance: 'full-page',
-      allowCodeBlocks: true,
       allowBreakout: true,
     });
 
@@ -68,7 +66,6 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: 'full-page',
-      allowCodeBlocks: true,
       allowBreakout: true,
     });
 
@@ -99,7 +96,6 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: 'full-page',
-      allowCodeBlocks: true,
       allowBreakout: true,
     });
 

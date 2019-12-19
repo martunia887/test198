@@ -1,5 +1,79 @@
 # @atlaskit/navigation-next
 
+## 7.3.0
+
+### Minor Changes
+
+- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  Allowing support for using with new react-beautiful-dnd 12.x API
+
+### Patch Changes
+
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+  - @atlaskit/tooltip@15.2.0
+  - @atlaskit/analytics-next@6.3.3
+  - @atlaskit/select@11.0.3
+  - @atlaskit/modal-dialog@10.5.0
+  - @atlaskit/avatar@17.1.5
+  - @atlaskit/field-base@13.0.16
+  - @atlaskit/drawer@5.2.0
+  - @atlaskit/onboarding@9.0.7
+  - @atlaskit/inline-dialog@12.1.6
+
+## 7.2.2
+
+### Patch Changes
+
+- Updated dependencies [df31cc4fb4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/df31cc4fb4):
+- Updated dependencies [308708081a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/308708081a):
+  - @atlaskit/atlassian-navigation@0.8.0
+  - @atlaskit/logo@12.3.0
+
+## 7.2.1
+
+### Patch Changes
+
+- Updated dependencies [63b9f324df](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/63b9f324df):
+  - @atlaskit/atlassian-navigation@0.7.0
+
+## 7.2.0
+
+### Minor Changes
+
+- [minor][920519979d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/920519979d):
+
+  Update collapse affordance icon
+
+## 7.1.3
+
+### Patch Changes
+
+- [patch][3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  Make PopupSelect correctly pass props. Forcing update of @atlaskit/select for all other packages- Updated dependencies [3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  - @atlaskit/select@11.0.2
+
+## 7.1.2
+
+### Patch Changes
+
+- [patch][75fa61803d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/75fa61803d):
+
+  Reverting broken code
+
 ## 7.1.1
 
 - Updated dependencies [30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):

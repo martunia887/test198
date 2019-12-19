@@ -4,26 +4,46 @@ import { EditorView } from 'prosemirror-view';
 import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
 import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
+import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import { messages } from '../messages';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import Button from '../../../../floating-toolbar/ui/Button';
 import PanelTextInput from '../../../../../ui/PanelTextInput';
 import * as keymaps from '../../../../../keymaps';
 import { closeMediaAltTextMenu, updateAltText } from '../commands';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import {
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+  EVENT_TYPE,
+  fireAnalyticsEvent,
+  ACTION,
+  MediaAltTextActionType,
+  FireAnalyticsCallback,
+} from '../../../../analytics';
 
 export const CONTAINER_WIDTH_IN_PX = 350;
 const SupportText = styled.p`
   color: ${colors.N100};
   font-size: 12px;
-  padding: 0 24px;
+  padding-right: 24px;
+  padding-left: 28px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   line-height: 20px;
+  border-top: 1px solid ${colors.N30};
+  margin: 0;
 `;
 
-const AltTextEditWrapper = styled.div`
+const Container = styled.div`
   width: ${CONTAINER_WIDTH_IN_PX}px;
   display: flex;
   flex-direction: column;
-  padding: 4px;
+  overflow: auto;
+  line-height: 2;
 `;
 
 const InputWrapper = styled.section`
@@ -31,23 +51,71 @@ const InputWrapper = styled.section`
   line-height: 0;
   padding: 0;
   align-items: center;
+  margin-bottom: 4px;
 `;
 
-const Separator = styled.div`
-  background: ${colors.N30};
-  width: 100%;
-  height: 1px;
+const BackButtonWrapper = styled.div`
+  display: flex;
+  margin-right: 4px;
+`;
+
+const ClearText = styled.span`
+  color: ${colors.N80};
 `;
 
 type Props = {
   view: EditorView;
+  value?: string;
+} & InjectedIntlProps &
+  WithAnalyticsEventsProps;
+
+export type AltTextEditComponentState = {
+  showClearTextButton: boolean;
 };
 
-class AltTextEditComponent extends React.Component<Props & InjectedIntlProps> {
-  render() {
-    const { intl } = this.props;
+export class AltTextEditComponent extends React.Component<
+  Props,
+  AltTextEditComponentState
+> {
+  private fireCustomAnalytics?: FireAnalyticsCallback;
+  state = {
+    showClearTextButton: Boolean(this.props.value),
+  };
 
-    const backButtonMessage = intl.formatMessage(messages.back);
+  constructor(props: Props) {
+    super(props);
+
+    const { createAnalyticsEvent } = props;
+    this.fireCustomAnalytics = fireAnalyticsEvent(createAnalyticsEvent);
+  }
+
+  prevValue: string | undefined;
+
+  componentDidMount() {
+    this.prevValue = this.props.value;
+  }
+
+  componentWillUnmount() {
+    this.fireAnalytics(ACTION.CLOSED);
+    if (!this.prevValue && this.props.value) {
+      this.fireAnalytics(ACTION.ADDED);
+    }
+    if (this.prevValue && !this.props.value) {
+      this.fireAnalytics(ACTION.CLEARED);
+    }
+    if (this.prevValue && this.prevValue !== this.props.value) {
+      this.fireAnalytics(ACTION.EDITED);
+    }
+  }
+
+  render() {
+    const {
+      intl: { formatMessage },
+      value,
+    } = this.props;
+    const { showClearTextButton } = this.state;
+
+    const backButtonMessage = formatMessage(messages.back);
     const backButtonMessageComponent = keymaps.renderTooltipContent(
       backButtonMessage,
       keymaps.escape,
@@ -55,28 +123,41 @@ class AltTextEditComponent extends React.Component<Props & InjectedIntlProps> {
     );
 
     return (
-      <AltTextEditWrapper>
+      <Container>
         <InputWrapper>
-          <Button
-            title={intl.formatMessage(messages.back)}
-            icon={
-              <ChevronLeftLargeIcon label={intl.formatMessage(messages.back)} />
-            }
-            tooltipContent={backButtonMessageComponent}
-            onClick={this.closeMediaAltTextMenu}
-          />
+          <BackButtonWrapper>
+            <Button
+              title={formatMessage(messages.back)}
+              icon={
+                <ChevronLeftLargeIcon label={formatMessage(messages.back)} />
+              }
+              tooltipContent={backButtonMessageComponent}
+              onClick={this.closeMediaAltTextMenu}
+            />
+          </BackButtonWrapper>
           <PanelTextInput
-            placeholder={intl.formatMessage(messages.placeholder)}
-            defaultValue=""
-            onBlur={this.dispatchCancelEvent}
+            placeholder={formatMessage(messages.placeholder)}
+            defaultValue={value ? value : ''}
             onCancel={this.dispatchCancelEvent}
-            onSubmit={this.updateAltText}
+            onChange={this.handleOnChange}
+            onSubmit={this.closeMediaAltTextMenu}
             autoFocus
           />
+          {showClearTextButton && (
+            <Button
+              title={formatMessage(messages.clear)}
+              icon={
+                <ClearText>
+                  <CrossCircleIcon label={formatMessage(messages.clear)} />
+                </ClearText>
+              }
+              tooltipContent={formatMessage(messages.clear)}
+              onClick={this.handleClearText}
+            />
+          )}
         </InputWrapper>
-        <Separator />
-        <SupportText>{intl.formatMessage(messages.supportText)}</SupportText>
-      </AltTextEditWrapper>
+        <SupportText>{formatMessage(messages.supportText)}</SupportText>
+      </Container>
     );
   }
 
@@ -84,6 +165,20 @@ class AltTextEditComponent extends React.Component<Props & InjectedIntlProps> {
     const { view } = this.props;
     closeMediaAltTextMenu(view.state, view.dispatch);
   };
+
+  private fireAnalytics(actionType: MediaAltTextActionType) {
+    const { createAnalyticsEvent } = this.props;
+    if (createAnalyticsEvent && this.fireCustomAnalytics) {
+      this.fireCustomAnalytics({
+        payload: {
+          action: actionType,
+          actionSubject: ACTION_SUBJECT.MEDIA,
+          actionSubjectId: ACTION_SUBJECT_ID.ALT_TEXT,
+          eventType: EVENT_TYPE.TRACK,
+        },
+      });
+    }
+  }
 
   private dispatchCancelEvent = (event: KeyboardEvent) => {
     const { view } = this.props;
@@ -96,9 +191,20 @@ class AltTextEditComponent extends React.Component<Props & InjectedIntlProps> {
 
   private updateAltText = (newAltText: string) => {
     const { view } = this.props;
+    const newValue = newAltText.length === 0 ? null : newAltText;
+    updateAltText(newValue)(view.state, view.dispatch);
+  };
 
-    updateAltText(newAltText)(view.state, view.dispatch);
+  private handleOnChange = (newAltText: string) => {
+    this.setState({
+      showClearTextButton: Boolean(newAltText),
+    });
+    this.updateAltText(newAltText);
+  };
+
+  private handleClearText = () => {
+    this.handleOnChange('');
   };
 }
 
-export default injectIntl(AltTextEditComponent);
+export default withAnalyticsEvents()(injectIntl(AltTextEditComponent));

@@ -35,6 +35,15 @@ export function productStoreRecommendation(): RecommendationItem[] {
   ];
 }
 
+export function productStoreInTrelloRecommendation(): RecommendationItem[] {
+  return [
+    { productKey: ProductKey.CONFLUENCE },
+    { productKey: ProductKey.JIRA_SOFTWARE },
+    { productKey: ProductKey.JIRA_SERVICE_DESK },
+    { productKey: ProductKey.OPSGENIE },
+  ];
+}
+
 export const jswOgExpandsExperiment = {
   flagKey: JSW_OG_EXPANDS_EXPERIMENT_FEATURE_FLAG_KEY,
   variationValues: JSW_OG_EXPANDS_EXPERIMENT_FEATURE_FLAG_KEY,

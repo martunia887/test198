@@ -1,50 +1,84 @@
+/* eslint-disable global-require */
 //@flow
 const compose = require('docker-compose');
 const path = require('path');
 const ip = require('ip');
 const exec = require('child_process').execSync;
+const semver = require('semver');
 
 const cwd = path.join(__dirname);
 const log = true;
 
-// ip address is required for docker image to connect to local server
-console.log('local ip address:', ip.address());
 process.env.HOST_IP = ip.address();
 
 async function startDocker() {
   console.log('starting docker');
-  return await compose.upAll({ cwd, log });
+  try {
+    await compose.upAll({ cwd, log });
+  } catch (err) {
+    err.message = `docker-compose up failed. Visit go/ak-vr-setup and join go/ak-build-channel for help.\n${err.message}`;
+    throw err;
+  }
 }
 
 async function stopDocker() {
   console.log('stopping docker');
-  return await compose.stop({ cwd, log });
+  return compose.stop({ cwd, log });
 }
 
 const getDockerImageProdVersion = () =>
   require('../pipelines-docker-image/package.json').version;
 
 const getDockerImageLocalVersion = async () => {
-  const cmd = `docker images| grep atlassianlabs/atlaskit-mk-2-vr| awk '{print $2}'| head -n 1`;
-  return await exec(cmd)
+  const table = exec(`docker images`)
     .toString()
     .trim();
+
+  const images = table
+    .split('\n')
+    .map(line =>
+      line
+        .split('  ')
+        .filter(Boolean)
+        .map(item => item.trim()),
+    )
+    .map(([repository, tag]) => ({ repository, tag }))
+    .filter(({ tag }) => tag !== '<none>');
+
+  const vrImages = images
+    .filter(({ repository }) => repository === `atlassianlabs/atlaskit-mk-2-vr`)
+    .sort(({ tag: a }, { tag: b }) => semver.compare(b, a));
+
+  const image = vrImages[0];
+
+  if (!image) {
+    return undefined;
+  }
+
+  return image.tag;
 };
 
-async function isLatestVersion(localVersion /*: string */) {
-  const prodVersion = getDockerImageProdVersion();
-
-  console.info('Latest docker image version:', prodVersion);
-  console.info('Local docker image version:', localVersion);
-
+async function isSameVersion(
+  localVersion /*: string | typeof undefined */,
+  prodVersion /*: string */,
+) {
   return localVersion ? prodVersion === localVersion : false;
 }
 
 async function deleteOldDockerImage() {
+  const prodVersion = await getDockerImageProdVersion();
   const localVersion = await getDockerImageLocalVersion();
-  const isLatest = await isLatestVersion(localVersion);
+  const isLatest = await isSameVersion(localVersion, prodVersion);
 
-  if (!isLatest) {
+  console.info('Latest docker image version:', prodVersion);
+
+  if (typeof localVersion === 'string') {
+    console.info('Local docker image version:', localVersion);
+  } else {
+    console.info('No local docker image found');
+  }
+
+  if (!isLatest && typeof localVersion === 'string') {
     console.info(
       'Old version of docker image found, updating docker image .....',
     );
@@ -63,7 +97,7 @@ module.exports = {
   startDocker,
   stopDocker,
   deleteOldDockerImage,
-  isLatestVersion,
+  isSameVersion,
   getDockerImageProdVersion,
   getDockerImageLocalVersion,
 };

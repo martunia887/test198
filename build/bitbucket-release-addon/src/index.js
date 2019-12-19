@@ -1,11 +1,14 @@
+// @flow
 import queryString from 'query-string';
-import flattenChangesets from '@atlaskit/build-releases/version/flattenChangesets';
+import flattenChangesets from '@atlaskit/build-utils/flattenReleases';
 import yaml from 'js-yaml';
 
 import getChangesetsFromCommits from './get-commits';
 import getChangesetsFromFiles from './get-changesets';
 import { legacyChangesetRepos } from './config';
 
+// TODO: Replace the static url `atlassian/atlaskit-mk-2` by  `atlassian/atlassian-frontend`.
+// https://product-fabric.atlassian.net/browse/AFP-1373
 const noChangesetMessage = `<div style="border: 2px solid red; padding: 10px; border-radius: 10px; display: inline-block;">
   <p><strong>Warning:</strong> No packages will be released with this PR</p>
   <p>It is now a requirement that all PRs <strong>must</strong> include a changeset.</p>
@@ -63,7 +66,7 @@ const yamlToReleases = changesets => {
   if (!changesets || changesets.length === 0) return [];
   return changesets
     .map(changeset => {
-      let lines = changeset.split('\n');
+      const lines = changeset.split('\n');
       let yamlStr = '';
       if (lines[0] !== '---') return null; // if we don't have a frontmatter block, skip this file
       let lineIdx = 1; // skip the first line, we know it is '---'
@@ -80,7 +83,7 @@ const yamlToReleases = changesets => {
 };
 
 const {
-  repoName, // repoName is the full repo path (i.e atlassian/atlaskit-mk-2)
+  repoName, // repoName is the full repo path
   pullrequestid,
   sourcehash,
   destinationhash,
@@ -118,13 +121,15 @@ async function main() {
 
   if (releases.length === 0) {
     if (changesetsPresent) {
+      // $FlowFixMe - document.body.innerHTML does not exist in noReleaseEmtpyChangesetMessage.
       document.body.innerHTML = noReleaseEmtpyChangesetMessage;
     } else {
+      // $FlowFixMe - document.body.innerHTML does not exist in noReleaseEmtpyChangesetMessage.
       document.body.innerHTML = noChangesetMessage;
     }
     return;
   }
-
+  // $FlowFixMe - document.body.innerHTML does not exist in noReleaseEmtpyChangesetMessage.
   document.body.innerHTML = releasedPackagesMessage(
     releases,
     shouldWarnAboutChangesetsV2,
@@ -135,5 +140,6 @@ try {
   main();
 } catch (e) {
   console.error('error in changeset', e);
+  // $FlowFixMe - document.body.innerHTML does not exist in noReleaseEmtpyChangesetMessage.
   document.body.innerHTML = errorLoadingChangesetMessage;
 }

@@ -1,5 +1,359 @@
 # @atlaskit/editor-core
 
+## 115.2.2
+
+### Patch Changes
+
+- [patch][1b5cb65fd7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1b5cb65fd7):
+
+  Use contextId instead of collectionName to know when to copy a media node
+
+## 115.2.1
+
+### Patch Changes
+
+- [patch][36f6e99c5b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/36f6e99c5b):
+
+  Fix type errors caused when generating declaration files- Updated dependencies [36f6e99c5b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/36f6e99c5b):
+
+  - @atlaskit/calendar@9.2.2
+  - @atlaskit/editor-test-helpers@10.3.2
+  - @atlaskit/renderer@53.2.2
+  - @atlaskit/date@0.7.9
+  - @atlaskit/media-client@4.2.1
+
+## 115.2.0
+
+### Minor Changes
+
+- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8080 Add provider factory to editor arch V3
+
+- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8132: Stop passing props to EditorPlugin factories- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8078 Sending invalid nodes instead of whole node on dispatch invalid transaction analytis- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  FM-2744 Implement native side for Hybrid Editor/Renderer Analytics events
+
+### Patch Changes
+
+- [patch][7ee2d3281f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7ee2d3281f):
+
+  ED-7957 Disable save button on Comment appearance
+
+- [patch][7ee2d3281f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7ee2d3281f):
+
+  FEF-9891 Fix being unable to click inside and type in placeholders
+
+- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8191 fix expand button position when disabled- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8213 Remove unused macroProvider usage- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-7945: fix number column alignment on first load- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-7901 Added analytics for media alt text- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8129 Fix bug where table throws an exception when try to delete it when the contextual menu is open- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  Make GenericCard Component instead of PureComponent to react on context updates- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-7992: Prevent creating new style tags on every resize of media single- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8187 Update cursor on expand to represent user actions- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8162: Prevent the editor from locking up when navigating from gap-cursor to an expand title- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-7927: Transform status text uppercase- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-7977: when cursor is after a collapsed expand, pressing Backspace focus the title- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  [ED-8159] Add flag to disable the open|close events from Expand- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-7967 Add location and selection information on insertion analytics events- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  ED-8177: Change animation style of the gap-cursor to avoid a high amount of style recalc- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  Make @atlaskit/smart-card a peerDependency of editor/renderer- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+  - @atlaskit/renderer@53.2.1
+  - @atlaskit/user-picker@4.2.0
+  - @atlaskit/adf-schema@4.3.2
+  - @atlaskit/adf-utils@7.3.1
+  - @atlaskit/editor-common@43.1.0
+  - @atlaskit/tooltip@15.2.0
+  - @atlaskit/analytics-next@6.3.3
+  - @atlaskit/media-picker@50.0.3
+  - @atlaskit/media-client@4.2.0
+  - @atlaskit/select@11.0.3
+  - @atlaskit/share@0.7.3
+  - @atlaskit/modal-dialog@10.5.0
+  - @atlaskit/smart-card@12.6.2
+  - @atlaskit/avatar-group@5.0.2
+  - @atlaskit/avatar@17.1.5
+  - @atlaskit/media-card@66.1.2
+  - @atlaskit/item@10.2.0
+  - @atlaskit/textarea@2.2.3
+  - @atlaskit/status@0.9.18
+
+## 115.1.0
+
+### Minor Changes
+
+- [minor][7519b2a816](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7519b2a816):
+
+  FM-2694 Scroll user's selection (cursor) into view whenever they insert/delete nodes, format text, undo/redo or paste content
+
+  Add new editor plugin: `ScrollIntoView`
+  This hooks into each transaction applied and calls ProseMirror's [scrollIntoView](https://prosemirror.net/docs/ref/#state.Transaction.scrollIntoView) if the transaction is a primary action from the user that updates the document
+  This behaviour is on by default and should be opted out of on a per-transaction basis, initially we have opted out of any interactions with the floating toolbar or breakout buttons and resizing, as to perform these actions you are in the context of what you are editing already
+
+### Patch Changes
+
+- [patch][768bac6d81](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/768bac6d81):
+
+  Convert editor error boundary from GasV2 to GasV3 analytics. Support graceful recovery for intermittent issues.- [patch][7bf6a29563](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7bf6a29563):
+
+  ED-8217: Prevent unnecessery re-renders in a status node- [patch][fbff0b7e41](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/fbff0b7e41):
+
+  [ED-8286] Fix analytics configuration to AltText- [patch][9902932114](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9902932114):
+
+  ED-7480: fix contextual menu position when enabling numbered column- Updated dependencies [768bac6d81](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/768bac6d81):
+
+- Updated dependencies [139ab68e90](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/139ab68e90):
+- Updated dependencies [768bac6d81](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/768bac6d81):
+  - @atlaskit/editor-test-helpers@10.3.1
+  - @atlaskit/media-card@66.1.1
+  - @atlaskit/analytics-next@6.3.2
+
+## 115.0.0
+
+### Major Changes
+
+- [major][5e4d1feec3](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5e4d1feec3):
+
+  Removed deprecated props from editor core
+
+  Following props have been removed from `@atlaskit/editor-core`:
+
+  - mediaProvider –> Use `media={{ provider }}` instead
+  - cardProvider -> Use `UNSAFE_cards={{ provider }}` instead
+  - allowPlaceholderCursor -> Enabled by default
+  - addonToolbarComponents -> Not supported anymore (and according to sourcegraph not used anywhere)
+  - allowCodeBlocks -> Enabled by default
+  - allowLists -> Enabled by default
+  - allowHelpDialog -> Is enabled by default, pass `false` to disabled it
+
+### Minor Changes
+
+- [minor][10425b84b4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/10425b84b4):
+
+  Add support to extensions v2 (using manifests and extension providers)
+
+- [minor][0ea0587ac5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0ea0587ac5):
+
+  ED-8130: Update expand feature flag to seperate rendering from insertion- [minor][926798632e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/926798632e):
+
+  ED-7962: Build ADF node from actions - remove "insert" from node
+
+### Patch Changes
+
+- [patch][a6663b9325](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a6663b9325):
+
+  ED-8026: Prevent infinite transactions being dispatched when focusing on an expands title during collab
+
+- [patch][0f8d5df4cf](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0f8d5df4cf):
+
+  ED-7975: fix copy-pasting tables that contain nestedExpand
+
+- [patch][ecfbe83dfb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ecfbe83dfb):
+
+  [ED-7903] Implement alt text update on UI- [patch][ea0e619cc7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ea0e619cc7):
+
+  ED-8017: Fix expand overflow issues with tables and text
+
+- [patch][93b445dcdc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/93b445dcdc):
+
+  ED-8134: Adding /help command to quick insert
+
+- [patch][ded174361e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ded174361e):
+
+  ED-7993: Stop toolbar insert block from re-rendering when typing inside code block, etc
+
+- [patch][80eb127904](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/80eb127904):
+
+  ED-8068: Fixes an issues where wrapped media could end up on top of one another inside an Expand.
+
+- [patch][8c84ed470e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8c84ed470e):
+
+  ED-7957 Disable save button on Comment appearance- [patch][6e4b678428](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6e4b678428):
+
+  ED-8077: Fixes pasting expands into a table that is inside an expand
+
+- [patch][40bec82851](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/40bec82851):
+
+  ED-7850 Fix bug where card inserted by paste (but intercepted by macro) wasn't replacing the content
+
+- [patch][8b652147a5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8b652147a5):
+
+  ED-8099: Disables resize grid lines when media is inside an expand
+
+- [patch][0603c2fbf7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0603c2fbf7):
+
+  FEF-9891 Fix being unable to click inside and type in placeholders- [patch][72d4c3298d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72d4c3298d):
+
+  ED-7934: keyboard navigation for expand
+
+- [patch][5ef337766c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5ef337766c):
+
+  ED-8069: Fixes expand toggling syncing between sessions in collab mode.
+
+- [patch][dc0999afc2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/dc0999afc2):
+
+  ED-7995: Performance enchancements when editor transitions between disabled to enabled state
+
+- [patch][6764e83801](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6764e83801):
+
+  ED-8131 Fix not passing analyticsHandler to createPMPlugins
+
+- [patch][553915553f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/553915553f):
+
+  [ED-8081] Improve tab navigation on native expand
+
+- [patch][4700477bbe](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4700477bbe):
+
+  ED-8094: Fix cursor issues relating to mobile and toolbar insertion issues
+
+- [patch][3a7c0bfa32](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a7c0bfa32):
+
+  Fixes minor keymap issues within expand, with type-ahead and backspace- [patch][5455e35bc0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5455e35bc0):
+
+  ED-8171 Remove disable save button on comment appearance when upload has no finished- [patch][cc1b89d310](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cc1b89d310):
+
+  ED-8162: Prevent the editor from locking up when navigating from gap-cursor to an expand title- [patch][2bb3af2382](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2bb3af2382):
+
+  ED-8178: Disable media alignment options and extension layout options when inside an expand- [patch][611dbe68ff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/611dbe68ff):
+
+  [ED-8159] Add flag to disable the open|close events from Expand- [patch][938f1c2902](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/938f1c2902):
+
+  ED-8186: Fix incorrect mark filtering when toggling lists- Updated dependencies [271945fd08](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/271945fd08):
+
+- Updated dependencies [161a30be16](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/161a30be16):
+- Updated dependencies [2d1aee3e47](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2d1aee3e47):
+- Updated dependencies [ea0e619cc7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ea0e619cc7):
+- Updated dependencies [4427e6c8cf](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4427e6c8cf):
+- Updated dependencies [5b8a074ce6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5b8a074ce6):
+- Updated dependencies [49fbe3d3bf](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/49fbe3d3bf):
+- Updated dependencies [c1d4898af5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c1d4898af5):
+- Updated dependencies [579779f5aa](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/579779f5aa):
+- Updated dependencies [df2280531d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/df2280531d):
+- Updated dependencies [ef2ba36d5c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ef2ba36d5c):
+- Updated dependencies [6e4b678428](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6e4b678428):
+- Updated dependencies [bb164fbd1e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bb164fbd1e):
+- Updated dependencies [3c0f6feee5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3c0f6feee5):
+- Updated dependencies [b3fd0964f2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b3fd0964f2):
+- Updated dependencies [1b8e3a1412](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1b8e3a1412):
+- Updated dependencies [7540cdff80](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7540cdff80):
+- Updated dependencies [b4fda095ef](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b4fda095ef):
+- Updated dependencies [10425b84b4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/10425b84b4):
+- Updated dependencies [4700477bbe](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4700477bbe):
+- Updated dependencies [7f8de51c36](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7f8de51c36):
+- Updated dependencies [f9c291923c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f9c291923c):
+- Updated dependencies [9a261337b5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9a261337b5):
+- Updated dependencies [cc1b89d310](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cc1b89d310):
+- Updated dependencies [938f1c2902](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/938f1c2902):
+- Updated dependencies [926798632e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/926798632e):
+  - @atlaskit/editor-common@43.0.0
+  - @atlaskit/adf-schema@4.3.1
+  - @atlaskit/emoji@62.6.0
+  - @atlaskit/media-picker@50.0.2
+  - @atlaskit/smart-card@12.6.1
+  - @atlaskit/mention@18.16.0
+  - @atlaskit/icon@19.0.11
+  - @atlaskit/media-client@4.1.1
+  - @atlaskit/renderer@53.2.0
+  - @atlaskit/theme@9.3.0
+  - @atlaskit/media-editor@37.0.3
+  - @atlaskit/editor-test-helpers@10.3.0
+  - @atlaskit/date@0.7.8
+  - @atlaskit/profilecard@12.3.5
+  - @atlaskit/editor-bitbucket-transformer@6.2.10
+  - @atlaskit/editor-json-transformer@7.0.1
+  - @atlaskit/editor-markdown-transformer@3.1.12
+  - @atlaskit/synchrony-test-helpers@1.0.2
+  - @atlaskit/task-decision@16.0.4
+
+## 114.1.4
+
+### Patch Changes
+
+- [patch][3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  Make PopupSelect correctly pass props. Forcing update of @atlaskit/select for all other packages- Updated dependencies [3a20e9a596](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a20e9a596):
+
+  - @atlaskit/select@11.0.2
+  - @atlaskit/user-picker@4.1.5
+  - @atlaskit/media-test-helpers@25.2.5
+
+## 114.1.3
+
+### Patch Changes
+
+- [patch][aed7d2a980](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/aed7d2a980):
+
+  ED-8042 upgrade prosemirror-markdown to remove ES modules workaround- Updated dependencies [aed7d2a980](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/aed7d2a980):
+
+  - @atlaskit/editor-bitbucket-transformer@6.2.9
+  - @atlaskit/editor-markdown-transformer@3.1.11
+
+## 114.1.2
+
+### Patch Changes
+
+- [patch][f4b7363a8e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f4b7363a8e):
+
+  ED-8137: Fix rendering of hyperlink toolbar without any activity provider set
+
+## 114.1.1
+
+### Patch Changes
+
+- [patch][a76c0e3081](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a76c0e3081):
+
+  ED-8042 fix: bump markdown-it and prosemirror-markdown to avoid ReDoS vulnerability
+
 ## 114.1.0
 
 ### Minor Changes

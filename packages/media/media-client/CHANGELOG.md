@@ -1,5 +1,39 @@
 # @atlaskit/media-client
 
+## 4.2.1
+
+### Patch Changes
+
+- [patch][36f6e99c5b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/36f6e99c5b):
+
+  Fix type errors caused when generating declaration files
+
+## 4.2.0
+
+### Minor Changes
+
+- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  fixed media client retrying aborted request- [minor][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  export safeUnsubscribe util to prevent exceptions when unsubscribing from RXJS Subscriptions
+
+### Patch Changes
+
+- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  Check if the subscription is defined before calling unsubscribe in utils observableToPromise- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  - @atlaskit/media-card@66.1.2
+
+## 4.1.1
+
+### Patch Changes
+
+- [patch][579779f5aa](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/579779f5aa):
+
+  MS-2423 add retries on 5xx errors and network errors to HTTP calls
+
 ## 4.1.0
 
 ### Minor Changes

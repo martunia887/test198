@@ -7,7 +7,6 @@ import { withHelp, HelpContextInterface } from '../HelpContext';
 
 import ArticleContent from './ArticleContent';
 import ArticleWasHelpfulForm from './ArticleWasHelpfulForm';
-import RelatedArticles from './RelatedArticles';
 import LoadingError from './LoadingError';
 import { ArticleContainer } from './styled';
 import { TRANSITION_DURATION_MS, TRANSITION_STATUS } from '../constants';
@@ -35,6 +34,7 @@ export class Article extends Component<Props & HelpContextInterface, State> {
   };
 
   refArticleContainer = React.createRef<HTMLDivElement>();
+  private onArticleEnteredTimeout?: number;
 
   constructor(props: Props & HelpContextInterface) {
     super(props);
@@ -42,6 +42,7 @@ export class Article extends Component<Props & HelpContextInterface, State> {
     this.onArticleEntered = this.onArticleEntered.bind(this);
     this.onArticleExited = this.onArticleExited.bind(this);
     this.renderArticleContent = this.renderArticleContent.bind(this);
+    this.onArticleExit = this.onArticleExit.bind(this);
   }
 
   componentDidMount() {
@@ -75,6 +76,15 @@ export class Article extends Component<Props & HelpContextInterface, State> {
     if (skipArticleFadeInAnimation) {
       this.setState({ skipArticleFadeInAnimation: false });
     }
+
+    this.onArticleEnteredTimeout = window.setTimeout(() => {
+      this.props.help.setArticleFullyVisible(true);
+    }, TRANSITION_DURATION_MS);
+  }
+
+  onArticleExit() {
+    clearTimeout(this.onArticleEnteredTimeout);
+    this.props.help.setArticleFullyVisible(false);
   }
 
   onArticleExited() {
@@ -88,10 +98,6 @@ export class Article extends Component<Props & HelpContextInterface, State> {
   renderArticleContent() {
     const currentArticle = this.props.help.getCurrentArticle();
 
-    const handleOnClick = (articleId: string) => {
-      this.props.help.loadArticle(articleId);
-    };
-
     if (currentArticle) {
       const { article } = currentArticle;
 
@@ -104,19 +110,16 @@ export class Article extends Component<Props & HelpContextInterface, State> {
               title={article.title}
               body={article.body}
               titleLinkUrl={article.productUrl}
+              onArticleRenderBegin={this.props.help.onArticleRenderBegin}
+              onArticleRenderDone={this.props.help.onArticleRenderDone}
             />
             <ArticleWasHelpfulForm />
-            <RelatedArticles
-              relatedArticles={article.relatedArticles}
-              onRelatedArticlesListItemClick={handleOnClick}
-            />
           </>
         );
       } else {
         return (
           <>
             <ArticleContent isLoading />
-            <RelatedArticles isLoading />
           </>
         );
       }
@@ -134,6 +137,7 @@ export class Article extends Component<Props & HelpContextInterface, State> {
         timeout={TRANSITION_DURATION_MS}
         enter={!skipArticleFadeInAnimation}
         onEntered={this.onArticleEntered}
+        onExit={this.onArticleExit}
         onExited={this.onArticleExited}
         mountOnEnter
         unmountOnExit

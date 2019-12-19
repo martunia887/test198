@@ -6,14 +6,19 @@ export enum EVENT_TYPE {
 }
 
 export enum ACTION {
+  ADDED = 'added',
   CHANGED_FULL_WIDTH_MODE = 'changedFullWidthMode',
   CHANGED_LAYOUT = 'changedLayout',
   CHANGED_TYPE = 'changedType',
   CHANGED_URL = 'changedUrl',
+  CLEARED = 'cleared',
   CLICKED = 'clicked',
+  CLOSED = 'closed',
   DELETED = 'deleted',
   DISPATCHED_INVALID_TRANSACTION = 'dispatchedInvalidTransaction',
+  EDITED = 'edited',
   EDITOR_MOUNTED = 'mounted',
+  EDITOR_CRASHED = 'unhandledErrorCaught',
   FORMATTED = 'formatted',
   INSERTED = 'inserted',
   INVOKED = 'invoked',
@@ -32,6 +37,7 @@ export enum ACTION {
   SLOW_INPUT = 'slowInput',
   UPLOAD_EXTERNAL_FAIL = 'uploadExternalFailed',
   INPUT_PERF_SAMPLING = 'inputPerfSampling',
+  HELP_OPENED = 'helpOpened',
 }
 
 export enum INPUT_METHOD {
@@ -73,13 +79,16 @@ export enum ACTION_SUBJECT {
   TABLE = 'table',
   EXPAND = 'expand',
   NESTED_EXPAND = 'nestedExpand',
+  HELP = 'help',
 }
 
 export enum ACTION_SUBJECT_ID {
   ACTION = 'action',
+  ALT_TEXT = 'altText',
   ANNOTATE_BUTTON = 'annotateButton',
   BLOCK_QUOTE = 'blockQuote',
   BUTTON_HELP = 'helpButton',
+  HELP_QUICK_INSERT = 'helpQuickInsert',
   BUTTON_FEEDBACK = 'feedbackButton',
   CANCEL = 'cancel',
   CARD_INLINE = 'inlineCard',

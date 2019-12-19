@@ -7,7 +7,7 @@ import {
   expandMessages,
   sharedExpandStyles,
   ExpandIconWrapper,
-  ExpandTooltipWrapper,
+  ExpandLayoutWrapper,
 } from '@atlaskit/editor-common';
 import { AnalyticsEventPayload, PLATFORM, MODE } from '../analytics/events';
 import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../analytics/enums';
@@ -38,6 +38,7 @@ const Title = styled.span`
   flex: 1;
   margin: 0;
   padding: 0 0 0 ${gridSize() / 2}px;
+  text-align: left;
 `;
 
 const Container = styled.div<StyleProps>`
@@ -97,7 +98,7 @@ function Expand({
         aria-label={label}
         contentEditable={false}
       >
-        <Tooltip content={label} position="top" tag={ExpandTooltipWrapper}>
+        <Tooltip content={label} position="top" tag={ExpandLayoutWrapper}>
           <ExpandIconWrapper expanded={expanded}>
             <ChevronRightIcon label={label} primaryColor={colors.N80A} />
           </ExpandIconWrapper>

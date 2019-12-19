@@ -1,5 +1,29 @@
 # @atlaskit/ci-scripts
 
+## 1.1.1
+
+### Patch Changes
+
+- [patch][6a22d73b24](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6a22d73b24):
+
+  Unignore typescript errors when building TS packages and add --strict flag to also unignore when building single packages
+
+## 1.1.0
+
+### Minor Changes
+
+- [minor][ccbd1b390b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ccbd1b390b):
+
+  - Update build tooling to:
+    - Only build typescript packages with a `build/tsconfig.json` dir rather than any package with `tsconfig.json` in the root
+    - Remove concept of cli packages with a `build/cli/tsconfig.json` and update them to use the standard build
+    - Separate the typecheck and typescript build properties in `getPackageInfo` to allow typechecking our build packages without attempting to build them
+
+### Patch Changes
+
+- Updated dependencies [ccbd1b390b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ccbd1b390b):
+  - @atlaskit/build-utils@2.6.0
+
 ## 1.0.7
 
 ### Patch Changes

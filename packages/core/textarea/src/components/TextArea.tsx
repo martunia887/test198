@@ -39,6 +39,8 @@ export interface Props extends WithAnalyticsEventsProps {
   value?: string;
   /** The default value of the textarea */
   defaultValue?: string;
+  /** Name of the input form control */
+  name?: string;
   /** The placeholder within the textarea */
   placeholder?: string;
   /** Handler to be called when the input is blurred */
@@ -59,7 +61,7 @@ export interface Props extends WithAnalyticsEventsProps {
    */
   resize?: 'auto' | 'vertical' | 'horizontal' | 'smart' | 'none';
   /**
-   * Passed down to the <textarea /> element.
+   * Enables native spell check on the `textarea` element.
    */
   spellCheck?: boolean;
   /**

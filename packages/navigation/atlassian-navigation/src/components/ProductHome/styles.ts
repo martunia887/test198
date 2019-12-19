@@ -1,3 +1,4 @@
+import { CSSObject } from '@emotion/core';
 import { gridSize as gridSizeFn } from '@atlaskit/theme';
 import { PRODUCT_HOME_BREAKPOINT } from '../../common/constants';
 import { skeletonCSS } from '../../common/styles';
@@ -5,23 +6,45 @@ import { NavigationTheme } from '../../theme';
 
 const gridSize = gridSizeFn();
 
-export const containerCSS = {
-  alignItems: 'center',
-  display: 'flex',
-  [`@media (max-width: ${PRODUCT_HOME_BREAKPOINT - 1}px)`]: {
-    margin: `0 ${gridSize}px`,
-  },
-  [`@media (min-width: ${PRODUCT_HOME_BREAKPOINT}px)`]: {
-    margin: `0 ${gridSize * 2}px`,
-  },
+export const productHomeButtonCSS = ({
+  mode: { primaryButton },
+}: NavigationTheme): CSSObject => {
+  return {
+    alignItems: 'center',
+    padding: gridSize / 2,
+    borderRadius: 3,
+    border: 0,
+    background: 'none',
+    display: 'flex',
+    cursor: 'pointer',
+    color: 'inherit',
+    '&:first-of-type': {
+      marginLeft: 0,
+    },
+    '&::-moz-focus-inner': {
+      border: 0,
+    },
+    '&:hover': primaryButton.hover,
+    '&:focus': { ...(primaryButton.focus as CSSObject), outline: 0 },
+    '&:active': primaryButton.active,
+    'div&': {
+      pointerEvents: 'none',
+    },
+    [`@media (max-width: ${PRODUCT_HOME_BREAKPOINT - 1}px)`]: {
+      margin: `0 ${gridSize}px`,
+    },
+    [`@media (min-width: ${PRODUCT_HOME_BREAKPOINT}px)`]: {
+      margin: `0 ${gridSize * 2}px`,
+    },
+  };
 };
 
-export const containerSkeletonCSS = containerCSS;
+export const productHomeButtonSkeletonCSS = productHomeButtonCSS;
 
-const height = 40;
+const iconHeight = 28;
 
 const heightCSS = {
-  height: `${height}px`,
+  maxHeight: `${iconHeight}px`,
 };
 
 export const productIconCSS = {
@@ -29,13 +52,12 @@ export const productIconCSS = {
   // productHome is aligned correctly
   '& > *': {
     display: 'flex',
+    maxHeight: 24,
   },
   [`@media (min-width: ${PRODUCT_HOME_BREAKPOINT}px)`]: {
     display: 'none',
   },
 };
-
-const iconHeight = 28;
 
 export const productIconSkeletonCSS = (theme: NavigationTheme) => ({
   borderRadius: '50%',
@@ -55,9 +77,15 @@ export const productLogoCSS = {
   // productHome is aligned correctly
   '& > *': {
     display: 'flex',
+    maxHeight: 24,
   },
   [`@media (max-width: ${PRODUCT_HOME_BREAKPOINT - 1}px)`]: {
     display: 'none',
+  },
+  // Continue to display custom logo
+  // if custom icon is missing.
+  '&:only-child': {
+    display: 'flex',
   },
 };
 
@@ -70,8 +98,7 @@ export const siteTitleCSS = ({
   marginLeft: `${gridSize * 0.5}px`,
   display: 'flex',
   alignItems: 'center',
-
-  paddingRight: gridSize * 3,
+  paddingRight: gridSize * 2,
   marginRight: gridSize / 2,
   borderRight: borderRight,
 });
@@ -85,7 +112,7 @@ export const siteTitleSkeletonCSS = (theme: NavigationTheme) => ({
   '&:after': {
     content: '""',
     width: '100%',
-    height: height / 2,
+    height: iconHeight / 2,
     backgroundColor: theme.mode.skeleton.backgroundColor,
     borderRadius: 4,
   },
@@ -93,6 +120,7 @@ export const siteTitleSkeletonCSS = (theme: NavigationTheme) => ({
 
 export const productLogoSkeletonCSS = (theme: NavigationTheme) => ({
   width: '120px',
+  height: 24,
   ...heightCSS,
   ...productLogoCSS,
   ...skeletonCSS(theme),

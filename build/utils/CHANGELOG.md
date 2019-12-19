@@ -1,5 +1,24 @@
 # @atlaskit/build-utils
 
+## 2.6.0
+
+### Minor Changes
+
+- [minor][ccbd1b390b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ccbd1b390b):
+
+  - Update build tooling to:
+    - Only build typescript packages with a `build/tsconfig.json` dir rather than any package with `tsconfig.json` in the root
+    - Remove concept of cli packages with a `build/cli/tsconfig.json` and update them to use the standard build
+    - Separate the typecheck and typescript build properties in `getPackageInfo` to allow typechecking our build packages without attempting to build them
+
+## 2.5.0
+
+### Minor Changes
+
+- [minor][6bce2c0290](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6bce2c0290):
+
+  Fix the circular dependencies between build releases and build utils by moving flattenReleases and parseChangesetCommit to build-utils.
+
 ## 2.4.0
 
 ### Minor Changes

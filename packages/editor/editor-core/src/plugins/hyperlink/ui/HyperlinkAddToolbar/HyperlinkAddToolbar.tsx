@@ -68,7 +68,7 @@ export interface Props {
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   autoFocus?: boolean;
-  provider: Promise<ActivityProvider>;
+  provider?: Promise<ActivityProvider>;
   displayText?: string;
   displayUrl?: string;
 }
@@ -114,15 +114,15 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
     this.handleClearDisplayText = this.createClearHandler('displayText');
   }
 
-  async resolveProvider() {
-    const provider = await this.props.provider;
+  async resolveProvider(unresolvedProvider: Promise<ActivityProvider>) {
+    const provider = await unresolvedProvider;
     this.setState({ provider });
     return provider;
   }
 
   async componentDidMount() {
     if (this.props.provider) {
-      const activityProvider = await this.resolveProvider();
+      const activityProvider = await this.resolveProvider(this.props.provider);
       this.loadRecentItems(activityProvider);
     }
   }
@@ -212,7 +212,7 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
               placeholder={placeholder}
               onSubmit={this.handleSubmit}
               onChange={this.updateInput}
-              autoFocus={true}
+              autoFocus={{ preventScroll: true }}
               onCancel={this.urlBlur}
               onBlur={this.urlBlur}
               defaultValue={text}

@@ -2,12 +2,12 @@ import {
   B50,
   B200,
   B400,
-  DN10A,
   N0,
+  N20,
   N40,
   N200,
-  N500,
   N600,
+  N700,
 } from '@atlaskit/theme/colors';
 
 import { Mode } from './types';
@@ -40,7 +40,7 @@ const defaultTheme: { mode: Mode } = {
     },
     iconButton: {
       active: {
-        color: N500,
+        color: B400,
         backgroundColor: hexToRGBA(B50, 0.6),
         boxShadow: '',
       },
@@ -64,15 +64,15 @@ const defaultTheme: { mode: Mode } = {
     navigation: { backgroundColor: N0, color: N200 },
     productHome: {
       backgroundColor: B400,
-      color: DN10A,
+      color: N700,
       borderRight: `1px solid ${hexToRGBA(N200, 0.3)}`,
-      gradientStart: B400,
-      gradientStop: B200,
+      iconGradientStart: B400,
+      iconGradientStop: B200,
       iconColor: B200,
     },
     primaryButton: {
       active: {
-        color: N600,
+        color: B400,
         backgroundColor: hexToRGBA(B50, 0.7),
         boxShadow: '0 0 0 2px transparent',
       },
@@ -108,7 +108,7 @@ const defaultTheme: { mode: Mode } = {
         borderColor: B200,
       },
     },
-    skeleton: { backgroundColor: DN10A, opacity: 0.15 },
+    skeleton: { backgroundColor: N20, opacity: 1 },
   },
 };
 

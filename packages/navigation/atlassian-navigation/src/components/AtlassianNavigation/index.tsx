@@ -41,13 +41,14 @@ export const AtlassianNavigation = (
               moreLabel={moreLabel}
               items={primaryItems}
               create={create}
+              theme={theme}
             />
           </div>
           <div css={rightCSS}>
             {Search && <Search />}
             {Notifications && <Notifications />}
-            {Settings && <Settings />}
             {Help && <Help />}
+            {Settings && <Settings />}
             {SignIn && <SignIn />}
             {Profile && <Profile />}
           </div>

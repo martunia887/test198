@@ -170,12 +170,17 @@ const BROWSE_APPS_URL: { [Key in Product]?: string | undefined } = {
     '/wiki/plugins/servlet/ac/com.atlassian.confluence.emcee/discover',
 };
 
-const TO_WORKLENS_PRODUCT_KEY: { [Key in ProductKey]: WorklensProductType } = {
+export const TO_WORKLENS_PRODUCT_KEY: {
+  [Key in ProductKey]: WorklensProductType;
+} = {
   [ProductKey.CONFLUENCE]: WorklensProductType.CONFLUENCE,
   [ProductKey.JIRA_CORE]: WorklensProductType.JIRA_BUSINESS,
   [ProductKey.JIRA_SERVICE_DESK]: WorklensProductType.JIRA_SERVICE_DESK,
   [ProductKey.JIRA_SOFTWARE]: WorklensProductType.JIRA_SOFTWARE,
   [ProductKey.OPSGENIE]: WorklensProductType.OPSGENIE,
+  [ProductKey.BITBUCKET]: WorklensProductType.BITBUCKET,
+  [ProductKey.STATUSPAGE]: WorklensProductType.STATUSPAGE,
+  [ProductKey.TRELLO]: WorklensProductType.TRELLO,
 };
 
 interface ConnectedSite {
@@ -462,8 +467,8 @@ export const getJoinableSiteLinks = (
   let joinableSiteLinks = [];
 
   for (let site of joinableSites) {
-    for (let productKey in site.products) {
-      const users: JoinableSiteUser[] = site.products[productKey] || [];
+    for (let productKey in site.users) {
+      const users: JoinableSiteUser[] = site.users[productKey] || [];
       const productType: WorklensProductType =
         TO_WORKLENS_PRODUCT_KEY[productKey as ProductKey];
       const {
@@ -472,12 +477,23 @@ export const getJoinableSiteLinks = (
         href,
       }: AvailableProductDetails = AVAILABLE_PRODUCT_DATA_MAP[productType];
 
+      let productUrl = href;
+
+      if (
+        productKey === ProductKey.JIRA_SOFTWARE ||
+        productKey === ProductKey.JIRA_CORE
+      ) {
+        productUrl = site.url;
+      } else if (productKey === ProductKey.CONFLUENCE) {
+        productUrl = site.url + href;
+      }
+
       joinableSiteLinks.push({
         key: site.cloudId,
         label,
         description: site.displayName,
         Icon,
-        href,
+        href: productUrl,
         users: users.map(
           (user: JoinableSiteUser): JoinableSiteUserAvatarPropTypes => ({
             name: user.displayName,

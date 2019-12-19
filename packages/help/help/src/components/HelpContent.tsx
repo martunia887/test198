@@ -26,11 +26,13 @@ export const HelpContent = (props: Props & HelpContextInterface) => {
           <HelpBody>
             {help.isSearchVisible() && <Search />}
             <ArticleComponent />
-            <DefaultContent isArticleVisible={help.isArticleVisible()}>
+            <DefaultContent isArticleVisible={help.articleFullyVisible}>
               {help.defaultContent}
             </DefaultContent>
           </HelpBody>
-          {help.isFooter() ? <HelpFooter>{help.footer}</HelpFooter> : null}
+          {help.isFooterDefined() ? (
+            <HelpFooter>{help.footer}</HelpFooter>
+          ) : null}
         </Section>
       </Container>
     </>
