@@ -8,7 +8,7 @@ import {
   typeAheadQuery,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import { createTypeAheadPlugin } from './_create-type-ahead-plugin';
+import { createTypeAheadPlugin } from '../_create-type-ahead-plugin';
 import { selectCurrentItem } from '../../../../../plugins/type-ahead/commands/select-item';
 import { pluginKey as typeAheadPluginKey } from '../../../../../plugins/type-ahead/pm-plugins/main';
 
@@ -21,12 +21,13 @@ describe('typeAhead main plugin', () => {
       doc: doc(p('{<>}')),
       editorPlugins: [plugin],
     });
-    insertText(editorView, '/ ', sel);
-    expect(editorView.state.doc).toEqualDocument(doc(p('/ ')));
+    insertText(editorView, '| ', sel);
+    expect(editorView.state.doc).toEqualDocument(doc(p('| ')));
   });
 
   it('should handle inserting typeAheadQuery from type ahead', () => {
     const plugin = createTypeAheadPlugin({
+      trigger: '@',
       selectItem(state, _item, insert) {
         const mark = state.schema.mark('typeAheadQuery', {
           trigger: '@',
@@ -39,7 +40,7 @@ describe('typeAhead main plugin', () => {
       doc: doc(p('{<>}')),
       editorPlugins: [plugin],
     });
-    insertText(editorView, '/1 ', sel);
+    insertText(editorView, '@1 ', sel);
     selectCurrentItem()(editorView.state, editorView.dispatch);
     const pluginState = typeAheadPluginKey.getState(editorView.state);
     expect(pluginState.trigger).toBe('@');
@@ -67,7 +68,7 @@ describe('typeAhead main plugin', () => {
   it('should dismiss type ahead when trigger has been removed', async () => {
     const { editorView } = createEditor({
       doc: doc(
-        p(typeAheadQuery({ trigger: '/', query: 'test' })('{<}/test{>}')),
+        p(typeAheadQuery({ trigger: '|', query: 'test' })('{<}/test{>}')),
       ),
     });
 

@@ -6,7 +6,7 @@ import {
   insertText,
   em,
 } from '@atlaskit/editor-test-helpers';
-import { createTypeAheadPlugin } from './_create-type-ahead-plugin';
+import { createTypeAheadPlugin } from '../_create-type-ahead-plugin';
 
 describe('typeAhead input rules', () => {
   const createEditor = createEditorFactory();

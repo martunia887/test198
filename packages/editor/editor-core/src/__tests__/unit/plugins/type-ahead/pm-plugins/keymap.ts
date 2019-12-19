@@ -6,7 +6,7 @@ import {
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
 import { pluginKey } from '../../../../../plugins/type-ahead/pm-plugins/main';
-import { createTypeAheadPlugin } from './_create-type-ahead-plugin';
+import { createTypeAheadPlugin } from '../_create-type-ahead-plugin';
 
 describe('typeAhead keymaps', () => {
   const createEditor = createEditorFactory();
@@ -14,7 +14,7 @@ describe('typeAhead keymaps', () => {
   it('enter should select current item', () => {
     const plugin = createTypeAheadPlugin();
     const { editorView } = createEditor({
-      doc: doc(p(typeAheadQuery({ trigger: '/' })('/item'))),
+      doc: doc(p(typeAheadQuery({ trigger: '|' })('|item'))),
       editorPlugins: [plugin],
     });
     sendKeyToPm(editorView, 'Enter');
@@ -24,7 +24,7 @@ describe('typeAhead keymaps', () => {
   it('tab should select current item', () => {
     const plugin = createTypeAheadPlugin();
     const { editorView } = createEditor({
-      doc: doc(p(typeAheadQuery({ trigger: '/' })('/item'))),
+      doc: doc(p(typeAheadQuery({ trigger: '|' })('|item'))),
       editorPlugins: [plugin],
     });
     sendKeyToPm(editorView, 'Tab');
@@ -34,7 +34,7 @@ describe('typeAhead keymaps', () => {
   it('up arrow should move selection to a previous item', () => {
     const plugin = createTypeAheadPlugin();
     const { editorView } = createEditor({
-      doc: doc(p(typeAheadQuery({ trigger: '/' })('/item'))),
+      doc: doc(p(typeAheadQuery({ trigger: '|' })('|item'))),
       editorPlugins: [plugin],
     });
     sendKeyToPm(editorView, 'Up');
@@ -45,7 +45,7 @@ describe('typeAhead keymaps', () => {
   it('down arrow should move selection to a next item', () => {
     const plugin = createTypeAheadPlugin();
     const { editorView } = createEditor({
-      doc: doc(p(typeAheadQuery({ trigger: '/' })('/item'))),
+      doc: doc(p(typeAheadQuery({ trigger: '|' })('|item'))),
       editorPlugins: [plugin],
     });
     sendKeyToPm(editorView, 'Down');
@@ -56,17 +56,17 @@ describe('typeAhead keymaps', () => {
   it('esc should dismiss type ahead query', () => {
     const plugin = createTypeAheadPlugin();
     const { editorView } = createEditor({
-      doc: doc(p(typeAheadQuery({ trigger: '/' })('/item'))),
+      doc: doc(p(typeAheadQuery({ trigger: '|' })('|item'))),
       editorPlugins: [plugin],
     });
     sendKeyToPm(editorView, 'Esc');
-    expect(editorView.state.doc).toEqualDocument(doc(p('/item')));
+    expect(editorView.state.doc).toEqualDocument(doc(p('|item')));
   });
 
   it("space should select item if there's only one available", () => {
     const plugin = createTypeAheadPlugin({ getItems: () => [{ title: 1 }] });
     const { editorView } = createEditor({
-      doc: doc(p(typeAheadQuery({ trigger: '/' })('/item'))),
+      doc: doc(p(typeAheadQuery({ trigger: '|' })('|item'))),
       editorPlugins: [plugin],
     });
     sendKeyToPm(editorView, 'Space');
@@ -76,10 +76,10 @@ describe('typeAhead keymaps', () => {
   it('space should dismiss type ahead query if not items is available', () => {
     const plugin = createTypeAheadPlugin({ getItems: () => [] });
     const { editorView } = createEditor({
-      doc: doc(p(typeAheadQuery({ trigger: '/' })('/item'))),
+      doc: doc(p(typeAheadQuery({ trigger: '|' })('|item'))),
       editorPlugins: [plugin],
     });
     sendKeyToPm(editorView, 'Space');
-    expect(editorView.state.doc).toEqualDocument(doc(p('/item')));
+    expect(editorView.state.doc).toEqualDocument(doc(p('|item')));
   });
 });

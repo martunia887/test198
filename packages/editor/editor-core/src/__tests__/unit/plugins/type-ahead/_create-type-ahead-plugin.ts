@@ -1,16 +1,18 @@
-import { TypeAheadSelectItem } from '../../../../../plugins/type-ahead/types';
+import { TypeAheadSelectItem } from '../../../../plugins/type-ahead/types';
 
 export const createTypeAheadPlugin = ({
+  trigger,
   getItems,
   selectItem,
 }: {
+  trigger?: string;
   getItems?: Function;
   selectItem?: TypeAheadSelectItem;
 } = {}) => {
   return {
     pluginsOptions: {
       typeAhead: {
-        trigger: '/',
+        trigger: typeof trigger !== 'undefined' ? trigger : '|',
         getItems:
           getItems !== undefined
             ? getItems
