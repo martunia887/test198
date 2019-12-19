@@ -74,7 +74,7 @@
     "start:trello": "                        yarn run website:start **/packages/trello/**",
     "start:teamwork-ecosystem": "            yarn run website:start **/packages/teamwork-ecosystem/**",
     "constellation:aliases": "               cd services/website-constellation && node write-resolution-map.js",
-    "constellation:start": "                 yarn constellation:aliases && cd services/website-constellation && brisk build-pages && gatsby develop"
+    "constellation:start": "                 yarn constellation:aliases && cd services/website-constellation && gatsby develop"
   },
   "bolt": {
     "version": "^0.24.3",
