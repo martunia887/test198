@@ -14,7 +14,7 @@ BrowserTestCase(
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
-    const JAN_1TH_2019_AEST_TIMEZONE = {
+    const JAN_1ST_2019_AEST_TIMEZONE = {
       year: 2019,
       monthIndex: 0,
       day: 1,
@@ -22,7 +22,7 @@ BrowserTestCase(
       minute: 0,
       tz: 11,
     };
-    const teardownMockDate = page.mockDate(JAN_1TH_2019_AEST_TIMEZONE);
+    const teardownMockDate = page.mockDate(JAN_1ST_2019_AEST_TIMEZONE);
     // 1st Jan 2019 00:00 AEST / 31st Dec 2018 13:00 UTC
 
     await mountEditor(page, {
@@ -47,7 +47,7 @@ BrowserTestCase(
   async (client: any) => {
     const page = await goToEditorTestingExample(client);
 
-    const JAN_1TH_2019_AEST_TIMEZONE = {
+    const JAN_1ST_2019_AEST_TIMEZONE = {
       year: 2019,
       monthIndex: 0,
       day: 1,
@@ -55,7 +55,7 @@ BrowserTestCase(
       minute: 0,
       tz: 11,
     };
-    const teardownMockDate = page.mockDate(JAN_1TH_2019_AEST_TIMEZONE);
+    const teardownMockDate = page.mockDate(JAN_1ST_2019_AEST_TIMEZONE);
     // 1st Jan 2019 00:00 AEST / 31st Dec 2018 13:00 UTC
 
     await mountEditor(page, {
@@ -78,7 +78,7 @@ BrowserTestCase(
     const page = await goToEditorTestingExample(client);
     await loadLocale(page, ['pt', 'es']);
 
-    const JAN_1TH_2019_AEST_TIMEZONE = {
+    const JAN_1ST_2019_AEST_TIMEZONE = {
       year: 2019,
       monthIndex: 0,
       day: 1,
@@ -86,7 +86,7 @@ BrowserTestCase(
       minute: 0,
       tz: 11,
     };
-    const teardownMockDate = page.mockDate(JAN_1TH_2019_AEST_TIMEZONE);
+    const teardownMockDate = page.mockDate(JAN_1ST_2019_AEST_TIMEZONE);
     // 1st Jan 2019 00:00 AEST / 31st Dec 2018 13:00 UTC
 
     await mountEditor(

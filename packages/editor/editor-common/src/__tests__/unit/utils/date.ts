@@ -100,7 +100,7 @@ describe('@atlaskit/editor-common date utils', () => {
           intl = intlProvider.getChildContext().intl;
         });
 
-        it('should return Today the distance from the current day is -1', () => {
+        it('should return Yesterday the distance from the current day is -1', () => {
           const yesterdayInUTC = 1323907200000; // 15 December 2011 00:00:00
 
           expect(timestampToTaskContext(yesterdayInUTC, intl)).toEqual(
@@ -108,7 +108,7 @@ describe('@atlaskit/editor-common date utils', () => {
           );
         });
 
-        it('should return Yesterday the distance from the current day is 0', () => {
+        it('should return Today the distance from the current day is 0', () => {
           const todayInUTC = 1323993600000; // 16 December 2011 00:00:00
 
           expect(timestampToTaskContext(todayInUTC, intl)).toEqual('Today');
