@@ -2,6 +2,7 @@ import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 import { Page } from '../../__helpers/page-objects/_types';
 import * as col2 from './__fixtures__/column2-adf.json';
 import * as col3 from './__fixtures__/column3-adf.json';
+import * as layoutWithAction from './__fixtures__/layout-with-action-adf.json';
 import * as colLeftSidebar from './__fixtures__/columnLeftSidebar-adf.json';
 import * as colRightSidebar from './__fixtures__/columnRightSidebar-adf.json';
 import * as col3WithSidebars from './__fixtures__/column3WithSidebars-adf.json';
@@ -61,6 +62,11 @@ describe('Layouts:', () => {
         await page.click(layoutColSelector);
       });
     });
+  });
+
+  it('should actions placeholder not overflow the layout', async () => {
+    await initEditor(layoutWithAction, largeViewport);
+    await page.click(layoutColSelector);
   });
 
   // todo: https://product-fabric.atlassian.net/browse/ED-6676
