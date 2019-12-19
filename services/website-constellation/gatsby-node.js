@@ -26,19 +26,19 @@ try {
 //                 name
 //               }
 //             }
-//             allMdx {
-//               nodes {
-//                 id
-//                 tableOfContents
-//                 parent {
-//                   ... on File {
-//                     absolutePath
-//                     name
-//                     sourceInstanceName
-//                   }
-//                 }
-//               }
-//             }
+// allMdx {
+//   nodes {
+//     id
+//     tableOfContents
+//     parent {
+//       ... on File {
+//         absolutePath
+//         name
+//         sourceInstanceName
+//       }
+//     }
+//   }
+// }
 //           }
 //         `,
 //       ).then(result => {

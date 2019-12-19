@@ -62,7 +62,10 @@ exports.onCreateNode = async ({ node, actions }) => {
   }
 };
 
-exports.createPages = async function({ actions, graphql }) {
+// to do: define docsfolder deafult
+exports.createPages = async function({ actions, graphql }, options) {
+  let context = {};
+  const docsFolder = options.docsFolder || 'constellation';
   const { data } = await graphql(`
     query {
       allWorkspaceInfo {
@@ -70,18 +73,22 @@ exports.createPages = async function({ actions, graphql }) {
           node {
             name
             docsDisplayName
+            dir
           }
         }
       }
     }
   `);
+
   data.allWorkspaceInfo.edges.forEach(edge => {
     const slug = edge.node.docsDisplayName;
     const name = edge.node.name;
+    const mdxPath = `${edge.node.dir}/${options.docsFolder}/**`;
+
     actions.createPage({
       path: `components/${slug}`,
       component: require.resolve(`./src/templates/component.tsx`),
-      context: { name: name },
+      context: { name: name, mdxPath: mdxPath },
     });
   });
 };
