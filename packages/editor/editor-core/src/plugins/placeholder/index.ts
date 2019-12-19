@@ -3,7 +3,11 @@ import { Plugin, PluginKey } from 'prosemirror-state';
 import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
 import { EditorPlugin, MessageDescriptor } from '../../types';
 // import { isEmptyDocument } from '../../utils';
-import { isInEmptyLine, isEmptyDocument } from '../../utils/document';
+import {
+  isInEmptyLine,
+  isEmptyDocument,
+  bracketTyped,
+} from '../../utils/document';
 
 export const pluginKey = new PluginKey('placeholderPlugin');
 
@@ -130,12 +134,6 @@ export function createPlugin(
             $from.pos,
           );
         }
-        // non-plugin specific transaction; don't excessively recalculate
-        // if the document is empty
-        if (!tr.docChanged) {
-          return _oldPluginState;
-        }
-
         return {
           hasPlaceholder: false,
         };

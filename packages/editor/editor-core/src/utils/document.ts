@@ -106,7 +106,6 @@ export function isEmptyDocument(node: Node): boolean {
 
 export function isInEmptyLine(state: EditorState) {
   const { doc, selection } = state;
-
   const { $cursor } = selection as TextSelection;
 
   if (!$cursor) {
@@ -121,6 +120,8 @@ export function isInEmptyLine(state: EditorState) {
 
   return isEmptyParagraph2(node);
 }
+
+export function bracketTyped(state: EditorState) {}
 
 function wrapWithUnsupported(
   originalValue: ADFEntity,
