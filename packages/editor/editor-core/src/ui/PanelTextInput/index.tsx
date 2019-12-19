@@ -15,6 +15,7 @@ export interface Props {
   onBlur?: Function;
   width?: number;
   maxLength?: number;
+  testId?: string;
 }
 
 export interface State {
@@ -60,10 +61,11 @@ export default class PanelTextInput extends PureComponent<Props, State> {
   };
 
   render() {
-    const { placeholder, width, maxLength } = this.props;
+    const { placeholder, width, maxLength, testId } = this.props;
     const { value } = this.state;
     return (
       <Input
+        data-testid={testId || ''}
         type="text"
         placeholder={placeholder}
         value={value}

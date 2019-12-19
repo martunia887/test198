@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import SlideIn, { slideInAnimation, From } from '../../../entering/slide-in';
+import SlideIn, { slideInAnimation } from '../../../entering/slide-in';
 import ExitingPersistence from '../../../entering/exiting-persistence';
 import { easeOut, easeIn } from '../../../utils/curves';
 import { mediumDurationMs } from '../../../utils/durations';
-import { Direction } from '../../../entering/types';
+import { Direction, From } from '../../../entering/types';
 
 jest.mock('../../../utils/accessibility');
 

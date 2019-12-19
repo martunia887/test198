@@ -19,6 +19,7 @@ export interface Props {
   children?: React.ReactNode;
   className?: string;
   tooltipContent?: React.ReactNode;
+  testId?: string;
 }
 
 export default ({
@@ -36,6 +37,7 @@ export default ({
   children,
   className,
   tooltipContent,
+  testId,
 }: Props) => {
   return (
     <Tooltip
@@ -73,6 +75,7 @@ export default ({
           onClick={onClick}
           isSelected={selected}
           isDisabled={disabled}
+          testId={testId}
         >
           {children}
         </Button>
