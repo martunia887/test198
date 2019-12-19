@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import * as React from 'react';
 import { Plugin } from 'prosemirror-state';
 import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
-import { WidthProvider, WidthObserver } from '@atlaskit/editor-common';
+import { WidthProvider } from '@atlaskit/editor-common';
 
 import {
   pluginKey as widthPluginKey,
