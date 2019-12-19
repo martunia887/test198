@@ -65,6 +65,7 @@ import { ScrollGutterPluginOptions } from '../plugins/base/pm-plugins/scroll-gut
 export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
   const { appearance, textFormatting, placeholder } = props;
   const isFullPage = fullPageCheck(appearance);
+  const isMobile = props.appearance === 'mobile';
 
   return [
     pastePlugin({
@@ -86,7 +87,9 @@ export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
     hyperlinkPlugin(),
     textFormattingPlugin(textFormatting || {}),
     widthPlugin(),
-    quickInsertPlugin(),
+    quickInsertPlugin({
+      headless: isMobile,
+    }),
     typeAheadPlugin(),
     unsupportedContentPlugin(),
     editorDisabledPlugin(),

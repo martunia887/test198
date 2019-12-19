@@ -20,7 +20,13 @@ import {
   ACTION_SUBJECT_ID,
 } from '../analytics';
 
-const quickInsertPlugin = (): EditorPlugin => ({
+export interface QuickInsertPluginOptions {
+  headless?: boolean;
+}
+
+const quickInsertPlugin = (
+  options?: QuickInsertPluginOptions,
+): EditorPlugin => ({
   name: 'quickInsert',
 
   pmPlugins(quickInsert: Array<QuickInsertHandler>) {
@@ -36,6 +42,7 @@ const quickInsertPlugin = (): EditorPlugin => ({
   pluginsOptions: {
     typeAhead: {
       trigger: '/',
+      headless: options ? options.headless : undefined,
       getItems: (
         query,
         state,
