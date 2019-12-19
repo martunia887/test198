@@ -132,9 +132,9 @@ export function createPlugin(
         }
         // non-plugin specific transaction; don't excessively recalculate
         // if the document is empty
-        // if (!tr.docChanged) {
-        //   return _oldPluginState;
-        // }
+        if (!tr.docChanged) {
+          return _oldPluginState;
+        }
 
         return {
           hasPlaceholder: false,

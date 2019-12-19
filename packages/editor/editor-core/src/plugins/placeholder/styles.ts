@@ -7,6 +7,7 @@ export const placeholderStyles = css`
     color: ${colors.N90};
     pointer-events: none;
     display: block;
+    user-select: none;
 
     > span {
       position: absolute;
