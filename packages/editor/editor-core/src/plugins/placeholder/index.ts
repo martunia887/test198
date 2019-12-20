@@ -3,7 +3,7 @@ import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
 import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
 import { EditorPlugin, MessageDescriptor } from '../../types';
 import { isInEmptyLine, isEmptyDocument } from '../../utils/document';
-
+import { placeHolderClassName } from './styles';
 export const pluginKey = new PluginKey('placeholderPlugin');
 
 export function createPlaceholderDecoration(
@@ -12,7 +12,7 @@ export function createPlaceholderDecoration(
   pos: number = 1,
 ): DecorationSet {
   const placeholderDecoration = document.createElement('span');
-  placeholderDecoration.className = 'placeholder-decoration';
+  placeholderDecoration.className = placeHolderClassName;
   const placeholderNode = document.createElement('span');
   placeholderNode.textContent = placeholderText;
   placeholderDecoration.appendChild(placeholderNode);
@@ -80,7 +80,7 @@ interface PlaceHolderState {
 
 type AvailableMessages = 'slashCommand';
 
-const messages: Record<AvailableMessages, MessageDescriptor> = {
+export const messages: Record<AvailableMessages, MessageDescriptor> = {
   slashCommand: {
     id: 'slash-placheholder',
     defaultMessage: "Type '/' to insert content.",

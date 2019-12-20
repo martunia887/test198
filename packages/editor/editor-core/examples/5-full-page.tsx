@@ -251,7 +251,7 @@ export class ExampleEditorComponent extends React.Component<
                   UNSAFE_allowAltTextOnImages: true,
                 }}
                 allowHelpDialog
-                placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
+                // placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
                 shouldFocus={false}
                 enablePlaceHolderHint
                 disabled={this.state.disabled}
