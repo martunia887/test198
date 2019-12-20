@@ -93,7 +93,37 @@ describe('placeholder', () => {
       expectNoPlaceholder(editorView);
     });
   });
+  describe('Bracket placeholder', () => {
+    const bracketPlaceholderEditor = (doc: any) =>
+      createProsemirrorEditor({
+        doc,
+        plugins: [['placeholder', { enablePlaceHolderHint: true }]],
+      });
 
+    it('renders hint placeholder when bracket is typed in an empty line', async () => {
+      const { editorView } = await bracketPlaceholderEditor(doc(p()));
+
+      insertText(editorView, '{', 0);
+
+      expectPlaceHolderWithText(
+        editorView,
+        messages.bracketCommand.defaultMessage,
+      );
+    });
+
+    it('bracket hint placeholder disappears when other characters are entered', async () => {
+      const { editorView } = await bracketPlaceholderEditor(doc(p()));
+
+      insertText(editorView, '{', 0);
+      expectPlaceHolderWithText(
+        editorView,
+        messages.bracketCommand.defaultMessage,
+      );
+
+      insertText(editorView, ' ', 1);
+      expectNoPlaceholder(editorView);
+    });
+  });
   describe('Default and Hint placeholder', () => {
     const fullPlaceholderEditor = (doc: any) =>
       createProsemirrorEditor({
