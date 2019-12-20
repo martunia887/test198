@@ -36,7 +36,6 @@ describe('Expand: full-page', () => {
   });
 
   afterEach(async () => {
-    await waitForLoadedBackgroundImages(page, emojiReadySelector, 10000);
     await snapshot(page, undefined, selectors.expand);
   });
 
@@ -44,6 +43,7 @@ describe('Expand: full-page', () => {
     it(`should render a ${mode} collapsed top level expand`, async () => {
       await initFullPageEditorWithAdf(page, expandADF(mode), Device.LaptopMDPI);
       await page.waitForSelector(selectors.expand);
+      await waitForLoadedBackgroundImages(page, emojiReadySelector, 10000);
     });
   });
 
@@ -84,6 +84,7 @@ describe('Expand: full-page', () => {
       Device.LaptopMDPI,
     );
     await page.waitForSelector(selectors.nestedExpand);
+    await waitForLoadedBackgroundImages(page, emojiReadySelector, 10000);
   });
 });
 

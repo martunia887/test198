@@ -43,15 +43,22 @@ const Title = styled.span`
 
 const Container = styled.div<StyleProps>`
   ${sharedExpandStyles.ContainerStyles}
+  padding: 0;
+  padding-bottom: ${props => (props.expanded ? gridSize() : 0)}px;
 `;
 
-const TitleContainer = styled.button`
+const TitleContainer = styled.button<StyleProps>`
   ${sharedExpandStyles.TitleContainerStyles}
+  padding: ${gridSize()}px;
+  padding-bottom: ${props => (!props.expanded ? gridSize() : 0)}px;
 `;
+
 TitleContainer.displayName = 'TitleContainerButton';
 
 const ContentContainer = styled.div<StyleProps>`
   ${sharedExpandStyles.ContentStyles};
+  padding-right: ${gridSize() * 2}px;
+  padding-left: ${gridSize() * 5 - gridSize() / 2}px;
 `;
 
 export interface ExpandProps {
@@ -59,6 +66,30 @@ export interface ExpandProps {
   nodeType: 'expand' | 'nestedExpand';
   children: React.ReactNode;
   fireAnalyticsEvent?: (event: AnalyticsEventPayload) => void;
+}
+
+function fireExpandToggleAnalytics(
+  nodeType: ExpandProps['nodeType'],
+  expanded: boolean,
+  fireAnalyticsEvent: ExpandProps['fireAnalyticsEvent'],
+) {
+  if (!fireAnalyticsEvent) {
+    return;
+  }
+
+  fireAnalyticsEvent({
+    action: ACTION.TOGGLE_EXPAND,
+    actionSubject:
+      nodeType === 'expand'
+        ? ACTION_SUBJECT.EXPAND
+        : ACTION_SUBJECT.NESTED_EXPAND,
+    attributes: {
+      platform: PLATFORM.WEB,
+      mode: MODE.RENDERER,
+      expanded: !expanded,
+    },
+    eventType: EVENT_TYPE.TRACK,
+  });
 }
 
 function Expand({
@@ -78,25 +109,12 @@ function Expand({
       <TitleContainer
         onClick={(e: React.SyntheticEvent) => {
           e.stopPropagation();
-          if (fireAnalyticsEvent) {
-            fireAnalyticsEvent({
-              action: ACTION.TOGGLE_EXPAND,
-              actionSubject:
-                nodeType === 'expand'
-                  ? ACTION_SUBJECT.EXPAND
-                  : ACTION_SUBJECT.NESTED_EXPAND,
-              attributes: {
-                platform: PLATFORM.WEB,
-                mode: MODE.RENDERER,
-                expanded: !expanded,
-              },
-              eventType: EVENT_TYPE.TRACK,
-            });
-          }
+          fireExpandToggleAnalytics(nodeType, expanded, fireAnalyticsEvent);
           setExpanded(!expanded);
         }}
         aria-label={label}
         contentEditable={false}
+        expanded={expanded}
       >
         <Tooltip content={label} position="top" tag={ExpandLayoutWrapper}>
           <ExpandIconWrapper expanded={expanded}>

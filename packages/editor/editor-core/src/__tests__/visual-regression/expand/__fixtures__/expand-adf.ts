@@ -436,14 +436,6 @@ export const tableMediaADF = {
                             },
                           ],
                         },
-                        {
-                          type: 'emoji',
-                          attrs: {
-                            shortName: ':grinning:',
-                            id: '1f600',
-                            text: '😀',
-                          },
-                        },
                       ],
                     },
                   ],
