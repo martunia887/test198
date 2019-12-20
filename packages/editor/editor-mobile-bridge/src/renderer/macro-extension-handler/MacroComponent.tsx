@@ -30,7 +30,11 @@ export class MacroComponent extends React.Component<
   constructor(props: MacroRendererProps) {
     super(props);
 
-    this.state = {
+    this.state = this.getInitialState();
+  }
+
+  getInitialState = () => {
+    return {
       content: null,
       macroWhitelist: null,
       loading: false,
@@ -38,7 +42,7 @@ export class MacroComponent extends React.Component<
       retryCount: 0,
       errorMessage: '',
     };
-  }
+  };
 
   getMacroId = () => {
     const { parameters } = this.props.extension;
@@ -294,10 +298,9 @@ export class MacroComponent extends React.Component<
   };
 
   componentDidMount() {
+    // Attach a listener to the tapToRefresh event emitted during refresh.
     eventDispatcher.on('tapToRefresh', () => {
-      this.setState({
-        retryCount: 0,
-      });
+      this.setState(this.getInitialState());
     });
   }
 
