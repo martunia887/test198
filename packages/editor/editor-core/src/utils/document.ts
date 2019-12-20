@@ -105,28 +105,28 @@ export function isEmptyDocument(node: Node): boolean {
 }
 
 // Checks to see if the parent node is the document, ie not contained within another entity
-export function isNotNested(node: Node): boolean {
-  if (node.type.name !== 'doc') return false;
+export function hasDocAsParent(anchor: ResolvedPos): boolean {
+  const parentNode = anchor.node(-1);
+
+  if (parentNode.type.name !== 'doc') return false;
   return true;
 }
 
 export function isInEmptyLine(state: EditorState) {
   const { doc, selection } = state;
   const { $cursor, $anchor } = selection as TextSelection;
-  // debugger;
 
   if (!$cursor) {
     return false;
   }
 
   const node = doc.nodeAt($cursor.pos - 1);
-  const parentNode = $anchor.node(-1);
 
   if (!node) {
     return false;
   }
 
-  return isEmptyParagraph2(node) && isNotNested(parentNode);
+  return isEmptyParagraph2(node) && hasDocAsParent($anchor);
 }
 
 export function bracketTyped(state: EditorState) {}
