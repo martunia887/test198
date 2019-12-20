@@ -9,10 +9,20 @@ import { JSONDocNode } from '../utils';
 
 const FALSE_POSITIVE_MARKS = ['code', 'alignment', 'indentation'];
 
+export function isEmptyParagraph(node?: Node | null): boolean {
+  return (
+    node != null &&
+    node.type.name === 'paragraph' &&
+    !node.childCount &&
+    node.nodeSize === 2 &&
+    (!node.marks || node.marks.length === 0)
+  );
+}
+
 /**
  * Checks if node is an empty paragraph.
  */
-export function isEmptyParagraph(node?: Node | null): boolean {
+export function oldIsEmptyParagraph(node?: Node | null): boolean {
   return (
     !node ||
     (node.type.name === 'paragraph' && !node.textContent && !node.childCount)
@@ -84,15 +94,6 @@ export function isNodeEmpty(node?: Node): boolean {
   );
 }
 
-function isEmptyParagraph2(node: Node) {
-  return (
-    node.type.name === 'paragraph' &&
-    !node.childCount &&
-    node.nodeSize === 2 &&
-    (!node.marks || node.marks.length === 0)
-  );
-}
-
 /**
  * Checks if a node looks like an empty document
  */
@@ -101,7 +102,7 @@ export function isEmptyDocument(node: Node): boolean {
   if (node.childCount !== 1 || !nodeChild) {
     return false;
   }
-  return isEmptyParagraph2(nodeChild);
+  return isEmptyParagraph(nodeChild);
 }
 
 // Checks to see if the parent node is the document, ie not contained within another entity
@@ -126,7 +127,7 @@ export function isInEmptyLine(state: EditorState) {
     return false;
   }
 
-  return isEmptyParagraph2(node) && hasDocAsParent($anchor);
+  return isEmptyParagraph(node) && hasDocAsParent($anchor);
 }
 
 export function bracketTyped(state: EditorState) {}
