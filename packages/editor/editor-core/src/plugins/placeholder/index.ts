@@ -2,7 +2,11 @@ import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
 import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
 import { EditorPlugin, MessageDescriptor } from '../../types';
-import { isInEmptyLine, isEmptyDocument } from '../../utils/document';
+import {
+  isInEmptyLine,
+  isEmptyDocument,
+  bracketTyped,
+} from '../../utils/document';
 import { placeHolderClassName } from './styles';
 export const pluginKey = new PluginKey('placeholderPlugin');
 
@@ -78,13 +82,19 @@ interface PlaceHolderState {
   pos?: number;
 }
 
-type AvailableMessages = 'slashCommand';
+type AvailableMessages = 'slashCommand' | 'bracketCommand';
 
 export const messages: Record<AvailableMessages, MessageDescriptor> = {
   slashCommand: {
     id: 'slash-placheholder',
     defaultMessage: "Type '/' to insert content.",
     description: 'Message to be shown when the user is in a new empty line.',
+  },
+  bracketCommand: {
+    id: 'bracket-placheholder',
+    defaultMessage: "  Did you mean to use '/' to insert content.",
+    description:
+      'Message to be shown when the user types "{" in a new empty line.',
   },
 };
 
@@ -103,7 +113,13 @@ function createPlaceHolderStateFrom(
     const { $from } = editorState.selection;
     return setPlaceHolderState(messages.slashCommand.defaultMessage, $from.pos);
   }
-
+  if (enablePlaceHolderHint && bracketTyped(editorState)) {
+    const { $from } = editorState.selection;
+    return setPlaceHolderState(
+      messages.bracketCommand.defaultMessage,
+      $from.pos - 1,
+    );
+  }
   return EmptyPlaceholder;
 }
 
