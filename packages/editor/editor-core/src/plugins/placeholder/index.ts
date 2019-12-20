@@ -2,7 +2,11 @@ import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
 import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
 import { EditorPlugin } from '../../types';
-import { isInEmptyLine, isEmptyDocument } from '../../utils/document';
+import {
+  isInEmptyLine,
+  isEmptyDocument,
+  bracketTyped,
+} from '../../utils/document';
 import { placeHolderClassName } from './styles';
 export const pluginKey = new PluginKey('placeholderPlugin');
 
@@ -85,6 +89,7 @@ function createPlaceHolderStateFrom(
   editorState: EditorState,
   getPlaceholderHintMessage: () => string | undefined,
   defaultPlaceholderText?: string,
+  bracketPlaceholderText?: string,
 ): PlaceHolderState {
   if (defaultPlaceholderText && isEmptyDocument(editorState.doc)) {
     return setPlaceHolderState(defaultPlaceholderText);
@@ -96,6 +101,15 @@ function createPlaceHolderStateFrom(
     return setPlaceHolderState(placeholderHint, $from.pos);
   }
 
+  if (bracketPlaceholderText && bracketTyped(editorState)) {
+    const { $from } = editorState.selection;
+    // Space is to account for positioning of the bracket
+    const bracketHint = '  ' + bracketPlaceholderText
+    return setPlaceHolderState(
+      bracketHint,
+      $from.pos - 1,
+    );
+  }
   return emptyPlaceholder;
 }
 
@@ -120,8 +134,9 @@ function createGetPlaceholderHintMessage(
 export function createPlugin(
   defaultPlaceholderText?: string,
   placeholderHints?: string[],
+  bracketPlaceholderText?: string,
 ): Plugin | undefined {
-  if (!defaultPlaceholderText && !placeholderHints) {
+  if (!defaultPlaceholderText && !placeholderHints && !bracketPlaceholderText) {
     return;
   }
 
@@ -137,6 +152,7 @@ export function createPlugin(
           state,
           getPlaceholderHintMessage,
           defaultPlaceholderText,
+          bracketPlaceholderText,
         ),
       apply: (tr, _oldPluginState, _oldEditorState, newEditorState) => {
         const meta = tr.getMeta(pluginKey);
@@ -151,6 +167,7 @@ export function createPlugin(
               newEditorState,
               getPlaceholderHintMessage,
               defaultPlaceholderText,
+              bracketPlaceholderText,
             );
           }
         }
@@ -159,6 +176,7 @@ export function createPlugin(
           newEditorState,
           getPlaceholderHintMessage,
           defaultPlaceholderText,
+          bracketPlaceholderText,
         );
       },
     },
@@ -194,6 +212,7 @@ export function createPlugin(
 interface PlaceholderPluginOptions {
   placeholder?: string;
   placeholderHints?: string[];
+  placeholderBracketHint?: string;
 }
 
 const placeholderPlugin = (
@@ -209,6 +228,7 @@ const placeholderPlugin = (
           createPlugin(
             options && options.placeholder,
             options && options.placeholderHints,
+            options && options.placeholderBracketHint,
           ),
       },
     ];
