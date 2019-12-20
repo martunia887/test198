@@ -253,6 +253,7 @@ export class ExampleEditorComponent extends React.Component<
                 allowHelpDialog
                 placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
                 shouldFocus={false}
+                enablePlaceHolderHint
                 disabled={this.state.disabled}
                 defaultValue={
                   (localStorage &&
