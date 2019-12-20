@@ -244,9 +244,6 @@ const distributeTenantFileState = async (
       },
     });
   }
-
-  tenantMediaClient.emit('file-added', tenantFileState);
-  globalMediaEventEmitter.emit('file-added', tenantFileState);
 };
 
 /**

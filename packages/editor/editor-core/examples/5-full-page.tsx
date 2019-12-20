@@ -48,6 +48,10 @@ import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
 import { ReactRenderer } from '@atlaskit/renderer';
 import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
 
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
+
+addGlobalEventEmitterListeners();
+
 /**
  * +-------------------------------+
  * + [Editor core v] [Full page v] +  48px height

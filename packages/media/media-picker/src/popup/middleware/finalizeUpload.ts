@@ -7,6 +7,7 @@ import {
   FileState,
   MediaFile as MediaClientFile,
   safeUnsubscribe,
+  globalMediaEventEmitter,
 } from '@atlaskit/media-client';
 import {
   FinalizeUploadAction,
@@ -87,6 +88,7 @@ const emitProcessedState = async (
       tenantSubject &&
       tenantSubject.next
     ) {
+      let alreadyEmitted = false;
       const subscription = tenantSubject.subscribe({
         next(currentState) {
           safeUnsubscribe(subscription);
@@ -99,9 +101,10 @@ const emitProcessedState = async (
               size,
               representations,
             } = firstItem.details;
+
             // we emit a new state which extends the existing one + the remote fields
             // fields like "artifacts" will be later on required on MV and we don't have it locally beforehand
-            tenantSubject.next({
+            const fileState: FileState = {
               ...currentState,
               status: 'processed',
               artifacts,
@@ -110,7 +113,13 @@ const emitProcessedState = async (
               name,
               size,
               representations,
-            });
+            };
+            if (!alreadyEmitted) {
+              alreadyEmitted = true;
+              console.log('FILE ADDED');
+              globalMediaEventEmitter.emit('file-added', fileState);
+            }
+            tenantSubject.next(fileState);
             resolve();
           }, 0);
         },
@@ -142,6 +151,18 @@ async function copyFile({
 
   try {
     const destinationFile = await mediaStore.copyFileWithToken(body, params);
+
+    const fileState: FileState = {
+      status: 'processing',
+      id: file.id,
+      name: file.name,
+      size: file.size,
+      mediaType: 'image',
+      mimeType: file.type,
+    };
+    console.log('FILE ADDED 2');
+    globalMediaEventEmitter.emit('file-added', fileState);
+
     emitProcessedState(destinationFile.data, store);
     const tenantSubject = tenantMediaClient.file.getFileState(
       destinationFile.data.id,
