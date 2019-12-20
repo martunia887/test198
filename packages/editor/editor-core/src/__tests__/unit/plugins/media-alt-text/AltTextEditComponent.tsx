@@ -12,6 +12,7 @@ import { EditorView } from 'prosemirror-view';
 import AltTextEdit, {
   AltTextEditComponent,
   AltTextEditComponentState,
+  MAX_ALT_TEXT_LENGTH,
 } from '../../../../plugins/media/pm-plugins/alt-text/ui/AltTextEdit';
 import { InjectedIntl } from 'react-intl';
 import {
@@ -234,6 +235,19 @@ describe('AltTextEditComponent', () => {
 
         expect(wrapper.state('showClearTextButton')).toBeTruthy();
       });
+    });
+  });
+
+  describe('when max length is set', () => {
+    it('should ensure max length prop is passed to input', () => {
+      const view = new mockView();
+      const intl = {} as InjectedIntl;
+      const wrapper = mountWithIntl<{}, AltTextEditComponentState>(
+        <AltTextEditComponent view={view} intl={intl} />,
+      );
+      const input = wrapper.find('input');
+
+      expect(input.prop('maxLength')).toBe(MAX_ALT_TEXT_LENGTH);
     });
   });
 
