@@ -52,7 +52,10 @@ export class ToolbarDecision extends PureComponent<
       if (!editorView) {
         return false;
       }
-      insertTaskDecision(editorView, 'decisionList');
+      insertTaskDecision(editorView, 'decisionList')(
+        editorView.state,
+        editorView.dispatch,
+      );
       return true;
     },
   );
