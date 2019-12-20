@@ -11,5 +11,5 @@ export const TAP_TO_VIEW_PROMISE = {
 };
 export const TAP_TO_REFRESH_PAGE_TEXT = 'Tap to refresh';
 export const TAP_TO_REFRESH_PAGE_PROMISE = {
-  name: 'customTapToRefreshMacroButton',
+  name: 'customRefreshMacro',
 };
