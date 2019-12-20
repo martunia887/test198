@@ -13,8 +13,8 @@ import {
   StatusType,
   textColorPluginKey,
   TextColorPluginState,
-  typeAheadPluginKey,
-  TypeAheadPluginState,
+  //  typeAheadPluginKey,
+  //  TypeAheadPluginState,
   hyperlinkStateKey,
   HyperlinkState,
   HyperlinkInsertStatus,
@@ -150,23 +150,23 @@ const configs: Array<BridgePluginListener<any>> = [
     },
     sendInitialState: true,
   }),
-  createListenerConfig<TypeAheadPluginState>({
-    bridge: 'typeAheadBridge',
-    pluginKey: typeAheadPluginKey,
-    updater: pluginState => {
-      const { active, query, trigger } = pluginState;
+  // createListenerConfig<TypeAheadPluginState>({
+  //   bridge: 'typeAheadBridge',
+  //   pluginKey: typeAheadPluginKey,
+  //   updater: pluginState => {
+  //     const { active, query, trigger } = pluginState;
 
-      if (active === false) {
-        toNativeBridge.call('typeAheadBridge', 'dismissTypeAhead');
-        return;
-      }
+  //     if (active === false) {
+  //       toNativeBridge.call('typeAheadBridge', 'dismissTypeAhead');
+  //       return;
+  //     }
 
-      toNativeBridge.call('typeAheadBridge', 'typeAheadQuery', {
-        query,
-        trigger,
-      });
-    },
-  }),
+  //     toNativeBridge.call('typeAheadBridge', 'typeAheadQuery', {
+  //       query,
+  //       trigger,
+  //     });
+  //   },
+  // }),
   createListenerConfig<HyperlinkState>({
     bridge: 'linkBridge',
     pluginKey: hyperlinkStateKey,

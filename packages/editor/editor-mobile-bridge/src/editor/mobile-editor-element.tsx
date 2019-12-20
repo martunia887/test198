@@ -95,6 +95,11 @@ export default function mobileEditor(props: Props) {
         <AtlaskitThemeProvider mode={mode}>
           <EditorWithState
             appearance="mobile"
+            quickInsert={{
+              provider: Promise.resolve({
+                getItems: async () => [],
+              }),
+            }}
             mentionProvider={Promise.resolve(mentionProvider)}
             emojiProvider={Promise.resolve(emojiProvider)}
             media={{

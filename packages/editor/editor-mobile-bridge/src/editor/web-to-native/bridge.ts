@@ -36,10 +36,10 @@ export interface StatusBridge {
   dismissStatusPicker(isNew: boolean): void;
 }
 
-export interface TypeAheadBridge {
-  dismissTypeAhead(): void;
-  typeAheadQuery(query: string, trigger: string): void;
-}
+// export interface TypeAheadBridge {
+//   dismissTypeAhead(): void;
+//   typeAheadQuery(query: string, trigger: string): void;
+// }
 
 export interface LinkBridge {
   currentSelection(

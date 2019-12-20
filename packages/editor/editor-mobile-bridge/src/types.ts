@@ -34,6 +34,7 @@ export interface GetAuthPayload {
 export interface GetConfigPayload {
   baseUrl: string;
   cloudId?: string;
+  productId: string;
 }
 
 export interface NativeFetchPayload {

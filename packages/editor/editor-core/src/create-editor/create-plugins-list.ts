@@ -350,9 +350,7 @@ export default function createPluginsList(
     }),
   );
 
-  if (!isMobile) {
-    plugins.push(quickInsertPlugin());
-  }
+  plugins.push(quickInsertPlugin());
 
   if (isMobile) {
     plugins.push(historyPlugin());

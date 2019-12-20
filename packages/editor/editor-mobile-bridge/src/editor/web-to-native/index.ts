@@ -5,7 +5,7 @@ import {
   PromiseBridge,
   TextFormattingBridge,
   StatusBridge,
-  TypeAheadBridge,
+  //  TypeAheadBridge,
   LinkBridge,
   UndoRedoBridge,
   AnalyticsBridge,
@@ -24,7 +24,7 @@ export interface EditorBridges {
   listBridge?: ListBridge;
   blockFormatBridge?: TextFormattingBridge;
   statusBridge?: StatusBridge;
-  typeAheadBridge?: TypeAheadBridge;
+  //  typeAheadBridge?: TypeAheadBridge;
   linkBridge?: LinkBridge;
   undoRedoBridge?: UndoRedoBridge;
   analyticsBridge?: AnalyticsBridge;
