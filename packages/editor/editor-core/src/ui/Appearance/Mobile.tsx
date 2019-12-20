@@ -11,6 +11,7 @@ import {
 import { mentionPluginKey } from '../../plugins/mentions';
 import WithFlash from '../WithFlash';
 import { ClickAreaMobile as ClickArea } from '../Addon';
+import { WidthProvider } from '@atlaskit/editor-common';
 
 export interface MobileEditorProps {
   isMaxContentSizeReached?: boolean;
@@ -70,26 +71,28 @@ export default class Editor extends React.Component<
       maxContentSize && maxContentSize.maxContentSizeReached;
     return (
       <WithFlash animate={maxContentSizeReached}>
-        <MobileEditor
-          isMaxContentSizeReached={maxContentSizeReached}
-          maxHeight={maxHeight}
-        >
-          <ClickArea editorView={editorView}>
-            <ContentArea innerRef={this.handleRef}>
-              {customContentComponents}
-              <PluginSlot
-                editorView={editorView}
-                eventDispatcher={eventDispatcher}
-                providerFactory={providerFactory}
-                appearance={this.appearance}
-                containerElement={this.containerElement}
-                disabled={!!disabled}
-                dispatchAnalyticsEvent={dispatchAnalyticsEvent}
-              />
-              {editorDOMElement}
-            </ContentArea>
-          </ClickArea>
-        </MobileEditor>
+        <WidthProvider>
+          <MobileEditor
+            isMaxContentSizeReached={maxContentSizeReached}
+            maxHeight={maxHeight}
+          >
+            <ClickArea editorView={editorView}>
+              <ContentArea innerRef={this.handleRef}>
+                {customContentComponents}
+                <PluginSlot
+                  editorView={editorView}
+                  eventDispatcher={eventDispatcher}
+                  providerFactory={providerFactory}
+                  appearance={this.appearance}
+                  containerElement={this.containerElement}
+                  disabled={!!disabled}
+                  dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                />
+                {editorDOMElement}
+              </ContentArea>
+            </ClickArea>
+          </MobileEditor>
+        </WidthProvider>
       </WithFlash>
     );
   };

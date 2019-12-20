@@ -8,6 +8,7 @@ import {
   akEditorGutterPadding,
   akEditorSwoopCubicBezier,
   akLayoutGutterOffset,
+  WidthProvider,
 } from '@atlaskit/editor-common';
 import { taskListSelector, decisionListSelector } from '@atlaskit/adf-schema';
 import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
@@ -39,6 +40,7 @@ FullPageEditorWrapper.displayName = 'FullPageEditorWrapper';
 
 const ScrollContainer = styled(ContentStyles)`
   flex-grow: 1;
+  height: 100%;
   overflow-y: scroll;
   position: relative;
   display: flex;
@@ -116,22 +118,23 @@ const EditorContentArea = styled.div`
     .pm-table-container {
       width: 100% !important;
     }
+  }
 
-    /* Prevent horizontal scroll on page in full width mode */
-    ${({ containerWidth }) => {
-      if (!containerWidth) {
-        // initially hide until we have a containerWidth and can properly size them,
-        // otherwise they can cause the editor width to extend which is non-recoverable
-        return `
+  /* Prevent horizontal scroll on page in full width mode */
+  ${({ containerWidth }) => {
+    if (!containerWidth) {
+      // initially hide until we have a containerWidth and can properly size them,
+      // otherwise they can cause the editor width to extend which is non-recoverable
+      return `
           .pm-table-container,
           .code-block,
           .extension-container {
             display: none;
           }
         `;
-      }
+    }
 
-      return `
+    return `
         .pm-table-container,
         .code-block,
         .extension-container {
@@ -146,8 +149,7 @@ const EditorContentArea = styled.div`
             akLayoutGutterOffset * 2}px;
         }
       `;
-    }}
-  }
+  }}
 `;
 EditorContentArea.displayName = 'EditorContentArea';
 
@@ -343,60 +345,61 @@ export default class Editor extends React.Component<
           </MainToolbarCustomComponentsSlot>
         </MainToolbar>
         <ContentArea>
-          <ScrollContainer
-            innerRef={this.scrollContainerRef}
-            allowAnnotation={allowAnnotation}
-            className="fabric-editor-popup-scroll-parent"
-          >
-            <ClickAreaBlock editorView={editorView}>
-              <EditorContentArea
-                fullWidthMode={appearance === 'full-width'}
-                innerRef={(contentArea: HTMLElement) => {
-                  this.contentArea = contentArea;
-                }}
-                containerWidth={containerWidth}
-              >
-                <div
-                  style={{ padding: `0 ${akEditorGutterPadding}px` }}
-                  className={[
-                    'ak-editor-content-area',
-                    this.props.appearance === 'full-width'
-                      ? 'fabric-editor--full-width-mode'
-                      : '',
-                  ].join(' ')}
+          <WidthProvider>
+            <ScrollContainer
+              innerRef={this.scrollContainerRef}
+              allowAnnotation={allowAnnotation}
+              className="fabric-editor-popup-scroll-parent"
+            >
+              <ClickAreaBlock editorView={editorView}>
+                <EditorContentArea
+                  fullWidthMode={appearance === 'full-width'}
+                  innerRef={(contentArea: HTMLElement) => {
+                    this.contentArea = contentArea;
+                  }}
+                  containerWidth={containerWidth}
                 >
-                  {customContentComponents}
-                  {
-                    <PluginSlot
-                      editorView={editorView}
-                      editorActions={editorActions}
-                      eventDispatcher={eventDispatcher}
-                      providerFactory={providerFactory}
-                      appearance={this.props.appearance || this.appearance}
-                      items={contentComponents}
-                      contentArea={this.contentArea}
-                      popupsMountPoint={popupsMountPoint}
-                      popupsBoundariesElement={popupsBoundariesElement}
-                      popupsScrollableElement={popupsScrollableElement}
-                      disabled={!!disabled}
-                      containerElement={this.scrollContainer}
-                      dispatchAnalyticsEvent={dispatchAnalyticsEvent}
-                    />
-                  }
-                  {editorDOMElement}
-                </div>
-              </EditorContentArea>
-            </ClickAreaBlock>
-          </ScrollContainer>
+                  <div
+                    style={{ padding: `0 ${akEditorGutterPadding}px` }}
+                    className={[
+                      'ak-editor-content-area',
+                      this.props.appearance === 'full-width'
+                        ? 'fabric-editor--full-width-mode'
+                        : '',
+                    ].join(' ')}
+                  >
+                    {customContentComponents}
+                    {
+                      <PluginSlot
+                        editorView={editorView}
+                        editorActions={editorActions}
+                        eventDispatcher={eventDispatcher}
+                        providerFactory={providerFactory}
+                        appearance={this.props.appearance || this.appearance}
+                        items={contentComponents}
+                        contentArea={this.contentArea}
+                        popupsMountPoint={popupsMountPoint}
+                        popupsBoundariesElement={popupsBoundariesElement}
+                        popupsScrollableElement={popupsScrollableElement}
+                        disabled={!!disabled}
+                        containerElement={this.scrollContainer}
+                        dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                      />
+                    }
+                    {editorDOMElement}
+                  </div>
+                </EditorContentArea>
+              </ClickAreaBlock>
+            </ScrollContainer>
+            <WidthEmitter
+              editorView={editorView!}
+              contentArea={this.scrollContainer}
+            />
+          </WidthProvider>
           {this.props.contextPanel && (
             <SidebarArea>{this.props.contextPanel}</SidebarArea>
           )}
         </ContentArea>
-
-        <WidthEmitter
-          editorView={editorView!}
-          contentArea={this.scrollContainer}
-        />
       </FullPageEditorWrapper>
     );
   }

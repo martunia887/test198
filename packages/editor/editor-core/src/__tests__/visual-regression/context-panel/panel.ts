@@ -1,6 +1,6 @@
 import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 
-import adfWithMixedContent from '../common/__fixtures__/with-content.json';
+import adfWithMixedContent from './__fixtures__/content.adf.json';
 import { Page } from '../../__helpers/page-objects/_types';
 import { scrollToTop } from '../../__helpers/page-objects/_editor';
 
@@ -11,7 +11,7 @@ describe('Context panel', () => {
     adf: any,
     appearance: Appearance,
     width = 2000,
-    height = 800,
+    height = 1200,
   ) => {
     await initEditorWithAdf(page, {
       appearance,

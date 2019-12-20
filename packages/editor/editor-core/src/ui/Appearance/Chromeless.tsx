@@ -10,6 +10,7 @@ import {
 } from '../../plugins/max-content-size';
 import { scrollbarStyles } from '../styles';
 import WithFlash from '../WithFlash';
+import { WidthProvider } from '@atlaskit/editor-common';
 
 export interface ChromelessEditorProps {
   isMaxContentSizeReached?: boolean;
@@ -75,31 +76,33 @@ export default class Editor extends React.Component<
 
     return (
       <WithFlash animate={maxContentSizeReached}>
-        <ChromelessEditor
-          maxHeight={maxHeight}
-          innerRef={(ref: HTMLElement | undefined) =>
-            (this.containerElement = ref)
-          }
-        >
-          <ContentArea>
-            {customContentComponents}
-            <PluginSlot
-              editorView={editorView}
-              editorActions={editorActions}
-              eventDispatcher={eventDispatcher}
-              providerFactory={providerFactory}
-              appearance={this.appearance}
-              items={contentComponents}
-              popupsMountPoint={popupsMountPoint}
-              popupsBoundariesElement={popupsBoundariesElement}
-              popupsScrollableElement={popupsScrollableElement}
-              containerElement={this.containerElement}
-              disabled={!!disabled}
-              dispatchAnalyticsEvent={dispatchAnalyticsEvent}
-            />
-            {editorDOMElement}
-          </ContentArea>
-        </ChromelessEditor>
+        <WidthProvider>
+          <ChromelessEditor
+            maxHeight={maxHeight}
+            innerRef={(ref: HTMLElement | undefined) =>
+              (this.containerElement = ref)
+            }
+          >
+            <ContentArea>
+              {customContentComponents}
+              <PluginSlot
+                editorView={editorView}
+                editorActions={editorActions}
+                eventDispatcher={eventDispatcher}
+                providerFactory={providerFactory}
+                appearance={this.appearance}
+                items={contentComponents}
+                popupsMountPoint={popupsMountPoint}
+                popupsBoundariesElement={popupsBoundariesElement}
+                popupsScrollableElement={popupsScrollableElement}
+                containerElement={this.containerElement}
+                disabled={!!disabled}
+                dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+              />
+              {editorDOMElement}
+            </ContentArea>
+          </ChromelessEditor>
+        </WidthProvider>
       </WithFlash>
     );
   };

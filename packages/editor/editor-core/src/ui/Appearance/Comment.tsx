@@ -21,6 +21,7 @@ import WithFlash from '../WithFlash';
 import {
   WidthConsumer,
   akEditorMobileBreakoutPoint,
+  WidthProvider,
 } from '@atlaskit/editor-common';
 import WidthEmitter from '../WidthEmitter';
 import { GRID_GUTTER } from '../../plugins/grid';
@@ -182,90 +183,92 @@ class Editor extends React.Component<
       maxContentSize && maxContentSize.maxContentSizeReached;
     return (
       <WithFlash animate={maxContentSizeReached}>
-        <CommentEditor maxHeight={maxHeight} className="akEditor">
-          <MainToolbar>
-            <Toolbar
+        <WidthProvider>
+          <CommentEditor maxHeight={maxHeight} className="akEditor">
+            <MainToolbar>
+              <Toolbar
+                editorView={editorView!}
+                editorActions={editorActions}
+                eventDispatcher={eventDispatcher!}
+                providerFactory={providerFactory!}
+                appearance={this.appearance}
+                items={primaryToolbarComponents}
+                popupsMountPoint={popupsMountPoint}
+                popupsBoundariesElement={popupsBoundariesElement}
+                popupsScrollableElement={popupsScrollableElement}
+                disabled={!!disabled}
+                dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+              />
+              <MainToolbarCustomComponentsSlot>
+                {customPrimaryToolbarComponents}
+              </MainToolbarCustomComponentsSlot>
+            </MainToolbar>
+            <ClickAreaBlock editorView={editorView}>
+              <WidthConsumer>
+                {({ width }) => {
+                  return (
+                    <ContentArea
+                      innerRef={ref => (this.containerElement = ref)}
+                      className={classnames('ak-editor-content-area', {
+                        'less-margin': width < akEditorMobileBreakoutPoint,
+                      })}
+                    >
+                      {customContentComponents}
+                      <PluginSlot
+                        editorView={editorView}
+                        editorActions={editorActions}
+                        eventDispatcher={eventDispatcher}
+                        dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                        providerFactory={providerFactory}
+                        appearance={this.appearance}
+                        items={contentComponents}
+                        popupsMountPoint={popupsMountPoint}
+                        popupsBoundariesElement={popupsBoundariesElement}
+                        popupsScrollableElement={popupsScrollableElement}
+                        containerElement={this.containerElement}
+                        disabled={!!disabled}
+                      />
+                      {editorDOMElement}
+                    </ContentArea>
+                  );
+                }}
+              </WidthConsumer>
+            </ClickAreaBlock>
+            <WidthEmitter
               editorView={editorView!}
-              editorActions={editorActions}
-              eventDispatcher={eventDispatcher!}
-              providerFactory={providerFactory!}
-              appearance={this.appearance}
-              items={primaryToolbarComponents}
-              popupsMountPoint={popupsMountPoint}
-              popupsBoundariesElement={popupsBoundariesElement}
-              popupsScrollableElement={popupsScrollableElement}
-              disabled={!!disabled}
-              dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+              contentArea={this.containerElement}
             />
-            <MainToolbarCustomComponentsSlot>
-              {customPrimaryToolbarComponents}
-            </MainToolbarCustomComponentsSlot>
-          </MainToolbar>
-          <ClickAreaBlock editorView={editorView}>
-            <WidthConsumer>
-              {({ width }) => {
-                return (
-                  <ContentArea
-                    innerRef={ref => (this.containerElement = ref)}
-                    className={classnames('ak-editor-content-area', {
-                      'less-margin': width < akEditorMobileBreakoutPoint,
-                    })}
-                  >
-                    {customContentComponents}
-                    <PluginSlot
-                      editorView={editorView}
-                      editorActions={editorActions}
-                      eventDispatcher={eventDispatcher}
-                      dispatchAnalyticsEvent={dispatchAnalyticsEvent}
-                      providerFactory={providerFactory}
-                      appearance={this.appearance}
-                      items={contentComponents}
-                      popupsMountPoint={popupsMountPoint}
-                      popupsBoundariesElement={popupsBoundariesElement}
-                      popupsScrollableElement={popupsScrollableElement}
-                      containerElement={this.containerElement}
-                      disabled={!!disabled}
-                    />
-                    {editorDOMElement}
-                  </ContentArea>
-                );
-              }}
-            </WidthConsumer>
-          </ClickAreaBlock>
-          <WidthEmitter
-            editorView={editorView!}
-            contentArea={this.containerElement}
-          />
-        </CommentEditor>
-        <SecondaryToolbar>
-          <ButtonGroup>
-            {!!onSave && (
-              <Button
-                appearance="primary"
-                onClick={this.handleSave}
-                testId="comment-save-button"
-                isDisabled={
-                  disabled
-                  // TODO: ED-8171 Disabled this until we fixed race condition
-                  // || (mediaState && !mediaState.allUploadsFinished)
-                }
-              >
-                {intl.formatMessage(messages.saveButton)}
-              </Button>
-            )}
-            {!!onCancel && (
-              <Button
-                appearance="subtle"
-                onClick={this.handleCancel}
-                isDisabled={disabled}
-              >
-                {intl.formatMessage(messages.cancelButton)}
-              </Button>
-            )}
-          </ButtonGroup>
-          <span style={{ flexGrow: 1 }} />
-          {customSecondaryToolbarComponents}
-        </SecondaryToolbar>
+          </CommentEditor>
+          <SecondaryToolbar>
+            <ButtonGroup>
+              {!!onSave && (
+                <Button
+                  appearance="primary"
+                  onClick={this.handleSave}
+                  testId="comment-save-button"
+                  isDisabled={
+                    disabled
+                    // TODO: ED-8171 Disabled this until we fixed race condition
+                    // || (mediaState && !mediaState.allUploadsFinished)
+                  }
+                >
+                  {intl.formatMessage(messages.saveButton)}
+                </Button>
+              )}
+              {!!onCancel && (
+                <Button
+                  appearance="subtle"
+                  onClick={this.handleCancel}
+                  isDisabled={disabled}
+                >
+                  {intl.formatMessage(messages.cancelButton)}
+                </Button>
+              )}
+            </ButtonGroup>
+            <span style={{ flexGrow: 1 }} />
+            {customSecondaryToolbarComponents}
+          </SecondaryToolbar>
+        </WidthProvider>
       </WithFlash>
     );
   };

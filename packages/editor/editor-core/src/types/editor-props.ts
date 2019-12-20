@@ -197,6 +197,8 @@ export interface EditorProps {
   // Set if the editor should be disabled.
   disabled?: boolean;
 
+  // Content to appear in the context panel. Displays as a right sidebar in the full-page apperance.
+  // You probably want to pass it the `ContextPanel` component from this package, and your content as children.
   contextPanel?: ReactComponents;
 
   errorReporterHandler?: ErrorReportingHandler;
