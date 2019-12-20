@@ -101,20 +101,20 @@ class TemplatePanel extends React.Component<
 
   render() {
     const adf = this.state.adf || this.props.defaultValue;
-    let panelVisible = true;
+    let panelVisible;
 
-    // if (!adf) {
-    //   panelVisible = true;
-    // } else {
-    //   if (this.state.selectedTemplate) {
-    //     // if templates are the same
-    //     panelVisible =
-    //       JSON.stringify(clearTableWidths(adf)) ===
-    //       JSON.stringify(clearTableWidths(this.state.selectedTemplate.adf));
-    //   } else {
-    //     panelVisible = isEmptyDoc(adf);
-    //   }
-    // }
+    if (!adf) {
+      panelVisible = true;
+    } else {
+      if (this.state.selectedTemplate) {
+        // if templates are the same
+        panelVisible =
+          JSON.stringify(clearTableWidths(adf)) ===
+          JSON.stringify(clearTableWidths(this.state.selectedTemplate.adf));
+      } else {
+        panelVisible = isEmptyDoc(adf);
+      }
+    }
 
     return (
       <ContextPanel visible={panelVisible}>

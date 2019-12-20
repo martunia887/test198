@@ -61,6 +61,7 @@ ContentArea.displayName = 'ContentArea';
 const SidebarArea = styled.div`
   height: 100%;
   box-sizing: border-box;
+  align-self: flex-end;
 `;
 SidebarArea.displayName = 'SidebarArea';
 
@@ -345,12 +346,12 @@ export default class Editor extends React.Component<
           </MainToolbarCustomComponentsSlot>
         </MainToolbar>
         <ContentArea>
-          <WidthProvider>
-            <ScrollContainer
-              innerRef={this.scrollContainerRef}
-              allowAnnotation={allowAnnotation}
-              className="fabric-editor-popup-scroll-parent"
-            >
+          <ScrollContainer
+            innerRef={this.scrollContainerRef}
+            allowAnnotation={allowAnnotation}
+            className="fabric-editor-popup-scroll-parent"
+          >
+            <WidthProvider>
               <ClickAreaBlock editorView={editorView}>
                 <EditorContentArea
                   fullWidthMode={appearance === 'full-width'}
@@ -390,12 +391,12 @@ export default class Editor extends React.Component<
                   </div>
                 </EditorContentArea>
               </ClickAreaBlock>
-            </ScrollContainer>
-            <WidthEmitter
-              editorView={editorView!}
-              contentArea={this.scrollContainer}
-            />
-          </WidthProvider>
+              <WidthEmitter
+                editorView={editorView!}
+                contentArea={this.scrollContainer}
+              />
+            </WidthProvider>
+          </ScrollContainer>
           {this.props.contextPanel && (
             <SidebarArea>{this.props.contextPanel}</SidebarArea>
           )}
