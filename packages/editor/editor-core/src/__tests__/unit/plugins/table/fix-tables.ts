@@ -13,13 +13,17 @@ import {
 } from '../../../../plugins/table/types';
 
 import { pluginKey as tablePluginKey } from '../../../../plugins/table/pm-plugins/main';
+import { EditorView } from 'prosemirror-view';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 describe('fix tables', () => {
   const createEditor = createEditorFactory<TablePluginState>();
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
   // @ts-ignore
   global['fetch'] = jest.fn();
 
   const editor = (doc: any) => {
+    createAnalyticsEvent = jest.fn().mockReturnValue({ fire() {} });
     const tableOptions = {
       allowNumberColumn: true,
       allowHeaderRow: true,
@@ -30,15 +34,18 @@ describe('fix tables', () => {
     return createEditor({
       doc,
       editorProps: {
+        allowAnalyticsGASV3: true,
         allowTables: tableOptions,
       },
+      createAnalyticsEvent,
       pluginKey: tablePluginKey,
     });
   };
 
   describe('removeExtraneousColumnWidths', () => {
-    it('removes unneccesary column widths', () => {
-      const { editorView } = editor(
+    let editorView: EditorView;
+    beforeEach(() => {
+      ({ editorView } = editor(
         doc(
           table()(
             tr(
@@ -53,8 +60,10 @@ describe('fix tables', () => {
             ),
           ),
         ),
-      );
+      ));
+    });
 
+    it('removes unneccesary column widths', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(
           table()(
@@ -70,6 +79,20 @@ describe('fix tables', () => {
             ),
           ),
         ),
+      );
+    });
+
+    it('fires analytics event when removing extraneous column widths', () => {
+      expect(createAnalyticsEvent).toBeCalledWith(
+        expect.objectContaining({
+          action: 'removedExtraneousColumnWidths',
+          actionSubject: 'table',
+          attributes: {
+            totalColumnCount: 3,
+            totalRowCount: 2,
+          },
+          eventType: 'operational',
+        }),
       );
     });
   });
