@@ -83,7 +83,12 @@ describe('BitbucketTransformer: parser', () => {
       expect(parsed).toEqualDocument(
         doc(
           mediaSingle()(
-            media({ url: 'http://path/to/image.jpg', type: 'external' })(),
+            media({
+              url: 'http://path/to/image.jpg',
+              type: 'external',
+              // @ts-ignore
+              alt: 'Alt text',
+            })(),
           ),
         ),
       );
@@ -97,7 +102,12 @@ describe('BitbucketTransformer: parser', () => {
       expect(parsed).toEqualDocument(
         doc(
           mediaSingle()(
-            media({ url: 'http://path/to/image.jpg', type: 'external' })(),
+            media({
+              url: 'http://path/to/image.jpg',
+              type: 'external',
+              // @ts-ignore
+              alt: 'Alt text',
+            })(),
           ),
         ),
       );
@@ -114,7 +124,12 @@ describe('BitbucketTransformer: parser', () => {
         doc(
           p(a({ href: 'https://example.com' })('Great idea see:')),
           mediaSingle()(
-            media({ url: 'http://path/to/image.jpg', type: 'external' })(),
+            media({
+              url: 'http://path/to/image.jpg',
+              type: 'external',
+              // @ts-ignore
+              alt: 'Alt text',
+            })(),
           ),
         ),
       );
@@ -125,7 +140,7 @@ describe('BitbucketTransformer: parser', () => {
         <ul>
           <li>
             Hello
-            <img src="http://path/to/image.jpg">
+            <img src="http://path/to/image.jpg" alt="Alt text" />
             World
           </li>
         </ul>
@@ -137,7 +152,12 @@ describe('BitbucketTransformer: parser', () => {
             li(
               p('Hello'),
               mediaSingle()(
-                media({ url: 'http://path/to/image.jpg', type: 'external' })(),
+                media({
+                  url: 'http://path/to/image.jpg',
+                  type: 'external',
+                  // @ts-ignore
+                  alt: 'Alt text',
+                })(),
               ),
               p(' World'),
             ),
@@ -155,7 +175,12 @@ describe('BitbucketTransformer: parser', () => {
         doc(
           p('Hello'),
           mediaSingle()(
-            media({ url: 'http://path/to/image.jpg', type: 'external' })(),
+            media({
+              url: 'http://path/to/image.jpg',
+              type: 'external',
+              // @ts-ignore
+              alt: '',
+            })(),
           ),
           p('World'),
         ),
@@ -183,7 +208,12 @@ describe('BitbucketTransformer: parser', () => {
         doc(
           blockquote(p('Hello')),
           mediaSingle()(
-            media({ url: 'http://path/to/image.jpg', type: 'external' })(),
+            media({
+              url: 'http://path/to/image.jpg',
+              type: 'external',
+              // @ts-ignore
+              alt: '',
+            })(),
           ),
           blockquote(p('World')),
         ),
@@ -193,7 +223,12 @@ describe('BitbucketTransformer: parser', () => {
         doc(
           blockquote(p('Hello'), p('Look')),
           mediaSingle()(
-            media({ url: 'http://path/to/image.jpg', type: 'external' })(),
+            media({
+              url: 'http://path/to/image.jpg',
+              type: 'external',
+              // @ts-ignore
+              alt: '',
+            })(),
           ),
           blockquote(p('Here'), p('World')),
         ),
@@ -502,6 +537,8 @@ describe('BitbucketTransformer: parser', () => {
                   media({
                     url: 'http://path/to/image.jpg',
                     type: 'external',
+                    // @ts-ignore
+                    alt: '',
                   })(),
                 ),
                 p(strong('hi')),
@@ -513,6 +550,8 @@ describe('BitbucketTransformer: parser', () => {
                   media({
                     url: 'http://path/to/image.jpg',
                     type: 'external',
+                    // @ts-ignore
+                    alt: '',
                   })(),
                 ),
               ),
