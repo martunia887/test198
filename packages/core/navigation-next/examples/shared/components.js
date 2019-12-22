@@ -152,7 +152,7 @@ class ProjectSwitcherBase extends PureComponent<*, *> {
           onChange={this.onSwitch}
           create={{
             onClick: () => {
-              // eslint-disable-next-line
+              // eslint-disable-next-line no-alert
               const boardName = window.prompt(
                 'What would you like to call your new board?',
               );

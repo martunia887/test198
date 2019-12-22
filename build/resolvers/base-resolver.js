@@ -47,7 +47,7 @@ module.exports = function resolver(
   if (modulePath.startsWith('.') || modulePath.startsWith(path.sep)) {
     try {
       return resolveFrom(opts.basedir, modulePath);
-    } catch (e) {} // eslint-disable-line
+    } catch (e) {} // eslint-disable-line no-empty
   }
 
   /*

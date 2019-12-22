@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable */
+// @noflow
 require('ts-node').register({
   compilerOptions: {
     lib: [

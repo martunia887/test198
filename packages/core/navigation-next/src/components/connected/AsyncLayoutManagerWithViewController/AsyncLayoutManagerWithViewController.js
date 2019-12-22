@@ -57,7 +57,7 @@ class AsyncLayoutManagerWithViewControllerBase extends Component<
       // It's totally fine to setState in componentDidUpdate as long as it's
       // wrapped in a condition:
       // https://reactjs.org/docs/react-component.html#componentdidupdate
-      // eslint-disable-next-line
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ outgoingView: prevView });
     }
   }

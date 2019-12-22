@@ -50,7 +50,7 @@ const WrapperDiv = styled.div<WrapperDivProps>`
   color: ${props => props.color};
   background: ${props => props.background};
 `;
-/* eslint-disable */
+
 const Wrapper: React.FC<WrapperDivProps> = props => (
   <Fragment>
     <WrapperDiv {...props}>{props.children}</WrapperDiv>

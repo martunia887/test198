@@ -43,7 +43,6 @@ const Span = styled.span<SpanProps>`
 const Wrapper = ({ label, svg, ...rest }: WrapperProps) => (
   <Span
     // We want to not add the aria-label if it does not exist for consistency
-    // eslint-disable-next-line
     aria-label={label ? label : undefined}
     dangerouslySetInnerHTML={{
       __html:

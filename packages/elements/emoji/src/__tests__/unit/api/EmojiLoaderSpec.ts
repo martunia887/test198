@@ -165,11 +165,9 @@ describe('EmojiLoader', () => {
       return resource.loadEmoji().then(emojiResponse => {
         expect(refreshedSecurityProvider.callCount).toEqual(1);
         const firstCall = fetchMock.lastCall('auth');
-        // eslint-disable-next-line
         expect(firstCall).not.toBeUndefined();
         expect(getSecurityHeader(firstCall)).toEqual(defaultSecurityCode);
         const secondCall = fetchMock.lastCall('auth2');
-        // eslint-disable-next-line
         expect(secondCall).not.toBeUndefined();
         expect(getSecurityHeader(secondCall)).toEqual(666);
 

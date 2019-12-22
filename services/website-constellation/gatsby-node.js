@@ -2,7 +2,7 @@
 let MultiEntrypointAliases;
 
 try {
-  // eslint-disable-next-line
+  // eslint-disable-next-line global-require
   MultiEntrypointAliases = require('./aliases-written-map.json');
 } catch (e) {
   throw new Error(

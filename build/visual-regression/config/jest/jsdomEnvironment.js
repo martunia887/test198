@@ -1,10 +1,13 @@
-/* eslint-disable */
+// @noflow
+/* eslint-disable import/no-extraneous-dependencies */
+
 const puppeteer = require('puppeteer');
 const JSDOMEnvironment = require('jest-environment-jsdom-fourteen');
 const request = require('request-promise-native');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+
 const DIR = path.join(os.tmpdir(), 'jest_puppeteer_global_setup');
 const wsEndpointDir = path.join(DIR, 'wsEndpoint');
 
@@ -21,6 +24,7 @@ async function getDockerWsEndpoint() {
 }
 
 class PuppeteerEnvironment extends JSDOMEnvironment {
+  // eslint-disable-next-line no-useless-constructor
   constructor(config) {
     super(config);
   }

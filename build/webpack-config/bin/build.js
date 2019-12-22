@@ -32,7 +32,8 @@ async function runBuild() {
       if (err) {
         console.error(err.stack || err);
         if (err.details) console.error(err.details);
-        reject(1); // eslint-disable-line
+        // eslint-disable-next-line prefer-promise-reject-errors
+        reject(1);
       }
 
       const statsString = stats.toString('minimal');

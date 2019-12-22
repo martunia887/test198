@@ -8,7 +8,7 @@ const { getKarmaConfig } = require('./build/karma-config');
 const log = (type /*: string */ = 'log') => (
   data /*: { toString: Function }*/,
 ) =>
-  // eslint-disable-next-line
+  // eslint-disable-next-line no-console
   console[type](data.toString());
 
 const runKarma = async ({ watch, browserstack }) => {

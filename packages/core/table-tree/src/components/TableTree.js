@@ -43,7 +43,7 @@ export default class TableTree extends Component<Props, State> {
   componentDidMount() {
     const widths = this.props.columnWidths;
     if (widths) {
-      this.setState({ columnWidths: widths }); // eslint-disable-line
+      this.setState({ columnWidths: widths });
     }
   }
 

@@ -60,7 +60,8 @@ export default class FocusTrap extends React.Component<Props> {
   renderTabCatcher = () => {
     return this.target.current
       ? createPortal(
-          <div tabIndex="0" data-last-tabbable-node />, // eslint-disable-line
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+          <div tabIndex="0" data-last-tabbable-node />,
           ((document.body: any): HTMLElement),
         )
       : null;

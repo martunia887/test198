@@ -41,7 +41,6 @@ export default class Slider extends Component<Props, State> {
     onChange: () => {},
   };
 
-  // eslint-disable-next-line
   inputElement: any;
 
   constructor(props: Props) {

@@ -265,7 +265,6 @@ describe('MentionResource', () => {
 
     // Temporarily disabled due to failing on Mobile Safari 9.0.0.
     it.skip('out of order responses', done => {
-      // eslint-disable-line
       const resource = new MentionResource(apiConfig);
       const results: MentionDescription[][] = [];
       const expected = [resultCraig];

@@ -105,12 +105,11 @@ class MySwitcher extends React.Component<*, State> {
 
   create = () => ({
     onClick: () => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-alert
       const boardName = window.prompt(
         'What would you like to call your new board?',
       );
       if (boardName && boardName.length) {
-        // eslint-disable-next-line
         console.log(`You created the board "${boardName}"`);
       }
     },

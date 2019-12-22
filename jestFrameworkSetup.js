@@ -1,4 +1,6 @@
-/* eslint-disable */
+// @noflow
+/* eslint-disable import/no-extraneous-dependencies, no-console */
+
 import { toBeInTheDocument, toHaveFocus } from '@testing-library/jest-dom';
 import { XMLHttpRequest } from 'xmlhttprequest';
 import 'jest-styled-components';
@@ -6,17 +8,20 @@ import { toMatchSnapshot } from 'jest-snapshot';
 import { configureToMatchImageSnapshot } from 'jest-image-snapshot';
 import { createSerializer, matchers } from 'jest-emotion';
 import 'jest-localstorage-mock';
-import ScreenshotReporter from './build/visual-regression/utils/screenshotReporter';
 import { cleanup } from '@testing-library/react';
 import { NodeSelection } from 'prosemirror-state';
+// eslint-disable-next-line no-unused-vars
 import { CellSelection } from 'prosemirror-tables';
+import ScreenshotReporter from './build/visual-regression/utils/screenshotReporter';
 
 // override timeout
+// eslint-disable-next-line no-undef
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 300000;
 
 // https://product-fabric.atlassian.net/browse/BUILDTOOLS-176
 global.XMLHttpRequest = XMLHttpRequest;
 global.fetch = require('jest-fetch-mock');
+
 global.fetchMock = global.fetch;
 
 let consoleError;
@@ -42,7 +47,9 @@ process.on('unhandledRejection', reason => {
 // Currently, the integration tests are using a custom matcher and it is not considered as an assertion.
 // `expect.hasAssertions()` will only run for Visual Regression And Unit tests.
 if (!process.env.INTEGRATION_TESTS) {
+  // eslint-disable-next-line no-undef
   beforeEach(() => {
+    // eslint-disable-next-line no-undef
     expect.hasAssertions();
   });
 }
@@ -136,6 +143,7 @@ if (typeof window !== 'undefined' && !('cancelAnimationFrame' in window)) {
 
 function transformDoc(fn) {
   return doc => {
+    // eslint-disable-next-line no-shadow
     const walk = fn => node => {
       const { content = [], ...rest } = node;
       const transformedNode = fn(rest);
@@ -167,6 +175,7 @@ const removeIdsFromDoc = transformDoc(node => {
       attrs: {
         ...node.attrs,
         id: node.attrs.id.replace(
+          // eslint-disable-next-line no-useless-escape
           /(temporary:)?([a-z0-9\-]+)(:.*)?$/,
           '$11234-5678-abcd-efgh$3',
         ),
@@ -177,6 +186,7 @@ const removeIdsFromDoc = transformDoc(node => {
 
     if (node.attrs.__key) {
       replacedNode.attrs.__key = node.attrs.__key.replace(
+        // eslint-disable-next-line no-useless-escape
         /(temporary:)?([a-z0-9\-]+)(:.*)?$/,
         '$11234-5678-abcd-efgh$3',
       );
@@ -184,6 +194,7 @@ const removeIdsFromDoc = transformDoc(node => {
 
     if (node.attrs.occurrenceKey) {
       replacedNode.attrs.occurrenceKey = node.attrs.occurrenceKey.replace(
+        // eslint-disable-next-line no-useless-escape
         /([a-z0-9\-]+)(:.*)?$/,
         '12345678-9abc-def0-1234-56789abcdef0$2',
       );
@@ -196,6 +207,7 @@ const removeIdsFromDoc = transformDoc(node => {
       ...node,
       attrs: {
         ...node.attrs,
+        // eslint-disable-next-line no-useless-escape
         localId: node.attrs.localId.replace(/([a-z0-9\-]+)/, () => 'abc-123'),
       },
     };
@@ -211,6 +223,7 @@ const toEqualDocument = (equals, utils, expand) => (actual, expected) => {
   //
   // Also it fixes issues that happens sometimes when actual schema and expected schema
   // are different objects, making this case impossible by always using actual schema to create expected node.
+  // eslint-disable-next-line no-param-reassign
   expected =
     typeof expected === 'function' && actual.type && actual.type.schema
       ? expected(actual.type.schema)
@@ -249,7 +262,7 @@ const toEqualDocument = (equals, utils, expand) => (actual, expected) => {
         `Actual JSON:\n  ${utils.printReceived(actual)}`
     : () => {
         const diffString = diff(expected, actual, {
-          expand: expand,
+          expand,
         });
         return (
           `${utils.matcherHint('.toEqualDocument')}\n\n` +
@@ -291,6 +304,7 @@ expect.extend({
       return docComparison;
     }
 
+    // eslint-disable-next-line no-param-reassign
     expected =
       typeof expected === 'function' && actualDoc.type && actualDoc.type.schema
         ? expected(actualDoc.type.schema)
@@ -309,7 +323,7 @@ expect.extend({
         '<': (position, selection) => position === selection.$from.pos,
         '>': (position, selection) => position === selection.$to.pos,
         '<>': (position, selection) =>
-          position === selection.$from.pos && position == selection.$to.pos,
+          position === selection.$from.pos && position === selection.$to.pos,
         '<node>': (position, selection) =>
           selection instanceof NodeSelection &&
           position === selection.$from.pos,

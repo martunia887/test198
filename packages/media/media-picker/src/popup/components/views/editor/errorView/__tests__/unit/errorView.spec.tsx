@@ -1,4 +1,4 @@
-import * as React from 'react'; // eslint-disable-line
+import * as React from 'react';
 import Button from '@atlaskit/button';
 import { messages } from '@atlaskit/media-ui';
 import ConnectedErrorView from '../../errorView';

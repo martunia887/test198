@@ -25,7 +25,6 @@ describe('DuplicateLimitedQueue', () => {
         minUniqueItems: 5,
       });
       const items = queue.getItemsOrderedByDuplicateCount();
-      // eslint-disable-next-line
       expect(items).toHaveLength(0);
     });
 

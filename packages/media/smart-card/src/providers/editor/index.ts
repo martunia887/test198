@@ -37,7 +37,7 @@ export class EditorCardProvider implements CardProvider {
         };
       }
     } catch (e) {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-console
       console.warn(
         `Error when trying to check Smart Card url "${url} - ${e.prototype.name} ${e.message}`,
         e,

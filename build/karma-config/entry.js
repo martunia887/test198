@@ -46,7 +46,6 @@ Object.keys(contexts).forEach(key => {
     try {
       ctx(path);
     } catch (err) {
-      // eslint-disable-next-line
       console.error(`Running tests in: ${path}`);
       throw err;
     }

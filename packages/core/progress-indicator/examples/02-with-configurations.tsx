@@ -86,7 +86,7 @@ export default class ProgressIndicatorDots extends Component<{}, State> {
   handleNext = () => {
     this.setState(state => ({ selectedIndex: state.selectedIndex + 1 }));
   };
-  /* eslint-disable */
+
   handleSelect = ({
     event,
     index: selectedIndex,
@@ -97,7 +97,6 @@ export default class ProgressIndicatorDots extends Component<{}, State> {
     this.setState({ selectedIndex });
   };
 
-  /* eslint-enable */
   toggleTheme = () =>
     this.setState(state => ({ themeIndex: state.themeIndex + 1 }));
 

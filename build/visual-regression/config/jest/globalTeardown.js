@@ -1,10 +1,15 @@
-/* eslint-disable */
+// @noflow
+
 const os = require('os');
 const path = require('path');
 const puppeteer = require('puppeteer');
 const rimraf = require('rimraf');
+
 const DIR = path.join(os.tmpdir(), 'jest_puppeteer_global_setup');
+
+// eslint-disable-next-line prefer-destructuring
 const getDockerWsEndpoint = require('./jsdomEnvironment').getDockerWsEndpoint;
+
 const docker = require('../../docker-helper');
 
 /**

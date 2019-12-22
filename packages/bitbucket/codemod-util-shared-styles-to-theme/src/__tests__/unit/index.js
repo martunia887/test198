@@ -8,7 +8,7 @@ jest.autoMockOff();
 const { runInlineTest } = require('jscodeshift/dist/testUtils');
 
 // $FlowFixMe - in require it should be a string litteral
-const transformFn = require(path.resolve(__dirname, '..', '..', 'index.js')); // eslint-disable-line
+const transformFn = require(path.resolve(__dirname, '..', '..', 'index.js')); // eslint-disable-line import/no-dynamic-require
 
 function getFixtureFiles() {
   return fs

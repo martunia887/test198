@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-// eslint-disable-next-line
+// eslint-disable-next-line import/no-webpack-loader-syntax
 import icons from '!!raw-loader!../src/icons-sprite.svg';
-// eslint-disable-next-line
+// eslint-disable-next-line import/no-webpack-loader-syntax, no-unused-vars
 import stuff from '!!style-loader!css-loader!../src/bundle.css';
 import Warning from './utils/warning';
 

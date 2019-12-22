@@ -74,7 +74,6 @@ export const DummyControl: FC<ControlProps<any>> = props => (
 );
 
 // NOTE `props` intentionally omitted from `Fragment`
-// eslint-disable-next-line
 const Menu = ({ children, innerProps, ...props }: MenuProps<any>) => (
   <div {...innerProps}>{children}</div>
 );

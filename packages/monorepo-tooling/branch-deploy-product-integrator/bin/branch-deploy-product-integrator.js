@@ -1,8 +1,14 @@
 #!/usr/bin/env node
-/* eslint-disable */
+// @noflow
+/* eslint-disable
+  import/no-extraneous-dependencies,
+  global-require,
+  import/no-dynamic-require
+*/
 
 const fs = require('fs');
 const path = require('path');
+
 const project = path.join(__dirname, '../tsconfig.json');
 const dev = fs.existsSync(project);
 

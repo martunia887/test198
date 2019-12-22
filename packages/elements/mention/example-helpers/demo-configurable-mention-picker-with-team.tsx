@@ -65,7 +65,6 @@ export default class ConfigurableTeamMentionPicker extends React.Component<
         [stateName]: config,
       });
     } catch (err) {
-      // eslint-disable-next-line
       console.error('ERROR: cannot parse JSON', event.target.value);
     }
   };

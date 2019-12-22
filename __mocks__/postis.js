@@ -1,4 +1,5 @@
-/* eslint-disable */
+// @noflow
+
 const Postis = jest.fn();
 
 const postisObject = {

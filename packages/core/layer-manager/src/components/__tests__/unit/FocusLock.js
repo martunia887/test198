@@ -1,4 +1,5 @@
 // @flow
+
 import React, { type Node, createRef } from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
@@ -39,7 +40,7 @@ it('should focus button', () => {
 
 it('should focus what is returned by the function', () => {
   const ref = React.createRef();
-  /* eslint-disable */
+  /* eslint-disable jsx-a11y/no-autofocus */
   mount(
     <FocusLock>
       <button>Button 1</button>
