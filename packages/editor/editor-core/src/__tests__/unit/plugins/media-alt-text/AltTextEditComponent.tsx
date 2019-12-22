@@ -22,6 +22,7 @@ import {
 } from '../../../../plugins/analytics';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { ReactWrapper } from 'enzyme';
+import UndoableWrapper from '../../../../plugins/media/utils/undoredo';
 
 describe('AltTextEditComponent', () => {
   let createAnalyticsEvent: CreateUIAnalyticsEvent;
@@ -189,14 +190,46 @@ describe('AltTextEditComponent', () => {
     });
   });
 
+  describe('uses UndoableWrapper component to override standard undo/redo', () => {
+    // do for all?
+    let wrapper: ReactWrapper;
+    beforeEach(() => {
+      const view = new mockView();
+      wrapper = mountWithIntl(<AltTextEdit view={view} value="test" />);
+    });
+
+    afterEach(() => {
+      if (wrapper) {
+        wrapper.unmount();
+      }
+    });
+
+    it('should be wrapped with UndoableWrapper component', () => {
+      expect(wrapper.find(UndoableWrapper).length).toBe(1);
+    });
+
+    it('should add new value to undoable history on change', () => {
+      const undoable = wrapper.find(UndoableWrapper);
+
+      const undoableInstance = undoable.instance() as UndoableWrapper;
+      undoableInstance.addToHistory = jest.fn();
+      jest.spyOn(undoableInstance, 'addToHistory');
+
+      const input = wrapper.find('input');
+      ((input.instance() as unknown) as HTMLInputElement).value = 'newvalue';
+      input.simulate('change');
+
+      expect(undoableInstance.addToHistory).toHaveBeenCalledWith('newvalue');
+    });
+  });
+
   describe('when onChange is called', () => {
     it('should call updateAltText command with the input text value', () => {
       const view = new mockView();
       const wrapper = mountWithIntl(<AltTextEdit view={view} value="test" />);
 
       const input = wrapper.find('input');
-      // @ts-ignore
-      input.instance().value = 'newvalue';
+      ((input.instance() as unknown) as HTMLInputElement).value = 'newvalue';
       input.simulate('change');
 
       expect(mockUpdateAltText).toBeCalledWith('newvalue');

@@ -1259,11 +1259,12 @@ describe('Media plugin', () => {
     });
 
     it('should insert media in the media group that already exist', async () => {
+      const existingId = randomId();
       const listDoc = doc(
         ul(li(p('te{<>}xt'))),
         mediaGroup(
           media({
-            id: pdfFile.id,
+            id: existingId,
             type: 'file',
             __fileMimeType: pdfFile.fileMimeType,
             __fileName: pdfFile.fileName,
@@ -1284,7 +1285,7 @@ describe('Media plugin', () => {
           ul(li(p('text'))),
           mediaGroup(
             media({
-              id: pdfFile.id,
+              id: existingId,
               type: 'file',
               __fileMimeType: pdfFile.fileMimeType,
               __fileName: pdfFile.fileName,

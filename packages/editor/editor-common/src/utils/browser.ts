@@ -8,6 +8,7 @@ const result = {
   android: false,
   ios: false,
   webkit: false,
+  windows: false,
 };
 
 if (typeof navigator !== 'undefined') {
@@ -18,6 +19,8 @@ if (typeof navigator !== 'undefined') {
   );
 
   result.mac = /Mac/.test(navigator.platform);
+  result.windows = /Win/.test(navigator.platform);
+
   let ie = (result.ie = !!(ieUpTo10 || ie11up || ieEdge));
   result.ie_version = ieUpTo10
     ? (document as any).documentMode || 6

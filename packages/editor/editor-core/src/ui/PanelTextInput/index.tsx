@@ -22,7 +22,7 @@ export interface State {
 }
 
 export default class PanelTextInput extends PureComponent<Props, State> {
-  private input?: HTMLInputElement;
+  input?: HTMLInputElement;
   private focusTimeoutId: number | undefined;
 
   constructor(props: Props) {

@@ -24,6 +24,7 @@ import {
   MediaAltTextActionType,
   FireAnalyticsCallback,
 } from '../../../../analytics';
+import UndoableWrapper from '../../../utils/undoredo';
 
 export const CONTAINER_WIDTH_IN_PX = 350;
 const SupportText = styled.p`
@@ -82,6 +83,8 @@ export class AltTextEditComponent extends React.Component<
     showClearTextButton: Boolean(this.props.value),
   };
 
+  panelInputRef = React.createRef<PanelTextInput>();
+  undoableRef = React.createRef<UndoableWrapper>();
   constructor(props: Props) {
     super(props);
 
@@ -121,43 +124,51 @@ export class AltTextEditComponent extends React.Component<
       keymaps.escape,
       'Esc',
     );
-
+    const input = (this.panelInputRef.current &&
+      this.panelInputRef.current.input) as HTMLInputElement;
     return (
       <Container>
-        <InputWrapper>
-          <BackButtonWrapper>
-            <Button
-              title={formatMessage(messages.back)}
-              icon={
-                <ChevronLeftLargeIcon label={formatMessage(messages.back)} />
-              }
-              tooltipContent={backButtonMessageComponent}
-              onClick={this.closeMediaAltTextMenu}
+        <UndoableWrapper
+          onUndoRedo={this.handleOnChange}
+          input={input}
+          ref={this.undoableRef}
+        >
+          <InputWrapper>
+            <BackButtonWrapper>
+              <Button
+                title={formatMessage(messages.back)}
+                icon={
+                  <ChevronLeftLargeIcon label={formatMessage(messages.back)} />
+                }
+                tooltipContent={backButtonMessageComponent}
+                onClick={this.closeMediaAltTextMenu}
+              />
+            </BackButtonWrapper>
+            <PanelTextInput
+              testId="alt-text-input"
+              placeholder={formatMessage(messages.placeholder)}
+              defaultValue={value ? value : ''}
+              onCancel={this.dispatchCancelEvent}
+              onChange={this.handleOnChange}
+              onBlur={this.handleOnBlur}
+              onSubmit={this.closeMediaAltTextMenu}
+              ref={this.panelInputRef}
+              autoFocus
             />
-          </BackButtonWrapper>
-          <PanelTextInput
-            testId="alt-text-input"
-            placeholder={formatMessage(messages.placeholder)}
-            defaultValue={value ? value : ''}
-            onCancel={this.dispatchCancelEvent}
-            onChange={this.handleOnChange}
-            onBlur={this.handleOnBlur}
-            onSubmit={this.closeMediaAltTextMenu}
-            autoFocus
-          />
-          {showClearTextButton && (
-            <Button
-              title={formatMessage(messages.clear)}
-              icon={
-                <ClearText>
-                  <CrossCircleIcon label={formatMessage(messages.clear)} />
-                </ClearText>
-              }
-              tooltipContent={formatMessage(messages.clear)}
-              onClick={this.handleClearText}
-            />
-          )}
-        </InputWrapper>
+            {showClearTextButton && (
+              <Button
+                title={formatMessage(messages.clear)}
+                icon={
+                  <ClearText>
+                    <CrossCircleIcon label={formatMessage(messages.clear)} />
+                  </ClearText>
+                }
+                tooltipContent={formatMessage(messages.clear)}
+                onClick={this.handleClearText}
+              />
+            )}
+          </InputWrapper>
+        </UndoableWrapper>
         <SupportText>{formatMessage(messages.supportText)}</SupportText>
       </Container>
     );
@@ -202,6 +213,10 @@ export class AltTextEditComponent extends React.Component<
       showClearTextButton: Boolean(newAltText),
     });
     this.updateAltText(newAltText);
+
+    if (this.undoableRef.current) {
+      this.undoableRef.current.addToHistory(newAltText);
+    }
   };
 
   private handleOnBlur = () => {
