@@ -251,6 +251,20 @@ describe('AltTextEditComponent', () => {
     });
   });
 
+  describe('when onBlur is called', () => {
+    it('should trim whitespace off the ends of alt-text', () => {
+      const view = new mockView();
+      const wrapper = mountWithIntl(
+        <AltTextEdit view={view} value="   trim whitespace around me   " />,
+      );
+
+      const input = wrapper.find('input');
+      input.simulate('blur');
+
+      expect(mockUpdateAltText).toBeCalledWith('trim whitespace around me');
+    });
+  });
+
   describe('when submit', () => {
     const KEY_CODE_ENTER = 13;
 

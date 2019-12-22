@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper, ReactWrapper } from 'enzyme';
 import { Ellipsify } from '@atlaskit/media-ui';
 import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
 import { CardOverlay } from '../../cardImageView/cardOverlay';
@@ -16,42 +16,55 @@ import { FabricChannel } from '@atlaskit/analytics-listeners';
 
 describe('CardOverlay', () => {
   const errorMessage = 'Loading failed';
+  let card: ReactWrapper | ShallowWrapper;
 
-  it('should not render the title or subtitle when the card has errored', () => {
-    const title = 'card is lyfe';
-    const subtitle = 'do you even card?';
-    const card = shallow(
-      <CardOverlay
-        error={errorMessage}
-        mediaName={title}
-        subtitle={subtitle}
-        persistent={true}
-      />,
-    );
+  afterEach(() => {
+    if (card) {
+      card.unmount();
+    }
+  });
 
-    expect(
-      card
-        .find(ErrorMessage)
-        .childAt(0)
-        .text(),
-    ).toEqual(errorMessage);
-    expect(card.find(TitleWrapper).find(Ellipsify)).toHaveLength(0);
-    expect(card.find(Metadata)).toHaveLength(0);
+  describe('when the card has errored', () => {
+    const altTextMessage = 'alt text';
+    beforeEach(() => {
+      card = mountWithIntlContext(
+        <CardOverlay
+          error={errorMessage}
+          mediaName={'card is lyfe'}
+          subtitle={'do you even card?'}
+          alt={altTextMessage}
+          persistent={true}
+        />,
+      );
+    });
+
+    it('should not render the title or subtitle', () => {
+      expect(card.find(TitleWrapper).find(Ellipsify)).toHaveLength(0);
+      expect(card.find(Metadata)).toHaveLength(0);
+    });
+
+    it('should render both error message and alt text', () => {
+      const errorMessages = card.find(ErrorMessage).children() as ReactWrapper;
+      expect(errorMessages.map(x => x.text())).toEqual([
+        errorMessage,
+        altTextMessage,
+      ]);
+    });
   });
 
   it('should pass triggerColor "white" to Menu component when overlay is NOT persistent', () => {
-    const card = shallow(<CardOverlay persistent={false} />);
+    card = shallow(<CardOverlay persistent={false} />);
     expect(card.find(CardActionsView).props().triggerColor).toEqual('white');
   });
 
   it('should pass triggerColor as "undefined" to Menu component when overlay is persistent', () => {
-    const card = shallow(<CardOverlay persistent={true} />);
+    card = shallow(<CardOverlay persistent={true} />);
     expect(card.find(CardActionsView).props().triggerColor).toEqual(undefined);
   });
 
   it('should allow manual retry when "onRetry" is passed', () => {
     const onRetry = jest.fn();
-    const card = mountWithIntlContext(
+    card = mountWithIntlContext(
       <CardOverlay persistent={false} onRetry={onRetry} error={errorMessage} />,
     );
     const retryComponent = card.find(Retry);
@@ -63,7 +76,7 @@ describe('CardOverlay', () => {
 
   it('should fire analytics event on Retry click', () => {
     const analyticsEventHandler = jest.fn();
-    const card = mountWithIntlContext(
+    card = mountWithIntlContext(
       <AnalyticsListener
         channel={FabricChannel.media}
         onEvent={analyticsEventHandler}

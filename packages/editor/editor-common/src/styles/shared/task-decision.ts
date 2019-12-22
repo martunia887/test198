@@ -4,6 +4,7 @@ import { akEditorTableCellMinWidth } from '..';
 export const tasksAndDecisionsStyles = css`
   .ProseMirror .taskItemView-content-wrap,
   .ProseMirror .decisionItemView-content-wrap {
+    position: relative;
     min-width: ${akEditorTableCellMinWidth}px;
   }
 

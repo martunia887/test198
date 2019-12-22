@@ -16,11 +16,8 @@ export function enrichFetchError(
   };
 }
 
-export const customFetchJson = <T>(
-  url: string,
-  init?: RequestInit,
-): Promise<T> =>
-  fetch(url, init).then(response => {
+export const fetchJson = <T>(url: string, init?: RequestInit): Promise<T> =>
+  fetch(url, { credentials: 'include', ...init }).then(response => {
     if (response.ok) {
       return response.json();
     }
@@ -32,10 +29,8 @@ export const customFetchJson = <T>(
     );
   });
 
-export const fetchJson = <T>(url: string) => customFetchJson<T>(url);
-
 export const postJson = <T>(url: string, data: any) =>
-  customFetchJson<T>(url, {
+  fetchJson<T>(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

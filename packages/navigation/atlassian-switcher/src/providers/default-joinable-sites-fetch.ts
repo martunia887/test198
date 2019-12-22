@@ -1,5 +1,5 @@
 import { JoinableSitesResponse, ProductKey } from '../types';
-import { customFetchJson } from '../utils/fetch';
+import { fetchJson } from '../utils/fetch';
 
 interface ExperimentApiJoinableSiteUser {
   avatarUrl: string;
@@ -55,7 +55,7 @@ export const fetchJoinableSites = (
     rawResponse: any,
   ) => JoinableSitesResponse = transformExperimentSitesToSwitcherSites,
 ): Promise<JoinableSitesResponse> => {
-  return customFetchJson<ExperimentApiJoinableSites>(
+  return fetchJson<ExperimentApiJoinableSites>(
     `${baseUrl}/trello-cross-product-join/recommended-sites`,
     {
       method: 'post',

@@ -123,7 +123,7 @@ class LinkAddToolbar extends PureComponent<Props & InjectedIntlProps, State> {
   async componentDidMount() {
     if (this.props.provider) {
       const activityProvider = await this.resolveProvider(this.props.provider);
-      this.loadRecentItems(activityProvider);
+      await this.loadRecentItems(activityProvider);
     }
   }
 

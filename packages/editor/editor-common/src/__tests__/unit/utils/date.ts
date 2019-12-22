@@ -1,25 +1,30 @@
 import {
+  timestampToTaskContext,
   timestampToString,
-  timestampToIsoFormat,
   timestampToUTCDate,
   isPastDate,
-  // timestampToTaskContext,
 } from '../../../utils/date';
+import { IntlProvider, InjectedIntl } from 'react-intl';
 
 describe('@atlaskit/editor-common date utils', () => {
   describe('timestampToString', () => {
-    it('should correctly format date', () => {
-      const date = Date.parse('2018-06-19');
-      expect(timestampToString(date, 'ddd, DD MMM')).toEqual('Tue, 19 Jun');
-      expect(timestampToString(date, 'YYYY-MM-DD')).toEqual('2018-06-19');
-      expect(timestampToString(date, 'DD MMM YYYY')).toEqual('19 Jun 2018');
+    describe('when there is no intl', () => {
+      it('should format date to ISO', () => {
+        const date = Date.parse('2018-06-19');
+        expect(timestampToString(date, null)).toEqual('2018-06-19');
+      });
     });
-  });
 
-  describe('timestampToIsoFormat', () => {
-    it('should correctly format date in ISO format', () => {
-      const date = Date.parse('2018-06-19');
-      expect(timestampToIsoFormat(date)).toEqual('2018-06-19');
+    describe('when there is intl', () => {
+      it('should format using localization', () => {
+        const date = Date.parse('2018-06-19');
+
+        const intlProvider = new IntlProvider({
+          locale: 'en',
+        });
+        const { intl } = intlProvider.getChildContext();
+        expect(timestampToString(date, intl)).toEqual('Jun 19, 2018');
+      });
     });
   });
 
@@ -40,41 +45,82 @@ describe('@atlaskit/editor-common date utils', () => {
     });
   });
 
-  // TODO: Currently skipped due to local issues
-  // https://bitbucket.org/atlassian/atlaskit-mk-2/addon/pipelines/home#!/results/27648/steps/%7Bab5d2f0d-39aa-4bad-9ba5-0b0852a7b81e%7D/test-report
-  // describe('timestampToTaskContext', () => {
-  //   const matchesYearFormat = date => {
-  //     const currentYear = new Date().getUTCFullYear();
-  //     if (date.getUTCFullYear() === currentYear) {
-  //       expect(timestampToTaskContext(date.valueOf())).toEqual(
-  //         timestampToString(date.valueOf(), 'ddd, DD MMM'),
-  //       );
-  //     } else {
-  //       expect(timestampToTaskContext(date.valueOf())).toEqual(
-  //         timestampToString(date.valueOf(), 'DD MMM YYYY'),
-  //       );
-  //     }
-  //   };
-  //   it('should correctly format date for task', () => {
-  //     const date = new Date();
-  //     const currentDate = date.getUTCDate();
-  //     const currentMonth = date.getUTCMonth();
-  //     date.setDate(currentDate - 1);
-  //     expect(timestampToTaskContext(date.valueOf())).toEqual(
-  //       timestampToString(date.valueOf(), 'Yesterday'),
-  //     );
-  //     date.setDate(currentDate);
-  //     expect(timestampToTaskContext(date.valueOf())).toEqual('Today');
-  //     date.setDate(currentDate + 1);
-  //     expect(timestampToTaskContext(date.valueOf())).toEqual('Tomorrow');
-  //     date.setDate(currentDate - 4);
-  //     matchesYearFormat(date);
-  //     date.setDate(currentDate + 4);
-  //     matchesYearFormat(date);
-  //     date.setMonth(currentMonth + 1);
-  //     matchesYearFormat(date);
-  //     date.setFullYear(date.getFullYear() + 1);
-  //     matchesYearFormat(date);
-  //   });
-  // });
+  describe('#timestampToTaskContext', () => {
+    describe('given Date.now is mocked', () => {
+      let dateNowMockFn: jest.SpyInstance;
+      let dateUTCMockFn: jest.SpyInstance;
+      let intl: InjectedIntl;
+
+      beforeEach(() => {
+        dateNowMockFn = jest.spyOn(Date, 'now');
+        dateUTCMockFn = jest.spyOn(Date, 'UTC');
+
+        const intlProvider = new IntlProvider({
+          locale: 'en',
+        });
+        intl = intlProvider.getChildContext().intl;
+      });
+
+      afterEach(() => {
+        dateNowMockFn.mockRestore();
+        dateUTCMockFn.mockRestore();
+      });
+
+      describe('and is not from the same year', () => {
+        it('should return the date in MMM DD YYYY us format', () => {
+          dateNowMockFn.mockImplementation(() => 1040078526); // 16 December 2002 22:42:06 miliseconds
+          const oneYearOldInUTC = Date.UTC(2001, 1, 1).toString();
+
+          expect(timestampToTaskContext(oneYearOldInUTC, intl)).toEqual(
+            'Feb 1, 2001',
+          );
+        });
+      });
+
+      describe('and is from the same year', () => {
+        it('should return the date in ddd, MMM DD us format', () => {
+          dateNowMockFn.mockImplementation(() => 1324075326000); // 16 December 2011 22:42:06
+          const oneYearOldInUTC = Date.UTC(2011, 1, 1).toString();
+
+          expect(timestampToTaskContext(oneYearOldInUTC, intl)).toEqual(
+            'Tue, Feb 1',
+          );
+        });
+      });
+
+      describe('given the timestamp is in UTC', () => {
+        beforeEach(() => {
+          dateUTCMockFn.mockImplementation(() => '1323993600000'); // 16 December 2011 00:00:00
+          dateNowMockFn.mockImplementation(() => '1323993600000'); // 16 December 2011 00:00:00
+
+          const intlProvider = new IntlProvider({
+            locale: 'en',
+            initialNow: '1323993600000',
+          });
+          intl = intlProvider.getChildContext().intl;
+        });
+
+        it('should return Yesterday the distance from the current day is -1', () => {
+          const yesterdayInUTC = 1323907200000; // 15 December 2011 00:00:00
+
+          expect(timestampToTaskContext(yesterdayInUTC, intl)).toEqual(
+            'Yesterday',
+          );
+        });
+
+        it('should return Today the distance from the current day is 0', () => {
+          const todayInUTC = 1323993600000; // 16 December 2011 00:00:00
+
+          expect(timestampToTaskContext(todayInUTC, intl)).toEqual('Today');
+        });
+
+        it('should returns Tomorrow the distance from the current day is 1', () => {
+          const tomorrowInUTC = 1324080000000; // 17 December 2011 00:00:00
+          expect(timestampToTaskContext(tomorrowInUTC, intl)).toEqual(
+            'Tomorrow',
+          );
+        });
+      });
+    });
+  });
 });
