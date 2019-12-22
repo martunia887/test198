@@ -59,6 +59,7 @@ export const getAltTextToolbar = (
   return {
     ...toolbarBaseConfig,
     width: CONTAINER_WIDTH_IN_PX,
+    className: 'alt-text-floating-toolbar',
     items: [altTextEditComponent()],
   };
 };

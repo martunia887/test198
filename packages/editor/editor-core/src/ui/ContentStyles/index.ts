@@ -175,7 +175,7 @@ const ContentStyles: ComponentClass<HTMLAttributes<{}> & {
     text-align: center;
   }
 
-  .hyperlink-floating-toolbar {
+  .hyperlink-floating-toolbar, .alt-text-floating-toolbar {
     padding: 0;
   }
 
