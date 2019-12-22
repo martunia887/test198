@@ -98,7 +98,14 @@ module.exports = {
     ],
   },
   parser: 'babel-eslint',
-  plugins: ['flowtype', 'jest', 'prettier', 'react-hooks', '@wordpress'],
+  plugins: [
+    'flowtype',
+    'jest',
+    'prettier',
+    'react-hooks',
+    '@wordpress',
+    'unicorn',
+  ],
   rules: {
     'import/no-extraneous-dependencies': [
       'error',
@@ -213,6 +220,10 @@ module.exports = {
     'jest/no-focused-tests': 'error',
     'jest/no-identical-title': 'error',
     'jest/valid-expect': 'error',
+
+    // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/master/docs/rules/no-abusive-eslint-disable.md
+    // disallow "catch all" eslint-disables for better code analysis
+    'unicorn/no-abusive-eslint-disable': 'error',
   },
   env: {
     browser: true,
@@ -449,6 +460,17 @@ module.exports = {
       files: ['**/build/**'],
       rules: {
         'no-console': 'off',
+      },
+    },
+    {
+      files: [
+        // should only include files that are generated or copied over from a different source
+        // for these, switching off our linting entirely is reasonable.
+        'packages/core/polyfills/*.js',
+        'packages/media/media-editor/src/engine/core/binaries/mediaEditor.js',
+      ],
+      rules: {
+        'unicorn/no-abusive-eslint-disable': 'off',
       },
     },
   ],
