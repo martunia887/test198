@@ -92,28 +92,50 @@ const EmptyPlaceholder: PlaceHolderState = { hasPlaceholder: false };
 
 function createPlaceHolderStateFrom(
   editorState: EditorState,
+  getPlaceholderHintMessage: () => string | undefined,
   defaultPlaceholderText?: string,
-  enablePlaceHolderHint?: boolean,
 ): PlaceHolderState {
   if (defaultPlaceholderText && isEmptyDocument(editorState.doc)) {
     return setPlaceHolderState(defaultPlaceholderText);
   }
 
-  if (enablePlaceHolderHint && isInEmptyLine(editorState)) {
+  const placeholderHint = getPlaceholderHintMessage();
+  if (placeholderHint && isInEmptyLine(editorState)) {
     const { $from } = editorState.selection;
-    return setPlaceHolderState(messages.slashCommand.defaultMessage, $from.pos);
+    return setPlaceHolderState(placeholderHint, $from.pos);
   }
 
   return EmptyPlaceholder;
 }
 
+function createGetPlaceholderHintMessage(
+  placeholderHints?: string[],
+): () => string | undefined {
+  let index = 0;
+  const length = placeholderHints ? placeholderHints.length : 0;
+  return () => {
+    if (length === 0) {
+      return;
+    }
+
+    const placeholder = placeholderHints![index++];
+    index = index % length;
+
+    return placeholder;
+  };
+}
+
 export function createPlugin(
   defaultPlaceholderText?: string,
-  enablePlaceHolderHint?: boolean,
+  placeholderHints?: string[],
 ): Plugin | undefined {
-  if (!defaultPlaceholderText && !enablePlaceHolderHint) {
+  if (!defaultPlaceholderText && !placeholderHints) {
     return;
   }
+
+  const getPlaceholderHintMessage = createGetPlaceholderHintMessage(
+    placeholderHints,
+  );
 
   return new Plugin<PlaceHolderState>({
     key: pluginKey,
@@ -121,8 +143,8 @@ export function createPlugin(
       init: (_, state) =>
         createPlaceHolderStateFrom(
           state,
+          getPlaceholderHintMessage,
           defaultPlaceholderText,
-          enablePlaceHolderHint,
         ),
       apply: (tr, _oldPluginState, _oldEditorState, newEditorState) => {
         const meta = tr.getMeta(pluginKey);
@@ -135,16 +157,16 @@ export function createPlugin(
           if (meta.applyPlaceholderIfEmpty) {
             return createPlaceHolderStateFrom(
               newEditorState,
+              getPlaceholderHintMessage,
               defaultPlaceholderText,
-              enablePlaceHolderHint,
             );
           }
         }
 
         return createPlaceHolderStateFrom(
           newEditorState,
+          getPlaceholderHintMessage,
           defaultPlaceholderText,
-          enablePlaceHolderHint,
         );
       },
     },
@@ -179,7 +201,7 @@ export function createPlugin(
 
 interface PlaceholderPluginOptions {
   placeholder?: string;
-  enablePlaceHolderHint?: boolean;
+  placeholderHints?: string[];
 }
 
 const placeholderPlugin = (
@@ -194,7 +216,7 @@ const placeholderPlugin = (
         plugin: () =>
           createPlugin(
             options && options.placeholder,
-            options && options.enablePlaceHolderHint,
+            options && options.placeholderHints,
           ),
       },
     ];

@@ -244,6 +244,9 @@ export interface EditorProps {
   // Default placeholder text to be displayed if the content is empty. e.g. 'Add a comment...'
   placeholder?: string;
 
+  // Set to enabled placeholder hints to be shown
+  placeholderHints?: string[];
+
   // Set the default editor content.
   defaultValue?: Node | string | Object;
 
@@ -281,6 +284,4 @@ export interface EditorProps {
   // New extension API
   // This eventually is going to replace `quickInsert.provider`, `extensionHandlers`, `macroProvider`.
   extensionProviders?: Array<ExtensionProvider>;
-
-  enablePlaceHolderHint?: boolean;
 }
