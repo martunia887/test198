@@ -24,8 +24,9 @@ import {
   MediaAltTextActionType,
   FireAnalyticsCallback,
 } from '../../../../analytics';
+import { RECENT_SEARCH_WIDTH_IN_PX } from '../../../../../ui/RecentSearch/ToolbarComponents';
 
-export const CONTAINER_WIDTH_IN_PX = 350;
+export const CONTAINER_WIDTH_IN_PX = RECENT_SEARCH_WIDTH_IN_PX;
 const SupportText = styled.p`
   color: ${colors.N100};
   font-size: 12px;
