@@ -1,16 +1,18 @@
 import * as React from 'react';
-import rafSchedule from 'raf-schd';
-import { Node as PmNode } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
-import { isTableSelected } from 'prosemirror-utils';
 import {
   browser,
   calcTableWidth,
   akEditorMobileBreakoutPoint,
 } from '@atlaskit/editor-common';
+import classnames from 'classnames';
+import { Node as PmNode } from 'prosemirror-model';
+import { isTableSelected } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+import rafSchedule from 'raf-schd';
 
-import TableFloatingControls from '../ui/TableFloatingControls';
-
+import { getParentNodeWidth } from '../../../utils/node-width';
+import { WidthPluginState } from '../../width';
+import { autoSizeTable } from '../commands';
 import { getPluginState } from '../pm-plugins/main';
 import { scaleTable } from '../pm-plugins/table-resizing';
 import {
@@ -18,24 +20,21 @@ import {
   insertColgroupFromNode as recreateResizeColsByNode,
   updateControls,
 } from '../pm-plugins/table-resizing/utils';
-
 import {
   TablePluginState,
   ColumnResizingPluginState,
   TableCssClassName as ClassName,
 } from '../types';
-import classnames from 'classnames';
-const isIE11 = browser.ie_version === 11;
-
-import { Props, TableOptions } from './table';
+import TableFloatingControls from '../ui/TableFloatingControls';
 import {
   containsHeaderRow,
   tablesHaveDifferentColumnWidths,
   tablesHaveDifferentNoOfColumns,
 } from '../utils';
-import { autoSizeTable } from '../commands';
-import { WidthPluginState } from '../../width';
-import { getParentNodeWidth } from '../../../utils/node-width';
+
+import { Props, TableOptions } from './table';
+
+const isIE11 = browser.ie_version === 11;
 
 export interface ComponentProps extends Props {
   view: EditorView;

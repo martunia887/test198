@@ -1,6 +1,6 @@
+import { Task } from '../../runner';
 import { resolveToCwd } from '../../utils/fs';
 import { loadPackageJson } from '../../utils/package-json';
-import { Task } from '../../runner';
 
 export const loadPackageJsonTask: Task = {
   title: "Loading project's package.json",

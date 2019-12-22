@@ -5,9 +5,12 @@
  * so please don’t be too sad about all this!
  */
 
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
+import { borderRadius, size, ellipsis, absolute } from '@atlaskit/media-ui';
+import * as colors from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
+
 import {
   rgba,
   centerX,
@@ -15,9 +18,6 @@ import {
   transition,
   antialiased,
 } from '../../../styles';
-import { borderRadius, size, ellipsis, absolute } from '@atlaskit/media-ui';
-import { themed } from '@atlaskit/theme/components';
-import * as colors from '@atlaskit/theme/colors';
 
 export interface OverlayProps {
   hasError?: boolean;

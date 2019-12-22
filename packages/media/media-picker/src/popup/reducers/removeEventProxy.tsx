@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isRemoveEventProxyAction } from '../actions/removeEventProxy';
 import { State } from '../domain';
 

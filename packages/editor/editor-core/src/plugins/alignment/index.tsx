@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { alignment } from '@atlaskit/adf-schema';
+
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
+
+import { changeAlignment } from './commands';
 import {
   pluginKey,
   createPlugin,
   AlignmentState,
   AlignmentPluginState,
 } from './pm-plugins/main';
-import { changeAlignment } from './commands';
 import ToolbarAlignment from './ui/ToolbarAlignment';
 
 export const defaultConfig: AlignmentPluginState = {

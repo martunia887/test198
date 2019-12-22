@@ -3,18 +3,19 @@ jest.mock('../../../../../newgen/utils/isIE', () => ({
 }));
 
 import * as React from 'react';
+import Button from '@atlaskit/button';
 import { ProcessedFileState } from '@atlaskit/media-client';
+import { Auth } from '@atlaskit/media-core';
 import {
   mountWithIntlContext,
   nextTick,
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
-import { AudioViewer } from '../../../../../newgen/viewers/audio';
 import Spinner from '@atlaskit/spinner';
-import { DefaultCoverWrapper, AudioCover } from '../../../../../newgen/styled';
+
 import { ErrorMessage } from '../../../../../newgen/error';
-import Button from '@atlaskit/button';
-import { Auth } from '@atlaskit/media-core';
+import { DefaultCoverWrapper, AudioCover } from '../../../../../newgen/styled';
+import { AudioViewer } from '../../../../../newgen/viewers/audio';
 
 const token = 'some-token';
 const clientId = 'some-client-id';

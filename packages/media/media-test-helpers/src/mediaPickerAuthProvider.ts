@@ -1,6 +1,6 @@
 import { Auth, AuthContext, AuthProvider } from '@atlaskit/media-core';
-import { userAuthProviderBaseURL } from './userAuthProvider';
 import { defaultCollectionName } from './collectionNames';
+import { userAuthProviderBaseURL } from './userAuthProvider';
 
 const cachedAuths: { [key: string]: Promise<Auth> } = {};
 

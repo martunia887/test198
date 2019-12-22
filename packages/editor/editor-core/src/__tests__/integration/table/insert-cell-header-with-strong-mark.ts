@@ -1,15 +1,14 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-
+import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
   fullpage,
   quickInsert,
 } from '../_helpers';
-import {
-  mountEditor,
-  goToEditorTestingExample,
-} from '../../__helpers/testing-example-helpers';
 
 BrowserTestCase(
   'inside-table.ts: Insert panel into table, add text, change panel type',

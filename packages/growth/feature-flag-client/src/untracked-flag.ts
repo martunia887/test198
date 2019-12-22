@@ -1,6 +1,5 @@
-import { Flag, FlagShape, CustomAttributes } from './types';
-
 import { isBoolean, isObject, isOneOf, isString } from './lib';
+import { Flag, FlagShape, CustomAttributes } from './types';
 
 export default class UntrackedFlag implements Flag {
   flagKey: string;

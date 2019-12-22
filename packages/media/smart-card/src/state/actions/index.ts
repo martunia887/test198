@@ -1,25 +1,7 @@
 import { auth } from '@atlaskit/outbound-auth-flow-client';
 
-import { AnalyticsHandler } from '../../utils/types';
-import {
-  cardAction,
-  getDefinitionId,
-  getByDefinitionId,
-  getServices,
-  getStatus,
-} from './helpers';
-import {
-  ACTION_PENDING,
-  ACTION_RESOLVING,
-  ACTION_RESOLVED,
-  ACTION_ERROR,
-  ERROR_MESSAGE_OAUTH,
-  ERROR_MESSAGE_FATAL,
-  ANALYTICS_RESOLVING,
-  ANALYTICS_ERROR,
-  ANALYTICS_FALLBACK,
-} from './constants';
-import { CardAppearance } from '../../view/Card';
+import { FetchError } from '../../client/errors';
+import { JsonLd } from '../../client/types';
 import {
   resolvedEvent,
   unresolvedEvent,
@@ -34,9 +16,28 @@ import {
   KEY_SENSITIVE_DATA,
   screenAuthPopupEvent,
 } from '../../utils/analytics';
+import { AnalyticsHandler } from '../../utils/types';
+import { CardAppearance } from '../../view/Card';
 import { useSmartLinkContext } from '../context';
-import { JsonLd } from '../../client/types';
-import { FetchError } from '../../client/errors';
+
+import {
+  ACTION_PENDING,
+  ACTION_RESOLVING,
+  ACTION_RESOLVED,
+  ACTION_ERROR,
+  ERROR_MESSAGE_OAUTH,
+  ERROR_MESSAGE_FATAL,
+  ANALYTICS_RESOLVING,
+  ANALYTICS_ERROR,
+  ANALYTICS_FALLBACK,
+} from './constants';
+import {
+  cardAction,
+  getDefinitionId,
+  getByDefinitionId,
+  getServices,
+  getStatus,
+} from './helpers';
 
 export function useSmartCardActions(
   url: string,

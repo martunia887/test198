@@ -1,6 +1,6 @@
-import { CardStore, CardConnections } from '../store/types';
-import CardClient from '../../client';
 import { Store } from 'redux';
+import CardClient from '../../client';
+import { CardStore, CardConnections } from '../store/types';
 
 // TODO: Remove once mobile team move to using authentication
 // flow https://product-fabric.atlassian.net/browse/SL-347.

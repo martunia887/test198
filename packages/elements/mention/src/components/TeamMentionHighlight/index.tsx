@@ -7,20 +7,20 @@ import {
 import Button from '@atlaskit/button';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 import Tooltip from '@atlaskit/tooltip';
-import TeamMentionHighlightController from './TeamMentionHighlightController';
 
 import {
   fireAnalyticsTeamMentionHighlightEvent,
   ComponentNames,
   Actions,
 } from '../../util/analytics';
-
 import {
   TeamMentionHighlightTitle,
   TeamMentionHighlightCloseTooltip,
   TeamMentionHighlightDescription,
   TeamMentionHighlightDescriptionLink,
 } from '../../util/i18n';
+
+import TeamMentionHighlightController from './TeamMentionHighlightController';
 import * as Styled from './styles';
 
 export interface OwnProps {

@@ -1,10 +1,11 @@
 import { Component } from 'react';
-import { isRetina } from './isRetina';
 import { CardDimensions, CardAppearance } from '..';
-import { ElementDimension, getElementDimension } from './getElementDimension';
+
 import { defaultImageCardDimensions } from './cardDimensions';
-import { isValidPercentageUnit } from './isValidPercentageUnit';
 import { containsPixelUnit } from './containsPixelUnit';
+import { ElementDimension, getElementDimension } from './getElementDimension';
+import { isRetina } from './isRetina';
+import { isValidPercentageUnit } from './isValidPercentageUnit';
 
 export type getDataURIDimensionOptions = {
   component: Component;

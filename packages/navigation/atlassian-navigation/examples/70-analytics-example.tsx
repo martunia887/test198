@@ -4,8 +4,10 @@ import {
   AnalyticsContext,
   useCallbackWithAnalytics,
 } from '@atlaskit/analytics-next';
-import { JiraIcon, JiraLogo } from '@atlaskit/logo';
 import Badge from '@atlaskit/badge';
+import { DropdownItem } from '@atlaskit/dropdown-menu';
+import { JiraIcon, JiraLogo } from '@atlaskit/logo';
+
 import {
   AtlassianNavigation,
   PrimaryButton,
@@ -20,7 +22,6 @@ import {
   Profile,
 } from '../src';
 import { useOverflowStatus } from '../src/controllers/overflow';
-import { DropdownItem } from '@atlaskit/dropdown-menu';
 
 const useNavigationAnalytics = (subject: string) => {
   return useCallbackWithAnalytics(

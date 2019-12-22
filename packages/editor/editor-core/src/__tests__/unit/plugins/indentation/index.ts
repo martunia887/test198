@@ -7,7 +7,6 @@ import {
   indentation,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-
 import * as indentationCommands from '../../../../plugins/indentation/commands';
 
 const { indent, outdent } = indentationCommands;

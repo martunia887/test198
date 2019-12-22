@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import FieldRange from '@atlaskit/range';
+
 import {
   Slider,
   SliderProps,

@@ -1,11 +1,5 @@
 import * as React from 'react';
 import {
-  objectData,
-  personData,
-  containerData,
-  makeAutocompleteData,
-} from './mockData';
-import {
   QuickSearch,
   ResultItemGroup,
   ContainerResult,
@@ -15,6 +9,12 @@ import {
   ObjectResult,
   ObjectResultProps,
 } from '../../src';
+import {
+  objectData,
+  personData,
+  containerData,
+  makeAutocompleteData,
+} from './mockData';
 
 type DataShape = {
   title: string;

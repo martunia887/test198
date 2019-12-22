@@ -5,9 +5,8 @@ import * as historyHelper from 'history';
 
 import { mockRoute } from '../../../../common/mocks';
 import { getResourceStore } from '../../../../controllers/resource-store';
-import { RouterSubscriber } from '../../../../controllers/subscribers/route';
-
 import { StaticRouter } from '../../../../controllers/static-router';
+import { RouterSubscriber } from '../../../../controllers/subscribers/route';
 
 const mockLocation = {
   pathname: '/pathname',

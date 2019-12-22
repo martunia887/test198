@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { R300 } from '@atlaskit/theme/colors';
-import ErrorIcon from '@atlaskit/icon/glyph/error';
-import Button from '@atlaskit/button';
-import { Frame } from '../Frame';
-import { IconAndTitleLayout } from '../IconAndTitleLayout';
-import { AKIconWrapper } from '../Icon';
-import { messages } from '../../messages';
 import { FormattedMessage } from 'react-intl';
+import Button from '@atlaskit/button';
+import ErrorIcon from '@atlaskit/icon/glyph/error';
+import { R300 } from '@atlaskit/theme/colors';
+
+import { messages } from '../../messages';
+import { Frame } from '../Frame';
+import { AKIconWrapper } from '../Icon';
+import { IconAndTitleLayout } from '../IconAndTitleLayout';
 
 export interface InlineCardErroredViewProps {
   /** The url to display */

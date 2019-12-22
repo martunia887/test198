@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
-import { MentionResource, MentionProvider } from '@atlaskit/editor-core';
-import { mention, emoji } from '@atlaskit/util-data-test';
 import { ActivityProvider } from '@atlaskit/activity';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
+import { MentionResource, MentionProvider } from '@atlaskit/editor-core';
 import { EmojiProvider } from '@atlaskit/emoji';
+import { mention, emoji } from '@atlaskit/util-data-test';
+import { EditorView } from 'prosemirror-view';
+
 import { BitbucketTransformer } from '../src';
+
 import { Content } from './styles';
 
 const rejectedPromise = Promise.reject(

@@ -4,6 +4,7 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
 import createStub from 'raf-stub';
+
 import { mobileScrollPluginKey } from '../../../../plugins/mobile-scroll';
 import { setKeyboardHeight } from '../../../../plugins/mobile-scroll/commands';
 

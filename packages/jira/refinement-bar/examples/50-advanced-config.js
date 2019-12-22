@@ -1,8 +1,6 @@
 // @noflow
 
 import React from 'react';
-
-import { Heading, PreMap } from './styled';
 import {
   AvatarAsyncSelectFilter,
   IssueSelectFilter,
@@ -14,6 +12,7 @@ import {
   RefinementBarProvider,
   RefinementBarUI,
 } from '../src';
+import { Heading, PreMap } from './styled';
 
 export default class AdvancedConfigExample extends React.Component {
   state = { activePopupKey: null, value: {} };

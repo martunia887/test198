@@ -14,13 +14,11 @@ import {
 } from '@atlaskit/media-client';
 import { TouchedFiles, ProcessingFileState } from '@atlaskit/media-client';
 import { AuthProvider, Auth } from '@atlaskit/media-core';
-import uuidV4 from 'uuid/v4';
 import { asMock, fakeMediaClient } from '@atlaskit/media-test-helpers';
-import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs';
-import { UploadServiceImpl } from '../../uploadServiceImpl';
-import * as getPreviewModule from '../../../util/getPreviewFromBlob';
-import * as getPreviewFromImage from '../../../util/getPreviewFromImage';
+import { Observable } from 'rxjs/Observable';
+import uuidV4 from 'uuid/v4';
+
 import {
   Preview,
   MediaFile,
@@ -28,6 +26,9 @@ import {
   UploadPreviewUpdateEventPayload,
   UploadsStartEventPayload,
 } from '../../../types';
+import * as getPreviewModule from '../../../util/getPreviewFromBlob';
+import * as getPreviewFromImage from '../../../util/getPreviewFromImage';
+import { UploadServiceImpl } from '../../uploadServiceImpl';
 
 const fileStreamCacheSpy = jest.spyOn(getFileStreamsCache(), 'set');
 

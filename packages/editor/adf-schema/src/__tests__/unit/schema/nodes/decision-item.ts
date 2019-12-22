@@ -1,6 +1,6 @@
-import { name } from '../../../../version.json';
-import { createSchema } from '../../../../schema/create-schema';
 import { toHTML, fromHTML } from '../../../../../test-helpers';
+import { createSchema } from '../../../../schema/create-schema';
+import { name } from '../../../../version.json';
 
 const schema = makeSchema();
 

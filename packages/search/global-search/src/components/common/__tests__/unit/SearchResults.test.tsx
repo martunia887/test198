@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import SearchResults, { Props } from '../../SearchResults';
-import SearchError from '../../../SearchError';
-import PreQueryState from '../../PreQueryState';
-import { PostQueryAnalyticsComponent } from '../../ScreenAnalyticsHelper';
-import ResultGroupsComponent, {
-  ResultGroupType,
-} from '../../ResultGroupsComponent';
+
 import {
   ResultType,
   AnalyticsType,
   ResultsGroup,
   ContentType,
 } from '../../../../model/Result';
+import SearchError from '../../../SearchError';
+import PreQueryState from '../../PreQueryState';
+import ResultGroupsComponent, {
+  ResultGroupType,
+} from '../../ResultGroupsComponent';
+import { PostQueryAnalyticsComponent } from '../../ScreenAnalyticsHelper';
+import SearchResults, { Props } from '../../SearchResults';
 
 const defaultProps = {
   isPreQuery: true,

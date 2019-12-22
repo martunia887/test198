@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-
-import { colors } from '@atlaskit/theme';
 import { ADFEntity, ValidationError } from '@atlaskit/adf-utils';
+import { colors } from '@atlaskit/theme';
 
 export type Error = {
   entity: ADFEntity;

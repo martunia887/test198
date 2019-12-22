@@ -1,8 +1,10 @@
 import styled from 'styled-components';
-import { themed } from '@atlaskit/theme/components';
 import { N0, DN600, DN0 } from '@atlaskit/theme/colors';
-import { getHeight, paddingUnitless, transition } from './constants';
+import { themed } from '@atlaskit/theme/components';
+
 import { StyledProps } from '../types';
+
+import { getHeight, paddingUnitless, transition } from './constants';
 
 const backgroundColor = themed({ light: N0, dark: DN600 });
 const backgroundColorChecked = themed({ light: N0, dark: DN0 });

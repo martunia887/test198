@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import Button from '@atlaskit/button';
-import SectionMessage from '@atlaskit/section-message';
 import InfoIcon from '@atlaskit/icon/glyph/info';
+import SectionMessage from '@atlaskit/section-message';
 
 import { commonMessages, overviewMessages } from '../../messages';
-import StatefulInlineDialog from '../StatefulInlineDialog';
-import UserInfo from '../UserInfo';
-import { DeleteUserOverviewScreenProps } from './types';
-import * as Styled from './styled';
 import { DropdownList } from '../DropdownList';
 import MessagesIntlProvider from '../MessagesIntlProvider';
+import StatefulInlineDialog from '../StatefulInlineDialog';
+import UserInfo from '../UserInfo';
+
+import * as Styled from './styled';
+import { DeleteUserOverviewScreenProps } from './types';
 
 export class DeleteUserOverviewScreen extends React.Component<
   DeleteUserOverviewScreenProps

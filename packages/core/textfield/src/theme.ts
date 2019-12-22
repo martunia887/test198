@@ -1,6 +1,7 @@
 import { CSSProperties } from 'react';
 import { createTheme } from '@atlaskit/theme/components';
 import { codeFontFamily, gridSize, fontSize } from '@atlaskit/theme/constants';
+
 import * as componentTokens from './component-tokens';
 
 const disabledRules = {

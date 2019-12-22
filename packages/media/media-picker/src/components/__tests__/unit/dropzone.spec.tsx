@@ -1,10 +1,10 @@
 import * as React from 'react';
-jest.mock('../../../service/uploadServiceImpl');
-import { Dropzone, DropzoneBase } from '../../dropzone/dropzone';
 import { mount, ReactWrapper } from 'enzyme';
-import { DropzoneDragEnterEventPayload } from '../../types';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { fakeMediaClient } from '@atlaskit/media-test-helpers';
+
+import { Dropzone, DropzoneBase } from '../../dropzone/dropzone';
+import { DropzoneDragEnterEventPayload } from '../../types';
 
 const files = [new File([], '')];
 

@@ -1,10 +1,10 @@
 import fetchMock from 'fetch-mock';
+import uuid from 'uuid/v4';
 import {
   ConfluenceContentType,
   RecentPage,
   RecentSpace,
 } from '../../../api/ConfluenceClient';
-import uuid from 'uuid/v4';
 
 export const DUMMY_CONFLUENCE_HOST = 'http://localhost';
 export const DUMMY_CLOUD_ID = '123';

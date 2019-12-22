@@ -1,8 +1,7 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass, ButtonHTMLAttributes } from 'react';
-import { borderRadius } from '@atlaskit/theme/constants';
+import styled from 'styled-components';
 import { N50A } from '@atlaskit/theme/colors';
+import { borderRadius } from '@atlaskit/theme/constants';
 
 // Using module augmentation to add crossOrigin attribute as it does not exist yet, PR has been opened in
 // DefinitelyTyped for it

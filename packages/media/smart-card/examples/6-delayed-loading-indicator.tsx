@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Form, { Field, FormHeader } from '@atlaskit/form';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Textfield from '@atlaskit/textfield';
+
 import { Card, Client, Provider, ResolveResponse } from '../src';
 
 const customResponse = (url: string): ResolveResponse => ({

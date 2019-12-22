@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
 import BranchIcon from '@atlaskit/icon-object/glyph/branch/16';
+import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
 
 import { extractInlineViewPropsFromObject } from './extractPropsFromObject';
 import { buildName } from './extractPropsFromSourceCodeCommon';

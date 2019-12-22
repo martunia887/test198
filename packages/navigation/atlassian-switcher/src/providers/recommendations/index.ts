@@ -3,7 +3,6 @@ import {
   RecommendationItem,
   RecommendationsFeatureFlags,
 } from '../../types';
-
 import {
   jswOgExpandsExperiment,
   productStoreInTrelloRecommendation,

@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { gridSize, typography } from '@atlaskit/theme';
 import styled from 'styled-components';
+import { gridSize, typography } from '@atlaskit/theme';
+
 import {
   analyticsAttributes,
   withAnalyticsContextData,
 } from '../utils/analytics';
+
 import { FadeIn } from './fade-in';
 
 const SectionContainer = styled.section`

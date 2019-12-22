@@ -1,17 +1,15 @@
 // @flow
 
 import React from 'react';
-
 import { Route, Switch } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
-
 // $FlowFixMe - ts module and relative import?
 import AuthenticatedAppNavigationExample from '@atlaskit/atlassian-navigation/examples/10-authenticated-example';
 
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';
 
-import { DummySkeletonContent } from './shared/components/DummySkeletonContent';
 import { LinkItem, ProjectSwitcher } from './shared/components';
+import { DummySkeletonContent } from './shared/components/DummySkeletonContent';
 import { routes } from './shared/routes';
 import ContainerViews from './shared/views/container';
 import RootViews from './shared/views/root';

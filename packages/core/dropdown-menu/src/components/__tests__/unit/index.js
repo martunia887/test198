@@ -2,10 +2,10 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import Droplist from '@atlaskit/droplist';
 import Button from '@atlaskit/button';
-import MoreIcon from '@atlaskit/icon/glyph/more';
+import Droplist from '@atlaskit/droplist';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
+import MoreIcon from '@atlaskit/icon/glyph/more';
 
 import Menu, {
   DropdownItem,

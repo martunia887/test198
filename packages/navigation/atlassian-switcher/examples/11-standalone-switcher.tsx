@@ -1,11 +1,13 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import {
   mockEndpoints,
   REQUEST_FAST,
 } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+
 import AtlassianSwitcher from '../src';
-import styled from 'styled-components';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 const Container = styled.div`
   width: 300px;

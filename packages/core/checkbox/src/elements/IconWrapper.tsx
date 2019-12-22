@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { jsx, CSSObject } from '@emotion/core';
-import { defaultAttributesFn } from '../utils';
 import {
   IconWrapperProps,
   ThemeIconTokens,
   IconWrapperCSSProps,
 } from '../types';
+import { defaultAttributesFn } from '../utils';
 
 const disabledBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.disabled,

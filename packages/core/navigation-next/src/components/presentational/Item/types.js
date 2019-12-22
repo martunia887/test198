@@ -3,8 +3,8 @@
 import type { ComponentType, Node, Ref } from 'react';
 import type { DraggableProps, DragHandleProps } from 'react-beautiful-dnd';
 
-import type { AfterComponentProps } from '../../connected/GoToItem/types';
 import type { StyleReducerWithState, ProductTheme } from '../../../theme/types';
+import type { AfterComponentProps } from '../../connected/GoToItem/types';
 import type { InteractionState } from '../InteractionStateManager/types';
 
 type Spacing = 'compact' | 'default';

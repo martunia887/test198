@@ -1,5 +1,4 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-
 import { gotoCardFilesMockedPage } from '../_pages/card-files-mocked-page';
 
 const cardStandardSelector = '[data-testid="media-card-standard"]';

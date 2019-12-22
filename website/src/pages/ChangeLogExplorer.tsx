@@ -1,18 +1,19 @@
 import React from 'react';
-import * as H from 'history';
 import { match } from 'react-router';
 import styled from 'styled-components';
-import BackIcon from '@atlaskit/icon/glyph/arrow-left';
 import TextField from '@atlaskit/field-text';
-import Loadable from '../components/WrappedLoader';
+import BackIcon from '@atlaskit/icon/glyph/arrow-left';
+import * as H from 'history';
+
 import Changelog, { NoMatch } from '../components/ChangeLog';
-import Page from '../components/Page';
-import { packages } from '../site';
-import * as fs from '../utils/fs';
-import { File } from '../types';
-import Loading from '../components/Loading';
-import { divvyChangelog } from '../utils/changelog';
 import LinkButton from '../components/LinkButton';
+import Loading from '../components/Loading';
+import Page from '../components/Page';
+import Loadable from '../components/WrappedLoader';
+import { packages } from '../site';
+import { File } from '../types';
+import { divvyChangelog } from '../utils/changelog';
+import * as fs from '../utils/fs';
 
 export type Props = {
   match: match<Record<string, string>>;

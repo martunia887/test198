@@ -1,18 +1,18 @@
+import { defaultSchema } from '@atlaskit/adf-schema';
+import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
+import { createDispatch } from '@atlaskit/editor-core/src/event-dispatcher';
 import {
   PortalProviderAPI,
   EventDispatcher,
   PluginConfig,
   asyncCreatePMPluginList,
 } from '@atlaskit/editor-core/test-utils';
-
-import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
-import { defaultSchema } from '@atlaskit/adf-schema';
-import { EditorView } from 'prosemirror-view';
-import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
 import { Schema } from 'prosemirror-model';
+import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
 import { Refs, RefsNode } from './schema-builder';
 import { setSelection } from './utils/set-selection';
-import { createDispatch } from '@atlaskit/editor-core/src/event-dispatcher';
 
 class PortalProviderMock extends EventDispatcher implements PortalProviderAPI {
   portals = new Map();

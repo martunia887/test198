@@ -7,6 +7,7 @@ import {
   SpotlightTarget,
   SpotlightTransition,
 } from '../src';
+
 import { Highlight } from './styled';
 
 interface State {

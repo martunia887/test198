@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 
-import PanelTextInput from '../../../../ui/PanelTextInput';
 import FloatingToolbar, {
   handlePositionCalculatedWith,
   getOffsetParent,
   getNearestNonTextNode,
   Coordinates,
 } from '../../../../ui/FloatingToolbar';
+import PanelTextInput from '../../../../ui/PanelTextInput';
 
 export const messages = defineMessages({
   placeholderTextPlaceholder: {

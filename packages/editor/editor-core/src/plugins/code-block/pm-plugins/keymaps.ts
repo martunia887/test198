@@ -5,8 +5,9 @@ import {
   findParentNodeOfTypeClosestToPos,
   hasParentNodeOfType,
 } from 'prosemirror-utils';
-import { getCursor, isEmptyNode, pipe } from '../../../utils';
+
 import { CommandDispatch } from '../../../types';
+import { getCursor, isEmptyNode, pipe } from '../../../utils';
 
 const deleteCurrentItem = ($from: ResolvedPos) => (
   tr: Transaction,

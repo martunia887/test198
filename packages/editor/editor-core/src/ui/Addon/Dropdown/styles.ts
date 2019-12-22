@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { borderRadius, colors } from '@atlaskit/theme';
 
 export const Dropdown: ComponentClass<HTMLAttributes<{}>> = styled.div`

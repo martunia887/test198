@@ -1,12 +1,13 @@
 import { inputRules, InputRule } from 'prosemirror-inputrules';
 import { Schema } from 'prosemirror-model';
 import { Plugin, EditorState } from 'prosemirror-state';
+
 import { analyticsService } from '../../../analytics';
 import { createInputRule } from '../../../utils/input-rules';
-import { Match, LinkMatcher, normalizeUrl } from '../utils';
-import { queueCards } from '../../card/pm-plugins/actions';
 import { INPUT_METHOD, addAnalytics } from '../../analytics';
+import { queueCards } from '../../card/pm-plugins/actions';
 import { getLinkCreationAnalyticsEvent } from '../analytics';
+import { Match, LinkMatcher, normalizeUrl } from '../utils';
 
 export function createLinkInputRule(regexp: RegExp): InputRule {
   // Plain typed text (eg, typing 'www.google.com') should convert to a hyperlink

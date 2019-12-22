@@ -4,8 +4,8 @@
  */
 
 import { useState } from 'react';
-import { useAnalyticsEvents } from './useAnalyticsEvents';
 import { CreateEventMap, AnalyticsEventCreator } from './types';
+import { useAnalyticsEvents } from './useAnalyticsEvents';
 
 export type PatchedPropsHook = {
   patchedEventProps: CreateEventMap;

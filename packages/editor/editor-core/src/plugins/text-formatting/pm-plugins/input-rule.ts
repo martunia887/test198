@@ -1,7 +1,9 @@
 import { InputRule, inputRules } from 'prosemirror-inputrules';
 import { Schema, MarkType } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
+
 import { analyticsService } from '../../../analytics';
+import { applyMarkOnRange } from '../../../utils/commands';
 import { InputRuleHandler, createInputRule } from '../../../utils/input-rules';
 import {
   ACTION,
@@ -11,7 +13,6 @@ import {
   INPUT_METHOD,
 } from '../../analytics';
 import { ruleWithAnalytics } from '../../analytics/utils';
-import { applyMarkOnRange } from '../../../utils/commands';
 
 const validCombos = {
   '**': ['_', '~~'],

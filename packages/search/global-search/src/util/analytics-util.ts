@@ -1,12 +1,13 @@
+import { GasPayload } from '@atlaskit/analytics-gas-types';
+
+import { ABTest } from '../api/CrossProductSearchClient';
+import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
 import {
   Result,
   ConfluenceObjectResult,
   JiraResult,
   ResultType,
 } from '../model/Result';
-import { GasPayload } from '@atlaskit/analytics-gas-types';
-import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
-import { ABTest } from '../api/CrossProductSearchClient';
 
 export declare type ScreenEventSafeGasPayload = GasPayload & { name: string };
 

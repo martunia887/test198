@@ -2,8 +2,6 @@ import {
   denormaliseEmojiServiceResponse,
   shouldUseAltRepresentation,
 } from '../../../api/EmojiUtils';
-import { customCategory } from '../../../util/constants';
-import { isEmojiVariationDescription } from '../../../util/type-helpers';
 import {
   EmojiDescription,
   EmojiServiceDescription,
@@ -12,6 +10,8 @@ import {
   ImageRepresentation,
   SpriteRepresentation,
 } from '../../../types';
+import { customCategory } from '../../../util/constants';
+import { isEmojiVariationDescription } from '../../../util/type-helpers';
 import {
   defaultMediaApiToken,
   mediaEmoji,

@@ -1,42 +1,38 @@
 import * as React from 'react';
-import uuidV4 from 'uuid/v4';
-import { Subscription } from 'rxjs/Subscription';
-
 import {
   intlShape,
   IntlProvider,
   injectIntl,
   InjectedIntlProps,
 } from 'react-intl';
-
 import {
   withAnalyticsContext,
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-
 import {
   MediaClient,
   UploadableFile,
   FileIdentifier,
 } from '@atlaskit/media-client';
-// Importing from own entry-point, since we dont' want to bring whole media-client at this point
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { messages, Shortcut } from '@atlaskit/media-ui';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
+import { start, end } from 'perf-marks';
+import { Subscription } from 'rxjs/Subscription';
+import uuidV4 from 'uuid/v4';
 
-import EditorView from './editorView/editorView';
-import { Blanket, SpinnerWrapper } from './styled';
-import { fileToBase64, fireAnalyticsEvent } from '../util';
-import ErrorView from './editorView/errorView/errorView';
 import { CancelInputType, Dimensions, ShapeParameters, Tool } from '../common';
-
+import { fileToBase64, fireAnalyticsEvent } from '../util';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-import { start, end } from 'perf-marks';
+
+import EditorView from './editorView/editorView';
+import ErrorView from './editorView/errorView/errorView';
+import { Blanket, SpinnerWrapper } from './styled';
 
 export const convertFileNameToPng = (fileName?: string) => {
   if (!fileName) {

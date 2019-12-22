@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { DescriptionBylineProps } from './types';
-import { DescriptionBylineStyle } from './styles';
+
 import { messages } from '../i18n';
+
+import { DescriptionBylineStyle } from './styles';
+import { DescriptionBylineProps } from './types';
 
 export default class TeamMentionDescriptionByline extends React.PureComponent<
   DescriptionBylineProps

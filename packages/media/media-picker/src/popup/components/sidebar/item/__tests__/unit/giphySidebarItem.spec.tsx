@@ -1,17 +1,17 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-import { changeService, searchGiphy } from '../../../../../actions';
+import { shallow } from 'enzyme';
 import {
   mockStore,
   getComponentClassWithStore,
 } from '@atlaskit/media-test-helpers';
 
-import { StatelessSidebarItem } from '../../sidebarItem';
+import { changeService, searchGiphy } from '../../../../../actions';
+import { GiphyIcon } from '../../../icons';
 import {
   StatelessGiphySidebarItem,
   default as ConnectedGiphySidebarItem,
 } from '../../giphySidebarItem';
-import { GiphyIcon } from '../../../icons';
+import { StatelessSidebarItem } from '../../sidebarItem';
 
 const ConnectedSidebarItemStoreWithStore = getComponentClassWithStore(
   ConnectedGiphySidebarItem,

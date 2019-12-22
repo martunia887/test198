@@ -25,22 +25,23 @@ const mockFetchError = jest.fn();
 jest.doMock('../../client/errors', () => ({
   FetchError: mockFetchError,
 }));
-import CardClient from '../../client';
 import * as React from 'react';
-import { Card } from '../Card';
-import { Provider } from '../..';
-import { fakeFactory, mocks } from '../../utils/mocks';
 import {
   render,
   waitForElement,
   fireEvent,
   cleanup,
 } from '@testing-library/react';
+
+import { Provider } from '../..';
+import CardClient from '../../client';
 import {
   MESSAGE_WINDOW_CLOSED,
   KEY_SENSITIVE_DATA,
   KEY_WINDOW_CLOSED,
 } from '../../utils/analytics';
+import { fakeFactory, mocks } from '../../utils/mocks';
+import { Card } from '../Card';
 // TODO: Failing in Landkid
 describe('smart-card: analytics', () => {
   let mockClient: CardClient;

@@ -1,8 +1,8 @@
-import { getIdentifierCollection } from '../../../../newgen/utils/getIdentifierCollection';
 import {
   ExternalImageIdentifier,
   FileIdentifier,
 } from '@atlaskit/media-client';
+import { getIdentifierCollection } from '../../../../newgen/utils/getIdentifierCollection';
 
 describe('getIdentifierCollection', () => {
   const defaultCollection = 'default-collection-name';

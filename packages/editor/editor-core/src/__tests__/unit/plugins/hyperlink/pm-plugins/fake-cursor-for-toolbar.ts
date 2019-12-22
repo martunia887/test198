@@ -1,4 +1,3 @@
-import fakeCursorForToolbarPlugin from '../../../../../plugins/hyperlink/pm-plugins/fake-cursor-for-toolbar';
 import {
   doc,
   p,
@@ -7,9 +6,11 @@ import {
   insertText,
   a,
 } from '@atlaskit/editor-test-helpers';
-import { DecorationSet, Decoration } from 'prosemirror-view';
 import { PluginSpec, EditorState } from 'prosemirror-state';
+import { DecorationSet, Decoration } from 'prosemirror-view';
+
 import { showLinkToolbar } from '../../../../../plugins/hyperlink/commands';
+import fakeCursorForToolbarPlugin from '../../../../../plugins/hyperlink/pm-plugins/fake-cursor-for-toolbar';
 
 const init = (fakeCursorForToolbarPlugin.spec as PluginSpec).state!.init;
 const getDecorations = (state: EditorState) =>

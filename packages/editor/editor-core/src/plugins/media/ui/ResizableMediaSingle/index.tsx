@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  findParentNodeOfTypeClosestToPos,
-  hasParentNodeOfType,
-} from 'prosemirror-utils';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
-import { MediaClientConfig } from '@atlaskit/media-core';
-import { getMediaClient } from '@atlaskit/media-client';
 import {
   akEditorWideLayoutWidth,
   calcPxFromColumns,
@@ -13,13 +7,20 @@ import {
   akEditorBreakoutPadding,
   calcColumnsFromPx,
 } from '@atlaskit/editor-common';
+import { getMediaClient } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
+import {
+  findParentNodeOfTypeClosestToPos,
+  hasParentNodeOfType,
+} from 'prosemirror-utils';
 
+import { getPluginState } from '../../../table/pm-plugins/table-resizing/plugin';
+import { calcMediaPxWidth, wrappedLayouts } from '../../utils/media-single';
+
+import Resizer from './Resizer';
 import { Wrapper } from './styled';
 import { Props, EnabledHandles } from './types';
-import Resizer from './Resizer';
 import { snapTo, handleSides, imageAlignmentMap } from './utils';
-import { calcMediaPxWidth, wrappedLayouts } from '../../utils/media-single';
-import { getPluginState } from '../../../table/pm-plugins/table-resizing/plugin';
 
 type State = {
   offsetLeft: number;

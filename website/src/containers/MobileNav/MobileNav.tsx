@@ -1,12 +1,13 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import Tooltip from '@atlaskit/tooltip';
 import MobileHeader from '@atlaskit/mobile-header';
 import Navigation, { AkContainerTitle } from '@atlaskit/navigation';
+import Tooltip from '@atlaskit/tooltip';
 
-import Groups from './Groups';
 import { AtlaskitIcon } from '../../components/AtlaskitIcon';
 import { externalPackages as packages, docs, patterns } from '../../site';
+
+import Groups from './Groups';
 
 export function Nav({
   closeNav,

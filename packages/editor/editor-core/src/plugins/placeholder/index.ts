@@ -1,6 +1,7 @@
 import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
+
 import { EditorPlugin } from '../../types';
 import { isEmptyDocument } from '../../utils';
 

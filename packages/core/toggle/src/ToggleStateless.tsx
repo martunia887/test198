@@ -1,11 +1,11 @@
-import { uid } from 'react-uid';
 import React, { Component } from 'react';
+import { uid } from 'react-uid';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import { name as packageName, version as packageVersion } from './version.json';
+
 import {
   Handle,
   Icon,
@@ -16,6 +16,7 @@ import {
   Slide,
 } from './styled';
 import { StatelessProps, StyledProps, Sizes } from './types';
+import { name as packageName, version as packageVersion } from './version.json';
 
 interface State {
   // not controlled by props but by browser focus

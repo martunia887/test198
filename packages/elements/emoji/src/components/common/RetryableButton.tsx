@@ -1,9 +1,11 @@
-import AkButton from '@atlaskit/button';
-import Spinner from '@atlaskit/spinner';
 import * as React from 'react';
 import { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
+import AkButton from '@atlaskit/button';
+import Spinner from '@atlaskit/spinner';
+
 import { messages } from '../i18n';
+
 import * as styles from './styles';
 
 export interface Props {

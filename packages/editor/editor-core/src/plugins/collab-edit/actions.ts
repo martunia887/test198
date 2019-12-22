@@ -1,13 +1,13 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { receiveTransaction } from 'prosemirror-collab';
-import { Step } from 'prosemirror-transform';
 import {
   AllSelection,
   NodeSelection,
   Selection,
   Transaction,
 } from 'prosemirror-state';
+import { Step } from 'prosemirror-transform';
 import { EditorView } from 'prosemirror-view';
-import { ProviderFactory } from '@atlaskit/editor-common';
 
 import {
   CollabEventInitData,
@@ -18,7 +18,6 @@ import {
   CollabSendableSelection,
   CollabEditOptions,
 } from './types';
-
 import { replaceDocument } from './utils';
 
 export const handleInit = (

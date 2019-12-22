@@ -1,9 +1,10 @@
 // #region Imports
+import { Node as PmNode } from 'prosemirror-model';
 import { Transaction } from 'prosemirror-state';
 import { CellSelection } from 'prosemirror-tables';
 import { findTable, findParentNodeOfType } from 'prosemirror-utils';
 import { DecorationSet } from 'prosemirror-view';
-import { Node as PmNode } from 'prosemirror-model';
+
 import { defaultTableSelection } from './pm-plugins/main';
 import {
   TablePluginState,

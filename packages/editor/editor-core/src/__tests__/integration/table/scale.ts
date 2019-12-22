@@ -1,18 +1,19 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, getDocFromElement, fullpage } from '../_helpers';
+
 import {
   insertColumn,
   deleteColumn,
 } from '../../__helpers/page-objects/_table';
 import {
-  tableWithManyMinWidthCols,
-  tableInOverflow,
-} from './__fixtures__/scale';
-
-import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
+import { editable, getDocFromElement, fullpage } from '../_helpers';
+
+import {
+  tableWithManyMinWidthCols,
+  tableInOverflow,
+} from './__fixtures__/scale';
 
 BrowserTestCase(
   'Should scale remaining columns when adding a new column preventing from going to overflow',

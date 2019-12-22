@@ -1,8 +1,8 @@
 /** @jsx jsx */
 
-import styled from '@emotion/styled';
-import { gridSize } from '@atlaskit/theme/constants';
 import * as colors from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
+import styled from '@emotion/styled';
 
 export const HEADER_HEIGHT = gridSize() * 6;
 export const FOOTER_HEIGHT = gridSize() * 6;

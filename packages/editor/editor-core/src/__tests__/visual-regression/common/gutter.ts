@@ -1,11 +1,12 @@
-import { initFullPageEditorWithAdf, snapshot, Device } from '../_utils';
-import longContent from './__fixtures__/long-content-adf.json';
-import { typeInEditorAtEndOfDocument } from '../../__helpers/page-objects/_editor';
-import { tableSelectors } from '../../__helpers/page-objects/_table';
-import { panelSelectors } from '../../__helpers/page-objects/_panel';
 import { decisionSelectors } from '../../__helpers/page-objects/_decision';
+import { typeInEditorAtEndOfDocument } from '../../__helpers/page-objects/_editor';
 import { pressKey } from '../../__helpers/page-objects/_keyboard';
+import { panelSelectors } from '../../__helpers/page-objects/_panel';
+import { tableSelectors } from '../../__helpers/page-objects/_table';
 import { Page } from '../../__helpers/page-objects/_types';
+import { initFullPageEditorWithAdf, snapshot, Device } from '../_utils';
+
+import longContent from './__fixtures__/long-content-adf.json';
 
 describe('Gutter:', () => {
   let page: Page;

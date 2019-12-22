@@ -7,9 +7,10 @@ import {
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
 import Base, { Label } from '@atlaskit/field-base';
-import { name as packageName, version as packageVersion } from './version.json';
+
 import Radio from './Radio';
 import type { RadioGroupStatelessPropTypes } from './types';
+import { name as packageName, version as packageVersion } from './version.json';
 
 if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
   // eslint-disable-next-line no-console

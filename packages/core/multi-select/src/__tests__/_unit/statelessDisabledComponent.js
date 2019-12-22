@@ -2,10 +2,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { FieldBaseStateless } from '@atlaskit/field-base';
+
 import { MultiSelectStateless } from '../..';
 import Trigger from '../../components/Trigger';
 import type { GroupType } from '../../types';
-
 import { name } from '../../version.json';
 
 describe(`${name} - stateless`, () => {

@@ -1,10 +1,11 @@
 // @flow
 
 import React, { Fragment, Component } from 'react';
+import deepEqual from 'react-fast-compare';
 import Tooltip from '@atlaskit/tooltip';
 
-import deepEqual from 'react-fast-compare';
 import { styleReducerNoOp, withGlobalTheme } from '../../../theme';
+
 import type {
   GlobalItemPresentationProps,
   GlobalItemStyles,

@@ -1,12 +1,18 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
 import {
   AnalyticsListener,
   withAnalyticsEvents,
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { FileDetails } from '@atlaskit/media-client';
+
+import {
+  version as packageVersion,
+  name as packageName,
+} from '../../../version.json';
 import {
   createAndFireMediaEvent,
   MediaCardAnalyticsPayload,
@@ -15,11 +21,6 @@ import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
 } from '../../analytics';
-import {
-  version as packageVersion,
-  name as packageName,
-} from '../../../version.json';
-import { FileDetails } from '@atlaskit/media-client';
 
 const somePayload: MediaCardAnalyticsPayloadBase = {
   eventType: 'ui',

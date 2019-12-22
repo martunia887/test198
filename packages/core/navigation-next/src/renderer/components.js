@@ -10,9 +10,10 @@ import Loadable from 'react-loadable';
 import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 
 import { navigationItemClicked } from '../common/analytics';
-
 import RenderBlocker from '../components/common/RenderBlocker';
-
+import BackItem from '../components/connected/BackItem';
+import ConnectedItem from '../components/connected/ConnectedItem';
+import GoToItem from '../components/connected/GoToItem';
 import ContainerHeaderComponent from '../components/presentational/ContainerHeader';
 import GroupComponent from '../components/presentational/Group';
 import GroupHeadingComponent from '../components/presentational/GroupHeading';
@@ -22,10 +23,6 @@ import SectionComponent from '../components/presentational/Section';
 import SectionHeadingComponent from '../components/presentational/SectionHeading';
 import Separator from '../components/presentational/Separator';
 import Wordmark from '../components/presentational/Wordmark';
-
-import BackItem from '../components/connected/BackItem';
-import ConnectedItem from '../components/connected/ConnectedItem';
-import GoToItem from '../components/connected/GoToItem';
 
 import type {
   CustomComponents,

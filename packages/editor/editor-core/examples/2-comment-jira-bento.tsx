@@ -1,13 +1,15 @@
 import * as React from 'react';
+import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
+import { EmojiProvider } from '@atlaskit/emoji';
+import { mention, emoji } from '@atlaskit/util-data-test';
+
+import CollapsedEditor from '../src/ui/CollapsedEditor';
+import ToolbarHelp from '../src/ui/ToolbarHelp';
+
 import Editor, { EditorProps } from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
 import WithEditorActions from './../src/ui/WithEditorActions';
-import CollapsedEditor from '../src/ui/CollapsedEditor';
-import ToolbarHelp from '../src/ui/ToolbarHelp';
-import { mention, emoji } from '@atlaskit/util-data-test';
-import { EmojiProvider } from '@atlaskit/emoji';
 import { mediaProvider } from './5-full-page';
-import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 
 export type Props = {
   editorProps?: EditorProps;

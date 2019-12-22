@@ -1,3 +1,4 @@
+import { RefsNode } from '@atlaskit/editor-test-helpers';
 import {
   DOMParser,
   DOMSerializer,
@@ -6,7 +7,6 @@ import {
   Node as PMNode,
   ParseOptions,
 } from 'prosemirror-model';
-import { RefsNode } from '@atlaskit/editor-test-helpers';
 import { TextSelection } from 'prosemirror-state';
 
 export const fromHTML = (

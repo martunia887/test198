@@ -1,5 +1,5 @@
-import * as readline from 'readline';
 import chalk from 'chalk';
+import * as readline from 'readline';
 
 export function prompt(message: string): Promise<boolean> {
   return new Promise(resolve => {

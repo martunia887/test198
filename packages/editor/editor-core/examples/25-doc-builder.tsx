@@ -1,15 +1,15 @@
 import * as React from 'react';
-import prettier from 'prettier/standalone';
-import babylon from 'prettier/parser-babylon';
-
-import TextArea from '@atlaskit/textarea';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { builderEval } from '@atlaskit/editor-test-helpers';
+import TextArea from '@atlaskit/textarea';
+import babylon from 'prettier/parser-babylon';
+import prettier from 'prettier/standalone';
 
-import EditorContext from '../src/ui/EditorContext';
 import { DevTools } from '../example-helpers/DevTools';
-import WithEditorActions from '../src/ui/WithEditorActions';
 import { EditorActions } from '../src';
+import EditorContext from '../src/ui/EditorContext';
+import WithEditorActions from '../src/ui/WithEditorActions';
+
 import { ExampleEditor as FullPageEditor } from './5-full-page';
 
 interface DocBuilderState {

@@ -1,7 +1,14 @@
 import * as React from 'react';
+import {
+  AnalyticsEventPayload,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import throttle from 'lodash.throttle';
+
+import { JoinableSitesDataProvider } from '../../src/providers/joinable-sites-data-provider';
 import { prefetch } from '../prefetch';
-import now from '../utils/performance-now';
+import { AvailableProductsDataProvider } from '../providers/products-data-provider';
+import { FeatureFlagProps } from '../types';
 import {
   NAVIGATION_CHANNEL,
   NavigationAnalyticsContext,
@@ -10,14 +17,8 @@ import {
   TRIGGER_SUBJECT,
   withAnalyticsEvents,
 } from '../utils/analytics';
-import {
-  AnalyticsEventPayload,
-  WithAnalyticsEventsProps,
-} from '@atlaskit/analytics-next';
 import packageContext from '../utils/package-context';
-import { FeatureFlagProps } from '../types';
-import { AvailableProductsDataProvider } from '../providers/products-data-provider';
-import { JoinableSitesDataProvider } from '../../src/providers/joinable-sites-data-provider';
+import now from '../utils/performance-now';
 
 const THROTTLE_EXPIRES = 60 * 1000; // 60 seconds
 const THROTTLE_OPTIONS = {

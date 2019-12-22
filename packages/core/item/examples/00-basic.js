@@ -1,16 +1,13 @@
 // @flow
 import React, { Component } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-
+import Avatar from '@atlaskit/avatar';
+import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
+import { colors, gridSize, math } from '@atlaskit/theme';
 import { darken, mix } from 'polished';
 
-import Avatar from '@atlaskit/avatar';
-import { colors, gridSize, math } from '@atlaskit/theme';
-import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
-
-import type { ItemTheme } from '../src/types';
-
 import Item, { ItemGroup, itemThemeNamespace } from '../src';
+import type { ItemTheme } from '../src/types';
 
 const generateTheme = (
   padding: number,

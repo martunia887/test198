@@ -1,11 +1,7 @@
 import {
-  EditorState,
-  TextSelection,
-  NodeSelection,
-  Selection,
-} from 'prosemirror-state';
-import { findChildrenByType, NodeWithPos } from 'prosemirror-utils';
-import { EditorView } from 'prosemirror-view';
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
@@ -16,15 +12,20 @@ import {
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
 import {
+  EditorState,
+  TextSelection,
+  NodeSelection,
+  Selection,
+} from 'prosemirror-state';
+import { findChildrenByType, NodeWithPos } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
+import {
   updateStatus,
   setStatusPickerAt,
 } from '../../../../plugins/status/actions';
-import { setNodeSelectionNearPos } from '../../../../plugins/status/utils';
 import { pluginKey } from '../../../../plugins/status/plugin';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+import { setNodeSelectionNearPos } from '../../../../plugins/status/utils';
 
 export const setSelectionAndPickerAt = (pos: number) => (
   editorView: EditorView,

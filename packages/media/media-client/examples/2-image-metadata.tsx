@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { MediaStore, ImageMetadata } from '../src';
 import {
   createStorybookMediaClient,
   imageFileId,
 } from '@atlaskit/media-test-helpers';
+
+import { MediaStore, ImageMetadata } from '../src';
 
 export interface ExampleState {
   metadata?: ImageMetadata;

@@ -1,7 +1,8 @@
-import { components } from '@atlaskit/select';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
+import { components } from '@atlaskit/select';
+
 import { messages } from './i18n';
 import { isChildInput } from './utils';
 

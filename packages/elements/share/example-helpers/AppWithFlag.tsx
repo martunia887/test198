@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { colors } from '@atlaskit/theme';
-import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
 import { AutoDismissFlag, FlagGroup } from '@atlaskit/flag';
+import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
+import { colors } from '@atlaskit/theme';
+
 import { Flag } from '../src/types';
 
 type RenderChildren = (

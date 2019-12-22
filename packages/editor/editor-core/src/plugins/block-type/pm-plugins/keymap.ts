@@ -1,18 +1,19 @@
 import { chainCommands } from 'prosemirror-commands';
-import { undoInputRule } from 'prosemirror-inputrules';
 import { redo, undo } from 'prosemirror-history';
+import { undoInputRule } from 'prosemirror-inputrules';
 import { Schema } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
-import * as keymaps from '../../../keymaps';
-import * as commands from '../../../commands';
+
 import { trackAndInvoke } from '../../../analytics';
-import * as blockTypes from '../types';
+import * as commands from '../../../commands';
+import * as keymaps from '../../../keymaps';
 import { keymap } from '../../../utils/keymap';
+import { INPUT_METHOD } from '../../analytics';
 import {
   cleanUpAtTheStartOfDocument,
   insertBlockTypesWithAnalytics,
 } from '../../block-type/commands';
-import { INPUT_METHOD } from '../../analytics';
+import * as blockTypes from '../types';
 
 const analyticsEventName = (blockTypeName: string, eventSource: string) =>
   `atlassian.editor.format.${blockTypeName}.${eventSource}`;

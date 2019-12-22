@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
-
 import Select from 'react-select';
+
 import AtlaskitRadioSelect from '../../../RadioSelect';
 
 const OPTIONS = [

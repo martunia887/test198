@@ -1,8 +1,9 @@
 // @flow
 import React, { type ComponentType } from 'react';
-import { AkCodeBlock } from '@atlaskit/code';
 import { mount } from 'enzyme';
+import { AkCodeBlock } from '@atlaskit/code';
 import cases from 'jest-in-case';
+
 import Example, { ToggleTitle, Toggle } from '../../Example';
 
 type Props = {

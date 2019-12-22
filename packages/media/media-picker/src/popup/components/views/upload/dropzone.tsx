@@ -3,8 +3,10 @@ import * as React from 'react';
 import { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
-import LocalBrowserButton from './uploadButton';
+
+import { BrowserBase } from '../../../../components/browser/browser';
 import { filesIcon } from '../../../../icons';
+
 import {
   ButtonWrapper,
   DefaultImage,
@@ -13,7 +15,7 @@ import {
   DropzoneContentWrapper,
   TextWrapper,
 } from './styled';
-import { BrowserBase } from '../../../../components/browser/browser';
+import LocalBrowserButton from './uploadButton';
 
 export interface DropzoneProps {
   readonly isEmpty?: boolean;

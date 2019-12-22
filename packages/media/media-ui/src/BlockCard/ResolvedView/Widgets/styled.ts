@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { N300, N800 } from '@atlaskit/theme/colors';
+
 import { ellipsis } from '../../../mixins';
 
 const widgetHeight = 24;

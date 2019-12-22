@@ -1,6 +1,7 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
 import { FormattedMessage } from 'react-intl';
+
 import { AddOptionAvatar } from '../../../components/AddOptionAvatar';
 import { AvatarItemOption } from '../../../components/AvatarItemOption';
 import { EmailOption, EmailOptionProps } from '../../../components/EmailOption';

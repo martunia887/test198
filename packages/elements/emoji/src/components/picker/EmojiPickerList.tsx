@@ -1,9 +1,9 @@
-import classNames from 'classnames';
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { PureComponent } from 'react';
+import * as PropTypes from 'prop-types';
 import { List as VirtualList } from 'react-virtualized/dist/commonjs/List';
-import { customCategory, userCustomTitle } from '../../util/constants';
+import classNames from 'classnames';
+
 import {
   EmojiDescription,
   EmojiId,
@@ -12,13 +12,11 @@ import {
   ToneSelection,
   User,
 } from '../../types';
+import { customCategory, userCustomTitle } from '../../util/constants';
 import { EmojiContext } from '../common/internal-types';
-import {
-  CategoryDescriptionMap,
-  CategoryGroupKey,
-  CategoryId,
-} from './categories';
+
 import CategoryTracker from './CategoryTracker';
+import EmojiPickerListSearch from './EmojiPickerListSearch';
 import { sizes } from './EmojiPickerSizes';
 import * as Items from './EmojiPickerVirtualItems';
 import {
@@ -28,8 +26,12 @@ import {
   VirtualItem,
   virtualItemRenderer,
 } from './EmojiPickerVirtualItems';
+import {
+  CategoryDescriptionMap,
+  CategoryGroupKey,
+  CategoryId,
+} from './categories';
 import * as styles from './styles';
-import EmojiPickerListSearch from './EmojiPickerListSearch';
 
 const categoryClassname = 'emoji-category';
 

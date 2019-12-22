@@ -1,25 +1,26 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { createStore, applyMiddleware, Middleware } from 'redux';
 import { Store } from 'react-redux';
+import { MediaClient } from '@atlaskit/media-client';
+import { AuthProvider } from '@atlaskit/media-core';
 import { fakeMediaClient } from '@atlaskit/media-test-helpers';
 import {
   getComponentClassWithStore,
   mockStore,
 } from '@atlaskit/media-test-helpers';
-import { State } from '../../../domain';
-import ConnectedApp, { App, AppDispatchProps } from '../../app';
-import UploadView from '../../views/upload/upload';
-import Browser from '../../views/browser/browser';
-import { fileUploadsStart } from '../../../actions/fileUploadsStart';
-import { LocalBrowserButton } from '../../views/upload/uploadButton';
-import analyticsProcessing from '../../../middleware/analyticsProcessing';
-import { Dropzone } from '../../../../components/dropzone/dropzone';
+import { createStore, applyMiddleware, Middleware } from 'redux';
+
 import { Browser as MediaPickerBrowser } from '../../../../components/browser/browser';
 import { Clipboard as MediaPickerClipboard } from '../../../../components/clipboard/clipboard';
+import { Dropzone } from '../../../../components/dropzone/dropzone';
 import { MediaFile, UploadParams } from '../../../../types';
-import { AuthProvider } from '@atlaskit/media-core';
-import { MediaClient } from '@atlaskit/media-client';
+import { fileUploadsStart } from '../../../actions/fileUploadsStart';
+import { State } from '../../../domain';
+import analyticsProcessing from '../../../middleware/analyticsProcessing';
+import ConnectedApp, { App, AppDispatchProps } from '../../app';
+import Browser from '../../views/browser/browser';
+import UploadView from '../../views/upload/upload';
+import { LocalBrowserButton } from '../../views/upload/uploadButton';
 
 const tenantUploadParams: UploadParams = {};
 const baseUrl = 'some-api-url';

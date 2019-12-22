@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 
 export const AvatarPickerViewWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: flex;

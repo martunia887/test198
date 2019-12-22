@@ -1,5 +1,5 @@
-import { Plugin } from 'prosemirror-state';
 import { keydownHandler } from 'prosemirror-keymap';
+import { Plugin } from 'prosemirror-state';
 import { base, keyName } from 'w3c-keyname';
 
 /**

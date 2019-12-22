@@ -1,8 +1,10 @@
-import { TableMap, CellSelection } from 'prosemirror-tables';
-import { Transaction, TextSelection } from 'prosemirror-state';
-import { Node as PMNode } from 'prosemirror-model';
 import { CellAttributes } from '@atlaskit/adf-schema';
+import { Node as PMNode } from 'prosemirror-model';
+import { Transaction, TextSelection } from 'prosemirror-state';
+import { TableMap, CellSelection } from 'prosemirror-tables';
+
 import { ResizeState } from '../pm-plugins/table-resizing/utils';
+
 import { setMeta } from './metadata';
 
 export const updateColumnWidths = (

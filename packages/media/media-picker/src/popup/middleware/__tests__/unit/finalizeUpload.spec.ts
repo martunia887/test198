@@ -1,26 +1,27 @@
 import * as MediaClientModule from '@atlaskit/media-client';
-import { Auth } from '@atlaskit/media-core';
 import {
   getFileStreamsCache,
   ProcessedFileState,
   ProcessingFileState,
   FileState,
 } from '@atlaskit/media-client';
+import { Auth } from '@atlaskit/media-core';
 import {
   mockStore,
   expectFunctionToHaveBeenCalledWith,
   asMock,
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
-import { sendUploadEvent } from '../../../actions/sendUploadEvent';
+import { ReplaySubject, Observable } from 'rxjs';
+
 import { resetView } from '../../../actions';
-import finalizeUploadMiddleware, { finalizeUpload } from '../../finalizeUpload';
 import {
   FinalizeUploadAction,
   FINALIZE_UPLOAD,
 } from '../../../actions/finalizeUpload';
+import { sendUploadEvent } from '../../../actions/sendUploadEvent';
 import { State } from '../../../domain';
-import { ReplaySubject, Observable } from 'rxjs';
+import finalizeUploadMiddleware, { finalizeUpload } from '../../finalizeUpload';
 
 describe('finalizeUploadMiddleware', () => {
   const auth: Auth = {

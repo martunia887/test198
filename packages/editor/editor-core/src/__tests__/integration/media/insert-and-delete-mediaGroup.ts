@@ -1,9 +1,9 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, comment, insertMedia } from '../_helpers';
 import {
   mountEditor,
   goToEditorTestingExample,
 } from '../../__helpers/testing-example-helpers';
+import { editable, comment, insertMedia } from '../_helpers';
 
 [comment].forEach(editor => {
   BrowserTestCase(

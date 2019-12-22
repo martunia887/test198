@@ -1,11 +1,13 @@
 import React from 'react';
-import { toClass } from 'recompose';
 import styled from 'styled-components';
-import { gridSize } from '@atlaskit/theme';
 import { AkNavigationItem } from '@atlaskit/navigation';
-import renderNav from './renderNav';
+import { gridSize } from '@atlaskit/theme';
+import { toClass } from 'recompose';
+
 import { Link } from '../../../components/WrappedLink';
 import { NavGroup } from '../../../types';
+
+import renderNav from './renderNav';
 
 export type RouterLinkProps = {
   children?: React.ReactNode;

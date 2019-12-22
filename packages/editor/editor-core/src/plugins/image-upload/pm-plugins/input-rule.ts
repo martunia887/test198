@@ -1,6 +1,7 @@
 import { inputRules } from 'prosemirror-inputrules';
 import { Schema } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
+
 import { analyticsService } from '../../../analytics';
 import { createInputRule } from '../../../utils/input-rules';
 import { createExternalMediaNode } from '../utils';

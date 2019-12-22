@@ -10,30 +10,31 @@ jest.mock('../../../newgen/analytics/media-viewer', () => mockMediaViewer);
 
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { Subject } from 'rxjs/Subject';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 import Button from '@atlaskit/button';
-import { Shortcut } from '@atlaskit/media-ui';
+import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
 import { FileItem, Identifier } from '@atlaskit/media-client';
 import {
   KeyboardEventWithKeyCode,
   fakeMediaClient,
   asMock,
 } from '@atlaskit/media-test-helpers';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
-import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
+import { Shortcut } from '@atlaskit/media-ui';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+
+import {
+  MediaViewerProps,
+  MediaViewerExtensions,
+} from '../../../components/types';
+import { ItemSource } from '../../../newgen/domain';
+import Header from '../../../newgen/header';
+import { List } from '../../../newgen/list';
 import {
   MediaViewer,
   MediaViewerComponent,
 } from '../../../newgen/media-viewer';
 import { CloseButtonWrapper, SidebarWrapper } from '../../../newgen/styled';
-import Header from '../../../newgen/header';
-import { ItemSource } from '../../../newgen/domain';
-import { Observable } from 'rxjs';
-import { List } from '../../../newgen/list';
-import {
-  MediaViewerProps,
-  MediaViewerExtensions,
-} from '../../../components/types';
 
 function createFixture(
   items: Identifier[],

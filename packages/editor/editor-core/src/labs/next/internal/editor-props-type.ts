@@ -1,5 +1,6 @@
-import { Schema } from 'prosemirror-model';
 import { Transformer } from '@atlaskit/editor-common';
+import { Schema } from 'prosemirror-model';
+
 import EditorActions from '../../../actions';
 import { EditorPlugin } from '../../../types';
 

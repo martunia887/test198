@@ -1,11 +1,11 @@
 // @flow
-import queryString from 'query-string';
 import flattenChangesets from '@atlaskit/build-utils/flattenReleases';
 import yaml from 'js-yaml';
+import queryString from 'query-string';
 
-import getChangesetsFromCommits from './get-commits';
-import getChangesetsFromFiles from './get-changesets';
 import { legacyChangesetRepos } from './config';
+import getChangesetsFromFiles from './get-changesets';
+import getChangesetsFromCommits from './get-commits';
 
 // TODO: Replace the static url `atlassian/atlaskit-mk-2` by  `atlassian/atlassian-frontend`.
 // https://product-fabric.atlassian.net/browse/AFP-1373

@@ -1,6 +1,8 @@
 import { mockCanvas } from '@atlaskit/media-test-helpers';
+
 import { DEFAULT_INNER_WIDTH, DEFAULT_INNER_HEIGHT } from '../../viewport';
 import { renderViewport } from '../../viewport/viewport-render';
+
 import { setup as setupViewport } from './viewportSpec';
 
 const getCanvasMock = mockCanvas();

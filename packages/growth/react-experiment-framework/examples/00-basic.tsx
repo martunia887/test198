@@ -2,8 +2,8 @@
 
 import React, { Component } from 'react';
 
-import asExperiment from '../src/asExperiment';
 import ExperimentController from '../src/ExperimentController';
+import asExperiment from '../src/asExperiment';
 import { EnrollmentDetails } from '../src/types';
 
 export class Control extends Component<{ title: string }> {

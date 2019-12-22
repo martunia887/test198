@@ -1,13 +1,14 @@
 import { SecurityOptions } from '@atlaskit/util-service-support';
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
+import 'es6-promise/auto';
 import fetchMock from 'fetch-mock/src/client';
 import * as queryString from 'query-string';
-import TeamMentionResource from '../../../api/TeamMentionResource';
-import { resultCr, resultCraig, teamResults } from '../_mention-search-results';
+
 import {
   MentionResourceConfig,
   TeamMentionResourceConfig,
 } from '../../../api/MentionResource';
+import TeamMentionResource from '../../../api/TeamMentionResource';
+import { resultCr, resultCraig, teamResults } from '../_mention-search-results';
 
 const baseUserUrl = 'https://bogus/users/mentions';
 const baseTeamUrl = 'https://bogus/teams/mentions';

@@ -1,8 +1,8 @@
-import { Page } from './_types';
-import { clickToolbarMenu, ToolbarMenuItem } from './_toolbar';
-
 import { messages } from '../../../plugins/block-type/types';
 import { messages as insertBlockMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
+
+import { clickToolbarMenu, ToolbarMenuItem } from './_toolbar';
+import { Page } from './_types';
 
 export enum BlockMenuItem {
   quote,

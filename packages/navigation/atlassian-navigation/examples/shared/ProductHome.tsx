@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   BitbucketIcon,
   BitbucketLogo,
@@ -12,7 +13,6 @@ import {
   OpsGenieIcon,
   OpsGenieLogo,
 } from '@atlaskit/logo';
-import React from 'react';
 
 import { CustomProductHome, ProductHome } from '../../src';
 

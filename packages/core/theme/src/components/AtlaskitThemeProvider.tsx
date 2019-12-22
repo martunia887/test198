@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 import exenv from 'exenv';
-import { ThemeModes, AtlaskitThemeProps } from '../types';
+
 import * as colors from '../colors';
-
 import { CHANNEL, DEFAULT_THEME_MODE } from '../constants';
+import { ThemeModes, AtlaskitThemeProps } from '../types';
 
-// For forward-compat until everything is upgraded.
 import Theme from './Theme';
 
 function getStylesheetResetCSS(state: AtlaskitThemeProps) {

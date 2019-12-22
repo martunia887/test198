@@ -1,4 +1,3 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 import {
   clickEditableContent,
   typeInEditor,
@@ -10,8 +9,10 @@ import {
   scrollToMedia,
   clickMediaInPosition,
 } from '../../__helpers/page-objects/_media';
-import * as panelList from './__fixtures__/panel-list-adf.json';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import * as panelList from './__fixtures__/panel-list-adf.json';
 
 let page: Page;
 

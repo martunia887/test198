@@ -1,12 +1,14 @@
-import { components } from '@atlaskit/select';
 import React, { FC } from 'react';
+import { components } from '@atlaskit/select';
+
 import { Option as OptionType } from '../types';
+
 import { EmailOption } from './EmailOption';
+import { GroupOption } from './GroupOption';
 import { TeamOption } from './TeamOption';
 import { UserOption } from './UserOption';
-import { GroupOption } from './GroupOption';
-import { isEmail, isTeam, isUser, isGroup } from './utils';
 import { isValidEmail } from './emailValidation';
+import { isEmail, isTeam, isUser, isGroup } from './utils';
 
 export type OptionProps = {
   data: OptionType;

@@ -1,5 +1,5 @@
-import { EditorState, NodeSelection } from 'prosemirror-state';
 import { Schema, Node } from 'prosemirror-model';
+import { EditorState, NodeSelection } from 'prosemirror-state';
 
 export const isMediaSelected = (state: EditorState): boolean => {
   const { media } = state.schema.nodes;

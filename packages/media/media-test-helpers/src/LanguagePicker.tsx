@@ -5,8 +5,8 @@ import DropdownMenu, {
   DropdownItemGroup,
   DropdownItem,
 } from '@atlaskit/dropdown-menu';
-import WorldIcon from '@atlaskit/icon/glyph/world';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
+import WorldIcon from '@atlaskit/icon/glyph/world';
 
 const DropdownContainer = styled.div`
   margin: 8px;

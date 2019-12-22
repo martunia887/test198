@@ -1,18 +1,20 @@
+import { doc, paragraph, text } from '@atlaskit/adf-schema';
 import { baseKeymap } from 'prosemirror-commands';
 import { history } from 'prosemirror-history';
-import { doc, paragraph, text } from '@atlaskit/adf-schema';
+
 import { EditorPlugin, PMPluginFactory } from '../../types';
+import { keymap } from '../../utils/keymap';
+
+import decorationPlugin from './pm-plugins/decoration';
 import filterStepsPlugin from './pm-plugins/filter-steps';
 import focusHandlerPlugin from './pm-plugins/focus-handler';
-import newlinePreserveMarksPlugin from './pm-plugins/newline-preserve-marks';
+import frozenEditor from './pm-plugins/frozen-editor';
 import inlineCursorTargetPlugin from './pm-plugins/inline-cursor-target';
+import newlinePreserveMarksPlugin from './pm-plugins/newline-preserve-marks';
 import { plugin as reactNodeView } from './pm-plugins/react-nodeview';
-import decorationPlugin from './pm-plugins/decoration';
 import scrollGutter, {
   ScrollGutterPluginOptions,
 } from './pm-plugins/scroll-gutter';
-import { keymap } from '../../utils/keymap';
-import frozenEditor from './pm-plugins/frozen-editor';
 
 interface BasePluginOptions {
   allowScrollGutter?: ScrollGutterPluginOptions;

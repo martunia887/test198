@@ -3,8 +3,9 @@ jest.mock('uuid/v4', () => ({
   default: jest.fn().mockReturnValue('some-scope'),
 }));
 import { AuthProvider } from '@atlaskit/media-core';
-import uuidV4 from 'uuid/v4';
 import Postis from 'postis';
+import uuidV4 from 'uuid/v4';
+
 import { CloudService } from '../../cloud-service';
 
 interface FakePostis {

@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { ContextIdentifierProvider } from '@atlaskit/editor-common';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { ContextIdentifierProvider } from '@atlaskit/editor-common';
+
 import {
   editorAnalyticsChannel,
   ACTION,

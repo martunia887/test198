@@ -1,6 +1,10 @@
 import { EventEmitter2 } from 'eventemitter2';
 import { getVersion, sendableSteps } from 'prosemirror-collab';
 import { Transaction, EditorState } from 'prosemirror-state';
+
+import { logger } from './';
+import { Channel } from './channel';
+import { getParticipant } from './mock-users';
 import {
   CollabEditProvider,
   CollabEvent,
@@ -10,9 +14,6 @@ import {
   TelepointerData,
   Participant,
 } from './types';
-import { Channel } from './channel';
-import { logger } from './';
-import { getParticipant } from './mock-users';
 
 export class CollabProvider implements CollabEditProvider {
   private eventEmitter: EventEmitter2 = new EventEmitter2();

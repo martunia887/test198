@@ -1,18 +1,14 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { colors } from '@atlaskit/theme';
 import Avatar from '@atlaskit/avatar';
 import Button from '@atlaskit/button';
 import Lozenge from '@atlaskit/lozenge';
 import Spinner from '@atlaskit/spinner';
+import { colors } from '@atlaskit/theme';
 
-import IconLabel from './IconLabel';
-import ErrorMessage from './ErrorMessage';
+import { AnalyticsName } from '../internal/analytics';
 import relativeDate from '../internal/relative-date';
 import messages from '../messages';
-
-import { ProfilecardProps } from '../types';
-
 import {
   ActionButtonGroup,
   ActionsFlexSpacer,
@@ -28,7 +24,10 @@ import {
   LozengeWrapper,
   SpinnerContainer,
 } from '../styled/Card';
-import { AnalyticsName } from '../internal/analytics';
+import { ProfilecardProps } from '../types';
+
+import ErrorMessage from './ErrorMessage';
+import IconLabel from './IconLabel';
 
 export default class Profilecard extends React.PureComponent<ProfilecardProps> {
   static defaultProps: ProfilecardProps = {

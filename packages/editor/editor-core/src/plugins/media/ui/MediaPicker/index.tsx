@@ -1,8 +1,10 @@
 import React from 'react';
+
 import { MediaPluginState } from '../../pm-plugins/main';
+
+import { BrowserWrapper } from './BrowserWrapper';
 import { ClipboardWrapper } from './ClipboardWrapper';
 import { DropzoneWrapper } from './DropzoneWrapper';
-import { BrowserWrapper } from './BrowserWrapper';
 
 type Props = {
   mediaState: MediaPluginState;

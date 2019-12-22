@@ -1,5 +1,5 @@
-import * as Core from './binaries/mediaEditor';
 import { Dimensions } from '../../common';
+import * as Core from './binaries/mediaEditor';
 
 // Responsible for receiving the image
 export class BitmapExporter implements Core.BitmapExporterInterop {

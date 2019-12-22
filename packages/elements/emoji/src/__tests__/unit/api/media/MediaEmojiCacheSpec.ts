@@ -1,5 +1,6 @@
-import { waitUntil } from '@atlaskit/util-common-test';
 import * as sinon from 'sinon';
+import { waitUntil } from '@atlaskit/util-common-test';
+
 import MediaEmojiCache, {
   BrowserCacheStrategy,
   EmojiCacheStrategy,
@@ -7,9 +8,9 @@ import MediaEmojiCache, {
 } from '../../../../api/media/MediaEmojiCache';
 import MediaImageLoader from '../../../../api/media/MediaImageLoader';
 import TokenManager from '../../../../api/media/TokenManager';
+import { EmojiDescriptionWithVariations } from '../../../../types';
 import { frequentCategory } from '../../../../util/constants';
 import { isPromise } from '../../../../util/type-helpers';
-import { EmojiDescriptionWithVariations } from '../../../../types';
 import {
   createTokenManager,
   imageEmoji,

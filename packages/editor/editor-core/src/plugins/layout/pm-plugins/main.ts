@@ -1,3 +1,4 @@
+import { keydownHandler } from 'prosemirror-keymap';
 import { Node, Slice } from 'prosemirror-model';
 import {
   PluginKey,
@@ -5,11 +6,11 @@ import {
   EditorState,
   TextSelection,
 } from 'prosemirror-state';
-import { DecorationSet, Decoration } from 'prosemirror-view';
-import { keydownHandler } from 'prosemirror-keymap';
 import { findParentNodeOfType } from 'prosemirror-utils';
-import { filter } from '../../../utils/commands';
+import { DecorationSet, Decoration } from 'prosemirror-view';
+
 import { Command } from '../../../types';
+import { filter } from '../../../utils/commands';
 import {
   fixColumnSizes,
   PresetLayout,

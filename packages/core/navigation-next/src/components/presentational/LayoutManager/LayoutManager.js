@@ -4,24 +4,6 @@ import React, { Component, Fragment, type ElementRef } from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 
 import {
-  name as packageName,
-  version as packageVersion,
-} from '../../../version.json';
-import ResizeTransition, { isTransitioning } from '../ResizeTransition';
-import ResizeControl from './ResizeControl';
-import {
-  HorizontalNavigationContainer,
-  LayoutContainer,
-  NavigationContainer,
-} from './primitives';
-import type { LayoutManagerProps } from './types';
-import { ContainerNavigationMask } from '../ContentNavigation/primitives';
-import {
-  ComposedGlobalNavigation,
-  ComposedContainerNavigation,
-} from './nav-components';
-
-import {
   ALTERNATE_FLYOUT_DELAY,
   CONTENT_NAV_WIDTH_COLLAPSED,
   CONTENT_NAV_WIDTH_FLYOUT,
@@ -29,9 +11,27 @@ import {
   GLOBAL_NAV_WIDTH,
   HORIZONTAL_GLOBAL_NAV_HEIGHT,
 } from '../../../common/constants';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../../../version.json';
 import RenderBlocker from '../../common/RenderBlocker';
+import { ContainerNavigationMask } from '../ContentNavigation/primitives';
+import ResizeTransition, { isTransitioning } from '../ResizeTransition';
+
 import { LayoutEventListener } from './LayoutEvent';
+import ResizeControl from './ResizeControl';
+import {
+  ComposedGlobalNavigation,
+  ComposedContainerNavigation,
+} from './nav-components';
+import {
+  HorizontalNavigationContainer,
+  LayoutContainer,
+  NavigationContainer,
+} from './primitives';
 import { pageContainerCSS } from './styles';
+import type { LayoutManagerProps } from './types';
 
 type State = {
   flyoutIsOpen: boolean,

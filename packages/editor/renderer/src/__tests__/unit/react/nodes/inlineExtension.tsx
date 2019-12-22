@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import InlineExtension from '../../../../react/nodes/inlineExtension';
-import { RendererContext } from '../../../../react';
-import ReactSerializer from '../../../../react';
+import Loadable from 'react-loadable';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   ExtensionHandlers,
@@ -10,7 +8,10 @@ import {
   combineExtensionProviders,
 } from '@atlaskit/editor-common';
 import { createFakeExtensionProvider } from '@atlaskit/editor-test-helpers/src/extensions';
-import Loadable from 'react-loadable';
+
+import { RendererContext } from '../../../../react';
+import ReactSerializer from '../../../../react';
+import InlineExtension from '../../../../react/nodes/inlineExtension';
 
 describe('Renderer - React/Nodes/InlineExtension', () => {
   const providerFactory = ProviderFactory.create({});

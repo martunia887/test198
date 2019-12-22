@@ -1,7 +1,9 @@
-import { snapshot, initRendererWithADF } from './_utils';
-import * as mixedAdf from '../__fixtures__/document-without-media.adf.json';
-import * as mediaAdf from '../__fixtures__/1600px-media.adf.json';
 import { Page } from 'puppeteer';
+
+import * as mediaAdf from '../__fixtures__/1600px-media.adf.json';
+import * as mixedAdf from '../__fixtures__/document-without-media.adf.json';
+
+import { snapshot, initRendererWithADF } from './_utils';
 
 const initRenderer = async (
   page: Page,

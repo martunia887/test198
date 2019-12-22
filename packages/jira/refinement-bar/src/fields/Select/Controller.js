@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import FieldController from '../Controller';
 import { isObject } from '../../utils';
+import FieldController from '../Controller';
 
 type Options = Array<Object>;
 

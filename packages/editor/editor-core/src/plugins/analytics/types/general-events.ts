@@ -1,10 +1,10 @@
-import { UIAEP, TrackAEP, OperationalAEP } from './events';
 import {
   ACTION,
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
   INPUT_METHOD,
 } from './enums';
+import { UIAEP, TrackAEP, OperationalAEP } from './events';
 
 export enum PLATFORMS {
   NATIVE = 'mobileNative',

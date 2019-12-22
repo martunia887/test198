@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import type { PositionType } from '../src/types';
+
 import Layer from '../src';
+import type { PositionType } from '../src/types';
 
 const StyledRoot = styled.div`
   display: flex;

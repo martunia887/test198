@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Button from '@atlaskit/button';
 import Spinner from '../src';
 

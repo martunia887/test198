@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import { RankableTableCell, Props } from '../../rankable/TableCell';
 
 import { head, cellWithKey as cell } from './_data';

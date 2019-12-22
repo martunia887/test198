@@ -1,7 +1,8 @@
-import { exactMatch, fillInResponse, MockContext } from '..';
-import { userAuthProviderBaseURL } from '../..';
-import { MockRequest, MockResponse } from 'xhr-mock';
 import { Auth } from '@atlaskit/media-core';
+import { exactMatch, fillInResponse, MockContext } from '..';
+import { MockRequest, MockResponse } from 'xhr-mock';
+
+import { userAuthProviderBaseURL } from '../..';
 
 export const tenantAuth = (context: () => MockContext) => (
   req: MockRequest,

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import RouterLinkComponent from './RouterLinkComponent';
 import { AkNavigationItem } from '../../../src';
+import RouterLinkComponent from './RouterLinkComponent';
 
 type Props = {
   to: string,

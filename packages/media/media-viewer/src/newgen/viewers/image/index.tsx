@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import {
   MediaClient,
   FileItem,
@@ -9,11 +8,12 @@ import {
 } from '@atlaskit/media-client';
 import { getOrientation } from '@atlaskit/media-ui';
 
+import { AnalyticViewerProps } from '../../analytics/item-viewer';
 import { Outcome } from '../../domain';
 import { createError, MediaViewerError } from '../../error';
-import { InteractiveImg } from './interactive-img';
-import { AnalyticViewerProps } from '../../analytics/item-viewer';
 import { BaseViewer } from '../base-viewer';
+
+import { InteractiveImg } from './interactive-img';
 
 export type ObjectUrl = string;
 

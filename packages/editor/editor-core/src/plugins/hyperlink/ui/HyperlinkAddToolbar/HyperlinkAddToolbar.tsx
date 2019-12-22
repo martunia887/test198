@@ -1,13 +1,14 @@
 import * as React from 'react';
+import { KeyboardEvent, PureComponent } from 'react';
+import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl';
+import styled from 'styled-components';
 import { ActivityItem, ActivityProvider } from '@atlaskit/activity';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import EditorAlignLeftIcon from '@atlaskit/icon/glyph/editor/align-left';
 import LinkIcon from '@atlaskit/icon/glyph/link';
 import { colors } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
-import { KeyboardEvent, PureComponent } from 'react';
-import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl';
-import styled from 'styled-components';
+
 import { analyticsService } from '../../../../analytics';
 import { linkToolbarMessages as linkToolbarCommonMessages } from '../../../../messages';
 import PanelTextInput from '../../../../ui/PanelTextInput';

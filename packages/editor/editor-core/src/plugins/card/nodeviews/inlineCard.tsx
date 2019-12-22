@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { EventHandler, MouseEvent, KeyboardEvent } from 'react';
 import * as PropTypes from 'prop-types';
-import { Card as SmartCard } from '@atlaskit/smart-card';
 import { findOverflowScrollParent } from '@atlaskit/editor-common';
+import { Card as SmartCard } from '@atlaskit/smart-card';
 import rafSchedule from 'raf-schd';
 
-import { ZeroWidthSpace } from '../../../utils';
-import { SmartCardProps, Card } from './genericCard';
-import UnsupportedInlineNode from '../../unsupported-content/nodeviews/unsupported-inline';
 import { SelectionBasedNodeView } from '../../../nodeviews/ReactNodeView';
+import { ZeroWidthSpace } from '../../../utils';
+import UnsupportedInlineNode from '../../unsupported-content/nodeviews/unsupported-inline';
 import { registerCard } from '../pm-plugins/actions';
+
+import { SmartCardProps, Card } from './genericCard';
 
 export class InlineCardComponent extends React.PureComponent<SmartCardProps> {
   private scrollContainer?: HTMLElement;

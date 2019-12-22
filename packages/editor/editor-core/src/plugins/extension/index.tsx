@@ -4,7 +4,9 @@ import {
   bodiedExtension,
 } from '@atlaskit/adf-schema';
 import { ExtensionHandlers } from '@atlaskit/editor-common';
+
 import { EditorPlugin } from '../../types';
+
 import { createPlugin } from './plugin';
 import { getToolbarConfig } from './toolbar';
 

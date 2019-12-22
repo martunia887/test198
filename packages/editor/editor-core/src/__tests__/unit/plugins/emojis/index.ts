@@ -1,6 +1,5 @@
-import { Node as PMNode } from 'prosemirror-model';
-import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { emoji as emojiNode } from '@atlaskit/adf-schema';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
@@ -14,10 +13,12 @@ import {
   ul,
   insertText,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { emoji as emojiData } from '@atlaskit/util-data-test';
+import { Node as PMNode } from 'prosemirror-model';
+
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 import { emojiPluginKey } from '../../../../plugins/emoji';
 import { insertEmoji } from '../../../../plugins/emoji/commands/insert-emoji';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 const { testData } = emojiData;
 

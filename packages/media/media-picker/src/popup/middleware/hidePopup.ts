@@ -1,7 +1,8 @@
 import { Store, Action, Dispatch } from 'redux';
+
+import { PopupUploadEventEmitter } from '../../components/types';
 import { isHidePopupAction } from '../actions/hidePopup';
 import { State } from '../domain';
-import { PopupUploadEventEmitter } from '../../components/types';
 
 export default (eventEmitter: PopupUploadEventEmitter) => (_: Store<State>) => (
   next: Dispatch<State>,

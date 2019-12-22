@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 
+import { JoinableSitesResponse } from '../../../types';
+import { createProviderWithCustomFetchData } from '../../create-data-provider';
 import {
   JoinableSitesProvider,
   prefetchJoinableSites,
 } from '../../joinable-sites-data-provider';
-
-import { JoinableSitesResponse } from '../../../types';
-
-import { createProviderWithCustomFetchData } from '../../create-data-provider';
 
 describe('joinable-sites-data-providers', () => {
   test('should render using the default provider', () => {

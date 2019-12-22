@@ -1,6 +1,6 @@
-import { IntlProvider, intlShape } from 'react-intl';
-import { mount, ReactWrapper } from 'enzyme';
 import { Component, ReactElement } from 'react';
+import { mount, ReactWrapper } from 'enzyme';
+import { IntlProvider, intlShape } from 'react-intl';
 
 /* TODO: We are explicitly using the third arg of ReactWrapper to work around the following TS issue which prevents a d.ts from being generated
  * and therefore fails the build:

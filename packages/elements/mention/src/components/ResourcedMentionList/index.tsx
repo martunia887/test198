@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { MentionProvider } from '../../api/MentionResource';
 import { PresenceMap, PresenceProvider } from '../../api/PresenceResource';
 import { MentionDescription, OnMentionEvent } from '../../types';

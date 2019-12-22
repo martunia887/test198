@@ -3,17 +3,18 @@ import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 
 import commonMessages from '../../messages';
 import { FloatingToolbarHandler } from '../floating-toolbar/types';
-import { TablePluginState, ColumnResizingPluginState } from './types';
-import { pluginKey } from './pm-plugins/main';
-import { pluginKey as tableResizingPluginKey } from './pm-plugins/table-resizing/index';
+
 import { hoverTable, clearHoverSelection } from './commands';
-import { checkIfNumberColumnEnabled } from './utils';
 import {
   toggleHeaderRowWithAnalytics,
   toggleHeaderColumnWithAnalytics,
   toggleNumberColumnWithAnalytics,
   deleteTableWithAnalytics,
 } from './commands-with-analytics';
+import { pluginKey } from './pm-plugins/main';
+import { pluginKey as tableResizingPluginKey } from './pm-plugins/table-resizing/index';
+import { TablePluginState, ColumnResizingPluginState } from './types';
+import { checkIfNumberColumnEnabled } from './utils';
 
 export const messages = defineMessages({
   tableOptions: {

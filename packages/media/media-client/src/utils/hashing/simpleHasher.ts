@@ -1,5 +1,4 @@
 import * as Rusha from 'rusha';
-
 import { Hasher } from './hasher';
 
 export class SimpleHasher implements Hasher {

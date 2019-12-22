@@ -1,6 +1,5 @@
-import { doc, p, sendKeyToPm } from '@atlaskit/editor-test-helpers';
 import { ProviderFactory } from '@atlaskit/editor-common';
-
+import { doc, p, sendKeyToPm } from '@atlaskit/editor-test-helpers';
 import { mediaEditor, temporaryMediaGroup } from './_utils';
 
 describe('media - keymaps', () => {

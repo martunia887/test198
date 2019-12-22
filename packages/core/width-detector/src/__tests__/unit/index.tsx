@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+
 import WidthDetector from '../..';
 import { name } from '../../version.json';
 

@@ -1,19 +1,17 @@
 import React from 'react';
 import styled, { keyframes, css } from 'styled-components';
-import { Link } from '../../components/WrappedLink';
-import { gridSize, colors } from '@atlaskit/theme';
-import debounce from 'lodash.debounce';
-
-import { AtlassianIcon } from '@atlaskit/logo';
+import CodeIcon from '@atlaskit/icon/glyph/code';
 import PackagesIcon from '@atlaskit/icon/glyph/component';
 import BlogIcon from '@atlaskit/icon/glyph/component';
 import MediaDocIcon from '@atlaskit/icon/glyph/media-services/document';
-import CodeIcon from '@atlaskit/icon/glyph/code';
+import { AtlassianIcon } from '@atlaskit/logo';
+import { gridSize, colors } from '@atlaskit/theme';
+import debounce from 'lodash.debounce';
 
-import rocket from '../../assets/Rocket.png';
 import platform from '../../assets/Platform.png';
+import rocket from '../../assets/Rocket.png';
 import multiTool from '../../assets/multiTool.png';
-
+import { Link } from '../../components/WrappedLink';
 import {
   MOBILE_BREAKPOINT_MAX,
   TABLET_BREAKPOINT_MIN,

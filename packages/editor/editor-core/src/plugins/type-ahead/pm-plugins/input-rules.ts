@@ -1,12 +1,14 @@
-import { Schema } from 'prosemirror-model';
 import { inputRules } from 'prosemirror-inputrules';
+import { Schema } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
+
+import { analyticsService } from '../../../analytics';
 import {
   createInputRule,
   leafNodeReplacementCharacter,
 } from '../../../utils/input-rules';
-import { analyticsService } from '../../../analytics';
 import { TypeAheadHandler } from '../types';
+
 import {
   PluginState as TypeAheadPluginState,
   pluginKey as typeAheadPluginKey,

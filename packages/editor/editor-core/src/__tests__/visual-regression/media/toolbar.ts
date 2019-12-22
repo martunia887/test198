@@ -1,4 +1,4 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+import { pressKey } from '../../__helpers/page-objects/_keyboard';
 import {
   insertMedia,
   waitForMediaToBeLoaded,
@@ -7,8 +7,8 @@ import {
   MediaToolbarButton,
   waitForActivityItems,
 } from '../../__helpers/page-objects/_media';
-import { pressKey } from '../../__helpers/page-objects/_keyboard';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 // TODO: https://product-fabric.atlassian.net/browse/ED-7721
 describe.skip('Snapshot Test: Media', () => {
   let page: Page;

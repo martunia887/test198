@@ -1,6 +1,6 @@
 // TODO these classes are deprecated and will be removed as part of MSW-691
-import { handleError } from '../util/handleError';
 import { MediaProgress } from '../types';
+import { handleError } from '../util/handleError';
 
 export class SmartMediaProgress {
   constructor(

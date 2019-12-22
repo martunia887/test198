@@ -1,9 +1,3 @@
-import { getCellsInTable, selectColumn, selectTable } from 'prosemirror-utils';
-import { CellSelection } from 'prosemirror-tables';
-import { Node as ProsemirrorNode, Fragment, Slice } from 'prosemirror-model';
-import { TextSelection, Transaction } from 'prosemirror-state';
-// @ts-ignore
-import { __serializeForClipboard } from 'prosemirror-view';
 import {
   doc,
   p,
@@ -17,6 +11,12 @@ import {
   dispatchPasteEvent,
   br,
 } from '@atlaskit/editor-test-helpers';
+import { Node as ProsemirrorNode, Fragment, Slice } from 'prosemirror-model';
+import { TextSelection, Transaction } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
+import { getCellsInTable, selectColumn, selectTable } from 'prosemirror-utils';
+import { __serializeForClipboard } from 'prosemirror-view';
+
 import { pluginKey as tablePluginKey } from '../../../../plugins/table/pm-plugins/main';
 import {
   TablePluginState,

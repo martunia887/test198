@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import styled from 'styled-components';
 import ScrollLock from 'react-scrolllock';
+import styled from 'styled-components';
 
 const Blanket = styled.div`
   position: fixed;

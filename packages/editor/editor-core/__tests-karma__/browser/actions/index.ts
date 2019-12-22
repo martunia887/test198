@@ -1,6 +1,7 @@
-import * as chai from 'chai';
-import { expect } from 'chai';
 import * as sinon from 'sinon';
+import { defaultSchema } from '@atlaskit/adf-schema';
+import { Transformer, ProviderFactory } from '@atlaskit/editor-common';
+import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import { createEditorFactory, chaiPlugin } from '@atlaskit/editor-test-helpers';
 import {
   doc,
@@ -12,19 +13,19 @@ import {
   storyMediaProviderFactory,
   bodiedExtension,
 } from '@atlaskit/editor-test-helpers';
+import * as chai from 'chai';
+import { expect } from 'chai';
 import { EditorView } from 'prosemirror-view';
-import { JSONTransformer } from '@atlaskit/editor-json-transformer';
-import { defaultSchema } from '@atlaskit/adf-schema';
-import { Transformer, ProviderFactory } from '@atlaskit/editor-common';
+
+import EditorActions from '../../../src/actions';
+import { EventDispatcher } from '../../../src/event-dispatcher';
+import { toJSON } from '../../../src/utils';
 
 import {
   MediaPluginState,
   stateKey as mediaPluginStateKey,
   MediaState,
 } from './../../../src/plugins/media/pm-plugins/main';
-import EditorActions from '../../../src/actions';
-import { toJSON } from '../../../src/utils';
-import { EventDispatcher } from '../../../src/event-dispatcher';
 
 chai.use(chaiPlugin);
 

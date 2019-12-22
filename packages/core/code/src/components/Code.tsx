@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+
 import { normalizeLanguage, SupportedLanguages } from '../supportedLanguages';
 import { Theme, ThemeProps, applyTheme } from '../themes/themeBuilder';
 

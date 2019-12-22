@@ -2,21 +2,21 @@ import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ModalTransition } from '@atlaskit/modal-dialog';
 
-import Home from './pages/Home';
-import Package from './pages/Package';
-import Pattern from './pages/Pattern';
+import ChangeLogExplorer from './pages/ChangeLogExplorer';
 import Document from './pages/Document';
 import FourOhFour from './pages/FourOhFour';
-import PackagesList from './pages/PackagesList';
-import PatternsInfo from './pages/PatternsInfo';
-import PackageDocument from './pages/PackageDocument';
-import ChangeLogExplorer from './pages/ChangeLogExplorer';
+import Home from './pages/Home';
+import Package from './pages/Package';
 import ChangelogModal, {
   Props as ChangelogModalProps,
 } from './pages/Package/ChangelogModal';
 import ExamplesModal, {
   Props as ExamplesModalProps,
 } from './pages/Package/ExamplesModal';
+import PackageDocument from './pages/PackageDocument';
+import PackagesList from './pages/PackagesList';
+import Pattern from './pages/Pattern';
+import PatternsInfo from './pages/PatternsInfo';
 
 const home = [
   {

@@ -1,15 +1,17 @@
 import { waitForTooltip } from '@atlaskit/visual-regression/helper';
-import adf from './__fixtures__/default-table.adf.json';
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import tableMergedColumnsADF from './__fixtures__/table-with-first-column-merged.json';
+
+import { animationFrame } from '../../__helpers/page-objects/_editor';
 import {
   insertRow,
   insertColumn,
   tableSelectors,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
-import { animationFrame } from '../../__helpers/page-objects/_editor';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adf from './__fixtures__/default-table.adf.json';
+import tableMergedColumnsADF from './__fixtures__/table-with-first-column-merged.json';
 
 let page: Page;
 const initEditor = async (adf: Object) => {

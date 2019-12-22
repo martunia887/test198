@@ -1,43 +1,45 @@
 import * as React from 'react';
-import { EditorPlugin } from '../../types';
 import { WithProviders, Providers } from '@atlaskit/editor-common';
+
+import { EditorPlugin } from '../../types';
+import { ToolbarSize } from '../../ui/Toolbar';
+import WithPluginState from '../../ui/WithPluginState';
+import { INPUT_METHOD } from '../analytics';
+import { insertBlockTypesWithAnalytics } from '../block-type/commands';
 import {
   pluginKey as blockTypeStateKey,
   BlockTypeState,
 } from '../block-type/pm-plugins/main';
-import {
-  stateKey as mediaStateKey,
-  MediaPluginState,
-} from '../media/pm-plugins/main';
+import { pluginKey as dateStateKey, DateState } from '../date/plugin';
+import { emojiPluginKey, EmojiPluginState } from '../emoji';
 import {
   stateKey as hyperlinkPluginKey,
   HyperlinkState,
 } from '../hyperlink/pm-plugins/main';
-import { mentionPluginKey, MentionPluginState } from '../mentions';
+import { startImageUpload } from '../image-upload/pm-plugins/commands';
 import { stateKey as imageUploadStateKey } from '../image-upload/pm-plugins/main';
-import {
-  pluginKey as placeholderTextStateKey,
-  PluginState as PlaceholderPluginState,
-} from '../placeholder-text';
+import { ImageUploadPluginState } from '../image-upload/types';
 import { pluginKey as layoutStateKey } from '../layout';
+import { LayoutState } from '../layout/pm-plugins/main';
 import {
   pluginKey as macroStateKey,
   MacroState,
   insertMacroFromMacroBrowser,
 } from '../macro';
-import { pluginKey as dateStateKey, DateState } from '../date/plugin';
-import { emojiPluginKey, EmojiPluginState } from '../emoji';
-import WithPluginState from '../../ui/WithPluginState';
-import { ToolbarSize } from '../../ui/Toolbar';
-import ToolbarInsertBlock from './ui/ToolbarInsertBlock';
-import { insertBlockTypesWithAnalytics } from '../block-type/commands';
-import { startImageUpload } from '../image-upload/pm-plugins/commands';
-import { pluginKey as typeAheadPluginKey } from '../type-ahead/pm-plugins/main';
-import { TypeAheadPluginState } from '../type-ahead';
+import {
+  stateKey as mediaStateKey,
+  MediaPluginState,
+} from '../media/pm-plugins/main';
+import { mentionPluginKey, MentionPluginState } from '../mentions';
+import {
+  pluginKey as placeholderTextStateKey,
+  PluginState as PlaceholderPluginState,
+} from '../placeholder-text';
 import { TablePluginState } from '../table/types';
-import { ImageUploadPluginState } from '../image-upload/types';
-import { LayoutState } from '../layout/pm-plugins/main';
-import { INPUT_METHOD } from '../analytics';
+import { TypeAheadPluginState } from '../type-ahead';
+import { pluginKey as typeAheadPluginKey } from '../type-ahead/pm-plugins/main';
+
+import ToolbarInsertBlock from './ui/ToolbarInsertBlock';
 
 const toolbarSizeToButtons = (toolbarSize: ToolbarSize) => {
   switch (toolbarSize) {

@@ -2,14 +2,16 @@
 import React, { PureComponent, type ElementRef } from 'react';
 import { withTheme } from 'styled-components';
 import rafSchedule from 'raf-schd';
-import ResizerInner from '../styled/ResizerInner';
-import ResizerButton from './ResizerButton';
+
 import {
   globalOpenWidth,
   standardOpenWidth,
   resizerClickableWidth,
 } from '../../shared-variables';
 import { isElectronMac } from '../../theme/util';
+import ResizerInner from '../styled/ResizerInner';
+
+import ResizerButton from './ResizerButton';
 
 type Props = {
   onResizeStart: () => {},

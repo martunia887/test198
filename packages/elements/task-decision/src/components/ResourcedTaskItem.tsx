@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import TaskItem from './TaskItem';
+import { FabricElementsAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+
 import {
   Appearance,
   BaseItem,
@@ -9,7 +10,8 @@ import {
   TaskState,
   DecisionState,
 } from '../types';
-import { FabricElementsAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+
+import TaskItem from './TaskItem';
 
 export interface Props {
   taskId: string;

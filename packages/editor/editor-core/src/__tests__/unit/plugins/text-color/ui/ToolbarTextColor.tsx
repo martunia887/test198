@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   doc,
   code_block,
@@ -7,20 +9,18 @@ import {
   mountWithIntl,
   createAnalyticsEventMock,
 } from '@atlaskit/editor-test-helpers';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { ReactWrapper } from 'enzyme';
 
+import { AnalyticsHandler } from '../../../../../analytics';
 import {
   TextColorPluginState,
   pluginKey,
 } from '../../../../../plugins/text-color/pm-plugins/main';
-import Color from '../../../../../ui/ColorPalette/Color';
-import ToolbarButton from '../../../../../ui/ToolbarButton';
 import ToolbarTextColor, {
   Props as ToolbarTextColorProps,
 } from '../../../../../plugins/text-color/ui/ToolbarTextColor';
-import { AnalyticsHandler } from '../../../../../analytics';
+import Color from '../../../../../ui/ColorPalette/Color';
 import { PaletteColor } from '../../../../../ui/ColorPalette/Palettes/type';
+import ToolbarButton from '../../../../../ui/ToolbarButton';
 
 /**
  * Simulate a click color

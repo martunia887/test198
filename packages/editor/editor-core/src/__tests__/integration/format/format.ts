@@ -1,11 +1,12 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { fullpage, getDocFromElement } from '../_helpers';
+import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
+import { KEY } from '../../__helpers/page-objects/_keyboard';
 import {
   mountEditor,
   goToEditorTestingExample,
 } from '../../__helpers/testing-example-helpers';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import { KEY } from '../../__helpers/page-objects/_keyboard';
+import { fullpage, getDocFromElement } from '../_helpers';
 
 const editorSelector = '.ProseMirror';
 

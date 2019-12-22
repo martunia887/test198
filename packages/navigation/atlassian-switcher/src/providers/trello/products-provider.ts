@@ -1,8 +1,8 @@
 import { AvailableProductsResponse } from '../../types';
-import { withCached } from '../../utils/with-cached';
-import { fetchJson } from '../../utils/fetch';
-import asDataProvider from '../as-data-provider';
 import { Environment, getEnvName } from '../../utils/environment';
+import { fetchJson } from '../../utils/fetch';
+import { withCached } from '../../utils/with-cached';
+import asDataProvider from '../as-data-provider';
 
 export const getAvailableProductsUrl = (env: Environment) => {
   const origin =

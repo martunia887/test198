@@ -1,18 +1,17 @@
 import * as React from 'react';
 
-import ProfileCard from './ProfileCard';
-import LoadingState from './LoadingState';
-import ErrorMessage from './ErrorMessage';
+import { AnalyticsName } from '../internal/analytics';
 import filterActions from '../internal/filterActions';
-
 import { CardElevationWrapper } from '../styled/Card';
-
 import {
   ProfileCardResourcedProps,
   ProfileCardResourcedState,
   ProfileCardAction,
 } from '../types';
-import { AnalyticsName } from '../internal/analytics';
+
+import ErrorMessage from './ErrorMessage';
+import LoadingState from './LoadingState';
+import ProfileCard from './ProfileCard';
 
 export default class ProfileCardResourced extends React.PureComponent<
   ProfileCardResourcedProps,

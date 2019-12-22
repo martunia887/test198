@@ -1,9 +1,10 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
+
 import ExitingPersistence from '../../../entering/exiting-persistence';
 import ShrinkOut from '../../../entering/shrink-out';
-import { smallDurationMs } from '../../../utils/durations';
 import { easeIn } from '../../../utils/curves';
+import { smallDurationMs } from '../../../utils/durations';
 import { ComponentStub } from '../../__utils__/component-stub';
 import * as raf from '../../__utils__/raf';
 

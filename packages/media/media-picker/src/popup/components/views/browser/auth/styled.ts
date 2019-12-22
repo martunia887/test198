@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { N30, N500, N100 } from '@atlaskit/theme/colors';
 
 export const IconWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`

@@ -4,9 +4,10 @@ jest.mock('../../getElementDimension');
 import * as React from 'react';
 import { Component } from 'react';
 import { shallow } from 'enzyme';
+
 import { getDataURIDimension } from '../../getDataURIDimension';
-import { isRetina } from '../../isRetina';
 import { getElementDimension } from '../../getElementDimension';
+import { isRetina } from '../../isRetina';
 
 describe('getDataURIDimension()', () => {
   class SomeComponent extends Component<any, any> {

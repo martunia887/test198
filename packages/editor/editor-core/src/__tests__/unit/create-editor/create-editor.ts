@@ -1,12 +1,13 @@
-import { name } from '../../../version.json';
-import { Selection } from 'prosemirror-state';
 import { createEditorFactory } from '@atlaskit/editor-test-helpers';
+import { Selection } from 'prosemirror-state';
+
 import {
   sortByRank,
   fixExcludes,
   createPMPlugins,
   processPluginsList,
 } from '../../../create-editor/create-editor';
+import { name } from '../../../version.json';
 
 describe(name, () => {
   describe('create-editor', () => {

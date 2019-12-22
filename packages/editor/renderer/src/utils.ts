@@ -1,7 +1,7 @@
-import { Schema } from 'prosemirror-model';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import { Transformer, ADNode, EventHandlers } from '@atlaskit/editor-common';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
+import { Schema } from 'prosemirror-model';
 import { Node as PMNode } from 'prosemirror-model';
 
 function createEncoder<T>(parser: Transformer<T>, encoder: Transformer<any>) {

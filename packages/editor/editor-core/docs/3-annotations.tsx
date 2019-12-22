@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
-
 import { md, code } from '@atlaskit/docs';
 import { colors } from '@atlaskit/theme';
+import { EditorView } from 'prosemirror-view';
 
 import { Editor } from '../src';
 

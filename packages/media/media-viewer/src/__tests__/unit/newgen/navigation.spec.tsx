@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { FileIdentifier } from '@atlaskit/media-client';
-import { Navigation, NavigationBase } from '../../../newgen/navigation';
 import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/chevron-left-circle';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
+import { FileIdentifier } from '@atlaskit/media-client';
 import { KeyboardEventWithKeyCode } from '@atlaskit/media-test-helpers';
+
+import { Navigation, NavigationBase } from '../../../newgen/navigation';
 
 /**
  * Skipped two tests in here that are failing due to an issue with synthetic keyboard events

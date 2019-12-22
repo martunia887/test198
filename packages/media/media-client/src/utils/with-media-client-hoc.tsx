@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { MediaClientConfig } from '@atlaskit/media-core';
+
 import { MediaClient } from '../client/media-client';
 import { Identifier } from '../identifier';
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Node as PMNode } from 'prosemirror-model';
 import { JiraIcon } from '@atlaskit/logo';
 import { borderRadius, colors } from '@atlaskit/theme';
+import { Node as PMNode } from 'prosemirror-model';
 
 const WrapperNode = styled.span`
   align-items: center;

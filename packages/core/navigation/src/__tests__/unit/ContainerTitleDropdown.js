@@ -5,7 +5,9 @@ import AkDropdownMenu, {
   DropdownItemGroup,
 } from '@atlaskit/dropdown-menu';
 import { AtlassianIcon } from '@atlaskit/logo';
+
 import ContainerTitleDropdown from '../../components/js/ContainerTitleDropdown';
+
 import { mountWithRootTheme } from './_theme-util';
 
 describe('<ContainerTitleDropdown />', () => {

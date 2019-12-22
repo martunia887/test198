@@ -1,14 +1,16 @@
-import AkButton from '@atlaskit/button';
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { customCategory } from '../../util/constants';
+import AkButton from '@atlaskit/button';
+
 import { EmojiDescription, Message } from '../../types';
+import { customCategory } from '../../util/constants';
 import { messages } from '../i18n';
+
 import Emoji from './Emoji';
 import EmojiErrorMessage from './EmojiErrorMessage';
-import { UploadStatus } from './internal-types';
 import RetryableButton from './RetryableButton';
+import { UploadStatus } from './internal-types';
 import * as styles from './styles';
 
 export interface EmojiUploadPreviewProps {

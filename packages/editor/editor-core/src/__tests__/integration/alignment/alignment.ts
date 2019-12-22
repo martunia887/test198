@@ -1,11 +1,12 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement, editable, quickInsert } from '../_helpers';
+
 import { messages } from '../../../plugins/block-type/types';
 import { TableCssClassName as ClassName } from '../../../plugins/table/types';
 import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
+import { getDocFromElement, editable, quickInsert } from '../_helpers';
 
 const alignButton = 'button[aria-label="Text alignment"]';
 const alignRightButton = 'span[aria-label="Align right"]';

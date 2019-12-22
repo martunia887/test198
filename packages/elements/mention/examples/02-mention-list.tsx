@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { IntlProvider } from 'react-intl';
+
 import { onSelection, randomMentions } from '../example-helpers';
 import MentionList from '../src/components/MentionList';
 import { MentionDescription } from '../src/types';
-import { IntlProvider } from 'react-intl';
 
 export interface State {
   mentions: MentionDescription[];

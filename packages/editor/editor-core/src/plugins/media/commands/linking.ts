@@ -1,13 +1,8 @@
-import {
-  createMediaLinkingCommand,
-  getMediaLinkingState,
-} from '../pm-plugins/linking';
-import { Node, MarkType } from 'prosemirror-model';
-import { normalizeUrl } from '../../hyperlink/utils';
-import { createToggleBlockMarkOnRange } from '../../../commands';
 import { LinkAttributes } from '@atlaskit/adf-schema';
-import { MediaLinkingActionsTypes } from '../pm-plugins/linking/actions';
+import { Node, MarkType } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
+
+import { createToggleBlockMarkOnRange } from '../../../commands';
 import {
   addAnalytics,
   EVENT_TYPE,
@@ -16,6 +11,12 @@ import {
   ACTION_SUBJECT_ID,
   INPUT_METHOD,
 } from '../../analytics';
+import { normalizeUrl } from '../../hyperlink/utils';
+import {
+  createMediaLinkingCommand,
+  getMediaLinkingState,
+} from '../pm-plugins/linking';
+import { MediaLinkingActionsTypes } from '../pm-plugins/linking/actions';
 
 export const showLinkingToolbar = createMediaLinkingCommand(state => {
   const mediaLinkingState = getMediaLinkingState(state);

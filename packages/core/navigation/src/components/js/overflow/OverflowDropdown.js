@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import type { Node } from 'react';
 import { ThemeProvider } from 'styled-components';
 import DropdownMenu from '@atlaskit/dropdown-menu';
-import Item from '@atlaskit/item';
 import MoreVerticalIcon from '@atlaskit/icon/glyph/more-vertical';
+import Item from '@atlaskit/item';
 import Tooltip from '@atlaskit/tooltip';
-import OverflowDropdownButtonWrapper from '../../styled/OverflowDropdownButtonWrapper';
+
 import { isDropdownOverflowKey } from '../../../theme/util';
+import OverflowDropdownButtonWrapper from '../../styled/OverflowDropdownButtonWrapper';
 
 type State = {
   isOpen: boolean,

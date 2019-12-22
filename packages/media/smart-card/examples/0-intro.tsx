@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
-
-import Page, { Grid, GridColumn } from '@atlaskit/page';
-import Form, { Field, FormHeader } from '@atlaskit/form';
-import Textfield from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
-import { Provider, Card } from '../src';
-import { CardAppearance } from '../src/view/Card/types';
 import { Checkbox } from '@atlaskit/checkbox';
+import Form, { Field, FormHeader } from '@atlaskit/form';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
 import { RadioGroup } from '@atlaskit/radio';
+import Textfield from '@atlaskit/textfield';
+
 import urlsJSON from '../examples-helpers/example-urls.json';
+import { Provider, Card } from '../src';
 import SmartCardClient from '../src/client';
+import { CardAppearance } from '../src/view/Card/types';
 
 const params =
   typeof URLSearchParams !== 'undefined'

@@ -1,5 +1,3 @@
-import { EditorView } from 'prosemirror-view';
-import { ResolvedPos, NodeSpec } from 'prosemirror-model';
 import { TableLayout, CellAttributes } from '@atlaskit/adf-schema';
 import {
   calcTableWidth,
@@ -10,8 +8,11 @@ import {
   mapBreakpointToLayoutMaxWidth,
   akEditorGutterPadding,
 } from '@atlaskit/editor-common';
-import { TableOptions } from '../../../nodeviews/table';
+import { ResolvedPos, NodeSpec } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
+
 import { containsClassName } from '../../../../../utils';
+import { TableOptions } from '../../../nodeviews/table';
 
 export const tableLayoutToSize: Record<string, number> = {
   default: akEditorDefaultLayoutWidth,

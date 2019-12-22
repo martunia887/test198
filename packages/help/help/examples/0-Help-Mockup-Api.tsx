@@ -3,6 +3,8 @@ import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import Page from '@atlaskit/page';
 
 import LocaleIntlProvider from '../example-helpers/LocaleIntlProvider';
+import Help from '../src';
+
 import { getArticle, searchArticle } from './utils/mockData';
 import {
   ExampleWrapper,
@@ -10,8 +12,6 @@ import {
   FooterContent,
   ExampleDefaultContent,
 } from './utils/styled';
-
-import Help from '../src';
 
 interface ArticleFeedback {
   RateReasonText: string;

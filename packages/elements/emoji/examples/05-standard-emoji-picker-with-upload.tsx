@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Layer from '@atlaskit/layer';
-import { EmojiPicker } from '../src/picker';
 
 import {
   getEmojiResource,
@@ -9,6 +8,7 @@ import {
   lorem,
 } from '../example-helpers';
 import { onSelection } from '../example-helpers/index';
+import { EmojiPicker } from '../src/picker';
 import { EmojiProvider } from '../src/resource';
 
 export interface EmojiState {

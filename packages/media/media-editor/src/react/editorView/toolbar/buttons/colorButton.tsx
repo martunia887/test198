@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { Component } from 'react';
-import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
-import Tooltip from '@atlaskit/tooltip';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 import Button from '@atlaskit/button';
+import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
+import { messages } from '@atlaskit/media-ui';
 import { N0 } from '@atlaskit/theme/colors';
+import Tooltip from '@atlaskit/tooltip';
+
+import { PICKER_COLORS } from '../popups/colorPopup';
+
 import {
   ColorSample,
   DropdownRightIconWrapper,
   DropdownLeftIconWrapper,
 } from './styles';
-import { messages } from '@atlaskit/media-ui';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { PICKER_COLORS } from '../popups/colorPopup';
 
 export interface ColorButtonProps {
   readonly color: string;

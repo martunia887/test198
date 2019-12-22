@@ -1,7 +1,8 @@
 import * as React from 'react';
+import styled from 'styled-components';
+
 import { TopLevelItemWrapperTheme } from '../theme/default-theme';
 import { ThemeTokens } from '../theme/types';
-import styled from 'styled-components';
 
 interface ToggleProps {
   isParentHovered?: boolean;

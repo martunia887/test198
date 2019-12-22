@@ -1,3 +1,11 @@
+import { Slice, Node } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+import { findParentNode } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
+import { commandWithAnalytics as commandWithV2Analytics } from '../../../analytics';
+import { Command } from '../../../types';
+import { pipe } from '../../../utils';
 import {
   ACTION,
   INPUT_METHOD,
@@ -14,10 +22,6 @@ import {
   PasteContents,
   withAnalytics,
 } from '../../analytics';
-import { commandWithAnalytics as commandWithV2Analytics } from '../../../analytics';
-import { EditorView } from 'prosemirror-view';
-import { Slice, Node } from 'prosemirror-model';
-import { getPasteSource } from '../util';
 import {
   handlePasteAsPlainText,
   handlePasteIntoTaskAndDecision,
@@ -28,10 +32,7 @@ import {
   handleRichText,
   handleExpand,
 } from '../handlers';
-import { Command } from '../../../types';
-import { pipe } from '../../../utils';
-import { EditorState } from 'prosemirror-state';
-import { findParentNode } from 'prosemirror-utils';
+import { getPasteSource } from '../util';
 
 type PasteContext = {
   type: PasteType;

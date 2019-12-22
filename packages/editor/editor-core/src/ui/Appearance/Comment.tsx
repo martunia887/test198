@@ -1,12 +1,16 @@
 import * as React from 'react';
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import {
+  WidthConsumer,
+  akEditorMobileBreakoutPoint,
+} from '@atlaskit/editor-common';
 import { colors, borderRadius, gridSize } from '@atlaskit/theme';
-import Toolbar from '../Toolbar';
-import PluginSlot from '../PluginSlot';
-import WithPluginState from '../WithPluginState';
-import ContentStyles from '../ContentStyles';
-import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
+import classnames from 'classnames';
+
+import messages from '../../messages';
+import { GRID_GUTTER } from '../../plugins/grid';
 import {
   pluginKey as maxContentSizePluginKey,
   MaxContentSizePluginState,
@@ -15,18 +19,15 @@ import {
   stateKey as mediaPluginKey,
   MediaPluginState,
 } from '../../plugins/media/pm-plugins/main';
-import { ClickAreaBlock } from '../Addon';
 import { tableCommentEditorStyles } from '../../plugins/table/ui/styles';
-import WithFlash from '../WithFlash';
-import {
-  WidthConsumer,
-  akEditorMobileBreakoutPoint,
-} from '@atlaskit/editor-common';
+import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
+import { ClickAreaBlock } from '../Addon';
+import ContentStyles from '../ContentStyles';
+import PluginSlot from '../PluginSlot';
+import Toolbar from '../Toolbar';
 import WidthEmitter from '../WidthEmitter';
-import { GRID_GUTTER } from '../../plugins/grid';
-import classnames from 'classnames';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
-import messages from '../../messages';
+import WithFlash from '../WithFlash';
+import WithPluginState from '../WithPluginState';
 
 export interface CommentEditorProps {
   isMaxContentSizeReached?: boolean;

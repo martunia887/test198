@@ -1,9 +1,11 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
+
 import { getType as getListType, ListBuilder } from '../builder/list-builder';
 import { parseString } from '../text';
 import { normalizePMNodes } from '../utils/normalize';
-import { parseMacroKeyword } from './keyword';
+
 import { Token, TokenType, parseToken, TokenParser } from './';
+import { parseMacroKeyword } from './keyword';
 import { parseNewlineOnly } from './whitespace';
 
 const LIST_ITEM_REGEXP = /^ *([*\-#]+) /;

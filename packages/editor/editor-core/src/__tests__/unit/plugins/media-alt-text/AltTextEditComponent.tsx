@@ -7,21 +7,22 @@ jest.mock('../../../../plugins/media/pm-plugins/alt-text/commands', () => ({
 }));
 
 import React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { InjectedIntl } from 'react-intl';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
-import AltTextEdit, {
-  AltTextEditComponent,
-  AltTextEditComponentState,
-} from '../../../../plugins/media/pm-plugins/alt-text/ui/AltTextEdit';
-import { InjectedIntl } from 'react-intl';
+
 import {
   EVENT_TYPE,
   ACTION,
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
 } from '../../../../plugins/analytics';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { ReactWrapper } from 'enzyme';
+import AltTextEdit, {
+  AltTextEditComponent,
+  AltTextEditComponentState,
+} from '../../../../plugins/media/pm-plugins/alt-text/ui/AltTextEdit';
 
 describe('AltTextEditComponent', () => {
   let createAnalyticsEvent: CreateUIAnalyticsEvent;

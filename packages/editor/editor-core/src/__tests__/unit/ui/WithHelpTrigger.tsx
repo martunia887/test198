@@ -1,10 +1,11 @@
-import { name } from '../../../version.json';
-import { mount } from 'enzyme';
 import * as React from 'react';
-import WithHelpTrigger from '../../../ui/WithHelpTrigger';
-import EditorContext from '../../../ui/EditorContext';
+import { mount } from 'enzyme';
+
 import * as EventDispatcher from '../../../event-dispatcher';
 import { analyticsEventKey } from '../../../plugins/analytics';
+import EditorContext from '../../../ui/EditorContext';
+import WithHelpTrigger from '../../../ui/WithHelpTrigger';
+import { name } from '../../../version.json';
 
 describe(name, () => {
   describe('WithHelpTrigger', () => {

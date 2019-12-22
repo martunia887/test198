@@ -1,23 +1,24 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+
+import {
+  clickFirstCell,
+  selectTable,
+} from '../../__helpers/page-objects/_table';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
   fullpage,
   doubleClickResizeHandle,
 } from '../_helpers';
-import {
-  clickFirstCell,
-  selectTable,
-} from '../../__helpers/page-objects/_table';
+
 import {
   tableWithUnevenColumns,
   tableWithUnevenColumnsInOverflow,
 } from './__fixtures__/even-columns';
-
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
 
 // There is no positionDoubleClick on firefox
 BrowserTestCase(

@@ -1,5 +1,6 @@
 import { ThemeProps, ThemeTokens } from '@atlaskit/button/types';
 import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
+
 import {
   actionSectionDesktopCSS,
   actionSectionMobileCSS,

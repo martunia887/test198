@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { Node as PmNode } from 'prosemirror-model';
-import { Overlay } from '../styles';
+
 import ExtensionLozenge from '../Lozenge';
+import { Overlay } from '../styles';
+
 import { Wrapper } from './styles';
 
 export interface Props {

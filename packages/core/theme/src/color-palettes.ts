@@ -1,5 +1,5 @@
-import { colorPaletteType } from './types';
 import * as colors from './colors';
+import { colorPaletteType } from './types';
 
 // Jira Portfolio
 export const colorPalette8 = [

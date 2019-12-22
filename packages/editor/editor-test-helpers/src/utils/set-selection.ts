@@ -1,14 +1,15 @@
-import { Refs, RefsNode } from '../schema-builder';
-import { EditorView } from 'prosemirror-view';
 import {
   GapCursorSelection,
   GapCursorSide,
   setTextSelection,
 } from '@atlaskit/editor-core/test-utils';
-import { findCellClosestToPos } from 'prosemirror-utils';
-import { CellSelection } from 'prosemirror-tables';
-import { NodeSelection } from 'prosemirror-state';
 import { Schema } from 'prosemirror-model';
+import { NodeSelection } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
+import { findCellClosestToPos } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
+import { Refs, RefsNode } from '../schema-builder';
 
 const positionExists = (position: number | undefined): boolean =>
   typeof position === 'number';

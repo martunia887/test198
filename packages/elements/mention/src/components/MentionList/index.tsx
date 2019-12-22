@@ -1,10 +1,12 @@
 import * as React from 'react';
+
 import { MentionDescription, OnMentionEvent } from '../../types';
 import debug from '../../util/logger';
 import { actualMouseMove, mouseLocation, Position } from '../../util/mouse';
 import MentionItem from '../MentionItem';
 import MentionListError from '../MentionListError';
 import Scrollable from '../Scrollable';
+
 import { MentionListStyle } from './styles';
 
 function wrapIndex(mentions: MentionDescription[], index: number): number {

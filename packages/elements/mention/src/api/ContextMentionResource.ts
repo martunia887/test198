@@ -1,3 +1,5 @@
+import { MentionDescription } from '../types';
+import { padArray } from '../util';
 import {
   MentionProvider,
   MentionContextIdentifier,
@@ -8,8 +10,6 @@ import {
   // @ts-ignore
   ResultCallback,
 } from './MentionResource';
-import { padArray } from '../util';
-import { MentionDescription } from '../types';
 export { MentionDescription };
 
 export type MentionProviderFunctions = {

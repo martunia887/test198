@@ -4,6 +4,7 @@ import { Transition } from 'react-transition-group';
 
 import NestedNavigationPage from '../../styled/NestedNavigationPage';
 import NestedNavigationWrapper from '../../styled/NestedNavigationWrapper';
+
 import type {
   Stack,
   TraversalDirection,

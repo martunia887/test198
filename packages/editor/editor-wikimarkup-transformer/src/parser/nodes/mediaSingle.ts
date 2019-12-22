@@ -1,6 +1,6 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
-import { LINK_TEXT_REGEXP } from '../tokenize/link-text';
 import { Context } from '../../interfaces';
+import { LINK_TEXT_REGEXP } from '../tokenize/link-text';
 
 const defaultWidth = 200;
 const defaultHeight = 183;

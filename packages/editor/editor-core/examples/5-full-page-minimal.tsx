@@ -1,15 +1,14 @@
-import styled from 'styled-components';
-
 import * as React from 'react';
+import styled from 'styled-components';
 import { borderRadius } from '@atlaskit/theme';
-
-import Editor from './../src/editor';
 
 import {
   akEditorCodeBackground,
   akEditorCodeBlockPadding,
   akEditorCodeFontFamily,
 } from '../src/styles';
+
+import Editor from './../src/editor';
 
 export const Wrapper: any = styled.div`
   height: 500px;

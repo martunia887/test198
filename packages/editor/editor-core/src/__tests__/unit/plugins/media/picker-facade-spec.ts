@@ -1,13 +1,13 @@
+import { ErrorReportingHandler } from '@atlaskit/editor-common';
 import { MediaClientConfig } from '@atlaskit/media-core';
+import { Popup } from '@atlaskit/media-picker/types';
 import {
   StoryBookAuthProvider,
   userAuthProvider,
   asMock,
 } from '@atlaskit/media-test-helpers';
-import { Popup } from '@atlaskit/media-picker/types';
 
 import PickerFacade from '../../../../plugins/media/picker-facade';
-import { ErrorReportingHandler } from '@atlaskit/editor-common';
 
 describe('Media PickerFacade', () => {
   const errorReporter: ErrorReportingHandler = {

@@ -1,5 +1,3 @@
-import { MarkdownSerializer, marks, nodes } from '../../serializer';
-import { stringRepeat } from '../../util';
 import {
   a,
   blockquote,
@@ -33,6 +31,8 @@ import {
   th,
   tr,
 } from '@atlaskit/editor-test-helpers';
+import { MarkdownSerializer, marks, nodes } from '../../serializer';
+import { stringRepeat } from '../../util';
 
 const markdownSerializer = new MarkdownSerializer(nodes, marks);
 

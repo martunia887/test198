@@ -1,14 +1,15 @@
-import { EditorView } from 'prosemirror-view';
-import { Selection, EditorState } from 'prosemirror-state';
 import {
   doc,
   p,
   createEditorFactory,
   insertText,
 } from '@atlaskit/editor-test-helpers';
+import { Selection, EditorState } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
 import { scrollIntoViewPluginKey } from '../../../../plugins/scroll-into-view';
-import { CommandDispatch } from '../../../../types';
 import { toggleStrong } from '../../../../plugins/text-formatting/commands/text-formatting';
+import { CommandDispatch } from '../../../../types';
 
 describe('ScrollIntoView plugin', () => {
   const createEditor = createEditorFactory();

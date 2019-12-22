@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { colors } from '@atlaskit/theme';
-import { EventHandlers, mediaSingleClassName } from '@atlaskit/editor-common';
 import styled from 'styled-components';
+import { EventHandlers, mediaSingleClassName } from '@atlaskit/editor-common';
+import { colors } from '@atlaskit/theme';
 
 import { getEventHandler } from '../../utils';
 

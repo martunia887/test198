@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components';
-
 import { gridSize } from '@atlaskit/theme/constants';
 
 // we apply overflow and maxheight to the GroupWrapper if we are displaying a footer so that the

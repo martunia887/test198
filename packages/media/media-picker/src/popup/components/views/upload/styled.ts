@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ImgHTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { borderIcon } from '../../../../icons';
 
 export interface IsEmptyProps {

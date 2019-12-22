@@ -1,5 +1,5 @@
-import { TrackAEP } from './events';
 import { ACTION_SUBJECT, ACTION, ACTION_SUBJECT_ID } from './enums';
+import { TrackAEP } from './events';
 
 type MediaLinkAEP<Action> = TrackAEP<
   Action,

@@ -1,12 +1,12 @@
 import {
+  EmojiDescriptionWithVariations,
+  MediaApiRepresentation,
+} from '../../../types';
+import {
   buildEmojiDescriptionWithAltRepresentation,
   convertMediaToImageEmoji,
   convertMediaToImageRepresentation,
 } from '../../../util/type-helpers';
-import {
-  EmojiDescriptionWithVariations,
-  MediaApiRepresentation,
-} from '../../../types';
 import { evilburnsEmoji, mediaEmoji } from '../_test-data';
 
 const newPath = 'http://new-path/';

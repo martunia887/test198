@@ -1,8 +1,8 @@
+import { testMediaFileId } from '@atlaskit/editor-test-helpers';
 import {
   MediaMock,
   generateFilesFromTestData,
 } from '@atlaskit/media-test-helpers';
-import { testMediaFileId } from '@atlaskit/editor-test-helpers';
 import { fakeImage } from '../../../media/media-test-helpers/src/mocks/database/mockData';
 
 export default new MediaMock({

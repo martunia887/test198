@@ -1,18 +1,19 @@
+import { messages } from '../../../plugins/layout/toolbar';
+import { toggleBreakout } from '../../__helpers/page-objects/_layouts';
+import {
+  clickOnLayoutColumn,
+  waitForLayoutToolbar,
+} from '../../__helpers/page-objects/_layouts';
+import { clickFirstCell } from '../../__helpers/page-objects/_table';
+import { Page } from '../../__helpers/page-objects/_types';
 import {
   initFullPageEditorWithAdf,
   snapshot,
   Device,
   deviceViewPorts,
 } from '../_utils';
+
 import tableIn2ColAdf from './__fixtures__/table-in-2-col-layout.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
-import { messages } from '../../../plugins/layout/toolbar';
-import { clickFirstCell } from '../../__helpers/page-objects/_table';
-import { toggleBreakout } from '../../__helpers/page-objects/_layouts';
-import {
-  clickOnLayoutColumn,
-  waitForLayoutToolbar,
-} from '../../__helpers/page-objects/_layouts';
 
 describe('Snapshot Test: Nested table inside layouts', () => {
   let page: Page;

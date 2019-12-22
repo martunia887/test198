@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isFileClickAction } from '../actions/fileClick';
 import { State } from '../domain';
 

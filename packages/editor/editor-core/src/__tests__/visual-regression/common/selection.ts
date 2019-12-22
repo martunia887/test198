@@ -1,12 +1,14 @@
+import { EditorTestCardProvider } from '@atlaskit/editor-test-helpers';
 import { waitForTooltip } from '@atlaskit/visual-regression/helper';
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import adf from './__fixtures__/nested-elements.adf.json';
+
+import { animationFrame } from '../../__helpers/page-objects/_editor';
 import {
   tableSelectors,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
-import { animationFrame } from '../../__helpers/page-objects/_editor';
-import { EditorTestCardProvider } from '@atlaskit/editor-test-helpers';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adf from './__fixtures__/nested-elements.adf.json';
 // TODO: https://product-fabric.atlassian.net/browse/ED-7721
 describe.skip('Danger for nested elements', () => {
   let page: any;

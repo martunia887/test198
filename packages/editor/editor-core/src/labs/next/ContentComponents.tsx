@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import { pluginKey as disabledPluginKey } from '../../plugins/editor-disabled';
-import WithPluginState from '../../ui/WithPluginState';
 import PluginSlot from '../../ui/PluginSlot';
+import WithPluginState from '../../ui/WithPluginState';
+
 import { useEditorSharedConfig } from './Editor';
 
 export function ContentComponents(disabled?: any) {

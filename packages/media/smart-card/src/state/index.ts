@@ -1,7 +1,9 @@
-import { AnalyticsHandler } from '../utils/types';
-import { useSmartCardState as useSmartLinkState } from './store';
-import { useSmartCardActions as useSmartLinkActions } from './actions';
 import { useEffect } from 'react';
+
+import { AnalyticsHandler } from '../utils/types';
+
+import { useSmartCardActions as useSmartLinkActions } from './actions';
+import { useSmartCardState as useSmartLinkState } from './store';
 
 export function useSmartLink(url: string, dispatchAnalytics: AnalyticsHandler) {
   const state = useSmartLinkState(url);

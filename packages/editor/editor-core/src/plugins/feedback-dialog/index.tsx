@@ -1,10 +1,8 @@
 import React from 'react';
 import { PluginKey } from 'prosemirror-state';
-import { EditorPlugin, FeedbackInfo } from '../../types';
-import { IconFeedback } from '../quick-insert/assets';
-import { version as coreVersion } from '../../version.json';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 
+import { EditorPlugin, FeedbackInfo } from '../../types';
+import { version as coreVersion } from '../../version.json';
 import {
   addAnalytics,
   ACTION,
@@ -12,6 +10,9 @@ import {
   INPUT_METHOD,
   EVENT_TYPE,
 } from '../analytics';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { IconFeedback } from '../quick-insert/assets';
+
 import loadJiraCollectorDialogScript from './loadJiraCollectorDialogScript';
 
 export const pluginKey = new PluginKey('feedbackDialogPlugin');

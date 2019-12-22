@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
-import Tree, { RenderItemParams, TreeItem } from '../src';
+import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
+
 import { treeWithTwoBranches } from '../mockdata/treeWithTwoBranches';
+import Tree, { RenderItemParams, TreeItem } from '../src';
 
 const Container = styled.div`
   display: flex;

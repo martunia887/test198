@@ -1,5 +1,5 @@
-import { mount, shallow } from 'enzyme';
 import React from 'react';
+import { mount, shallow } from 'enzyme';
 import AnimateHeight from 'react-animate-height';
 
 import Panel from '../../Panel';

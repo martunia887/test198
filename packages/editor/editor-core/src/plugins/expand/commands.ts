@@ -1,9 +1,8 @@
-import { NodeSelection, EditorState } from 'prosemirror-state';
 import { Node as PMNode, NodeType } from 'prosemirror-model';
+import { NodeSelection, EditorState } from 'prosemirror-state';
 import { safeInsert, findTable } from 'prosemirror-utils';
-import { createCommand } from './pm-plugins/main';
+
 import { Command } from '../../types';
-import { findExpand } from './utils';
 import {
   addAnalytics,
   AnalyticsEventPayload,
@@ -14,6 +13,9 @@ import {
   EVENT_TYPE,
 } from '../analytics';
 import { GapCursorSelection, Side } from '../gap-cursor';
+
+import { createCommand } from './pm-plugins/main';
+import { findExpand } from './utils';
 
 export const setExpandRef = (ref?: HTMLDivElement | null): Command =>
   createCommand(

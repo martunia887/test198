@@ -1,5 +1,5 @@
-import SchemaNode from './schema-node';
 import OfSchemaNode from './of-schema-node';
+import SchemaNode from './schema-node';
 
 export default class AllOfSchemaNode extends OfSchemaNode {
   constructor(values: Array<SchemaNode> = []) {

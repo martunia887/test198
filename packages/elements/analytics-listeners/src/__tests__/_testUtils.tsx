@@ -1,5 +1,5 @@
-import { AnalyticsContext } from '@atlaskit/analytics-next';
 import * as React from 'react';
+import { AnalyticsContext } from '@atlaskit/analytics-next';
 import Logger, { LOG_LEVEL } from '../helpers/logger';
 
 export const createLoggerMock = (): Logger =>

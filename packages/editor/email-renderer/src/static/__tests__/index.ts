@@ -1,6 +1,6 @@
 import { processImages, createContentId } from '..';
-import * as icons from '../icons';
 import { base64Prefix, imageOutputType } from '../generator/constants';
+import * as icons from '../icons';
 
 describe('static asset rendering tests', () => {
   it('processImages: should have expected embeddedImages array', () => {

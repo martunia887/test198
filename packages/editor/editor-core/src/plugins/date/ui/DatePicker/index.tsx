@@ -1,13 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import Calendar from '@atlaskit/calendar';
 import {
   Popup,
   timestampToUTCDate,
   timestampToIsoFormat,
   akEditorFloatingDialogZIndex,
 } from '@atlaskit/editor-common';
-import Calendar from '@atlaskit/calendar';
 import { colors, borderRadius } from '@atlaskit/theme';
+
 import withOuterListeners from '../../../../ui/with-outer-listeners';
 import { DateType } from '../../index';
 

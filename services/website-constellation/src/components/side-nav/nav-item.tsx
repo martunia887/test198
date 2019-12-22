@@ -1,6 +1,5 @@
 import React from 'react';
 import { CustomItem } from '@atlaskit/menu';
-
 import { Link } from 'gatsby';
 
 type Props = {

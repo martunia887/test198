@@ -4,8 +4,6 @@ import ReactDOM from 'react-dom';
 import Button from '@atlaskit/button';
 import { AtlassianIcon } from '@atlaskit/logo';
 
-declare var global: any;
-
 import BreadcrumbsItemWithAnalytics, {
   BreadcrumbsItemWithoutAnalytics as BreadcrumbsItem,
 } from '../../BreadcrumbsItem';

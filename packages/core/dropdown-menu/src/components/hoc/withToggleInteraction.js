@@ -1,14 +1,14 @@
 // @flow
 
 import React, { Component, type Node, type ComponentType } from 'react';
-import { B400, N40 } from '@atlaskit/theme/colors';
 import PropTypes from 'prop-types';
-import getDisplayName from '../../util/getDisplayName';
-import safeContextCall from '../../util/safeContextCall';
-import { selectionManagerContext } from '../../util/contextNamespace';
-import type { Behaviors } from '../../types';
+import { B400, N40 } from '@atlaskit/theme/colors';
 
+import type { Behaviors } from '../../types';
+import { selectionManagerContext } from '../../util/contextNamespace';
+import getDisplayName from '../../util/getDisplayName';
 import { KEY_ENTER, KEY_SPACE } from '../../util/keys';
+import safeContextCall from '../../util/safeContextCall';
 
 type Props = {
   /** Content to be displayed inside the item. Same as @atlaskit/item `children` prop. */

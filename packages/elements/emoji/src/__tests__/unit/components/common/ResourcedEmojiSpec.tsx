@@ -1,14 +1,13 @@
-import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import { waitUntil } from '@atlaskit/util-common-test';
+import { mount, ReactWrapper } from 'enzyme';
 import Tooltip from '@atlaskit/tooltip';
+import { waitUntil } from '@atlaskit/util-common-test';
 
-import { EmojiDescription } from '../../../../types';
+import { EmojiProvider } from '../../../../api/EmojiResource';
 import Emoji from '../../../../components/common/Emoji';
 import EmojiPlaceholder from '../../../../components/common/EmojiPlaceholder';
 import ResourcedEmoji from '../../../../components/common/ResourcedEmoji';
-import { EmojiProvider } from '../../../../api/EmojiResource';
-
+import { EmojiDescription } from '../../../../types';
 import {
   evilburnsEmoji,
   grinEmoji,

@@ -1,17 +1,15 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { EditorState, Transaction, NodeSelection } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
 import { Step } from 'prosemirror-transform';
 import { findParentNode } from 'prosemirror-utils';
-import { CellSelection } from 'prosemirror-tables';
-import { EditorState, Transaction, NodeSelection } from 'prosemirror-state';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+
 import { Command } from '../../types';
 import { InputRuleWithHandler } from '../../utils/input-rules';
 import { GapCursorSelection, Side } from '../gap-cursor/selection';
-import { analyticsPluginKey } from './plugin';
+
 import { AnalyticsStep } from './analytics-step';
-import {
-  AnalyticsEventPayloadWithChannel,
-  editorAnalyticsChannel,
-} from './index';
+import { analyticsPluginKey } from './plugin';
 import {
   AnalyticsEventPayload,
   ACTION,
@@ -19,6 +17,10 @@ import {
   SELECTION_TYPE,
   SELECTION_POSITION,
 } from './types';
+import {
+  AnalyticsEventPayloadWithChannel,
+  editorAnalyticsChannel,
+} from './index';
 
 export type DispatchAnalyticsEvent = (payload: AnalyticsEventPayload) => void;
 export type HigherOrderCommand = (command: Command) => Command;

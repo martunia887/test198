@@ -1,16 +1,18 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
+
 import { AddCellArgs } from '../../interfaces';
+import { Context } from '../../interfaces';
 import { TableBuilder } from '../builder/table-builder';
 import { parseString } from '../text';
 import { normalizePMNodes } from '../utils/normalize';
+
+import { TokenType, TokenParser } from './';
+import { parseToken } from './';
+import { emoji } from './emoji';
+import { parseMacroKeyword } from './keyword';
 import { linkFormat } from './links/link-format';
 import { media } from './media';
-import { emoji } from './emoji';
-import { TokenType, TokenParser } from './';
-import { Context } from '../../interfaces';
 import { parseNewlineOnly } from './whitespace';
-import { parseMacroKeyword } from './keyword';
-import { parseToken } from './';
 
 /*
   The following are currently NOT supported

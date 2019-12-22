@@ -1,5 +1,15 @@
-import { Device, snapshot, initFullPageEditorWithAdf } from '../_utils';
 import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
+
+import { emojiReadySelector } from '../../__helpers/page-objects/_emoji';
+import { selectors } from '../../__helpers/page-objects/_expand';
+import { resizeMediaInPositionWithSnapshot } from '../../__helpers/page-objects/_media';
+import {
+  clickFirstCell,
+  tableSelectors,
+} from '../../__helpers/page-objects/_table';
+import { Page } from '../../__helpers/page-objects/_types';
+import { Device, snapshot, initFullPageEditorWithAdf } from '../_utils';
+
 import {
   expandADF,
   tableMediaADF,
@@ -8,14 +18,6 @@ import {
   mediaInExpandADF,
   mediaInNestedExpandADF,
 } from './__fixtures__/expand-adf';
-import { selectors } from '../../__helpers/page-objects/_expand';
-import { Page } from '../../__helpers/page-objects/_types';
-import { emojiReadySelector } from '../../__helpers/page-objects/_emoji';
-import {
-  clickFirstCell,
-  tableSelectors,
-} from '../../__helpers/page-objects/_table';
-import { resizeMediaInPositionWithSnapshot } from '../../__helpers/page-objects/_media';
 
 const hideTooltip = async (page: Page) => {
   // Hide the tooltip

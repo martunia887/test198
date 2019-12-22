@@ -8,9 +8,11 @@ import {
   typeAheadQuery,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import { createTypeAheadPlugin } from './_create-type-ahead-plugin';
+
 import { selectCurrentItem } from '../../../../../plugins/type-ahead/commands/select-item';
 import { pluginKey as typeAheadPluginKey } from '../../../../../plugins/type-ahead/pm-plugins/main';
+
+import { createTypeAheadPlugin } from './_create-type-ahead-plugin';
 
 describe('typeAhead main plugin', () => {
   const createEditor = createEditorFactory();

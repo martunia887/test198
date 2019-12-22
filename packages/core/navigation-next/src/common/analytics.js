@@ -1,7 +1,6 @@
 // @flow
 
 import type { ComponentType, ElementConfig } from 'react';
-
 import {
   withAnalyticsEvents,
   withAnalyticsContext,

@@ -1,7 +1,9 @@
 import { N20, N50, N200 } from '@atlaskit/adf-schema';
+
 import { createTag } from '../create-tag';
-import { createClassName } from '../styles/util';
 import { NodeSerializerOpts } from '../interfaces';
+import { createClassName } from '../styles/util';
+
 import { numberedColumnWidth } from './table';
 
 export const styles = `

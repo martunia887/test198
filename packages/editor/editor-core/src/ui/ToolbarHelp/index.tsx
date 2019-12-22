@@ -1,8 +1,9 @@
 import * as React from 'react';
 import QuestionIcon from '@atlaskit/icon/glyph/question';
+import { PositionType } from '@atlaskit/tooltip/types';
+
 import ToolbarButton from '../ToolbarButton';
 import WithHelpTrigger from '../WithHelpTrigger';
-import { PositionType } from '@atlaskit/tooltip/types';
 
 interface Props {
   title?: string;

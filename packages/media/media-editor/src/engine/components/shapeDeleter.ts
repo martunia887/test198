@@ -1,5 +1,5 @@
-import { Component } from './component';
 import { Signal } from '../signal';
+import { Component } from './component';
 
 export interface ShapeDeleter extends Component {
   // These methods are called by the core to notify about the availability of the delete operation

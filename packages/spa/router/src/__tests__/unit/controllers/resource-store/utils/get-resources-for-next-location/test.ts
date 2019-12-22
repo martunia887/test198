@@ -1,5 +1,5 @@
-import { createResource } from '../../../../../../controllers/resource-utils';
 import { getResourcesForNextLocation } from '../../../../../../controllers/resource-store/utils/get-resources-for-next-location';
+import { createResource } from '../../../../../../controllers/resource-utils';
 
 const type = 'mockResourceType';
 const result = 'some result';

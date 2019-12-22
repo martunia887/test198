@@ -1,16 +1,16 @@
 import React from 'react';
-import * as ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
+import * as ReactDOM from 'react-dom';
 import { render } from '@testing-library/react';
-import InlineEditableTextfield from '../../InlineEditableTextfield';
-import InlineEdit from '../../InlineEdit';
-import InlineEditUncontrolled from '../../InlineEditUncontrolled';
 
 import ContentWrapper from '../../../styled/ContentWrapper';
 import EditButton from '../../../styled/EditButton';
 import ReadViewContainer from '../../../styled/ReadViewContainer';
 import ReadViewContentWrapper from '../../../styled/ReadViewContentWrapper';
 import ReadViewWrapper from '../../../styled/ReadViewWrapper';
+import InlineEdit from '../../InlineEdit';
+import InlineEditUncontrolled from '../../InlineEditUncontrolled';
+import InlineEditableTextfield from '../../InlineEditableTextfield';
 
 const noop = () => {};
 

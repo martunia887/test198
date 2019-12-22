@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { Droppable, type DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 import Group from '../../presentational/Group';
+
 import type { SortableGroupProps } from './types';
 
 const defaultStyles = {

@@ -6,7 +6,6 @@ import {
   code,
   AtlassianInternalWarning,
 } from '@atlaskit/docs';
-
 import ReactionsExample from '../examples/00-picker-and-reactions';
 
 const ReactionsSource = require('!!raw-loader!../examples/00-picker-and-reactions');

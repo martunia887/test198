@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import { AnalyticsWebClient, FabricChannel, ListenerProps } from './types';
-import FabricElementsListener from './fabric/FabricElementsListener';
 import AtlaskitListener from './atlaskit/AtlaskitListener';
-import Logger from './helpers/logger';
-import NavigationListener from './navigation/NavigationListener';
 import FabricEditorListener from './fabric/FabricEditorListener';
+import FabricElementsListener from './fabric/FabricElementsListener';
+import Logger from './helpers/logger';
 import MediaAnalyticsListener from './media/MediaAnalyticsListener';
+import NavigationListener from './navigation/NavigationListener';
+import { AnalyticsWebClient, FabricChannel, ListenerProps } from './types';
 
 export type Props = {
   /** Children! */

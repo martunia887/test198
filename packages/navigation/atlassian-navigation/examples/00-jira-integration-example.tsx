@@ -1,19 +1,13 @@
 /** @jsx jsx */
+import { Fragment, KeyboardEvent, useState } from 'react';
+import { ThemeProvider } from 'styled-components';
 import Drawer from '@atlaskit/drawer';
 import { DropdownItem, DropdownItemGroup } from '@atlaskit/dropdown-menu';
 import { JiraIcon, JiraLogo } from '@atlaskit/logo';
 import Popup from '@atlaskit/popup';
 import { PopupProps } from '@atlaskit/popup/types';
 import { jsx } from '@emotion/core';
-import { Fragment, KeyboardEvent, useState } from 'react';
 
-import { ThemeProvider } from 'styled-components';
-import { ProfilePopup } from './shared/ProfilePopup';
-import { SwitcherPopup } from './shared/SwitcherPopup';
-import { HelpPopup } from './shared/HelpPopup';
-import { NotificationsPopup } from './shared/NotificationsPopup';
-
-import { DefaultCreate } from './shared/Create';
 import {
   AtlassianNavigation,
   PrimaryDropdownButton,
@@ -24,6 +18,12 @@ import {
   _itemTheme,
 } from '../src';
 import { useOverflowStatus } from '../src/controllers/overflow';
+
+import { DefaultCreate } from './shared/Create';
+import { HelpPopup } from './shared/HelpPopup';
+import { NotificationsPopup } from './shared/NotificationsPopup';
+import { ProfilePopup } from './shared/ProfilePopup';
+import { SwitcherPopup } from './shared/SwitcherPopup';
 
 const ProductHomeExample = () => (
   <ProductHome

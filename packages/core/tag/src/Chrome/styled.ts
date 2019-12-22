@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { R500, DN30, N700, R50, R100 } from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { gridSize, borderRadius } from '@atlaskit/theme/constants';
-import { R500, DN30, N700, R50, R100 } from '@atlaskit/theme/colors';
+
 import { buttonWidthUnitless, tagHeight, focusRingColor } from '../constants';
 import {
   backgroundColor,
@@ -9,6 +10,7 @@ import {
   textColor,
   textColorHover,
 } from '../theme';
+
 import { SpanProps } from './index';
 
 const gridSizeUnitless = gridSize();

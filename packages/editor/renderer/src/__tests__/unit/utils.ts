@@ -4,8 +4,9 @@ import {
   p,
   strong,
 } from '@atlaskit/editor-test-helpers/src/schema-builder';
-import { ADFEncoder } from '../../index';
+
 import { getText } from '../../utils';
+import { ADFEncoder } from '../../index';
 
 describe('Renderer - utils', () => {
   describe('ADFEncoder', () => {

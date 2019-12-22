@@ -1,12 +1,14 @@
 import * as React from 'react';
-import Button from '@atlaskit/button';
-import InlineDialog from '@atlaskit/inline-dialog';
 import {
   mockEndpoints,
   REQUEST_FAST,
 } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+import Button from '@atlaskit/button';
+import InlineDialog from '@atlaskit/inline-dialog';
+
 import AtlassianSwitcher from '../src';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 class InlineDialogSwitcherExample extends React.Component {
   state = {

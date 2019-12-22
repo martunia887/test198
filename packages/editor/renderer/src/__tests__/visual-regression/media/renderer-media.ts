@@ -1,9 +1,11 @@
-import { snapshot, Device, initRendererWithADF } from '../_utils';
-import * as resizeAdf from './__fixtures__/renderer-media.adf.json';
+import { Page } from 'puppeteer';
+
 import * as layoutAdf from '../../../../examples/helper/media-resize-layout.adf.json';
 import { selectors as mediaSelectors } from '../../__helpers/page-objects/_media';
 import { selectors as rendererSelectors } from '../../__helpers/page-objects/_renderer';
-import { Page } from 'puppeteer';
+import { snapshot, Device, initRendererWithADF } from '../_utils';
+
+import * as resizeAdf from './__fixtures__/renderer-media.adf.json';
 
 const devices = [
   // TODO: ED-7455

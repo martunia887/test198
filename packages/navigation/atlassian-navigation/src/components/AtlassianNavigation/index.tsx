@@ -3,8 +3,9 @@ import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-conte
 import { jsx } from '@emotion/core';
 
 import { NavigationTheme, ThemeProvider, defaultTheme } from '../../theme';
-import { containerCSS, leftCSS, rightCSS } from './styles';
 import { PrimaryItemsContainer } from '../PrimaryItemsContainer';
+
+import { containerCSS, leftCSS, rightCSS } from './styles';
 import { AtlassianNavigationProps } from './types';
 
 const analyticsData = {

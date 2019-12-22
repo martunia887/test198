@@ -7,8 +7,9 @@ import {
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
 import Base, { Label } from '@atlaskit/field-base';
-import { name as packageName, version as packageVersion } from './version.json';
+
 import TextArea from './styled/TextArea';
+import { name as packageName, version as packageVersion } from './version.json';
 
 const Wrapper = styled.div`
   flex: 1 1 100%;

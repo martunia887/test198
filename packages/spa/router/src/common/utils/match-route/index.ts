@@ -1,6 +1,6 @@
-import matchPath from './matchPath';
 import queryString from 'query-string';
 import { Routes, MatchParams, Match, Query, MatchedRoute } from '../../types';
+import matchPath from './matchPath';
 // import type { Match, Route, MatchedRoute } from '../../types';
 
 /* This should match what react-router does to compute a root match. */

@@ -1,5 +1,5 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { NodeEncoder } from '..';
+import { Node as PMNode } from 'prosemirror-model';
 import { inlines } from './inlines';
 
 const supportedLanguageInWiki = [

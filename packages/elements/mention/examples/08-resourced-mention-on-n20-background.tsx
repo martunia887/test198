@@ -1,13 +1,14 @@
 import * as React from 'react';
+import { IntlProvider } from 'react-intl';
 import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { colors } from '@atlaskit/theme';
-import debug from '../src/util/logger';
+import { mention } from '@atlaskit/util-data-test';
+
 import { onMentionEvent } from '../example-helpers/index';
 import { mockMentionData as mentionData } from '../src/__tests__/unit/_test-helpers';
-import { mention } from '@atlaskit/util-data-test';
 import { ELEMENTS_CHANNEL } from '../src/_constants';
 import ResourcedMention from '../src/components/Mention/ResourcedMention';
-import { IntlProvider } from 'react-intl';
+import debug from '../src/util/logger';
 
 const style = {
   backgroundColor: colors.N20,

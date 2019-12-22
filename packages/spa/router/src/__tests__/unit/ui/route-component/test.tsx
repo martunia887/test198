@@ -2,7 +2,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import { Router } from '../../../../controllers/router';
-
 import { RouteComponent } from '../../../../ui/route-component';
 
 const MockComponent = () => <div>My component</div>;

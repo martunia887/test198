@@ -1,16 +1,15 @@
 // @flow
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import FieldBase, { Label } from '@atlaskit/field-base';
 import Droplist, { Group, Item } from '@atlaskit/droplist';
+import FieldBase, { Label } from '@atlaskit/field-base';
 import UpIcon from '@atlaskit/icon/glyph/arrow-up';
 import Spinner from '@atlaskit/spinner';
 
 import { StatelessSelect } from '../..';
-import InitialLoadingElement from '../../styled/InitialLoading';
 import Content from '../../styled/Content';
+import InitialLoadingElement from '../../styled/InitialLoading';
 import Trigger from '../../styled/Trigger';
-
 import { name } from '../../version.json';
 
 describe(name, () => {

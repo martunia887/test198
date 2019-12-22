@@ -1,6 +1,6 @@
 import { EditorPlugin } from '../../types';
-import { createPlugin } from './pm-plugins/main';
 import { CardOptions } from '../card';
+import { createPlugin } from './pm-plugins/main';
 
 const pastePlugin = ({
   cardOptions,

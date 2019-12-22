@@ -1,5 +1,6 @@
 import { FileIdentifier } from '@atlaskit/media-client';
 import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';
+
 import { reducer } from '../../../../plugins/media/pm-plugins/media-editor';
 import { MediaEditorState } from '../../../../plugins/media/types';
 

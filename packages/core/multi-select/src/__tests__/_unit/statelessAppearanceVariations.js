@@ -2,8 +2,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { FieldBaseStateless } from '@atlaskit/field-base';
-import { MultiSelectStateless } from '../..';
 
+import { MultiSelectStateless } from '../..';
 import { name } from '../../version.json';
 
 describe(`${name} - stateless`, () => {

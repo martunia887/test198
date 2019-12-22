@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import styled from '@emotion/styled';
 import * as colors from '@atlaskit/theme/colors';
+import styled from '@emotion/styled';
 import { panelWidth } from './constants';
 
 export const RightSidePanelDrawer = styled.div`

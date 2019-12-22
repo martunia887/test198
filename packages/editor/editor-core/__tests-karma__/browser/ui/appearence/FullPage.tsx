@@ -1,7 +1,8 @@
-import { expect } from 'chai';
-import { mount } from 'enzyme';
 import * as React from 'react';
+import { mount } from 'enzyme';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { expect } from 'chai';
+
 import Editor from '../../../../src/ui/Appearance/FullPage';
 
 describe('@atlaskit/editor-core/editor/plugins/FullPage', () => {

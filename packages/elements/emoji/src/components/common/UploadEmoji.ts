@@ -1,11 +1,9 @@
 import { FormattedMessage } from 'react-intl';
-
-import { EmojiProvider, supportsUploadFeature } from '../../api/EmojiResource';
-
-import { EmojiDescription, EmojiUpload } from '../../types';
-import { uploadFailedEvent, uploadSucceededEvent } from '../../util/analytics';
 import { AnalyticsEventPayload } from '@atlaskit/analytics-next';
 
+import { EmojiProvider, supportsUploadFeature } from '../../api/EmojiResource';
+import { EmojiDescription, EmojiUpload } from '../../types';
+import { uploadFailedEvent, uploadSucceededEvent } from '../../util/analytics';
 import { messages } from '../i18n';
 
 export const uploadEmoji = (

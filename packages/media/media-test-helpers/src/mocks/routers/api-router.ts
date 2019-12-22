@@ -1,4 +1,5 @@
 // eslint-disable-line no-console
+import { TouchFileDescriptor } from '@atlaskit/media-client';
 import {
   Router,
   KakapoResponse,
@@ -8,17 +9,15 @@ import {
 } from 'kakapo';
 import uuid from 'uuid/v4';
 
-import { TouchFileDescriptor } from '@atlaskit/media-client';
-
+import { defaultBaseUrl } from '../..';
+import { mapDataUriToBlob } from '../../utils';
 import {
   MediaDatabaseSchema,
   createCollection,
   createCollectionItem,
 } from '../database';
-import { defaultBaseUrl } from '../..';
-import { createUpload } from '../database/upload';
 import { mockDataUri } from '../database/mockData';
-import { mapDataUriToBlob } from '../../utils';
+import { createUpload } from '../database/upload';
 
 class RouterWithLogging<M> extends Router<M> {
   register(

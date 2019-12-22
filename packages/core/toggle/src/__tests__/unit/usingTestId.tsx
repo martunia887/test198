@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-
 import Toggle from '../..';
 
 describe('Toggle should be found by data-testid', () => {

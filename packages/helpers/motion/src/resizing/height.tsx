@@ -1,10 +1,11 @@
 import { useRef, useLayoutEffect } from 'react';
+
 import { isReducedMotion } from '../utils/accessibility';
-import { mediumDurationMs } from '../utils/durations';
 import { easeInOut } from '../utils/curves';
-import { useSnapshotBeforeUpdate } from '../utils/use-snapshot-before-update';
+import { mediumDurationMs } from '../utils/durations';
 import { useSetTimeout, useRequestAnimationFrame } from '../utils/timer-hooks';
 import { useElementRef, CallbackRef } from '../utils/use-element-ref';
+import { useSnapshotBeforeUpdate } from '../utils/use-snapshot-before-update';
 
 interface ResizingHeightOpts {
   /**

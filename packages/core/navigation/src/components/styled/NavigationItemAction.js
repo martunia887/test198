@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
-import { whenCollapsed } from '../../theme/util';
 import { gridSize } from '../../shared-variables';
+import { whenCollapsed } from '../../theme/util';
 
 const NavigationItemAction = styled.div`
   align-items: center;

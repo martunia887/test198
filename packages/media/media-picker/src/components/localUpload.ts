@@ -1,5 +1,7 @@
 import { MediaClient } from '@atlaskit/media-client';
+
 import { UploadService } from '../service/types';
+import { UploadServiceImpl } from '../service/uploadServiceImpl';
 import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
@@ -10,8 +12,8 @@ import {
   UploadStatusUpdateEventPayload,
   UploadParams,
 } from '../types';
+
 import { UploadComponent } from './component';
-import { UploadServiceImpl } from '../service/uploadServiceImpl';
 import { LocalUploadConfig } from './types';
 
 export class LocalUploadComponent<

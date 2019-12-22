@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
-import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
-import { ReactRenderer } from '@atlaskit/renderer';
-
-import { Content } from './styles';
-import { toJSON } from '../src/utils';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { storyContextIdentifierProviderFactory } from '@atlaskit/editor-test-helpers';
+import { ReactRenderer } from '@atlaskit/renderer';
+import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
+import { EditorView } from 'prosemirror-view';
+
+import { toJSON } from '../src/utils';
+
+import { Content } from './styles';
 
 const emojiProvider = emoji.storyData.getEmojiResource({
   uploadSupported: true,

@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isFileUploadProgressAction } from '../actions/fileUploadProgress';
 import { State } from '../domain';
 

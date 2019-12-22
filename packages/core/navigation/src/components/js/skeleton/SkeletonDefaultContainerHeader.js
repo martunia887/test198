@@ -1,10 +1,8 @@
 // @flow
 import React, { Component } from 'react';
-
 import { Skeleton as SkeletonAvatar } from '@atlaskit/avatar';
 
 import { HiddenWhenCollapsed } from './ToggleWhenCollapsed';
-
 import SkeletonContainerHeaderText from './styled/SkeletonContainerHeaderText';
 import SkeletonDefaultContainerHeaderInner from './styled/SkeletonDefaultContainerHeaderInner';
 

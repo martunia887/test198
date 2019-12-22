@@ -1,5 +1,5 @@
-import { render } from '@testing-library/react';
 import React from 'react';
+import { render } from '@testing-library/react';
 import TextArea from '../../components/TextArea';
 
 describe('Textarea should be found by data-testid', () => {

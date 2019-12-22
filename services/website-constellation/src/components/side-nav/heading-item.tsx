@@ -1,11 +1,10 @@
 /** @jsx jsx */
-import { jsx, ClassNames } from '@emotion/core';
-
-import { CSSObject } from '@emotion/core';
-import { headingSizes } from '@atlaskit/theme/typography';
-import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 import { subtleHeading } from '@atlaskit/theme/colors';
+import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 import { N800 } from '@atlaskit/theme/src/colors';
+import { headingSizes } from '@atlaskit/theme/typography';
+import { jsx, ClassNames } from '@emotion/core';
+import { CSSObject } from '@emotion/core';
 
 const gridSize = gridSizeFn();
 

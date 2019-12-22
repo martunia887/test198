@@ -1,6 +1,6 @@
-import { Component } from './component';
-import { Signal } from '../signal';
 import { getUtf32Codes } from '../../util';
+import { Signal } from '../signal';
+import { Component } from './component';
 
 export type InputCommand =
   | 'complete'

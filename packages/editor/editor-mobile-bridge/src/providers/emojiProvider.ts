@@ -1,6 +1,8 @@
 import { EmojiResource, EmojiResourceConfig } from '@atlaskit/emoji/resource';
+
 import { createPromise } from '../cross-platform-promise';
 import { GetConfigPayload } from '../types';
+
 import { mockFetchFor } from './utils';
 
 /**

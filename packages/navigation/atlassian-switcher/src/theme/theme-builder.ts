@@ -1,5 +1,4 @@
 import memoizeOne from 'memoize-one';
-
 import {
   ThemeProps,
   CustomThemeResult,

@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import { JoinableSitesResponse } from '../types';
+
 import { ProviderResult } from './as-data-provider';
-import { createJoinableSitesProvider } from './default-joinable-sites-provider';
 import { ExportedDataProvider, DataProvider } from './create-data-provider';
+import { createJoinableSitesProvider } from './default-joinable-sites-provider';
 
 const {
   fetchMethod: fetchJoinableSites,

@@ -4,11 +4,13 @@ import {
   hideControlsClassName,
   WithShowControlMethodProp,
 } from '@atlaskit/media-ui';
-import { ItemViewer } from './item-viewer';
-import { HeaderWrapper, ListWrapper } from './styled';
-import { Navigation } from './navigation';
-import Header from './header';
+
 import { MediaViewerExtensions } from '../components/types';
+
+import Header from './header';
+import { ItemViewer } from './item-viewer';
+import { Navigation } from './navigation';
+import { HeaderWrapper, ListWrapper } from './styled';
 
 export type Props = Readonly<
   {

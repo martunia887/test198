@@ -1,11 +1,7 @@
-import { TableMap, CellSelection } from 'prosemirror-tables';
-import { EditorView } from 'prosemirror-view';
 import {
-  selectRow,
-  selectColumn,
-  selectTable,
-  findTable,
-} from 'prosemirror-utils';
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   doc,
   createEditorFactory,
@@ -21,14 +17,18 @@ import {
   defaultSchema,
   pmNodeBuilder,
 } from '@atlaskit/editor-test-helpers';
+import { TableMap, CellSelection } from 'prosemirror-tables';
+import {
+  selectRow,
+  selectColumn,
+  selectTable,
+  findTable,
+} from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
 
+import { AnalyticsHandler } from '../../../../analytics';
 import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
 import { TablePluginState } from '../../../../plugins/table/types';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import { AnalyticsHandler } from '../../../../analytics';
 
 describe('table keymap', () => {
   const createEditor = createEditorFactory<TablePluginState>();

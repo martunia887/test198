@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { hideControlsClassName, MediaButton } from '@atlaskit/media-ui';
-import ZoomOutIcon from '@atlaskit/icon/glyph/media-services/zoom-out';
-import ZoomInIcon from '@atlaskit/icon/glyph/media-services/zoom-in';
-import { ZoomLevel } from './domain/zoomLevel';
-import { ZoomWrapper, ZoomControlsWrapper, ZoomLevelIndicator } from './styled';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
+import ZoomInIcon from '@atlaskit/icon/glyph/media-services/zoom-in';
+import ZoomOutIcon from '@atlaskit/icon/glyph/media-services/zoom-out';
+import { hideControlsClassName, MediaButton } from '@atlaskit/media-ui';
+import { messages } from '@atlaskit/media-ui';
+
 import { channel } from './analytics';
 import { ZoomControlsGasPayload, createZoomEvent } from './analytics/zoom';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { messages } from '@atlaskit/media-ui';
+import { ZoomLevel } from './domain/zoomLevel';
+import { ZoomWrapper, ZoomControlsWrapper, ZoomLevelIndicator } from './styled';
 
 export type ZoomControlsProps = Readonly<{
   onChange: (newZoomLevel: ZoomLevel) => void;

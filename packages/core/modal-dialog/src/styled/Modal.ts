@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
+import { N30A, N60A, N0, DN50, text } from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { borderRadius, layers } from '@atlaskit/theme/constants';
-import { N30A, N60A, N0, DN50, text } from '@atlaskit/theme/colors';
-import { WIDTH_ENUM, gutter, WidthNames } from '../shared-variables';
+import styled from '@emotion/styled';
 
+import { WIDTH_ENUM, gutter, WidthNames } from '../shared-variables';
 import {
   flexMaxHeightIEFix,
   IEMaxHeightCalcPx,

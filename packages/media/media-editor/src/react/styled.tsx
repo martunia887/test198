@@ -1,13 +1,12 @@
-import styled, { ThemedOuterStyledProps } from 'styled-components';
-
 import {
   HTMLAttributes,
   ComponentClass,
   CanvasHTMLAttributes,
   TextareaHTMLAttributes,
 } from 'react';
-import { layers } from '@atlaskit/theme/constants';
+import styled, { ThemedOuterStyledProps } from 'styled-components';
 import { N700A, N600A, N50A, N200, N40 } from '@atlaskit/theme/colors';
+import { layers } from '@atlaskit/theme/constants';
 
 export interface LineWidthFrontCircleProps {
   width: number;

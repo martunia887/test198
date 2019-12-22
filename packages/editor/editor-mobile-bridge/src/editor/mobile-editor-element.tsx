@@ -1,35 +1,37 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
-import { EditorViewWithComposition } from '../types';
+import {
+  GasPurePayload,
+  GasPureScreenEventPayload,
+} from '@atlaskit/analytics-gas-types';
+import FabricAnalyticsListeners, {
+  AnalyticsWebClient,
+} from '@atlaskit/analytics-listeners';
 import {
   Editor,
   MediaProvider as MediaProviderType,
   EditorProps,
 } from '@atlaskit/editor-core';
-import FabricAnalyticsListeners, {
-  AnalyticsWebClient,
-} from '@atlaskit/analytics-listeners';
-import {
-  GasPurePayload,
-  GasPureScreenEventPayload,
-} from '@atlaskit/analytics-gas-types';
+import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { toNativeBridge } from './web-to-native';
-import WebBridgeImpl from './native-to-web';
-import MobilePicker from './MobileMediaPicker';
-import {
-  initPluginListeners,
-  destroyPluginListeners,
-} from './plugin-subscription';
+import { EditorView } from 'prosemirror-view';
+
+import { analyticsBridgeClient } from '../analytics-client';
 import {
   mediaProvider,
   mentionProvider,
   createTaskDecisionProvider,
   emojiProvider,
 } from '../providers';
-import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 import { cardClient, cardProvider } from '../providers/cardProvider';
-import { analyticsBridgeClient } from '../analytics-client';
+import { EditorViewWithComposition } from '../types';
+
+import MobilePicker from './MobileMediaPicker';
+import WebBridgeImpl from './native-to-web';
+import {
+  initPluginListeners,
+  destroyPluginListeners,
+} from './plugin-subscription';
+import { toNativeBridge } from './web-to-native';
 
 export const bridge: WebBridgeImpl = ((window as any).bridge = new WebBridgeImpl());
 

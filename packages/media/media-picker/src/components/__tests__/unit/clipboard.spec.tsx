@@ -1,13 +1,11 @@
 import * as React from 'react';
-
-jest.mock('../../../service/uploadServiceImpl');
-
+import { mount } from 'enzyme';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { MockFile, fakeMediaClient } from '@atlaskit/media-test-helpers';
+
 import { LocalFileSource } from '../../../service/types';
 import { Clipboard, ClipboardBase } from '../../clipboard/clipboard';
-import { mount } from 'enzyme';
 
 describe('Clipboard', () => {
   const mediaClient = fakeMediaClient();

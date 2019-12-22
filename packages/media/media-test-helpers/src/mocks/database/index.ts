@@ -1,17 +1,17 @@
+import { MediaCollection } from '@atlaskit/media-client';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
+import { ClientBasedAuth } from '@atlaskit/media-core';
 import { Database } from 'kakapo';
 import uuidV4 from 'uuid/v4';
 
-import { ClientBasedAuth } from '@atlaskit/media-core';
-import { MediaCollection } from '@atlaskit/media-client';
+import { defaultCollectionName } from '../../collectionNames';
+import { defaultBaseUrl } from '../../mediaClientProvider';
+import { MockCollections } from '../media-mock';
 
+import { Chunk, createChunk } from './chunk';
 import { createCollection } from './collection';
 import { CollectionItem, createCollectionItem } from './collection-item';
 import { createUpload, Upload } from './upload';
-import { Chunk, createChunk } from './chunk';
-import { defaultBaseUrl } from '../../mediaClientProvider';
-import { MockCollections } from '../media-mock';
-import { defaultCollectionName } from '../../collectionNames';
-import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 
 export * from './collection';
 export * from './collection-item';

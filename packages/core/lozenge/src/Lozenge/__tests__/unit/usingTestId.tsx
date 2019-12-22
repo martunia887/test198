@@ -1,6 +1,5 @@
-import { render } from '@testing-library/react';
 import React from 'react';
-
+import { render } from '@testing-library/react';
 import Lozenge from '../../..';
 
 describe('Lozenge should be found by data-testid', () => {

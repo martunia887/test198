@@ -1,13 +1,13 @@
 jest.mock('../../../randomInt');
 
 import { Auth } from '@atlaskit/media-core';
+import { randomInt } from '../../../randomInt';
 import {
   getWsUrl,
   Ws,
   ConnectionLostHandler,
   WebsocketDataReceivedHandler,
 } from '../../ws';
-import { randomInt } from '../../../randomInt';
 
 jest.useFakeTimers();
 

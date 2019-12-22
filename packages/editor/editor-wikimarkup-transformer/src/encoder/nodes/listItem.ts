@@ -1,11 +1,12 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { encode } from '..';
+import { Node as PMNode } from 'prosemirror-model';
 
-import { paragraph } from './paragraph';
-import { unknown } from './unknown';
+import { Context } from '../../interfaces';
+
 import { codeBlock } from './code-block';
 import { mediaGroup } from './media-group';
-import { Context } from '../../interfaces';
+import { paragraph } from './paragraph';
+import { unknown } from './unknown';
 
 export const listItem = (
   node: PMNode,

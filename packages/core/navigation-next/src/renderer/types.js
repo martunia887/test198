@@ -2,6 +2,12 @@
 
 import type { ComponentType, ElementConfig } from 'react';
 
+import BackItem from '../components/connected/BackItem';
+import ConnectedItem from '../components/connected/ConnectedItem';
+import GoToItem from '../components/connected/GoToItem';
+import SortableContext from '../components/connected/SortableContext';
+import SortableGroup from '../components/connected/SortableGroup';
+import SortableItem from '../components/connected/SortableItem';
 import ContainerHeader from '../components/presentational/ContainerHeader';
 import Group from '../components/presentational/Group';
 import GroupHeading from '../components/presentational/GroupHeading';
@@ -12,13 +18,6 @@ import SectionHeading from '../components/presentational/SectionHeading';
 import Separator from '../components/presentational/Separator';
 import Switcher from '../components/presentational/Switcher';
 import Wordmark from '../components/presentational/Wordmark';
-
-import BackItem from '../components/connected/BackItem';
-import ConnectedItem from '../components/connected/ConnectedItem';
-import GoToItem from '../components/connected/GoToItem';
-import SortableContext from '../components/connected/SortableContext';
-import SortableGroup from '../components/connected/SortableGroup';
-import SortableItem from '../components/connected/SortableItem';
 
 type WithoutChildren<P: {}> = $Diff<P, { children: * }>;
 

@@ -3,8 +3,8 @@ import {
   ServiceConfig,
   utils,
 } from '@atlaskit/util-service-support';
-import { version as npmPackageVersion } from './version.json';
 import { NotificationLogProvider, NotificationCountResponse } from './types';
+import { version as npmPackageVersion } from './version.json';
 
 export const DEFAULT_SOURCE = 'atlaskitNotificationLogClient';
 

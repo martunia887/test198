@@ -1,15 +1,17 @@
 import * as React from 'react';
-import { ScreenCounter } from '../../util/ScreenCounter';
 import { FormattedMessage } from 'react-intl';
+import { CancelableEvent } from '@atlaskit/quick-search';
+
+import { Scope } from '../../api/types';
+import { ResultsGroup } from '../../model/Result';
+import { ScreenCounter } from '../../util/ScreenCounter';
+import { ReferralContextIdentifiers } from '../GlobalQuickSearchWrapper';
 import ResultGroup from '../ResultGroup';
+
 import {
   PreQueryAnalyticsComponent,
   PostQueryAnalyticsComponent,
 } from './ScreenAnalyticsHelper';
-import { ReferralContextIdentifiers } from '../GlobalQuickSearchWrapper';
-import { ResultsGroup } from '../../model/Result';
-import { Scope } from '../../api/types';
-import { CancelableEvent } from '@atlaskit/quick-search';
 
 export enum ResultGroupType {
   PreQuery = 'PreQuery',

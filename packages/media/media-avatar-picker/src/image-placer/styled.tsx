@@ -1,6 +1,5 @@
-import styled from 'styled-components';
 import { ComponentClass, ImgHTMLAttributes, HTMLAttributes } from 'react';
-
+import styled from 'styled-components';
 import { R500 } from '@atlaskit/theme/colors';
 
 export const checkeredBg =

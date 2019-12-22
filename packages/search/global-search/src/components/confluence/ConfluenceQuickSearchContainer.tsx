@@ -4,9 +4,11 @@ import {
   InjectedIntlProps,
   FormattedHTMLMessage,
 } from 'react-intl';
-// @ts-ignore
 import { withAnalytics, FireAnalyticsEvent } from '@atlaskit/analytics';
 import { CancelableEvent } from '@atlaskit/quick-search';
+import some from 'lodash.some';
+
+import { AutocompleteClient } from '../../api/AutocompleteClient';
 import { ConfluenceClient } from '../../api/ConfluenceClient';
 import {
   CrossProductSearchClient,
@@ -17,7 +19,9 @@ import {
   FilterWithMetadata,
   QueryBasedSpaceFilterMetadata,
 } from '../../api/CrossProductSearchClient';
+import { PeopleSearchClient } from '../../api/PeopleSearchClient';
 import { Scope, ConfluenceModelContext } from '../../api/types';
+import { messages } from '../../messages';
 import {
   Result,
   ResultsWithTiming,
@@ -25,8 +29,21 @@ import {
   PersonResult,
   ConfluenceObjectResult,
 } from '../../model/Result';
-import { PeopleSearchClient } from '../../api/PeopleSearchClient';
 import { SearchScreenCounter } from '../../util/ScreenCounter';
+import { CONF_MAX_DISPLAYED_RESULTS } from '../../util/experiment-utils';
+import { ConfluenceFeatures } from '../../util/features';
+import { buildConfluenceModelParams } from '../../util/model-parameters';
+import performanceNow from '../../util/performance-now';
+import { appendListWithoutDuplication } from '../../util/search-results-utils';
+import {
+  BaseConfluenceQuickSearchContainer,
+  SearchResultProps,
+  PartiallyLoadedRecentItems,
+} from '../common/QuickSearchContainer';
+import SearchResultsComponent, {
+  FilterComponentProps,
+} from '../common/SearchResults';
+import { injectFeatures } from '../FeaturesProvider';
 import {
   LinkComponent,
   ReferralContextIdentifiers,
@@ -38,34 +55,18 @@ import {
   handlePromiseError,
   ADVANCED_CONFLUENCE_SEARCH_RESULT_ID,
 } from '../SearchResultsUtil';
-import { CreateAnalyticsEventFn } from '../analytics/types';
-import performanceNow from '../../util/performance-now';
-import {
-  BaseConfluenceQuickSearchContainer,
-  SearchResultProps,
-  PartiallyLoadedRecentItems,
-} from '../common/QuickSearchContainer';
-import { messages } from '../../messages';
-import NoResultsState from './NoResultsState';
-import SearchResultsComponent, {
-  FilterComponentProps,
-} from '../common/SearchResults';
 import { getConfluenceAdvancedSearchLink } from '../SearchResultsUtil';
+import { CreateAnalyticsEventFn } from '../analytics/types';
+
 import AdvancedSearchGroup from './AdvancedSearchGroup';
+import ConfluenceFilterGroup from './ConfluenceFilterGroup';
 import {
   mapRecentResultsToUIGroups,
   mapSearchResultsToUIGroups,
   MAX_RECENT_RESULTS_TO_SHOW,
 } from './ConfluenceSearchResultsMapper';
-import { CONF_MAX_DISPLAYED_RESULTS } from '../../util/experiment-utils';
-import { AutocompleteClient } from '../../api/AutocompleteClient';
-import { appendListWithoutDuplication } from '../../util/search-results-utils';
-import { buildConfluenceModelParams } from '../../util/model-parameters';
-import ConfluenceFilterGroup from './ConfluenceFilterGroup';
 import NoResultsInFilterState from './NoResultsInFilterState';
-import some from 'lodash.some';
-import { injectFeatures } from '../FeaturesProvider';
-import { ConfluenceFeatures } from '../../util/features';
+import NoResultsState from './NoResultsState';
 
 /**
  * NOTE: This component is only consumed internally as such avoid using optional props

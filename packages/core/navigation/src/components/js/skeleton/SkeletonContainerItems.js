@@ -1,8 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-
 import SkeletonContainerItem from './SkeletonContainerItem';
-
 import SkeletonNavigationItems from './styled/SkeletonNavigationItems';
 
 export type Props = {

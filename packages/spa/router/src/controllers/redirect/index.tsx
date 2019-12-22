@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { createPath } from 'history';
 
-import { RouterSubscriber } from '../subscribers/route';
 import { RouterActionsType, RouterState } from '../router-store/types';
+import { RouterSubscriber } from '../subscribers/route';
+
 import { RedirectProps } from './types';
 
 type RedirectorProps = RedirectProps & {

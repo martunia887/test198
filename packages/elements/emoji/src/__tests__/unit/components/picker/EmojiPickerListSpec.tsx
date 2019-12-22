@@ -1,8 +1,9 @@
-import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
-import { ReactWrapper } from 'enzyme';
-import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
 import { List as VirtualList } from 'react-virtualized/dist/commonjs/List';
+import { mountWithIntl } from '@atlaskit/editor-test-helpers';
+import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
+
 import {
   CachingEmoji,
   CachingEmojiProps,
@@ -10,8 +11,8 @@ import {
 import EmojiPickerCategoryHeading from '../../../../components/picker/EmojiPickerCategoryHeading';
 import EmojiPickerList from '../../../../components/picker/EmojiPickerList';
 import * as styles from '../../../../components/picker/styles';
-import { deleteEmojiLabel } from '../../../../util/constants';
 import { EmojiDescription } from '../../../../types';
+import { deleteEmojiLabel } from '../../../../util/constants';
 import {
   atlassianEmojis,
   emojis as allEmojis,

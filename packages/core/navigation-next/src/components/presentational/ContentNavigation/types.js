@@ -1,7 +1,6 @@
 // @flow
 
 import type { ComponentType, Node } from 'react';
-
 import type { ProductTheme } from '../../../theme';
 
 export type ContentNavigationProps = {

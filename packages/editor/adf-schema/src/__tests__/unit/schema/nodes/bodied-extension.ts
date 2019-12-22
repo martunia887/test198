@@ -1,16 +1,17 @@
-import { name } from '../../../../version.json';
+import {
+  doc,
+  bodiedExtension as bodiedExt,
+  p,
+} from '@atlaskit/editor-test-helpers';
+
+import { bodiedExtension } from '../../../../../src';
 import {
   schema,
   toDOM,
   fromHTML,
   toContext,
 } from '../../../../../test-helpers';
-import { bodiedExtension } from '../../../../../src';
-import {
-  doc,
-  bodiedExtension as bodiedExt,
-  p,
-} from '@atlaskit/editor-test-helpers';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema bodiedExtension node`, () => {
   describe('parse html', () => {

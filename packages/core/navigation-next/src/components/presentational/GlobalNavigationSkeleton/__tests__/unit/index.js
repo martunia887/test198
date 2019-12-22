@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
 import { mount } from 'enzyme';
-import GlobalNavigationSkeleton from '../../index';
+
 import BaseGlobalNavigationSkeleton from '../../GlobalNavigationSkeleton';
+import GlobalNavigationSkeleton from '../../index';
 
 describe('GlobalNavigationSkeleton with theming', () => {
   it('should render a ThemeProvider with a BaseGlobalNavigationSkeleton', () => {

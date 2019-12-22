@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import Button from '@atlaskit/button';
 import InlineDialog from '@atlaskit/inline-dialog';
+
 import InlineMessage from '../../..';
 import IconForType from '../../IconForType';
 import { Text, Title } from '../../InlineMessage/styledInlineMessage';

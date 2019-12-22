@@ -1,5 +1,7 @@
+import { INPUT_METHOD, AnalyticsEventPayload } from '@atlaskit/editor-core';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
 import {
   callNativeBridge,
   clearBridgeOutput,
@@ -7,8 +9,6 @@ import {
   skipBrowsers as skip,
   getBridgeOutput,
 } from '../_utils';
-
-import { INPUT_METHOD, AnalyticsEventPayload } from '@atlaskit/editor-core';
 
 const callNativeBridgeFirst = async (
   browser: any,

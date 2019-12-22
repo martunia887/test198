@@ -1,8 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-import Items from './Items';
-import toItemId from '../utils/toItemId';
+
 import type { RenderFunction, RowData } from '../types';
+import toItemId from '../utils/toItemId';
+
+import Items from './Items';
 
 type Props = {
   data: RowData,

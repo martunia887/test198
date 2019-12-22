@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import PropTypes from 'prop-types';
+
 import { AnalyticsListener } from '../..';
 
 type Handlers = Array<() => any>;

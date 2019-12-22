@@ -1,11 +1,12 @@
 import * as React from 'react';
-import TaskItem from '../../../../components/TaskItem';
-import TaskList from '../../../../components/TaskList';
+
 import {
   dumpRef,
   action,
   TaskStateManager,
 } from '../../../../../example-helpers/story-utils';
+import TaskItem from '../../../../components/TaskItem';
+import TaskList from '../../../../components/TaskList';
 
 export default () => (
   <div>

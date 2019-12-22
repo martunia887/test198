@@ -1,4 +1,3 @@
-import { name } from '../../../../version.json';
 import {
   fromHTML,
   toHTML,
@@ -7,6 +6,7 @@ import {
   p,
   blockquote,
 } from '../../../../../test-helpers';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema blockquote node`, () => {
   it('should be possible to create a blockquote with a paragraph', () => {

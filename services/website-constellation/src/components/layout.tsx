@@ -1,10 +1,11 @@
 /** @jsx jsx */
-import { css, jsx, Global } from '@emotion/core';
-import { P200 } from '@atlaskit/theme/colors';
-import TopNav from '../components/top-nav';
 import cssReset from '@atlaskit/css-reset';
 import { gridSize as gridSizeFn } from '@atlaskit/theme';
+import { P200 } from '@atlaskit/theme/colors';
 import { N30 } from '@atlaskit/theme/colors';
+import { css, jsx, Global } from '@emotion/core';
+
+import TopNav from '../components/top-nav';
 
 const gridSize = gridSizeFn();
 

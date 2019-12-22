@@ -1,13 +1,14 @@
 // @flow
 import styled, { keyframes } from 'styled-components';
+
+import { zIndex } from '../../shared-variables';
+import { getProvided } from '../../theme/util';
 import {
   widths,
   widthTransition,
   animationTiming,
   animationSpeed,
 } from '../../utils/drawer-style-variables';
-import { getProvided } from '../../theme/util';
-import { zIndex } from '../../shared-variables';
 
 const entryAnimation = offscreenX => keyframes`
   from { transform: translateX(${offscreenX}); }

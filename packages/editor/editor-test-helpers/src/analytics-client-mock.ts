@@ -1,8 +1,8 @@
-import { AnalyticsWebClient } from '@atlaskit/analytics-listeners/types';
 import {
   GasPurePayload,
   GasPureScreenEventPayload,
 } from '@atlaskit/analytics-gas-types';
+import { AnalyticsWebClient } from '@atlaskit/analytics-listeners/types';
 
 type AnalyticsEventHandler = (
   event: GasPurePayload | GasPureScreenEventPayload,

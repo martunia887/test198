@@ -1,10 +1,11 @@
 // @flow
 import React, { Component } from 'react';
-import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import TableTree, { Headers, Header, Rows, Row, Cell } from '../src';
+
 import staticData from './data-freeform-nodes.json';
 
 const actions = {

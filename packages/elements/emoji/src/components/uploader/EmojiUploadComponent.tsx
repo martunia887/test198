@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import classNames from 'classnames';
-
-import * as styles from './styles';
-
-import { EmojiUpload } from '../../types';
-import { EmojiProvider, supportsUploadFeature } from '../../api/EmojiResource';
 import {
   AnalyticsEventPayload,
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import EmojiUploadPicker from '../common/EmojiUploadPicker';
-import { uploadEmoji } from '../common/UploadEmoji';
+import classNames from 'classnames';
+
+import { EmojiProvider, supportsUploadFeature } from '../../api/EmojiResource';
+import { EmojiUpload } from '../../types';
 import {
   createAndFireEventInElementsChannel,
   selectedFileEvent,
   uploadCancelButton,
   uploadConfirmButton,
 } from '../../util/analytics';
+import EmojiUploadPicker from '../common/EmojiUploadPicker';
+import { uploadEmoji } from '../common/UploadEmoji';
+
+import * as styles from './styles';
 
 export interface UploadRefHandler {
   (ref: HTMLDivElement): void;

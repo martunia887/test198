@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isResetViewAction } from '../actions/resetView';
 import { State, SelectedItem, LocalUploads, LocalUpload } from '../domain';
 

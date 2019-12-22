@@ -1,8 +1,9 @@
-import { createCommand, getPluginState } from '../pm-plugins/media-editor';
-import { MediaClientConfig } from '@atlaskit/media-core';
-import { FileIdentifier } from '@atlaskit/media-client';
 import { MediaBaseAttributes } from '@atlaskit/adf-schema';
+import { FileIdentifier } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { Dimensions } from '@atlaskit/media-editor';
+
+import { createCommand, getPluginState } from '../pm-plugins/media-editor';
 
 export const openMediaEditor = (pos: number, identifier: FileIdentifier) =>
   createCommand({

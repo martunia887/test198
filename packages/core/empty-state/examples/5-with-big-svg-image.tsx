@@ -1,7 +1,5 @@
 import React from 'react';
 import EmptyState, { Sizes } from '../src';
-// @ts-ignore
-
 import exampleImage from './img/example-image.svg';
 
 const props = {

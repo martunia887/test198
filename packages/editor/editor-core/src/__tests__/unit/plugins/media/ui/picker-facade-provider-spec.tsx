@@ -1,36 +1,13 @@
-import { mount } from 'enzyme';
 import * as React from 'react';
-
-const picker: any = {
-  on: jest.fn(),
-  onClose: jest.fn(),
-  onNewMedia: jest.fn(),
-  onMediaEvent: jest.fn(),
-  onDrag: jest.fn(),
-  hide: jest.fn(),
-  setUploadParams: jest.fn(),
-  show: jest.fn(),
-  deactivate: jest.fn(),
-  activate: jest.fn(),
-  destroy: jest.fn(),
-  type: 'popup',
-};
-picker.init = jest.fn().mockReturnValue(picker);
-
-const mockMediaPickerFacade = jest.fn<typeof picker, Array<any>>(() => picker);
-
-jest.mock(
-  '../../../../../plugins/media/picker-facade',
-  () => mockMediaPickerFacade,
-);
+import { mount } from 'enzyme';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';
 
 import {
   MediaPluginState,
   MediaProvider,
 } from '../../../../../plugins/media/pm-plugins/main';
 import PickerFacadeProvider from '../../../../../plugins/media/ui/MediaPicker/PickerFacadeProvider';
-import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';
-import { ProviderFactory } from '@atlaskit/editor-common';
 
 describe('PickerFacadeProvider', () => {
   let pluginState: MediaPluginState;

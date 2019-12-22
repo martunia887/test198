@@ -1,5 +1,4 @@
 import { Auth, isClientBasedAuth } from '@atlaskit/media-core';
-
 import { WsConnectionHolder } from './wsConnectionHolder';
 
 // Helper class that provides a WsConnectionHolder instance for a given client.

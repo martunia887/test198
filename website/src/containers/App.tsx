@@ -1,16 +1,17 @@
 import React from 'react';
 import Media from 'react-media';
-import GlobalTheme from '@atlaskit/theme';
-import Page from '@atlaskit/page';
 import { RouteProps } from 'react-router';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Page from '@atlaskit/page';
+import GlobalTheme from '@atlaskit/theme';
 
+import AnalyticsListeners from '../components/Analytics/AnalyticsListeners';
+import ErrorBoundary from '../components/ErrorBoundary';
+import ScrollHandler from '../components/ScrollToTop';
 import { DESKTOP_BREAKPOINT_MIN } from '../constants';
 import FullscreenExamples from '../pages/Examples';
 import { modalRoutes, pageRoutes } from '../routes';
-import ScrollHandler from '../components/ScrollToTop';
-import ErrorBoundary from '../components/ErrorBoundary';
-import AnalyticsListeners from '../components/Analytics/AnalyticsListeners';
+
 import DesktopNav from './DesktopNav';
 import MobileNav from './MobileNav';
 

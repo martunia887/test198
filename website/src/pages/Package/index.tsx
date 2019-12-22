@@ -1,29 +1,30 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Media from 'react-media';
 import { match, RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
-import { Helmet } from 'react-helmet';
 import Button from '@atlaskit/button';
-import { AtlassianIcon } from '@atlaskit/logo';
 import ExamplesIcon from '@atlaskit/icon/glyph/screen';
-import { gridSize, colors, math } from '@atlaskit/theme';
+import { AtlassianIcon } from '@atlaskit/logo';
 import Lozenge from '@atlaskit/lozenge';
+import { gridSize, colors, math } from '@atlaskit/theme';
 
-import MetaData from './MetaData';
-import * as fs from '../../utils/fs';
-import FourOhFour from '../FourOhFour';
-import Page from '../../components/Page';
-import { File, Directory } from '../../types';
-import Loading from '../../components/Loading';
-import LatestChangelog from './LatestChangelog';
 import { Log } from '../../components/ChangeLog';
+import LinkButton from '../../components/LinkButton';
+import Loading from '../../components/Loading';
+import Page from '../../components/Page';
 import Loadable from '../../components/WrappedLoader';
 import { DESKTOP_BREAKPOINT_MIN } from '../../constants';
+import { File, Directory } from '../../types';
+import * as fs from '../../utils/fs';
+import FourOhFour from '../FourOhFour';
+
+import LatestChangelog from './LatestChangelog';
+import MetaData from './MetaData';
 import fetchPackageData, {
   PackageData,
   PackageJson,
 } from './utils/fsOperations';
-import LinkButton from '../../components/LinkButton';
 
 const TopRow = styled.div`
   display: flex;

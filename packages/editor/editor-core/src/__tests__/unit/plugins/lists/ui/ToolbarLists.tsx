@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   doc,
   p,
@@ -6,17 +8,16 @@ import {
   mountWithIntl,
   createAnalyticsEventMock,
 } from '@atlaskit/editor-test-helpers';
+
 import { AnalyticsHandler } from '../../../../../analytics';
+import { messages } from '../../../../../plugins/lists/messages';
 import {
   ListsPluginState,
   pluginKey,
 } from '../../../../../plugins/lists/pm-plugins/main';
-import { messages } from '../../../../../plugins/lists/messages';
-import ToolbarButton from '../../../../../ui/ToolbarButton';
-import DropdownMenu from '../../../../../ui/DropdownMenu';
 import ToolbarLists from '../../../../../plugins/lists/ui/ToolbarLists';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { ReactWrapper } from 'enzyme';
+import DropdownMenu from '../../../../../ui/DropdownMenu';
+import ToolbarButton from '../../../../../ui/ToolbarButton';
 
 function clickToolbarOption(toolbarOption: ReactWrapper, title: string) {
   toolbarOption

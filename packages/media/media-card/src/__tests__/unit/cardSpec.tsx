@@ -1,11 +1,8 @@
 jest.mock('../../utils/getDataURIFromFileState');
-import { Observable, ReplaySubject } from 'rxjs';
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-
 import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { AnalyticsContext, AnalyticsListener } from '@atlaskit/analytics-next';
-
 import {
   MediaClient,
   FileState,
@@ -18,7 +15,6 @@ import {
   MediaViewedEventPayload,
   RECENTS_COLLECTION,
 } from '@atlaskit/media-client';
-import { MediaViewer } from '@atlaskit/media-viewer';
 import {
   fakeMediaClient,
   nextTick,
@@ -26,20 +22,22 @@ import {
   asMock,
   expectFunctionToHaveBeenCalledWith,
 } from '@atlaskit/media-test-helpers';
+import { MediaViewer } from '@atlaskit/media-viewer';
+import { Observable, ReplaySubject } from 'rxjs';
 
 import { CardAction, CardProps, CardDimensions, CardState } from '../..';
 import { Card, CardBase } from '../../root/card';
 import { CardView } from '../../root/cardView';
 import { InlinePlayer } from '../../root/inlinePlayer';
-import { LazyContent } from '../../utils/lazyContent';
-import {
-  getDataURIFromFileState,
-  FilePreview,
-} from '../../utils/getDataURIFromFileState';
 import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
 } from '../../utils/analytics';
+import {
+  getDataURIFromFileState,
+  FilePreview,
+} from '../../utils/getDataURIFromFileState';
+import { LazyContent } from '../../utils/lazyContent';
 
 describe('Card', () => {
   let identifier: Identifier;

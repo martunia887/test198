@@ -2,11 +2,11 @@
 /** @jsx jsx */
 
 import { PureComponent } from 'react';
-import { jsx } from '@emotion/core';
 import { makeAsyncSelect } from '@atlaskit/select';
+import { jsx } from '@emotion/core';
 
-import { BaseSelect, selectComponents } from '../../components/Select';
 import { DialogInner } from '../../components/Popup';
+import { BaseSelect, selectComponents } from '../../components/Select';
 
 const AsyncSelect = makeAsyncSelect(BaseSelect);
 

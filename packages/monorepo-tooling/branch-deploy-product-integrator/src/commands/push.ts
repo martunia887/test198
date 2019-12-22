@@ -1,14 +1,11 @@
-import fs from 'fs';
+import installFromCommit from '@atlaskit/branch-installer';
 import chalk from 'chalk';
+import childProcess from 'child_process';
+import fs from 'fs';
+import fetch from 'node-fetch';
 import simpleGit, { SimpleGit } from 'simple-git/promise';
 import util from 'util';
-import childProcess from 'child_process';
-import { debugMock, Default } from '../lib/util';
 
-//@ts-ignore
-import installFromCommit from '@atlaskit/branch-installer';
-
-import fetch from 'node-fetch';
 import { triggerProductBuild } from '../lib/ci';
 import {
   commitAndPush,
@@ -16,8 +13,9 @@ import {
   isInsideRepo,
   mergeAndReApply,
 } from '../lib/git';
-import { ValidationError, ErrorType } from '../types';
 import { getWorkspaceDirs } from '../lib/packageEngine';
+import { debugMock, Default } from '../lib/util';
+import { ValidationError, ErrorType } from '../types';
 
 const exec = util.promisify(childProcess.exec);
 const writeFile = util.promisify(fs.writeFile);

@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import { render, fireEvent, act } from '@testing-library/react';
 import Button from '@atlaskit/button';
 import FieldText from '@atlaskit/field-text';
 import TextField from '@atlaskit/textfield';
+import { render, fireEvent, act } from '@testing-library/react';
 
 import Form, { Field, HelperMessage, ErrorMessage, ValidMessage } from '../..';
 import { Label } from '../../styled/Field';

@@ -1,4 +1,3 @@
-import { Node, Fragment, Slice } from 'prosemirror-model';
 import {
   defaultSchema,
   p,
@@ -6,6 +5,8 @@ import {
   layoutColumn,
   hr,
 } from '@atlaskit/editor-test-helpers';
+import { Node, Fragment, Slice } from 'prosemirror-model';
+
 import {
   unwrapContentFromLayout,
   removeLayoutFromFirstChild,

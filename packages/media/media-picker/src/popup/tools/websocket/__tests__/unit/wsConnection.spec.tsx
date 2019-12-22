@@ -1,12 +1,12 @@
 jest.mock('../../ws');
 
 import { Auth } from '@atlaskit/media-core';
-import { WsConnection } from '../../wsConnection';
 import {
   Ws,
   ConnectionLostHandler,
   WebsocketDataReceivedHandler,
 } from '../../ws';
+import { WsConnection } from '../../wsConnection';
 
 jest.useFakeTimers();
 

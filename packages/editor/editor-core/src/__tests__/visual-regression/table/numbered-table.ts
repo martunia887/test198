@@ -2,6 +2,7 @@ import {
   clickFirstCell,
   tableSelectors,
 } from '../../__helpers/page-objects/_table';
+import { Page } from '../../__helpers/page-objects/_types';
 import {
   Device,
   initCommentEditorWithAdf,
@@ -9,10 +10,10 @@ import {
   snapshot,
   editorCommentContentSelector,
 } from '../_utils';
-import adf from './__fixtures__/numbered-table.adf.json';
-import tableWithContentAdf from './__fixtures__/numbered-table-with-content.adf.json';
+
 import multipleTablesAdf from './__fixtures__/numbered-table-multiple.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
+import tableWithContentAdf from './__fixtures__/numbered-table-with-content.adf.json';
+import adf from './__fixtures__/numbered-table.adf.json';
 
 describe('Snapshot Test: numbered table', () => {
   let page: Page;

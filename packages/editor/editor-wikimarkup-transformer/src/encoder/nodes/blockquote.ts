@@ -1,5 +1,5 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { encode, NodeEncoder } from '..';
+import { Node as PMNode } from 'prosemirror-model';
 
 export const blockquote: NodeEncoder = (node: PMNode): string => {
   const result: string[] = [];

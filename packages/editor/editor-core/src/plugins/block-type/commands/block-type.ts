@@ -1,15 +1,9 @@
-import { EditorState, Selection, TextSelection } from 'prosemirror-state';
 import { Node as PMNode, NodeType } from 'prosemirror-model';
+import { EditorState, Selection, TextSelection } from 'prosemirror-state';
 import { findWrapping } from 'prosemirror-transform';
+
 import { Command } from '../../../types';
-import {
-  CODE_BLOCK,
-  BLOCK_QUOTE,
-  PANEL,
-  HEADINGS_BY_NAME,
-  NORMAL_TEXT,
-  HeadingLevelsAndNormalText,
-} from '../types';
+import { filterChildrenBetween } from '../../../utils';
 import { removeBlockMarks } from '../../../utils/mark';
 import {
   withAnalytics,
@@ -19,8 +13,15 @@ import {
   EVENT_TYPE,
   INPUT_METHOD,
 } from '../../analytics';
-import { filterChildrenBetween } from '../../../utils';
 import { PANEL_TYPE } from '../../analytics';
+import {
+  CODE_BLOCK,
+  BLOCK_QUOTE,
+  PANEL,
+  HEADINGS_BY_NAME,
+  NORMAL_TEXT,
+  HeadingLevelsAndNormalText,
+} from '../types';
 
 export type InputMethod =
   | INPUT_METHOD.TOOLBAR

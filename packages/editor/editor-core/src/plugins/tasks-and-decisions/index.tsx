@@ -8,18 +8,20 @@ import {
   nestableTaskList,
 } from '@atlaskit/adf-schema';
 import { Node as PMNode } from 'prosemirror-model';
+import { Transaction, EditorState } from 'prosemirror-state';
+
 import { EditorPlugin } from '../../types';
+import { INPUT_METHOD } from '../analytics';
 import { messages as insertBlockMessages } from '../insert-block/ui/ToolbarInsertBlock';
-import { createPlugin } from './pm-plugins/main';
+import { IconAction, IconDecision } from '../quick-insert/assets';
+
+import { insertTaskDecisionWithAnalytics, getListTypes } from './commands';
 import inputRulePlugin from './pm-plugins/input-rules';
 import keymap from './pm-plugins/keymaps';
+import { createPlugin } from './pm-plugins/main';
+import { TaskDecisionListType } from './types';
 import ToolbarDecision from './ui/ToolbarDecision';
 import ToolbarTask from './ui/ToolbarTask';
-import { INPUT_METHOD } from '../analytics';
-import { insertTaskDecisionWithAnalytics, getListTypes } from './commands';
-import { Transaction, EditorState } from 'prosemirror-state';
-import { TaskDecisionListType } from './types';
-import { IconAction, IconDecision } from '../quick-insert/assets';
 
 const TaskDecisionToolbarGroup = styled.div`
   display: flex;

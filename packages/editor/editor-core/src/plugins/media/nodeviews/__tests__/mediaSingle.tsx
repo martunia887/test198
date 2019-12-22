@@ -1,9 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { EditorView } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
-import MediaSingleNode from '../mediaSingle';
+import { EditorView } from 'prosemirror-view';
+
 import { MediaPluginState, MediaProvider } from '../../pm-plugins/main';
+import MediaSingleNode from '../mediaSingle';
 
 export const createMediaProvider = async (): Promise<MediaProvider> =>
   ({} as MediaProvider);

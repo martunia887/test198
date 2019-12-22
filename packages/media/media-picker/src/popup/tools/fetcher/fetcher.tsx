@@ -1,6 +1,7 @@
-import * as url from 'url';
 import { FileDetails } from '@atlaskit/media-client';
 import { Auth } from '@atlaskit/media-core';
+import * as url from 'url';
+
 import {
   AuthHeaders,
   Service,
@@ -9,7 +10,6 @@ import {
   ServiceFolderItem,
   ServiceName,
 } from '../../domain';
-
 import { mapAuthToAuthHeaders } from '../../domain/auth';
 
 const giphyApiKey = 'lBOxhhz1BM62Y3JsK0iQv1pRYyOGUjR8';

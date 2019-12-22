@@ -2,9 +2,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
+
+import ArticleBody from '../../components/ArticleBody';
 import HelpArticle from '../../components/HelpArticle';
 import { ArticleContentTitleLink } from '../../components/styled';
-import ArticleBody from '../../components/ArticleBody';
 
 describe('HelpArticle', () => {
   const TITLE = 'title content';

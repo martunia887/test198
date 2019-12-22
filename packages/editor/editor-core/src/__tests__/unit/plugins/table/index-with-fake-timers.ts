@@ -9,6 +9,7 @@ import {
   tdCursor,
   createEditorFactory,
 } from '@atlaskit/editor-test-helpers';
+
 import TableView from '../../../../plugins/table/nodeviews/table';
 import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
 import {

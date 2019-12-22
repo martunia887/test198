@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Messages } from 'react-intl';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import isEqual from 'lodash.isequal';
+
 import {
   SwitcherThemedItemWithEvents,
   SwitcherItemWithDropdown,
@@ -13,12 +14,12 @@ import {
   FormattedMessage,
   ItemWithAvatarGroup,
 } from '../primitives';
-
+import { Appearance } from '../theme/types';
 import {
-  SwitcherItemType,
-  RecentItemType,
-  JoinableSiteItemType,
-} from '../utils/links';
+  TriggerXFlowCallback,
+  DiscoverMoreCallback,
+  JoinableSiteClickHandler,
+} from '../types';
 import {
   analyticsAttributes,
   NavigationAnalyticsContext,
@@ -27,14 +28,13 @@ import {
   ViewedTracker,
   NotRenderedTracker,
 } from '../utils/analytics';
+import {
+  SwitcherItemType,
+  RecentItemType,
+  JoinableSiteItemType,
+} from '../utils/links';
 import now from '../utils/performance-now';
 import { urlToHostname } from '../utils/url-to-hostname';
-import { Appearance } from '../theme/types';
-import {
-  TriggerXFlowCallback,
-  DiscoverMoreCallback,
-  JoinableSiteClickHandler,
-} from '../types';
 
 const noop = () => void 0;
 

@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Editor } from '../src/index';
-import EditorContext from '../src/ui/EditorContext';
-import WithEditorActions from '../src/ui/WithEditorActions';
 import {
   MentionDescription,
   MentionProvider,
 } from '@atlaskit/mention/resource';
+
+import EditorContext from '../src/ui/EditorContext';
+import WithEditorActions from '../src/ui/WithEditorActions';
+import { Editor } from '../src/index';
 
 class MentionProviderImpl implements MentionProvider {
   filter(_query?: string): void {}

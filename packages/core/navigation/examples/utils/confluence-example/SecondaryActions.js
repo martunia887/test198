@@ -1,19 +1,19 @@
 // @flow
 import React, { Component, type Node } from 'react';
-import { gridSize } from '@atlaskit/theme';
+import styled from 'styled-components';
+import Avatar from '@atlaskit/avatar';
 import {
   DropdownItemGroup,
   DropdownItem,
   DropdownMenuStateless,
 } from '@atlaskit/dropdown-menu';
-import Avatar from '@atlaskit/avatar';
 import HomeFilledIcon from '@atlaskit/icon/glyph/home';
 import MenuIcon from '@atlaskit/icon/glyph/menu';
 import NotificationIcon from '@atlaskit/icon/glyph/notification';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
-import styled from 'styled-components';
-import Tooltip from '@atlaskit/tooltip';
 import { JiraIcon } from '@atlaskit/logo';
+import { gridSize } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
 
 import { AkNavigationItem, AkGlobalItem } from '../../../src';
 import emmaAvatar from '../emma.png';

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   createEditorFactory,
   doc,
@@ -12,8 +13,7 @@ import {
   tr,
 } from '@atlaskit/editor-test-helpers';
 import { getSelectionRect, selectRow } from 'prosemirror-utils';
-import * as React from 'react';
-import { setTextSelection } from '../../../../../index';
+
 import { hoverRows } from '../../../../../plugins/table/commands';
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
 import {
@@ -22,6 +22,7 @@ import {
 } from '../../../../../plugins/table/types';
 import TableFloatingControls from '../../../../../plugins/table/ui/TableFloatingControls';
 import RowControls from '../../../../../plugins/table/ui/TableFloatingControls/RowControls';
+import { setTextSelection } from '../../../../../index';
 
 const ControlsButton = `.${ClassName.CONTROLS_BUTTON}`;
 const RowControlsButtonWrap = `.${ClassName.ROW_CONTROLS_BUTTON_WRAP}`;

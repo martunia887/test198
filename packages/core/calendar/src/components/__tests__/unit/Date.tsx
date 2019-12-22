@@ -1,7 +1,8 @@
-import { shallow } from 'enzyme';
 import React from 'react';
-import DateComponent from '../../Date';
+import { shallow } from 'enzyme';
+
 import { DateDiv, DateTd, DateProps } from '../../../styled/Date';
+import DateComponent from '../../Date';
 
 const create = (
   props: { disabled?: boolean; onClick?: (e: any) => void } = {},

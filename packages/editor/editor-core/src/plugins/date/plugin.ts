@@ -1,7 +1,9 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
-import DateNodeView from './nodeviews/date';
+
 import { ReactNodeView } from '../../nodeviews';
 import { PMPluginFactory } from '../../types';
+
+import DateNodeView from './nodeviews/date';
 
 export const pluginKey = new PluginKey('datePlugin');
 

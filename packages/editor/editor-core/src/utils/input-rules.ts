@@ -1,6 +1,6 @@
 import { InputRule } from 'prosemirror-inputrules';
-import { EditorState, Transaction } from 'prosemirror-state';
 import { Mark as PMMark } from 'prosemirror-model';
+import { EditorState, Transaction } from 'prosemirror-state';
 
 export type InputRuleWithHandler = InputRule & { handler: InputRuleHandler };
 

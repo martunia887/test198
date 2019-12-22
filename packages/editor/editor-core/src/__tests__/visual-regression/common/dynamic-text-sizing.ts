@@ -1,7 +1,9 @@
-import { initFullPageEditorWithAdf, snapshot } from '../_utils';
-import dynamicTextExample from './__fixtures__/dynamic-text-adf.json';
-import { emojiReadySelector } from '../../__helpers/page-objects/_emoji';
 import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
+
+import { emojiReadySelector } from '../../__helpers/page-objects/_emoji';
+import { initFullPageEditorWithAdf, snapshot } from '../_utils';
+
+import dynamicTextExample from './__fixtures__/dynamic-text-adf.json';
 
 describe('Dynamic Text Sizing', () => {
   let page: any;

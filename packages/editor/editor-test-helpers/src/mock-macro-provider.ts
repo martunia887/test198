@@ -1,9 +1,9 @@
-import { Node as PmNode } from 'prosemirror-model';
 import {
   MacroProvider,
   MacroAttributes,
   ExtensionType,
 } from '@atlaskit/editor-core';
+import { Node as PmNode } from 'prosemirror-model';
 import { bodiedExtensionData } from './mock-extension-data';
 
 const getMacroADFNode = (

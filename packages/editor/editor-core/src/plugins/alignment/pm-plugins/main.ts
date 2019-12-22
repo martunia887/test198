@@ -1,4 +1,5 @@
 import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
+
 import { Dispatch } from '../../../event-dispatcher';
 import { isAlignable } from '../commands';
 import { getActiveAlignment } from '../utils';

@@ -1,4 +1,3 @@
-import { Slice } from 'prosemirror-model';
 import {
   defaultSchema,
   doc,
@@ -9,6 +8,7 @@ import {
   status,
   date,
 } from '@atlaskit/editor-test-helpers';
+import { Slice } from 'prosemirror-model';
 
 import { toJSON } from '../../../../utils';
 import {

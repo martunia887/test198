@@ -1,6 +1,6 @@
 import React from 'react';
-import Heading from '../../Heading';
 import { mount, ReactWrapper } from 'enzyme';
+import Heading from '../../Heading';
 // A console error is thrown because 'h' + level is not recognized as a React component
 test('children', () => {
   const wrapper1 = mount(<Heading level={0} />);

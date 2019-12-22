@@ -1,19 +1,17 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
 import React, { Component, Fragment } from 'react';
-
-import { AtlassianIcon } from '@atlaskit/logo';
-import SearchIcon from '@atlaskit/icon/glyph/search';
+import Button, { ButtonGroup } from '@atlaskit/button';
+import { Checkbox } from '@atlaskit/checkbox';
+import { FieldTextStateless } from '@atlaskit/field-text';
 import CreateIcon from '@atlaskit/icon/glyph/add';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
-
+import SearchIcon from '@atlaskit/icon/glyph/search';
+import { AtlassianIcon } from '@atlaskit/logo';
 import Page from '@atlaskit/page';
-import Tooltip from '@atlaskit/tooltip';
-import Button, { ButtonGroup } from '@atlaskit/button';
-import { FieldTextStateless } from '@atlaskit/field-text';
-import { Checkbox } from '@atlaskit/checkbox';
 // $FlowFixMe: cannot resolve TS module
 import { AkSearch } from '@atlaskit/quick-search';
+import Tooltip from '@atlaskit/tooltip';
 
 import Navigation, {
   AkNavigationItemGroup,

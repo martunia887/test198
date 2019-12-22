@@ -1,19 +1,18 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import AddIcon from '@atlaskit/icon/glyph/add';
-import StarIcon from '@atlaskit/icon/glyph/star';
-import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
-import Button from '@atlaskit/button';
-import { ConfluenceIcon } from '@atlaskit/logo';
 import Lorem from 'react-lorem-component';
-import Page, { Grid, GridColumn } from '@atlaskit/page';
+import styled from 'styled-components';
+import Button from '@atlaskit/button';
+import AddIcon from '@atlaskit/icon/glyph/add';
+import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import SearchIcon from '@atlaskit/icon/glyph/search';
-import Tooltip from '@atlaskit/tooltip';
+import StarIcon from '@atlaskit/icon/glyph/star';
+import { ConfluenceIcon } from '@atlaskit/logo';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
 import { gridSize } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
 
-import SecondaryActions from './utils/confluence-example/SecondaryActions';
 import Navigation, {
   AkContainerNavigationNested,
   AkGlobalItem,
@@ -25,6 +24,8 @@ import Navigation, {
   SkeletonDefaultContainerHeader,
   SkeletonContainerItems,
 } from '../src';
+
+import SecondaryActions from './utils/confluence-example/SecondaryActions';
 
 const SkeletonItemsWrapper = styled.div`
   padding-right: ${gridSize() * 3}px;

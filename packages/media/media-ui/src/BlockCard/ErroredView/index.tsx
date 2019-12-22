@@ -1,12 +1,13 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Button from '@atlaskit/button';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
 import { Y300 } from '@atlaskit/theme/colors';
-import { CollapsedFrame } from '../CollapsedFrame';
-import { minWidth, maxWidth } from '../dimensions';
-import { CollapsedIconTitleDescriptionLayout } from '../CollapsedIconTitleDescriptionLayout';
+
 import { messages } from '../../messages';
-import { FormattedMessage } from 'react-intl';
+import { CollapsedFrame } from '../CollapsedFrame';
+import { CollapsedIconTitleDescriptionLayout } from '../CollapsedIconTitleDescriptionLayout';
+import { minWidth, maxWidth } from '../dimensions';
 
 export interface BlockCardErroredViewProps {
   /** The url to display */

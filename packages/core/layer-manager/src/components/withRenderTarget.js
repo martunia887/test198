@@ -2,8 +2,8 @@
 import React, { Component, type ComponentType, type ElementRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { Gateway, GatewayRegistry } from './gateway';
 import Portal from './Portal';
+import { Gateway, GatewayRegistry } from './gateway';
 import withContextFromProps from './withContextFromProps';
 
 type Props = {

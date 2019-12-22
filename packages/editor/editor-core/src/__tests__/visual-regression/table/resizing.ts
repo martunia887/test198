@@ -1,13 +1,7 @@
 import { waitForTooltip } from '@atlaskit/visual-regression/helper';
-import {
-  snapshot,
-  initFullPageEditorWithAdf,
-  initEditorWithAdf,
-  Appearance,
-} from '../_utils';
-import adfTableWithMergedCellsOnFirstRow from './__fixtures__/table-with-merged-cells-on-first-row.adf.json';
-import adfTableWithMergedCells from './__fixtures__/table-with-merged-cells.adf.json';
-import adf from '../common/__fixtures__/noData-adf.json';
+
+import { TableCssClassName as ClassName } from '../../../plugins/table/types';
+import { animationFrame } from '../../__helpers/page-objects/_editor';
 import {
   deleteColumn,
   resizeColumn,
@@ -19,9 +13,17 @@ import {
   unselectTable,
   tableSelectors,
 } from '../../__helpers/page-objects/_table';
-import { animationFrame } from '../../__helpers/page-objects/_editor';
 import { Page } from '../../__helpers/page-objects/_types';
-import { TableCssClassName as ClassName } from '../../../plugins/table/types';
+import adf from '../common/__fixtures__/noData-adf.json';
+import {
+  snapshot,
+  initFullPageEditorWithAdf,
+  initEditorWithAdf,
+  Appearance,
+} from '../_utils';
+
+import adfTableWithMergedCellsOnFirstRow from './__fixtures__/table-with-merged-cells-on-first-row.adf.json';
+import adfTableWithMergedCells from './__fixtures__/table-with-merged-cells.adf.json';
 // TODO: https://product-fabric.atlassian.net/browse/ED-7721
 describe.skip('Snapshot Test: table resizing', () => {
   describe('Re-sizing', () => {

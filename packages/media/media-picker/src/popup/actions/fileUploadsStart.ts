@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { UploadsStartEventPayload } from '../../types';
 import { MediaFile } from '../../types';
 

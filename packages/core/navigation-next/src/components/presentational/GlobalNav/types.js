@@ -1,8 +1,8 @@
 // @flow
 
 import type { ComponentType, ElementConfig } from 'react';
-import GlobalItem from '../GlobalItem';
 import type { GlobalTheme } from '../../../theme/types';
+import GlobalItem from '../GlobalItem';
 
 type ItemDataShape = {
   ...$Exact<ElementConfig<typeof GlobalItem>>,

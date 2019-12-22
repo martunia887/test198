@@ -2,7 +2,6 @@ import {
   AnalyticsEventPayload,
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-
 import { ANALYTICS_MEDIA_CHANNEL, ColorWithAlpha, Dimensions } from './common';
 import { VeColor } from './engine/core/binaries/mediaEditor';
 

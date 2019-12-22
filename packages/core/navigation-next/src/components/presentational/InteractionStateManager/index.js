@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from 'react';
-
 import type { InteractionState, InteractionStateProps } from './types';
 
 export default class InteractionStateManager extends Component<

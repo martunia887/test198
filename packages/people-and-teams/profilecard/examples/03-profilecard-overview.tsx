@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { profiles } from '../mock-helpers/index';
 
+import { profiles } from '../mock-helpers/index';
 import { ProfileCard } from '../src';
 import { ProfilecardProps } from '../src/types';
+
 import LocaleIntlProvider from './helper/locale-intl-provider';
 
 export const MainStage = styled.div`

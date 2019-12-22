@@ -1,9 +1,11 @@
 import { safeInsert } from 'prosemirror-utils';
-import { createExternalMediaNode } from '../utils';
+
 import { Command } from '../../../types';
 import { InsertedImageProperties, ImageUploadPluginState } from '../types';
-import { stateKey } from './main';
+import { createExternalMediaNode } from '../utils';
+
 import { startUpload } from './actions';
+import { stateKey } from './main';
 
 export const insertExternalImage: (
   options: InsertedImageProperties,

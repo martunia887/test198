@@ -1,3 +1,4 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
   createEditorFactory,
@@ -13,11 +14,13 @@ import {
   panel,
 } from '@atlaskit/editor-test-helpers';
 import { MockMentionResource } from '@atlaskit/util-data-test';
+
 import {
   insertMediaGroupNode,
   getPosInList,
 } from '../../../../plugins/media/utils/media-files';
 import { setNodeSelection } from '../../../../utils';
+
 import {
   testCollectionName,
   temporaryMediaGroup,
@@ -26,7 +29,6 @@ import {
   insertMediaGroupItem,
   getFreshMediaProvider,
 } from './_utils';
-import { ProviderFactory } from '@atlaskit/editor-common';
 
 describe('media-files', () => {
   const createEditor = createEditorFactory();

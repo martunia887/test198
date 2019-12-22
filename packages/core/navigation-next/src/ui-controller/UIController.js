@@ -1,7 +1,7 @@
 // @flow
 
 import { Container } from 'unstated';
-
+import { CONTENT_NAV_WIDTH } from '../common/constants';
 import type {
   InitialUIControllerShape,
   UIControllerCache,
@@ -10,8 +10,6 @@ import type {
   UIControllerInterface,
   UIControllerShape,
 } from './types';
-
-import { CONTENT_NAV_WIDTH } from '../common/constants';
 
 const defaultState = {
   isResizing: false,

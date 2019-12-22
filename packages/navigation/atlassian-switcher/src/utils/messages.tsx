@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
-import FormattedMessage from '../primitives/formatted-message';
 
 import IntlProvider from '../components/intl-provider';
+import FormattedMessage from '../primitives/formatted-message';
 
 const messages = defineMessages({
   switchTo: {

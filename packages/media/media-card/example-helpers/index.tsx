@@ -1,11 +1,11 @@
 // eslint-disable-line no-console
 
 import * as React from 'react';
-import { FileItem, Identifier } from '@atlaskit/media-client';
-import { createStorybookMediaClientConfig } from '@atlaskit/media-test-helpers';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
-import { SelectableCard } from './selectableCard';
+import { FileItem, Identifier } from '@atlaskit/media-client';
+import { createStorybookMediaClientConfig } from '@atlaskit/media-test-helpers';
+
 import {
   Card,
   CardAppearance,
@@ -13,6 +13,8 @@ import {
   OnSelectChangeFuncResult,
   CardAction,
 } from '../src';
+
+import { SelectableCard } from './selectableCard';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 

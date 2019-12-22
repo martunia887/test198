@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ImageWrapper } from './styled';
 import { isImageRemote } from '../image-cropper/isImageRemote';
+import { ImageWrapper } from './styled';
 
 export interface ImagePlacerImageProps {
   src?: string;

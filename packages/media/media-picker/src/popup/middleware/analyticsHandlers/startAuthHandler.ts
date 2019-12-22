@@ -1,6 +1,6 @@
 import { Action } from 'redux';
-import { isStartAuthAction } from '../../actions/startAuth';
 import { buttonClickPayload, HandlerResult } from '.';
+import { isStartAuthAction } from '../../actions/startAuth';
 
 export default (action: Action): HandlerResult => {
   if (isStartAuthAction(action)) {

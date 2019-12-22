@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Switch } from 'react-router';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 import TitledPage from './utils/react-router/PageNavigation';
 
 export default () => (

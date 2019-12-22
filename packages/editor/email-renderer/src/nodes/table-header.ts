@@ -1,8 +1,9 @@
 import { N20, N50 } from '@atlaskit/adf-schema';
+
 import { createTag } from '../create-tag';
+import { NodeSerializerOpts } from '../interfaces';
 import { serializeStyle } from '../serialize-style';
 import { createClassName } from '../styles/util';
-import { NodeSerializerOpts } from '../interfaces';
 
 export const styles = `
 .${createClassName('tableHeader')} {

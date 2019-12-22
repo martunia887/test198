@@ -1,6 +1,6 @@
-import analyticsService from './service';
 import { Command } from '../types';
 import { AnalyticsProperties } from './handler';
+import analyticsService from './service';
 
 export function commandWithAnalytics(
   analyticsEventName: string,

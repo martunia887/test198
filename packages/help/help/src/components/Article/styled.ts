@@ -1,9 +1,9 @@
 /** @jsx jsx */
 
-import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core';
-import { gridSize } from '@atlaskit/theme/constants';
 import * as colors from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
+import { keyframes } from '@emotion/core';
+import styled from '@emotion/styled';
 
 interface ArticleContainerProps {
   isSearchVisible: boolean;

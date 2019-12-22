@@ -2,11 +2,10 @@
 import React from 'react';
 import { Item, Group } from '@atlaskit/droplist';
 
-import NoMatches from '../styled/NoMatch';
-import InitialLoading from '../styled/InitialLoading';
-import GroupsContainer from '../styled/GroupsContainer';
 import { filterItems } from '../internal/sharedFunctions';
-
+import GroupsContainer from '../styled/GroupsContainer';
+import InitialLoading from '../styled/InitialLoading';
+import NoMatches from '../styled/NoMatch';
 import type { GroupType, ItemType } from '../types';
 
 const renderItems = ({

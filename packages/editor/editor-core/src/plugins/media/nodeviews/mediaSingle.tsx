@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Node as PMNode } from 'prosemirror-model';
-import { EditorView, Decoration } from 'prosemirror-view';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import {
   MediaSingle,
@@ -13,31 +11,34 @@ import {
   ContextIdentifierProvider,
 } from '@atlaskit/editor-common';
 import { CardEvent } from '@atlaskit/media-card';
-import { NodeSelection } from 'prosemirror-state';
 import { MediaClientConfig } from '@atlaskit/media-core';
+import { Node as PMNode } from 'prosemirror-model';
+import { NodeSelection } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
+import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
+import { EditorView, Decoration } from 'prosemirror-view';
 
+import { EventDispatcher } from '../../../event-dispatcher';
 import {
   SelectionBasedNodeView,
   getPosHandler,
   getPosHandlerNode,
 } from '../../../nodeviews/ReactNodeView';
-import MediaItem from './media';
-import WithPluginState from '../../../ui/WithPluginState';
-import { pluginKey as widthPluginKey } from '../../width';
-import { setNodeSelection, setTextSelection } from '../../../utils';
-import ResizableMediaSingle from '../ui/ResizableMediaSingle';
 import { createDisplayGrid } from '../../../plugins/grid';
-import { EventDispatcher } from '../../../event-dispatcher';
-import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import { MediaOptions, MediaPMPluginOptions } from '../index';
-import { stateKey as mediaPluginKey } from '../pm-plugins/main';
-import { isMobileUploadCompleted } from '../commands/helpers';
-import { MediaSingleNodeProps, MediaSingleNodeViewProps } from './types';
-import { MediaNodeUpdater } from './mediaNodeUpdater';
-import { DispatchAnalyticsEvent } from '../../analytics';
-import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { EditorAppearance } from '../../../types';
-import { CellSelection } from 'prosemirror-tables';
+import { PortalProviderAPI } from '../../../ui/PortalProvider';
+import WithPluginState from '../../../ui/WithPluginState';
+import { setNodeSelection, setTextSelection } from '../../../utils';
+import { DispatchAnalyticsEvent } from '../../analytics';
+import { pluginKey as widthPluginKey } from '../../width';
+import { isMobileUploadCompleted } from '../commands/helpers';
+import { stateKey as mediaPluginKey } from '../pm-plugins/main';
+import ResizableMediaSingle from '../ui/ResizableMediaSingle';
+import { MediaOptions, MediaPMPluginOptions } from '../index';
+
+import MediaItem from './media';
+import { MediaNodeUpdater } from './mediaNodeUpdater';
+import { MediaSingleNodeProps, MediaSingleNodeViewProps } from './types';
 
 export interface MediaSingleNodeState {
   width?: number;

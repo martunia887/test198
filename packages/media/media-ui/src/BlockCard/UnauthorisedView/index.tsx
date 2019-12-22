@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Button from '@atlaskit/button';
+
+import { messages } from '../../messages';
 import { CollapsedFrame } from '../CollapsedFrame';
-import { minWidth, maxWidth } from '../dimensions';
 import { CollapsedIconTitleDescriptionLayout } from '../CollapsedIconTitleDescriptionLayout';
 import { ImageIcon } from '../ImageIcon';
-import { messages } from '../../messages';
-import { FormattedMessage } from 'react-intl';
+import { minWidth, maxWidth } from '../dimensions';
 
 export interface BlockCardUnauthorisedViewProps {
   /** The icon of the service (e.g. Dropbox/Asana/Google/etc) to display */

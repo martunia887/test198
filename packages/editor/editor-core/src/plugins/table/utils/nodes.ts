@@ -2,6 +2,7 @@ import { Node as PmNode } from 'prosemirror-model';
 import { EditorState, Selection } from 'prosemirror-state';
 import { TableMap } from 'prosemirror-tables';
 import { findTable, hasParentNodeOfType } from 'prosemirror-utils';
+
 import { pluginKey } from '../pm-plugins/main';
 
 export const isIsolating = (node: PmNode): boolean => {

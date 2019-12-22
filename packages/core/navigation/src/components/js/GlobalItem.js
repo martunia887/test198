@@ -1,10 +1,12 @@
 // @flow
 import React, { PureComponent, type Node, type ComponentType } from 'react';
 import styled from 'styled-components';
-import GlobalItemInner, { globalItemStyles } from '../styled/GlobalItemInner';
-import DefaultLinkComponent from './DefaultLinkComponent';
+
 import type { IconAppearance } from '../../types';
 import { withGlobalItemAnalytics } from '../../utils/analytics';
+import GlobalItemInner, { globalItemStyles } from '../styled/GlobalItemInner';
+
+import DefaultLinkComponent from './DefaultLinkComponent';
 
 type Props = {
   /** Standard aria-haspopup prop */

@@ -1,7 +1,8 @@
-import removeFileFromRecents from '../../removeFileFromRecents';
-import { removeFileFromRecents as removeFileFromRecentsAction } from '../../../actions/removeFileFromRecents';
 import { mockState } from '@atlaskit/media-test-helpers';
+
+import { removeFileFromRecents as removeFileFromRecentsAction } from '../../../actions/removeFileFromRecents';
 import { State } from '../../../domain';
+import removeFileFromRecents from '../../removeFileFromRecents';
 
 const extraState: Partial<State> = {
   uploads: {

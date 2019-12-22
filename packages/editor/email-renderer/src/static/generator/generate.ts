@@ -1,11 +1,12 @@
 // TODO: Move this file out of src if it is a build script
 /* eslint-disable import/no-extraneous-dependencies */
-import * as svgexport from 'svgexport';
-import { resolve } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
+import { resolve } from 'path';
 import rimraf from 'rimraf';
-import imageSources from './image-sources';
+import * as svgexport from 'svgexport';
+
 import { imageOutputType } from './constants';
+import imageSources from './image-sources';
 
 const coreIconSrc = resolve(__dirname, '../svg');
 const tempFolder = resolve(__dirname, './tmp');

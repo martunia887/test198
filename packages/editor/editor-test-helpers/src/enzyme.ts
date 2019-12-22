@@ -4,9 +4,9 @@
  * These helper functions aim to address that and wrap a valid,
  * English-locale intl context around them.
  */
-import { mount, ReactWrapper, shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { ReactElement } from 'react';
+import { mount, ReactWrapper, shallow, ShallowWrapper } from 'enzyme';
 import { InjectedIntlProps, IntlProvider, intlShape } from 'react-intl';
 
 // Create the IntlProvider to retrieve context for wrapping around.

@@ -1,10 +1,10 @@
 import { messages } from '../../messages';
 import { ConfluenceResultsMap, ResultsGroup } from '../../model/Result';
+import { getConfluenceMaxObjects } from '../../util/experiment-utils';
+import { CONF_OBJECTS_ITEMS_PER_PAGE } from '../../util/experiment-utils';
+import { ConfluenceFeatures } from '../../util/features';
 import { attachConfluenceContextIdentifiers } from '../common/contextIdentifiersHelper';
 import { take } from '../SearchResultsUtil';
-import { getConfluenceMaxObjects } from '../../util/experiment-utils';
-import { ConfluenceFeatures } from '../../util/features';
-import { CONF_OBJECTS_ITEMS_PER_PAGE } from '../../util/experiment-utils';
 
 export const DEFAULT_MAX_OBJECTS = 10;
 export const MAX_SPACES = 3;

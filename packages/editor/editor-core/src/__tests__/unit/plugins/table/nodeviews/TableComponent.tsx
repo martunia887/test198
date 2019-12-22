@@ -10,11 +10,12 @@ import {
   tdEmpty,
 } from '@atlaskit/editor-test-helpers';
 import { selectTable } from 'prosemirror-utils';
-import { TableCssClassName as ClassName } from '../../../../../plugins/table/types';
-import { TablePluginState } from '../../../../../plugins/table/types';
+import { findTable } from 'prosemirror-utils';
+
 import TableComponent from '../../../../../plugins/table/nodeviews/TableComponent';
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
-import { findTable } from 'prosemirror-utils';
+import { TableCssClassName as ClassName } from '../../../../../plugins/table/types';
+import { TablePluginState } from '../../../../../plugins/table/types';
 
 describe('table -> nodeviews -> TableComponent.tsx', () => {
   const createEditor = createEditorFactory<TablePluginState>();

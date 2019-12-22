@@ -11,7 +11,6 @@ import {
   isSchemaWithTables,
   normalizeHexColor,
 } from '@atlaskit/adf-schema';
-
 import {
   Fragment,
   Mark,
@@ -19,7 +18,6 @@ import {
   Schema,
   NodeType,
 } from 'prosemirror-model';
-
 import { mapImageToEmoji } from './emojiHelper';
 
 /**

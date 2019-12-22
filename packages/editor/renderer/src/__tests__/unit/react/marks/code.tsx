@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+
 import Code from '../../../../react/marks/code';
 import InlineComment from '../../../../react/marks/confluence-inline-comment';
 

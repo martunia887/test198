@@ -1,9 +1,8 @@
-import asDataProvider from './as-data-provider';
 import {
   RecommendationsEngineResponse,
   RecommendationsFeatureFlags,
 } from '../types';
-
+import asDataProvider from './as-data-provider';
 import { resolveRecommendations } from './recommendations';
 
 const fetchRecommendations = ({

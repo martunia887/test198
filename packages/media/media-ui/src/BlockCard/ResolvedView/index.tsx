@@ -1,15 +1,18 @@
 import * as React from 'react';
 import Avatar from '@atlaskit/avatar';
 import AvatarGroup from '@atlaskit/avatar-group';
-import Tooltip from '@atlaskit/tooltip';
 import Button from '@atlaskit/button';
-import { ImageIcon } from '../ImageIcon';
 import LinkGlyph from '@atlaskit/icon/glyph/link';
-import { minWidth, maxWidth } from '../dimensions';
+import Tooltip from '@atlaskit/tooltip';
+
 import { LozengeViewModel } from '../../common';
 import { ExpandedFrame } from '../ExpandedFrame';
+import { ImageIcon } from '../ImageIcon';
+import { minWidth, maxWidth } from '../dimensions';
+
 import AlertView from './AlertView';
 import { PreviewView } from './PreviewView';
+import Transition from './Transition';
 import Widgets from './Widgets';
 import {
   maxAvatarCount,
@@ -25,7 +28,6 @@ import {
   ActionsWrapper,
   AlertWrapper,
 } from './styled';
-import Transition from './Transition';
 
 export interface ContextViewModel {
   icon?: string;

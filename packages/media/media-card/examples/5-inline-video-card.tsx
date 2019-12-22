@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Card } from '../src';
 import {
   createStorybookMediaClientConfig,
   videoFileId,
@@ -7,10 +6,12 @@ import {
   videoLargeFileId,
   videoHorizontalFileId,
 } from '@atlaskit/media-test-helpers';
+
 import {
   InlineCardVideoWrapper,
   InlineCardVideoWrapperItem,
 } from '../example-helpers/styled';
+import { Card } from '../src';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const onClick = () => console.log('onClick');

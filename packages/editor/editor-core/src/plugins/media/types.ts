@@ -1,8 +1,8 @@
 import { FileIdentifier } from '@atlaskit/media-client';
 import { MediaClientConfig } from '@atlaskit/media-core';
 import { UploadParams, MediaFile } from '@atlaskit/media-picker/types';
-import { EditorView } from 'prosemirror-view';
 import { NodeType } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
 
 export type MediaStateStatus =
   | 'unknown'

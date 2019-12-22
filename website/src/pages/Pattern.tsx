@@ -1,12 +1,14 @@
 import React from 'react';
-import Loadable from '../components/WrappedLoader';
-import * as fs from '../utils/fs';
-import { File } from '../types';
 import { match } from 'react-router';
-import Page from '../components/Page';
-import FourOhFour from './FourOhFour';
+
 import Loading from '../components/Loading';
+import Page from '../components/Page';
+import Loadable from '../components/WrappedLoader';
 import { patterns } from '../site';
+import { File } from '../types';
+import * as fs from '../utils/fs';
+
+import FourOhFour from './FourOhFour';
 
 export type Props = {
   match: match<Record<string, string>>;

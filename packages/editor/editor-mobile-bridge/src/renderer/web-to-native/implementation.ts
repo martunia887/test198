@@ -1,5 +1,5 @@
-import { RendererBridges, RendererPluginBridges } from './bridge';
 import { sendToBridge } from '../../bridge-utils';
+import { RendererBridges, RendererPluginBridges } from './bridge';
 
 class WebRendererBridge {
   call<T extends RendererPluginBridges>(

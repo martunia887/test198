@@ -1,10 +1,11 @@
-import TextField from '@atlaskit/textfield';
-import { gridSize } from '@atlaskit/theme';
 import * as React from 'react';
 import { FormEvent, PureComponent } from 'react';
 import styled from 'styled-components';
-import ColorPalette from './internal/color-palette';
+import TextField from '@atlaskit/textfield';
+import { gridSize } from '@atlaskit/theme';
+
 import { Color } from './Status';
+import ColorPalette from './internal/color-palette';
 
 export type ColorType = Color;
 

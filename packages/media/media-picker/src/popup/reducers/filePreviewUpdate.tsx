@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isFileUploadPreviewUpdateAction } from '../actions/fileUploadPreviewUpdate';
 import { State } from '../domain';
 

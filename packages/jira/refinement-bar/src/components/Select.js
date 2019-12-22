@@ -2,12 +2,12 @@
 /** @jsx jsx */
 
 import React, { type Node } from 'react';
-import { jsx } from '@emotion/core';
-import Select, { CheckboxOption } from '@atlaskit/select';
 import SearchIcon from '@atlaskit/icon/glyph/editor/search';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
-import { colors, gridSize } from '@atlaskit/theme';
+import Select, { CheckboxOption } from '@atlaskit/select';
 import Spinner from '@atlaskit/spinner';
+import { colors, gridSize } from '@atlaskit/theme';
+import { jsx } from '@emotion/core';
 
 // ==============================
 // React-Select Replacements

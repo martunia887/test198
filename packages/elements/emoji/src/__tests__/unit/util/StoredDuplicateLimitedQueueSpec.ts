@@ -1,5 +1,4 @@
 import * as sinon from 'sinon';
-
 import StoredDuplicateLimitedQueue, {
   StoredQueueOptions,
 } from '../../../util/StoredDuplicateLimitedQueue';

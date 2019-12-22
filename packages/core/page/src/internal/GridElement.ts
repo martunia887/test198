@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import { defaultGridColumnWidth, spacing } from './vars';
 
 const getMargin = (props: any) =>

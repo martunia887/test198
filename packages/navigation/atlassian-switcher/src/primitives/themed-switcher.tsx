@@ -1,12 +1,13 @@
 import * as React from 'react';
+
 import Switcher, { SwitcherProps } from '../components/switcher';
 import {
   TopLevelItemWrapperTheme,
   ItemTheme,
   ChildItemTheme,
 } from '../theme/default-theme';
-import { WithTheme } from '../theme/types';
 import { createCustomTheme } from '../theme/theme-builder';
+import { WithTheme } from '../theme/types';
 
 export default ({
   theme,

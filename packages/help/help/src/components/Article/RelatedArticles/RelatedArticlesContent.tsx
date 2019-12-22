@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { ThemeProvider } from 'styled-components';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { itemThemeNamespace } from '@atlaskit/item';
 import { gridSize } from '@atlaskit/theme/constants';
+
 import { ArticleItem } from '../../../model/Article';
 
 import RelatedArticlesList from './RelatedArticlesList';

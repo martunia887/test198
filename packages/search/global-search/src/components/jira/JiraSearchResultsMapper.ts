@@ -1,3 +1,5 @@
+import { ABTest } from '../../api/CrossProductSearchClient';
+import { messages } from '../../messages';
 import {
   ResultsGroup,
   JiraResultsMap,
@@ -6,17 +8,15 @@ import {
   AnalyticsType,
   ContentType,
 } from '../../model/Result';
+import { getJiraMaxObjects } from '../../util/experiment-utils';
+import { JiraFeatures } from '../../util/features';
+import { attachJiraContextIdentifiers } from '../common/contextIdentifiersHelper';
+import { JiraApplicationPermission } from '../GlobalQuickSearchWrapper';
 import {
   take,
   getJiraAdvancedSearchUrl,
   JiraEntityTypes,
 } from '../SearchResultsUtil';
-import { messages } from '../../messages';
-import { JiraApplicationPermission } from '../GlobalQuickSearchWrapper';
-import { attachJiraContextIdentifiers } from '../common/contextIdentifiersHelper';
-import { ABTest } from '../../api/CrossProductSearchClient';
-import { getJiraMaxObjects } from '../../util/experiment-utils';
-import { JiraFeatures } from '../../util/features';
 
 const DEFAULT_MAX_OBJECTS = 8;
 const MAX_CONTAINERS = 6;

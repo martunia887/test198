@@ -1,6 +1,6 @@
-import { name } from '../../../version.json';
-import { EventDispatcher, createDispatch } from '../../../event-dispatcher';
 import { PluginKey } from 'prosemirror-state';
+import { EventDispatcher, createDispatch } from '../../../event-dispatcher';
+import { name } from '../../../version.json';
 
 describe(name, () => {
   describe('Event Dispatcher', () => {

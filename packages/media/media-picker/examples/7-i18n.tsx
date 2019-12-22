@@ -1,15 +1,16 @@
+import * as React from 'react';
+import { Component } from 'react';
+import * as PropTypes from 'prop-types';
+import { intlShape } from 'react-intl';
 import {
   I18NWrapper,
   defaultCollectionName,
   defaultMediaPickerAuthProvider,
   userAuthProvider,
 } from '@atlaskit/media-test-helpers';
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import { Component } from 'react';
+
 import { MediaPicker } from '../src';
 import { Popup } from '../src/types';
-import { intlShape } from 'react-intl';
 
 const mediaClientConfig = {
   authProvider: defaultMediaPickerAuthProvider,

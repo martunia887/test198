@@ -1,18 +1,19 @@
-import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { EditorView } from 'prosemirror-view';
 import {
   createEditorFactory,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
+import { expect } from 'chai';
+import { EditorView } from 'prosemirror-view';
+
+import EditorActions from '../../../../src/actions';
+import { analyticsService } from '../../../../src/analytics';
+import { EventDispatcher } from '../../../../src/event-dispatcher';
 import {
   pluginKey,
   openHelpCommand,
   closeHelpCommand,
 } from '../../../../src/plugins/help-dialog';
-import EditorActions from '../../../../src/actions';
-import { analyticsService } from '../../../../src/analytics';
-import { EventDispatcher } from '../../../../src/event-dispatcher';
 
 describe('@atlaskit/editor-core/editor/ui/HelpDialog', () => {
   let editorActions: EditorActions;

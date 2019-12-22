@@ -1,5 +1,5 @@
-import { FileReference } from '../domain';
 import { Action } from 'redux';
+import { FileReference } from '../domain';
 
 export const EDITOR_SHOW_IMAGE = 'EDITOR_SHOW_IMAGE';
 

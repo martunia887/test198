@@ -3,12 +3,11 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import Droplist from '@atlaskit/droplist';
+
 import {
   name as packageName,
   version as packageVersion,
 } from '../../../version.json';
-//import DropdownMenuStatelessWithAnalytics from '../../DropdownMenuStateless';
-
 import DropdownMenuStatelessWithAnalytics, {
   DropdownMenuStatelessWithoutAnalytics as DropdownMenuStateless,
 } from '../../DropdownMenuStateless';

@@ -5,8 +5,8 @@ import { mount } from 'enzyme';
 import AkButton, { ButtonGroup } from '@atlaskit/button';
 import MenuIcon from '@atlaskit/icon/glyph/menu';
 
-import * as styles from '../styled';
 import MobileHeader from '../components/MobileHeader';
+import * as styles from '../styled';
 
 const Navigation = isOpen => isOpen && <div data-nav="true" />;
 const Sidebar = isOpen => isOpen && <div data-sidebar="true" />;

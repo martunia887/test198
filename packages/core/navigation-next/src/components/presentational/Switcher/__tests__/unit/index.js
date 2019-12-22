@@ -4,6 +4,8 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { PopupSelect } from '@atlaskit/select';
 import { gridSize } from '@atlaskit/theme/constants';
+
+import Option from '../../Option';
 import {
   BaseSwitcher,
   Footer,
@@ -13,7 +15,6 @@ import {
   isOptionSelected,
   getOptionValue,
 } from '../../index';
-import Option from '../../Option';
 
 const Target = () => <div>A target</div>;
 

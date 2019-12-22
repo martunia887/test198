@@ -3,14 +3,15 @@ import {
   OPERATIONAL_EVENT_TYPE,
 } from '@atlaskit/analytics-gas-types';
 import { Action, MiddlewareAPI } from 'redux';
-import { State } from '../../domain';
-import { isHandleCloudFetchingEventAction } from '../../actions/handleCloudFetchingEvent';
-import { MediaFile } from '../../../types';
 import { HandlerResult } from '.';
+
 import {
   FailurePayload,
   SuccessPayload,
 } from '../../../components/localUploadReact';
+import { MediaFile } from '../../../types';
+import { isHandleCloudFetchingEventAction } from '../../actions/handleCloudFetchingEvent';
+import { State } from '../../domain';
 import { RemoteUploadFailPayload } from '../../tools/websocket/upload/wsUploadEvents';
 
 const commonPayload = {

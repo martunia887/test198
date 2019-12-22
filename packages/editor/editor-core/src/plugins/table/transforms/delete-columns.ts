@@ -1,8 +1,9 @@
+import { CellAttributes } from '@atlaskit/adf-schema';
+import { Node as PMNode } from 'prosemirror-model';
 import { Transaction, Selection } from 'prosemirror-state';
 import { TableMap, Rect } from 'prosemirror-tables';
 import { findTable } from 'prosemirror-utils';
-import { Node as PMNode } from 'prosemirror-model';
-import { CellAttributes } from '@atlaskit/adf-schema';
+
 import { setMeta } from './metadata';
 
 export const deleteColumns = (rect: Rect) => (tr: Transaction): Transaction => {

@@ -1,3 +1,4 @@
+import { CardAttributes, UrlType } from '@atlaskit/adf-schema';
 import {
   createEditorFactory,
   date,
@@ -9,10 +10,10 @@ import {
   a,
   BuilderContent,
 } from '@atlaskit/editor-test-helpers';
-import { EditorView } from 'prosemirror-view';
-import { createCompareNodes } from '../../../utils/compareNodes';
 import { mention as mentionDataTest } from '@atlaskit/util-data-test';
-import { CardAttributes, UrlType } from '@atlaskit/adf-schema';
+import { EditorView } from 'prosemirror-view';
+
+import { createCompareNodes } from '../../../utils/compareNodes';
 
 const compareNodes = createCompareNodes({
   getInlineCardTextFromStore() {

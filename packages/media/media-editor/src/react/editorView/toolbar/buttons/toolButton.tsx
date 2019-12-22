@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { Component } from 'react';
-
 import Button from '@atlaskit/button';
-import { N0 } from '@atlaskit/theme/colors';
 import ArrowIcon from '@atlaskit/icon/glyph/media-services/arrow';
+import BlurIcon from '@atlaskit/icon/glyph/media-services/blur';
 import BrushIcon from '@atlaskit/icon/glyph/media-services/brush';
 import LineIcon from '@atlaskit/icon/glyph/media-services/line';
-import BlurIcon from '@atlaskit/icon/glyph/media-services/blur';
 import OvalIcon from '@atlaskit/icon/glyph/media-services/oval';
 import RectIcon from '@atlaskit/icon/glyph/media-services/rectangle';
 import TextIcon from '@atlaskit/icon/glyph/media-services/text';
+import { N0 } from '@atlaskit/theme/colors';
+
 import { Tool } from '../../../../common';
+
 import { ButtonIconWrapper } from './styles';
 
 export const toolIcons = {

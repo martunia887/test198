@@ -1,11 +1,14 @@
-import classNames from 'classnames';
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import uuid from 'uuid';
 import { PureComponent } from 'react';
+import * as PropTypes from 'prop-types';
+import {
+  AnalyticsEventPayload,
+  CreateUIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import classNames from 'classnames';
+import uuid from 'uuid';
+
 import { EmojiProvider, OnEmojiProviderChange } from '../../api/EmojiResource';
-import { defaultListLimit } from '../../util/constants';
-import { toEmojiId } from '../../util/type-helpers';
 import {
   EmojiDescription,
   EmojiSearchResult,
@@ -14,20 +17,19 @@ import {
   SearchSort,
   ToneSelection,
 } from '../../types';
-import debug from '../../util/logger';
 import {
   typeaheadCancelledEvent,
   typeaheadSelectedEvent,
   typeaheadRenderedEvent,
 } from '../../util/analytics';
-import { EmojiContext } from '../common/internal-types';
+import { defaultListLimit } from '../../util/constants';
+import debug from '../../util/logger';
+import { toEmojiId } from '../../util/type-helpers';
 import { createRecordSelectionDefault } from '../common/RecordSelectionDefault';
+import { EmojiContext } from '../common/internal-types';
+
 import EmojiList from './EmojiTypeAheadList';
 import * as styles from './styles';
-import {
-  AnalyticsEventPayload,
-  CreateUIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 
 export interface OnLifecycle {
   (): void;

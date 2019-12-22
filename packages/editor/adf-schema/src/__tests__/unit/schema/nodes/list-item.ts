@@ -1,4 +1,3 @@
-import { name } from '../../../../version.json';
 import {
   toHTML,
   fromHTML,
@@ -8,6 +7,7 @@ import {
   p,
   schema,
 } from '../../../../../test-helpers';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema listItem node`, () => {
   it('should be possible to create a list item with a single paragraph', () => {

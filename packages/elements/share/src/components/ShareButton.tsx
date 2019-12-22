@@ -1,5 +1,5 @@
-import Button, { ButtonAppearances } from '@atlaskit/button';
 import * as React from 'react';
+import Button, { ButtonAppearances } from '@atlaskit/button';
 
 export type Props = {
   appearance?: ButtonAppearances;

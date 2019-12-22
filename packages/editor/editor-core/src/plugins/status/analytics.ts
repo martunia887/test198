@@ -1,11 +1,11 @@
 import {
-  name as packageName,
-  version as packageVersion,
-} from '../../version.json';
-import {
   CreateUIAnalyticsEvent,
   AnalyticsEventPayload,
 } from '@atlaskit/analytics-next';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../../version.json';
 
 export const FABRIC_CHANNEL = 'fabric-elements';
 

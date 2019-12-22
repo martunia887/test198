@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import SectionMessage from '@atlaskit/section-message';
+
 import { visuallyHidden } from '../src';
 
 const AssitiveText = styled.span`

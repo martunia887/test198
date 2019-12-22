@@ -1,7 +1,9 @@
 import { NodeSpec, Node as PMNode, Fragment } from 'prosemirror-model';
-import { TextDefinition as Text } from './text';
-import { NoMark, MarksObject } from './doc';
+
 import { BreakoutMarkDefinition } from '../marks/breakout';
+
+import { NoMark, MarksObject } from './doc';
+import { TextDefinition as Text } from './text';
 
 /**
  * @name codeBlock_node

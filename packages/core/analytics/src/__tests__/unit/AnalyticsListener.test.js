@@ -4,7 +4,6 @@
 
 import React, { Component } from 'react';
 import { shallow, mount } from 'enzyme';
-
 import { AnalyticsListener, cleanProps, withAnalytics } from '../..';
 
 const Button = withAnalytics(

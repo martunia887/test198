@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { EditorView } from 'prosemirror-view';
+import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import BulletListIcon from '@atlaskit/icon/glyph/editor/bullet-list';
 import NumberListIcon from '@atlaskit/icon/glyph/editor/number-list';
-import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
+import { EditorView } from 'prosemirror-view';
+
 import { withAnalytics } from '../../../../analytics';
 import {
   toggleBulletList as toggleBulletListKeymap,
@@ -12,8 +13,8 @@ import {
   tooltip,
   renderTooltipContent,
 } from '../../../../keymaps';
-import ToolbarButton from '../../../../ui/ToolbarButton';
 import DropdownMenu from '../../../../ui/DropdownMenu';
+import ToolbarButton from '../../../../ui/ToolbarButton';
 import {
   ButtonGroup,
   Separator,
@@ -21,11 +22,11 @@ import {
   ExpandIconWrapper,
   Shortcut,
 } from '../../../../ui/styles';
+import { INPUT_METHOD } from '../../../analytics';
+import { DropdownItem } from '../../../block-type/ui/ToolbarBlockType';
+import { TOOLBAR_MENU_TYPE } from '../../../insert-block/ui/ToolbarInsertBlock';
 import { toggleBulletList, toggleOrderedList } from '../../commands';
 import { messages } from '../../messages';
-import { INPUT_METHOD } from '../../../analytics';
-import { TOOLBAR_MENU_TYPE } from '../../../insert-block/ui/ToolbarInsertBlock';
-import { DropdownItem } from '../../../block-type/ui/ToolbarBlockType';
 
 export interface Props {
   editorView: EditorView;

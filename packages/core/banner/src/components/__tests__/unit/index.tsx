@@ -2,7 +2,7 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import * as renderer from 'react-test-renderer';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
-import Banner from '../../Banner';
+
 import {
   backgroundColor,
   textColor,
@@ -12,6 +12,7 @@ import {
   Visibility,
   Text,
 } from '../../../styled';
+import Banner from '../../Banner';
 
 describe('banner', () => {
   it('basic sanity check', () =>

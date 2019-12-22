@@ -1,6 +1,7 @@
-import { NodeSerializerOpts } from '../interfaces';
-import { createTag } from '../create-tag';
 import { N30, N50, N800 } from '@atlaskit/adf-schema';
+
+import { createTag } from '../create-tag';
+import { NodeSerializerOpts } from '../interfaces';
 import { createClassName } from '../styles/util';
 
 const className = createClassName('bodiedExtension');

@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
 import { mount } from 'enzyme';
+import { render, fireEvent } from '@testing-library/react';
 
 import { PopupSelect, OptionsType } from '../../..';
 

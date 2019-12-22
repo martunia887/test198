@@ -1,8 +1,8 @@
+import React, { PureComponent, ReactNode } from 'react';
+import AnimateHeight from 'react-animate-height';
 import Button from '@atlaskit/button';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
-import React, { PureComponent, ReactNode } from 'react';
-import AnimateHeight from 'react-animate-height';
 
 import * as styles from './styledPanel';
 

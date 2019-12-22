@@ -1,6 +1,6 @@
-import { stateKey } from './main';
-import { ImageUploadPluginAction } from '../types';
 import { Transaction } from 'prosemirror-state';
+import { ImageUploadPluginAction } from '../types';
+import { stateKey } from './main';
 
 const imageUploadAction = (
   tr: Transaction,

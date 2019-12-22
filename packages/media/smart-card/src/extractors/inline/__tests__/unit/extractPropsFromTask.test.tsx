@@ -1,8 +1,8 @@
-import { shallow } from 'enzyme';
 import { ReactElement } from 'react';
+import { shallow } from 'enzyme';
 
-import { extractInlineViewPropsFromTask } from '../../extractPropsFromTask';
 import { JiraTasks } from '../../../../../examples-helpers/_jsonLDExamples/atlassian.task';
+import { extractInlineViewPropsFromTask } from '../../extractPropsFromTask';
 
 const JiraTaskTypes = JiraTasks.slice(0, JiraTasks.length - 2);
 const JiraTaskCustomType = JiraTasks[JiraTasks.length - 2];

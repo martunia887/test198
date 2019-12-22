@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { AnalyticsEventPayload } from './AnalyticsEvent';
+import UIAnalyticsEvent from './UIAnalyticsEvent';
 import {
   CreateEventMap,
   CreateUIAnalyticsEvent,
   AnalyticsEventCreator,
 } from './types';
-import UIAnalyticsEvent from './UIAnalyticsEvent';
-import { AnalyticsEventPayload } from './AnalyticsEvent';
 
 export interface AnalyticsContextConsumerProps<Props> {
   children: (props: {

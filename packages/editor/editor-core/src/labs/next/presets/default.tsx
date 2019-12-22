@@ -1,5 +1,6 @@
 // #region Imports
 import * as React from 'react';
+
 import {
   pastePlugin,
   blockTypePlugin,
@@ -19,6 +20,7 @@ import {
   scrollIntoViewPlugin,
 } from '../../../plugins';
 import { PresetProvider } from '../Editor';
+
 import { EditorPresetProps, PluginsPreset } from './types';
 import { getPluginsFromPreset } from './utils';
 // #endregion

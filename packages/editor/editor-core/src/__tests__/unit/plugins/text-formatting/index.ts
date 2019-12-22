@@ -1,3 +1,4 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { browser } from '@atlaskit/editor-common';
 import {
   sendKeyToPm,
@@ -14,13 +15,8 @@ import {
   insertText,
   code_block,
 } from '@atlaskit/editor-test-helpers';
-import {
-  TextFormattingState,
-  pluginKey as textFormattingPluginKey,
-} from '../../../../plugins/text-formatting/pm-plugins/main';
-import * as commands from '../../../../plugins/text-formatting/commands/text-formatting';
-import { anyMarkActive } from '../../../../plugins/text-formatting/utils';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+
+import { AnalyticsHandler } from '../../../../analytics';
 import {
   AnalyticsEventPayload,
   ACTION,
@@ -29,7 +25,12 @@ import {
   INPUT_METHOD,
   ACTION_SUBJECT_ID,
 } from '../../../../plugins/analytics';
-import { AnalyticsHandler } from '../../../../analytics';
+import * as commands from '../../../../plugins/text-formatting/commands/text-formatting';
+import {
+  TextFormattingState,
+  pluginKey as textFormattingPluginKey,
+} from '../../../../plugins/text-formatting/pm-plugins/main';
+import { anyMarkActive } from '../../../../plugins/text-formatting/utils';
 
 describe('text-formatting', () => {
   const createEditor = createEditorFactory<TextFormattingState>();

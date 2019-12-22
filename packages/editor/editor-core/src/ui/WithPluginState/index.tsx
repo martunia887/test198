@@ -1,9 +1,10 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import * as PropTypes from 'prop-types';
-import { EventDispatcher } from '../../event-dispatcher';
+
 import EditorActions from '../../actions';
+import { EventDispatcher } from '../../event-dispatcher';
 import { EditorSharedConfig } from '../../labs/next/Editor';
 
 export interface State {

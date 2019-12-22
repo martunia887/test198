@@ -1,4 +1,3 @@
-import { Node as PMNode, Mark } from 'prosemirror-model';
 import {
   StatusDefinition,
   DateDefinition,
@@ -6,6 +5,7 @@ import {
   CardAttributes,
   UrlType,
 } from '@atlaskit/adf-schema';
+import { Node as PMNode, Mark } from 'prosemirror-model';
 
 enum ContentType {
   NUMBER = 0,

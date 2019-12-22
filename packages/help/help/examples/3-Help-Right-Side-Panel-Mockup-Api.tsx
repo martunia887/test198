@@ -9,14 +9,14 @@ import {
 } from '@atlaskit/right-side-panel';
 
 import LocaleIntlProvider from '../example-helpers/LocaleIntlProvider';
+import Help from '../src';
+
 import { getArticle, searchArticle } from './utils/mockData';
 import {
   ButtonsWrapper,
   FooterContent,
   ExampleDefaultContent,
 } from './utils/styled';
-
-import Help from '../src';
 
 interface ArticleFeedback {
   RateReasonText: string;

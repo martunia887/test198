@@ -1,6 +1,6 @@
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import * as React from 'react';
 import { mount } from 'enzyme';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 import ColorPicker from '../..';
 

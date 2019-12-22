@@ -1,13 +1,13 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
-import WikiMarkupTransformer from '../../../index';
-
 import {
   doc,
   media,
   mediaGroup,
   mediaSingle,
 } from '@atlaskit/editor-test-helpers';
+
 import { Context } from '../../../interfaces';
+import WikiMarkupTransformer from '../../../index';
 
 describe('ADF => WikiMarkup - Media', () => {
   const transformer = new WikiMarkupTransformer();

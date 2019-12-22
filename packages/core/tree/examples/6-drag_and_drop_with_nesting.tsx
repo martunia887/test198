@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
+import Button from '@atlaskit/button';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
-import Button from '@atlaskit/button';
+import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
+
+import { complexTree } from '../mockdata/complexTree';
 import Tree, {
   mutateTree,
   moveItemOnTree,
@@ -14,7 +16,6 @@ import Tree, {
   TreeSourcePosition,
   TreeDestinationPosition,
 } from '../src';
-import { complexTree } from '../mockdata/complexTree';
 
 const Container = styled.div`
   display: flex;

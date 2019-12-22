@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
-// @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 
-import TaskItem from '../src/components/TaskItem';
 import { dumpRef, action, document } from '../example-helpers/story-utils';
+import TaskItem from '../src/components/TaskItem';
 
 export default () => (
   <AtlaskitThemeProvider mode={'dark'}>

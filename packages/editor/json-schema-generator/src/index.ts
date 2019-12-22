@@ -1,10 +1,10 @@
 /* eslint-disable no-bitwise */
-import * as ts from 'typescript';
 import { readFileSync, writeFileSync } from 'fs';
 import JSON5 from 'json5';
+import mkdirp from 'mkdirp';
 import { resolve, join } from 'path';
 import * as prettier from 'prettier';
-import mkdirp from 'mkdirp';
+import * as ts from 'typescript';
 
 import JSONSchemaNode, {
   SchemaNode,
@@ -18,7 +18,6 @@ import JSONSchemaNode, {
   AnyOfSchemaNode,
   AllOfSchemaNode,
 } from './json-schema-nodes';
-
 import {
   extractLiteralValue,
   getTags,

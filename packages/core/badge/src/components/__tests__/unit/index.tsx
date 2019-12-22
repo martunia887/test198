@@ -1,5 +1,6 @@
-import { mount } from 'enzyme';
 import React from 'react';
+import { mount } from 'enzyme';
+
 import Badge from '../..';
 import Format from '../../Format';
 

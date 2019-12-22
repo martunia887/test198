@@ -1,7 +1,8 @@
-import { name } from '../../../../version.json';
-import { JSONDocNode } from '../../../../utils/index';
-import { sanitizeNode } from '../../../../utils/filter/node-filter';
 import { doc, p, strong, emoji, br } from '@atlaskit/adf-utils';
+
+import { sanitizeNode } from '../../../../utils/filter/node-filter';
+import { JSONDocNode } from '../../../../utils/index';
+import { name } from '../../../../version.json';
 
 describe(name, () => {
   describe('Utils -> filter -> node-filter', () => {

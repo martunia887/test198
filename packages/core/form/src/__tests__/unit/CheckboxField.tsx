@@ -1,8 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { render } from '@testing-library/react';
 import Button from '@atlaskit/button';
 import { Checkbox } from '@atlaskit/checkbox';
+import { render } from '@testing-library/react';
+
 import Form, { CheckboxField } from '../..';
 
 const wait = (ms: number) => new Promise(res => setTimeout(res, ms));

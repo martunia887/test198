@@ -1,10 +1,10 @@
 import React, { createContext } from 'react';
-import { withAnalyticsEvents } from '../analytics';
 import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 
+import { withAnalyticsEvents } from '../analytics';
 import { Article, ArticleItem, ArticleFeedback } from '../model/Article';
 import { REQUEST_STATE } from '../model/Requests';
 

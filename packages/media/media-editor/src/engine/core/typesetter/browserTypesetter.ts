@@ -1,6 +1,6 @@
 import * as Core from '../binaries/mediaEditor';
-import { Typeset } from './typeset';
 import { FontInfo } from './fontInfo';
+import { Typeset } from './typeset';
 
 export interface BrowserTypesetterConfig {
   gl: WebGLRenderingContext;

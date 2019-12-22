@@ -1,12 +1,13 @@
-import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
-import { akEditorBreakoutPadding } from '@atlaskit/editor-common';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
+import { akEditorBreakoutPadding } from '@atlaskit/editor-common';
+import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
-import { buildLayoutForWidths } from '../../layout/_utils';
+
 import {
   calcMediaPxWidth,
   alignAttributes,
 } from '../../../../../plugins/media/utils/media-single';
+import { buildLayoutForWidths } from '../../layout/_utils';
 
 describe('Media Single Utils', () => {
   const createEditor = createEditorFactory();

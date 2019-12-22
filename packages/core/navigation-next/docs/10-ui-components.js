@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Example, md, Props, Prop } from '@atlaskit/docs';
-
 import { Contents, ContentsProvider, H, Hr } from './shared';
 
 export default (

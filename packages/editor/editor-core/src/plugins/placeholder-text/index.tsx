@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { placeholder } from '@atlaskit/adf-schema';
 import {
   Plugin,
   NodeSelection,
@@ -6,17 +7,18 @@ import {
   TextSelection,
 } from 'prosemirror-state';
 import { PluginKey } from 'prosemirror-state';
-import { placeholder } from '@atlaskit/adf-schema';
+
+import { Dispatch } from '../../event-dispatcher';
 import { EditorPlugin } from '../../types/editor-plugin';
 import WithPluginState from '../../ui/WithPluginState';
-import { Dispatch } from '../../event-dispatcher';
 import { isNodeEmpty } from '../../utils';
 import { FakeTextCursorSelection } from '../fake-text-cursor/cursor';
-import PlaceholderFloatingToolbar from './ui/PlaceholderFloatingToolbar';
+
 import {
   hidePlaceholderFloatingToolbar,
   insertPlaceholderTextAtSelection,
 } from './actions';
+import PlaceholderFloatingToolbar from './ui/PlaceholderFloatingToolbar';
 
 export const pluginKey = new PluginKey('placeholderTextPlugin');
 

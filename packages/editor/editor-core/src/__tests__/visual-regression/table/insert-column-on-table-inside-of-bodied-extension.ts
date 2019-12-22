@@ -1,11 +1,12 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import adf from './__fixtures__/table-inside-bodied-extension.adf.json';
 import {
   insertRow,
   insertColumn,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adf from './__fixtures__/table-inside-bodied-extension.adf.json';
 
 describe('Snapshot Test: table insert/delete', () => {
   let page: Page;

@@ -1,7 +1,8 @@
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { WithTheme } from './theme/types';
-import { AvailableProductsDataProvider } from './providers/products-data-provider';
+
 import { JoinableSitesDataProvider } from './providers/joinable-sites-data-provider';
+import { AvailableProductsDataProvider } from './providers/products-data-provider';
+import { WithTheme } from './theme/types';
 
 export interface TriggerXFlowCallback {
   (

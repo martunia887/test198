@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Provider, Card, Client } from '../src';
 import urlsJSON from '../examples-helpers/example-urls.json';
+import { Provider, Card, Client } from '../src';
 
 export default () => (
   <Provider

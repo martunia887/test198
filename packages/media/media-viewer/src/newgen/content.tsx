@@ -6,8 +6,9 @@ import {
   hideControlsClassName,
   InactivityDetector,
 } from '@atlaskit/media-ui';
-import { CloseButtonWrapper } from './styled';
 import { WithShowControlMethodProp } from '@atlaskit/media-ui';
+
+import { CloseButtonWrapper } from './styled';
 
 export interface ContentProps {
   onClose?: () => void;

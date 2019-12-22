@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { KeyboardEvent } from 'react';
-import RecentList from './RecentList';
 import { InjectedIntlProps, injectIntl } from 'react-intl';
 import { ActivityProvider, ActivityItem } from '@atlaskit/activity';
+
+import { INPUT_METHOD } from '../../plugins/analytics';
+
+import RecentList from './RecentList';
+import { RecentSearchProps, RecentSearchState } from './types';
 import withActivityProvider, {
   WithActivityProviderProps,
 } from './withActivityProvider';
-import { RecentSearchProps, RecentSearchState } from './types';
-import { INPUT_METHOD } from '../../plugins/analytics';
 
 const DEFAULT_ITEMS_LIMIT = 5;
 

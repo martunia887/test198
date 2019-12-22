@@ -1,5 +1,3 @@
-import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
-import { colors } from '@atlaskit/theme';
 import * as React from 'react';
 import {
   ButtonHTMLAttributes,
@@ -9,9 +7,12 @@ import {
 } from 'react';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
+import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
+import { colors } from '@atlaskit/theme';
+
+import { Color as ColorType } from '../Status';
 import { ANALYTICS_HOVER_DELAY } from '../constants';
 import { messages } from '../i18n';
-import { Color as ColorType } from '../Status';
 
 const Button: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`
   height: 24px;

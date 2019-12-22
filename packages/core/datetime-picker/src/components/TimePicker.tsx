@@ -1,3 +1,14 @@
+import React, { CSSProperties } from 'react';
+import {
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  WithAnalyticsEventsProps,
+  createAndFireEvent,
+} from '@atlaskit/analytics-next';
+import {
+  createLocalizationProvider,
+  LocalizationProvider,
+} from '@atlaskit/locale';
 import Select, {
   CreatableSelect,
   components,
@@ -7,28 +18,12 @@ import Select, {
   OptionType,
   SelectProps,
 } from '@atlaskit/select';
-import {
-  createLocalizationProvider,
-  LocalizationProvider,
-} from '@atlaskit/locale';
+import { B100 } from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
 import pick from 'lodash.pick';
 // eslint-disable-next-line no-restricted-imports
 import { format, isValid } from 'date-fns';
-import React, { CSSProperties } from 'react';
-import {
-  withAnalyticsEvents,
-  withAnalyticsContext,
-  WithAnalyticsEventsProps,
-  createAndFireEvent,
-} from '@atlaskit/analytics-next';
-import { B100 } from '@atlaskit/theme/colors';
-import { gridSize } from '@atlaskit/theme/constants';
 
-import { Appearance, Spacing } from '../types';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
 import {
   ClearIndicator,
   defaultTimes,
@@ -36,8 +31,13 @@ import {
   defaultTimeFormat,
   placeholderDatetime,
 } from '../internal';
-import parseTime from '../internal/parseTime';
 import FixedLayer from '../internal/FixedLayer';
+import parseTime from '../internal/parseTime';
+import { Appearance, Spacing } from '../types';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 
 interface Option {
   label: string;

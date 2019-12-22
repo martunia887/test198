@@ -1,8 +1,8 @@
-import { NodeSerializerOpts } from '../interfaces';
-import { createTable, TableData } from '../table-util';
 import { createTag } from '../create-tag';
+import { NodeSerializerOpts } from '../interfaces';
 import { createContentId } from '../static';
 import { createClassName } from '../styles/util';
+import { createTable, TableData } from '../table-util';
 
 enum DecisionState {
   DECIDED = 'DECIDED',

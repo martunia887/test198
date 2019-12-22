@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Card } from '@atlaskit/smart-card';
 import { EventHandlers, UnsupportedBlock } from '@atlaskit/editor-common';
+import { Card } from '@atlaskit/smart-card';
 
 import { getEventHandler } from '../../utils';
+
 import { CardErrorBoundary } from './fallback';
 
 export default function BlockCard(props: {

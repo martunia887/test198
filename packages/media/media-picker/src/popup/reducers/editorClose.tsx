@@ -1,7 +1,6 @@
 import { Action } from 'redux';
-
-import { State } from '../domain';
 import { isEditorCloseAction } from '../actions';
+import { State } from '../domain';
 
 export default function editorClose(state: State, action: Action): State {
   if (isEditorCloseAction(action)) {

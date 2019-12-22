@@ -1,9 +1,10 @@
 // @flow
 /** @jsx jsx */
 
-import { jsx } from '@emotion/core';
 import Lozenge from '@atlaskit/lozenge';
 import { gridSize } from '@atlaskit/theme';
+import { jsx } from '@emotion/core';
+
 import AsyncSelect from '../AsyncSelect/View';
 import { CLEAR_DATA } from '../Select/View';
 

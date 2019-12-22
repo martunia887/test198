@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import JiraAdvancedSearch, { Props } from '../../JiraAdvancedSearch';
-import * as Utils from '../../../SearchResultsUtil';
 import Button from '@atlaskit/button';
+
+import * as Utils from '../../../SearchResultsUtil';
 import { JiraEntityTypes } from '../../../SearchResultsUtil';
+import JiraAdvancedSearch, { Props } from '../../JiraAdvancedSearch';
 
 const defaultProps: Props = {
   query: 'query',

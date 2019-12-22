@@ -1,27 +1,26 @@
 import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { Transition } from 'react-transition-group';
 import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
+import Button from '@atlaskit/button';
+import ArrowleftIcon from '@atlaskit/icon/glyph/arrow-left';
 import * as colors from '@atlaskit/theme/colors';
 import { gridSize } from '@atlaskit/theme/constants';
-import { Transition } from 'react-transition-group';
-import ArrowleftIcon from '@atlaskit/icon/glyph/arrow-left';
-import Button from '@atlaskit/button';
 
+import { withAnalyticsEvents, withAnalyticsContext } from '../../analytics';
+import { messages } from '../../messages';
+import { Analytics } from '../../model/Analytics';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version.json';
+import { withHelp, HelpContextInterface } from '../HelpContext';
+import { TRANSITION_DURATION_MS, TRANSITION_STATUS } from '../constants';
 
 import { BackButtonContainer } from './styled';
-import { TRANSITION_DURATION_MS, TRANSITION_STATUS } from '../constants';
-import { withAnalyticsEvents, withAnalyticsContext } from '../../analytics';
-import { messages } from '../../messages';
-import { Analytics } from '../../model/Analytics';
-
-import { withHelp, HelpContextInterface } from '../HelpContext';
 
 const buttonTheme = {
   color: colors.N90,

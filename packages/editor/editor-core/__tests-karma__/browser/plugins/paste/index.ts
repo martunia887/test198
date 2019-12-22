@@ -1,5 +1,3 @@
-import * as chai from 'chai';
-import { expect } from 'chai';
 import { browser } from '@atlaskit/editor-common';
 import {
   strong,
@@ -16,6 +14,8 @@ import {
   media,
   mediaSingle,
 } from '@atlaskit/editor-test-helpers';
+import * as chai from 'chai';
+import { expect } from 'chai';
 
 chai.use(chaiPlugin);
 

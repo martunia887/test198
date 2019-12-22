@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react';
 import { shallow, mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+
 import Reveal from '../../components/js/Reveal';
 import RevealInner from '../../components/styled/RevealInner';
 

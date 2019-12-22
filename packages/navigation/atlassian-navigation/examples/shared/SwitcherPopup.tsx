@@ -1,19 +1,19 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Component, useState } from 'react';
-import Popup from '@atlaskit/popup';
-import Spinner from '@atlaskit/spinner';
 import AtlassianSwitcher from '@atlaskit/atlassian-switcher';
-
-import { AppSwitcher } from '../../src';
 import {
   mockEndpoints,
   REQUEST_FAST,
 } from '@atlaskit/atlassian-switcher-test-utils';
+import Popup from '@atlaskit/popup';
+import Spinner from '@atlaskit/spinner';
+import { jsx } from '@emotion/core';
+
 import {
   withAnalyticsLogger,
   withIntlProvider,
 } from '../../../atlassian-switcher/examples/helpers';
+import { AppSwitcher } from '../../src';
 
 const spinnerCSS = {
   display: 'flex',

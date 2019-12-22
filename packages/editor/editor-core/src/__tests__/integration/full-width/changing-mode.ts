@@ -1,13 +1,14 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import {
   fullpage,
   setProseMirrorTextSelection,
   updateEditorProps,
 } from '../_helpers';
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
 
 import { mediumSizeDoc } from './__fixtures__/medium-document';
 

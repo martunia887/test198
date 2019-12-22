@@ -6,13 +6,14 @@ import {
   FormattedMessage,
   InjectedIntlProps,
 } from 'react-intl';
+import { akEditorMenuZIndex } from '@atlaskit/editor-common';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import TextStyleIcon from '@atlaskit/icon/glyph/editor/text-style';
-import { akEditorMenuZIndex } from '@atlaskit/editor-common';
 
 import { analyticsService as analytics } from '../../../../analytics';
-import ToolbarButton from '../../../../ui/ToolbarButton';
+import { tooltip, findKeymapByDescription } from '../../../../keymaps';
 import DropdownMenu, { MenuItem } from '../../../../ui/DropdownMenu';
+import ToolbarButton from '../../../../ui/ToolbarButton';
 import {
   ButtonContent,
   Separator,
@@ -22,8 +23,8 @@ import {
 } from '../../../../ui/styles';
 import { BlockTypeState } from '../../pm-plugins/main';
 import { BlockType, NORMAL_TEXT } from '../../types';
+
 import { BlockTypeMenuItem, KeyboardShortcut } from './styled';
-import { tooltip, findKeymapByDescription } from '../../../../keymaps';
 
 export const messages = defineMessages({
   textStyles: {

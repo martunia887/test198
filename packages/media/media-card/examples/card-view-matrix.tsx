@@ -1,14 +1,15 @@
 // eslint-disable-line no-console
 import * as React from 'react';
-import { atlassianLogoUrl, tallImage } from '@atlaskit/media-test-helpers';
-import { Checkbox } from '@atlaskit/checkbox';
 import styled from 'styled-components';
-import DownloadIcon from '@atlaskit/icon/glyph/download';
+import { Checkbox } from '@atlaskit/checkbox';
 import BookIcon from '@atlaskit/icon/glyph/book';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
 import EditIcon from '@atlaskit/icon/glyph/edit';
+import { FileDetails, MediaType } from '@atlaskit/media-client';
+import { atlassianLogoUrl, tallImage } from '@atlaskit/media-test-helpers';
+
 import { CardAction, CardStatus } from '../src';
 import { CardView } from '../src/root/cardView';
-import { FileDetails, MediaType } from '@atlaskit/media-client';
 
 const CardWrapper = styled.div`
   width: 150px;

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
+import Button from '@atlaskit/button';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
+import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
 import Spinner from '@atlaskit/spinner';
-import Button from '@atlaskit/button';
+
+import { treeWithTwoBranches } from '../mockdata/treeWithTwoBranches';
 import Tree, {
   mutateTree,
   RenderItemParams,
@@ -12,7 +14,6 @@ import Tree, {
   TreeData,
   ItemId,
 } from '../src';
-import { treeWithTwoBranches } from '../mockdata/treeWithTwoBranches';
 
 const Container = styled.div`
   display: flex;

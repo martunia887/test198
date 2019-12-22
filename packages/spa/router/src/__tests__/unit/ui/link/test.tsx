@@ -3,10 +3,9 @@ import { mount } from 'enzyme';
 import { defaultRegistry } from 'react-sweet-state';
 import { createPath } from 'history';
 
-import { Router } from '../../../../controllers/router';
-
-import Link from '../../../../ui/link';
 import { LinkProps } from '../../../../common/types';
+import { Router } from '../../../../controllers/router';
+import Link from '../../../../ui/link';
 
 const MockLocation = {
   pathname: 'pathname',

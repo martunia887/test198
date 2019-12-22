@@ -27,8 +27,9 @@ import {
 } from '../../../plugins';
 import { MediaProvider } from '../../../plugins/media';
 import { PresetProvider } from '../Editor';
-import { EditorPresetProps } from './types';
+
 import { useDefaultPreset } from './default';
+import { EditorPresetProps } from './types';
 import { getPluginsFromPreset } from './utils';
 // #endregion
 

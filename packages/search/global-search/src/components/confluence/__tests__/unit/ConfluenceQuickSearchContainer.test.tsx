@@ -1,36 +1,22 @@
 import * as React from 'react';
+import { shallow } from 'enzyme';
+
 import {
-  ConfluenceQuickSearchContainer,
-  Props,
-} from '../../ConfluenceQuickSearchContainer';
-import {
-  noResultsCrossProductSearchClient,
-  errorCrossProductSearchClient,
-} from '../../../../__tests__/unit/mocks/_mockCrossProductSearchClient';
-import { noResultsPeopleSearchClient } from '../../../../__tests__/unit/mocks/_mockPeopleSearchClient';
+  makeConfluenceObjectResult,
+  makePersonResult,
+} from '../../../../__tests__/unit/_test-util';
+import { shallowWithIntl } from '../../../../__tests__/unit/helpers/_intl-enzyme-test-helper';
 import {
   noResultsConfluenceClient,
   makeConfluenceClient,
   mockAutocompleteClient,
 } from '../../../../__tests__/unit/mocks/_mockConfluenceClient';
-import { shallowWithIntl } from '../../../../__tests__/unit/helpers/_intl-enzyme-test-helper';
 import {
-  BaseConfluenceQuickSearchContainer as QuickSearchContainer,
-  Props as QuickSearchContainerProps,
-} from '../../../common/QuickSearchContainer';
-import {
-  makeConfluenceObjectResult,
-  makePersonResult,
-} from '../../../../__tests__/unit/_test-util';
-import { Scope } from '../../../../api/types';
-import {
-  Result,
-  ConfluenceResultsMap,
-  ResultsWithTiming,
-  ContentType,
-  ResultType,
-  AnalyticsType,
-} from '../../../../model/Result';
+  noResultsCrossProductSearchClient,
+  errorCrossProductSearchClient,
+} from '../../../../__tests__/unit/mocks/_mockCrossProductSearchClient';
+import { mockLogger } from '../../../../__tests__/unit/mocks/_mockLogger';
+import { noResultsPeopleSearchClient } from '../../../../__tests__/unit/mocks/_mockPeopleSearchClient';
 import {
   EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE,
   DEFAULT_AB_TEST,
@@ -40,12 +26,26 @@ import {
   SearchParams,
   RecentParams,
 } from '../../../../api/CrossProductSearchClient';
-import * as SearchUtils from '../../../SearchResultsUtil';
-
-import { mockLogger } from '../../../../__tests__/unit/mocks/_mockLogger';
-import { ReferralContextIdentifiers } from '../../../GlobalQuickSearchWrapper';
+import { Scope } from '../../../../api/types';
+import {
+  Result,
+  ConfluenceResultsMap,
+  ResultsWithTiming,
+  ContentType,
+  ResultType,
+  AnalyticsType,
+} from '../../../../model/Result';
 import { ConfluenceFeatures } from '../../../../util/features';
-import { shallow } from 'enzyme';
+import {
+  BaseConfluenceQuickSearchContainer as QuickSearchContainer,
+  Props as QuickSearchContainerProps,
+} from '../../../common/QuickSearchContainer';
+import { ReferralContextIdentifiers } from '../../../GlobalQuickSearchWrapper';
+import * as SearchUtils from '../../../SearchResultsUtil';
+import {
+  ConfluenceQuickSearchContainer,
+  Props,
+} from '../../ConfluenceQuickSearchContainer';
 
 const sessionId = 'sessionId';
 const referralContextIdentifiers: ReferralContextIdentifiers = {

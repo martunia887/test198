@@ -3,8 +3,9 @@ import {
   findParentDomRefOfType,
   findParentNodeOfType,
 } from 'prosemirror-utils';
-import { panelNodeView } from '../nodeviews/panel';
+
 import { Command, PMPluginFactoryParams } from '../../../types';
+import { panelNodeView } from '../nodeviews/panel';
 
 export type PanelState = {
   element?: HTMLElement;

@@ -5,18 +5,11 @@ import {
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
 import Tooltip from '@atlaskit/tooltip';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
-import { propsOmittedFromClickData } from './constants';
-import Presence from './Presence';
-import AvatarImage from './AvatarImage';
-import Status from './Status';
-import Outer, { PresenceWrapper, StatusWrapper } from '../styled/Avatar';
-import { omit } from '../utils';
+
 import { getProps, getStyledAvatar } from '../helpers';
 import { mapProps, withPseudoState } from '../hoc';
+import Outer, { PresenceWrapper, StatusWrapper } from '../styled/Avatar';
+import { ICON_SIZES } from '../styled/constants';
 import { Theme } from '../theme';
 import {
   AvatarPropTypes,
@@ -24,8 +17,16 @@ import {
   AppearanceType,
   SizeType,
 } from '../types';
+import { omit } from '../utils';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 
-import { ICON_SIZES } from '../styled/constants';
+import AvatarImage from './AvatarImage';
+import Presence from './Presence';
+import Status from './Status';
+import { propsOmittedFromClickData } from './constants';
 
 const validIconSizes = Object.keys(ICON_SIZES);
 

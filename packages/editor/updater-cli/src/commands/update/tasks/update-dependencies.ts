@@ -1,6 +1,6 @@
+import { resolveToCwd } from '../../../utils/fs';
 import { updatePackageJson } from '../../../utils/package-json';
 import { yarn, deduplicate } from '../../../utils/yarn';
-import { resolveToCwd } from '../../../utils/fs';
 import { UpdateTask } from '../types';
 
 export const updateDependenciesTask: UpdateTask = {

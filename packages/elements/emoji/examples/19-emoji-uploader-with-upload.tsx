@@ -1,7 +1,7 @@
 import * as React from 'react';
-import EmojiUploader from '../src/components/uploader/EmojiUploader';
 
 import { getEmojiResource, loggedUser, lorem } from '../example-helpers';
+import EmojiUploader from '../src/components/uploader/EmojiUploader';
 import { EmojiProvider } from '../src/resource';
 
 export interface EmojiProps {}

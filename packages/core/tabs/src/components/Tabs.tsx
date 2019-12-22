@@ -4,13 +4,7 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
-import TabsNavigation from './TabsNavigation';
-import DefaultTabContent from './TabContent';
-import DefaultTabItem from './TabItem';
+
 import { Tabs as StyledTabs } from '../styled';
 import {
   IsSelectedTestFunction,
@@ -19,6 +13,14 @@ import {
   TabsProps,
   TabsState,
 } from '../types';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
+
+import DefaultTabContent from './TabContent';
+import DefaultTabItem from './TabItem';
+import TabsNavigation from './TabsNavigation';
 
 const defaultIsSelectedTestNumber: IsSelectedTestFunction = (
   selectedIndex,

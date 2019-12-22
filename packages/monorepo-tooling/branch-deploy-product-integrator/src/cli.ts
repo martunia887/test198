@@ -1,8 +1,9 @@
 import chalk from 'chalk';
 import meow from 'meow';
-import { ValidationError, ErrorType, Command } from './types';
+
 import * as push from './commands/push';
 import * as reportStatus from './commands/reportStatus';
+import { ValidationError, ErrorType, Command } from './types';
 
 // prettier-ignore
 const HELP_MSG = `

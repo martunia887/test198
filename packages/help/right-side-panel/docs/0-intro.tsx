@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@atlaskit/button';
 import {
   md,
   code,
@@ -6,7 +7,6 @@ import {
   AtlassianInternalWarning,
   DevPreviewWarning,
 } from '@atlaskit/docs';
-import Button from '@atlaskit/button';
 import { gridSize } from '@atlaskit/theme/constants';
 
 export default md`

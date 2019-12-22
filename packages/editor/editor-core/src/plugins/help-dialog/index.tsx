@@ -1,12 +1,11 @@
 import * as React from 'react';
+import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import { keymap } from 'prosemirror-keymap';
 import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
-import { EditorPlugin } from '../../types';
-import * as keymaps from '../../keymaps';
+
 import { analyticsService } from '../../analytics';
-import WithPluginState from '../../ui/WithPluginState';
-import { HelpDialogLoader } from './ui/HelpDialogLoader';
-import { pluginKey as quickInsertPluginKey } from '../quick-insert';
+import * as keymaps from '../../keymaps';
+import { openHelp, tooltip } from '../../keymaps';
 import {
   addAnalytics,
   ACTION,
@@ -15,10 +14,13 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
 } from '../../plugins/analytics';
-import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import { openHelp, tooltip } from '../../keymaps';
+import { EditorPlugin } from '../../types';
+import WithPluginState from '../../ui/WithPluginState';
 import { ImageUploadHandler } from '../image-upload/types';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { pluginKey as quickInsertPluginKey } from '../quick-insert';
+
+import { HelpDialogLoader } from './ui/HelpDialogLoader';
 
 export const pluginKey = new PluginKey('helpDialogPlugin');
 

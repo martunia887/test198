@@ -21,6 +21,7 @@ import {
   Slice,
   Mark,
 } from 'prosemirror-model';
+
 import matches from './matches';
 import sampleSchema from './schema';
 

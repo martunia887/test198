@@ -1,28 +1,28 @@
-import { name } from '../../version.json';
-import { mount } from 'enzyme';
 import * as React from 'react';
-import Editor from '../../editor';
-import { EditorView } from 'prosemirror-view';
+import { mount } from 'enzyme';
+import {
+  GasPurePayload,
+  GasPureScreenEventPayload,
+} from '@atlaskit/analytics-gas-types';
+import FabricAnalyticsListeners, {
+  AnalyticsWebClient,
+} from '@atlaskit/analytics-listeners';
+import { EDITOR_APPEARANCE_CONTEXT } from '@atlaskit/analytics-namespaced-context';
 import Button from '@atlaskit/button';
 import {
   insertText,
   sendKeyToPm,
   analyticsClient,
 } from '@atlaskit/editor-test-helpers';
-import FabricAnalyticsListeners, {
-  AnalyticsWebClient,
-} from '@atlaskit/analytics-listeners';
-import {
-  GasPurePayload,
-  GasPureScreenEventPayload,
-} from '@atlaskit/analytics-gas-types';
-import { EDITOR_APPEARANCE_CONTEXT } from '@atlaskit/analytics-namespaced-context';
-import { EditorAppearance } from '../../types';
+import { EditorView } from 'prosemirror-view';
 
+import Editor from '../../editor';
+import { EditorAppearance } from '../../types';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version-wrapper';
+import { name } from '../../version.json';
 
 describe(name, () => {
   describe('Editor', () => {

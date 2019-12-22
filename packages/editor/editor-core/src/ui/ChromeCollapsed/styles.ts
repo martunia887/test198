@@ -1,7 +1,8 @@
-import styled from 'styled-components';
 import { InputHTMLAttributes, ComponentClass } from 'react';
-import { akEditorSubtleAccent } from '../../styles';
+import styled from 'styled-components';
 import { borderRadius, colors } from '@atlaskit/theme';
+
+import { akEditorSubtleAccent } from '../../styles';
 
 export const Input: ComponentClass<InputHTMLAttributes<{}> & {
   innerRef?: any;

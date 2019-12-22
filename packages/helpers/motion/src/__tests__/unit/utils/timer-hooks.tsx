@@ -1,10 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import * as raf from '../../__utils__/raf';
+
 import {
   useRequestAnimationFrame,
   useSetTimeout,
 } from '../../../utils/timer-hooks';
+import * as raf from '../../__utils__/raf';
 
 raf.replace();
 

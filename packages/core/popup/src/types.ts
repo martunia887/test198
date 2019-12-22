@@ -7,7 +7,6 @@ import {
   SetStateAction,
   ComponentType,
 } from 'react';
-
 import { Placement } from '@atlaskit/popper';
 
 export type TriggerProps = {

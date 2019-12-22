@@ -1,11 +1,5 @@
 import React from 'react';
 
-import { fetchJson, postJson } from '../utils/fetch';
-import asDataProvider, {
-  ProviderResult,
-  ResultComplete,
-  Status,
-} from './as-data-provider';
 import {
   Permissions,
   RecentContainersResponse,
@@ -13,7 +7,14 @@ import {
   WithCloudId,
   XFlowSettingsResponse,
 } from '../types';
+import { fetchJson, postJson } from '../utils/fetch';
 import { withCached } from '../utils/with-cached';
+
+import asDataProvider, {
+  ProviderResult,
+  ResultComplete,
+  Status,
+} from './as-data-provider';
 import withHandleOptionalCloudId from './with-handle-optional-cloud-id';
 
 // Recent activity api

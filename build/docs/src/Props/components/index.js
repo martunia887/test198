@@ -1,10 +1,11 @@
 /* eslint-disable import/no-named-default */
 // @flow
 import type { ComponentType } from 'react';
+
+import { default as Description } from './Description';
 import { default as Indent } from './Indent';
 import { default as Outline } from './Outline';
 import { default as Required } from './Required';
-import { default as Description } from './Description';
 import { default as Type, StringType, TypeMeta } from './Type';
 
 const components = {

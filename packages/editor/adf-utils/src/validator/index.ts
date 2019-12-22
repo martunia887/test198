@@ -1,5 +1,5 @@
-import * as specs from './specs';
 import { ADFEntity } from '../types';
+import * as specs from './specs';
 
 export type Content = Array<string | [string, object] | Array<string>>;
 

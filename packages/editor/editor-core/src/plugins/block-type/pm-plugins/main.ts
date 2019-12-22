@@ -1,7 +1,15 @@
+import { browser } from '@atlaskit/editor-common';
 import { Node, Schema } from 'prosemirror-model';
 import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { browser } from '@atlaskit/editor-common';
+
+import { HEADING_KEYS } from '../../../keymaps';
+import { areBlockTypesDisabled } from '../../../utils';
+import { INPUT_METHOD } from '../../analytics';
+import {
+  setHeadingWithAnalytics,
+  setNormalTextWithAnalytics,
+} from '../commands';
 import {
   NORMAL_TEXT,
   HEADING_1,
@@ -21,13 +29,6 @@ import {
   HeadingLevels,
   HeadingLevelsAndNormalText,
 } from '../types';
-import { areBlockTypesDisabled } from '../../../utils';
-import { HEADING_KEYS } from '../../../keymaps';
-import {
-  setHeadingWithAnalytics,
-  setNormalTextWithAnalytics,
-} from '../commands';
-import { INPUT_METHOD } from '../../analytics';
 
 export type BlockTypeState = {
   currentBlockType: BlockType;

@@ -1,6 +1,6 @@
+import { Page } from '../../__helpers/page-objects/_types';
 import { snapshot, Appearance, initEditorWithAdf } from '../_utils';
 import adf from './__fixtures__/card-xss.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Cards:', () => {
   let page: Page;

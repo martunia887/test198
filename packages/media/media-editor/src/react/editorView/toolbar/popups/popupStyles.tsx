@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 
 // TODO Extract common part from these:
 

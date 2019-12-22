@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
+
 import { DeactivateUserOverviewScreen } from '../../components/DeactivateUserOverviewScreen';
-import { catherineHirons } from '../../mocks/users';
-import accessibleSites from '../../mocks/accessibleSites';
 import { DeactivateUserOverviewScreenProps } from '../../components/DeactivateUserOverviewScreen/types';
+import accessibleSites from '../../mocks/accessibleSites';
+import { catherineHirons } from '../../mocks/users';
 
 const defaultProps: Partial<DeactivateUserOverviewScreenProps> = {
   accessibleSites,

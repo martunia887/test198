@@ -1,10 +1,10 @@
+import { Store, Dispatch, Action } from 'redux';
+
 import {
   isSearchGiphyAction,
   searchGiphyFulfilled,
   searchGiphyFailed,
 } from '../actions/searchGiphy';
-import { Store, Dispatch, Action } from 'redux';
-
 import { State } from '../domain';
 import { Fetcher } from '../tools/fetcher/fetcher';
 

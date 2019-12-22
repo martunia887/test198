@@ -1,10 +1,12 @@
 import * as React from 'react';
-import TextField from '@atlaskit/textfield';
+import styled from 'styled-components';
 import { Field } from '@atlaskit/form';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+import TextField from '@atlaskit/textfield';
+
 import { ThemingPublicApi } from '../../src/theme/types';
+
 import ColorScheme from './ColorScheme';
-import styled from 'styled-components';
 
 const FieldWrapper = styled.div`
   display: inline-block;

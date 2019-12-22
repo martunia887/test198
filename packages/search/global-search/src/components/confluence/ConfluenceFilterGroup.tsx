@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { ResultItemGroup, CancelableEvent } from '@atlaskit/quick-search';
-import Button from '@atlaskit/button';
-import { messages } from '../../messages';
 import { FormattedMessage } from 'react-intl';
-import { FilterWithMetadata } from '../../api/CrossProductSearchClient';
-import ConfluenceSpaceFilter from './SpaceFilter';
 import styled from 'styled-components';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import Button from '@atlaskit/button';
+import { ResultItemGroup, CancelableEvent } from '@atlaskit/quick-search';
+
+import { FilterWithMetadata } from '../../api/CrossProductSearchClient';
+import { messages } from '../../messages';
 import { fireMoreFiltersButtonClickEvent } from '../../util/analytics-event-helper';
 import { CreateAnalyticsEventFn } from '../analytics/types';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+
+import ConfluenceSpaceFilter from './SpaceFilter';
 
 export interface Props {
   spaceAvatar: string;

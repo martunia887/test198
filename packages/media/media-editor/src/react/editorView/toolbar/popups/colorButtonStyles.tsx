@@ -1,8 +1,7 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
-import { borderRadius } from '@atlaskit/theme/constants';
+import styled from 'styled-components';
 import { N0 } from '@atlaskit/theme/colors';
+import { borderRadius } from '@atlaskit/theme/constants';
 
 export const ColorSample: ComponentClass<HTMLAttributes<{}>> = styled.div`
   cursor: pointer;

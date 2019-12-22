@@ -1,7 +1,8 @@
 import styled, { keyframes } from 'styled-components';
 import { center, borderRadius } from '@atlaskit/media-ui';
-import { themed } from '@atlaskit/theme/components';
 import { N20, DN50, N50, DN100 } from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
+
 import { CardDimensions } from '../..';
 
 export const blinkLoadingAnimation = keyframes`

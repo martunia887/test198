@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { IntlProvider, addLocaleData } from 'react-intl';
+
+import LanguagePicker from '../example-helpers/LanguagePicker';
 import enMessages from '../src/i18n/en';
 import languages from '../src/i18n/languages';
+
 import WithEditorActions from './../src/ui/WithEditorActions';
 import {
   default as FullPageExample,
   SaveAndCancelButtons,
 } from './5-full-page';
-import LanguagePicker from '../example-helpers/LanguagePicker';
 
 export type Props = {};
 export type State = { locale: string; messages: { [key: string]: string } };

@@ -1,11 +1,12 @@
 import React from 'react';
-import { WidthObserverProps } from './types';
-import { browser } from './utils';
+
 import {
   IframeWidthObserver,
   IframeWidthObserverFallbackWrapper,
   IframeWrapperConsumer,
 } from './iframe-fallbacks';
+import { WidthObserverProps } from './types';
+import { browser } from './utils';
 import { WidthDetectorObserver } from './width-detector-observer';
 
 /**

@@ -5,14 +5,13 @@ import FieldRange from '@atlaskit/field-range';
 import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
 import * as colors from '@atlaskit/theme/colors';
 
-import { Toolbar, ToolbarProps, ToolbarState } from '../toolbar';
+import { ANALYTICS_MEDIA_CHANNEL, Tool } from '../../../../common';
 import { ToolButton } from '../buttons/toolButton';
 import { ColorButton } from '../popups/colorButton';
 import { ColorPopup } from '../popups/colorPopup';
-import { ShapePopup } from '../popups/shapePopup';
 import { LineWidthPopup } from '../popups/lineWidthPopup';
-
-import { ANALYTICS_MEDIA_CHANNEL, Tool } from '../../../../common';
+import { ShapePopup } from '../popups/shapePopup';
+import { Toolbar, ToolbarProps, ToolbarState } from '../toolbar';
 
 function simulateClickOnTool(
   component: ReactWrapper<ToolbarProps, ToolbarState>,

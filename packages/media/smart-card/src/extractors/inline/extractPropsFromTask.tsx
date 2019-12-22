@@ -1,20 +1,15 @@
 import * as React from 'react';
-
-import DefaultTaskIcon from '@atlaskit/icon-object/glyph/task/16';
-import JiraTaskIcon from '@atlaskit/icon-object/glyph/task/16';
-import JiraSubTaskIcon from '@atlaskit/icon-object/glyph/subtask/16';
-import JiraStoryIcon from '@atlaskit/icon-object/glyph/story/16';
 import JiraBugIcon from '@atlaskit/icon-object/glyph/bug/16';
+import JiraChangeIcon from '@atlaskit/icon-object/glyph/changes/16';
 import JiraEpicIcon from '@atlaskit/icon-object/glyph/epic/16';
 import JiraIncidentIcon from '@atlaskit/icon-object/glyph/incident/16';
 import JiraServiceRequestIcon from '@atlaskit/icon-object/glyph/issue/16';
-import JiraChangeIcon from '@atlaskit/icon-object/glyph/changes/16';
 import JiraProblemIcon from '@atlaskit/icon-object/glyph/problem/16';
-
+import JiraStoryIcon from '@atlaskit/icon-object/glyph/story/16';
+import JiraSubTaskIcon from '@atlaskit/icon-object/glyph/subtask/16';
+import DefaultTaskIcon from '@atlaskit/icon-object/glyph/task/16';
+import JiraTaskIcon from '@atlaskit/icon-object/glyph/task/16';
 import { InlineCardResolvedViewProps, LozengeColor } from '@atlaskit/media-ui';
-
-import { extractInlineViewPropsFromObject } from './extractPropsFromObject';
-import { BuildInlineProps } from './types';
 
 import {
   JIRA_GENERATOR_ID,
@@ -29,6 +24,8 @@ import {
   JIRA_PROBLEM,
   JIRA_CUSTOM_TASK_TYPE,
 } from './constants';
+import { extractInlineViewPropsFromObject } from './extractPropsFromObject';
+import { BuildInlineProps } from './types';
 
 export type BuildInlineTaskProps = BuildInlineProps<
   InlineCardResolvedViewProps

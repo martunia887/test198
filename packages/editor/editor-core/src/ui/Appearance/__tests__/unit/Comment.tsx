@@ -1,17 +1,18 @@
 import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
   doc,
   p,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
-import Comment from '../../Comment';
 import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers/fakeMediaClient';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { getMediaPluginState } from '../../../../plugins/media/pm-plugins/main';
-import { ReactWrapper } from 'enzyme';
-import EditorContext from '../../../EditorContext';
+
 import EditorActions from '../../../../actions';
+import { getMediaPluginState } from '../../../../plugins/media/pm-plugins/main';
+import EditorContext from '../../../EditorContext';
+import Comment from '../../Comment';
 
 describe('comment editor', () => {
   const createEditor = createEditorFactory();

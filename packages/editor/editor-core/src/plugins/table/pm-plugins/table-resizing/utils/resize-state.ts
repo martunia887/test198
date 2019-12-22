@@ -1,16 +1,17 @@
-import { Node as PMNode } from 'prosemirror-model';
 import {
   tableCellMinWidth,
   tableNewColumnMinWidth,
   calcTableColumnWidths,
 } from '@atlaskit/editor-common';
-import { growColumn, shrinkColumn } from './resize-logic';
+import { Node as PMNode } from 'prosemirror-model';
+
+import { insertColgroupFromNode, hasTableBeenResized } from './colgroup';
 import {
   ColumnState,
   getCellsRefsInColumn,
   getColumnStateFromDOM,
 } from './column-state';
-import { insertColgroupFromNode, hasTableBeenResized } from './colgroup';
+import { growColumn, shrinkColumn } from './resize-logic';
 
 export interface ResizeState {
   cols: ColumnState[];

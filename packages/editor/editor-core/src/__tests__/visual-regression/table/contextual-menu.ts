@@ -1,9 +1,9 @@
-import { snapshot, initFullPageEditorWithAdf } from '../_utils';
-import adf from './__fixtures__/default-table.adf.json';
 import {
   clickFirstCell,
   selectTableOption,
 } from '../../__helpers/page-objects/_table';
+import { snapshot, initFullPageEditorWithAdf } from '../_utils';
+import adf from './__fixtures__/default-table.adf.json';
 
 describe('Table contextual menu: fullpage', () => {
   let page: any;

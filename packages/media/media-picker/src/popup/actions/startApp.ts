@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { CancelUploadHandler } from '../domain';
 
 export const START_APP = 'START_APP';

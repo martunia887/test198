@@ -1,6 +1,7 @@
-import { colors, themed } from '@atlaskit/theme';
 import { ComponentClass, HTMLAttributes } from 'react';
 import styled from 'styled-components';
+import { colors, themed } from '@atlaskit/theme';
+
 import { MentionType } from '../../types';
 
 export interface MentionStyleProps {

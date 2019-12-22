@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ChangeEventHandler, PureComponent } from 'react';
-
 import AkButton from '@atlaskit/button';
 
 export interface Props {

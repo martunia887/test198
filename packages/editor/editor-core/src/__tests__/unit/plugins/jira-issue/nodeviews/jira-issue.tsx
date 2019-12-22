@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { JiraIcon } from '@atlaskit/logo';
-import ReactJIRAIssueNode from '../../../../../plugins/jira-issue/nodeviews/jira-issue';
 import {
   confluenceJiraIssue,
   defaultSchema,
 } from '@atlaskit/editor-test-helpers';
+import { JiraIcon } from '@atlaskit/logo';
+
+import ReactJIRAIssueNode from '../../../../../plugins/jira-issue/nodeviews/jira-issue';
 
 describe('jiraIssue - React component', () => {
   it('should return a node of type span', () => {

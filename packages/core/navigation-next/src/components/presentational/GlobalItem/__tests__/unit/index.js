@@ -5,8 +5,8 @@ import { shallow } from 'enzyme';
 import { AtlassianIcon } from '@atlaskit/logo';
 
 import InteractionStateManager from '../../../InteractionStateManager';
-import GlobalItem, { GlobalItemBase } from '../../index';
 import GlobalItemPrimitive from '../../primitives';
+import GlobalItem, { GlobalItemBase } from '../../index';
 
 const theme: any = {
   mode: {

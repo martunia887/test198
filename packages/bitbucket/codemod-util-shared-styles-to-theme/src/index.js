@@ -1,14 +1,14 @@
 // @flow
+import borderRadiusTransform from './transforms/borderRadius';
+import codeFontTransform from './transforms/codeFont';
+import colorTransform from './transforms/color';
+import fixRedundantRenamesTransform from './transforms/fixRedundantRenames';
+import fontFamily from './transforms/fontFamily';
+import fontSize from './transforms/fontSize';
 import gridSizeTransform from './transforms/gridSize';
 import gridSizeUnitlessTransform from './transforms/gridSizeUnitless';
-import colorTransform from './transforms/color';
-import borderRadiusTransform from './transforms/borderRadius';
-import typographyTransform from './transforms/typography';
-import codeFontTransform from './transforms/codeFont';
-import fixRedundantRenamesTransform from './transforms/fixRedundantRenames';
-import fontSize from './transforms/fontSize';
-import fontFamily from './transforms/fontFamily';
 import layers from './transforms/layers';
+import typographyTransform from './transforms/typography';
 
 // This function gets called by jscodeshift.
 // It gets passed the file info and a reference to the jscodeshift API.

@@ -1,8 +1,10 @@
 // @flow
 import React, { Component } from 'react';
+
+import { type RenderFunction, type LoadableItems } from '../types';
+
 import Item from './Item';
 import LoaderItem from './LoaderItem';
-import { type RenderFunction, type LoadableItems } from '../types';
 
 type Props = {
   parentData?: Object,

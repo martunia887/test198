@@ -1,6 +1,6 @@
 import { css } from 'styled-components';
-import { colors } from '@atlaskit/theme';
 import { akEditorGridLineZIndex } from '@atlaskit/editor-common';
+import { colors } from '@atlaskit/theme';
 
 export const GRID_GUTTER = 12;
 

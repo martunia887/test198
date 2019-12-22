@@ -1,17 +1,18 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+
+import { MentionNameClient } from '../../../api/MentionNameClient';
+import {
   DefaultMentionNameResolver,
   MentionNameResolver,
 } from '../../../api/MentionNameResolver';
-import { MentionNameClient } from '../../../api/MentionNameClient';
 import {
   isPromise,
   MentionNameDetails,
   MentionNameStatus,
 } from '../../../types';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 
 describe('MentionNameResolver', () => {
   let mentionNameResolver: MentionNameResolver;

@@ -1,7 +1,8 @@
 import { css } from 'styled-components';
 import { colors } from '@atlaskit/theme';
-import { shadowClassNames } from '../../ui/OverflowShadow';
+
 import { akEditorSmallZIndex } from '../../styles';
+import { shadowClassNames } from '../../ui/OverflowShadow';
 
 const shadowWidth = 8;
 

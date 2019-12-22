@@ -1,5 +1,6 @@
-import { mount, shallow } from 'enzyme';
 import * as React from 'react';
+import { mount, shallow } from 'enzyme';
+
 import {
   createComponentWithAnalytics,
   DummyAtlaskitComponent,
@@ -8,9 +9,9 @@ import {
   DummyNavigationComponent,
   IncorrectEventType,
 } from '../../../examples/helpers';
+import FabricAnalyticsListeners from '../../FabricAnalyticsListeners';
 import AtlaskitListener from '../../atlaskit/AtlaskitListener';
 import FabricElementsListener from '../../fabric/FabricElementsListener';
-import FabricAnalyticsListeners from '../../FabricAnalyticsListeners';
 import { LOG_LEVEL } from '../../helpers/logger';
 import NavigationListener from '../../navigation/NavigationListener';
 import { AnalyticsWebClient, FabricChannel } from '../../types';

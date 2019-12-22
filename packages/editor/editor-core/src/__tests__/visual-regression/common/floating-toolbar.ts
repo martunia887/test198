@@ -1,15 +1,16 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import {
-  getSelectorForTableCell,
-  tableSelectors,
-} from '../../__helpers/page-objects/_table';
-import toolbarAdf from './__fixtures__/toolbar-adf.json';
 import { waitForElementWithText } from '../../__helpers/page-objects/_editor';
 import {
   clickOnExtension,
   waitForExtensionToolbar,
 } from '../../__helpers/page-objects/_extensions';
+import {
+  getSelectorForTableCell,
+  tableSelectors,
+} from '../../__helpers/page-objects/_table';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import toolbarAdf from './__fixtures__/toolbar-adf.json';
 
 describe('Floating toolbars:', () => {
   let page: Page;

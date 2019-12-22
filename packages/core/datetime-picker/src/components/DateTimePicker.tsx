@@ -1,26 +1,28 @@
-import CalendarIcon from '@atlaskit/icon/glyph/calendar';
-import { mergeStyles, StylesConfig, SelectProps } from '@atlaskit/select';
-import { borderRadius } from '@atlaskit/theme/constants';
-import * as colors from '@atlaskit/theme/colors';
-import styled from '@emotion/styled';
-import pick from 'lodash.pick';
+import React from 'react';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import React from 'react';
+import CalendarIcon from '@atlaskit/icon/glyph/calendar';
+import { mergeStyles, StylesConfig, SelectProps } from '@atlaskit/select';
+import * as colors from '@atlaskit/theme/colors';
+import { borderRadius } from '@atlaskit/theme/constants';
+import pick from 'lodash.pick';
+import styled from '@emotion/styled';
 // eslint-disable-next-line no-restricted-imports
 import { parse, format, isValid } from 'date-fns';
+
+import { defaultTimes, formatDateTimeZoneIntoIso } from '../internal';
 import { Appearance, Spacing } from '../types';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
+
 import DatePicker, { Props as DatePickerProps } from './DatePicker';
 import TimePicker, { Props as TimePickerProps } from './TimePicker';
-import { defaultTimes, formatDateTimeZoneIntoIso } from '../internal';
 
 /* eslint-disable react/no-unused-prop-types */
 export interface Props extends WithAnalyticsEventsProps {

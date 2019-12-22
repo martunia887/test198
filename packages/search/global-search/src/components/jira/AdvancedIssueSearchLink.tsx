@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ResultBase } from '@atlaskit/quick-search';
-import { gridSize } from '@atlaskit/theme';
-import SearchIcon from '@atlaskit/icon/glyph/search';
 import styled from 'styled-components';
-import { messages } from '../../messages';
-import Return from '../../assets/Return';
-import { AnalyticsType } from '../../model/Result';
+import SearchIcon from '@atlaskit/icon/glyph/search';
+import { ResultBase } from '@atlaskit/quick-search';
 import { ResultData } from '@atlaskit/quick-search';
+import { gridSize } from '@atlaskit/theme';
+
+import Return from '../../assets/Return';
+import { messages } from '../../messages';
+import { AnalyticsType } from '../../model/Result';
 
 const Wrapper = styled.div`
   padding: ${gridSize()}px 0;

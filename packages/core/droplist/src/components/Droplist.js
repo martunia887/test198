@@ -2,6 +2,7 @@
 
 import React, { Component, type Node } from 'react';
 import PropTypes from 'prop-types';
+import { ThemeProvider } from 'styled-components';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
@@ -9,18 +10,18 @@ import {
 } from '@atlaskit/analytics-next';
 import Layer from '@atlaskit/layer';
 import Spinner from '@atlaskit/spinner';
-import { ThemeProvider } from 'styled-components';
 import { gridSize } from '@atlaskit/theme/constants';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
+
 import Wrapper, {
   Content,
   SpinnerContainer,
   Trigger,
 } from '../styled/Droplist';
 import itemTheme from '../theme/item-theme';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 
 const halfFocusRing = 1;
 const dropOffset = `0, ${gridSize()}px`;

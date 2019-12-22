@@ -1,20 +1,15 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import ModalDialog, { ModalFooter } from '@atlaskit/modal-dialog';
-import Button from '@atlaskit/button';
 import { FormattedMessage, intlShape, IntlProvider } from 'react-intl';
+import Button from '@atlaskit/button';
 import { fileToDataURI, dataURItoFile, messages } from '@atlaskit/media-ui';
+import ModalDialog, { ModalFooter } from '@atlaskit/modal-dialog';
+
 import { Avatar } from '../avatar-list';
 import ImageNavigator, { CropProperties } from '../image-navigator';
-import { PredefinedAvatarList } from '../predefined-avatar-list';
-import {
-  AvatarPickerViewWrapper,
-  ModalHeader,
-  CroppingWrapper,
-  ModalFooterButtons,
-} from './styled';
-import { PredefinedAvatarView } from '../predefined-avatar-view';
 import { LoadParameters } from '../image-navigator/index';
+import { PredefinedAvatarList } from '../predefined-avatar-list';
+import { PredefinedAvatarView } from '../predefined-avatar-view';
 
 import { DEFAULT_VISIBLE_PREDEFINED_AVATARS } from './layout-const';
 import {
@@ -22,6 +17,12 @@ import {
   AVATAR_DIALOG_HEIGHT,
   CONTAINER_INNER_SIZE,
 } from './layout-const';
+import {
+  AvatarPickerViewWrapper,
+  ModalHeader,
+  CroppingWrapper,
+  ModalFooterButtons,
+} from './styled';
 import {
   AvatarPickerDialogProps,
   AvatarPickerDialogState,

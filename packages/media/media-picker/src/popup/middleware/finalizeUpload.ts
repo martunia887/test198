@@ -1,5 +1,3 @@
-import { Store, Dispatch, Middleware } from 'redux';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import {
   MediaStore,
   MediaStoreCopyFileWithTokenBody,
@@ -8,16 +6,19 @@ import {
   MediaFile as MediaClientFile,
   safeUnsubscribe,
 } from '@atlaskit/media-client';
+import { Store, Dispatch, Middleware } from 'redux';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+import { UploadEndEvent } from '../../domain/uploadEvent';
+import { MediaFile } from '../../types';
+import { resetView } from '../actions';
 import {
   FinalizeUploadAction,
   isFinalizeUploadAction,
 } from '../actions/finalizeUpload';
+import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { State, SourceFile } from '../domain';
 import { mapAuthToSourceFileOwner } from '../domain/source-file';
-import { MediaFile } from '../../types';
-import { sendUploadEvent } from '../actions/sendUploadEvent';
-import { resetView } from '../actions';
-import { UploadEndEvent } from '../../domain/uploadEvent';
 
 export default function(): Middleware {
   return store => (next: Dispatch<State>) => (action: any) => {

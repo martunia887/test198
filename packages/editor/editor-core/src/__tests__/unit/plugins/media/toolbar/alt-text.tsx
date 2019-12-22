@@ -1,3 +1,4 @@
+import { IntlProvider } from 'react-intl';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
@@ -7,13 +8,14 @@ import {
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
-import { IntlProvider } from 'react-intl';
-import { messages as altTextMessages } from '../../../../../plugins/media/pm-plugins/alt-text/messages';
+
+import { MediaAttributes } from '../../../../../../../adf-schema/src';
 import {
   FloatingToolbarButton,
   FloatingToolbarConfig,
 } from '../../../../../plugins/floating-toolbar/types';
 import { MediaOptions } from '../../../../../plugins/media';
+import { messages as altTextMessages } from '../../../../../plugins/media/pm-plugins/alt-text/messages';
 import {
   MediaPluginState,
   stateKey,
@@ -22,15 +24,14 @@ import { floatingToolbar } from '../../../../../plugins/media/toolbar';
 import { Command } from '../../../../../types';
 import { setNodeSelection } from '../../../../../utils';
 import {
+  findToolbarBtn,
+  getToolbarItems,
+} from '../../floating-toolbar/_helpers';
+import {
   getFreshMediaProvider,
   temporaryFileId,
   testCollectionName,
 } from '../_utils';
-import {
-  findToolbarBtn,
-  getToolbarItems,
-} from '../../floating-toolbar/_helpers';
-import { MediaAttributes } from '../../../../../../../adf-schema/src';
 
 interface ToolbarWrapper {
   editorView: EditorView;

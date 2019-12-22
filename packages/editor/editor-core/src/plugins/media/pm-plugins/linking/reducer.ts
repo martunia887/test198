@@ -1,5 +1,5 @@
-import { MediaLinkingState } from './types';
 import { MediaLinkingActionsTypes, MediaLinkingActions } from './actions';
+import { MediaLinkingState } from './types';
 
 export default (state: MediaLinkingState, action: MediaLinkingActions) => {
   switch (action.type) {

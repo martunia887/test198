@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { ErrorMessage, Field, HelperMessage } from '@atlaskit/form';
 import UserPicker, {
   EmailValidationResponse,
@@ -6,8 +8,7 @@ import UserPicker, {
   Value,
   isValidEmail,
 } from '@atlaskit/user-picker';
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { messages } from '../i18n';
 import {
   ConfigResponse,
@@ -15,6 +16,7 @@ import {
   MessageDescriptor,
   ProductName,
 } from '../types';
+
 import {
   allowEmails,
   isValidEmailUsingConfig,

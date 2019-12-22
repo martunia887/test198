@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { ComponentClass } from 'react';
 
+import EmojiProvider from '../../api/EmojiResource';
 import { defaultEmojiHeight } from '../../util/constants';
+
 import EmojiPlaceholder from './EmojiPlaceholder';
 import LoadingEmojiComponent, {
   Props as LoadingProps,
   State as LoadingState,
 } from './LoadingEmojiComponent';
-import EmojiProvider from '../../api/EmojiResource';
 import {
   Props as ComponentProps,
   BaseResourcedEmojiProps,

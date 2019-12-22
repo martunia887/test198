@@ -1,5 +1,5 @@
-import { ADFEntity } from '@atlaskit/adf-utils';
 import { ReactNode } from 'react';
+import { ADFEntity } from '@atlaskit/adf-utils';
 
 export type ExtensionType = string;
 

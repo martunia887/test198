@@ -1,6 +1,7 @@
 import { InjectedIntl } from 'react-intl';
-import { EditorState, Transaction } from 'prosemirror-state';
 import { Node } from 'prosemirror-model';
+import { EditorState, Transaction } from 'prosemirror-state';
+
 import { TypeAheadItem } from '../type-ahead/types';
 
 export type QuickInsertActionInsert = (

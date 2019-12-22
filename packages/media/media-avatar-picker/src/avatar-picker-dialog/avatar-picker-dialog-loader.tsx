@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
 import { ModalSpinner } from '@atlaskit/media-ui';
-
 import { AvatarPickerDialog } from '.';
+
 import { AvatarPickerDialogProps } from './types';
 
 export interface AsyncAvatarPickerDialogState {

@@ -1,16 +1,3 @@
-import {
-  setState as setInteractiveImgState,
-  InteractiveImg as InteractiveImgMock,
-} from '../../../../mocks/_interactive-img';
-
-const mockInteractiveImg = {
-  InteractiveImg: InteractiveImgMock,
-};
-jest.mock(
-  '../../../../../newgen/viewers/image/interactive-img',
-  () => mockInteractiveImg,
-);
-
 import * as React from 'react';
 import {
   globalMediaEventEmitter,
@@ -24,7 +11,12 @@ import {
   asMock,
   expectFunctionToHaveBeenCalledWith,
 } from '@atlaskit/media-test-helpers';
+
 import { ImageViewer } from '../../../../../newgen/viewers/image';
+import {
+  setState as setInteractiveImgState,
+  InteractiveImg as InteractiveImgMock,
+} from '../../../../mocks/_interactive-img';
 
 const collectionName = 'some-collection';
 const imageItem: ProcessedFileState = {

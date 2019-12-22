@@ -1,15 +1,17 @@
-import { pluginFactory } from '../../../../utils/plugin-state-factory';
+import { LinkAttributes } from '@atlaskit/adf-schema';
 import {
   PluginKey,
   Transaction,
   Plugin,
   NodeSelection,
 } from 'prosemirror-state';
+
 import { Dispatch } from '../../../../event-dispatcher';
+import { pluginFactory } from '../../../../utils/plugin-state-factory';
+
 import { MediaLinkingActions } from './actions';
-import { MediaLinkingState, InitialState } from './types';
 import reducer from './reducer';
-import { LinkAttributes } from '@atlaskit/adf-schema';
+import { MediaLinkingState, InitialState } from './types';
 
 const mediaLinkingPluginKey = new PluginKey('mediaLinking');
 

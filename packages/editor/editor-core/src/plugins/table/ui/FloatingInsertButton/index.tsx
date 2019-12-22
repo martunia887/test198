@@ -1,20 +1,22 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { Node as PmNode } from 'prosemirror-model';
-import { findDomRefAtPos, findTable } from 'prosemirror-utils';
-import { TableMap, CellSelection } from 'prosemirror-tables';
 import { Popup } from '@atlaskit/editor-common';
-import { TableCssClassName as ClassName } from '../../types';
-import InsertButton from './InsertButton';
+import { Node as PmNode } from 'prosemirror-model';
+import { TableMap, CellSelection } from 'prosemirror-tables';
+import { findDomRefAtPos, findTable } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
 import { closestElement } from '../../../../utils';
 import { INPUT_METHOD } from '../../../analytics';
 import {
   insertColumnWithAnalytics,
   insertRowWithAnalytics,
 } from '../../commands-with-analytics';
-import getPopupOptions from './getPopupOptions';
+import { TableCssClassName as ClassName } from '../../types';
 import { checkIfNumberColumnEnabled } from '../../utils';
+
+import InsertButton from './InsertButton';
+import getPopupOptions from './getPopupOptions';
 
 export interface Props {
   editorView: EditorView;

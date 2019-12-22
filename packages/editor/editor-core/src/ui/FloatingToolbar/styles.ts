@@ -1,6 +1,7 @@
-import styled, { css } from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled, { css } from 'styled-components';
 import { colors, borderRadius } from '@atlaskit/theme';
+
 import { dropShadow } from '../styles';
 
 export const Container: ComponentClass<HTMLAttributes<{}> & {

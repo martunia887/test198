@@ -1,13 +1,11 @@
 import { Path, FlattenedTree, ItemId, FlattenedItem } from '../types';
-
+import { between } from './handy';
 import {
   isTopOfSubtree,
   hasSameParent,
   getPathOnLevel,
   moveAfterPath,
 } from './path';
-
-import { between } from './handy';
 
 export const getFlatItemPath = (
   flattenedTree: FlattenedTree,

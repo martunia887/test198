@@ -1,26 +1,27 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import {
   createEditorFactory,
   insertText,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
 import { doc, p, mention, a } from '@atlaskit/editor-test-helpers';
 import {
-  MockMentionResource,
-  MockMentionConfig,
-} from '@atlaskit/util-data-test';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import {
   MentionProvider,
   MentionDescription,
   MentionNameResolver,
 } from '@atlaskit/mention/resource';
-import { EditorView } from 'prosemirror-view';
 import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import { selectCurrentItem } from '../../../../plugins/type-ahead/commands/select-item';
+  MockMentionResource,
+  MockMentionConfig,
+} from '@atlaskit/util-data-test';
+import { EditorView } from 'prosemirror-view';
+
 import { dismissCommand } from '../../../../plugins/type-ahead/commands/dismiss';
+import { selectCurrentItem } from '../../../../plugins/type-ahead/commands/select-item';
 import { EditorProps } from '../../../../types';
 
 let mockRegisterTeamMention = jest.fn();

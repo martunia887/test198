@@ -1,8 +1,7 @@
 // @flow
 import React, { type Node } from 'react';
-
-import ScrollHintWrapper from '../styled/ScrollHintWrapper';
 import ScrollHintScrollContainer from '../styled/ScrollHintScrollContainer';
+import ScrollHintWrapper from '../styled/ScrollHintWrapper';
 
 type Props = {
   children?: Node,

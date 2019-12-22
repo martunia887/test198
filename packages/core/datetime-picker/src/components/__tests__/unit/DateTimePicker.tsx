@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { DateTimePickerWithoutAnalytics as DateTimePicker } from '../../../components/DateTimePicker';
 import DatePicker from '../../../components/DatePicker';
+import { DateTimePickerWithoutAnalytics as DateTimePicker } from '../../../components/DateTimePicker';
 import TimePicker from '../../../components/TimePicker';
 
 test('custom parseValue is used when accessing state', () => {

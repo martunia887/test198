@@ -3,7 +3,6 @@ import {
   doc,
   p as paragraph,
 } from '@atlaskit/editor-test-helpers';
-
 import { pluginKey } from '../../../../plugins/width';
 
 describe('width plugin', () => {

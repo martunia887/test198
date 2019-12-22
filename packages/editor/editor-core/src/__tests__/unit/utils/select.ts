@@ -1,4 +1,3 @@
-import { NodeSelection } from 'prosemirror-state';
 import {
   createEditorFactory,
   doc,
@@ -6,6 +5,8 @@ import {
   insertText,
   hr,
 } from '@atlaskit/editor-test-helpers';
+import { NodeSelection } from 'prosemirror-state';
+
 import { GapCursorSide } from '../../..';
 import { setGapCursorSelection } from '../../../utils';
 

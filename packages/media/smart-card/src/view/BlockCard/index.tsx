@@ -8,9 +8,11 @@ import {
   BlockCardForbiddenView,
   BlockCardResolvedView,
 } from '@atlaskit/media-ui';
-import { BlockCardProps } from './types';
+
 import { extractBlockPropsFromJSONLD } from '../../extractors/block';
 import { getCollapsedIcon } from '../../utils';
+
+import { BlockCardProps } from './types';
 
 export const BlockCard: FC<BlockCardProps> = ({
   url,

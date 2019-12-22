@@ -7,16 +7,15 @@ jest.mock('../../../../plugins/media/commands/media-editor', () => ({
 }));
 
 import * as React from 'react';
-
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { FileIdentifier } from '@atlaskit/media-client';
 import { SmartMediaEditor } from '@atlaskit/media-editor';
 import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';
-
 import { EditorView } from 'prosemirror-view';
-import MediaEditor from '../../../../plugins/media/ui/MediaEditor';
-import { MediaEditorState } from '../../../../plugins/media/types';
+
 import { uploadAnnotation } from '../../../../plugins/media/commands/media-editor';
+import { MediaEditorState } from '../../../../plugins/media/types';
+import MediaEditor from '../../../../plugins/media/ui/MediaEditor';
 
 describe('media editor', () => {
   const mockView = jest.fn(

@@ -2,10 +2,9 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { defaultRegistry } from 'react-sweet-state';
 
-import { Router } from '../../../../controllers/router';
-
 import { Redirect } from '../../../../controllers/redirect';
 import { RedirectProps } from '../../../../controllers/redirect/types';
+import { Router } from '../../../../controllers/router';
 
 const MockLocation = {
   pathname: 'pathname',

@@ -1,10 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+
+import ExitingPersistence from '../../../entering/exiting-persistence';
 import ZoomIn, {
   zoomInAnimation,
   shrinkOutAnimation,
 } from '../../../entering/zoom-in';
-import ExitingPersistence from '../../../entering/exiting-persistence';
 
 jest.mock('../../../utils/accessibility');
 

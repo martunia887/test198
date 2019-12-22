@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { MediaClientConfig } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
 import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
+import { Card } from '@atlaskit/media-card';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   userAuthProvider,
   mediaPickerAuthProvider,
@@ -12,10 +13,8 @@ import {
   defaultMediaPickerCollectionName,
   createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import { Card } from '@atlaskit/media-card';
 import Toggle from '@atlaskit/toggle';
-import { MediaPicker } from '../src';
-import { MediaProgress } from '../src/types';
+
 import {
   PopupContainer,
   PopupHeader,
@@ -26,6 +25,9 @@ import {
   CardsWrapper,
   CardItemWrapper,
 } from '../example-helpers/styled';
+import { AuthEnvironment } from '../example-helpers/types';
+import { MediaPicker } from '../src';
+import { MediaProgress } from '../src/types';
 import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
@@ -36,7 +38,6 @@ import {
   PopupUploadEventPayloadMap,
   Popup,
 } from '../src/types';
-import { AuthEnvironment } from '../example-helpers/types';
 
 const cardMediaClientConfig = createStorybookMediaClientConfig();
 

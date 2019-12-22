@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
+import { doc, p, a, b, heading, text } from '@atlaskit/adf-utils';
 import FabricAnalyticsListeners, {
   AnalyticsWebClient,
 } from '@atlaskit/analytics-listeners';
-import { analyticsClient } from '@atlaskit/editor-test-helpers/src/analytics-client-mock';
-import { doc, p, a, b, heading, text } from '@atlaskit/adf-utils';
 import { EDITOR_APPEARANCE_CONTEXT } from '@atlaskit/analytics-namespaced-context';
+import { analyticsClient } from '@atlaskit/editor-test-helpers/src/analytics-client-mock';
+
 import Renderer, {
   Renderer as BaseRenderer,
   Props,

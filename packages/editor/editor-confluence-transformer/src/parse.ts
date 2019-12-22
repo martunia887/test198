@@ -12,8 +12,16 @@ import {
   akEditorTableNumberColumnWidth,
 } from '@atlaskit/editor-common';
 import { Fragment, Node as PMNode, Schema } from 'prosemirror-model';
-import parseCxhtml from './parse-cxhtml';
+
+import {
+  blockquoteContentWrapper,
+  listContentWrapper,
+  listItemContentWrapper,
+  ensureInline,
+  docContentWrapper,
+} from './content-wrapper';
 import { AC_XMLNS, default as encodeCxhtml } from './encode-cxhtml';
+import parseCxhtml from './parse-cxhtml';
 import {
   findTraversalPath,
   getNodeName,
@@ -30,13 +38,6 @@ import {
   mapPanelTypeToPm,
   calcPixelsFromCSSValue,
 } from './utils';
-import {
-  blockquoteContentWrapper,
-  listContentWrapper,
-  listItemContentWrapper,
-  ensureInline,
-  docContentWrapper,
-} from './content-wrapper';
 
 const supportedSingleMediaLayouts = [
   'center',

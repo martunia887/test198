@@ -1,6 +1,6 @@
+import chalk from 'chalk';
 import ora from 'ora';
 import { prompt } from './utils/console';
-import chalk from 'chalk';
 
 export interface NestedPrintableOutput extends Array<PrintableOutput> {}
 export type PrintableOutput = string | Array<string | NestedPrintableOutput>;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import PropTypes from 'prop-types';
+
 import { AnalyticsContext } from '../..';
 
 interface Context {

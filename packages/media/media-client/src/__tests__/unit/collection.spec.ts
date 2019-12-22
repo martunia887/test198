@@ -1,5 +1,6 @@
 import { nextTick } from '@atlaskit/media-test-helpers';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+
 import {
   MediaCollectionItem,
   MediaCollectionItemDetails,

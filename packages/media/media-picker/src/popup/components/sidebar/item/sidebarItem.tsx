@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 import { connect, Dispatch } from 'react-redux';
+
 import { changeService } from '../../../actions/changeService';
 import { ServiceName as ServiceNameDomain } from '../../../domain';
+
 import { Wrapper, ServiceIcon, ServiceName } from './styled';
 
 export interface SidebarItemOwnProps {

@@ -1,7 +1,8 @@
+import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import LockCircleIcon from '@atlaskit/icon/glyph/lock-circle';
-import { ReactWrapper } from 'enzyme';
-import * as React from 'react';
+
 import MentionItem from '../../../components/MentionItem';
 import { Props, State } from '../../../components/MentionList';
 import { MentionDescription } from '../../../types';

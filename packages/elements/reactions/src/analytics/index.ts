@@ -1,18 +1,19 @@
 import {
-  createAndFireEvent,
-  AnalyticsEventPayload,
-  CreateUIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import {
   UI_EVENT_TYPE,
   OPERATIONAL_EVENT_TYPE,
   EventType,
 } from '@atlaskit/analytics-gas-types';
 import {
+  createAndFireEvent,
+  AnalyticsEventPayload,
+  CreateUIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+
+import { ReactionSummary, ReactionSource } from '../types';
+import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-import { ReactionSummary, ReactionSource } from '../types';
 
 export type PreviousState = 'new' | 'existingNotReacted' | 'existingReacted';
 

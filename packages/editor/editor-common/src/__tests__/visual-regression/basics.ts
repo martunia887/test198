@@ -1,5 +1,5 @@
-import { loadFullPageEditorWithAdf, snapshot } from './_utils';
 import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
+import { loadFullPageEditorWithAdf, snapshot } from './_utils';
 import adf from './adf/basic-content.adf.json';
 
 describe('Snapshot Test: Basic Content', () => {

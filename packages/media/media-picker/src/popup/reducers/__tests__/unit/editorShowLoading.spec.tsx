@@ -1,5 +1,5 @@
-import editorShowLoading from '../../editorShowLoading';
 import { EDITOR_SHOW_LOADING } from '../../../actions/editorShowLoading';
+import editorShowLoading from '../../editorShowLoading';
 
 describe('editorShowLoading() reducer', () => {
   const stateBase: any = {

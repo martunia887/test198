@@ -1,7 +1,7 @@
 /** @jsx jsx */
+import { Fragment } from 'react';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import { jsx } from '@emotion/core';
-import { Fragment } from 'react';
 
 import { useTheme } from '../../theme';
 import { IconButton } from '../IconButton';

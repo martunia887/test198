@@ -7,8 +7,8 @@ import React, {
   type ElementRef,
   type Node,
 } from 'react';
-import { DropdownMenuStateless } from '@atlaskit/dropdown-menu';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import { DropdownMenuStateless } from '@atlaskit/dropdown-menu';
 import { GlobalItem } from '@atlaskit/navigation-next';
 
 import type { GlobalNavItemData } from '../../config/types';

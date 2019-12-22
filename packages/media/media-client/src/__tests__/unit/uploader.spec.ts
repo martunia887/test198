@@ -1,7 +1,7 @@
 jest.mock('chunkinator');
 
-import chunkinator, { Options } from 'chunkinator';
 import { AuthProvider, MediaApiConfig } from '@atlaskit/media-core';
+import chunkinator, { Options } from 'chunkinator';
 import { uploadFile, UploadableFileUpfrontIds, MediaStore } from '../..';
 
 describe('Uploader', () => {

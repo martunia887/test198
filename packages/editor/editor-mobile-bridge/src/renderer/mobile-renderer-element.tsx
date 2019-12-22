@@ -1,22 +1,25 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import {
+  GasPurePayload,
+  GasPureScreenEventPayload,
+} from '@atlaskit/analytics-gas-types';
+import FabricAnalyticsListeners, {
+  AnalyticsWebClient,
+} from '@atlaskit/analytics-listeners';
+import {
   ProviderFactory,
   WithCreateAnalyticsEvent,
 } from '@atlaskit/editor-common';
 import { MediaProvider as MediaProviderType } from '@atlaskit/editor-core';
 import { ReactRenderer, RendererProps } from '@atlaskit/renderer';
-import FabricAnalyticsListeners, {
-  AnalyticsWebClient,
-} from '@atlaskit/analytics-listeners';
 import {
-  GasPurePayload,
-  GasPureScreenEventPayload,
-} from '@atlaskit/analytics-gas-types';
+  Provider as SmartCardProvider,
+  Client as CardClient,
+} from '@atlaskit/smart-card';
+import { ObjectKey, TaskState } from '@atlaskit/task-decision';
 
-import RendererBridgeImpl from './native-to-web/implementation';
-import { toNativeBridge } from './web-to-native/implementation';
-import HeightObserver from './height-observer';
+import { analyticsBridgeClient } from '../analytics-client';
 import {
   mediaProvider,
   mentionProvider,
@@ -24,13 +27,11 @@ import {
   emojiProvider,
 } from '../providers';
 import { cardClient } from '../providers/cardProvider';
-import {
-  Provider as SmartCardProvider,
-  Client as CardClient,
-} from '@atlaskit/smart-card';
+
 import { eventDispatcher } from './dispatcher';
-import { ObjectKey, TaskState } from '@atlaskit/task-decision';
-import { analyticsBridgeClient } from '../analytics-client';
+import HeightObserver from './height-observer';
+import RendererBridgeImpl from './native-to-web/implementation';
+import { toNativeBridge } from './web-to-native/implementation';
 
 export interface MobileRendererProps extends RendererProps {
   document: string;

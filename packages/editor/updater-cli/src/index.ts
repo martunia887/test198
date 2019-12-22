@@ -2,8 +2,9 @@
 
 import chalk from 'chalk';
 import meow from 'meow';
-import { updateCommand } from './commands/update';
+
 import { changelogCommand } from './commands/changelog';
+import { updateCommand } from './commands/update';
 import { UpdateTaskFlags } from './commands/update/types';
 
 // prettier-ignore

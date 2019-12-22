@@ -1,8 +1,8 @@
 import child_process from 'child_process';
 import fs from 'fs';
+import { copyFixtureIntoTempDir } from 'jest-fixtures';
 import path from 'path';
 import util from 'util';
-import { copyFixtureIntoTempDir } from 'jest-fixtures';
 import * as yalc from 'yalc';
 
 import build from '../../build';

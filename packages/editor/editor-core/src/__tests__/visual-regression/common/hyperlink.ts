@@ -1,7 +1,8 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 import { selectors } from '../../__helpers/page-objects/_editor';
-import adf from './__fixtures__/hyperlink-adf.json';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adf from './__fixtures__/hyperlink-adf.json';
 
 describe('Hyperlink:', () => {
   let page: Page;

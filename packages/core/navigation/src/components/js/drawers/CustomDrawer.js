@@ -1,7 +1,9 @@
 // @flow
 import React, { PureComponent } from 'react';
-import Drawer from '../Drawer';
+
 import { drawerIconOffset } from '../../../shared-variables';
+import Drawer from '../Drawer';
+
 import type { DrawerProps } from './types';
 
 /*

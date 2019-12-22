@@ -1,10 +1,10 @@
 // @flow
 
 import { Component } from 'react';
+
 import { withNavigationViewController } from '../../../../src';
 
 import getAnalyticsAttributes from './get-analytics-attributes';
-
 import type { ViewComponentProps } from './types';
 
 type Props = ViewComponentProps & {

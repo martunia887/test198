@@ -1,10 +1,11 @@
+import * as React from 'react';
 import { AnalyticsListener as AnalyticsListenerNext } from '@atlaskit/analytics-next';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import Lozenge from '@atlaskit/lozenge';
-import * as React from 'react';
+
+import { Color, Status } from '../../../components/Status';
 import { ELEMENTS_CHANNEL } from '../../../components/analytics';
 import { ANALYTICS_HOVER_DELAY } from '../../../components/constants';
-import { Color, Status } from '../../../components/Status';
 
 const createPayload = (
   actionSubject: string,

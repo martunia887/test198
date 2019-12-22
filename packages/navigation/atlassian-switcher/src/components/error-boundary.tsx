@@ -6,21 +6,22 @@ import {
   UIAnalyticsEvent,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import { gridSize } from '@atlaskit/theme';
 import Button from '@atlaskit/button';
+import { gridSize } from '@atlaskit/theme';
+
+import TRELLO_ERROR_SRC from '../assets/trello-error';
 import FormattedMessage from '../primitives/formatted-message';
+import { Appearance } from '../theme/types';
+import { Product } from '../types';
 import {
   NAVIGATION_CHANNEL,
   OPERATIONAL_EVENT_TYPE,
   UI_EVENT_TYPE,
   withAnalyticsEvents,
 } from '../utils/analytics';
+import { getLoginUrl } from '../utils/environment';
 import { errorToReason, Reason } from '../utils/error-to-reason';
 import { FETCH_ERROR_NAME } from '../utils/fetch';
-import { Product } from '../types';
-import { Appearance } from '../theme/types';
-import TRELLO_ERROR_SRC from '../assets/trello-error';
-import { getLoginUrl } from '../utils/environment';
 
 const TRIGGER_SUBJECT = 'errorBoundary';
 const ACTION_SUBJECT = 'rendered';

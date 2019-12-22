@@ -1,16 +1,17 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
+import { messages as insertBlockMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
+import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
   fullpage,
   quickInsert,
 } from '../_helpers';
-import { messages as insertBlockMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
-import {
-  mountEditor,
-  goToEditorTestingExample,
-} from '../../__helpers/testing-example-helpers';
+
 import { selectors } from './_utils';
 
 BrowserTestCase(

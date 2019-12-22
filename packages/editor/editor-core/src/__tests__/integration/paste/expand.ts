@@ -1,16 +1,18 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement, fullpage } from '../_helpers';
+
 import {
   goToEditorTestingExample,
   mountEditor,
   copyAsHTML,
 } from '../../__helpers/testing-example-helpers';
-import { document } from './__fixtures__/document-with-table';
+import { getDocFromElement, fullpage } from '../_helpers';
+
 import {
   documentWithExpand,
   documentWithExpandAndTables,
   tableWithPanel,
 } from './__fixtures__/document-with-expand';
+import { document } from './__fixtures__/document-with-table';
 
 const editorSelector = '.ProseMirror';
 const expandSelector = '[data-node-type="expand"]';

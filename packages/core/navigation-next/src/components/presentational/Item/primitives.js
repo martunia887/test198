@@ -1,10 +1,11 @@
 // @flow
 
 import React, { Component, type ElementType, type Ref } from 'react';
-
 import deepEqual from 'react-fast-compare';
-import type { Dataset, ItemPrimitiveProps } from './types';
+
 import { styleReducerNoOp, withContentTheme } from '../../../theme';
+
+import type { Dataset, ItemPrimitiveProps } from './types';
 
 const isString = x => typeof x === 'string';
 

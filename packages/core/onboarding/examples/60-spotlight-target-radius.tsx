@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Lorem from 'react-lorem-component';
 
 import { Spotlight, SpotlightManager, SpotlightTarget } from '../src';
+
 import { Code, HighlightGroup, Highlight } from './styled';
 
 interface State {

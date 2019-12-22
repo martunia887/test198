@@ -1,10 +1,11 @@
 import * as React from 'react';
-import ImageIcon from '@atlaskit/icon/glyph/media-services/image';
 import AudioIcon from '@atlaskit/icon/glyph/media-services/audio';
-import VideoIcon from '@atlaskit/icon/glyph/media-services/video';
 import DocIcon from '@atlaskit/icon/glyph/media-services/document';
+import ImageIcon from '@atlaskit/icon/glyph/media-services/image';
 import UnknownIcon from '@atlaskit/icon/glyph/media-services/unknown';
+import VideoIcon from '@atlaskit/icon/glyph/media-services/video';
 import { MediaType } from '@atlaskit/media-client';
+
 import { IconWrapper } from './styled';
 
 const icons = {

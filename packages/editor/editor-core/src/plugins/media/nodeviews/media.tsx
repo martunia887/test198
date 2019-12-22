@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Node as PMNode } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
-
 import {
   ImageLoaderProps,
   withImageLoader,
   ContextIdentifierProvider,
 } from '@atlaskit/editor-common';
-
 import {
   Card,
   CardDimensions,
@@ -17,14 +13,15 @@ import {
 } from '@atlaskit/media-card';
 import { Identifier } from '@atlaskit/media-client';
 import { MediaClientConfig } from '@atlaskit/media-core';
+import { Node as PMNode } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
 
+import { ProsemirrorGetPosHandler, ReactNodeProps } from '../../../nodeviews';
 import {
   MediaPluginState,
   stateKey as mediaStateKey,
   MediaProvider,
 } from '../pm-plugins/main';
-
-import { ProsemirrorGetPosHandler, ReactNodeProps } from '../../../nodeviews';
 
 // This is being used by DropPlaceholder now
 export const MEDIA_HEIGHT = 125;

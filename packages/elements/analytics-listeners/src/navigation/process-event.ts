@@ -2,9 +2,6 @@
  * Inspired by analytics-web-react
  */
 
-import last from 'lodash.last';
-import merge from 'lodash.merge';
-
 import {
   DEFAULT_SOURCE,
   UI_EVENT_TYPE,
@@ -14,6 +11,12 @@ import {
   GasPayload,
   GasScreenEventPayload,
 } from '@atlaskit/analytics-gas-types';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import last from 'lodash.last';
+import merge from 'lodash.merge';
+
+import Logger from '../helpers/logger';
+import { version as listenerVersion } from '../version.json';
 
 import {
   getSources,
@@ -21,9 +24,6 @@ import {
   getPackageInfo,
   getComponents,
 } from './extract-data-from-event';
-import Logger from '../helpers/logger';
-import { version as listenerVersion } from '../version.json';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 const NAVIGATION_TAG = 'navigation';
 

@@ -1,5 +1,5 @@
-import { PackageJson } from '../../utils/package-json';
 import { Task } from '../../runner';
+import { PackageJson } from '../../utils/package-json';
 
 export type ChangeLogTasksCtx = {
   packageJson: PackageJson;

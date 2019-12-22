@@ -1,11 +1,12 @@
 import { NodeType, Node as PMNode } from 'prosemirror-model';
-import { hasParentNodeOfType } from 'prosemirror-utils';
 import {
   TextSelection,
   NodeSelection,
   EditorState,
   Transaction,
 } from 'prosemirror-state';
+import { hasParentNodeOfType } from 'prosemirror-utils';
+
 import { analyticsService } from '../../../analytics';
 
 export const insertBlock = (

@@ -1,10 +1,10 @@
 import { traverse } from '@atlaskit/adf-utils';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { JSONDocNode } from '@atlaskit/editor-json-transformer';
 import {
   isResolvingMentionProvider,
   MentionProvider,
 } from '@atlaskit/mention/resource';
-import { ProviderFactory } from '@atlaskit/editor-common';
 
 /**
  * Sanitises a document where some content should not be in the document (e.g. mention names).

@@ -1,7 +1,7 @@
 //@flow
 import styled from 'styled-components';
-import { gridSize } from '@atlaskit/theme/constants';
 import { subtleText } from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
 
 export const ScoreContainer = styled.section`
   display: flex;

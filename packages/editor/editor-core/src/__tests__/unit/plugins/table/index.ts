@@ -1,6 +1,3 @@
-import { TextSelection } from 'prosemirror-state';
-import { CellSelection, TableMap } from 'prosemirror-tables';
-import { selectRow, selectColumn, selectTable } from 'prosemirror-utils';
 import {
   doc,
   p,
@@ -22,6 +19,21 @@ import {
   sendKeyToPm,
   randomId,
 } from '@atlaskit/editor-test-helpers';
+import { TextSelection } from 'prosemirror-state';
+import { CellSelection, TableMap } from 'prosemirror-tables';
+import { selectRow, selectColumn, selectTable } from 'prosemirror-utils';
+
+import { AnalyticsHandler } from '../../../../analytics';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-single';
+import {
+  createTable,
+  setEditorFocus,
+  toggleHeaderRow,
+  toggleHeaderColumn,
+  insertColumn,
+  insertRow,
+} from '../../../../plugins/table/commands';
 import {
   pluginKey,
   getPluginState,
@@ -31,22 +43,11 @@ import {
   PluginConfig,
 } from '../../../../plugins/table/types';
 import {
-  createTable,
-  setEditorFocus,
-  toggleHeaderRow,
-  toggleHeaderColumn,
-  insertColumn,
-  insertRow,
-} from '../../../../plugins/table/commands';
-import { setNodeSelection } from '../../../../utils';
-import {
   checkIfNumberColumnEnabled,
   checkIfHeaderColumnEnabled,
   checkIfHeaderRowEnabled,
 } from '../../../../plugins/table/utils';
-import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-single';
-import { AnalyticsHandler } from '../../../../analytics';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { setNodeSelection } from '../../../../utils';
 
 describe('table plugin', () => {
   const createEditor = createEditorFactory<TablePluginState>();

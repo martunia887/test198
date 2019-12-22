@@ -1,3 +1,7 @@
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
@@ -5,18 +9,15 @@ import {
   p,
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
+import { MediaFile } from '@atlaskit/media-picker/types';
 
+import PickerFacade from '../../../../plugins/media/picker-facade';
 import {
   stateKey as mediaPluginKey,
   MediaPluginState,
   MediaProvider,
 } from '../../../../plugins/media/pm-plugins/main';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import PickerFacade from '../../../../plugins/media/picker-facade';
-import { MediaFile } from '@atlaskit/media-picker/types';
+
 import {
   imagePreview,
   imageFile,

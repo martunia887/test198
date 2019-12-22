@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { menuGroupCSS, sectionCSS } from './styles';
 import { SectionProps, MenuGroupProps } from '../types';
+import { menuGroupCSS, sectionCSS } from './styles';
 
 export const MenuGroup = ({ maxHeight, ...rest }: MenuGroupProps) => (
   <div css={menuGroupCSS(maxHeight)} {...rest} />

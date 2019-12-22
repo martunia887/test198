@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { useContext, useMemo } from 'react';
 import { createStore, Reducer } from 'redux';
-import { cardReducer } from '../reducers';
 import { SmartCardContext } from '.';
-import { CardProviderProps } from './types';
-import { MAX_RELOAD_DELAY, MAX_LOADING_DELAY } from '../actions/constants';
-import { CardStore } from '../types';
+
 import CardClient from '../../client';
+import { MAX_RELOAD_DELAY, MAX_LOADING_DELAY } from '../actions/constants';
+import { cardReducer } from '../reducers';
+import { CardStore } from '../types';
+
+import { CardProviderProps } from './types';
 
 export function SmartCardProvider({
   storeOptions,

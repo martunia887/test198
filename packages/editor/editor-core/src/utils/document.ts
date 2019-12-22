@@ -1,11 +1,12 @@
+import { validator, ADFEntity, ValidationError } from '@atlaskit/adf-utils';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { Node, Schema, ResolvedPos } from 'prosemirror-model';
 import { Transaction, EditorState } from 'prosemirror-state';
-import { validator, ADFEntity, ValidationError } from '@atlaskit/adf-utils';
-import { analyticsService } from '../analytics';
 import { ContentNodeWithPos } from 'prosemirror-utils';
-import { sanitizeNodeForPrivacy } from '../utils/filter/privacy-filter';
-import { ProviderFactory } from '@atlaskit/editor-common';
+
+import { analyticsService } from '../analytics';
 import { JSONDocNode } from '../utils';
+import { sanitizeNodeForPrivacy } from '../utils/filter/privacy-filter';
 
 const FALSE_POSITIVE_MARKS = ['code', 'alignment', 'indentation'];
 

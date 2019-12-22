@@ -1,4 +1,8 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   doc,
   hr,
   createEditorFactory,
@@ -7,10 +11,6 @@ import {
   bodiedExtension,
   bodiedExtensionData,
 } from '@atlaskit/editor-test-helpers';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 
 describe('rule', () => {
   const createEditor = createEditorFactory();

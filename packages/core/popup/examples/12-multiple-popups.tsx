@@ -2,6 +2,7 @@
 import { Component, FC, useCallback, useState } from 'react';
 import Button from '@atlaskit/button';
 import { jsx } from '@emotion/core';
+
 import Popup, { ContentProps } from '../src';
 
 const contentCSS = {

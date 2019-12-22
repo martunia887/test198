@@ -1,8 +1,6 @@
 // @noflow
 
 import React from 'react';
-
-import { Heading, PreMap } from './styled';
 import {
   SearchFilter,
   SelectFilter,
@@ -11,6 +9,7 @@ import {
   RefinementBarConsumer,
   useRefinementBar,
 } from '../src';
+import { Heading, PreMap } from './styled';
 
 export default class AccessingContextExample extends React.Component {
   state = {

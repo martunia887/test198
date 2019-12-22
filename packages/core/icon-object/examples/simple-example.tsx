@@ -1,5 +1,4 @@
 import React from 'react';
-
 import CodeIcon16 from '../glyph/code/16';
 import CodeIcon24 from '../glyph/code/24';
 

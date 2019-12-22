@@ -11,8 +11,9 @@ import {
   a,
   status,
 } from '@atlaskit/editor-test-helpers';
-import { EditorView } from 'prosemirror-view';
 import { mention as mentionDataTest } from '@atlaskit/util-data-test';
+import { EditorView } from 'prosemirror-view';
+
 import { sortByColumn } from '../../../../../plugins/table/commands/sort';
 import { SortOrder } from '../../../../../plugins/table/types';
 

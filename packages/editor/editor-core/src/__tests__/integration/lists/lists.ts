@@ -1,16 +1,17 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
+import { KEY } from '../../__helpers/page-objects/_keyboard';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import {
   getDocFromElement,
   fullpage,
   editable,
   getProseMirrorPos,
 } from '../_helpers';
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
-import { KEY } from '../../__helpers/page-objects/_keyboard';
 
 import floatsAdf from './__fixtures__/lists-adjacent-floats.adf.json';
 

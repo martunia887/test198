@@ -2,10 +2,11 @@ import * as React from 'react';
 import { Component } from 'react';
 import { connect, Dispatch } from 'react-redux';
 
-import { searchGiphy } from '../../../actions/searchGiphy';
 import { changeService } from '../../../actions/changeService';
-import { StatelessSidebarItem } from './sidebarItem';
+import { searchGiphy } from '../../../actions/searchGiphy';
 import { GiphyIcon } from '../icons';
+
+import { StatelessSidebarItem } from './sidebarItem';
 
 export interface SidebarItemOwnProps {
   readonly isActive: boolean;

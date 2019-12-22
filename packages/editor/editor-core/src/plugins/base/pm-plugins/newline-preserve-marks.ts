@@ -1,9 +1,10 @@
-import { PluginKey, Plugin, EditorState } from 'prosemirror-state';
 import { keydownHandler } from 'prosemirror-keymap';
-import { filter } from '../../../utils/commands';
+import { PluginKey, Plugin, EditorState } from 'prosemirror-state';
+
 import { typeAheadPluginKey } from '../../../plugins/type-ahead';
 import { Command } from '../../../types';
 import { isSelectionEndOfParagraph } from '../../../utils';
+import { filter } from '../../../utils/commands';
 
 export const newlinePreserveMarksKey = new PluginKey(
   'newlinePreserveMarksPlugin',

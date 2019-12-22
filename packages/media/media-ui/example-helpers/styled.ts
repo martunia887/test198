@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { ComponentClass, ButtonHTMLAttributes } from 'react';
+import styled from 'styled-components';
 
 export const InputWrapper: ComponentClass = styled.div`
   margin: 20px 0;

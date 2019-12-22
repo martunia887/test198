@@ -1,4 +1,4 @@
-import createStub from 'raf-stub';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   doc,
   createEditorFactory,
@@ -7,9 +7,10 @@ import {
   insertText,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import * as Toolbar from '../../../../plugins/hyperlink/Toolbar';
+import createStub from 'raf-stub';
+
 import { FloatingToolbarConfig } from '../../../../plugins/floating-toolbar/types';
+import * as Toolbar from '../../../../plugins/hyperlink/Toolbar';
 import { EditorProps } from '../../../../types';
 
 describe('hyperlink', () => {

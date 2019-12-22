@@ -1,8 +1,9 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
 import Button from '@atlaskit/button';
-import { elevation, borderRadius, colors, gridSize } from '@atlaskit/theme';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
+import { elevation, borderRadius, colors, gridSize } from '@atlaskit/theme';
+import { jsx, css } from '@emotion/core';
+
 import { surveyInnerWidth } from '../constants';
 
 interface Props {

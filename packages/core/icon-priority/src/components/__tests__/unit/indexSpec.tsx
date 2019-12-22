@@ -1,11 +1,11 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-
-import path from 'path';
 import fs from 'fs';
-import { name } from '../../../version.json';
+import path from 'path';
+
 import PriorityCritical from '../../../../glyph/priority-critical';
 import { metadata } from '../../..';
+import { name } from '../../../version.json';
 
 // List all files in a directory in Node.js recursively in a synchronous fashion
 const walkSync = (dir: string, filelist: string[]) => {

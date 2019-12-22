@@ -1,17 +1,19 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
-import { findParentNode } from 'prosemirror-utils';
 import { breakout } from '@atlaskit/adf-schema';
 import { calcBreakoutWidth } from '@atlaskit/editor-common';
-import { EditorPlugin, PMPluginFactoryParams } from '../../types';
+import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
+import { findParentNode } from 'prosemirror-utils';
+
 import { ReactNodeView } from '../../nodeviews';
+import { ForwardRef } from '../../nodeviews/ReactNodeView';
+import { EditorPlugin, PMPluginFactoryParams } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
 import { pluginKey as widthPluginKey, WidthPluginState } from '../width';
+
+import { BreakoutCssClassName } from './constants';
 import LayoutButton from './ui/LayoutButton';
 import { isSupportedNodeForBreakout } from './utils/is-supported-node';
-import { BreakoutCssClassName } from './constants';
-import { ForwardRef } from '../../nodeviews/ReactNodeView';
 
 export const Wrapper = styled.div`
   .ProseMirror > .breakoutView-content-wrap &[data-layout='full-width'],

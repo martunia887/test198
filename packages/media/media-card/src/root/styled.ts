@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { borderRadius } from '@atlaskit/theme/constants';
+
 import { CardDimensions, CardAppearance } from '../';
-import { getCSSUnitValue } from '../utils/getCSSUnitValue';
-import { BreakpointSizeValue, breakpointStyles } from '../utils/breakpoint';
 import { getSelectedBorderStyle } from '../styles/getSelectedBorderStyle';
+import { BreakpointSizeValue, breakpointStyles } from '../utils/breakpoint';
+import { getCSSUnitValue } from '../utils/getCSSUnitValue';
 
 export interface WrapperProps {
   shouldUsePointerCursor?: boolean;

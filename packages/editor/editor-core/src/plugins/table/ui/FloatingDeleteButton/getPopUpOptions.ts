@@ -1,10 +1,10 @@
-import { CellSelectionType } from './types';
 import { PopupProps } from '@atlaskit/editor-common';
 import {
   tableDeleteButtonOffset,
   tableToolbarSize,
   tableDeleteButtonSize,
 } from '../styles';
+import { CellSelectionType } from './types';
 
 interface GetPopupOptions {
   left: number;

@@ -1,7 +1,9 @@
 import { keymap } from 'prosemirror-keymap';
 import { Plugin } from 'prosemirror-state';
-import * as keymaps from '../../../keymaps';
+
 import { trackAndInvoke } from '../../../analytics';
+import * as keymaps from '../../../keymaps';
+import { INPUT_METHOD } from '../../analytics';
 import {
   indentList,
   outdentList,
@@ -9,7 +11,6 @@ import {
   enterKeyCommand,
   toggleListCommandWithAnalytics,
 } from '../commands';
-import { INPUT_METHOD } from '../../analytics';
 
 export function keymapPlugin(): Plugin | undefined {
   const list = {};

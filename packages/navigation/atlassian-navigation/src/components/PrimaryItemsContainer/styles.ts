@@ -1,5 +1,5 @@
-import { CSSObject } from '@emotion/core';
 import { gridSize } from '@atlaskit/theme/constants';
+import { CSSObject } from '@emotion/core';
 import { NavigationTheme, hexToRGBA } from '../../theme';
 
 const margin = `0 ${gridSize() / 2}px`;

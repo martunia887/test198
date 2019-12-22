@@ -1,5 +1,5 @@
-import { HistoryPluginState } from './index';
 import { HistoryAction, HistoryActionTypes } from './actions';
+import { HistoryPluginState } from './index';
 
 const reducer = (
   state: HistoryPluginState,

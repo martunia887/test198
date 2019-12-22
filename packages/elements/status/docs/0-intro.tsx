@@ -8,7 +8,6 @@ import {
 } from '@atlaskit/docs';
 
 import StatusExample from '../examples/00-simple-status';
-const StatusSource = require('!!raw-loader!../examples/00-simple-status');
 import StatusPickerExample from '../examples/01-status-picker';
 const StatusPickerSource = require('!!raw-loader!../examples/01-status-picker');
 

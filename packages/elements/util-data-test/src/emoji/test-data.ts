@@ -4,12 +4,13 @@ import {
   denormaliseEmojiServiceResponse,
   UsageFrequencyTracker,
 } from '@atlaskit/emoji/utils';
-import { customCategory, customType } from './utils';
+
 import {
   mockNonUploadingEmojiResourceFactory,
   mockEmojiResourceFactory,
   MockEmojiResourceConfig,
 } from './MockEmojiResource';
+import { customCategory, customType } from './utils';
 
 export const spriteEmoji = {
   id: 'grimacing',

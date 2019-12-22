@@ -1,8 +1,8 @@
-import { createResource } from '../../../../../../controllers/resource-utils';
 import {
   getResourceIdentifier,
   getResourceIdentifiers,
 } from '../../../../../../controllers/resource-store/utils/get-resource-identifier';
+import { createResource } from '../../../../../../controllers/resource-utils';
 
 const getDataPromise = Promise.resolve();
 const type = 'my-cool-type';

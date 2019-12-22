@@ -1,14 +1,12 @@
-import URLSearchParams from 'url-search-params';
-import fetchMock from 'fetch-mock/src/client';
 import { waitUntil } from '@atlaskit/util-common-test';
+import fetchMock from 'fetch-mock/src/client';
+import URLSearchParams from 'url-search-params';
 
 import TaskDecisionResource, {
   ItemStateManager,
 } from '../../../api/TaskDecisionResource';
-
-import { ObjectKey, ServiceTask, TaskState } from '../../../types';
-
 import { objectKeyToString } from '../../../type-helpers';
+import { ObjectKey, ServiceTask, TaskState } from '../../../types';
 
 // patch URLSearchParams API for jsdom tests
 declare var global: any;

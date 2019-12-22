@@ -1,10 +1,11 @@
 //@flow
 import React, { type Node } from 'react';
 import Button from '@atlaskit/button';
-import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
 import { Checkbox } from '@atlaskit/checkbox';
-import { type Role, type AllowContact } from './NPS';
+import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
+
 import { Header, Description } from './common';
+import { type Role, type AllowContact } from './NPS';
 import { Wrapper, ButtonWrapper } from './styled/common';
 import { Contact, RoleQuestion } from './styled/followup';
 

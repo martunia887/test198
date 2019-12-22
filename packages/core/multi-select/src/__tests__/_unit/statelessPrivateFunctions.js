@@ -3,8 +3,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import { MultiSelectStateless } from '../..';
-import { name } from '../../version.json';
 import type { ItemType, GroupType } from '../../types';
+import { name } from '../../version.json';
 
 /* eslint-disable jest/no-disabled-tests */
 describe(`${name} - stateless`, () => {

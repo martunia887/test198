@@ -1,8 +1,10 @@
 import * as React from 'react';
+
 import { UserType } from '../../types';
-import { DescriptionBylineProps } from './types';
-import UserMentionDescriptionByline from './UserMentionDescriptionByline';
+
 import TeamMentionDescriptionByline from './TeamMentionDescriptionByline';
+import UserMentionDescriptionByline from './UserMentionDescriptionByline';
+import { DescriptionBylineProps } from './types';
 
 export default class MentionDescriptionByline extends React.PureComponent<
   DescriptionBylineProps,

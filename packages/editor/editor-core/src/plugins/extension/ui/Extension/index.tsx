@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { EditorView } from 'prosemirror-view';
-import { Node as PMNode } from 'prosemirror-model';
 import {
   ProviderFactory,
   WithProviders,
   ExtensionHandlers,
   Providers,
 } from '@atlaskit/editor-common';
+import { Node as PMNode } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
+
 import ExtensionComponent from './ExtensionComponent';
 
 export interface Props {

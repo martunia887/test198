@@ -6,7 +6,6 @@ import {
   code_block,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-
 import { temporaryMedia, mediaEditor } from './_utils';
 
 describe('mediaSingle - keymap', () => {

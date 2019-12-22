@@ -1,6 +1,6 @@
 import React from 'react';
-import Avatar, { AvatarItem } from '../src';
 import { RANDOM_USERS, getAdorableAvatar } from '../examples-util/data';
+import Avatar, { AvatarItem } from '../src';
 
 function getPresence() {
   const chance = Math.random();

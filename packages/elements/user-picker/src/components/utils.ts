@@ -1,5 +1,7 @@
-import memoizeOne from 'memoize-one';
 import { ReactChild, ReactElement } from 'react';
+import { PopupSelect } from '@atlaskit/select';
+import memoizeOne from 'memoize-one';
+
 import {
   AtlaskitSelectValue,
   Email,
@@ -15,7 +17,6 @@ import {
   UserType,
   Value,
 } from '../types';
-import { PopupSelect } from '@atlaskit/select';
 
 export const isUser = (option: OptionData): option is User =>
   option.type === undefined || option.type === UserType;

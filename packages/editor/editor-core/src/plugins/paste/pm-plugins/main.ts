@@ -1,29 +1,42 @@
+import { MarkdownTransformer } from '@atlaskit/editor-markdown-transformer';
 import MarkdownIt from 'markdown-it';
-// @ts-ignore
-import { handlePaste as handlePasteTable } from 'prosemirror-tables';
 import { Schema, Slice, Node, Fragment } from 'prosemirror-model';
 import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
-import { MarkdownTransformer } from '@atlaskit/editor-markdown-transformer';
+import { handlePaste as handlePasteTable } from 'prosemirror-tables';
+
+import { insideTable } from '../../../utils';
 import * as clipboard from '../../../utils/clipboard';
-import { transformSliceForMedia } from '../../media/utils/media-single';
-import linkify from '../linkify-md-plugin';
-import { escapeLinks } from '../util';
-import { linkifyContent } from '../../hyperlink/utils';
-import { transformSliceToRemoveOpenBodiedExtension } from '../../extension/actions';
-import { transformSliceToRemoveOpenLayoutNodes } from '../../layout/utils';
-import { getPluginState as getTablePluginState } from '../../table/pm-plugins/main';
+import { PasteTypes } from '../../analytics';
+import { CardOptions } from '../../card';
+import {
+  transformSliceToJoinAdjacentCodeBlocks,
+  transformSingleLineCodeBlockToCodeMark,
+} from '../../code-block/utils';
 import { transformSliceNestedExpandToExpand } from '../../expand/utils';
+import { transformSliceToRemoveOpenBodiedExtension } from '../../extension/actions';
+import { linkifyContent } from '../../hyperlink/utils';
+import { transformSliceToRemoveOpenLayoutNodes } from '../../layout/utils';
+import { upgradeTextToLists, splitParagraphs } from '../../lists/transforms';
+import {
+  transformSliceToCorrectMediaWrapper,
+  unwrapNestedMediaElements,
+} from '../../media/utils/media-common';
+import { transformSliceForMedia } from '../../media/utils/media-single';
+import { transformSliceToAddTableHeaders } from '../../table/commands';
+import {
+  transformSliceToRemoveColumnsWidths,
+  transformSliceRemoveCellBackgroundColor,
+} from '../../table/commands/misc';
+import { getPluginState as getTablePluginState } from '../../table/pm-plugins/main';
 import {
   transformSliceToRemoveOpenTable,
   transformSliceToCorrectEmptyTableCells,
   transformSliceToFixHardBreakProblemOnCopyFromCell,
 } from '../../table/utils';
-import { transformSliceToAddTableHeaders } from '../../table/commands';
 import { handleMacroAutoConvert, handleMention } from '../handlers';
-import {
-  transformSliceToJoinAdjacentCodeBlocks,
-  transformSingleLineCodeBlockToCodeMark,
-} from '../../code-block/utils';
+import linkify from '../linkify-md-plugin';
+import { escapeLinks } from '../util';
+
 import {
   sendPasteAnalyticsEvent,
   handlePasteAsPlainTextWithAnalytics,
@@ -35,18 +48,6 @@ import {
   handleRichTextWithAnalytics,
   handleExpandWithAnalytics,
 } from './analytics';
-import { PasteTypes } from '../../analytics';
-import { insideTable } from '../../../utils';
-import { CardOptions } from '../../card';
-import {
-  transformSliceToCorrectMediaWrapper,
-  unwrapNestedMediaElements,
-} from '../../media/utils/media-common';
-import {
-  transformSliceToRemoveColumnsWidths,
-  transformSliceRemoveCellBackgroundColor,
-} from '../../table/commands/misc';
-import { upgradeTextToLists, splitParagraphs } from '../../lists/transforms';
 
 export const stateKey = new PluginKey('pastePlugin');
 

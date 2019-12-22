@@ -1,8 +1,8 @@
+import { ABTest, DEFAULT_AB_TEST } from '../../../api/CrossProductSearchClient';
 import {
   getConfluenceMaxObjects,
   getJiraMaxObjects,
 } from '../../experiment-utils';
-import { ABTest, DEFAULT_AB_TEST } from '../../../api/CrossProductSearchClient';
 
 describe('experiment-utils', () => {
   [

@@ -1,6 +1,6 @@
-import { Page } from './_types';
-import { selectors } from './_editor';
 import messages from '../../../messages';
+import { selectors } from './_editor';
+import { Page } from './_types';
 
 const columnsSelector = 'div[data-layout-column]';
 const columnSelectedSelector = 'div[data-layout-section].selected';

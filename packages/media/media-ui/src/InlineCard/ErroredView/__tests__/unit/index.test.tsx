@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { InlineCardErroredView } from '../..';
 import { IntlProvider } from 'react-intl';
+
+import { InlineCardErroredView } from '../..';
 
 const URL =
   'http://product.example.com/lorem/ipsum/dolor/sit/amet/consectetur/adipiscing/volutpat/';

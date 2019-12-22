@@ -4,7 +4,6 @@ import {
   p,
   typeAheadQuery,
 } from '@atlaskit/editor-test-helpers';
-
 import { insertTypeAheadQuery } from '../../../../../plugins/type-ahead/commands/insert-query';
 
 const createTypeAheadPlugin = () => ({

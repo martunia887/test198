@@ -1,5 +1,4 @@
 import { LRUCache } from 'lru-fast';
-
 import {
   ProfileClientOptions,
   ProfileClientConfig,

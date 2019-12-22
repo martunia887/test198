@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+
 import DecisionItem from '../../../components/DecisionItem';
 import { ContentWrapper } from '../../../styled/Item';
 import { Placeholder } from '../../../styled/Placeholder';

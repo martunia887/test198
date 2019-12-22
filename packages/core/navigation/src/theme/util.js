@@ -2,8 +2,9 @@
 import { css } from 'styled-components';
 
 import hasOwnProperty from '../utils/has-own-property';
-import type { Provided, ScrollBarTheme } from './types';
+
 import { container, global, dark } from './presets';
+import type { Provided, ScrollBarTheme } from './types';
 
 export const prefix = (key: string): string =>
   `@atlaskit-private-theme-do-not-use/navigation:${key}`;

@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
 import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
-import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+
 import AtlassianSwitcher from '../src';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 class ConfluenceSwitcherExample extends React.Component {
   state = {

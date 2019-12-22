@@ -1,8 +1,9 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
+import Select from '@atlaskit/select';
 // eslint-disable-next-line no-restricted-imports
 import { parse, format } from 'date-fns';
-import Select from '@atlaskit/select';
+
 import { DatePickerWithoutAnalytics as DatePicker } from '../../../components/DatePicker';
 
 test('DatePicker, custom formatDisplayLabel', () => {

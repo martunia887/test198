@@ -1,3 +1,9 @@
+import {
+  getPrFromCommit,
+  PullRequest,
+  PullRequestClient,
+} from '@atlaskit/build-utils/bitbucket';
+import { createSpyObject } from '@atlaskit/build-utils/logging';
 import chalk from 'chalk';
 import simpleGit from 'simple-git/promise';
 
@@ -8,12 +14,6 @@ import {
   NextReleaseTagPrefix,
   ReleaseDocs,
 } from '../constants';
-import {
-  getPrFromCommit,
-  PullRequest,
-  PullRequestClient,
-} from '@atlaskit/build-utils/bitbucket';
-import { createSpyObject } from '@atlaskit/build-utils/logging';
 import { capitalise, addReleaseComment } from '../utils';
 
 const { BITBUCKET_USER, BITBUCKET_PASSWORD } = process.env;

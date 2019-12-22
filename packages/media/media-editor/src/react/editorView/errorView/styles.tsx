@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { N0, N900, N70 } from '@atlaskit/theme/colors';
 import Button, { ButtonProps } from '@atlaskit/button';
+import { N0, N900, N70 } from '@atlaskit/theme/colors';
 
 export const ErrorPopup: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   width: 290px;

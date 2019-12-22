@@ -1,3 +1,6 @@
+import * as React from 'react';
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
+import styled from 'styled-components';
 import {
   AnalyticsContext,
   AnalyticsEventPayload,
@@ -9,9 +12,7 @@ import ShareIcon from '@atlaskit/icon/glyph/share';
 import InlineDialog from '@atlaskit/inline-dialog';
 import Aktooltip from '@atlaskit/tooltip';
 import { LoadOptions } from '@atlaskit/user-picker';
-import * as React from 'react';
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
-import styled from 'styled-components';
+
 import { messages } from '../i18n';
 import {
   ADMIN_NOTIFIED,
@@ -27,6 +28,9 @@ import {
   ShareError,
   TooltipPosition,
 } from '../types';
+
+import ShareButton from './ShareButton';
+import { ShareForm } from './ShareForm';
 import {
   cancelShare,
   CHANNEL_ID,
@@ -36,8 +40,6 @@ import {
   shareTriggerButtonClicked,
   ANALYTICS_SOURCE,
 } from './analytics';
-import ShareButton from './ShareButton';
-import { ShareForm } from './ShareForm';
 import { showAdminNotifiedFlag } from './utils';
 
 type DialogState = {

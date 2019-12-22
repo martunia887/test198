@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { isTableSelected } from 'prosemirror-utils';
 import {
   doc,
   createEditorFactory,
@@ -8,6 +7,7 @@ import {
   thEmpty,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
+import { isTableSelected } from 'prosemirror-utils';
 
 import {
   pluginKey,

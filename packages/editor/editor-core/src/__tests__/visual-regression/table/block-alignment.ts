@@ -1,3 +1,11 @@
+import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
+
+import { emojiReadySelector } from '../../__helpers/page-objects/_emoji';
+import {
+  setTableLayout,
+  getSelectorForTableCell,
+} from '../../__helpers/page-objects/_table';
+import { Page } from '../../__helpers/page-objects/_types';
 import {
   Device,
   snapshot,
@@ -5,14 +13,8 @@ import {
   initCommentEditorWithAdf,
   editorCommentContentSelector,
 } from '../_utils';
+
 import adf from './__fixtures__/table-with-blocks.adf.json';
-import {
-  setTableLayout,
-  getSelectorForTableCell,
-} from '../../__helpers/page-objects/_table';
-import { emojiReadySelector } from '../../__helpers/page-objects/_emoji';
-import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
-import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Table with block looks correct for fullpage:', () => {
   let page: Page;

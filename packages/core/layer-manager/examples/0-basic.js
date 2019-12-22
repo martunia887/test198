@@ -1,14 +1,14 @@
 // @flow
 import React, { Component } from 'react';
-import Tooltip from '@atlaskit/tooltip';
-import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
 import Button from '@atlaskit/button';
+import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
 import {
   Spotlight,
   SpotlightManager,
   SpotlightTarget,
   SpotlightTransition,
 } from '@atlaskit/onboarding';
+import Tooltip from '@atlaskit/tooltip';
 
 // NOTE: @atlaskit/layer-manager is provided by the website
 

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import { validator } from '../../../validator';
 import waitForExpect from 'wait-for-expect';
+import { validator } from '../../../validator';
 
 const validate = validator();
 

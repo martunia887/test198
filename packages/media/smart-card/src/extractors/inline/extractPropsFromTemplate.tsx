@@ -1,10 +1,10 @@
 import * as React from 'react';
 import DocumentFilledIcon from '@atlaskit/icon/glyph/document-filled';
-
 import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
-import { BuildInlineProps } from './types';
+
 import { CONFLUENCE_GENERATOR_ID } from './constants';
 import { extractInlineViewPropsFromDocument } from './extractPropsFromDocument';
+import { BuildInlineProps } from './types';
 
 export const buildTemplateIcon: BuildInlineProps<InlineCardResolvedViewProps> = json => {
   if (json.generator && json.generator['@id'] === CONFLUENCE_GENERATOR_ID) {

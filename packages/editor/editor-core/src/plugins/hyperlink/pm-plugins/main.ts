@@ -7,6 +7,7 @@ import {
   Transaction,
   TextSelection,
 } from 'prosemirror-state';
+
 import { Dispatch } from '../../../event-dispatcher';
 import { shallowEqual } from '../../../utils';
 

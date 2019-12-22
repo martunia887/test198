@@ -1,9 +1,9 @@
-import mobileEditor from '../../../src/editor/mobile-editor-element';
 import { mount } from 'enzyme';
 import {
   storyMediaProviderFactory,
   sleep,
 } from '@atlaskit/editor-test-helpers';
+import mobileEditor from '../../../src/editor/mobile-editor-element';
 
 export async function mountEditor() {
   const elem = document.createElement('div');

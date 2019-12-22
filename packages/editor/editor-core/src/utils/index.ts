@@ -1,3 +1,9 @@
+import { browser } from '@atlaskit/editor-common';
+import {
+  JSONTransformer,
+  JSONDocNode,
+  JSONNode,
+} from '@atlaskit/editor-json-transformer';
 import { toggleMark } from 'prosemirror-commands';
 import {
   Fragment,
@@ -11,7 +17,6 @@ import {
   NodeRange,
   Mark,
 } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
 import {
   EditorState,
   NodeSelection,
@@ -20,16 +25,13 @@ import {
   Transaction,
 } from 'prosemirror-state';
 import { liftTarget, findWrapping } from 'prosemirror-transform';
-import { LEFT } from '../keymaps';
-import { browser } from '@atlaskit/editor-common';
-import {
-  JSONTransformer,
-  JSONDocNode,
-  JSONNode,
-} from '@atlaskit/editor-json-transformer';
-import { FakeTextCursorSelection } from '../plugins/fake-text-cursor/cursor';
 import { hasParentNodeOfType } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
+import { LEFT } from '../keymaps';
+import { FakeTextCursorSelection } from '../plugins/fake-text-cursor/cursor';
 import { GapCursorSelection, Side } from '../plugins/gap-cursor/selection';
+
 import { isNodeEmpty } from './document';
 
 export {

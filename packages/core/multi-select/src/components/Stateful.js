@@ -1,11 +1,11 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
-import uuid from 'uuid';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
-
-import MultiSelectStateless from './Stateless';
+import uuid from 'uuid';
 
 import type { FooterType, GroupType, ItemType } from '../types';
+
+import MultiSelectStateless from './Stateless';
 
 // =============================================================
 // NOTE: Duplicated in ./internal/appearances until docgen can follow imports.

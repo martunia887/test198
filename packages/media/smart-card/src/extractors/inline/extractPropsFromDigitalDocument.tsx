@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
 import FileIcon from '@atlaskit/icon-file-type/glyph/generic/16';
+import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
 
-import { BuildInlineProps } from './types';
-import { extractInlineViewPropsFromDocument } from './extractPropsFromDocument';
 import { getIconForFileType } from '../../utils';
+
+import { extractInlineViewPropsFromDocument } from './extractPropsFromDocument';
+import { BuildInlineProps } from './types';
 
 type BuildInlinePropsDigitalDocument = BuildInlineProps<
   InlineCardResolvedViewProps

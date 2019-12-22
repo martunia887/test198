@@ -1,12 +1,12 @@
 // @flow
 import React, { Component } from 'react';
-import StatelessMenu from './DropdownMenuStateless';
 import type {
   DropdownMenuStatefulProps,
   DeprecatedItemGroup,
   OnItemActivatedArgs,
   OnOpenChangeArgs,
 } from '../types';
+import StatelessMenu from './DropdownMenuStateless';
 
 type State = {
   isOpen: boolean,

@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+
 import ProfileCardResourced from '../src';
-import { getMockProfileClient, analyticsHandler } from './helper/util';
+
 import LocaleIntlProvider from './helper/locale-intl-provider';
+import { getMockProfileClient, analyticsHandler } from './helper/util';
 
 export const MainStage = styled.div`
   margin: 16px;

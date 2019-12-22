@@ -1,14 +1,16 @@
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { PureComponent } from 'react';
+import * as PropTypes from 'prop-types';
+
 import { shouldUseAltRepresentation } from '../../api/EmojiUtils';
+import { EmojiDescription, EmojiId } from '../../types';
+import debug from '../../util/logger';
 import {
   isEmojiDescription,
   isMediaEmoji,
   isPromise,
 } from '../../util/type-helpers';
-import { EmojiDescription, EmojiId } from '../../types';
-import debug from '../../util/logger';
+
 import Emoji, { Props as EmojiProps } from './Emoji';
 import EmojiPlaceholder from './EmojiPlaceholder';
 import { EmojiContext } from './internal-types';

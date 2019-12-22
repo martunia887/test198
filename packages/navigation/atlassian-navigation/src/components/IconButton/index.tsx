@@ -1,8 +1,9 @@
+import React, { forwardRef, Ref } from 'react';
 import Button from '@atlaskit/button';
 import Tooltip from '@atlaskit/tooltip';
-import React, { forwardRef, Ref } from 'react';
 
 import { useTheme } from '../../theme';
+
 import { getIconButtonTheme } from './styles';
 import { IconButtonProps } from './types';
 

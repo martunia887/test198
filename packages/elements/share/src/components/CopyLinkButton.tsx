@@ -1,12 +1,14 @@
+import * as React from 'react';
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
+import styled from 'styled-components';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import LinkFilledIcon from '@atlaskit/icon/glyph/link-filled';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { colors } from '@atlaskit/theme';
-import * as React from 'react';
-import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
-import styled from 'styled-components';
-import Button from './styles';
+
 import { messages } from '../i18n';
+
+import Button from './styles';
 
 const AUTO_DISMISS_SECONDS = 8;
 

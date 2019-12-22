@@ -1,9 +1,10 @@
+import { ValidationError } from '@atlaskit/build-utils/errors';
+import { createSpyObject } from '@atlaskit/build-utils/logging';
 import chalk from 'chalk';
 import meow from 'meow';
 import simpleGit, { SimpleGit } from 'simple-git/promise';
-import { ValidationError } from '@atlaskit/build-utils/errors';
+
 import { DevelopBranchName, ReleaseBranchPrefix } from '../constants';
-import { createSpyObject } from '@atlaskit/build-utils/logging';
 import { capitalise } from '../utils';
 
 type Options = {

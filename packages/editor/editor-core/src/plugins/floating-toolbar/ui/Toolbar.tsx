@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { Component } from 'react';
 import styled from 'styled-components';
-import { EditorView } from 'prosemirror-view';
-import { Node } from 'prosemirror-model';
-
 import { ButtonGroup } from '@atlaskit/button';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { borderRadius, gridSize, colors, themed } from '@atlaskit/theme';
+import { Node } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
 
 import { DispatchAnalyticsEvent } from '../../analytics';
 import { FloatingToolbarItem } from '../types';
 import { compareArrays, shallowEqual } from '../utils';
+
 import Button from './Button';
 import Dropdown from './Dropdown';
+import Input from './Input';
 import Select, { SelectOption } from './Select';
 import Separator from './Separator';
-import Input from './Input';
 
 const akGridSize = gridSize();
 

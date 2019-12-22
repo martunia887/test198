@@ -1,5 +1,8 @@
 // @flow
 
+// $FlowFixMe Remove this line once forwardRef is available in flow types
+import React, { forwardRef, type Node } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import {
   AtlassianNavigation,
   AppSwitcher,
@@ -14,9 +17,6 @@ import {
 import Avatar from '@atlaskit/avatar';
 import Badge from '@atlaskit/badge';
 import { JiraIcon, JiraLogo } from '@atlaskit/logo';
-// $FlowFixMe Remove this line once forwardRef is available in flow types
-import React, { forwardRef, type Node } from 'react';
-import { Link, NavLink } from 'react-router-dom';
 
 import { getAvatarUrl } from './helpers/avatar-data-url';
 

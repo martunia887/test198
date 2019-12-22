@@ -1,10 +1,11 @@
 import * as React from 'react';
-import Spinner from '@atlaskit/spinner';
-import { CollapsedFrame } from '../CollapsedFrame';
-import { minWidth, maxWidth } from '../dimensions';
-import { SingleLineLayout } from '../SingleLineLayout';
 import { FormattedMessage } from 'react-intl';
+import Spinner from '@atlaskit/spinner';
+
 import { messages } from '../../messages';
+import { CollapsedFrame } from '../CollapsedFrame';
+import { SingleLineLayout } from '../SingleLineLayout';
+import { minWidth, maxWidth } from '../dimensions';
 
 export interface BlockCardResolvingViewProps {
   /** The optional click handler */

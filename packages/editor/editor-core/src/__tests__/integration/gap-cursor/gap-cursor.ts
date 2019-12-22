@@ -1,9 +1,9 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+import { EditorAppearance } from '../../../types';
 import {
   mountEditor,
   goToEditorTestingExample,
 } from '../../__helpers/testing-example-helpers';
-import { EditorAppearance } from '../../../types';
 
 const baseADF = {
   version: 1,

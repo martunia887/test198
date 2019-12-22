@@ -2,10 +2,11 @@ import React, { FC, ReactNode, ComponentType } from 'react';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import { createTheme } from '@atlaskit/theme/components';
+import { ThemeProp } from '@atlaskit/theme/components';
 import { borderRadius, gridSize, layers } from '@atlaskit/theme/constants';
 import { multiply } from '@atlaskit/theme/math';
 import { h600 } from '@atlaskit/theme/typography';
-import { ThemeProp } from '@atlaskit/theme/components';
+
 import { ActionItems, ActionItem } from '../styled/Dialog';
 import { Actions } from '../types';
 

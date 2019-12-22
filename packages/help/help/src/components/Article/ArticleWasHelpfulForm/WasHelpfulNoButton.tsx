@@ -4,17 +4,15 @@ import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-
 import Button from '@atlaskit/button';
 
+import { withAnalyticsEvents, withAnalyticsContext } from '../../../analytics';
+import { messages } from '../../../messages';
+import { Analytics } from '../../../model/Analytics';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../../version.json';
-import { withAnalyticsEvents, withAnalyticsContext } from '../../../analytics';
-import { messages } from '../../../messages';
-import { Analytics } from '../../../model/Analytics';
-
 import { withHelp, HelpContextInterface } from '../../HelpContext';
 
 export interface Props {

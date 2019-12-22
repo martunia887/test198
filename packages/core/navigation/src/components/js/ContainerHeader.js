@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
-import ContainerHeaderWrapper from '../styled/ContainerHeaderWrapper';
 import { globalItemSizes } from '../../shared-variables';
+import ContainerHeaderWrapper from '../styled/ContainerHeaderWrapper';
 
 type Props = {
   children?: Node,

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import { ThemeTokens } from '../theme';
 
 const Container = styled.span<ThemeTokens>`

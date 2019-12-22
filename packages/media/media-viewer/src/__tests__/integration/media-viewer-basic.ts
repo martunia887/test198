@@ -1,6 +1,6 @@
+import { getExampleUrl } from '@atlaskit/visual-regression/helper';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import { getExampleUrl } from '@atlaskit/visual-regression/helper';
 
 const url = getExampleUrl(
   'media',

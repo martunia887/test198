@@ -1,15 +1,16 @@
 import * as React from 'react';
-import Icon from '@atlaskit/icon';
-import SearchIcon from '@atlaskit/icon/glyph/search';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
-import { gridSize, math } from '@atlaskit/theme';
+import Icon from '@atlaskit/icon';
+import SearchIcon from '@atlaskit/icon/glyph/search';
 import { CancelableEvent } from '@atlaskit/quick-search';
+import { gridSize, math } from '@atlaskit/theme';
+
+import PeopleIconGlyph from '../../assets/PeopleIconGlyph';
 import { messages } from '../../messages';
 import StickyFooter from '../common/StickyFooter';
-import SearchPeopleItem from '../SearchPeopleItem';
 import SearchConfluenceItem from '../SearchConfluenceItem';
-import PeopleIconGlyph from '../../assets/PeopleIconGlyph';
+import SearchPeopleItem from '../SearchPeopleItem';
 import { ConfluenceAdvancedSearchTypes } from '../SearchResultsUtil';
 
 const PeopleSearchWrapper = styled.div`

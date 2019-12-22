@@ -1,31 +1,31 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { InjectedIntl, defineMessages } from 'react-intl';
-import { EditorView, NodeView, Decoration } from 'prosemirror-view';
-import { Selection } from 'prosemirror-state';
-import { ExpandIconButton } from '../ui/ExpandIconButton';
-import { keyName } from 'w3c-keyname';
+import { expandMessages } from '@atlaskit/editor-common';
 import {
   Node as PmNode,
   DOMSerializer,
   DOMOutputSpec,
 } from 'prosemirror-model';
-import { expandMessages } from '@atlaskit/editor-common';
+import { Selection } from 'prosemirror-state';
+import { EditorView, NodeView, Decoration } from 'prosemirror-view';
+import { keyName } from 'w3c-keyname';
 
 import {
   getPosHandlerNode,
   getPosHandler,
 } from '../../../nodeviews/ReactNodeView';
+import { GapCursorSelection, Side } from '../../../plugins/gap-cursor';
 import { closestElement, isEmptyNode } from '../../../utils';
+import { getEditorProps } from '../../shared-context';
 import {
   updateExpandTitle,
   toggleExpandExpanded,
   selectExpand,
   deleteExpandAtPos,
 } from '../commands';
+import { ExpandIconButton } from '../ui/ExpandIconButton';
 import { expandClassNames } from '../ui/class-names';
-import { GapCursorSelection, Side } from '../../../plugins/gap-cursor';
-import { getEditorProps } from '../../shared-context';
 
 const messages = defineMessages({
   ...expandMessages,

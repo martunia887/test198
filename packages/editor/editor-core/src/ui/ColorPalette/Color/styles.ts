@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ButtonHTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
 
 export const Button: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`

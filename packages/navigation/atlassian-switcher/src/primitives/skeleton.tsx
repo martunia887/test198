@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import * as colors from '@atlaskit/theme/colors';
-import Section from './section';
+
 import SwitcherItem from './item';
+import Section from './section';
 
 const IconSkeleton = styled.div`
   background-color: ${colors.N20};

@@ -1,6 +1,8 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
+
 import { PMPluginFactoryParams } from '../../../../types';
 import { pluginFactory } from '../../../../utils/plugin-state-factory';
+
 import reducer from './reducer';
 
 export const pluginKey = new PluginKey('mediaAltTextPlugin');

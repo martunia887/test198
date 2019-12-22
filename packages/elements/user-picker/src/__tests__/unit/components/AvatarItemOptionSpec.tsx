@@ -1,6 +1,7 @@
-import { AvatarItem } from '@atlaskit/avatar';
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
+import { AvatarItem } from '@atlaskit/avatar';
+
 import {
   AvatarItemOption,
   AvatarItemOptionProps,

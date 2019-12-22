@@ -1,15 +1,17 @@
-import { EditorView } from '@atlaskit/media-editor';
 import * as React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { EditorView } from '@atlaskit/media-editor';
+
+import { LocalUploadComponent } from '../../../../components/localUpload';
 import { deselectItem } from '../../../actions/deselectItem';
-import { State, EditorData, EditorError, FileReference } from '../../../domain';
-import ErrorView from './errorView/errorView';
-import { SpinnerView } from './spinnerView/spinnerView';
 import { Selection, editorClose } from '../../../actions/editorClose';
 import { editorShowError } from '../../../actions/editorShowError';
+import { State, EditorData, EditorError, FileReference } from '../../../domain';
+
+import ErrorView from './errorView/errorView';
+import { SpinnerView } from './spinnerView/spinnerView';
 import { CenterView } from './styles';
-import { LocalUploadComponent } from '../../../../components/localUpload';
 
 export interface MainEditorViewStateProps {
   readonly editorData?: EditorData;

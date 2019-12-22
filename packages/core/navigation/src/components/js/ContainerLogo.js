@@ -1,8 +1,9 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
 import { withTheme } from 'styled-components';
-import ContainerLogoStyled from '../styled/ContainerLogo';
+
 import { rootKey } from '../../theme/util';
+import ContainerLogoStyled from '../styled/ContainerLogo';
 
 type Props = {
   /** Elements to be wrapped with the Logo styling. */

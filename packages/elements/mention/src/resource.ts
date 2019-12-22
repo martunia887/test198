@@ -1,3 +1,10 @@
+import { ELEMENTS_CHANNEL } from './_constants';
+import ContextMentionResource from './api/ContextMentionResource';
+import { MentionNameClient } from './api/MentionNameClient';
+import {
+  DefaultMentionNameResolver,
+  MentionNameResolver,
+} from './api/MentionNameResolver';
 import MentionResource, {
   AbstractMentionResource,
   ResolvingMentionProvider,
@@ -13,19 +20,12 @@ import PresenceResource, {
   AbstractPresenceResource,
 } from './api/PresenceResource';
 import {
-  DefaultMentionNameResolver,
-  MentionNameResolver,
-} from './api/MentionNameResolver';
-import { MentionNameClient } from './api/MentionNameClient';
-import {
   MentionDescription,
   MentionsResult,
   isSpecialMention,
   MentionNameStatus,
   MentionNameDetails,
 } from './types';
-import { ELEMENTS_CHANNEL } from './_constants';
-import ContextMentionResource from './api/ContextMentionResource';
 
 export {
   // Classes

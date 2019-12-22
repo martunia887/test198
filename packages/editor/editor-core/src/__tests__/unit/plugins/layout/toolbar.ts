@@ -1,20 +1,22 @@
-import { doc, createEditorFactory } from '@atlaskit/editor-test-helpers';
+import { IntlProvider } from 'react-intl';
 import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import { IntlProvider } from 'react-intl';
-import { buildToolbar, messages } from '../../../../plugins/layout/toolbar';
+import { doc, createEditorFactory } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
+
+import commonMessages from '../../../../messages';
+import { LAYOUT_TYPE } from '../../../../plugins/analytics/types/node-events';
 import {
   FloatingToolbarConfig,
   FloatingToolbarItem,
 } from '../../../../plugins/floating-toolbar/types';
+import { buildToolbar, messages } from '../../../../plugins/layout/toolbar';
 import { Command } from '../../../../types';
-import commonMessages from '../../../../messages';
-import { buildLayoutForWidths } from './_utils';
-import { LAYOUT_TYPE } from '../../../../plugins/analytics/types/node-events';
 import { getToolbarItems, findToolbarBtn } from '../floating-toolbar/_helpers';
+
+import { buildLayoutForWidths } from './_utils';
 
 describe('layout toolbar', () => {
   let createAnalyticsEvent: CreateUIAnalyticsEvent;

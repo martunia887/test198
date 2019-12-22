@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Popup } from '@atlaskit/editor-common';
+import { Selection } from 'prosemirror-state';
 import { CellSelection } from 'prosemirror-tables';
 import { getSelectionRect, isTableSelected } from 'prosemirror-utils';
 import { EditorView } from 'prosemirror-view';
+
 import { closestElement } from '../../../../utils';
 import { INPUT_METHOD } from '../../../analytics';
 import { clearHoverSelection, hoverColumns, hoverRows } from '../../commands';
@@ -19,10 +21,10 @@ import {
   getRowHeights,
 } from '../../utils';
 import tableMessages from '../messages';
+
 import DeleteButton from './DeleteButton';
 import getPopupOptions from './getPopUpOptions';
 import { CellSelectionType } from './types';
-import { Selection } from 'prosemirror-state';
 
 export interface Props {
   editorView: EditorView;

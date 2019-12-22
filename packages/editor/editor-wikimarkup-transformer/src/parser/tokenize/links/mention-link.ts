@@ -1,6 +1,6 @@
-import { ContentLink } from './link-parser';
 import { Schema, Node as PMNode } from 'prosemirror-model';
 import { Context } from '../../../interfaces';
+import { ContentLink } from './link-parser';
 
 export function mentionLinkResolver(
   link: ContentLink,

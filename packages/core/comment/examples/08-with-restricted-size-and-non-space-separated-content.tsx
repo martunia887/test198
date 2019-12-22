@@ -1,6 +1,6 @@
 import React from 'react';
-import avatarImg from './utils/sample-avatar.png';
 import Comment, { CommentAuthor } from '../src';
+import avatarImg from './utils/sample-avatar.png';
 
 const getNonSpacedSampleText = () =>
   'Cookiemacaroonliquorice.Marshmallowdonutlemondropscandycanesmarshmallowtoppingchocolatecake.Croissantpastrysouffléwafflecakefruitcake.Brownieoatcakesugarplum.';

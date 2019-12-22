@@ -1,7 +1,8 @@
 import { Action, MiddlewareAPI } from 'redux';
-import { State } from '../../domain';
-import { isHidePopupAction } from '../../actions/hidePopup';
 import { buttonClickPayload, HandlerResult } from '.';
+
+import { isHidePopupAction } from '../../actions/hidePopup';
+import { State } from '../../domain';
 
 export default (action: Action, store: MiddlewareAPI<State>): HandlerResult => {
   if (isHidePopupAction(action)) {

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { gridSize } from '@atlaskit/theme/constants';
 import { multiply } from '@atlaskit/theme/math';
+
 import { Align } from '../types';
 
 /**

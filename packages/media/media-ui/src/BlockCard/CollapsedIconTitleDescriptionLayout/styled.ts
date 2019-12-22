@@ -1,6 +1,7 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { N800, N300 } from '@atlaskit/theme/colors';
+
 import { ellipsis } from '../../mixins';
 
 export const Title: ComponentClass<HTMLAttributes<{}>> = styled.div`

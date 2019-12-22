@@ -1,9 +1,10 @@
-import AkButton from '@atlaskit/button';
-import AddIcon from '@atlaskit/icon/glyph/add';
-import classNames from 'classnames';
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
+import AkButton from '@atlaskit/button';
+import AddIcon from '@atlaskit/icon/glyph/add';
+import classNames from 'classnames';
+
 import CachingEmoji from '../../components/common/CachingEmoji';
 import EmojiButton from '../../components/common/EmojiButton';
 import {
@@ -14,8 +15,9 @@ import {
   ToneSelection,
 } from '../../types';
 import { messages } from '../i18n';
-import * as styles from './styles';
+
 import ToneSelector from './ToneSelector';
+import * as styles from './styles';
 
 export interface Props {
   emoji?: EmojiDescription;

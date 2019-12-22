@@ -1,7 +1,9 @@
 import * as React from 'react';
+
+import { EmbeddedDocument, DocumentBody } from '../src';
+
 import MockServiceProvider from './helpers/mock-provider';
 import { Container } from './helpers/styles';
-import { EmbeddedDocument, DocumentBody } from '../src';
 
 export default function Example() {
   const mockProvider = new MockServiceProvider();

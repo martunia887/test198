@@ -1,20 +1,19 @@
 import * as React from 'react';
 import { annotation } from '@atlaskit/adf-schema';
+import { ResolvedPos } from 'prosemirror-model';
 import { findDomRefAtPos } from 'prosemirror-utils';
 
+import { stateKey as reactPluginKey } from '../../plugins/base/pm-plugins/react-nodeview';
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
+import { sum } from '../../utils';
 
 import { removeInlineCommentNearSelection } from './commands';
-import { stateKey as reactPluginKey } from '../../plugins/base/pm-plugins/react-nodeview';
-
 import {
   AnnotationProvider,
   AnnotationComponentProps,
   AnnotationInfo,
 } from './types';
-import { ResolvedPos } from 'prosemirror-model';
-import { sum } from '../../utils';
 import { surroundingMarks, filterAnnotationIds } from './utils';
 
 /**

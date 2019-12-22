@@ -3,8 +3,9 @@ import {
   MarkdownSerializerState as PMMarkdownSerializerState,
 } from 'prosemirror-markdown';
 import { Mark, Node as PMNode } from 'prosemirror-model';
-import { escapeMarkdown, stringRepeat } from './util';
+
 import tableNodes from './tableSerializer';
+import { escapeMarkdown, stringRepeat } from './util';
 
 /**
  * Look for series of backticks in a string, find length of the longest one, then

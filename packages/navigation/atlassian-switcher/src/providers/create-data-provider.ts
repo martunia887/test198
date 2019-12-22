@@ -1,6 +1,6 @@
-import asDataProvider, { DataProviderProps } from './as-data-provider';
 import { fetchJson } from '../utils/fetch';
 import { withCached, WithCached } from '../utils/with-cached';
+import asDataProvider, { DataProviderProps } from './as-data-provider';
 
 /**
  * Some items might be using the type `ExportedDataProvider` instead due to errors with

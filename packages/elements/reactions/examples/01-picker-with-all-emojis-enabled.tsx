@@ -1,6 +1,8 @@
-import { emoji } from '@atlaskit/util-data-test';
 import * as React from 'react';
+import { emoji } from '@atlaskit/util-data-test';
+
 import { ReactionPicker } from '../src';
+
 import { ReactionsExampleWrapper } from './examples-util';
 
 const { getEmojiResource } = emoji.storyData;

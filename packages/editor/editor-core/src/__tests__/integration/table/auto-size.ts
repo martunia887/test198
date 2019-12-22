@@ -1,6 +1,10 @@
-import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { sleep } from '@atlaskit/editor-test-helpers';
+import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import { editable, getDocFromElement, fullpage } from '../_helpers';
 
 import {
@@ -8,11 +12,6 @@ import {
   autoSizeToWideLayout,
   autoSizeToFullWidthLayout,
 } from './__fixtures__/auto-size-documents';
-
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
 
 async function loadAndRetrieveDocument(
   page: any,

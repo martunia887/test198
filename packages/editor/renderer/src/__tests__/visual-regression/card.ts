@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer';
-import { snapshot, initRendererWithADF } from './_utils';
 import * as cardXSSADF from '../__fixtures__/card-xss.adf.json';
+import { snapshot, initRendererWithADF } from './_utils';
 
 const initRenderer = async (page: Page, adf: any) => {
   await initRendererWithADF(page, {

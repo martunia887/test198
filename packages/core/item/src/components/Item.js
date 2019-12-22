@@ -5,7 +5,6 @@ import React, {
   type Node,
   type ElementRef,
 } from 'react';
-
 import styledRootElement from '../styled/Item';
 import {
   Before,

@@ -1,15 +1,16 @@
-import { cardAction } from '../../actions/helpers';
+import { Reducer } from 'react';
+import { cardReducer } from '..';
+
+import { JsonLd } from '../../../client/types';
 import {
   ACTION_PENDING,
   ACTION_RESOLVING,
   ACTION_ERROR,
   ACTION_RESOLVED,
 } from '../../actions/constants';
+import { cardAction } from '../../actions/helpers';
 import { CardActionParams, CardAction } from '../../actions/types';
-import { JsonLd } from '../../../client/types';
 import { CardStore } from '../../types';
-import { cardReducer } from '..';
-import { Reducer } from 'react';
 
 describe('Smart Card: Reducers', () => {
   let url: string;

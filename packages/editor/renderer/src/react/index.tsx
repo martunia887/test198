@@ -1,19 +1,5 @@
 import * as React from 'react';
 import { ComponentType } from 'react';
-import { Fragment, Mark, MarkType, Node, Schema } from 'prosemirror-model';
-import { Serializer } from '../';
-import { RendererAppearance } from '../ui/Renderer/types';
-import { AnalyticsEventPayload } from '../analytics/events';
-
-import {
-  Doc,
-  mergeTextNodes,
-  isTextWrapper,
-  TextWrapper,
-  toReact,
-} from './nodes';
-
-import { toReact as markToReact } from './marks';
 import {
   ProviderFactory,
   getMarksByOrder,
@@ -22,7 +8,21 @@ import {
   ExtensionHandlers,
   calcTableColumnWidths,
 } from '@atlaskit/editor-common';
+import { Fragment, Mark, MarkType, Node, Schema } from 'prosemirror-model';
+
+import { Serializer } from '../';
+import { AnalyticsEventPayload } from '../analytics/events';
+import { RendererAppearance } from '../ui/Renderer/types';
 import { getText } from '../utils';
+
+import { toReact as markToReact } from './marks';
+import {
+  Doc,
+  mergeTextNodes,
+  isTextWrapper,
+  TextWrapper,
+  toReact,
+} from './nodes';
 
 export interface RendererContext {
   objectAri?: string;

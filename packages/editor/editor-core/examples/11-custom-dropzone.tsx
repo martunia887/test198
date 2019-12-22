@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Editor } from '../src';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+import { Editor } from '../src';
 
 type State = {
   dropzoneRef?: HTMLElement;

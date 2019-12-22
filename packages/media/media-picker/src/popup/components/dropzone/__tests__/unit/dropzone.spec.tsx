@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
+
 import { Dropzone } from '../../dropzone';
-import { Wrapper, Content, Label, Glass } from '../../styled';
 import { UploadIcon } from '../../icons';
+import { Wrapper, Content, Label, Glass } from '../../styled';
 
 describe('<Dropzone>', () => {
   describe('#render()', () => {

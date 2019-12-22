@@ -1,6 +1,6 @@
 import { EventHandler, MouseEvent, KeyboardEvent } from 'react';
-import { CardAppearance } from '../Card/types';
 import { CardState } from '../../state/types';
+import { CardAppearance } from '../Card/types';
 
 export interface CardWithDataContentProps {
   appearance: CardAppearance;

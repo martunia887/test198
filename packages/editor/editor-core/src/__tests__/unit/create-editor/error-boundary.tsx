@@ -1,9 +1,10 @@
-import { mount, shallow, ReactWrapper, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import EditorErrorBoundary from '../../../create-editor/ErrorBoundary';
+import { mount, shallow, ReactWrapper, ShallowWrapper } from 'enzyme';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { storyContextIdentifierProviderFactory } from '@atlaskit/editor-test-helpers';
+
 import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../../..';
+import EditorErrorBoundary from '../../../create-editor/ErrorBoundary';
 
 const mockCtxIdentifierProvider = {
   objectId: 'MOCK-OBJECT-ID',

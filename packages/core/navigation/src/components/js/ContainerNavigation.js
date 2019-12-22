@@ -5,21 +5,23 @@ import React, {
   type ComponentType,
   type Element,
 } from 'react';
-import { WithRootTheme } from '../../theme/util';
-import ContainerHeader from './ContainerHeader';
-import ContainerNavigationChildren from './ContainerNavigationChildren';
-import DefaultLinkComponent from './DefaultLinkComponent';
-import GlobalPrimaryActions from './GlobalPrimaryActions';
-import GlobalSecondaryActions from './GlobalSecondaryActions';
-import Reveal from './Reveal';
-import ContainerNavigationInner from '../styled/ContainerNavigationInner';
-import GlobalNavigationSecondaryContainer from '../styled/GlobalNavigationSecondaryContainer';
+
 import {
   globalPrimaryActions as globalPrimaryActionsSizes,
   globalSecondaryActions as globalSecondaryActionsSizes,
 } from '../../shared-variables';
 import { container } from '../../theme/presets';
 import type { Provided } from '../../theme/types';
+import { WithRootTheme } from '../../theme/util';
+import ContainerNavigationInner from '../styled/ContainerNavigationInner';
+import GlobalNavigationSecondaryContainer from '../styled/GlobalNavigationSecondaryContainer';
+
+import ContainerHeader from './ContainerHeader';
+import ContainerNavigationChildren from './ContainerNavigationChildren';
+import DefaultLinkComponent from './DefaultLinkComponent';
+import GlobalPrimaryActions from './GlobalPrimaryActions';
+import GlobalSecondaryActions from './GlobalSecondaryActions';
+import Reveal from './Reveal';
 
 type Props = {
   children?: Node,

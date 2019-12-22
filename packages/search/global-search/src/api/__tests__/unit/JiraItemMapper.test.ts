@@ -1,6 +1,3 @@
-import { ResultType, AnalyticsType, ContentType } from '../../../model/Result';
-
-import { mapJiraItemToResult } from '../../JiraItemMapper';
 import {
   generateRandomIssueV1,
   generateRandomJiraIssue,
@@ -9,6 +6,8 @@ import {
   generateRandomJiraProject,
 } from '../../../../example-helpers/mocks/mockJira';
 import { JiraItemV1, JiraItemV2 } from '../../../api/types';
+import { ResultType, AnalyticsType, ContentType } from '../../../model/Result';
+import { mapJiraItemToResult } from '../../JiraItemMapper';
 
 describe('mapJiraItemToResult', () => {
   it('should be able to parse issue V1 response', () => {

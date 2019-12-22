@@ -1,4 +1,3 @@
-import { stateKey as imageUploadPluginKey } from '../../../../plugins/image-upload/pm-plugins/main';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
@@ -10,12 +9,14 @@ import {
   createEvent,
   dispatchPasteEvent,
 } from '@atlaskit/editor-test-helpers';
-import { setNodeSelection } from '../../../../utils';
+
 import {
   insertExternalImage,
   startImageUpload,
 } from '../../../../plugins/image-upload/pm-plugins/commands';
+import { stateKey as imageUploadPluginKey } from '../../../../plugins/image-upload/pm-plugins/main';
 import { ImageUploadHandler } from '../../../../plugins/image-upload/types';
+import { setNodeSelection } from '../../../../utils';
 
 describe('image-upload', () => {
   const createEditor = createEditorFactory();

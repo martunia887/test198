@@ -1,6 +1,12 @@
-import createStore from '../../../internal/store';
-// @ts-ignore
-import { reducers } from '../../../internal/reducers';
+import { Dispatch, Store } from 'react-redux';
+
+import {
+  mockInlineConversation as mockInlineConversationClean,
+  mockConversation as mockConversationClean,
+  mockComment2 as mockComment2Clean,
+  mockComment as mockCommentClean,
+  mockReplyComment,
+} from '../../../../example-helpers/MockData';
 import {
   FETCH_CONVERSATIONS_REQUEST,
   FETCH_CONVERSATIONS_SUCCESS,
@@ -18,15 +24,8 @@ import {
   DELETE_COMMENT_ERROR,
   REVERT_COMMENT,
 } from '../../../internal/actions';
-
-import {
-  mockInlineConversation as mockInlineConversationClean,
-  mockConversation as mockConversationClean,
-  mockComment2 as mockComment2Clean,
-  mockComment as mockCommentClean,
-  mockReplyComment,
-} from '../../../../example-helpers/MockData';
-import { Dispatch, Store } from 'react-redux';
+import { reducers } from '../../../internal/reducers';
+import createStore from '../../../internal/store';
 import { Comment, Conversation } from '../../../model';
 
 describe('Reducers', () => {

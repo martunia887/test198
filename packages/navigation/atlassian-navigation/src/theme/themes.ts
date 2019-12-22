@@ -1,6 +1,7 @@
 import { B400, N0 } from '@atlaskit/theme/colors';
-import { generateTheme } from './themeGenerator';
+
 import { DEFAULT_THEME_NAME } from './defaultTheme';
+import { generateTheme } from './themeGenerator';
 import { NavigationTheme } from './types';
 
 export const atlassianTheme: NavigationTheme = generateTheme({

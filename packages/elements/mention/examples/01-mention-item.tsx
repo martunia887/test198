@@ -1,12 +1,12 @@
 import * as React from 'react';
+import { IntlProvider } from 'react-intl';
 
-import MentionItem from '../src/components/MentionItem';
 import {
   generateMentionItem,
   onSelection,
   sampleAvatarUrl as avatarUrl,
 } from '../example-helpers';
-import { IntlProvider } from 'react-intl';
+import MentionItem from '../src/components/MentionItem';
 
 export default function Example() {
   const mention = {

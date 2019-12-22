@@ -1,7 +1,8 @@
-import { name } from '../../../../version.json';
+import { mediaWithAltText, media } from '@atlaskit/adf-schema';
+
 import { mediaPlugin } from '../../../../plugins';
 import { EditorPlugin } from '../../../../types';
-import { mediaWithAltText, media } from '@atlaskit/adf-schema';
+import { name } from '../../../../version.json';
 
 const getNodeNames = (plugin: EditorPlugin) =>
   plugin.nodes ? plugin.nodes().map(node => node.name) : [];

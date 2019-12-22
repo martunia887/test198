@@ -1,6 +1,6 @@
 import { NodeSpec, Node } from 'prosemirror-model';
-import { MediaDefinition as Media } from './media';
 import { LinkDefinition } from '../marks/link';
+import { MediaDefinition as Media } from './media';
 
 export type Layout =
   | 'wrap-right'

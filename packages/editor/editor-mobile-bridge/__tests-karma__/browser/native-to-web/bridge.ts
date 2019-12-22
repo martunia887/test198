@@ -1,8 +1,9 @@
-import { expect } from 'chai';
 import { mount, ReactWrapper } from 'enzyme';
+import { expect } from 'chai';
+
+import mobileEditor from '../../../src/editor/mobile-editor-element';
 
 import { mountEditor } from './utils';
-import mobileEditor from '../../../src/editor/mobile-editor-element';
 
 declare var bridge: any;
 

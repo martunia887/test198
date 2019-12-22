@@ -6,13 +6,15 @@ import {
   Schema,
   Slice /*MediaAttributes */,
 } from 'prosemirror-model';
+
 import { MediaAttributes } from '../src/schema/nodes/media';
-import matches from './matches';
-import sampleSchema from './schema';
 import {
   TableAttributes,
   CellAttributes,
 } from '../src/schema/nodes/tableNodes';
+
+import matches from './matches';
+import sampleSchema from './schema';
 
 /**
  * Represents a ProseMirror "position" in a document.

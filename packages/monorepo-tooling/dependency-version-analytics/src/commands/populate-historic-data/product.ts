@@ -1,16 +1,8 @@
-import { DEFAULT_TAG } from './../../constants';
 import chalk from 'chalk';
-//@ts-ignore
 import simpleGit from 'simple-git';
+import { ListLogSummary } from 'simple-git/typings/response';
 
-import loadFileFromGitHistory from '../../util/load-file-from-git-history';
-import { IPackageJSON } from '../../util/package-json';
 import { DependencyType, UpgradeEvent } from '../../types';
-import {
-  PopulateHistoricDataFlags,
-  DependencyMap,
-  AkPackageChange,
-} from './types';
 import { createUpgradeEvent, sendAnalytics } from '../../util/analytics';
 import {
   getChangesSince,
@@ -19,7 +11,15 @@ import {
   refetchTag,
   getHash,
 } from '../../util/git';
-import { ListLogSummary } from 'simple-git/typings/response';
+import loadFileFromGitHistory from '../../util/load-file-from-git-history';
+import { IPackageJSON } from '../../util/package-json';
+
+import { DEFAULT_TAG } from './../../constants';
+import {
+  PopulateHistoricDataFlags,
+  DependencyMap,
+  AkPackageChange,
+} from './types';
 import { generateCSV } from './util/generate-csv';
 
 // Object.fromEntries polyfill, remove when upgraded to node 10

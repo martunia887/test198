@@ -1,7 +1,8 @@
+import * as React from 'react';
+import { shallow, ShallowWrapper } from 'enzyme';
 import { OptionData } from '@atlaskit/user-picker';
 import { utils } from '@atlaskit/util-service-support';
-import { shallow, ShallowWrapper } from 'enzyme';
-import * as React from 'react';
+
 import {
   ShortenResponse,
   UrlShortenerClient,
@@ -13,9 +14,9 @@ import {
   State,
 } from '../../../components/ShareDialogContainer';
 import { ShareDialogWithTrigger } from '../../../components/ShareDialogWithTrigger';
+import { copyLinkButtonClicked } from '../../../components/analytics';
 import { OriginTracing, TooltipPosition } from '../../../types';
 import { PropsOf } from '../_testUtils';
-import { copyLinkButtonClicked } from '../../../components/analytics';
 
 function currentEventLoopEnd() {
   return new Promise(resolve => setImmediate(resolve));

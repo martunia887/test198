@@ -1,5 +1,5 @@
-import { name } from '../../../version.json';
 import { code as codeBase, createSchema, sanitizeNodes } from '../../..';
+import { name } from '../../../version.json';
 const filterGroupDecMark = (marks: Array<string>) =>
   marks.filter(mark => mark[0] !== '_' || mark[1] !== '_');
 

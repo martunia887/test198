@@ -1,13 +1,15 @@
 import React from 'react';
-import { match } from 'react-router';
-import Loadable from '../components/WrappedLoader';
 import { Helmet } from 'react-helmet';
-import { packages } from '../site';
-import * as fs from '../utils/fs';
-import { File } from '../types';
-import Page, { Title } from '../components/Page';
-import FourOhFour from './FourOhFour';
+import { match } from 'react-router';
+
 import Loading from '../components/Loading';
+import Page, { Title } from '../components/Page';
+import Loadable from '../components/WrappedLoader';
+import { packages } from '../site';
+import { File } from '../types';
+import * as fs from '../utils/fs';
+
+import FourOhFour from './FourOhFour';
 
 export type PackageDocumentProps = {
   match: match<Record<string, string>>;

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { size } from '@atlaskit/media-ui';
 
 export const FileTypeIcon: ComponentClass<HTMLAttributes<{}>> = styled.div`

@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react';
-import Popup from '@atlaskit/popup';
 import { ThemeProvider } from 'styled-components';
 import { DropdownItem, DropdownItemGroup } from '@atlaskit/dropdown-menu';
+import Popup from '@atlaskit/popup';
 
 import { Help, _itemTheme } from '../../src';
 

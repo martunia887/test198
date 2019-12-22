@@ -1,5 +1,5 @@
-import ProfileCard from './components/ProfileCard';
 import ProfileCardClient, { modifyResponse } from './api/ProfileCardClient';
+import ProfileCard from './components/ProfileCard';
 import ProfileCardResourced from './components/ProfileCardResourced';
 import ProfileCardTrigger, {
   DELAY_MS_SHOW,

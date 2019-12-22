@@ -1,12 +1,14 @@
 import React from 'react';
-import Button from '@atlaskit/button';
-import Drawer from '@atlaskit/drawer';
 import {
   mockEndpoints,
   REQUEST_FAST,
 } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+import Button from '@atlaskit/button';
+import Drawer from '@atlaskit/drawer';
+
 import AtlassianSwitcher from '../src';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 class OptionalContainersExample extends React.Component {
   state = {

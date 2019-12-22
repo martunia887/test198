@@ -1,7 +1,8 @@
 /** @jsx jsx */
-import styled from '@emotion/styled';
-import { gridSize } from '@atlaskit/theme/constants';
 import * as colors from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
+import styled from '@emotion/styled';
+
 import { HEADER_HEIGHT } from '../styled';
 
 const HEADER_TITLE_BORDER_BOTTOM = 2;

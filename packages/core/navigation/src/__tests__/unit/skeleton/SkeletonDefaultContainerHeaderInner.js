@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { shallow } from 'enzyme';
-
 import SkeletonDefaultContainerHeaderInner from '../../../components/js/skeleton/styled/SkeletonDefaultContainerHeaderInner';
 
 test('renders a header skeleton container', () => {

@@ -1,7 +1,5 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
 import { useState } from 'react';
-import { elevation, focusRing, colors } from '@atlaskit/theme';
 import Button from '@atlaskit/button';
 import {
   BitbucketIcon,
@@ -10,8 +8,11 @@ import {
   OpsGenieIcon,
   StatuspageIcon,
 } from '@atlaskit/logo';
-import { useResizingHeight, FadeIn, StaggeredEntrance } from '../src';
+import { elevation, focusRing, colors } from '@atlaskit/theme';
+import { jsx, css } from '@emotion/core';
+
 import { Centered } from '../examples-utils';
+import { useResizingHeight, FadeIn, StaggeredEntrance } from '../src';
 
 const logos = [
   [<BitbucketIcon size="small" />, 'Bitbucket'],

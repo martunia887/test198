@@ -1,7 +1,10 @@
+import { Transformer } from '@atlaskit/editor-common';
 import { Node } from 'prosemirror-model';
 import { TextSelection, Selection } from 'prosemirror-state';
+import { safeInsert } from 'prosemirror-utils';
 import { EditorView } from 'prosemirror-view';
-import { Transformer } from '@atlaskit/editor-common';
+
+import { EventDispatcher } from '../event-dispatcher';
 import {
   compose,
   getEditorValueWithMedia,
@@ -9,8 +12,6 @@ import {
   processRawValue,
 } from '../utils';
 import { sanitizeNode } from '../utils/filter/node-filter';
-import { EventDispatcher } from '../event-dispatcher';
-import { safeInsert } from 'prosemirror-utils';
 
 export type ContextUpdateHandler = (
   editorView: EditorView,

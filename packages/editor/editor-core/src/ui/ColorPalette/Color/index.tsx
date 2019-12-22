@@ -3,9 +3,10 @@ import { PureComponent } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
 import { colors } from '@atlaskit/theme';
-import { Button, ButtonWrapper } from './styles';
 import Tooltip from '@atlaskit/tooltip';
 import chromatism from 'chromatism';
+
+import { Button, ButtonWrapper } from './styles';
 
 /**
  * For a given color set the alpha channel to alpha

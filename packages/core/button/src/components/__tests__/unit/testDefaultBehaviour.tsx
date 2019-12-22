@@ -1,9 +1,10 @@
-import { mount } from 'enzyme';
 import React from 'react';
-import cases from 'jest-in-case';
-import Spinner from '@atlaskit/spinner';
+import { mount } from 'enzyme';
 import * as renderer from 'react-test-renderer';
+import Spinner from '@atlaskit/spinner';
 import serializer, { matchers } from 'jest-emotion';
+import cases from 'jest-in-case';
+
 import Button from '../../Button';
 import InnerWrapper from '../../InnerWrapper';
 

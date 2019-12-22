@@ -1,5 +1,5 @@
-import { colors } from '@atlaskit/theme';
 import styled from 'styled-components';
+import { colors } from '@atlaskit/theme';
 
 export const OptionsWrapper = styled.div`
   border-bottom: 1px solid ${colors.N40};

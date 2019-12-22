@@ -1,11 +1,12 @@
 import { inputRules, InputRule } from 'prosemirror-inputrules';
+import { Transaction, Plugin, Selection } from 'prosemirror-state';
+
 import { analyticsService } from '../../../analytics';
 import {
   InputRuleHandler,
   createInputRule,
   InputRuleWithHandler,
 } from '../../../utils/input-rules';
-import { Transaction, Plugin, Selection } from 'prosemirror-state';
 import {
   ruleWithAnalytics,
   EVENT_TYPE,

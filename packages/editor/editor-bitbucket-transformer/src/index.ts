@@ -1,7 +1,8 @@
+import { Transformer } from '@atlaskit/editor-common';
 import { DOMParser, Node as PMNode, Schema } from 'prosemirror-model';
+
 import { MarkdownSerializer, marks, nodes } from './serializer';
 import { transformHtml } from './util';
-import { Transformer } from '@atlaskit/editor-common';
 
 export interface TransformerOptions {
   disableBitbucketLinkStripping?: boolean;

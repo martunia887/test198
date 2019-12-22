@@ -1,4 +1,3 @@
-import { Node, Fragment, Slice, Schema } from 'prosemirror-model';
 import {
   doc,
   p,
@@ -13,9 +12,11 @@ import {
   table,
   td,
 } from '@atlaskit/editor-test-helpers';
+import { Node, Fragment, Slice, Schema } from 'prosemirror-model';
+
+import { transformSliceForMedia } from '../../../../plugins/media/utils/media-single';
 
 import { temporaryMedia } from './_utils';
-import { transformSliceForMedia } from '../../../../plugins/media/utils/media-single';
 
 const removeRef = (node: Node) =>
   Node.fromJSON(node.type.schema, node.toJSON());

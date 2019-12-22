@@ -1,7 +1,8 @@
 import { SyntheticEvent } from 'react';
+import { Provider } from '@atlaskit/util-service-support/types';
+
 import { messages } from './components/i18n';
 import { CategoryId } from './components/picker/categories';
-import { Provider } from '@atlaskit/util-service-support/types';
 
 export interface EmojiProvider
   extends Provider<string, EmojiSearchResult, any, undefined, SearchOptions> {

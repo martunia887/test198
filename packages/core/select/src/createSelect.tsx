@@ -1,12 +1,12 @@
 import React, { Component, ComponentType } from 'react';
+import isEqual from 'react-fast-compare';
 import Select, { mergeStyles } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import memoizeOne from 'memoize-one';
-import isEqual from 'react-fast-compare';
 
-import { SelectProps, SelectComponentsConfig, OptionType } from './types';
 import * as defaultComponents from './components';
 import baseStyles from './styles';
+import { SelectProps, SelectComponentsConfig, OptionType } from './types';
 
 export default function createSelect(WrappedComponent: ComponentType<any>) {
   return class AtlaskitSelect<Option = OptionType> extends Component<

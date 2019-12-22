@@ -1,4 +1,3 @@
-import { Slice } from 'prosemirror-model';
 import {
   defaultSchema,
   doc,
@@ -7,13 +6,14 @@ import {
   p,
   strong,
 } from '@atlaskit/editor-test-helpers';
+import { Slice } from 'prosemirror-model';
 
-import { toJSON } from '../../../../utils';
 import {
   applyTextMarksToSlice,
   hasOnlyNodesOfType,
   isSingleLine,
 } from '../../../../plugins/paste/util';
+import { toJSON } from '../../../../utils';
 
 describe('paste util', () => {
   describe('isSingleLine()', () => {

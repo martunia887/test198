@@ -2,10 +2,11 @@
 
 import React from 'react';
 
-import type { LayoutManagerWithViewControllerProps } from './types';
 import ItemsRenderer from '../../../renderer';
 import SkeletonContainerView from '../../presentational/SkeletonContainerView';
 import AsyncLayoutManagerWithViewController from '../AsyncLayoutManagerWithViewController';
+
+import type { LayoutManagerWithViewControllerProps } from './types';
 /* NOTE: experimental props use an underscore */
 /* eslint-disable camelcase */
 

@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
+
+import { formatDuration } from '../formatDuration';
+
 import {
   TimeLine,
   CurrentTimeLine,
@@ -8,7 +11,6 @@ import {
   CurrentTimeTooltip,
   TimeRangeWrapper,
 } from './styled';
-import { formatDuration } from '../formatDuration';
 
 export interface TimeRangeProps {
   currentTime: number;

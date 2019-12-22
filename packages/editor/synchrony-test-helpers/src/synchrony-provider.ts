@@ -1,6 +1,6 @@
+import { CollabEditProvider } from '@atlaskit/editor-common';
 import { CLJSModule, CollabProviderModule } from './types';
 import { getProfile } from './user-profile';
-import { CollabEditProvider } from '@atlaskit/editor-common';
 
 const INSTRUCTIONS_WARNING = `
 You're running Atlaskit passing "SYNCHRONY_URL={url}" parameter.

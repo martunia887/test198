@@ -1,13 +1,9 @@
 // @flow
 import React, { Component, type Node, type ElementRef } from 'react';
 import styled from 'styled-components';
+import Popper from 'popper.js';
 import rafSchedule from 'raf-schd';
-import Popper from 'popper.js'; // eslint-disable-line import/extensions
-import ScrollBlock from './internal/ScrollBlock';
-import {
-  getFlipBehavior,
-  positionPropToPopperPosition,
-} from './internal/helpers';
+
 import ContentContainer from '../styledContentContainer';
 import type {
   FlipPositionType,
@@ -17,6 +13,12 @@ import type {
   OffsetStateType,
   PopperStateType,
 } from '../types';
+
+import ScrollBlock from './internal/ScrollBlock';
+import {
+  getFlipBehavior,
+  positionPropToPopperPosition,
+} from './internal/helpers';
 
 /* eslint-disable react/no-unused-prop-types */
 

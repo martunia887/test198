@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { cities } from './common/data';
 import { AsyncSelect } from '../src';
+import { cities } from './common/data';
 
 interface State {
   inputValue: string;

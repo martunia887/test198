@@ -1,9 +1,10 @@
 // @flow
 import styled, { css } from 'styled-components';
+
 import { globalItemSizes, gridSize } from '../../shared-variables';
-import { focusOutline } from '../../utils/mixins';
-import { getProvided } from '../../theme/util';
 import type { Provided } from '../../theme/types';
+import { getProvided } from '../../theme/util';
+import { focusOutline } from '../../utils/mixins';
 
 const getOutline = props => {
   const provided: Provided = getProvided(props.theme);

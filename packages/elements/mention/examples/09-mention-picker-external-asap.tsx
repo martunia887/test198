@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import MentionTextInput from '../example-helpers/demo-mention-text-input';
-import ConfigurableMentionPicker from '../example-helpers/demo-configurable-mention-picker';
 import { onSelection } from '../example-helpers';
+import ConfigurableMentionPicker from '../example-helpers/demo-configurable-mention-picker';
+import MentionTextInput from '../example-helpers/demo-mention-text-input';
 
 let config;
 

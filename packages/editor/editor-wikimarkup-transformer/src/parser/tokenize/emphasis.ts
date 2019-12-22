@@ -1,8 +1,10 @@
 import { Node as PMNode } from 'prosemirror-model';
-import { Token, TokenType, TokenParser } from './';
-import { hasAnyOfMarks } from '../utils/text';
-import { commonFormatter } from './common-formatter';
+
 import { parseString } from '../text';
+import { hasAnyOfMarks } from '../utils/text';
+
+import { Token, TokenType, TokenParser } from './';
+import { commonFormatter } from './common-formatter';
 
 export const emphasis: TokenParser = ({ input, position, schema, context }) => {
   /**

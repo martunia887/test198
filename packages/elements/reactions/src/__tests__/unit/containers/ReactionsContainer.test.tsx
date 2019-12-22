@@ -1,11 +1,12 @@
+import * as React from 'react';
+import { shallow, ShallowWrapper } from 'enzyme';
 import { EmojiProvider } from '@atlaskit/emoji';
 import { emoji } from '@atlaskit/util-data-test';
-import { shallow, ShallowWrapper } from 'enzyme';
-import * as React from 'react';
+
+import { ReactionSummary } from '../../../../src/types';
 import ReactionsContainer from '../../../containers/ReactionsContainer';
 import { ReactionConsumer } from '../../../reaction-store/ReactionConsumer';
 import { ReactionStatus } from '../../../types/ReactionStatus';
-import { ReactionSummary } from '../../../../src/types';
 
 const { getEmojiResourcePromise } = emoji.testData;
 

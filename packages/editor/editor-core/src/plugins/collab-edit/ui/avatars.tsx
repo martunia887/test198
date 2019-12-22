@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import styled, { keyframes } from 'styled-components';
-import { EditorView } from 'prosemirror-view';
 import Avatar, { SizeType } from '@atlaskit/avatar';
 import AvatarGroup from '@atlaskit/avatar-group';
-import { gridSize, colors } from '@atlaskit/theme';
-import InviteTeamIcon from '@atlaskit/icon/glyph/editor/add';
 import { akEditorSmallZIndex } from '@atlaskit/editor-common';
+import InviteTeamIcon from '@atlaskit/icon/glyph/editor/add';
+import { gridSize, colors } from '@atlaskit/theme';
+import { EditorView } from 'prosemirror-view';
 
-import WithPluginState from '../../../ui/WithPluginState';
 import { EventDispatcher } from '../../../event-dispatcher';
-import { pluginKey as collabEditPluginKey, PluginState } from '../plugin';
-import { getAvatarColor } from '../utils';
-import ToolbarButton from '../../../ui/ToolbarButton';
 import messages from '../../../messages';
+import ToolbarButton from '../../../ui/ToolbarButton';
+import WithPluginState from '../../../ui/WithPluginState';
+import { pluginKey as collabEditPluginKey, PluginState } from '../plugin';
 import { CollabInviteToEditProps } from '../types';
+import { getAvatarColor } from '../utils';
 
 export type Props = {
   editorView?: EditorView;

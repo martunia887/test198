@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { Card } from '@atlaskit/media-card';
+import { FileIdentifier } from '@atlaskit/media-client';
 import {
   imageFileId,
   I18NWrapper,
   createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import { FileIdentifier } from '@atlaskit/media-client';
+
 import { SmartMediaEditor } from '../src';
 
 interface State {

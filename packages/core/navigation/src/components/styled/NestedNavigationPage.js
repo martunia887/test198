@@ -1,12 +1,14 @@
 // @flow
 import styled, { keyframes } from 'styled-components';
+
 import {
   animationTimeUnitless,
   scrollHintSpacing,
   gridSize,
 } from '../../shared-variables';
-import ScrollHintScrollContainer from './ScrollHintScrollContainer';
 import { whenCollapsed } from '../../theme/util';
+
+import ScrollHintScrollContainer from './ScrollHintScrollContainer';
 
 const animationTime = animationTimeUnitless / 1000;
 

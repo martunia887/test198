@@ -1,6 +1,6 @@
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
-import RendererBridgeImpl from '../../renderer/native-to-web/implementation';
 import WebBridgeImpl from '../../editor/native-to-web';
+import RendererBridgeImpl from '../../renderer/native-to-web/implementation';
 
 // FIXME Ideally these would be mobile browsers
 // Safari & Chrome should suffice for now.

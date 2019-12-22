@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 
 // TODO: remove this override behaviour for @atlaskit/icon-object
 export const IconObjectOverrides = `

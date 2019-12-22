@@ -7,9 +7,10 @@ import {
   td,
   tdEmpty,
 } from '@atlaskit/editor-test-helpers';
-import { TablePluginState } from '../../../../../plugins/table/types';
+
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
 import { mergeCells } from '../../../../../plugins/table/transforms';
+import { TablePluginState } from '../../../../../plugins/table/types';
 
 describe('table plugin -> transforms -> merge cells', () => {
   const createEditor = createEditorFactory<TablePluginState>();

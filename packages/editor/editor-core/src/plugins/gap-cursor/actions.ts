@@ -6,17 +6,19 @@ import {
 } from 'prosemirror-state';
 import { removeNodeBefore } from 'prosemirror-utils';
 import { findDomRefAtPos } from 'prosemirror-utils';
-import { Direction, isBackward, isForward } from './direction';
-import { GapCursorSelection, Side } from './selection';
-import { isTextBlockNearPos, getMediaNearPos } from './utils';
-import { isValidTargetNode } from './utils/is-valid-target-node';
+
 import { Command } from '../../types';
 import {
   atTheBeginningOfDoc,
   atTheEndOfDoc,
   ZeroWidthSpace,
 } from '../../utils';
+
+import { Direction, isBackward, isForward } from './direction';
 import { pluginKey } from './pm-plugins/main';
+import { GapCursorSelection, Side } from './selection';
+import { isTextBlockNearPos, getMediaNearPos } from './utils';
+import { isValidTargetNode } from './utils/is-valid-target-node';
 
 type MapDirection = { [name in Direction]: number };
 const mapDirection: MapDirection = {

@@ -1,6 +1,6 @@
 import { NodeSpec, MarkSpec, Schema } from 'prosemirror-model';
-import { COLOR, FONT_STYLE, SEARCH_QUERY, LINK } from './groups';
 
+import { COLOR, FONT_STYLE, SEARCH_QUERY, LINK } from './groups';
 import {
   link,
   em,
@@ -17,7 +17,6 @@ import {
   indentation,
   annotation,
 } from './marks';
-
 import {
   confluenceJiraIssue,
   confluenceUnsupportedBlock,

@@ -1,15 +1,15 @@
-import { Node } from 'prosemirror-model';
+import {
+  confluenceSchemaWithMediaSingle as schema,
+  MediaAttributes,
+  MediaSingleAttributes,
+} from '@atlaskit/adf-schema';
 import {
   markFactory,
   nodeFactory,
   RefsNode,
   RefsTracker,
 } from '@atlaskit/editor-test-helpers';
-import {
-  confluenceSchemaWithMediaSingle as schema,
-  MediaAttributes,
-  MediaSingleAttributes,
-} from '@atlaskit/adf-schema';
+import { Node } from 'prosemirror-model';
 
 export { RefsNode, RefsTracker, Node };
 // Nodes

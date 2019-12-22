@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Presence } from '../src';
 import { Note } from '../examples-util/helpers';
+import { Presence } from '../src';
 
 type State = {
   width: number;

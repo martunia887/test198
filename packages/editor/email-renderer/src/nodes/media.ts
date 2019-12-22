@@ -1,16 +1,17 @@
+import { N30 } from '@atlaskit/adf-schema';
+
+import { createTag } from '../create-tag';
 import {
   NodeSerializerOpts,
   MediaMetaDataContextItem,
   MediaType,
 } from '../interfaces';
-import { createTag } from '../create-tag';
-import { N30 } from '@atlaskit/adf-schema';
+import { createContentId, IconString } from '../static';
 import {
   createClassName,
   MEDIA_PREVIEW_IMAGE_WIDTH,
   MEDIA_PREVIEW_IMAGE_HEIGHT,
 } from '../styles/util';
-import { createContentId, IconString } from '../static';
 
 const className = createClassName('media');
 const ICON_DIMENSION = 14;

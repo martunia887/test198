@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
+
 import { PortalRenderer, PortalProvider } from '../../ui/PortalProvider';
+
+import { EditorContent } from './internal/components/EditorContent';
 import { EditorInternal } from './internal/components/EditorInternal';
 import {
   usePresetContext,
@@ -11,7 +14,6 @@ import {
   EditorSharedConfigConsumer,
   useEditorSharedConfig,
 } from './internal/context/shared-config';
-import { EditorContent } from './internal/components/EditorContent';
 import { EditorProps } from './internal/editor-props-type';
 
 /**

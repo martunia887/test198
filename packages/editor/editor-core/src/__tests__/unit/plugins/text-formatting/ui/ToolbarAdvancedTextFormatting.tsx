@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { InjectedIntlProps } from 'react-intl';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import DropList from '@atlaskit/droplist';
-import Item from '@atlaskit/item';
 import {
   doc,
   p,
@@ -14,23 +16,21 @@ import {
   underline,
   createAnalyticsEventMock,
 } from '@atlaskit/editor-test-helpers';
-import { InjectedIntlProps } from 'react-intl';
+import Item from '@atlaskit/item';
+import { EditorView } from 'prosemirror-view';
 
-import { ReactWrapper } from 'enzyme';
+import { AnalyticsHandler } from '../../../../../analytics';
+import { pluginKey as clearFormattingPluginKey } from '../../../../../plugins/text-formatting/pm-plugins/clear-formatting';
 import {
   pluginKey,
   TextFormattingState,
 } from '../../../../../plugins/text-formatting/pm-plugins/main';
-import { pluginKey as clearFormattingPluginKey } from '../../../../../plugins/text-formatting/pm-plugins/clear-formatting';
 import ToolbarAdvancedTextFormatting, {
   messages,
   Props as ToolbarProps,
 } from '../../../../../plugins/text-formatting/ui/ToolbarAdvancedTextFormatting';
-import ToolbarButton from '../../../../../ui/ToolbarButton';
 import DropdownMenuWrapper from '../../../../../ui/DropdownMenu';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { EditorView } from 'prosemirror-view';
-import { AnalyticsHandler } from '../../../../../analytics';
+import ToolbarButton from '../../../../../ui/ToolbarButton';
 
 describe('@atlaskit/editor-core/ui/ToolbarAdvancedTextFormatting', () => {
   const createEditor = createEditorFactory();

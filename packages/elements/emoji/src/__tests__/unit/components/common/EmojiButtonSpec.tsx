@@ -1,9 +1,9 @@
+import * as React from 'react';
 import * as sinon from 'sinon';
 import { mount } from 'enzyme';
-import * as React from 'react';
 
-import * as styles from '../../../../components/common/styles';
 import EmojiButton from '../../../../components/common/EmojiButton';
+import * as styles from '../../../../components/common/styles';
 import { spriteEmoji, imageEmoji } from '../../_test-data';
 
 describe('<EmojiButton />', () => {

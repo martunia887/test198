@@ -1,4 +1,5 @@
 import { FileState } from '@atlaskit/media-client';
+import { CardState, CardProps } from '../../..';
 import {
   getCardStatus,
   getAnalyticsErrorStateAttributes,
@@ -6,7 +7,6 @@ import {
   getAnalyticsStatusFromCardStatus,
   getCardStatusFromFileState,
 } from '../../card/getCardStatus';
-import { CardState, CardProps } from '../../..';
 
 describe('getCardStatus()', () => {
   describe('image files', () => {

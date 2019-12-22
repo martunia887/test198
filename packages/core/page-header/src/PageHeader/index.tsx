@@ -1,5 +1,4 @@
 import React, { Component, ReactElement, ReactNode } from 'react';
-
 import {
   Outer,
   TitleWrapper,

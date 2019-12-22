@@ -1,14 +1,14 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
+import {
   editable,
   getDocFromElement,
   insertMedia,
   fullpage,
 } from '../_helpers';
-import {
-  mountEditor,
-  goToEditorTestingExample,
-} from '../../__helpers/testing-example-helpers';
 
 BrowserTestCase(
   'insert-mediaSingle.ts: Inserts a media single on fullpage',

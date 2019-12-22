@@ -1,13 +1,14 @@
 import fetchMock from 'fetch-mock';
-import { PeopleSearchClient } from '../../PeopleSearchClient';
-import { CachingPeopleSearchClient } from '../../CachingPeopleSearchClient';
+
+import { recentPeopleApiWillReturn } from '../../../__tests__/unit/helpers/_people-client-mocks';
 import {
   AnalyticsType,
   ContentType,
   Result,
   ResultType,
 } from '../../../model/Result';
-import { recentPeopleApiWillReturn } from '../../../__tests__/unit/helpers/_people-client-mocks';
+import { CachingPeopleSearchClient } from '../../CachingPeopleSearchClient';
+import { PeopleSearchClient } from '../../PeopleSearchClient';
 
 describe('CachingPeopleSearchClient', () => {
   let searchClient: PeopleSearchClient;

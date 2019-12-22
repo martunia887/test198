@@ -1,6 +1,6 @@
-import { name } from '../../../../version.json';
-import { schema, toDOM, fromHTML } from '../../../../../test-helpers';
 import { extension } from '../../../../../src';
+import { schema, toDOM, fromHTML } from '../../../../../test-helpers';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema extension node`, () => {
   describe('parse html', () => {

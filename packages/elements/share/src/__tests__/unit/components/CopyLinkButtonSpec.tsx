@@ -1,13 +1,11 @@
 // This works only by calling before importing InlineDialog
-import mockPopper from '../_mockPopper';
-mockPopper();
-
+import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { InjectedIntlProps } from 'react-intl';
+import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import InlineDialog from '@atlaskit/inline-dialog';
-import { ReactWrapper } from 'enzyme';
-import { mountWithIntl } from '@atlaskit/editor-test-helpers';
-import * as React from 'react';
-import { InjectedIntlProps } from 'react-intl';
+
 import CopyLinkButton, {
   AUTO_DISMISS_MS,
   Props,
@@ -16,6 +14,7 @@ import CopyLinkButton, {
   MessageContainer,
 } from '../../../components/CopyLinkButton';
 import Button from '../../../components/styles';
+import mockPopper from '../_mockPopper';
 
 describe('CopyLinkButton', () => {
   let originalExecCommand: (

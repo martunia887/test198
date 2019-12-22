@@ -42,7 +42,6 @@ import {
   clearEditorContent,
   setKeyboardHeight,
 } from '@atlaskit/editor-core';
-
 import WebBridgeImpl from '../../../../editor/native-to-web';
 import { defaultPadding } from '../../../../web-bridge';
 

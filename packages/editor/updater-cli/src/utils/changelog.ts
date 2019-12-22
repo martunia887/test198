@@ -1,6 +1,6 @@
+import chalk from 'chalk';
 import fetch from 'node-fetch';
 import { satisfies, coerce, SemVer } from 'semver';
-import chalk from 'chalk';
 import link from 'terminal-link';
 
 function printLogDetails(log: Log) {

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
-import Wrapper from './styled';
 import classnames from 'classnames';
+
 import { calcPxFromPct, layoutSupportsWidth } from './grid';
+import Wrapper from './styled';
 
 export const DEFAULT_IMAGE_WIDTH = 250;
 export const DEFAULT_IMAGE_HEIGHT = 200;

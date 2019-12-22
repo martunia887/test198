@@ -1,11 +1,13 @@
 import { InputRule, inputRules } from 'prosemirror-inputrules';
 import { Fragment, Schema } from 'prosemirror-model';
 import { Plugin, EditorState, Transaction } from 'prosemirror-state';
+
 import { analyticsService } from '../../../analytics';
 import {
   createInputRule,
   leafNodeReplacementCharacter,
 } from '../../../utils/input-rules';
+import { safeInsert } from '../../../utils/insert';
 import {
   addAnalytics,
   ACTION,
@@ -14,7 +16,6 @@ import {
   INPUT_METHOD,
   EVENT_TYPE,
 } from '../../analytics';
-import { safeInsert } from '../../../utils/insert';
 import { getEditorProps } from '../../shared-context';
 
 export const createHorizontalRule = (

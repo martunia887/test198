@@ -1,21 +1,20 @@
 /** @jsx jsx */
+import { ChangeEvent, Fragment, useState } from 'react';
 import Button from '@atlaskit/button';
 import { jsx } from '@emotion/core';
-import { ChangeEvent, Fragment, useState } from 'react';
 
 import { AtlassianNavigation } from '../src';
 import { NavigationSkeleton } from '../src/skeleton';
 
 import { DefaultCreate } from './shared/Create';
-import { defaultPrimaryItems } from './shared/PrimaryItems';
-import { DefaultProductHome } from './shared/ProductHome';
-import { DefaultSearch } from './shared/Search';
-import { DefaultSettings } from './shared/Settings';
-
-import { ProfilePopup } from './shared/ProfilePopup';
-import { SwitcherPopup } from './shared/SwitcherPopup';
 import { HelpPopup } from './shared/HelpPopup';
 import { NotificationsPopup } from './shared/NotificationsPopup';
+import { defaultPrimaryItems } from './shared/PrimaryItems';
+import { DefaultProductHome } from './shared/ProductHome';
+import { ProfilePopup } from './shared/ProfilePopup';
+import { DefaultSearch } from './shared/Search';
+import { DefaultSettings } from './shared/Settings';
+import { SwitcherPopup } from './shared/SwitcherPopup';
 
 const controlsCSS = {
   alignItems: 'center',

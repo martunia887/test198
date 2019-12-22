@@ -1,6 +1,7 @@
-import { Selection, EditorState, NodeSelection } from 'prosemirror-state';
 import { Fragment, Node } from 'prosemirror-model';
+import { Selection, EditorState, NodeSelection } from 'prosemirror-state';
 import { safeInsert } from 'prosemirror-utils';
+
 import { analyticsService } from '../../../analytics';
 import { Command } from '../../../types';
 import {
@@ -10,6 +11,7 @@ import {
 import { pluginKey, ACTIONS } from '../pm-plugins/main';
 import { TypeAheadHandler, TypeAheadItem } from '../types';
 import { findTypeAheadQuery } from '../utils/find-query-mark';
+
 import { dismissCommand } from './dismiss';
 
 export type SelectItemMode =

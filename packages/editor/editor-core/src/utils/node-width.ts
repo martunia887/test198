@@ -1,18 +1,19 @@
-import { EditorState } from 'prosemirror-state';
-import { Node as PMNode } from 'prosemirror-model';
-import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import {
   akEditorFullWidthLayoutWidth,
   absoluteBreakoutWidth,
   gridMediumMaxWidth,
   akLayoutGutterOffset,
 } from '@atlaskit/editor-common';
-import { WidthPluginState } from '../plugins/width';
+import { Node as PMNode } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
+
+import { BODIED_EXT_PADDING } from '../plugins/extension/ui/Extension/styles';
 import {
   LAYOUT_SECTION_MARGIN,
   LAYOUT_COLUMN_PADDING,
 } from '../plugins/layout/styles';
-import { BODIED_EXT_PADDING } from '../plugins/extension/ui/Extension/styles';
+import { WidthPluginState } from '../plugins/width';
 
 /**
  * Calculates width of parent node of a nested node (inside layouts, extension)

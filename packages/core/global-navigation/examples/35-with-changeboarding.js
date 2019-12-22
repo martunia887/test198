@@ -1,15 +1,15 @@
 // @flow
 
 import React, { Component, type ElementRef } from 'react';
-import EmojiAtlassianIcon from '@atlaskit/icon/glyph/emoji/atlassian';
-import { Spotlight } from '@atlaskit/onboarding';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
+import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
+import EmojiAtlassianIcon from '@atlaskit/icon/glyph/emoji/atlassian';
 import {
   GlobalItem,
   LayoutManager,
   NavigationProvider,
 } from '@atlaskit/navigation-next';
-import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
+import { Spotlight } from '@atlaskit/onboarding';
 
 import GlobalNavigation from '../src';
 

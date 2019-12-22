@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { codeFontFamily, fontSize } from '@atlaskit/theme/constants';
 import { placeholderText } from '@atlaskit/theme/colors';
+import { codeFontFamily, fontSize } from '@atlaskit/theme/constants';
 
 const getPlaceholderStyle = style => css`
   &::-webkit-input-placeholder {

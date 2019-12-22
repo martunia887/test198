@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import * as colors from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { borderRadius, gridSize } from '@atlaskit/theme/constants';
-import * as colors from '@atlaskit/theme/colors';
 import { divide } from '@atlaskit/theme/math';
+
 import { TabItemElementProps, Mode } from './types';
 
 interface NavItem extends TabItemElementProps {

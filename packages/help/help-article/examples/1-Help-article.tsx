@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
-
 import HelpArticle from '../src';
 
 interface Props {}

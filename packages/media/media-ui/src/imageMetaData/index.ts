@@ -1,3 +1,7 @@
+import { loadImage } from '../util';
+
+import { isRotated } from './imageOrientationUtil';
+import { readImageMetaTags } from './metatags';
 import {
   ImageInfo,
   ImageMetaData,
@@ -6,10 +10,6 @@ import {
   FileInfo,
   ExifOrientation,
 } from './types';
-import { readImageMetaTags } from './metatags';
-
-import { loadImage } from '../util';
-import { isRotated } from './imageOrientationUtil';
 
 const { Orientation, XResolution } = SupportedImageMetaTag;
 

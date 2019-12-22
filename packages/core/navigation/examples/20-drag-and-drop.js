@@ -1,8 +1,8 @@
 // @flow
 
 import React, { Component, type Element } from 'react';
-import styled, { injectGlobal } from 'styled-components';
 import { Draggable, Droppable, DragDropContext } from 'react-beautiful-dnd';
+import styled, { injectGlobal } from 'styled-components';
 
 import Navigation, { AkNavigationItem } from '../src';
 

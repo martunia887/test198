@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass, LiHTMLAttributes } from 'react';
+import styled from 'styled-components';
 import { B400, N500 } from '@atlaskit/theme/colors';
 
 export interface WrapperProps {

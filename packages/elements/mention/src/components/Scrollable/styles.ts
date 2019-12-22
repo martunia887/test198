@@ -1,8 +1,7 @@
-import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { borderRadius } from '@atlaskit/theme';
+
 import { scrollableMaxHeight } from '../../shared-styles';
 
 export const ScrollableStyle: ComponentClass<HTMLAttributes<{}> & {

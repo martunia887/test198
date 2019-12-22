@@ -1,9 +1,8 @@
-import styled, { css } from 'styled-components';
-
 import { HTMLAttributes, ComponentClass, AnchorHTMLAttributes } from 'react';
-
-import { fontFamily } from '@atlaskit/theme/constants';
+import styled, { css } from 'styled-components';
 import * as colors from '@atlaskit/theme/colors';
+import { fontFamily } from '@atlaskit/theme/constants';
+
 import { borderRadius, size, ellipsis } from '../../mixins';
 
 const wrapperPadding = 8;

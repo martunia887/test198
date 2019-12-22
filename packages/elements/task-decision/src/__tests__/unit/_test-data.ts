@@ -1,9 +1,8 @@
-import { ServiceTask, Task } from '../../types';
-
-import { convertServiceTaskToTask } from '../../api/TaskDecisionUtils';
-
 import { taskDecision } from '@atlaskit/util-data-test';
 import addMinutes from 'date-fns/add_minutes';
+
+import { convertServiceTaskToTask } from '../../api/TaskDecisionUtils';
+import { ServiceTask, Task } from '../../types';
 
 export const { getServiceTasksResponse, getParticipants } = taskDecision;
 

@@ -1,7 +1,9 @@
 import React from 'react';
 import { ObjectInterpolation } from '@emotion/core';
+
 import { easeOut, easeIn } from '../utils/curves';
 import { mediumDurationMs } from '../utils/durations';
+
 import KeyframesMotion, { KeyframesMotionProps } from './keyframes-motion';
 import { Direction, From } from './types';
 

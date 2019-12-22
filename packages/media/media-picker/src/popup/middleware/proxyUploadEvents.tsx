@@ -1,12 +1,12 @@
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { Store, Dispatch, Action } from 'redux';
 
-import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { UploadEvent } from '../../domain/uploadEvent';
-import { uploadHasProxy } from '../tools/uploadHasProxy';
-import { finalizeUpload } from '../actions/finalizeUpload';
-import { State } from '../domain';
 import { MediaFile } from '../../types';
+import { finalizeUpload } from '../actions/finalizeUpload';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
+import { State } from '../domain';
+import { uploadHasProxy } from '../tools/uploadHasProxy';
 
 export interface ProxyUploadEventsAction extends Action {
   readonly file: MediaFile;

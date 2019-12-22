@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '../components/layout';
 import SideNav from '../components/component-side-nav';
+import Layout from '../components/layout';
 
 export default () => (
   <Layout SideNavContents={SideNav}>

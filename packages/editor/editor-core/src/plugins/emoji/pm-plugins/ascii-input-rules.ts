@@ -1,14 +1,15 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { EmojiDescription } from '@atlaskit/emoji/types';
 import { inputRules } from 'prosemirror-inputrules';
 import { Schema, Node } from 'prosemirror-model';
 import { EditorState, Transaction, Plugin, PluginKey } from 'prosemirror-state';
-import { ProviderFactory } from '@atlaskit/editor-common';
+
+import { isMarkTypeAllowedInCurrentSelection } from '../../../utils';
 import {
   createInputRule,
   leafNodeReplacementCharacter,
 } from '../../../utils/input-rules';
-import { isMarkTypeAllowedInCurrentSelection } from '../../../utils';
 import {
   addAnalytics,
   ACTION,

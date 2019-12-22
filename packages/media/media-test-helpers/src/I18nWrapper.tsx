@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Component, ReactElement } from 'react';
 import { IntlProvider, addLocaleData } from 'react-intl';
-import { locales, languages } from '@atlaskit/media-ui';
-import LanguagePicker from './LanguagePicker';
 import * as es from 'react-intl/locale-data/es';
+import { locales, languages } from '@atlaskit/media-ui';
+
+import LanguagePicker from './LanguagePicker';
 
 addLocaleData(es);
 

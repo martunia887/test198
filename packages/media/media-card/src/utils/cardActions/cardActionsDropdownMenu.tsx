@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { Component, HTMLAttributes } from 'react';
-
-import MoreIcon from '@atlaskit/icon/glyph/more';
-import DropdownMenu, {
-  DropdownItemGroup,
-  DropdownItem,
-} from '@atlaskit/dropdown-menu';
-
-import { CardAction } from '../../actions';
-import { CardActionButton } from './styled';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
+import DropdownMenu, {
+  DropdownItemGroup,
+  DropdownItem,
+} from '@atlaskit/dropdown-menu';
+import MoreIcon from '@atlaskit/icon/glyph/more';
+
+import { CardAction } from '../../actions';
 import { createAndFireMediaEvent } from '../analytics';
+
+import { CardActionButton } from './styled';
 
 export type CardActionsDropdownMenuProps = {
   readonly actions: CardAction[];

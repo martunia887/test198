@@ -1,8 +1,5 @@
 import { ReactElement } from 'react';
-import { Node, Schema } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
-import EditorActions from '../actions/index';
-
+import { ActivityProvider } from '@atlaskit/activity';
 import {
   Transformer,
   ContextIdentifierProvider,
@@ -10,30 +7,30 @@ import {
   ErrorReportingHandler,
   ExtensionProvider,
 } from '@atlaskit/editor-common';
-
-import { ActivityProvider } from '@atlaskit/activity';
-import { MentionProvider } from '@atlaskit/mention/resource';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
+import { MentionProvider } from '@atlaskit/mention/resource';
 import { TaskDecisionProvider } from '@atlaskit/task-decision';
+import { Node, Schema } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
 
-import { PluginConfig as TablesPluginConfig } from '../plugins/table/types';
-import { TextColorPluginConfig } from '../plugins/text-color/pm-plugins/main';
-import { MediaState } from '../plugins/media/types';
+import EditorActions from '../actions/index';
 import { AnalyticsHandler } from '../analytics/handler';
-
-import { ImageUploadHandler } from '../plugins/image-upload/types';
-import { TextFormattingOptions } from '../plugins/text-formatting';
-import { CollabEditProvider } from '../plugins/collab-edit/provider';
-import { MacroProvider } from '../plugins/macro/types';
-import { MediaOptions } from '../plugins/media';
-import { PlaceholderTextOptions } from '../plugins/placeholder-text';
-import { CollabEditOptions } from '../plugins/collab-edit/types';
-import { CardOptions } from '../plugins/card/types';
-import { QuickInsertOptions } from '../plugins/quick-insert/types';
-import { AutoformattingProvider } from '../plugins/custom-autoformat/types';
 import { AnnotationProvider } from '../plugins/annotation/types';
 import { BlockTypePluginOptions } from '../plugins/block-type';
+import { CardOptions } from '../plugins/card/types';
+import { CollabEditProvider } from '../plugins/collab-edit/provider';
+import { CollabEditOptions } from '../plugins/collab-edit/types';
+import { AutoformattingProvider } from '../plugins/custom-autoformat/types';
+import { ImageUploadHandler } from '../plugins/image-upload/types';
 import { LayoutsConfig } from '../plugins/layout';
+import { MacroProvider } from '../plugins/macro/types';
+import { MediaOptions } from '../plugins/media';
+import { MediaState } from '../plugins/media/types';
+import { PlaceholderTextOptions } from '../plugins/placeholder-text';
+import { QuickInsertOptions } from '../plugins/quick-insert/types';
+import { PluginConfig as TablesPluginConfig } from '../plugins/table/types';
+import { TextColorPluginConfig } from '../plugins/text-color/pm-plugins/main';
+import { TextFormattingOptions } from '../plugins/text-formatting';
 
 export type EditorAppearance =
   | 'comment'

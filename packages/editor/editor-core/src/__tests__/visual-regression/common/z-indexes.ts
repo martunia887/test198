@@ -1,20 +1,22 @@
+import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
+
+import { selectors } from '../../__helpers/page-objects/_editor';
+import { emojiReadySelector } from '../../__helpers/page-objects/_emoji';
+import { tableSelectors } from '../../__helpers/page-objects/_table';
+import { insertTable } from '../../__helpers/page-objects/_table';
+import {
+  clickToolbarMenu,
+  ToolbarMenuItem,
+} from '../../__helpers/page-objects/_toolbar';
+import { Page } from '../../__helpers/page-objects/_types';
 import {
   initFullPageEditorWithAdf,
   snapshot,
   Device,
   editorSelector,
 } from '../_utils';
-import {
-  clickToolbarMenu,
-  ToolbarMenuItem,
-} from '../../__helpers/page-objects/_toolbar';
-import { selectors } from '../../__helpers/page-objects/_editor';
-import { tableSelectors } from '../../__helpers/page-objects/_table';
-import { insertTable } from '../../__helpers/page-objects/_table';
-import { emojiReadySelector } from '../../__helpers/page-objects/_emoji';
-import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
+
 import adf from './__fixtures__/noData-adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
 
 describe('z-indexes:', () => {
   let page: Page;

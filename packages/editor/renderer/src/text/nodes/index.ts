@@ -1,4 +1,5 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
+
 import blockquote from './blockquote';
 import bulletList from './bulletList';
 import decisionItem from './decisionItem';

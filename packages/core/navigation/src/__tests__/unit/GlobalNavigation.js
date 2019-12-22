@@ -1,13 +1,14 @@
 // @flow
 /* eslint-disable no-console */
+import React, { PureComponent } from 'react';
 import { shallow, mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import React, { PureComponent } from 'react';
-import GlobalNavigation from '../../components/js/GlobalNavigation';
-import * as presets from '../../theme/presets';
+
 import GlobalItem from '../../components/js/GlobalItem';
+import GlobalNavigation from '../../components/js/GlobalNavigation';
 import GlobalPrimaryActions from '../../components/js/GlobalPrimaryActions';
 import GlobalSecondaryActions from '../../components/js/GlobalSecondaryActions';
+import * as presets from '../../theme/presets';
 
 configure({ adapter: new Adapter() });
 

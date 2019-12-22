@@ -1,6 +1,7 @@
 // @flow
 
 import type { ComponentType, ElementConfig } from 'react';
+
 import type { Diffable } from '../common/types';
 import type {
   GlobalItemPresentationProps,

@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
+
+import { getUrl } from '../actions/helpers';
 import { useSmartLinkContext } from '../context';
 import { CardState } from '../types';
-import { useEffect, useState } from 'react';
-import { getUrl } from '../actions/helpers';
 
 export function useSmartCardState(url: string): CardState {
   const { store } = useSmartLinkContext();

@@ -1,30 +1,27 @@
 import * as React from 'react';
-
-import { EditorView } from 'prosemirror-view';
-
+import { validator, ErrorCallback, ADFEntity } from '@atlaskit/adf-utils';
 import {
   cardProvider,
   customInsertMenuItems,
   extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
-
-import { validator, ErrorCallback, ADFEntity } from '@atlaskit/adf-utils';
+import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 import { mention } from '@atlaskit/util-data-test';
+import { EditorView } from 'prosemirror-view';
 
-import Editor from './../src/editor';
-import { EditorAppearance } from '../src/types';
-import { EditorActions } from '../src';
-import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
-
+import { ExtensionProvider } from '../../editor-common/src';
 import {
   providers,
   mediaProvider,
   analyticsHandler,
   quickInsertProvider,
 } from '../examples/5-full-page';
+import { EditorActions } from '../src';
+import { EditorAppearance } from '../src/types';
+
+import Editor from './../src/editor';
 import { Error } from './ErrorReport';
-import { ExtensionProvider } from '../../editor-common/src';
 
 export type Props = {
   actions: EditorActions;

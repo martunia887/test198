@@ -6,20 +6,21 @@ import {
   withAnalyticsEvents,
 } from '@atlaskit/analytics-next';
 import Button from '@atlaskit/button';
-import Tooltip from '@atlaskit/tooltip';
 import { messages } from '@atlaskit/media-ui';
+import Tooltip from '@atlaskit/tooltip';
 
 import { Tool } from '../../../common';
 import { fireAnalyticsEvent } from '../../../util';
-import LineWidthButton from './buttons/lineWidthButton';
-import ColorButton from './buttons/colorButton';
-import { ToolButton } from './buttons/toolButton';
-import { LineWidthPopup } from './popups/lineWidthPopup';
-import { ColorPopup } from './popups/colorPopup';
-import { ToolbarContainer, CenterButtons, VerticalLine } from './styles';
-import { ShapePopup, shapeTools } from './popups/shapePopup';
-import ShapeButton from './buttons/shapeButton';
+
 import { ButtonGroup } from './buttons/buttonGroup';
+import ColorButton from './buttons/colorButton';
+import LineWidthButton from './buttons/lineWidthButton';
+import ShapeButton from './buttons/shapeButton';
+import { ToolButton } from './buttons/toolButton';
+import { ColorPopup } from './popups/colorPopup';
+import { LineWidthPopup } from './popups/lineWidthPopup';
+import { ShapePopup, shapeTools } from './popups/shapePopup';
+import { ToolbarContainer, CenterButtons, VerticalLine } from './styles';
 
 export type PopupState = 'none' | 'color' | 'lineWidth' | 'shape';
 

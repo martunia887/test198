@@ -3,6 +3,7 @@ const tsRecommendedRules = require('@typescript-eslint/eslint-plugin/dist/config
   .rules;
 const prettierTsRules = require('eslint-config-prettier/@typescript-eslint')
   .rules;
+const importOrder = require('./.eslintrc/import-order');
 
 const resolverPath = path.resolve(
   `${__dirname}/build/resolvers/eslint-resolver.js`,
@@ -98,7 +99,7 @@ module.exports = {
     ],
   },
   parser: 'babel-eslint',
-  plugins: ['flowtype', 'jest', 'prettier', 'react-hooks', '@wordpress'],
+  plugins: ['flowtype', 'jest', 'prettier', 'react-hooks', '@wordpress', 'tangerine'],
   rules: {
     'import/no-extraneous-dependencies': [
       'error',
@@ -213,6 +214,9 @@ module.exports = {
     'jest/no-focused-tests': 'error',
     'jest/no-identical-title': 'error',
     'jest/valid-expect': 'error',
+
+    'tangerine/import/order': ['error', importOrder()],
+    //'tangerine/import/no-implicit-imports': ['error', [{ source: 'react', keepDefaultImport: true }]],
   },
   env: {
     browser: true,

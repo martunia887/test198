@@ -1,5 +1,5 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { NodeEncoder, NodeEncoderOpts } from '..';
+import { Node as PMNode } from 'prosemirror-model';
 import { media } from './media';
 
 export const mediaGroup: NodeEncoder = (

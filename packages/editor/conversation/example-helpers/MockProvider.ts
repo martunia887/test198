@@ -2,6 +2,7 @@ import { ProviderFactory } from '@atlaskit/editor-common';
 import { MemoryReactionsStore } from '@atlaskit/reactions';
 import { MockReactionsClient } from '@atlaskit/reactions/src/client/MockReactionsClient';
 import { emoji, mention } from '@atlaskit/util-data-test';
+
 import {
   AbstractConversationResource,
   ConversationResourceConfig,
@@ -27,6 +28,7 @@ import {
 } from '../src/internal/actions';
 import { uuid } from '../src/internal/uuid';
 import { Comment, Conversation, User } from '../src/model';
+
 import {
   generateMockConversation,
   mockInlineConversation,

@@ -1,11 +1,13 @@
 import React, { Ref, useEffect } from 'react';
 import { ClassNames, keyframes, ObjectInterpolation } from '@emotion/core';
-import { useStaggeredEntrance } from './staggered-entrance';
-import { useExitingPersistence } from './exiting-persistence';
-import { MotionProps, Direction } from './types';
-import { largeDurationMs } from '../utils/durations';
+
 import { prefersReducedMotion } from '../utils/accessibility';
+import { largeDurationMs } from '../utils/durations';
 import { useSetTimeout } from '../utils/timer-hooks';
+
+import { useExitingPersistence } from './exiting-persistence';
+import { useStaggeredEntrance } from './staggered-entrance';
+import { MotionProps, Direction } from './types';
 
 /**
  * These are props that motions should use as their external props for consumers.

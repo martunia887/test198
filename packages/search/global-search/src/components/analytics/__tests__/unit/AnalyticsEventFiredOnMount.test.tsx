@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { UnwrappedAnalyticsEventFiredOnMount } from '../../AnalyticsEventFiredOnMount';
-import { GasPayload } from '@atlaskit/analytics-gas-types';
 import { mount } from 'enzyme';
-import { CreateAnalyticsEventFn } from '../../types';
+import { GasPayload } from '@atlaskit/analytics-gas-types';
+
 import { DEFAULT_GAS_CHANNEL } from '../../../../util/analytics-util';
+import { UnwrappedAnalyticsEventFiredOnMount } from '../../AnalyticsEventFiredOnMount';
+import { CreateAnalyticsEventFn } from '../../types';
 
 const mockPayloadA: GasPayload = {
   action: 'action-A',

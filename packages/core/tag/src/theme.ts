@@ -1,5 +1,5 @@
-import { themed } from '@atlaskit/theme/components';
 import * as colors from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
 
 // TODO: Define the types for props - https://ecosystem.atlassian.net/browse/AK-6340
 const textColors = themed('color', {

@@ -5,8 +5,9 @@ import {
   InternalFile,
   MediaCollectionFile,
 } from '..';
-import { MockRequest, MockResponse } from 'xhr-mock';
 import * as uuid from 'uuid';
+import { MockRequest, MockResponse } from 'xhr-mock';
+
 import { files, fileUri } from '../staticCommon';
 
 export const copyWithToken = (context: () => MockContext) => (

@@ -1,20 +1,19 @@
 import React from 'react';
-import { canUseDOM } from 'exenv';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
 import Blanket from '@atlaskit/blanket';
+import { canUseDOM } from 'exenv';
 
+import { WIDTH_ENUM, WidthNames } from '../shared-variables';
+import { Dialog, FillScreen as StyledFillScreen } from '../styled/Modal';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
 
-import { WIDTH_ENUM, WidthNames } from '../shared-variables';
-
-import { Dialog, FillScreen as StyledFillScreen } from '../styled/Modal';
 import { Animation } from './Animation';
 import Content from './Content';
 import FocusLock from './FocusLock';

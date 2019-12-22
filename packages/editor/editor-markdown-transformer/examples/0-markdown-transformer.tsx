@@ -6,8 +6,9 @@ import {
   WithEditorActions,
 } from '@atlaskit/editor-core';
 import { taskDecision } from '@atlaskit/util-data-test';
-import { MarkdownTransformer } from '../src';
+
 import exampleMarkdown from '../example-helpers/exampleMarkdown';
+import { MarkdownTransformer } from '../src';
 
 const Container = styled.div`
   display: grid;

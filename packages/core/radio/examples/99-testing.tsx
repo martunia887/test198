@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-
 import { RadioGroup } from '../src';
 import { OptionsPropType } from '../src/types';
 

@@ -1,5 +1,5 @@
-import { FlagShape, Flag, CustomAttributes } from './types';
 import { isBoolean, isObject, isOneOf, isString } from './lib';
+import { FlagShape, Flag, CustomAttributes } from './types';
 
 export default class TrackedFlag implements Flag {
   flagKey: string;

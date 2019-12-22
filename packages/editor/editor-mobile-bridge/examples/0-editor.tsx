@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { disableZooming } from './utils/viewport';
-
 import {
   cardProvider,
   storyMediaProviderFactory,
 } from '@atlaskit/editor-test-helpers';
 
 import Editor from './../src/editor/mobile-editor-element';
+import { disableZooming } from './utils/viewport';
 
 // @ts-ignore
 window.logBridge = window.logBridge || [];

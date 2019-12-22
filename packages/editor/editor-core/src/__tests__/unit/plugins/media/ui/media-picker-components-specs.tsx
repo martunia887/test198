@@ -1,46 +1,16 @@
-import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import { Props } from '../../../../../plugins/media/ui/MediaPicker/PickerFacadeProvider';
-import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';
+import { mount, ReactWrapper } from 'enzyme';
 import { Clipboard as ClipboardComponent } from '@atlaskit/media-picker';
 import { Browser as BrowserComponent } from '@atlaskit/media-picker';
 import { Dropzone as DropzoneComponent } from '@atlaskit/media-picker';
+import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';
 
-const picker: any = {
-  on: jest.fn(),
-  onClose: jest.fn(),
-  onNewMedia: jest.fn(),
-  onMediaEvent: jest.fn(),
-  onDrag: jest.fn(),
-  hide: jest.fn(),
-  setUploadParams: jest.fn(),
-  show: jest.fn(),
-  deactivate: jest.fn(),
-  activate: jest.fn(),
-  destroy: jest.fn(),
-  type: 'popup',
-};
-picker.init = jest.fn().mockReturnValue(picker);
-
-const mockPickerFacadeProvider = ({ children }: Props) =>
-  children({
-    mediaClientConfig: getDefaultMediaClientConfig(),
-    config: {
-      uploadParams: {},
-    },
-    pickerFacadeInstance: picker,
-  });
-
-jest.mock(
-  '../../../../../plugins/media/ui/MediaPicker/PickerFacadeProvider.tsx',
-  () => mockPickerFacadeProvider,
-);
-
-import { ClipboardWrapper } from '../../../../../plugins/media/ui/MediaPicker/ClipboardWrapper';
-import { BrowserWrapper } from '../../../../../plugins/media/ui/MediaPicker/BrowserWrapper';
-import { DropzoneWrapper } from '../../../../../plugins/media/ui/MediaPicker/DropzoneWrapper';
-import { MediaPickerComponents } from '../../../../../plugins/media/ui/MediaPicker';
 import { MediaPluginState } from '../../../../../plugins/media/pm-plugins/main';
+import { MediaPickerComponents } from '../../../../../plugins/media/ui/MediaPicker';
+import { BrowserWrapper } from '../../../../../plugins/media/ui/MediaPicker/BrowserWrapper';
+import { ClipboardWrapper } from '../../../../../plugins/media/ui/MediaPicker/ClipboardWrapper';
+import { DropzoneWrapper } from '../../../../../plugins/media/ui/MediaPicker/DropzoneWrapper';
+import { Props } from '../../../../../plugins/media/ui/MediaPicker/PickerFacadeProvider';
 
 describe('MediaPickerComponents', () => {
   let pluginState: MediaPluginState;

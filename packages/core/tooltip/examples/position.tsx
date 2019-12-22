@@ -1,8 +1,10 @@
 import React from 'react';
-import { Target } from './styled';
-import { Color } from './styled';
+
 import Tooltip from '../src';
 import { PositionType } from '../src/types';
+
+import { Target } from './styled';
+import { Color } from './styled';
 
 const VALID_POSITIONS: PositionType[] = [
   'mouse',

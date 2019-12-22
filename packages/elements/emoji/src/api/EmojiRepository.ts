@@ -1,10 +1,6 @@
 import { ITokenizer, Search, UnorderedSearchIndex } from 'js-search';
+
 import { CategoryId } from '../components/picker/categories';
-import { defaultCategories, frequentCategory } from '../util/constants';
-import {
-  getCategoryId,
-  isEmojiDescriptionWithVariations,
-} from '../util/type-helpers';
 import {
   EmojiDescription,
   EmojiSearchResult,
@@ -12,6 +8,12 @@ import {
   SearchOptions,
   SearchSort,
 } from '../types';
+import { defaultCategories, frequentCategory } from '../util/constants';
+import {
+  getCategoryId,
+  isEmojiDescriptionWithVariations,
+} from '../util/type-helpers';
+
 import { tokenizerRegex } from './EmojiRepositoryRegex';
 import {
   createSearchEmojiComparator,

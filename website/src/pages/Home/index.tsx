@@ -2,8 +2,10 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
-import Cards from './Cards';
+
 import { DESKTOP_BREAKPOINT_MIN } from '../../constants';
+
+import Cards from './Cards';
 
 const fonts =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';

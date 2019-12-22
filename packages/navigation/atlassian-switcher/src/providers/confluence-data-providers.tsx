@@ -1,12 +1,13 @@
 import React from 'react';
 
+import { CustomLinksResponse, CustomLink } from '../types';
 import { fetchJson } from '../utils/fetch';
+
 import asDataProvider, {
   ResultComplete,
   Status,
   ProviderResult,
 } from './as-data-provider';
-import { CustomLinksResponse, CustomLink } from '../types';
 
 export const MANAGE_HREF =
   '/wiki/plugins/servlet/customize-application-navigator';

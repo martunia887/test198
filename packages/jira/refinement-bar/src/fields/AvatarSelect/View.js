@@ -1,9 +1,10 @@
 // @flow
 /** @jsx jsx */
 
-import { jsx } from '@emotion/core';
 import Avatar from '@atlaskit/avatar';
 import { gridSize } from '@atlaskit/theme';
+import { jsx } from '@emotion/core';
+
 import Select, { CLEAR_DATA } from '../Select/View';
 
 // do NOT assign directly; a new component must be created to avoid inheritence

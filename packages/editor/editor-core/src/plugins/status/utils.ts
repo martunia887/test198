@@ -1,6 +1,6 @@
+import { Node as PMNode } from 'prosemirror-model';
 import { Selection, NodeSelection, Transaction } from 'prosemirror-state';
 import { StatusType } from './plugin';
-import { Node as PMNode } from 'prosemirror-model';
 
 export const mayGetStatusAtSelection = (
   selection: Selection,

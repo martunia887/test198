@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { Component } from 'react';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 
 import { CardAction } from '../../actions';
-import { Wrapper } from './styled';
+import { createAndFireMediaEvent } from '../analytics';
+import { PreventClickThrough } from '../preventClickThrough';
+
 import {
   CardActionIconButton,
   CardActionIconButtonProps,
 } from './cardActionIconButton';
 import { CardActionsDropdownMenu } from './cardActionsDropdownMenu';
-import { PreventClickThrough } from '../preventClickThrough';
-import { createAndFireMediaEvent } from '../analytics';
-import {
-  withAnalyticsEvents,
-  WithAnalyticsEventsProps,
-} from '@atlaskit/analytics-next';
+import { Wrapper } from './styled';
 
 type CardActionIconButtonPropsWithAnalytics = CardActionIconButtonProps &
   WithAnalyticsEventsProps;

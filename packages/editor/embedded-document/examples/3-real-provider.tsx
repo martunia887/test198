@@ -6,7 +6,6 @@ import {
   DocumentMode,
   Toolbar,
 } from '../src';
-
 import { Container } from './helpers/styles';
 
 const SERVICE_URL = 'http://localhost:8080';

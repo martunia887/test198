@@ -1,3 +1,5 @@
+import { ELEMENTS_CHANNEL } from './_constants';
+import ContextMentionResource from './api/ContextMentionResource';
 import MentionResource, {
   AbstractMentionResource,
   MentionContextIdentifier,
@@ -5,19 +7,17 @@ import MentionResource, {
   MentionStats,
   MentionResourceConfig,
 } from './api/MentionResource';
-import TeamMentionResource from './api/TeamMentionResource';
 import PresenceResource, {
   PresenceProvider,
   AbstractPresenceResource,
 } from './api/PresenceResource';
+import TeamMentionResource from './api/TeamMentionResource';
 import {
   MentionDescription,
   MentionsResult,
   isSpecialMention,
   TeamMember,
 } from './types';
-import { ELEMENTS_CHANNEL } from './_constants';
-import ContextMentionResource from './api/ContextMentionResource';
 
 export {
   // Classes

@@ -1,7 +1,7 @@
 // @flow
 
-import type { ConnectedSkeletonItemProps } from '../SkeletonItem/types';
 import type { GlobalTheme } from '../../../theme/types';
+import type { ConnectedSkeletonItemProps } from '../SkeletonItem/types';
 
 export type GlobalNavigationSkeletonItemProps = ConnectedSkeletonItemProps;
 

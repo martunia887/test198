@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import withHandleOptionalCloudId from '../../with-handle-optional-cloud-id';
+
 import { DataProviderProps, Status } from '../../as-data-provider';
+import withHandleOptionalCloudId from '../../with-handle-optional-cloud-id';
 
 describe('with-handle-optional-cloud-id', () => {
   const DummyProvider = withHandleOptionalCloudId(

@@ -3,8 +3,9 @@
 import React, { PureComponent } from 'react';
 import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 
-import SkeletonItem from '../SkeletonItem';
 import { styleReducerNoOp } from '../../../theme';
+import SkeletonItem from '../SkeletonItem';
+
 import type { SkeletonContainerHeaderProps } from './types';
 
 const gridSize = gridSizeFn();

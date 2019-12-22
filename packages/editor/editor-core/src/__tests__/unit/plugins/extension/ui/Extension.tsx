@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+import Loadable from 'react-loadable';
 import {
   ProviderFactory,
   ExtensionHandlers,
@@ -11,7 +12,6 @@ import { createFakeExtensionProvider } from '@atlaskit/editor-test-helpers/exten
 
 import Extension from '../../../../../plugins/extension/ui/Extension';
 import ExtensionComponent from '../../../../../plugins/extension/ui/Extension/ExtensionComponent';
-import Loadable from 'react-loadable';
 
 const macroProviderPromise = Promise.resolve(macroProvider);
 const providerFactory = ProviderFactory.create({

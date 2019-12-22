@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { ProviderFactory } from '@atlaskit/editor-common';
 import { mount } from 'enzyme';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
   doc,
   p,
   annotation,
 } from '@atlaskit/editor-test-helpers';
-import { removeInlineCommentNearSelection } from '../../../../plugins/annotation/commands';
+
+import { EventDispatcher } from '../../../../event-dispatcher';
 import annotationPlugin, {
   AnnotationComponentProps,
 } from '../../../../plugins/annotation';
-import { EventDispatcher } from '../../../../event-dispatcher';
+import { removeInlineCommentNearSelection } from '../../../../plugins/annotation/commands';
 
 describe('annotation', () => {
   const createEditor = createEditorFactory();

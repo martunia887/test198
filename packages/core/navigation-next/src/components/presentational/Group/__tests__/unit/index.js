@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { mount } from 'enzyme';
-
 import Group from '../../index';
 
 describe('Group', () => {

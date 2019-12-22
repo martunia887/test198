@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { mount, shallow } from 'enzyme';
 import Avatar from '@atlaskit/avatar';
-import LockFilledIcon from '@atlaskit/icon/glyph/lock-filled';
-import Lozenge from '@atlaskit/lozenge';
 import Button from '@atlaskit/button';
-
+import LockFilledIcon from '@atlaskit/icon/glyph/lock-filled';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
+import Lozenge from '@atlaskit/lozenge';
 
 import Comment, {
   CommentAction,
@@ -14,10 +13,10 @@ import Comment, {
   CommentLayout,
   CommentTime,
 } from '../../..';
+import { Content } from '../../../styled/CommentStyles';
 import { ActionsContainer } from '../../../styled/FooterStyles';
 import { TopItem } from '../../../styled/HeaderStyles';
 import { Container, Highlight } from '../../../styled/LayoutStyles';
-import { Content } from '../../../styled/CommentStyles';
 import HeaderItems from '../../Header';
 
 describe('@atlaskit comments', () => {

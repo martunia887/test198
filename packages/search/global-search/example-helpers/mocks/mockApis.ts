@@ -1,6 +1,14 @@
 import fetchMock from 'fetch-mock';
 import seedrandom from 'seedrandom';
 
+import { ScopeResult } from '../../src/api/CrossProductSearchClient';
+import { Scope } from '../../src/api/types';
+
+import {
+  permissionResponseWithoutUserPickerPermission,
+  permissionResponseWithUserPickerPermission,
+} from './jiraPermissionResponse';
+import { jiraRecentResponseWithAttributes } from './jiraRecentResponseDataWithAttributes';
 import {
   makePeopleSearchData,
   makeCrossProductSearchData,
@@ -9,13 +17,6 @@ import {
   makeCrossProductExperimentData,
   makeAutocompleteData,
 } from './mockData';
-import { jiraRecentResponseWithAttributes } from './jiraRecentResponseDataWithAttributes';
-import {
-  permissionResponseWithoutUserPickerPermission,
-  permissionResponseWithUserPickerPermission,
-} from './jiraPermissionResponse';
-import { ScopeResult } from '../../src/api/CrossProductSearchClient';
-import { Scope } from '../../src/api/types';
 
 type Request = string;
 

@@ -1,11 +1,3 @@
-import { Slice, Fragment } from 'prosemirror-model';
-import { TextSelection } from 'prosemirror-state';
-import { CellSelection } from 'prosemirror-tables';
-import {
-  isColumnSelected,
-  isRowSelected,
-  findParentNodeOfType,
-} from 'prosemirror-utils';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   doc,
@@ -19,6 +11,21 @@ import {
   tdEmpty,
   panelNote,
 } from '@atlaskit/editor-test-helpers';
+import { Slice, Fragment } from 'prosemirror-model';
+import { TextSelection } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
+import {
+  isColumnSelected,
+  isRowSelected,
+  findParentNodeOfType,
+} from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
+import {
+  temporaryMediaGroup,
+  getFreshMediaProvider,
+} from '../../../../__tests__/unit/plugins/media/_utils';
+import { EditorProps } from '../../../../types';
 import {
   transformSliceToAddTableHeaders,
   clearMultipleCells,
@@ -32,16 +39,10 @@ import {
   addBoldInEmptyHeaderCells,
   toggleHeaderRow,
 } from '../../commands';
-import { handleCut } from '../../event-handlers';
-import { TablePluginState } from '../../types';
-import { pluginKey, getPluginState } from '../../pm-plugins/main';
-import { EditorView } from 'prosemirror-view';
 import { splitCell } from '../../commands/misc';
-import {
-  temporaryMediaGroup,
-  getFreshMediaProvider,
-} from '../../../../__tests__/unit/plugins/media/_utils';
-import { EditorProps } from '../../../../types';
+import { handleCut } from '../../event-handlers';
+import { pluginKey, getPluginState } from '../../pm-plugins/main';
+import { TablePluginState } from '../../types';
 
 describe('table plugin: actions', () => {
   const createEditor = createEditorFactory<TablePluginState>();

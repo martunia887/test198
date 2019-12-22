@@ -1,5 +1,8 @@
 import React from 'react';
-
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
@@ -7,16 +10,11 @@ import {
   insertText,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 import { EditorView } from 'prosemirror-view';
-import ToolbarFeedback from '../../../../ui/ToolbarFeedback';
 
-import * as LoadJiraCollectorDialogScript from '../../../../plugins/feedback-dialog/loadJiraCollectorDialogScript';
 import { openFeedbackDialog } from '../../../../plugins/feedback-dialog';
+import * as LoadJiraCollectorDialogScript from '../../../../plugins/feedback-dialog/loadJiraCollectorDialogScript';
+import ToolbarFeedback from '../../../../ui/ToolbarFeedback';
 
 describe('feedbackDialogPlugin', () => {
   const createEditor = createEditorFactory();

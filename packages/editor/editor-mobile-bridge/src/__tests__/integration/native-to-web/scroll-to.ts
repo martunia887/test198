@@ -1,6 +1,8 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
 import { renderer, skipBrowsers as skip, callRendererBridge } from '../_utils';
+
 import adf from './__fixtures__/scroll-to-mention-adf.json';
 
 type ScrollTestResult = {

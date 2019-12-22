@@ -1,8 +1,8 @@
 jest.mock('../../wsConnectionHolder');
 
 import { Auth } from '@atlaskit/media-core';
-import { WsProvider } from '../../wsProvider';
 import { WsConnectionHolder } from '../../wsConnectionHolder';
+import { WsProvider } from '../../wsProvider';
 
 describe('WsProvider', () => {
   const baseUrl = 'https://media.api';

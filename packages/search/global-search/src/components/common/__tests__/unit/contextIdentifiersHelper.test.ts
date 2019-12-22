@@ -1,8 +1,4 @@
 import {
-  attachConfluenceContextIdentifiers,
-  attachJiraContextIdentifiers,
-} from '../../contextIdentifiersHelper';
-import {
   AnalyticsType,
   ConfluenceResultsMap,
   ContentType,
@@ -10,6 +6,10 @@ import {
   Result,
   JiraResultsMap,
 } from '../../../../model/Result';
+import {
+  attachConfluenceContextIdentifiers,
+  attachJiraContextIdentifiers,
+} from '../../contextIdentifiersHelper';
 
 const searchSessionId = 'searchSessionId';
 

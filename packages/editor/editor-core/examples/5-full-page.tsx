@@ -1,9 +1,12 @@
-import styled from 'styled-components';
 import * as React from 'react';
+import styled from 'styled-components';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import ExamplesErrorBoundary from '../example-helpers/ExamplesErrorBoundary';
-
+import {
+  ProviderFactory,
+  ExtensionProvider,
+  combineExtensionProviders,
+} from '@atlaskit/editor-common';
 import {
   cardProviderStaging,
   customInsertMenuItems,
@@ -13,13 +16,10 @@ import {
   macroProvider,
   autoformattingProvider,
 } from '@atlaskit/editor-test-helpers';
-import {
-  ProviderFactory,
-  ExtensionProvider,
-  combineExtensionProviders,
-} from '@atlaskit/editor-common';
-
+import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
+import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
+import { ReactRenderer } from '@atlaskit/renderer';
 import {
   Provider as SmartCardProvider,
   Client as SmartCardClient,
@@ -31,22 +31,21 @@ import {
   profilecard as profilecardUtils,
 } from '@atlaskit/util-data-test';
 
-import Editor, { EditorProps, EditorAppearance } from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
-import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
 import { DevTools } from '../example-helpers/DevTools';
+import ExamplesErrorBoundary from '../example-helpers/ExamplesErrorBoundary';
 import { TitleInput } from '../example-helpers/PageElements';
-import { EditorActions, MentionProvider } from './../src';
-import withSentry from '../example-helpers/withSentry';
 import BreadcrumbsMiscActions from '../example-helpers/breadcrumbs-misc-actions';
 import {
   DEFAULT_MODE,
   LOCALSTORAGE_defaultMode,
 } from '../example-helpers/example-constants';
-import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
-import { ReactRenderer } from '@atlaskit/renderer';
-import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
+import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
+import withSentry from '../example-helpers/withSentry';
+
+import { EditorActions, MentionProvider } from './../src';
+import Editor, { EditorProps, EditorAppearance } from './../src/editor';
+import EditorContext from './../src/ui/EditorContext';
+import WithEditorActions from './../src/ui/WithEditorActions';
 
 /**
  * +-------------------------------+

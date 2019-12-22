@@ -1,8 +1,9 @@
 import React from 'react';
 import PageIcon from '@atlaskit/icon/glyph/page';
+
 import { Directory } from '../../../types';
-import renderNav from '../utils/renderNav';
 import buildNavGroups from '../utils/buildNavGroups';
+import renderNav from '../utils/renderNav';
 
 export type DocsNavProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;

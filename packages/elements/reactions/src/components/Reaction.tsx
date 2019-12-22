@@ -1,20 +1,22 @@
+import * as React from 'react';
+import { PureComponent, SyntheticEvent } from 'react';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { ResourcedEmoji } from '@atlaskit/emoji/element';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { borderRadius, colors } from '@atlaskit/theme';
 import cx from 'classnames';
-import * as React from 'react';
-import { PureComponent, SyntheticEvent } from 'react';
 import { style } from 'typestyle';
+
 import {
   createAndFireSafe,
   createReactionClickedEvent,
   createReactionHoveredEvent,
 } from '../analytics';
 import { ReactionSummary } from '../types/ReactionSummary';
+
 import { Counter } from './Counter';
 import { FlashAnimation } from './FlashAnimation';
 import { ReactionTooltip } from './ReactionTooltip';

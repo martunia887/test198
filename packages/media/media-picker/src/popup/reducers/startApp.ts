@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isStartAppAction } from '../actions/startApp';
 import { State } from '../domain';
 

@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { withHelp, HelpContextInterface } from './HelpContext';
-import Header from './Header';
 
-import Search from './Search';
 import ArticleComponent from './Article';
-
+import Header from './Header';
+import { withHelp, HelpContextInterface } from './HelpContext';
+import Search from './Search';
 import {
   Container,
   HelpBody,

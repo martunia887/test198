@@ -1,6 +1,5 @@
 import { MediaProvider } from '@atlaskit/editor-core';
 import { Auth, AuthContext, MediaClientConfig } from '@atlaskit/media-core';
-
 import { createPromise } from '../cross-platform-promise';
 
 const getMediaToken = (context?: AuthContext): Promise<Auth> =>

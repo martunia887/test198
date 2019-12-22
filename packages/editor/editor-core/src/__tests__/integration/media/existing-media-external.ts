@@ -1,10 +1,11 @@
+import { sleep } from '@atlaskit/media-test-helpers';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, getDocFromElement, fullpage } from '../_helpers';
+
 import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
-import { sleep } from '@atlaskit/media-test-helpers';
+import { editable, getDocFromElement, fullpage } from '../_helpers';
 
 const baseADF = {
   version: 1,

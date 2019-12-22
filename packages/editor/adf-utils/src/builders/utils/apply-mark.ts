@@ -1,6 +1,6 @@
-import { isDuplicateMark, duplicateMarkError } from './is-duplicate-mark';
-import { WithMark } from '../types';
 import { text } from '../nodes/text';
+import { WithMark } from '../types';
+import { isDuplicateMark, duplicateMarkError } from './is-duplicate-mark';
 
 export function applyMark<T>(
   mark: T & { type: string },

@@ -1,9 +1,7 @@
 import * as React from 'react';
 
 import { getEmojis } from '../example-helpers';
-
 import EmojiPreview from '../src/components/common/EmojiPreview';
-
 import { emojiPickerWidth } from '../src/util/constants';
 import filters from '../src/util/filters';
 

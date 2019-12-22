@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import GlobalQuickSearchWithAnalytics, {
-  GlobalQuickSearch,
-  Props,
-} from '../../GlobalQuickSearch';
-import * as AnalyticsHelper from '../../../util/analytics-event-helper';
-import { CreateAnalyticsEventFn } from '../../analytics/types';
-import { ReferralContextIdentifiers } from '../../GlobalQuickSearchWrapper';
+
 import {
   FilterType,
   FilterWithMetadata,
 } from '../../../api/CrossProductSearchClient';
+import * as AnalyticsHelper from '../../../util/analytics-event-helper';
+import GlobalQuickSearchWithAnalytics, {
+  GlobalQuickSearch,
+  Props,
+} from '../../GlobalQuickSearch';
+import { ReferralContextIdentifiers } from '../../GlobalQuickSearchWrapper';
+import { CreateAnalyticsEventFn } from '../../analytics/types';
 
 const noop = () => {};
 const DEFAULT_PROPS = {

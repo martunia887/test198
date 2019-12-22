@@ -1,5 +1,11 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
+import messages from '../../../messages';
+import { clickFirstCell } from '../../__helpers/page-objects/_table';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
@@ -9,20 +15,11 @@ import {
   toggleBreakout,
 } from '../_helpers';
 
-import { clickFirstCell } from '../../__helpers/page-objects/_table';
-
 import {
   defaultTableInOverflow,
   defaultTableResizedTable,
   nestedTables,
 } from './__fixtures__/layout-documents';
-
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
-
-import messages from '../../../messages';
 
 BrowserTestCase(
   'Avoid overflow when table scale to wide',

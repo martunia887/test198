@@ -1,9 +1,11 @@
 import { Component } from 'react';
-import { AppProxyReactContext } from './app';
-import { Store } from 'redux';
-import { State } from '../domain';
-import { UIAnalyticsEventHandler } from '@atlaskit/analytics-next';
 import { intlShape, IntlProvider } from 'react-intl';
+import { UIAnalyticsEventHandler } from '@atlaskit/analytics-next';
+import { Store } from 'redux';
+
+import { State } from '../domain';
+
+import { AppProxyReactContext } from './app';
 
 export interface PassContextProps {
   store: Store<State>;

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 import { gridSize, typography } from '@atlaskit/theme';
-import { messages } from '../messages';
+
 import MaginfyingGlassImage from '../assets/MagnifyingGlassImage';
+import { messages } from '../messages';
 
 const Wrapper = styled.div`
   display: flex;

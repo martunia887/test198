@@ -1,23 +1,23 @@
 jest.mock('../../customMediaPlayer/fullscreen');
 import * as React from 'react';
 import { mount } from 'enzyme';
-import FullScreenIcon from '@atlaskit/icon/glyph/vid-full-screen-on';
-import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
-import VidHdCircleIcon from '@atlaskit/icon/glyph/vid-hd-circle';
-import DownloadIcon from '@atlaskit/icon/glyph/download';
 import Button from '@atlaskit/button';
-import Spinner from '@atlaskit/spinner';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
+import FullScreenIcon from '@atlaskit/icon/glyph/vid-full-screen-on';
+import VidHdCircleIcon from '@atlaskit/icon/glyph/vid-hd-circle';
+import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
 import { fakeIntl, asMock } from '@atlaskit/media-test-helpers';
+import Spinner from '@atlaskit/spinner';
+
+import { Shortcut } from '../../';
 import {
   CustomMediaPlayer,
   CustomMediaPlayerProps,
 } from '../../customMediaPlayer';
 import { toggleFullscreen } from '../../customMediaPlayer/fullscreen';
-import { TimeRange, TimeRangeProps } from '../../customMediaPlayer/timeRange';
-import { CurrentTime } from '../../customMediaPlayer/styled';
-import { Shortcut } from '../../';
-jest.mock('../../customMediaPlayer/simultaneousPlayManager');
 import simultaneousPlayManager from '../../customMediaPlayer/simultaneousPlayManager';
+import { CurrentTime } from '../../customMediaPlayer/styled';
+import { TimeRange, TimeRangeProps } from '../../customMediaPlayer/timeRange';
 
 // Removes errors from JSDOM virtual console on CustomMediaPlayer tests
 // Trick taken from https://github.com/jsdom/jsdom/issues/2155

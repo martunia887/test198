@@ -1,13 +1,14 @@
 import * as React from 'react';
 import {
+  AnalyticsEventPayload,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+
+import {
   NAVIGATION_CHANNEL,
   OPERATIONAL_EVENT_TYPE,
   withAnalyticsEvents,
 } from '../utils/analytics';
-import {
-  AnalyticsEventPayload,
-  WithAnalyticsEventsProps,
-} from '@atlaskit/analytics-next';
 import { errorToReason } from '../utils/error-to-reason';
 
 const DATA_PROVIDER_SUBJECT = 'atlassianSwitcherDataProvider';

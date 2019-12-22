@@ -1,7 +1,12 @@
 import * as React from 'react';
-import assert from 'assert';
-import { EditorView } from 'prosemirror-view';
-
+import { ReactWrapper, mount } from 'enzyme';
+import {
+  MediaAttributes,
+  MediaSingleAttributes,
+  defaultSchema,
+  ExternalMediaAttributes,
+} from '@atlaskit/adf-schema';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
@@ -30,21 +35,21 @@ import {
   storyContextIdentifierProviderFactory,
   RefsNode,
 } from '@atlaskit/editor-test-helpers';
-
-import {
-  stateKey as mediaPluginKey,
-  MediaPluginState,
-} from '../../../../plugins/media/pm-plugins/main';
-import { setNodeSelection, setTextSelection } from '../../../../utils';
-import { AnalyticsHandler, analyticsService } from '../../../../analytics';
-import {
-  insertMediaAsMediaSingle,
-  alignAttributes,
-} from '../../../../plugins/media/utils/media-single';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { Clipboard } from '@atlaskit/media-picker';
 import { UploadPreviewUpdateEventPayload } from '@atlaskit/media-picker/types';
 import { waitUntil } from '@atlaskit/media-test-helpers';
+import assert from 'assert';
+import { TextSelection } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
+import { EditorView } from 'prosemirror-view';
+
+import {
+  CardEvent,
+  CardOnClickCallback,
+} from '../../../../../../../media/media-card/src';
+import { FileDetails } from '../../../../../../../media/media-client/src';
+import { EditorInstanceWithPlugin } from '../../../../../../editor-test-helpers/src/create-editor';
+import { Schema } from '../../../../../../editor-test-helpers/src/schema';
 import {
   temporaryMedia,
   temporaryMediaGroup,
@@ -53,26 +58,20 @@ import {
   testCollectionName,
   temporaryFileId,
 } from '../../../../__tests__/unit/plugins/media/_utils';
-import {
-  MediaAttributes,
-  MediaSingleAttributes,
-  defaultSchema,
-  ExternalMediaAttributes,
-} from '@atlaskit/adf-schema';
-import { ReactWrapper, mount } from 'enzyme';
-import { ClipboardWrapper } from '../../../../plugins/media/ui/MediaPicker/ClipboardWrapper';
+import { AnalyticsHandler, analyticsService } from '../../../../analytics';
 import { INPUT_METHOD } from '../../../../plugins/analytics';
-import MediaSingleNode from '../../nodeviews/mediaSingle';
-import MediaItem, { MediaNodeProps } from '../../nodeviews/media';
 import {
-  CardEvent,
-  CardOnClickCallback,
-} from '../../../../../../../media/media-card/src';
-import { FileDetails } from '../../../../../../../media/media-client/src';
-import { Schema } from '../../../../../../editor-test-helpers/src/schema';
-import { CellSelection } from 'prosemirror-tables';
-import { TextSelection } from 'prosemirror-state';
-import { EditorInstanceWithPlugin } from '../../../../../../editor-test-helpers/src/create-editor';
+  stateKey as mediaPluginKey,
+  MediaPluginState,
+} from '../../../../plugins/media/pm-plugins/main';
+import { ClipboardWrapper } from '../../../../plugins/media/ui/MediaPicker/ClipboardWrapper';
+import {
+  insertMediaAsMediaSingle,
+  alignAttributes,
+} from '../../../../plugins/media/utils/media-single';
+import { setNodeSelection, setTextSelection } from '../../../../utils';
+import MediaItem, { MediaNodeProps } from '../../nodeviews/media';
+import MediaSingleNode from '../../nodeviews/mediaSingle';
 
 const pdfFile = {
   id: `${randomId()}`,

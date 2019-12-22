@@ -1,8 +1,9 @@
+import * as React from 'react';
+import { mount } from 'enzyme';
 import { GasPurePayload, UI_EVENT_TYPE } from '@atlaskit/analytics-gas-types';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
-import { mount } from 'enzyme';
 import cases from 'jest-in-case';
-import * as React from 'react';
+
 import { createButtonWithAnalytics } from '../../../../examples/helpers';
 import AtlaskitListener from '../../../atlaskit/AtlaskitListener';
 import Logger from '../../../helpers/logger';

@@ -1,6 +1,8 @@
-import { Schema } from 'prosemirror-model';
 import { Token, TokenParser } from '.';
+import { Schema } from 'prosemirror-model';
+
 import { Context } from '../../interfaces';
+
 import { commonMacro } from './common-macro';
 
 export const adfMacro: TokenParser = ({ input, position, schema, context }) => {

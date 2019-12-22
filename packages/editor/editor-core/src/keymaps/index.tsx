@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { browser } from '@atlaskit/editor-common';
-import { Command } from '../types';
 import styled from 'styled-components';
+import { browser } from '@atlaskit/editor-common';
 import { colors } from '@atlaskit/theme';
+
+import { Command } from '../types';
 
 export const addAltText = makeKeyMapWithCommon('Add Alt Text', 'Mod-Alt-y');
 export const toggleBold = makeKeyMapWithCommon('Bold', 'Mod-b');

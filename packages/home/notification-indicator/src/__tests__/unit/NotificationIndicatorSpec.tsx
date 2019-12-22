@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
 import * as sinon from 'sinon';
-
+import { mount } from 'enzyme';
 import Badge from '@atlaskit/badge';
 import {
   NotificationLogClient,

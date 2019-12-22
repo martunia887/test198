@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import { isSafeUrl } from '@atlaskit/adf-schema';
+import { Context as SmartCardContext } from '@atlaskit/smart-card';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { Context as SmartCardContext } from '@atlaskit/smart-card';
 
-import { isSafeUrl } from '@atlaskit/adf-schema';
 import { getPosHandler } from '../../../nodeviews';
 import { titleUrlPairFromNode } from '../utils';
 

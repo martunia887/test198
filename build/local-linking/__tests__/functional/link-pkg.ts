@@ -1,8 +1,9 @@
-import path from 'path';
 import fs from 'fs';
 import { getFixturePath, createTempDir, copyDir } from 'jest-fixtures';
-import linkPkg from '../../link-pkg';
+import path from 'path';
 import * as yalc from 'yalc';
+
+import linkPkg from '../../link-pkg';
 
 async function copyFixtureIntoDir(dir: string, fixtureName: string) {
   const fixturePath = await getFixturePath(__dirname, fixtureName);

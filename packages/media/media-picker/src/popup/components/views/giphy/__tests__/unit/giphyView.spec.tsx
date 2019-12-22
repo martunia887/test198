@@ -2,20 +2,21 @@ jest.mock('../../../../../tools/gridCellScaler');
 
 import * as React from 'react';
 import { shallow } from 'enzyme';
-
 import Button from '@atlaskit/button';
-import Spinner from '@atlaskit/spinner';
 import FieldText from '@atlaskit/field-text';
 import { Card } from '@atlaskit/media-card';
 import { fakeIntl, mountWithIntlContext } from '@atlaskit/media-test-helpers';
-
 import {
   mockStore,
   mockState,
   getComponentClassWithStore,
 } from '@atlaskit/media-test-helpers';
-import ConnectedGiphyView, { GiphyView } from '../../giphyView';
+import Spinner from '@atlaskit/spinner';
+
+import { searchGiphy, fileClick } from '../../../../../actions';
+import gridCellScaler from '../../../../../tools/gridCellScaler';
 import { BricksLayout } from '../../bricksGrid';
+import ConnectedGiphyView, { GiphyView } from '../../giphyView';
 import {
   Title,
   ButtonContainer,
@@ -25,8 +26,6 @@ import {
   WarningHeading,
   WarningSuggestion,
 } from '../../styles';
-import { searchGiphy, fileClick } from '../../../../../actions';
-import gridCellScaler from '../../../../../tools/gridCellScaler';
 
 const ConnectedGiphyViewWithStore = getComponentClassWithStore(
   ConnectedGiphyView,

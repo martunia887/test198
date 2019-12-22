@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { codeBlock } from '@atlaskit/adf-schema';
-import { createPlugin } from './pm-plugins/main';
-import { getToolbarConfig } from './toolbar';
-import keymap from './pm-plugins/keymaps';
-import ideUX from './pm-plugins/ide-ux';
-import { messages } from '../block-type/types';
+
+import { PMPluginFactoryParams, EditorPlugin } from '../../types';
 import {
   addAnalytics,
   ACTION,
@@ -13,8 +10,13 @@ import {
   INPUT_METHOD,
   EVENT_TYPE,
 } from '../analytics';
+import { messages } from '../block-type/types';
 import { IconCode } from '../quick-insert/assets';
-import { PMPluginFactoryParams, EditorPlugin } from '../../types';
+
+import ideUX from './pm-plugins/ide-ux';
+import keymap from './pm-plugins/keymaps';
+import { createPlugin } from './pm-plugins/main';
+import { getToolbarConfig } from './toolbar';
 
 const codeBlockPlugin = (): EditorPlugin => ({
   name: 'codeBlock',

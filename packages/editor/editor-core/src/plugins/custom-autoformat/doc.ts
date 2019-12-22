@@ -2,8 +2,9 @@ import { closeHistory } from 'prosemirror-history';
 import { EditorView } from 'prosemirror-view';
 
 import { processRawValue } from '../../utils';
-import { CustomAutoformatState, AutoformatHandler } from './types';
+
 import { InputRuleHander } from './input-rules';
+import { CustomAutoformatState, AutoformatHandler } from './types';
 import { autoformatAction } from './utils';
 
 export const buildHandler = (

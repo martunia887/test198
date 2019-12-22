@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
+
 import Switcher from '../../components/switcher';
 import messages from '../../utils/messages';
 

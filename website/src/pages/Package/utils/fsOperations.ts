@@ -1,8 +1,8 @@
-import { packages } from '../../../site';
-import * as fs from '../../../utils/fs';
-import { divvyChangelog } from '../../../utils/changelog';
-import { Directory, File } from '../../../types';
 import { Log } from '../../../components/ChangeLog';
+import { packages } from '../../../site';
+import { Directory, File } from '../../../types';
+import { divvyChangelog } from '../../../utils/changelog';
+import * as fs from '../../../utils/fs';
 
 function getPkg(packages: Directory, groupId: string, pkgId: string) {
   const groups = fs.getDirectories(packages.children);

@@ -1,3 +1,4 @@
+import { MediaAttributes } from '@atlaskit/adf-schema';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
@@ -7,14 +8,14 @@ import {
   storyContextIdentifierProviderFactory,
   testMediaFileId,
 } from '@atlaskit/editor-test-helpers';
-import { MediaPluginState } from '../../../../../plugins/media/pm-plugins/main';
-import { stateKey as mediaPluginKey } from '../../../../../plugins/media/pm-plugins/main';
-import { getFreshMediaProvider, testCollectionName } from '../_utils';
+
 import {
   updateMediaNodeAttrs,
   updateAllMediaNodesAttrs,
 } from '../../../../../plugins/media/commands';
-import { MediaAttributes } from '@atlaskit/adf-schema';
+import { MediaPluginState } from '../../../../../plugins/media/pm-plugins/main';
+import { stateKey as mediaPluginKey } from '../../../../../plugins/media/pm-plugins/main';
+import { getFreshMediaProvider, testCollectionName } from '../_utils';
 
 describe('Media plugin commands', () => {
   const createEditor = createEditorFactory<MediaPluginState>();

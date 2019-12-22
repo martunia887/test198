@@ -10,13 +10,14 @@ import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-conte
 
 import { withNavigationUIController } from '../../../ui-controller';
 import { ViewControllerSubscriber } from '../../../view-controller';
+import type { ActiveView } from '../../../view-controller/types';
+import LayerInitialised from '../../presentational/LayerInitialised';
 import LayoutManager from '../../presentational/LayoutManager';
+
 import type {
   AsyncLayoutManagerWithViewControllerProps,
   AsyncLayoutManagerWithViewControllerState,
 } from './types';
-import type { ActiveView } from '../../../view-controller/types';
-import LayerInitialised from '../../presentational/LayerInitialised';
 /* NOTE: experimental props use an underscore */
 /* eslint-disable camelcase */
 

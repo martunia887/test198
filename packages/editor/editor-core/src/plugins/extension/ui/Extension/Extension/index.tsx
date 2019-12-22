@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Node as PmNode } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
 import {
   calcBreakoutWidth,
   overflowShadow,
   OverflowShadowProps,
   ExtensionProvider,
 } from '@atlaskit/editor-common';
-import { Wrapper, Header, Content, ContentWrapper } from './styles';
-import { Overlay } from '../styles';
-import ExtensionLozenge from '../Lozenge';
+import { Node as PmNode } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
+
+import WithPluginState from '../../../../../ui/WithPluginState';
 import {
   pluginKey as widthPluginKey,
   WidthPluginState,
 } from '../../../../width';
-import WithPluginState from '../../../../../ui/WithPluginState';
+import ExtensionLozenge from '../Lozenge';
+import { Overlay } from '../styles';
+
+import { Wrapper, Header, Content, ContentWrapper } from './styles';
 
 export interface Props {
   node: PmNode;

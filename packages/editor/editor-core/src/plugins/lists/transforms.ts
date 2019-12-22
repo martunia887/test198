@@ -1,3 +1,4 @@
+import { autoJoin } from 'prosemirror-commands';
 import {
   Fragment,
   NodeRange,
@@ -13,9 +14,10 @@ import {
   Selection,
 } from 'prosemirror-state';
 import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
-import { getListLiftTarget } from './utils';
+
 import { mapSlice, mapChildren } from '../../utils/slice';
-import { autoJoin } from 'prosemirror-commands';
+
+import { getListLiftTarget } from './utils';
 
 function liftListItem(
   state: EditorState,

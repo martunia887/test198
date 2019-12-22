@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
-import AkSpinner from '@atlaskit/spinner';
+import { Card } from '@atlaskit/media-card';
+import { Identifier, FileIdentifier, MediaStore } from '@atlaskit/media-client';
 import {
   externalImageIdentifier,
   externalSmallImageIdentifier,
@@ -8,7 +9,11 @@ import {
   defaultCollectionName,
   defaultMediaPickerCollectionName,
 } from '@atlaskit/media-test-helpers';
-import { ButtonList, Container, Group } from '../example-helpers/styled';
+import { videoFileId } from '@atlaskit/media-test-helpers';
+import { I18NWrapper } from '@atlaskit/media-test-helpers';
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
+import AkSpinner from '@atlaskit/spinner';
+
 import {
   docIdentifier,
   largePdfIdentifier,
@@ -21,12 +26,8 @@ import {
   audioItem,
   audioItemNoCover,
 } from '../example-helpers';
+import { ButtonList, Container, Group } from '../example-helpers/styled';
 import { MediaViewer, MediaViewerDataSource } from '../src';
-import { videoFileId } from '@atlaskit/media-test-helpers';
-import { I18NWrapper } from '@atlaskit/media-test-helpers';
-import { Identifier, FileIdentifier, MediaStore } from '@atlaskit/media-client';
-import { Card } from '@atlaskit/media-card';
-import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 
 addGlobalEventEmitterListeners();
 

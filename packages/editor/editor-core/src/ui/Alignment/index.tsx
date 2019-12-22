@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import AlignmentButton from './AlignmentButton';
 
-import { AlignmentWrapper } from './styles';
-import { iconMap } from '../../plugins/alignment/ui/ToolbarAlignment';
 import { AlignmentState } from '../../plugins/alignment/pm-plugins/main';
+import { iconMap } from '../../plugins/alignment/ui/ToolbarAlignment';
+
+import AlignmentButton from './AlignmentButton';
+import { AlignmentWrapper } from './styles';
 
 export interface Props {
   selectedAlignment?: string;

@@ -1,7 +1,9 @@
-import { EditorView } from 'prosemirror-view';
-import { Transaction } from 'prosemirror-state';
-import { Node as PMNode, Node } from 'prosemirror-model';
 import { Transformer } from '@atlaskit/editor-common';
+import { Node as PMNode, Node } from 'prosemirror-model';
+import { Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
+import { Dispatch } from '../../../../../event-dispatcher';
 import {
   analyticsEventKey,
   ACTION,
@@ -10,16 +12,15 @@ import {
   getAnalyticsEventsFromTransaction,
   AnalyticsEventPayload,
 } from '../../../../../plugins/analytics';
+import { compose, toJSON } from '../../../../../utils';
+import { getDocStructure } from '../../../../../utils/document-logger';
+import { sanitizeNode } from '../../../../../utils/filter/node-filter';
 import {
   findChangedNodesFromTransaction,
   validateNodes,
   validNode,
 } from '../../../../../utils/nodes';
-import { compose, toJSON } from '../../../../../utils';
-import { sanitizeNode } from '../../../../../utils/filter/node-filter';
 import { EditorSharedConfig } from '../../context/shared-config';
-import { getDocStructure } from '../../../../../utils/document-logger';
-import { Dispatch } from '../../../../../event-dispatcher';
 
 // Helper to assure correct payload when dispatch analytics
 function dispatchAnalytics(dispatch: Dispatch, payload: AnalyticsEventPayload) {

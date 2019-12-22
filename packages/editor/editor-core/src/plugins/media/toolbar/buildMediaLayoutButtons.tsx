@@ -1,24 +1,23 @@
-import { EditorState, NodeSelection } from 'prosemirror-state';
 import { InjectedIntl, defineMessages } from 'react-intl';
-import { hasParentNodeOfType } from 'prosemirror-utils';
+import { MediaSingleLayout, MediaSingleAttributes } from '@atlaskit/adf-schema';
+import EditorAlignImageCenter from '@atlaskit/icon/glyph/editor/align-image-center';
+import EditorAlignImageLeft from '@atlaskit/icon/glyph/editor/align-image-left';
+import EditorAlignImageRight from '@atlaskit/icon/glyph/editor/align-image-right';
+import FullWidthIcon from '@atlaskit/icon/glyph/editor/media-full-width';
+import WideIcon from '@atlaskit/icon/glyph/editor/media-wide';
+import WrapLeftIcon from '@atlaskit/icon/glyph/editor/media-wrap-left';
+import WrapRightIcon from '@atlaskit/icon/glyph/editor/media-wrap-right';
 import { Schema } from 'prosemirror-model';
+import { EditorState, NodeSelection } from 'prosemirror-state';
+import { hasParentNodeOfType } from 'prosemirror-utils';
+
+import commonMessages from '../../../messages';
+import { Command } from '../../../types';
 import {
   FloatingToolbarSeparator,
   FloatingToolbarItem,
 } from '../../floating-toolbar/types';
-import { MediaSingleLayout, MediaSingleAttributes } from '@atlaskit/adf-schema';
 import { stateKey, MediaPluginState } from '../pm-plugins/main';
-import { Command } from '../../../types';
-import commonMessages from '../../../messages';
-
-import WrapLeftIcon from '@atlaskit/icon/glyph/editor/media-wrap-left';
-import WrapRightIcon from '@atlaskit/icon/glyph/editor/media-wrap-right';
-import WideIcon from '@atlaskit/icon/glyph/editor/media-wide';
-import FullWidthIcon from '@atlaskit/icon/glyph/editor/media-full-width';
-
-import EditorAlignImageLeft from '@atlaskit/icon/glyph/editor/align-image-left';
-import EditorAlignImageRight from '@atlaskit/icon/glyph/editor/align-image-right';
-import EditorAlignImageCenter from '@atlaskit/icon/glyph/editor/align-image-center';
 import { alignAttributes } from '../utils/media-single';
 
 type IconMap = Array<

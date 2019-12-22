@@ -3,7 +3,6 @@ import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
 import { ClearIndicator, DropdownIndicator } from '../../../internal';
-
 import {
   isValid,
   removeSpacer,

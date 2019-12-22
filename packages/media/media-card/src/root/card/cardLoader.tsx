@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { WithMediaClientConfigProps } from '@atlaskit/media-client';
+import { CardWithAnalyticsEventsProps } from '.';
+
 import { CardLoading } from '../..';
 import { MediaCardAnalyticsErrorBoundaryProps } from '../media-card-analytics-error-boundary';
-import { CardWithAnalyticsEventsProps } from '.';
 
 export type CardWithMediaClientConfigProps = WithMediaClientConfigProps<
   CardWithAnalyticsEventsProps

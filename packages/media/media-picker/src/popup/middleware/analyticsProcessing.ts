@@ -1,14 +1,14 @@
-import { MiddlewareAPI, Dispatch, Action } from 'redux';
 import {
   UIAnalyticsEvent,
   UIAnalyticsEventHandler,
 } from '@atlaskit/analytics-next';
+import { MiddlewareAPI, Dispatch, Action } from 'redux';
 
-import { State } from '../domain';
+import { ANALYTICS_MEDIA_CHANNEL } from '../../components/media-picker-analytics-error-boundary';
 import { version, name } from '../../version.json';
+import { State } from '../domain';
 
 import analyticsActionHandlers, { Payload } from './analyticsHandlers';
-import { ANALYTICS_MEDIA_CHANNEL } from '../../components/media-picker-analytics-error-boundary';
 
 // TODO https://product-fabric.atlassian.net/browse/MS-598
 

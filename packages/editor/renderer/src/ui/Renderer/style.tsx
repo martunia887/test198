@@ -1,15 +1,6 @@
 import { HTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
 import {
-  colors,
-  gridSize,
-  fontFamily,
-  fontSize,
-  borderRadius,
-  themed,
-  typography,
-} from '@atlaskit/theme';
-import {
   tableSharedStyle,
   columnLayoutSharedStyle,
   editorFontSize,
@@ -38,9 +29,20 @@ import {
   mediaSingleClassName,
   tasksAndDecisionsStyles,
 } from '@atlaskit/editor-common';
+import {
+  colors,
+  gridSize,
+  fontFamily,
+  fontSize,
+  borderRadius,
+  themed,
+  typography,
+} from '@atlaskit/theme';
+
 import { RendererCssClassName } from '../../consts';
-import { RendererAppearance } from './types';
 import { HeadingAnchorWrapperClassName } from '../../react/nodes/heading-anchor';
+
+import { RendererAppearance } from './types';
 
 export const FullPagePadding = 32;
 

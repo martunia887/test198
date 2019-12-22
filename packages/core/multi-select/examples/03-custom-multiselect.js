@@ -1,6 +1,5 @@
 // @flow
 import React, { PureComponent } from 'react';
-
 import { MultiSelectStateless } from '../src';
 import type { ItemType } from '../src/types';
 

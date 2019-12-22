@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import AkButton from '@atlaskit/button';
+import { mockState, mockStore } from '@atlaskit/media-test-helpers';
+import { getComponentClassWithStore } from '@atlaskit/media-test-helpers';
 
 import { startAuth } from '../../../../../../actions';
 import { ServiceAccountLink } from '../../../../../../domain';
-import { mockState, mockStore } from '@atlaskit/media-test-helpers';
 import { StatelessAuth, default as ConnectedAuth } from '../../auth';
-
-import { getComponentClassWithStore } from '@atlaskit/media-test-helpers';
 
 const ConnectedAuthWithStore = getComponentClassWithStore(ConnectedAuth);
 

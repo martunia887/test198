@@ -1,7 +1,6 @@
 // @flow
 import fs from 'fs';
 import path from 'path';
-
 import { writeEntryPointsPathInPkgJson } from '../../createEntryPointsUtils';
 
 jest.spyOn(global.console, 'log').mockImplementation(() => {});

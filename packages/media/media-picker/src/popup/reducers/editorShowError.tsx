@@ -1,8 +1,6 @@
 import { Action } from 'redux';
-
-import { State } from '../domain';
-
 import { isEditorShowErrorAction } from '../actions/editorShowError';
+import { State } from '../domain';
 
 export default function editorShowError<A extends Action>(
   state: State,

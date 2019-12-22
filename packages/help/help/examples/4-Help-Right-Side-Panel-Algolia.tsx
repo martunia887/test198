@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import algoliasearch from 'algoliasearch';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import Page from '@atlaskit/page';
 import {
@@ -8,15 +7,16 @@ import {
   FlexContainer,
   ContentWrapper,
 } from '@atlaskit/right-side-panel';
+import algoliasearch from 'algoliasearch';
 
 import LocaleIntlProvider from '../example-helpers/LocaleIntlProvider';
+import Help from '../src';
+
 import {
   ButtonsWrapper,
   FooterContent,
   ExampleDefaultContent,
 } from './utils/styled';
-
-import Help from '../src';
 
 const handleEvent = (analyticsEvent: { payload: any; context: any }) => {
   const { payload, context } = analyticsEvent;

@@ -1,8 +1,8 @@
+import { createTag } from './create-tag';
 import { Style, Attrs } from './interfaces';
 import { serializeStyle } from './serialize-style';
-import { createTag } from './create-tag';
-import { createClassName } from './styles/util';
 import { fontFamily, fontSize, fontWeight } from './styles/common';
+import { createClassName } from './styles/util';
 
 export type TableData = {
   text?: string | null;

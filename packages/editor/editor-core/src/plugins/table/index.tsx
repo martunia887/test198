@@ -1,7 +1,8 @@
+import * as React from 'react';
 import { table, tableCell, tableHeader, tableRow } from '@atlaskit/adf-schema';
 import { tableEditing } from 'prosemirror-tables';
 import { createTable } from 'prosemirror-utils';
-import * as React from 'react';
+
 import { toggleTable, tooltip } from '../../keymaps';
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
@@ -15,6 +16,7 @@ import {
 } from '../analytics';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { IconTable } from '../quick-insert/assets';
+
 import { keymapPlugin } from './pm-plugins/keymap';
 import { createPlugin, getPluginState, pluginKey } from './pm-plugins/main';
 import {

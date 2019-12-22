@@ -1,6 +1,4 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
-import WikiMarkupTransformer from '../../../index';
-
 import {
   decisionItem,
   decisionList,
@@ -8,6 +6,7 @@ import {
   emoji,
   p,
 } from '@atlaskit/editor-test-helpers';
+import WikiMarkupTransformer from '../../../index';
 
 describe('ADF => WikiMarkup - Unknown Nodes', () => {
   const transformer = new WikiMarkupTransformer();

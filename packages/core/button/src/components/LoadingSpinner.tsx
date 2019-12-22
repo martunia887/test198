@@ -1,7 +1,7 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import Spinner, { SpinnerSizes } from '@atlaskit/spinner';
+import { jsx } from '@emotion/core';
 
 const appearances: string[] = ['primary', 'danger'];
 

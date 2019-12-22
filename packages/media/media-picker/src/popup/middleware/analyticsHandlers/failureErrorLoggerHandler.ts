@@ -1,7 +1,8 @@
-import { Action } from 'redux';
 import { OPERATIONAL_EVENT_TYPE } from '@atlaskit/analytics-gas-types';
-import { isFailureErrorAction } from '../../actions/failureErrorLogger';
+import { Action } from 'redux';
 import { HandlerResult } from '.';
+
+import { isFailureErrorAction } from '../../actions/failureErrorLogger';
 
 export default (action: Action): HandlerResult => {
   if (isFailureErrorAction(action)) {

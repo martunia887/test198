@@ -1,6 +1,7 @@
-import { EditorState, TextSelection, PluginSpec } from 'prosemirror-state';
-import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
-import { Node, Slice } from 'prosemirror-model';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   layoutSection,
   layoutColumn,
@@ -12,20 +13,20 @@ import {
   sendKeyToPm,
   insertText,
 } from '@atlaskit/editor-test-helpers';
+import { Node, Slice } from 'prosemirror-model';
+import { EditorState, TextSelection, PluginSpec } from 'prosemirror-state';
+import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
+
+import {
+  forceSectionToPresetLayout,
+  PresetLayout,
+} from '../../../../../plugins/layout/actions';
 import {
   default as createLayoutPlugin,
   pluginKey,
   LayoutState,
 } from '../../../../../plugins/layout/pm-plugins/main';
-import {
-  forceSectionToPresetLayout,
-  PresetLayout,
-} from '../../../../../plugins/layout/actions';
 import { layouts, buildLayoutForWidths } from '../_utils';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 
 describe('layout', () => {
   let createAnalyticsEvent: CreateUIAnalyticsEvent;

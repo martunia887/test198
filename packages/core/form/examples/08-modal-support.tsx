@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-
 import { Checkbox } from '@atlaskit/checkbox';
-import Textfield from '@atlaskit/textfield';
 import RadioGroup, { AkRadio } from '@atlaskit/field-radio-group';
 import ModalDialog, {
   ModalFooter,
   ModalTransition,
 } from '@atlaskit/modal-dialog';
+import Textfield from '@atlaskit/textfield';
+
 import Form, { Field, CheckboxField } from '../src';
 
 interface State {

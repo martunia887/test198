@@ -3,11 +3,13 @@ import React, { PureComponent, type Node, type ComponentType } from 'react';
 import { ThemeProvider, withTheme } from 'styled-components';
 import { itemThemeNamespace } from '@atlaskit/item';
 import memoizeOne from 'memoize-one';
-import AkNavigationItem from './NavigationItem';
+
+import overrideItemTheme from '../../theme/create-container-title-item-theme';
+import { rootKey } from '../../theme/util';
 import ContainerTitleIcon from '../styled/ContainerTitleIcon';
 import ContainerTitleText from '../styled/ContainerTitleText';
-import { rootKey } from '../../theme/util';
-import overrideItemTheme from '../../theme/create-container-title-item-theme';
+
+import AkNavigationItem from './NavigationItem';
 
 type Props = {
   /** Location to link out to on click. This is passed down to the custom link

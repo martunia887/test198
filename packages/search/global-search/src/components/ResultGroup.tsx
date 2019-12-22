@@ -1,12 +1,13 @@
 import * as React from 'react';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
-import { gridSize } from '@atlaskit/theme';
-import { ResultItemGroup, CancelableEvent } from '@atlaskit/quick-search';
 import Badge from '@atlaskit/badge';
+import { ResultItemGroup, CancelableEvent } from '@atlaskit/quick-search';
+import { gridSize } from '@atlaskit/theme';
 
 import { Result } from '../model/Result';
+
 import ResultList from './ResultList';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
 import ShowMoreButton from './ShowMoreButton';
 
 export interface Props {

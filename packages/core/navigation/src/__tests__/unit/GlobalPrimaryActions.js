@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
-import GlobalPrimaryActions from '../../components/js/GlobalPrimaryActions';
-import { mountWithRootTheme, shallowWithTheme } from './_theme-util';
-import GlobalItem from '../../components/js/GlobalItem';
+
 import DrawerTrigger from '../../components/js/DrawerTrigger';
+import GlobalItem from '../../components/js/GlobalItem';
+import GlobalPrimaryActions from '../../components/js/GlobalPrimaryActions';
 import GlobalPrimaryActionsList from '../../components/js/GlobalPrimaryActionsList';
+
+import { mountWithRootTheme, shallowWithTheme } from './_theme-util';
 
 describe('<GlobalPrimaryActions />', () => {
   describe('renders', () => {

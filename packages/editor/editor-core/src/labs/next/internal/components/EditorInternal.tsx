@@ -1,15 +1,17 @@
 import * as React from 'react';
-import { intlShape } from 'react-intl';
 import * as PropTypes from 'prop-types';
+import { intlShape } from 'react-intl';
 import { WidthProvider } from '@atlaskit/editor-common';
-import EditorContext from '../../../../ui/EditorContext';
-import EditorActions from '../../../../actions';
-import { PortalProviderAPI } from '../../../../ui/PortalProvider';
-import { EditorProps } from '../editor-props-type';
-import { EditorSharedConfigProvider } from '../context/shared-config';
-import { useEditor } from '../hooks/use-editor';
-import { EditorContentProvider } from './EditorContent';
 import { useProviderFactory } from '@atlaskit/editor-common/provider-factory';
+
+import EditorActions from '../../../../actions';
+import EditorContext from '../../../../ui/EditorContext';
+import { PortalProviderAPI } from '../../../../ui/PortalProvider';
+import { EditorSharedConfigProvider } from '../context/shared-config';
+import { EditorProps } from '../editor-props-type';
+import { useEditor } from '../hooks/use-editor';
+
+import { EditorContentProvider } from './EditorContent';
 
 export function EditorInternal(
   {

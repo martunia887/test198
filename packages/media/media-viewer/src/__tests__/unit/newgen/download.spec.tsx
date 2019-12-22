@@ -1,19 +1,20 @@
+import * as React from 'react';
 import { mount } from 'enzyme';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { ErrorFileState, ProcessingFailedState } from '@atlaskit/media-client';
+import { fakeMediaClient } from '@atlaskit/media-test-helpers';
+
 import {
   createItemDownloader,
   ToolbarDownloadButton,
   ErrorViewDownloadButton,
   DownloadButton,
 } from '../../../newgen/download';
-import * as React from 'react';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { MediaViewerError } from '../../../newgen/error';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../../version.json';
-import { fakeMediaClient } from '@atlaskit/media-test-helpers';
 
 describe('download', () => {
   const processingFailedState: ProcessingFailedState = {

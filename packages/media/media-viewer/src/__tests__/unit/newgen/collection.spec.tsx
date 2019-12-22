@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Observable, Subject } from 'rxjs';
+import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
 import {
   MediaClient,
   FileIdentifier,
@@ -11,7 +11,8 @@ import {
   asMock,
 } from '@atlaskit/media-test-helpers';
 import Spinner from '@atlaskit/spinner';
-import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
+import { Observable, Subject } from 'rxjs';
+
 import { Collection, Props, State } from '../../../newgen/collection';
 import { ErrorMessage } from '../../../newgen/error';
 import { List } from '../../../newgen/list';

@@ -1,7 +1,8 @@
-import path from 'path';
 import buildIcons from '@atlaskit/icon-build-process';
-import pkgDir from 'pkg-dir';
 import fs from 'fs-extra';
+import path from 'path';
+import pkgDir from 'pkg-dir';
+
 import synonyms from '../utils/synonyms';
 
 const root = pkgDir.sync();

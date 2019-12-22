@@ -1,13 +1,14 @@
-import { insertMedia as integrationInsertMedia } from '../../integration/_helpers';
+import { mediaSingleClassName } from '@atlaskit/editor-common';
+import { waitForLoadedImageElements } from '@atlaskit/visual-regression/helper';
 import { Page } from 'puppeteer';
-import { getBoundingRect, scrollToElement } from './_editor';
 
-import { snapshot } from '../../visual-regression/_utils';
 import commonMessages, { linkToolbarMessages } from '../../../messages';
 import { messages as mediaLayoutToolbarMessages } from '../../../plugins/media/toolbar/buildMediaLayoutButtons';
 import { mediaLinkToolbarMessages } from '../../../plugins/media/ui/MediaLinkingToolbar';
-import { waitForLoadedImageElements } from '@atlaskit/visual-regression/helper';
-import { mediaSingleClassName } from '@atlaskit/editor-common';
+import { insertMedia as integrationInsertMedia } from '../../integration/_helpers';
+import { snapshot } from '../../visual-regression/_utils';
+
+import { getBoundingRect, scrollToElement } from './_editor';
 
 export enum MediaLayout {
   center,

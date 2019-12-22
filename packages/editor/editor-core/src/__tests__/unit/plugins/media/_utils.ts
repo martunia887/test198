@@ -1,4 +1,5 @@
 import { MediaAttributes } from '@atlaskit/adf-schema';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   randomId,
   media,
@@ -7,16 +8,15 @@ import {
   storyContextIdentifierProviderFactory,
   createEditorFactory,
 } from '@atlaskit/editor-test-helpers';
+import { ImagePreview, MediaFile } from '@atlaskit/media-picker/types';
+import { EditorView } from 'prosemirror-view';
 
 import {
   stateKey as mediaPluginKey,
   MediaPluginState,
 } from '../../../../plugins/media/pm-plugins/main';
-import { EditorProps } from '../../../../types';
-import { EditorView } from 'prosemirror-view';
 import { insertMediaGroupNode } from '../../../../plugins/media/utils/media-files';
-import { ImagePreview, MediaFile } from '@atlaskit/media-picker/types';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import { EditorProps } from '../../../../types';
 
 export const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 export const temporaryFileId = `temporary:${randomId()}`;

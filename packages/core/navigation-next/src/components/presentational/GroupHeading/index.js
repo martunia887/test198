@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from 'react';
-
 import { withContentTheme } from '../../../theme';
 import type { ConnectedGroupHeadingProps, GroupHeadingProps } from './types';
 

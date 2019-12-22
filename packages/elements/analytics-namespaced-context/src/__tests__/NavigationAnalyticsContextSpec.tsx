@@ -2,6 +2,7 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
+
 import { createDummyComponentWithAnalytics } from '../../examples/helpers';
 import { NavigationAnalyticsContext } from '../NavigationAnalyticsContext';
 

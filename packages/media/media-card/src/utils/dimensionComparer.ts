@@ -1,6 +1,6 @@
-import { isValidPercentageUnit } from './isValidPercentageUnit';
-import { containsPixelUnit } from './containsPixelUnit';
 import { CardDimensionValue, CardDimensions } from '../';
+import { containsPixelUnit } from './containsPixelUnit';
+import { isValidPercentageUnit } from './isValidPercentageUnit';
 
 export const canCompareDimension = (
   current?: CardDimensionValue,

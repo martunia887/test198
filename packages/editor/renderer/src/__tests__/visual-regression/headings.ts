@@ -1,7 +1,9 @@
-import { snapshot, initRendererWithADF } from './_utils';
-import headings from '../__fixtures__/headings-adf.json';
 import { waitForTooltip } from '@atlaskit/visual-regression/helper';
 import { Page } from 'puppeteer';
+
+import headings from '../__fixtures__/headings-adf.json';
+
+import { snapshot, initRendererWithADF } from './_utils';
 
 const hoverOnHeading = async (page: Page, selector: string) => {
   await page.waitForSelector(selector);

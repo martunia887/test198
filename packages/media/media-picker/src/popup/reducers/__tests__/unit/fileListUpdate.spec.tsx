@@ -1,6 +1,6 @@
-import fileListUpdate from '../../fileListUpdate';
 import { FILE_LIST_UPDATE } from '../../../actions';
 import { State, View } from '../../../domain';
+import fileListUpdate from '../../fileListUpdate';
 
 describe('fileListUpdate() reducer', () => {
   const currentPath = [{ id: 'folder1' }, { id: 'folder2' }];

@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { panel, PanelType } from '@atlaskit/adf-schema';
+import { EditorState } from 'prosemirror-state';
 
 import { EditorPlugin } from '../../types';
-import { messages } from '../block-type/types';
-import { createPlugin } from './pm-plugins/main';
-import { getToolbarConfig } from './toolbar';
-
-import keymap from './pm-plugins/keymaps';
-import { EditorState } from 'prosemirror-state';
 import {
   addAnalytics,
   ACTION,
@@ -17,7 +12,7 @@ import {
   EVENT_TYPE,
   PANEL_TYPE,
 } from '../analytics';
-import { QuickInsertActionInsert } from '../quick-insert/types';
+import { messages } from '../block-type/types';
 import {
   IconPanel,
   IconPanelNote,
@@ -25,6 +20,11 @@ import {
   IconPanelWarning,
   IconPanelError,
 } from '../quick-insert/assets';
+import { QuickInsertActionInsert } from '../quick-insert/types';
+
+import keymap from './pm-plugins/keymaps';
+import { createPlugin } from './pm-plugins/main';
+import { getToolbarConfig } from './toolbar';
 
 const insertPanelTypeWithAnalytics = (
   panelType: PANEL_TYPE,

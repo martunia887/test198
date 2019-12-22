@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
+
 import MultiSelect from '../src';
 import type { ItemType } from '../src/types';
 

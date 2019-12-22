@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { fixDuplicates } from 'yarn-deduplicate';
+
 import { readFile, writeFile, resolveToCwd } from './fs';
 
 const pexec = promisify(exec);

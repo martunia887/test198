@@ -1,5 +1,5 @@
-import { TablePluginState, TablePluginAction } from './types';
 import { defaultTableSelection } from './pm-plugins/main';
+import { TablePluginState, TablePluginAction } from './types';
 
 export default (
   pluginState: TablePluginState,

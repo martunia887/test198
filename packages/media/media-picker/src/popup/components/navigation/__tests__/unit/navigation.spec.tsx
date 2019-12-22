@@ -1,8 +1,8 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
 import Dropdown from '@atlaskit/dropdown-menu';
-import RefreshIcon from '@atlaskit/icon/glyph/refresh';
 import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
+import RefreshIcon from '@atlaskit/icon/glyph/refresh';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
 import {
   mountWithIntlContext,
@@ -14,7 +14,7 @@ import {
   mockStore,
   mockState,
 } from '@atlaskit/media-test-helpers';
-import { Navigation, default as ConnectedNavigation } from '../../navigation';
+
 import {
   changeAccount,
   changeCloudAccountFolder,
@@ -27,6 +27,7 @@ import {
   ServiceAccountWithType,
   ServiceAccountLink,
 } from '../../../../domain';
+import { Navigation, default as ConnectedNavigation } from '../../navigation';
 import {
   FolderViewerNavigation,
   ControlsWrapper,

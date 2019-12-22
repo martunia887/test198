@@ -1,5 +1,7 @@
 import * as sinon from 'sinon';
+import { emoji } from '@atlaskit/util-data-test';
 
+import EmojiRepository from '../../api/EmojiRepository';
 import TokenManager from '../../api/media/TokenManager';
 import {
   EmojiDescription,
@@ -11,8 +13,6 @@ import {
   MediaApiToken,
 } from '../../types';
 import { convertMediaToImageRepresentation } from '../../util/type-helpers';
-import { emoji } from '@atlaskit/util-data-test';
-import EmojiRepository from '../../api/EmojiRepository';
 
 const testData = emoji.testData;
 

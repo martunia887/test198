@@ -3,15 +3,14 @@
 import * as React from 'react';
 import { Component } from 'react';
 import styled from 'styled-components';
-
-import { colors } from '@atlaskit/theme';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { Skeleton } from '@atlaskit/icon';
+import { colors } from '@atlaskit/theme';
 
-import Toolbar from '../src/plugins/floating-toolbar/ui/Toolbar';
-import { FloatingToolbarItem } from '../src/plugins/floating-toolbar/types';
-import ColorPalette from '../src/ui/ColorPalette';
 import { Content } from '../example-helpers/styles';
+import { FloatingToolbarItem } from '../src/plugins/floating-toolbar/types';
+import Toolbar from '../src/plugins/floating-toolbar/ui/Toolbar';
+import ColorPalette from '../src/ui/ColorPalette';
 import cellBackgroundColorPalette from '../src/ui/ColorPalette/Palettes/cellBackgroundColorPalette';
 
 const SAVE_ACTION = () => console.log('Save');

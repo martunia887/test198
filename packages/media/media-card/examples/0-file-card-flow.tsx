@@ -1,5 +1,12 @@
 import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
+import Button from '@atlaskit/button';
+import {
+  UploadController,
+  FileIdentifier,
+  FileState,
+  MediaClient,
+} from '@atlaskit/media-client';
 import {
   defaultCollectionName,
   genericFileId,
@@ -16,21 +23,15 @@ import {
   noMetadataFileId,
   createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import Button from '@atlaskit/button';
-import { Card, OnLoadingChangeState } from '../src';
-import {
-  UploadController,
-  FileIdentifier,
-  FileState,
-  MediaClient,
-} from '@atlaskit/media-client';
 import { Observable } from 'rxjs/Observable';
+
 import {
   CardWrapper,
   CardFlowHeader,
   CardsWrapper,
   CardState,
 } from '../example-helpers/styled';
+import { Card, OnLoadingChangeState } from '../src';
 
 const mediaClientConfig = createUploadMediaClientConfig();
 const mediaClient = new MediaClient(mediaClientConfig);

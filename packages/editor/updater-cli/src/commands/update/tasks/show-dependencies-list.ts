@@ -1,10 +1,11 @@
 import chalk from 'chalk';
 import { diff, coerce } from 'semver';
+
 import { PrintableOutput, TaskWrapper } from '../../../runner';
 import { getChangelog, getLogDetails } from '../../../utils/changelog';
 import { badgeRed } from '../../../utils/console';
-import { UpdateTask } from '../types';
 import { PackageJsonPatchGroup } from '../../../utils/package-json';
+import { UpdateTask } from '../types';
 
 async function printDeps(
   title: string,

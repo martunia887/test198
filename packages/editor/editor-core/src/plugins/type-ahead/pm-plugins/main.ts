@@ -5,20 +5,21 @@ import {
   EditorState,
   TextSelection,
 } from 'prosemirror-state';
+
 import { Dispatch } from '../../../event-dispatcher';
 import { isMarkTypeAllowedInCurrentSelection } from '../../../utils';
+import { dismissCommand } from '../commands/dismiss';
+import { insertTypeAheadQuery } from '../commands/insert-query';
+import { itemsListUpdated } from '../commands/items-list-updated';
+import { selectCurrentItem } from '../commands/select-item';
+import { updateQueryCommand } from '../commands/update-query';
 import {
   TypeAheadHandler,
   TypeAheadItem,
   TypeAheadItemsLoader,
 } from '../types';
-import { dismissCommand } from '../commands/dismiss';
-import { insertTypeAheadQuery } from '../commands/insert-query';
-import { itemsListUpdated } from '../commands/items-list-updated';
-import { updateQueryCommand } from '../commands/update-query';
-import { isQueryActive } from '../utils/is-query-active';
 import { findTypeAheadQuery } from '../utils/find-query-mark';
-import { selectCurrentItem } from '../commands/select-item';
+import { isQueryActive } from '../utils/is-query-active';
 
 export const pluginKey = new PluginKey('typeAheadPlugin');
 

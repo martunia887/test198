@@ -1,16 +1,16 @@
 import * as React from 'react';
-import InlineMessage from '@atlaskit/inline-message';
+import AceEditor from 'react-ace';
+import { IntlProvider } from 'react-intl';
 import Button from '@atlaskit/button';
+import InlineMessage from '@atlaskit/inline-message';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import 'brace';
+import 'brace/ext/language_tools';
 import 'brace/mode/json';
 import 'brace/theme/tomorrow';
-import 'brace/ext/language_tools';
-import AceEditor from 'react-ace';
-import { Provider, Card } from '../src';
 
 import * as mockedExamples from '../examples-helpers/_jsonLDExamples';
-import { IntlProvider } from 'react-intl';
+import { Provider, Card } from '../src';
 
 export interface ExampleProps {}
 

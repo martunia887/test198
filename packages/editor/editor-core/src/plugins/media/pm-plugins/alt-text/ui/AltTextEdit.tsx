@@ -1,20 +1,18 @@
 import React from 'react';
 import { KeyboardEvent } from 'react';
-import { EditorView } from 'prosemirror-view';
-import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
-import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
-import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
-import { messages } from '../messages';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import Button from '../../../../floating-toolbar/ui/Button';
-import PanelTextInput from '../../../../../ui/PanelTextInput';
-import * as keymaps from '../../../../../keymaps';
-import { closeMediaAltTextMenu, updateAltText } from '../commands';
+import styled from 'styled-components';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
+import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
+import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
+import { colors } from '@atlaskit/theme';
+import { EditorView } from 'prosemirror-view';
+
+import * as keymaps from '../../../../../keymaps';
+import PanelTextInput from '../../../../../ui/PanelTextInput';
 import {
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
@@ -24,6 +22,9 @@ import {
   MediaAltTextActionType,
   FireAnalyticsCallback,
 } from '../../../../analytics';
+import Button from '../../../../floating-toolbar/ui/Button';
+import { closeMediaAltTextMenu, updateAltText } from '../commands';
+import { messages } from '../messages';
 
 export const CONTAINER_WIDTH_IN_PX = 350;
 const SupportText = styled.p`

@@ -1,10 +1,10 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   sendKeyToPm,
   createEditorFactory,
   doc,
   p,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { EditorProps } from '../../../../types';
 
 describe('submit-editor', () => {

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { Component } from 'react';
-
+import * as ReactDOM from 'react-dom';
+import { IntlProvider } from 'react-intl';
 import {
   AnalyticsContext,
   UIAnalyticsEvent,
@@ -27,9 +27,8 @@ import {
   RECENTS_COLLECTION,
 } from '@atlaskit/media-client';
 import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
-
 import { Subscription } from 'rxjs/Subscription';
-import { IntlProvider } from 'react-intl';
+
 import {
   CardAction,
   CardDimensions,
@@ -37,12 +36,20 @@ import {
   CardState,
   CardStatus,
 } from '../..';
-import { CardView, CardViewBase } from '../cardView';
-import { LazyContent } from '../../utils/lazyContent';
+import {
+  getUIAnalyticsContext,
+  getBaseAnalyticsContext,
+  createAndFireCustomMediaEvent,
+  getFileAttributes,
+} from '../../utils/analytics';
+import { isBigger } from '../../utils/dimensionComparer';
 import { getDataURIDimension } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
+import { LazyContent } from '../../utils/lazyContent';
 import { extendMetadata } from '../../utils/metadata';
-import { isBigger } from '../../utils/dimensionComparer';
+import { CardView, CardViewBase } from '../cardView';
+import { InlinePlayer, InlinePlayerBase } from '../inlinePlayer';
+
 import {
   getCardStatus,
   getCardStatusFromFileState,
@@ -52,13 +59,6 @@ import {
   AnalyticsErrorStateAttributes,
   AnalyticsLoadingAction,
 } from './getCardStatus';
-import { InlinePlayer, InlinePlayerBase } from '../inlinePlayer';
-import {
-  getUIAnalyticsContext,
-  getBaseAnalyticsContext,
-  createAndFireCustomMediaEvent,
-  getFileAttributes,
-} from '../../utils/analytics';
 
 export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
 export class CardBase extends Component<

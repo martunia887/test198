@@ -1,20 +1,19 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
-
 import React from 'react';
-import rafSchedule from 'raf-schd';
 import ScrollLock from 'react-scrolllock';
+import { jsx } from '@emotion/core';
+import rafSchedule from 'raf-schd';
 
-import Footer, { FooterComponentProps } from './Footer';
-import Header, { HeaderComponentProps } from './Header';
-
-import { AppearanceType, KeyboardOrMouseEvent, ActionProps } from '../types';
 import {
   keylineHeight,
   Body as DefaultBody,
   bodyStyles,
   wrapperStyles,
 } from '../styled/Content';
+import { AppearanceType, KeyboardOrMouseEvent, ActionProps } from '../types';
+
+import Footer, { FooterComponentProps } from './Footer';
+import Header, { HeaderComponentProps } from './Header';
 
 function getInitialState() {
   return {

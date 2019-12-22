@@ -1,16 +1,17 @@
+import { sleep } from '@atlaskit/media-test-helpers';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
   fullpage,
   copyToClipboard,
 } from '../_helpers';
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
-import { sleep } from '@atlaskit/media-test-helpers';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 
 BrowserTestCase(
   'upload-external-media.ts: Uploads external media when pasted',

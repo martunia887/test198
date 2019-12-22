@@ -1,6 +1,5 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
-
 import InitialLoadingElement from '../styled/InitialLoading';
 
 type Props = {

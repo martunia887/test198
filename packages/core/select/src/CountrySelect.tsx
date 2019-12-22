@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
-import { groupedCountries } from './data/countries';
 import Select from './Select';
+import { groupedCountries } from './data/countries';
 import { FormatOptionLabelMeta } from './types';
 
 // flow stuff

@@ -1,8 +1,12 @@
 import * as React from 'react';
 import { Component } from 'react';
-import CrossIcon from '@atlaskit/icon/glyph/cross';
 import { InjectedIntlProps, injectIntl } from 'react-intl';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
 import { messages, MediaImage } from '@atlaskit/media-ui';
+
+import { ERROR } from '../avatar-picker-dialog';
+import { CONTAINER_INNER_SIZE } from '../avatar-picker-dialog/layout-const';
+
 import { isImageRemote } from './isImageRemote';
 import {
   CircularMask,
@@ -13,8 +17,6 @@ import {
   RemoveImageButton,
   ImageContainer,
 } from './styled';
-import { ERROR } from '../avatar-picker-dialog';
-import { CONTAINER_INNER_SIZE } from '../avatar-picker-dialog/layout-const';
 
 export interface ImageCropperProp {
   imageSource: string;

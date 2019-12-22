@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { Y200, P200, B300 } from '@atlaskit/theme/colors';
 
 const typeToColorMap: any = {

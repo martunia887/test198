@@ -1,10 +1,10 @@
 import * as React from 'react';
-
 import { shallow } from 'enzyme';
-import PreQueryState, { Props } from '../../PreQueryState';
-import NoRecentActivity from '../../../NoRecentActivity';
+
 import { makeConfluenceObjectResult } from '../../../../__tests__/unit/_test-util';
 import { messages } from '../../../../messages';
+import NoRecentActivity from '../../../NoRecentActivity';
+import PreQueryState, { Props } from '../../PreQueryState';
 import ResultGroupsComponent from '../../ResultGroupsComponent';
 
 function render(partialProps: Partial<Props>) {

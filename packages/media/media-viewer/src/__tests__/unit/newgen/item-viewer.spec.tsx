@@ -1,16 +1,4 @@
-import {
-  setViewerPayload,
-  ImageViewer as ImageViewerMock,
-} from '../../mocks/_image-viewer';
-
-const mockImageViewer = {
-  ImageViewer: ImageViewerMock,
-};
-jest.mock('../../../newgen/viewers/image', () => mockImageViewer);
-
 import * as React from 'react';
-import { Observable } from 'rxjs';
-import Spinner from '@atlaskit/spinner';
 import Button from '@atlaskit/button';
 import {
   ProcessedFileState,
@@ -26,28 +14,35 @@ import {
   asMock,
   nextTick,
 } from '@atlaskit/media-test-helpers';
+import Spinner from '@atlaskit/spinner';
+import { Observable } from 'rxjs';
+
+import { ErrorMessage } from '../../../newgen/error';
 import {
   ItemViewer,
   ItemViewerBase,
   Props as ItemViewerBaseProps,
   State as ItemViewerBaseState,
 } from '../../../newgen/item-viewer';
-import { ErrorMessage } from '../../../newgen/error';
-import { ImageViewer } from '../../../newgen/viewers/image';
-import {
-  VideoViewer,
-  Props as VideoViewerProps,
-} from '../../../newgen/viewers/video';
 import {
   AudioViewer,
   Props as AudioViewerProps,
 } from '../../../newgen/viewers/audio';
 import { DocViewer } from '../../../newgen/viewers/doc';
+import { ImageViewer } from '../../../newgen/viewers/image';
+import { InteractiveImg } from '../../../newgen/viewers/image/interactive-img';
+import {
+  VideoViewer,
+  Props as VideoViewerProps,
+} from '../../../newgen/viewers/video';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../../version.json';
-import { InteractiveImg } from '../../../newgen/viewers/image/interactive-img';
+import {
+  setViewerPayload,
+  ImageViewer as ImageViewerMock,
+} from '../../mocks/_image-viewer';
 
 const identifier: Identifier = {
   id: 'some-id',

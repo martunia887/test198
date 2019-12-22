@@ -1,15 +1,17 @@
+import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
 import { mountWithIntl, shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import { waitUntil } from '@atlaskit/util-common-test';
-import { ReactWrapper } from 'enzyme';
-import * as React from 'react';
+
 import CachingEmoji from '../../../../components/common/CachingEmoji';
 import Emoji from '../../../../components/common/Emoji';
 import EmojiButton from '../../../../components/common/EmojiButton';
 import EmojiPreview from '../../../../components/common/EmojiPreview';
-import * as styles from '../../../../components/common/styles';
 import ToneSelector from '../../../../components/common/ToneSelector';
+import * as styles from '../../../../components/common/styles';
 import { EmojiDescriptionWithVariations } from '../../../../types';
 import { generateSkinVariation, imageEmoji } from '../../_test-data';
+
 import * as helper from './_common-test-helpers';
 
 const baseEmoji = imageEmoji;

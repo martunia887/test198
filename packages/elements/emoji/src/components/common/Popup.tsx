@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PureComponent, ReactElement } from 'react';
 import * as ReactDOM from 'react-dom';
+
 import { RelativePosition } from '../../types';
 
 const getTargetNode = (target: string | Element): Element | null => {

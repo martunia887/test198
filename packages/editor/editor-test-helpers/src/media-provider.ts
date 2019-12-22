@@ -1,3 +1,4 @@
+import { MediaProvider } from '@atlaskit/editor-core';
 import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   defaultCollectionName,
@@ -7,7 +8,6 @@ import {
   getAuthFromContextProvider,
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
-import { MediaProvider } from '@atlaskit/editor-core';
 
 export interface MediaProviderFactoryConfig {
   collectionName?: string;

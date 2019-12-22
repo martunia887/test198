@@ -2,12 +2,13 @@ import {
   sendKeyToPm,
   createEditorFactory,
 } from '@atlaskit/editor-test-helpers';
+import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+
 import {
   historyPluginKey,
   HistoryPluginState,
 } from '../../../../plugins/history';
-import { EditorState } from 'prosemirror-state';
 
 describe('History Plugin', () => {
   const createEditor = createEditorFactory();

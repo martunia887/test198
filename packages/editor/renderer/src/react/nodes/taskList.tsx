@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { PureComponent, Children, ReactNode } from 'react';
-
 import { TaskList as AkTaskList } from '@atlaskit/task-decision';
 
 export interface Props {

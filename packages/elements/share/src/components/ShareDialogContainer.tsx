@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   AnalyticsEventPayload,
   WithAnalyticsEventsProps,
@@ -6,9 +8,8 @@ import {
 import { ButtonAppearances } from '@atlaskit/button';
 import { LoadOptions } from '@atlaskit/user-picker';
 import memoizeOne from 'memoize-one';
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import assert from 'tiny-invariant';
+
 import {
   AtlassianUrlShortenerClient,
   UrlShortenerClient,
@@ -33,6 +34,10 @@ import {
   ShareButtonStyle,
   TooltipPosition,
 } from '../types';
+
+import ErrorBoundary from './ErrorBoundary';
+import MessagesIntlProvider from './MessagesIntlProvider';
+import { ShareDialogWithTrigger } from './ShareDialogWithTrigger';
 import {
   CHANNEL_ID,
   copyLinkButtonClicked,
@@ -40,10 +45,7 @@ import {
   shortUrlGenerated,
   shortUrlRequested,
 } from './analytics';
-import MessagesIntlProvider from './MessagesIntlProvider';
-import { ShareDialogWithTrigger } from './ShareDialogWithTrigger';
 import { optionDataToUsers } from './utils';
-import ErrorBoundary from './ErrorBoundary';
 
 const COPY_LINK_EVENT = copyLinkButtonClicked(0);
 

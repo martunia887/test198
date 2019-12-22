@@ -1,6 +1,6 @@
 import { ColorWithAlpha } from '../../common';
-import { Component } from './component';
 import { Signal } from '../signal';
+import { Component } from './component';
 
 export interface OutputSize {
   width: number;

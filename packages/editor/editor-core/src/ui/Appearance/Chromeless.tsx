@@ -1,15 +1,16 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import PluginSlot from '../PluginSlot';
-import WithPluginState from '../WithPluginState';
-import ContentStyles from '../ContentStyles';
-import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
+
 import {
   pluginKey as maxContentSizePluginKey,
   MaxContentSizePluginState,
 } from '../../plugins/max-content-size';
-import { scrollbarStyles } from '../styles';
+import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
+import ContentStyles from '../ContentStyles';
+import PluginSlot from '../PluginSlot';
 import WithFlash from '../WithFlash';
+import WithPluginState from '../WithPluginState';
+import { scrollbarStyles } from '../styles';
 
 export interface ChromelessEditorProps {
   isMaxContentSizeReached?: boolean;

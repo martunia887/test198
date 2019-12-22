@@ -1,5 +1,4 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import adf from '../common/__fixtures__/noData-adf.json';
+import { animationFrame } from '../../__helpers/page-objects/_editor';
 import {
   resizeColumn,
   insertTable,
@@ -7,8 +6,9 @@ import {
   insertColumn,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
-import { animationFrame } from '../../__helpers/page-objects/_editor';
 import { Page } from '../../__helpers/page-objects/_types';
+import adf from '../common/__fixtures__/noData-adf.json';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 // TODO: https://product-fabric.atlassian.net/browse/ED-7721
 describe.skip('Snapshot Test: table resizing', () => {
   describe('Re-sizing', () => {

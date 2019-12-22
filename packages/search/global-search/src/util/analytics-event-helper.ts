@@ -1,4 +1,10 @@
+import { GasPayload, EventType } from '@atlaskit/analytics-gas-types';
 import * as Rusha from 'rusha';
+
+import { ABTest } from '../api/CrossProductSearchClient';
+import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
+import { CreateAnalyticsEventFn } from '../components/analytics/types';
+
 import {
   sanitizeSearchQuery,
   sanitizeContainerId,
@@ -8,10 +14,6 @@ import {
   DEFAULT_GAS_ATTRIBUTES,
   DEFAULT_GAS_SOURCE,
 } from './analytics-util';
-import { GasPayload, EventType } from '@atlaskit/analytics-gas-types';
-import { CreateAnalyticsEventFn } from '../components/analytics/types';
-import { ABTest } from '../api/CrossProductSearchClient';
-import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
 
 function stripUGC(referralContextIdentifiers?: ReferralContextIdentifiers) {
   if (referralContextIdentifiers) {

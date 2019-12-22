@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { HTMLAttributes, ComponentClass } from 'react';
 import styled from 'styled-components';
-import { FilmstripView } from '../src/filmstripView';
+
 import { FilmstripState } from '../src';
+import { FilmstripView } from '../src/filmstripView';
 
 export interface StoryProps {}
 

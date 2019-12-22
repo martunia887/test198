@@ -2,16 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import ChevronUpIcon from '@atlaskit/icon/glyph/chevron-up';
-import { Toggle, ItemWrapper } from './themed-top-level-item';
-import SwitcherThemedItem from './themed-item';
-import SwitcherThemedChildItem from './themed-child-item';
 import { gridSize } from '@atlaskit/theme';
 import * as colors from '@atlaskit/theme/colors';
 import Tooltip from '@atlaskit/tooltip';
-import Avatar from './avatar';
-import { FadeIn } from './fade-in';
-import { SwitcherChildItem } from '../types';
 
+import { SwitcherChildItem } from '../types';
 import {
   createAndFireNavigationEvent,
   withAnalyticsEvents,
@@ -21,6 +16,12 @@ import {
   SWITCHER_ITEM_EXPAND_SUBJECT,
   WithAnalyticsEventsProps,
 } from '../utils/analytics';
+
+import Avatar from './avatar';
+import { FadeIn } from './fade-in';
+import SwitcherThemedChildItem from './themed-child-item';
+import SwitcherThemedItem from './themed-item';
+import { Toggle, ItemWrapper } from './themed-top-level-item';
 
 const ItemContainer = styled.div`
   display: flex;

@@ -1,9 +1,10 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { useState } from 'react';
 import Button from '@atlaskit/button';
-import { FadeIn, ExitingPersistence } from '../src';
+import { jsx } from '@emotion/core';
+
 import { Block, Centered, RetryContainer } from '../examples-utils';
+import { FadeIn, ExitingPersistence } from '../src';
 
 export default () => {
   const directions = [

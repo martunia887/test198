@@ -1,7 +1,11 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
 import { ProcessedFileState } from '@atlaskit/media-client';
-import { BaseProps, BaseViewer } from '../../../../newgen/viewers/base-viewer';
+import {
+  mountWithIntlContext,
+  fakeMediaClient,
+} from '@atlaskit/media-test-helpers';
+
 import { Outcome } from '../../../../newgen/domain';
 import {
   createError,
@@ -9,10 +13,7 @@ import {
   MediaViewerError,
 } from '../../../../newgen/error';
 import { Spinner } from '../../../../newgen/loading';
-import {
-  mountWithIntlContext,
-  fakeMediaClient,
-} from '@atlaskit/media-test-helpers';
+import { BaseProps, BaseViewer } from '../../../../newgen/viewers/base-viewer';
 
 function createItem(): ProcessedFileState {
   return {

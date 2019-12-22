@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Component } from 'react';
-import FieldRange from '@atlaskit/range';
+import Button from '@atlaskit/button';
 import ScaleLargeIcon from '@atlaskit/icon/glyph/media-services/scale-large';
 import ScaleSmallIcon from '@atlaskit/icon/glyph/media-services/scale-small';
-import Button from '@atlaskit/button';
+import FieldRange from '@atlaskit/range';
+
 import { SliderWrapper } from './styled';
 
 export interface SliderProps {

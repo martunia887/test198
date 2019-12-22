@@ -1,8 +1,10 @@
 // @flow
 import React from 'react';
-import styled, { ThemeProvider } from 'styled-components';
 import { mount } from 'enzyme';
+import styled, { ThemeProvider } from 'styled-components';
 import chromatism from 'chromatism';
+
+import { createGlobalTheme } from '../../theme/create-provided-theme';
 import * as presets from '../../theme/presets';
 import {
   prefix,
@@ -10,7 +12,7 @@ import {
   WithRootTheme,
   whenCollapsed,
 } from '../../theme/util';
-import { createGlobalTheme } from '../../theme/create-provided-theme';
+
 import { withRootTheme } from './_theme-util';
 
 describe('theme', () => {

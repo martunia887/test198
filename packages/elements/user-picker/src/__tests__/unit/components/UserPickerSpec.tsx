@@ -10,13 +10,14 @@ jest.mock('../../../components/components', () => ({
   getComponents: jest.fn(),
 }));
 
+import * as React from 'react';
 import Select, { CreatableSelect } from '@atlaskit/select';
 import { shallowWithIntl } from 'enzyme-react-intl';
-import * as React from 'react';
+
+import { UserPicker } from '../../../components/UserPicker';
 import { getComponents } from '../../../components/components';
 import { getCreatableProps } from '../../../components/creatable';
 import { getStyles } from '../../../components/styles';
-import { UserPicker } from '../../../components/UserPicker';
 import { User, UserPickerProps } from '../../../types';
 
 describe('UserPicker', () => {

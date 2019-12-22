@@ -1,6 +1,7 @@
-import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { mount, ReactWrapper } from 'enzyme';
 import Avatar from '@atlaskit/avatar';
+
 import PersonResult from '../../PersonResult';
 
 const DUMMY_AVATAR = <Avatar key="test-avatar" />;

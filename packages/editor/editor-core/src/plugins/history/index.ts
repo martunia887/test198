@@ -1,9 +1,11 @@
-import { pluginFactory } from '../../utils/plugin-state-factory';
 import { PluginKey, Plugin } from 'prosemirror-state';
+
 import { Dispatch } from '../../event-dispatcher';
 import { EditorPlugin } from '../../types';
-import reducer from './reducer';
+import { pluginFactory } from '../../utils/plugin-state-factory';
+
 import { HistoryActionTypes } from './actions';
+import reducer from './reducer';
 import { getPmHistoryPluginState } from './utils';
 
 /**

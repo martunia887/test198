@@ -1,10 +1,10 @@
 /** @jsx jsx */
 import { useCallback } from 'react';
-import { jsx } from '@emotion/core';
+import { Fragment, forwardRef } from 'react';
+import { smallDurationMs, easeInOut } from '@atlaskit/motion';
 import { visuallyHidden } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
-import { smallDurationMs, easeInOut } from '@atlaskit/motion';
-import { Fragment, forwardRef } from 'react';
+import { jsx } from '@emotion/core';
 
 export type RatingRender = (props: { isChecked: boolean }) => React.ReactNode;
 

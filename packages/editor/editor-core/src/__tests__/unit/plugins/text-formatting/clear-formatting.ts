@@ -1,3 +1,7 @@
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { browser } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
@@ -24,17 +28,14 @@ import {
   underline,
   textColor,
 } from '@atlaskit/editor-test-helpers';
-import { pluginKey as clearFormattingPluginKey } from '../../../../plugins/text-formatting/pm-plugins/clear-formatting';
+
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 import {
   clearFormatting,
   clearFormattingWithAnalytics,
 } from '../../../../plugins/text-formatting/commands/clear-formatting';
+import { pluginKey as clearFormattingPluginKey } from '../../../../plugins/text-formatting/pm-plugins/clear-formatting';
 import { checkFormattingIsPresent } from '../../../../plugins/text-formatting/utils';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('clear-formatting', () => {
   const createEditor = createEditorFactory();

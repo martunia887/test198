@@ -1,11 +1,12 @@
 /** @jsx jsx */
-import { jsx, InterpolationWithTheme } from '@emotion/core';
 import { Component, FC } from 'react';
-import RadioIcon from '@atlaskit/icon/glyph/radio';
 import CheckboxIcon from '@atlaskit/icon/glyph/checkbox';
+import RadioIcon from '@atlaskit/icon/glyph/radio';
+import * as colors from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { gridSize } from '@atlaskit/theme/constants';
-import * as colors from '@atlaskit/theme/colors';
+import { jsx, InterpolationWithTheme } from '@emotion/core';
+
 import { OptionProps } from '../types';
 
 const getPrimitiveStyles = (

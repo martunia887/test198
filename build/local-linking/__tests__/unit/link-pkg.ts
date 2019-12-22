@@ -1,10 +1,11 @@
 jest.enableAutomock();
-import path from 'path';
-import fse from 'fs-extra';
-import * as bolt from 'bolt';
-import * as yalc from 'yalc';
 import { prefixConsoleLog } from '@atlaskit/build-utils/logging';
 import runCommands from '@atlaskit/build-utils/runCommands';
+import * as bolt from 'bolt';
+import fse from 'fs-extra';
+import path from 'path';
+import * as yalc from 'yalc';
+
 import linkPkg from '../../link-pkg';
 
 jest.mock('fs-extra');

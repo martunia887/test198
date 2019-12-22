@@ -1,8 +1,9 @@
+import * as React from 'react';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import * as React from 'react';
+
 import {
   ErrorCallback,
   InfoCallback,
@@ -16,6 +17,7 @@ import uniqueId from '../../util/id';
 import debug from '../../util/logger';
 import Popup from '../Popup';
 import ResourcedMentionList from '../ResourcedMentionList';
+
 import { MentionPickerInfoStyle, MentionPickerStyle } from './styles';
 
 export interface OnOpen {

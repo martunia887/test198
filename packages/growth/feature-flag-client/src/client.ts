@@ -1,12 +1,4 @@
 import {
-  AnalyticsHandler,
-  Flags,
-  ExposureEvent,
-  FlagShape,
-  CustomAttributes,
-  ReservedAttributes,
-} from './types';
-import {
   isObject,
   enforceAttributes,
   isFlagWithEvaluationDetails,
@@ -14,8 +6,15 @@ import {
   validateFlags,
   checkForReservedAttributes,
 } from './lib';
-
 import TrackedFlag from './tracked-flag';
+import {
+  AnalyticsHandler,
+  Flags,
+  ExposureEvent,
+  FlagShape,
+  CustomAttributes,
+  ReservedAttributes,
+} from './types';
 import UntrackedFlag from './untracked-flag';
 
 export default class FeatureFlagClient {

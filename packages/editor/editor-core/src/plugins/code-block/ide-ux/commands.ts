@@ -1,12 +1,7 @@
 import { EditorState, TextSelection } from 'prosemirror-state';
 
-import {
-  getLinesFromSelection,
-  getLineInfo,
-  forEachLine,
-  getStartOfCurrentLine,
-} from './line-handling';
 import { analyticsService } from '../../../analytics';
+import { CommandDispatch } from '../../../types';
 import {
   addAnalytics,
   ACTION,
@@ -17,7 +12,13 @@ import {
   INDENT_TYPE,
   ACTION_SUBJECT,
 } from '../../analytics';
-import { CommandDispatch } from '../../../types';
+
+import {
+  getLinesFromSelection,
+  getLineInfo,
+  forEachLine,
+  getStartOfCurrentLine,
+} from './line-handling';
 
 /**
  * Return the current indentation level

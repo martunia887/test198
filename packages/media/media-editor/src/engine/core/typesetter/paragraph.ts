@@ -1,8 +1,9 @@
 import { TextDirection } from '../../../common';
+
+import { getCursorPositions } from './cursorPositions';
 import { FontInfo } from './fontInfo';
 import { Fragment } from './fragment';
 import { renderText } from './textRenderer';
-import { getCursorPositions } from './cursorPositions';
 
 export interface ParagraphConfig {
   gl: WebGLRenderingContext;

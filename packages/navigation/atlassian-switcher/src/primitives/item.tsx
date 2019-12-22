@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Item from '@atlaskit/item';
+
 import { WithAnalyticsEventsProps } from '../utils/analytics';
+
 import { FadeIn } from './fade-in';
 
 export interface SwitcherItemProps extends WithAnalyticsEventsProps {

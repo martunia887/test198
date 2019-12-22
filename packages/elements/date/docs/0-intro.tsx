@@ -7,8 +7,8 @@ import {
   AtlassianInternalWarning,
 } from '@atlaskit/docs';
 
-import DateStyledExample from '../examples/01-date-with-style';
 import CustomColorExample from '../examples/00-custom-colors';
+import DateStyledExample from '../examples/01-date-with-style';
 import CustomFormatExample from '../examples/02-custom-format';
 
 const DateStyledSource = require('!!raw-loader!../examples/01-date-with-style');

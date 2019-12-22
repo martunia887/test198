@@ -1,9 +1,9 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { activityProviderFactory } from '@atlaskit/editor-test-helpers/activity-provider';
 import {
   getLinkMatch,
   normalizeUrl,
 } from '../../../../plugins/hyperlink/utils';
-import { activityProviderFactory } from '@atlaskit/editor-test-helpers/activity-provider';
-import { ProviderFactory } from '@atlaskit/editor-common';
 
 /**
  * Provides sample data for this suite of tests.

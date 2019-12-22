@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Observable } from 'rxjs';
 import { ReactWrapper } from 'enzyme';
-import { MediaType, FileState, Identifier } from '@atlaskit/media-client';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
 import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
+import { MediaType, FileState, Identifier } from '@atlaskit/media-client';
 import {
   fakeIntl,
   fakeMediaClient,
@@ -11,6 +10,8 @@ import {
   mountWithIntlContext,
 } from '@atlaskit/media-test-helpers';
 import { MediaButton } from '@atlaskit/media-ui';
+import { Observable } from 'rxjs';
+
 import { Header, State as HeaderState } from '../../../newgen/header';
 import { MetadataFileName, MetadataSubText } from '../../../newgen/styled';
 import { LeftHeader } from '../../../newgen/styled';

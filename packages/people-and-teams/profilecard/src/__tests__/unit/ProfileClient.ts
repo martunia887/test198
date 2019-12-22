@@ -1,8 +1,6 @@
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-
-import fetchMock from 'fetch-mock';
-// @ts-ignore
 import * as sinon from 'sinon';
+import 'es6-promise/auto';
+import fetchMock from 'fetch-mock';
 
 import ProfileClient, { modifyResponse } from '../../api/ProfileCardClient';
 import { ApiClientResponse } from '../../types';

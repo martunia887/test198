@@ -1,4 +1,8 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   blockquote,
   br,
   code_block,
@@ -15,13 +19,10 @@ import {
   a as link,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+import { EditorView } from 'prosemirror-view';
+
 import { analyticsService } from '../../../../analytics';
 import { HeadingLevels } from '../../../../plugins/block-type/types';
-import { EditorView } from 'prosemirror-view';
 
 describe('inputrules', () => {
   const createEditor = createEditorFactory();

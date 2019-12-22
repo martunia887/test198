@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import type { Props } from '../src/components/Layer';
+
 import Layer from '../src';
+import type { Props } from '../src/components/Layer';
 
 const StyledRoot = styled.div`
   display: flex;

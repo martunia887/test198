@@ -1,10 +1,8 @@
-import styled from 'styled-components';
 import * as React from 'react';
+import styled from 'styled-components';
+import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { ReactRenderer } from '@atlaskit/renderer';
-import Editor, { EditorProps, EditorAppearance } from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   cardProvider,
   storyMediaProviderFactory,
@@ -12,24 +10,28 @@ import {
   macroProvider,
   autoformattingProvider,
 } from '@atlaskit/editor-test-helpers';
-import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
-import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
-import { EmojiProvider } from '@atlaskit/emoji/resource';
-import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 import {
   customInsertMenuItems,
   extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
-import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
-import { TitleInput } from '../example-helpers/PageElements';
-import { EditorActions, MediaProvider, MediaOptions } from './../src';
-import BreadcrumbsMiscActions from '../example-helpers/breadcrumbs-misc-actions';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
 import {
   defaultCollectionName,
   defaultMediaPickerCollectionName,
   videoFileId,
 } from '@atlaskit/media-test-helpers';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import { ReactRenderer } from '@atlaskit/renderer';
+import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
+
+import { TitleInput } from '../example-helpers/PageElements';
+import BreadcrumbsMiscActions from '../example-helpers/breadcrumbs-misc-actions';
+import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
+
+import { EditorActions, MediaProvider, MediaOptions } from './../src';
+import Editor, { EditorProps, EditorAppearance } from './../src/editor';
+import EditorContext from './../src/ui/EditorContext';
+import WithEditorActions from './../src/ui/WithEditorActions';
 
 const Wrapper = styled.div`
   box-sizing: border-box;

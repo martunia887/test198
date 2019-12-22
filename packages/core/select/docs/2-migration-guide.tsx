@@ -1,8 +1,9 @@
 import React from 'react';
 import { Example, code } from '@atlaskit/docs';
+
 import md from './docs-util/md';
-import PropChanges from './docs-util/propChanges';
 import { propChanges } from './docs-util/propChangeData';
+import PropChanges from './docs-util/propChanges';
 
 const itemShape = `Array<{
   heading: string

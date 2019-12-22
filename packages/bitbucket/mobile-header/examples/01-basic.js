@@ -3,8 +3,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import Navigation from '@atlaskit/navigation';
 import DetailViewIcon from '@atlaskit/icon/glyph/detail-view';
+import Navigation from '@atlaskit/navigation';
+
 import MobileHeader from '../src';
 
 const FakeSideBar = styled.div`

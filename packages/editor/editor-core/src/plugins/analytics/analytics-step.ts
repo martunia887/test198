@@ -1,5 +1,6 @@
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { Node as PMNode } from 'prosemirror-model';
+import { Slice } from 'prosemirror-model';
 import {
   Step,
   StepResult,
@@ -7,7 +8,7 @@ import {
   ReplaceStep,
   Mappable,
 } from 'prosemirror-transform';
-import { Slice } from 'prosemirror-model';
+
 import {
   AnalyticsEventPayloadWithChannel,
   EVENT_TYPE,

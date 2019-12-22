@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import EmptyState from '@atlaskit/empty-state';
-import exampleImage from './img/example-image.png';
+
 import TableTree, {
   Headers,
   Header,
@@ -10,6 +10,8 @@ import TableTree, {
   Cell,
   TableTreeDataHelper,
 } from '../src';
+
+import exampleImage from './img/example-image.png';
 
 let uuid = 0;
 

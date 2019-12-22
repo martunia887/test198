@@ -1,3 +1,4 @@
+import { akEditorFullWidthLayoutWidth } from '../../../styles/consts';
 import {
   calcLegacyWidth,
   calcResizedWidth,
@@ -6,7 +7,6 @@ import {
   calcWideWidth,
   calcBreakoutWidth,
 } from '../../../utils/calc-breakout-width';
-import { akEditorFullWidthLayoutWidth } from '../../../styles/consts';
 
 describe('@atlaskit/editor-common media utils', () => {
   describe('#calcLegacyWidth and #calcResizedWidth', () => {

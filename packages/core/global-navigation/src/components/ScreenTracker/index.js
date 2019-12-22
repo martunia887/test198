@@ -2,7 +2,6 @@
 
 import { Component } from 'react';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-
 import { NAVIGATION_CHANNEL } from '../../constants';
 
 type Props = {

@@ -4,6 +4,7 @@
 import React from 'react';
 import Avatar from '@atlaskit/avatar';
 import Question from '@atlaskit/icon/glyph/question';
+
 import Dropdown, { DropdownItemGroup, DropdownItem } from '../src';
 
 const getDropDownData = () => (

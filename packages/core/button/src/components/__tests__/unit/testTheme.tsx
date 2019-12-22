@@ -1,9 +1,10 @@
 /** @jsx jsx */
+import * as renderer from 'react-test-renderer';
 import { jsx } from '@emotion/core';
 import { matchers } from 'jest-emotion';
-import * as renderer from 'react-test-renderer';
-import Button from '../../Button';
+
 import { ButtonProps } from '../../../types';
+import Button from '../../Button';
 
 const ThemedButton = (props: ButtonProps) => (
   <Button

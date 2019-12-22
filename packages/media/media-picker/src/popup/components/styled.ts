@@ -1,8 +1,7 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
-import { fontFamily } from '@atlaskit/theme/constants';
+import styled from 'styled-components';
 import { N30 } from '@atlaskit/theme/colors';
+import { fontFamily } from '@atlaskit/theme/constants';
 
 const MIN_HEIGHT = '498px';
 

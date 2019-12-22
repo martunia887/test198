@@ -1,15 +1,17 @@
+import * as React from 'react';
+import { ComponentClass } from 'react';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import * as React from 'react';
-import { ComponentClass } from 'react';
+
 import { EmojiProvider } from '../../api/EmojiResource';
 import { OnEmojiEvent } from '../../types';
 import LoadingEmojiComponent, {
   Props as LoadingProps,
   State as LoadingState,
 } from '../common/LoadingEmojiComponent';
+
 import {
   PickerRefHandler,
   Props as ComponentProps,

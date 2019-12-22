@@ -1,10 +1,10 @@
 // @flow
 
+import React, { Component, type ComponentType, type Node } from 'react';
 // $FlowFixMe - ts module and relative import?
 import Navigation from '@atlaskit/atlassian-navigation/examples/10-authenticated-example';
 import { NavigationSkeleton } from '@atlaskit/atlassian-navigation/skeleton';
 import { ToggleStateless } from '@atlaskit/toggle';
-import React, { Component, type ComponentType, type Node } from 'react';
 
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';
 

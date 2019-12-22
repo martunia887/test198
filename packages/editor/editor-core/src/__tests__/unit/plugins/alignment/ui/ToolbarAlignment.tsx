@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
 import {
   doc,
   p,
   createEditorFactory,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
-import { ReactWrapper } from 'enzyme';
+
 import {
   AlignmentPluginState,
   pluginKey,

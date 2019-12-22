@@ -1,3 +1,4 @@
+import { FileIdentifier } from '@atlaskit/media-client';
 import {
   archiveFileId,
   audioFileId,
@@ -18,7 +19,6 @@ import {
   videoSquareFileId,
   verticalImageFileId,
 } from '@atlaskit/media-test-helpers';
-import { FileIdentifier } from '@atlaskit/media-client';
 
 export const imageIdentifier: FileIdentifier = {
   ...imageFileId,

@@ -1,37 +1,24 @@
+import { ReactWrapper } from 'enzyme';
 import { waitUntil } from '@atlaskit/util-common-test';
 import { mockNonUploadingEmojiResourceFactory } from '@atlaskit/util-data-test';
-import { ReactWrapper } from 'enzyme';
+
 import EmojiRepository from '../../../../api/EmojiRepository';
 import Emoji, {
   Props as EmojiProps,
 } from '../../../../components/common/Emoji';
 import EmojiButton from '../../../../components/common/EmojiButton';
 import EmojiPlaceholder from '../../../../components/common/EmojiPlaceholder';
+import EmojiPreview from '../../../../components/common/EmojiPreview';
+import ToneSelector from '../../../../components/common/ToneSelector';
 import { messages } from '../../../../components/i18n';
-import { CategoryDescriptionMap } from '../../../../components/picker/categories';
 import CategorySelector, {
   sortCategories,
 } from '../../../../components/picker/CategorySelector';
-import ToneSelector from '../../../../components/common/ToneSelector';
-import EmojiPreview from '../../../../components/common/EmojiPreview';
 import { Props } from '../../../../components/picker/EmojiPicker';
 import EmojiPickerFooter from '../../../../components/picker/EmojiPickerFooter';
 import EmojiPickerList from '../../../../components/picker/EmojiPickerList';
-import {
-  customCategory,
-  customTitle,
-  defaultCategories,
-  frequentCategory,
-  selectedToneStorageKey,
-} from '../../../../util/constants';
-import { isMessagesKey } from '../../../../util/type-helpers';
+import { CategoryDescriptionMap } from '../../../../components/picker/categories';
 import { EmojiDescription, OptionalEmojiDescription } from '../../../../types';
-import {
-  getEmojiResourcePromise,
-  mediaEmoji,
-  standardEmojis,
-} from '../../_test-data';
-import * as helper from './_emoji-picker-test-helpers';
 import {
   openedPickerEvent,
   closedPickerEvent,
@@ -42,6 +29,21 @@ import {
   toneSelectedEvent,
   toneSelectorClosedEvent,
 } from '../../../../util/analytics';
+import {
+  customCategory,
+  customTitle,
+  defaultCategories,
+  frequentCategory,
+  selectedToneStorageKey,
+} from '../../../../util/constants';
+import { isMessagesKey } from '../../../../util/type-helpers';
+import {
+  getEmojiResourcePromise,
+  mediaEmoji,
+  standardEmojis,
+} from '../../_test-data';
+
+import * as helper from './_emoji-picker-test-helpers';
 
 describe('<EmojiPicker />', () => {
   let onEvent: jest.SpyInstance;

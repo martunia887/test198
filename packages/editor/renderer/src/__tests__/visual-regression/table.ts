@@ -1,7 +1,9 @@
 import { Page } from 'puppeteer';
-import { snapshot, animationFrame, initRendererWithADF } from './_utils';
+
 import * as wideTableResized from '../__fixtures__/table-wide-resized.adf.json';
 import * as tableWithShadowAdf from '../__fixtures__/table-with-shadow.adf.json';
+
+import { snapshot, animationFrame, initRendererWithADF } from './_utils';
 
 const initRenderer = async (page: Page, adf: any) => {
   await initRendererWithADF(page, {

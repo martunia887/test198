@@ -3,9 +3,8 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import SkeletonGlobalNavigation from '../../../components/js/skeleton/SkeletonGlobalNavigation';
-
-import { WithRootTheme } from '../../../theme/util';
 import * as presets from '../../../theme/presets';
+import { WithRootTheme } from '../../../theme/util';
 
 test('wraps the content inside a <WithRootTheme />', () => {
   const rootThemeHoc = shallow(

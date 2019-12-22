@@ -1,9 +1,10 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
+
 import { SingleValueContainer } from '../../../components/SingleValueContainer';
 import { SizeableAvatar } from '../../../components/SizeableAvatar';
-import { testUser } from '../_testUtils';
 import { Option } from '../../../types';
+import { testUser } from '../_testUtils';
 
 describe('SingleValueContainer', () => {
   const shallowValueContainer = (props: any) =>

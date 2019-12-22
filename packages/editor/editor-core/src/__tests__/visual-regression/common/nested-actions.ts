@@ -1,7 +1,8 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import adf from './__fixtures__/nested-actions.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
 import { selectors } from '../../__helpers/page-objects/_editor';
+import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adf from './__fixtures__/nested-actions.adf.json';
 
 describe('Nested actions', () => {
   it('looks correct', async () => {

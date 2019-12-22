@@ -1,7 +1,13 @@
 import * as React from 'react';
-import Item from '@atlaskit/item';
-import { EmojiPicker as AkEmojiPicker } from '@atlaskit/emoji';
-import { emoji as emojiData } from '@atlaskit/util-data-test';
+import { ReactWrapper, mount } from 'enzyme';
+import { InjectedIntlProps } from 'react-intl';
+import { uuid } from '@atlaskit/adf-schema';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import Button from '@atlaskit/button';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
   p,
@@ -12,15 +18,18 @@ import {
   taskItem,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
+import { EmojiPicker as AkEmojiPicker } from '@atlaskit/emoji';
+import Item from '@atlaskit/item';
+import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { taskDecision } from '@atlaskit/util-data-test';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { uuid } from '@atlaskit/adf-schema';
-import Button from '@atlaskit/button';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+import { EditorView } from 'prosemirror-view';
 
+import { AnalyticsHandler } from '../../../../../analytics';
+import { TooltipShortcut } from '../../../../../keymaps';
+import {
+  INPUT_METHOD,
+  DispatchAnalyticsEvent,
+} from '../../../../../plugins/analytics';
 import { pluginKey as blockTypePluginKey } from '../../../../../plugins/block-type/pm-plugins/main';
 import {
   messages as blockTypeMessages,
@@ -28,27 +37,18 @@ import {
   PANEL,
   BLOCK_QUOTE,
 } from '../../../../../plugins/block-type/types';
-import DropdownMenu from '../../../../../ui/DropdownMenu';
-import ToolbarInsertBlock, {
-  messages,
-  Props as ToolbarInsertBlockProps,
-} from '../../../../../plugins/insert-block/ui/ToolbarInsertBlock';
-import ToolbarButton from '../../../../../ui/ToolbarButton';
-import { MediaProvider } from '../../../../../plugins/media';
 import {
   stateKey as hyperlinkPluginKey,
   LinkAction,
 } from '../../../../../plugins/hyperlink/pm-plugins/main';
-import {
-  INPUT_METHOD,
-  DispatchAnalyticsEvent,
-} from '../../../../../plugins/analytics';
-import { AnalyticsHandler } from '../../../../../analytics';
-import { ReactWrapper, mount } from 'enzyme';
-import { EditorView } from 'prosemirror-view';
+import ToolbarInsertBlock, {
+  messages,
+  Props as ToolbarInsertBlockProps,
+} from '../../../../../plugins/insert-block/ui/ToolbarInsertBlock';
+import { MediaProvider } from '../../../../../plugins/media';
 import { InsertMenuCustomItem } from '../../../../../types';
-import { TooltipShortcut } from '../../../../../keymaps';
-import { InjectedIntlProps } from 'react-intl';
+import DropdownMenu from '../../../../../ui/DropdownMenu';
+import ToolbarButton from '../../../../../ui/ToolbarButton';
 
 type ToolbarOptionWrapper = ReactWrapper<
   ToolbarInsertBlockProps & InjectedIntlProps

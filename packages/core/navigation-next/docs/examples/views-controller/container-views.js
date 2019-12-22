@@ -15,6 +15,7 @@ import PageIcon from '@atlaskit/icon/glyph/page';
 import PortfolioIcon from '@atlaskit/icon/glyph/portfolio';
 import ShipIcon from '@atlaskit/icon/glyph/ship';
 import { JiraIcon, JiraWordmark } from '@atlaskit/logo';
+
 import {
   ItemAvatar,
   LayoutManagerWithViewController,

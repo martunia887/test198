@@ -1,9 +1,8 @@
-import { CONTAINER_PADDING } from '../../image-cropper/styled';
-
-jest.mock('../../util');
 import { asMock, mockCanvas } from '@atlaskit/media-test-helpers';
-import { getCanvas } from '../../util';
+
 import { cropToDataURI, Rect } from '../../image-cropper/crop-to-data-uri';
+import { CONTAINER_PADDING } from '../../image-cropper/styled';
+import { getCanvas } from '../../util';
 
 describe('cropToDataURI()', () => {
   let mockImage: HTMLImageElement;

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
 import UnknownIcon from '@atlaskit/icon/glyph/media-services/unknown';
+
 import { MediaTypeIcon } from '../../../newgen/media-type-icon';
 
 describe('MediaTypeIcon', () => {

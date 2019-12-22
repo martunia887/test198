@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 import React, { useEffect } from 'react';
 import { render } from '@testing-library/react';
-import { useAnalyticsEvents } from '../../useAnalyticsEvents';
-import AnalyticsListener from '../../AnalyticsListener';
+
 import AnalyticsContext from '../../AnalyticsContext';
+import AnalyticsListener from '../../AnalyticsListener';
+import { useAnalyticsEvents } from '../../useAnalyticsEvents';
 
 const Component = (props: {
   passback?: (value: ReturnType<typeof useAnalyticsEvents>) => void;

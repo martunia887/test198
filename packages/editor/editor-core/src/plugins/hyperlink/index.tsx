@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { link } from '@atlaskit/adf-schema';
+
+import { tooltip, addLink } from '../../keymaps';
 import { EditorPlugin } from '../../types';
-import { createInputRulePlugin } from './pm-plugins/input-rule';
-import { createKeymapPlugin } from './pm-plugins/keymap';
-import { plugin, stateKey, LinkAction } from './pm-plugins/main';
-import fakeCursorToolbarPlugin from './pm-plugins/fake-cursor-for-toolbar';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import {
   addAnalytics,
   ACTION,
@@ -14,9 +11,14 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
 } from '../analytics';
-import { getToolbarConfig } from './Toolbar';
-import { tooltip, addLink } from '../../keymaps';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { IconLink } from '../quick-insert/assets';
+
+import { getToolbarConfig } from './Toolbar';
+import fakeCursorToolbarPlugin from './pm-plugins/fake-cursor-for-toolbar';
+import { createInputRulePlugin } from './pm-plugins/input-rule';
+import { createKeymapPlugin } from './pm-plugins/keymap';
+import { plugin, stateKey, LinkAction } from './pm-plugins/main';
 
 const hyperlinkPlugin = (): EditorPlugin => ({
   name: 'hyperlink',

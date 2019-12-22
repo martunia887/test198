@@ -1,6 +1,6 @@
+import { defaultSchema } from '@atlaskit/adf-schema';
 import { doc, p, img, a as link } from '@atlaskit/editor-test-helpers';
 import { checkParseEncodeRoundTrips } from '../_test-helpers';
-import { defaultSchema } from '@atlaskit/adf-schema';
 
 // Nodes
 

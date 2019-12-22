@@ -1,9 +1,7 @@
 // @flow
 
 import type { ComponentType, ElementConfig, Node } from 'react';
-
 import type { Diffable } from '../common/types';
-
 import UIController from './UIController';
 
 /**

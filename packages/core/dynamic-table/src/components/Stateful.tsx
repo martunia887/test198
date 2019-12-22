@@ -1,8 +1,10 @@
 import React from 'react';
-import DynamicTableStateless from './Stateless';
-import { SortOrderType, StatefulProps, RankEnd, RowType } from '../types';
-import { reorderRows } from '../internal/helpers';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+
+import { reorderRows } from '../internal/helpers';
+import { SortOrderType, StatefulProps, RankEnd, RowType } from '../types';
+
+import DynamicTableStateless from './Stateless';
 
 interface State {
   page?: number;

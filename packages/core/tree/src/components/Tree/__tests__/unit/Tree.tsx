@@ -1,7 +1,5 @@
-import { mount, configure } from 'enzyme';
-//@ts-ignore
-import Adapter from 'enzyme-adapter-react-16';
 import React, { useState } from 'react';
+import { mount, configure } from 'enzyme';
 import {
   DropResult,
   DragUpdate,
@@ -9,13 +7,14 @@ import {
   Droppable,
 } from 'react-beautiful-dnd-next';
 import { getBox } from 'css-box-model';
-import Tree from '../../Tree';
-// import { Props as TreeProps } from '../../Tree-types';
-import { mutateTree } from '../../../../utils/tree';
+import Adapter from 'enzyme-adapter-react-16';
+
+import { treeInitiallyClosed } from '../../../../../mockdata/treeInitiallyClosed';
 import { treeWithThreeLeaves } from '../../../../../mockdata/treeWithThreeLeaves';
 import { treeWithTwoBranches } from '../../../../../mockdata/treeWithTwoBranches';
-import { treeInitiallyClosed } from '../../../../../mockdata/treeInitiallyClosed';
+import { mutateTree } from '../../../../utils/tree';
 import { RenderItemParams } from '../../../TreeItem/TreeItem-types';
+import Tree from '../../Tree';
 
 configure({ adapter: new Adapter() });
 

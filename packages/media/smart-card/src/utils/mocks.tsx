@@ -1,5 +1,5 @@
-import { JsonLd } from '../client/types';
 import CardClient from '../client';
+import { JsonLd } from '../client/types';
 
 export const mocks = {
   success: {

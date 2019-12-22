@@ -5,6 +5,7 @@ import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/arrow-left-circle';
 import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 
 import ConnectedItem from '../ConnectedItem';
+
 import type { BackItemProps } from './types';
 
 const gridSize = gridSizeFn();

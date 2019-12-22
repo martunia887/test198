@@ -1,12 +1,11 @@
-import uuid from 'uuid';
 import { RequestServiceOptions, utils } from '@atlaskit/util-service-support';
+import uuid from 'uuid';
 
 import {
-  convertServiceTaskToTask,
-  convertServiceTaskStateToBaseItem,
-  findIndex,
-} from './TaskDecisionUtils';
-
+  objectKeyToString,
+  toggleTaskState,
+  toObjectKey,
+} from '../type-helpers';
 import {
   BaseItem,
   ServiceTaskState,
@@ -26,10 +25,10 @@ import {
 } from '../types';
 
 import {
-  objectKeyToString,
-  toggleTaskState,
-  toObjectKey,
-} from '../type-helpers';
+  convertServiceTaskToTask,
+  convertServiceTaskStateToBaseItem,
+  findIndex,
+} from './TaskDecisionUtils';
 
 interface RecentUpdateByIdValue {
   listener: RecentUpdatesListener;

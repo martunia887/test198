@@ -1,11 +1,11 @@
 import { Store, Dispatch } from 'redux';
 
-import { updateServiceList } from '../actions/updateServiceList';
-import { START_AUTH, StartAuthAction } from '../actions/startAuth';
 import { changeAccount } from '../actions/changeAccount';
+import { START_AUTH, StartAuthAction } from '../actions/startAuth';
+import { updateServiceList } from '../actions/updateServiceList';
 import { State, ServiceAccountWithType } from '../domain';
-import { Fetcher } from '../tools/fetcher/fetcher';
 import { CloudService } from '../services/cloud-service';
+import { Fetcher } from '../tools/fetcher/fetcher';
 
 export const startCloudAccountOAuthFlow = (
   fetcher: Fetcher,

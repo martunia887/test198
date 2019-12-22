@@ -1,11 +1,12 @@
-import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { TextSelection } from 'prosemirror-state';
-import { createEditorFactory } from '@atlaskit/editor-test-helpers';
-import { pluginKey as collabEditPluginKey } from '../../../../src/plugins/collab-edit';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { findPointers } from '../../../../src/plugins/collab-edit/utils';
+import { createEditorFactory } from '@atlaskit/editor-test-helpers';
 import { createMockCollabEditProvider } from '@atlaskit/synchrony-test-helpers/src/mock-collab-provider';
+import { expect } from 'chai';
+import { TextSelection } from 'prosemirror-state';
+
+import { pluginKey as collabEditPluginKey } from '../../../../src/plugins/collab-edit';
+import { findPointers } from '../../../../src/plugins/collab-edit/utils';
 
 describe('editor/plugins/collab-edit', () => {
   const createEditor = createEditorFactory();

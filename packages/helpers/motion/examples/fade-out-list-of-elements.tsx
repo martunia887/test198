@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { useState } from 'react';
 import Button from '@atlaskit/button';
 import {
@@ -10,8 +9,10 @@ import {
   OpsGenieIcon,
   StatuspageIcon,
 } from '@atlaskit/logo';
-import { FadeIn, ExitingPersistence, StaggeredEntrance } from '../src';
+import { jsx } from '@emotion/core';
+
 import { Block, RetryContainer } from '../examples-utils';
+import { FadeIn, ExitingPersistence, StaggeredEntrance } from '../src';
 
 const logos = [
   [<BitbucketIcon size="small" />, 'Bitbucket'],

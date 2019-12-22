@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DropdownItem } from './styles';
 import { AddonProps } from '../types';
+import { DropdownItem } from './styles';
 
 const DropdownItemWrapper = (props: AddonProps) => (
   <DropdownItem

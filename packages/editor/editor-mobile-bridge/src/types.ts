@@ -1,5 +1,5 @@
-import { EditorView } from 'prosemirror-view';
 import { ResolveResponse } from '@atlaskit/smart-card';
+import { EditorView } from 'prosemirror-view';
 
 export type EditorViewWithComposition = EditorView & {
   domObserver: {

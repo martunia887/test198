@@ -1,3 +1,8 @@
+import { uuid } from '@atlaskit/adf-schema';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
@@ -12,12 +17,8 @@ import {
   tr,
   testKeymap,
 } from '@atlaskit/editor-test-helpers';
-import { uuid } from '@atlaskit/adf-schema';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 import { MockMentionResource } from '@atlaskit/util-data-test';
+
 import { ListTypes } from './_helpers';
 
 describe('tasks and decisions - keymaps', () => {

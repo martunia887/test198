@@ -3,15 +3,15 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import RadioIcon from '@atlaskit/icon/glyph/radio';
-import { B400, N40 } from '@atlaskit/theme/colors';
 import Item from '@atlaskit/item';
+import { B400, N40 } from '@atlaskit/theme/colors';
 
-import { KEY_ENTER, KEY_SPACE } from '../../../util/keys';
 import DropdownMenu, {
   DropdownItemGroupRadio,
   DropdownItemRadio,
   DropdownMenuStateless,
 } from '../../..';
+import { KEY_ENTER, KEY_SPACE } from '../../../util/keys';
 
 /* TODO: create integration tests to replace these See https://ecosystem.atlassian.net/browse/AK-5183 */
 describe.skip('dropdown menu - DropdownItemRadio', () => {

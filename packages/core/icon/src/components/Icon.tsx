@@ -1,10 +1,10 @@
 import React, { Component, ReactElement } from 'react';
 import styled from 'styled-components';
-import uuid from 'uuid';
 import { background } from '@atlaskit/theme/colors';
+import uuid from 'uuid';
 
-import { sizeOpts } from '../types';
 import { sizes } from '../constants';
+import { sizeOpts } from '../types';
 
 interface WrapperProps {
   primaryColor?: string;

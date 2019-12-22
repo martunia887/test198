@@ -2,11 +2,12 @@
 
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Button from '@atlaskit/button';
 import Banner from '@atlaskit/banner';
-import Navigation from '@atlaskit/navigation';
+import Button from '@atlaskit/button';
 import RoomMenuIcon from '@atlaskit/icon/glyph/room-menu';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
+import Navigation from '@atlaskit/navigation';
+
 import MobileHeader from '../src';
 
 const BANNER_HEIGHT = 52;

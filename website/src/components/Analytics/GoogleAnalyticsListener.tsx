@@ -2,9 +2,11 @@ import React from 'react';
 import ReactGA from 'react-ga';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import ttiPolyfill from 'tti-polyfill';
-import { getAtlassianAnalyticsClient } from './AtlassianAnalytics';
+
 import { GOOGLE_ANALYTICS_ID } from '../../constants';
 import { Window } from '../../types';
+
+import { getAtlassianAnalyticsClient } from './AtlassianAnalytics';
 
 let mounted = 0;
 

@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { EditorError } from '../domain';
 
 export const EDITOR_SHOW_ERROR = 'EDITOR_SHOW_ERROR';

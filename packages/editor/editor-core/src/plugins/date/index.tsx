@@ -1,22 +1,11 @@
 import * as React from 'react';
-import { findDomRefAtPos } from 'prosemirror-utils';
 import Loadable from 'react-loadable';
 import { date } from '@atlaskit/adf-schema';
 import { todayTimestampInUTC } from '@atlaskit/editor-common';
+import { findDomRefAtPos } from 'prosemirror-utils';
+
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import { insertDate, setDatePickerAt } from './actions';
-import createDatePlugin, {
-  DateState,
-  pluginKey as datePluginKey,
-} from './plugin';
-import keymap from './keymap';
-import {
-  pluginKey as editorDisabledPluginKey,
-  EditorDisabledPluginState,
-} from '../editor-disabled';
-import { IconDate } from '../quick-insert/assets';
 import {
   addAnalytics,
   INPUT_METHOD,
@@ -25,6 +14,19 @@ import {
   ACTION_SUBJECT_ID,
   EVENT_TYPE,
 } from '../analytics';
+import {
+  pluginKey as editorDisabledPluginKey,
+  EditorDisabledPluginState,
+} from '../editor-disabled';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { IconDate } from '../quick-insert/assets';
+
+import { insertDate, setDatePickerAt } from './actions';
+import keymap from './keymap';
+import createDatePlugin, {
+  DateState,
+  pluginKey as datePluginKey,
+} from './plugin';
 
 const DatePicker = Loadable({
   loader: () =>

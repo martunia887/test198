@@ -2,7 +2,9 @@ import React from 'react';
 import FabricAnalyticsListeners, {
   AnalyticsWebClient,
 } from '@atlaskit/analytics-listeners';
+
 import FeatureFlag from '../FeatureFlag';
+
 import GoogleAnalyticsListener from './GoogleAnalyticsListener';
 
 // AK-4967 - replace with real implementation from analytics-web-client

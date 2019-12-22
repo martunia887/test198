@@ -1,8 +1,9 @@
 // We still need postis here to communicate with the "link-account-handler" iframe
+import { objectToQueryString } from '@atlaskit/media-client';
+import { AuthProvider } from '@atlaskit/media-core';
 import postis from 'postis';
 import uuidV4 from 'uuid/v4';
-import { AuthProvider } from '@atlaskit/media-core';
-import { objectToQueryString } from '@atlaskit/media-client';
+
 import { ServiceName } from '../domain';
 import { mapAuthToQueryParameters } from '../domain/auth';
 import { pickerUrl } from '../tools/fetcher/fetcher';

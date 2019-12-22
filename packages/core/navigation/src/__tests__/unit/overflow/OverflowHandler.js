@@ -3,10 +3,11 @@ import React from 'react';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { replaceRaf } from 'raf-stub';
+
+import OverflowDropdown from '../../../components/js/overflow/OverflowDropdown';
 import OverflowHandler from '../../../components/js/overflow/OverflowHandler';
 import OverflowItem from '../../../components/js/overflow/OverflowItem';
 import OverflowItemGroup from '../../../components/js/overflow/OverflowItemGroup';
-import OverflowDropdown from '../../../components/js/overflow/OverflowDropdown';
 import {
   dropdownHeight,
   reservedGapHeight,

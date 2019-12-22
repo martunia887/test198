@@ -1,5 +1,4 @@
 import React from 'react';
-
 import AnalyticsErrorBoundary from '@atlaskit/analytics-next/AnalyticsErrorBoundary';
 
 export type MediaPickerAnalyticsErrorBoundaryProps = {

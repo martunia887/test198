@@ -1,17 +1,18 @@
 import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
 import { genericExtractPropsFromJSONLD } from '..';
-import { extractInlineViewPropsFromObject } from './extractPropsFromObject';
-import { extractInlineViewPropsFromTask } from './extractPropsFromTask';
-import { extractInlineViewPropsFromTextDocument } from './extractPropsFromTextDocument';
+
 import { extractInlineViewPropsFromBlogPost } from './extractPropsFromBlogPost';
+import { extractInlineViewPropsFromDigitalDocument } from './extractPropsFromDigitalDocument';
 import { extractInlineViewPropsFromDocument } from './extractPropsFromDocument';
+import { extractInlineViewPropsFromObject } from './extractPropsFromObject';
 import { extractInlineViewPropsFromProject } from './extractPropsFromProject';
-import { extractInlineViewPropsFromTemplate } from './extractPropsFromTemplate';
-import { extractInlineViewPropsFromSourceCodeRepository } from './extractPropsFromSourceCodeRepository';
+import { extractInlineViewPropsFromSourceCodeCommit } from './extractPropsFromSourceCodeCommit';
 import { extractInlineViewPropsFromSourceCodePullRequest } from './extractPropsFromSourceCodePullRequest';
 import { extractInlineViewPropsFromSourceCodeReference } from './extractPropsFromSourceCodeReference';
-import { extractInlineViewPropsFromDigitalDocument } from './extractPropsFromDigitalDocument';
-import { extractInlineViewPropsFromSourceCodeCommit } from './extractPropsFromSourceCodeCommit';
+import { extractInlineViewPropsFromSourceCodeRepository } from './extractPropsFromSourceCodeRepository';
+import { extractInlineViewPropsFromTask } from './extractPropsFromTask';
+import { extractInlineViewPropsFromTemplate } from './extractPropsFromTemplate';
+import { extractInlineViewPropsFromTextDocument } from './extractPropsFromTextDocument';
 
 const extractorPrioritiesByType = {
   Object: 0,

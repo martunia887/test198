@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'gatsby';
-import { Location } from '@reach/router';
-
 import {
   AtlassianNavigation,
   generateTheme,
@@ -9,9 +6,11 @@ import {
   Search,
   Profile,
 } from '@atlaskit/atlassian-navigation';
-import { N900, B200 } from '@atlaskit/theme/colors';
-import { gridSize } from '@atlaskit/theme';
 import Avatar from '@atlaskit/avatar';
+import { gridSize } from '@atlaskit/theme';
+import { N900, B200 } from '@atlaskit/theme/colors';
+import { Location } from '@reach/router';
+import { Link } from 'gatsby';
 
 const theme = generateTheme({
   name: 'dark',

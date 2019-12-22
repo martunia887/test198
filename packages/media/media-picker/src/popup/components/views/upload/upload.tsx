@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import Flag, { FlagGroup } from '@atlaskit/flag';
+import EditorInfoIcon from '@atlaskit/icon/glyph/error';
+import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
+import TrashIcon from '@atlaskit/icon/glyph/trash';
 import {
   Card,
   CardEvent,
@@ -16,20 +20,16 @@ import {
   MediaClient,
 } from '@atlaskit/media-client';
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
-import Spinner from '@atlaskit/spinner';
-import Flag, { FlagGroup } from '@atlaskit/flag';
-import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
-import TrashIcon from '@atlaskit/icon/glyph/trash';
-import EditorInfoIcon from '@atlaskit/icon/glyph/error';
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
-import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import { messages, InfiniteScroll } from '@atlaskit/media-ui';
-import { isWebGLAvailable } from '../../../tools/webgl';
-import { Dropzone } from './dropzone';
-import { fileClick } from '../../../actions/fileClick';
-import { editorShowImage } from '../../../actions/editorShowImage';
-import { editRemoteImage } from '../../../actions/editRemoteImage';
+import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
+import Spinner from '@atlaskit/spinner';
+import { Dispatch } from 'redux';
 
+import { BrowserBase } from '../../../../components/browser/browser';
+import { editRemoteImage } from '../../../actions/editRemoteImage';
+import { editorShowImage } from '../../../actions/editorShowImage';
+import { fileClick } from '../../../actions/fileClick';
+import { removeFileFromRecents } from '../../../actions/removeFileFromRecents';
 import {
   FileReference,
   LocalUploadFileMetadata,
@@ -40,7 +40,10 @@ import {
   State,
   ServiceName,
 } from '../../../domain';
+import { isWebGLAvailable } from '../../../tools/webgl';
 import { menuDelete, menuEdit } from '../editor/phrases';
+
+import { Dropzone } from './dropzone';
 import {
   Wrapper,
   SpinnerWrapper,
@@ -49,8 +52,6 @@ import {
   RecentUploadsTitle,
   CardWrapper,
 } from './styled';
-import { removeFileFromRecents } from '../../../actions/removeFileFromRecents';
-import { BrowserBase } from '../../../../components/browser/browser';
 
 const createEditCardAction = (
   handler: CardEventHandler,

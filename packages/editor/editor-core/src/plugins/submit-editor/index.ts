@@ -1,10 +1,10 @@
 import { keymap } from 'prosemirror-keymap';
 import { EditorState, Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+
 import { analyticsService } from '../../analytics';
-import { EditorPlugin, CommandDispatch } from '../../types';
+import { Dispatch } from '../../event-dispatcher';
 import * as keymaps from '../../keymaps';
-import { stateKey as mediaPluginKey } from '../../plugins/media/pm-plugins/main';
 import {
   analyticsEventKey,
   AnalyticsEventPayload,
@@ -14,7 +14,8 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
 } from '../../plugins/analytics';
-import { Dispatch } from '../../event-dispatcher';
+import { stateKey as mediaPluginKey } from '../../plugins/media/pm-plugins/main';
+import { EditorPlugin, CommandDispatch } from '../../types';
 
 export function createPlugin(
   eventDispatch: Dispatch,

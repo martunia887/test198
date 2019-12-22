@@ -9,12 +9,20 @@ import {
   createRef,
   type ElementRef,
 } from 'react';
-import memoize from 'memoize-one';
-import applyRef from 'apply-ref';
-import { jsx } from '@emotion/core';
 import Badge from '@atlaskit/badge';
 import Button from '@atlaskit/button';
 import AddIcon from '@atlaskit/icon/glyph/add';
+import { jsx } from '@emotion/core';
+import applyRef from 'apply-ref';
+import memoize from 'memoize-one';
+
+import {
+  createAndFire,
+  defaultAttributes,
+  withAnalyticsContext,
+  withAnalyticsEvents,
+} from '../analytics';
+import { cloneObj, isEqualArr, objectMap, stringCompare } from '../utils';
 
 import {
   RefinementBarProvider,
@@ -23,17 +31,9 @@ import {
   type ProviderContext,
   type ValuesType,
 } from './ContextProvider';
-import Popup, { DialogInner } from './Popup';
 import { FilterButton } from './FilterButton';
 import { FilterManager } from './FilterManager';
-
-import { cloneObj, isEqualArr, objectMap, stringCompare } from '../utils';
-import {
-  createAndFire,
-  defaultAttributes,
-  withAnalyticsContext,
-  withAnalyticsEvents,
-} from '../analytics';
+import Popup, { DialogInner } from './Popup';
 
 type Props = {
   /** The key of the "active" popup; use this with `onPopupOpen` and `onPopupClose` to take control of the field popups. */

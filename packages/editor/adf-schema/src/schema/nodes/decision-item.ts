@@ -1,6 +1,6 @@
 import { Node, NodeSpec } from 'prosemirror-model';
-import { Inline } from './doc';
 import { uuid } from '../../utils/uuid';
+import { Inline } from './doc';
 
 /**
  * @name decisionItem_node

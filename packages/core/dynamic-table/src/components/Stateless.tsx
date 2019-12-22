@@ -5,27 +5,18 @@ import {
   createAndFireEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import ManagedPagination from './managedPagination';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
+
 import { ASC, DESC, SMALL, LARGE } from '../internal/constants';
 import {
   getPageRows,
   validateSortKey,
   assertIsSortable,
 } from '../internal/helpers';
-import TableHead from './TableHead';
-import Body from './Body';
-import RankableTableBody from './rankable/Body';
-import LoadingContainer from './LoadingContainer';
-import LoadingContainerAdvanced from './LoadingContainerAdvanced';
+import { Table, Caption, PaginationWrapper } from '../styled/DynamicTable';
 import {
   EmptyViewContainer,
   EmptyViewWithFixedHeight,
 } from '../styled/EmptyBody';
-import { Table, Caption, PaginationWrapper } from '../styled/DynamicTable';
 import {
   StatelessProps as Props,
   RowCellType,
@@ -33,6 +24,17 @@ import {
   RankEnd,
   SortOrderType,
 } from '../types';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
+
+import Body from './Body';
+import LoadingContainer from './LoadingContainer';
+import LoadingContainerAdvanced from './LoadingContainerAdvanced';
+import TableHead from './TableHead';
+import ManagedPagination from './managedPagination';
+import RankableTableBody from './rankable/Body';
 
 function toggleSortOrder(currentSortOrder?: SortOrderType) {
   switch (currentSortOrder) {

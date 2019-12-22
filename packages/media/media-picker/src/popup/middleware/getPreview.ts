@@ -1,10 +1,11 @@
+import { safeUnsubscribe } from '@atlaskit/media-client';
 import { Store, Dispatch, Middleware } from 'redux';
-import { GetPreviewAction, isGetPreviewAction } from '../actions/getPreview';
-import { State } from '../domain';
-import { sendUploadEvent } from '../actions/sendUploadEvent';
+
 import { getPreviewFromMetadata } from '../../domain/preview';
 import { NonImagePreview, Preview } from '../../types';
-import { safeUnsubscribe } from '@atlaskit/media-client';
+import { GetPreviewAction, isGetPreviewAction } from '../actions/getPreview';
+import { sendUploadEvent } from '../actions/sendUploadEvent';
+import { State } from '../domain';
 
 export default function(): Middleware {
   return store => (next: Dispatch<State>) => (action: any) => {

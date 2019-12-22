@@ -1,5 +1,5 @@
-import { TableCssClassName as ClassName } from '../types';
 import { closestElement, containsClassName } from '../../../utils';
+import { TableCssClassName as ClassName } from '../types';
 import { tableToolbarSize } from '../ui/styles';
 
 export const isCell = (node: HTMLElement): boolean => {

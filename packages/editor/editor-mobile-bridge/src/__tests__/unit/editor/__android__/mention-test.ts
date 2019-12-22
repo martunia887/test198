@@ -1,22 +1,19 @@
 import { ProviderFactory } from '@atlaskit/editor-common';
-
 import {
   typeAheadPluginKey,
   TypeAheadPluginState,
 } from '@atlaskit/editor-core';
-
 import {
   doc,
   createEditorFactory,
   p,
   typeAheadQuery,
 } from '@atlaskit/editor-test-helpers';
-
 import { MentionProvider } from '@atlaskit/mention/resource';
 import { mention as mentionData } from '@atlaskit/util-data-test';
 
-import { androidComposeStart, androidComposeEnd } from '../../_utils';
 import { EditorViewWithComposition } from '../../../../types';
+import { androidComposeStart, androidComposeEnd } from '../../_utils';
 
 describe('mentions on mobile', () => {
   const createEditor = createEditorFactory<TypeAheadPluginState>();

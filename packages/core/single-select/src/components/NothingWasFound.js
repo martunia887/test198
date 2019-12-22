@@ -1,6 +1,5 @@
 // @flow
 import React, { PureComponent } from 'react';
-
 import NothingWasFoundElement from '../styled/NothingWasFound';
 
 type Props = {

@@ -10,9 +10,10 @@ import {
   calcTableColumnWidths,
 } from '@atlaskit/editor-common';
 import { Fragment, Node as PMNode, Mark, Schema } from 'prosemirror-model';
-import parseCxhtml from './parse-cxhtml';
+
 import { AC_XMLNS, FAB_XMLNS, default as encodeCxhtml } from './encode-cxhtml';
 import { mapCodeLanguage } from './languageMap';
+import parseCxhtml from './parse-cxhtml';
 import {
   getNodeMarkOfType,
   encodeMacroParams,

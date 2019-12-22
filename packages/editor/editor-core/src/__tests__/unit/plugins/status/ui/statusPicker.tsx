@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { mountWithIntl } from '@atlaskit/editor-test-helpers';
-import { StatusPickerWithoutAnalytcs as StatusPicker } from '../../../../../plugins/status/ui/statusPicker';
-import { FABRIC_CHANNEL } from '../../../../../plugins/status/analytics';
 import { AnalyticsEventPayload } from '@atlaskit/analytics-next';
+import { mountWithIntl } from '@atlaskit/editor-test-helpers';
+
+import { FABRIC_CHANNEL } from '../../../../../plugins/status/analytics';
+import { StatusPickerWithoutAnalytcs as StatusPicker } from '../../../../../plugins/status/ui/statusPicker';
 
 describe('StatusPicker', () => {
   const closeStatusPicker = jest.fn();

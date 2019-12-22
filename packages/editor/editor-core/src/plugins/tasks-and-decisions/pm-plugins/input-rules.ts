@@ -6,14 +6,15 @@ import {
   EditorState,
   TextSelection,
 } from 'prosemirror-state';
+import { canInsert } from 'prosemirror-utils';
+
 import { analyticsService } from '../../../analytics';
 import {
   createInputRule,
   leafNodeReplacementCharacter,
 } from '../../../utils/input-rules';
-import { canInsert } from 'prosemirror-utils';
-import { changeInDepth, insertTaskDecisionWithAnalytics } from '../commands';
 import { INPUT_METHOD } from '../../analytics';
+import { changeInDepth, insertTaskDecisionWithAnalytics } from '../commands';
 import { TaskDecisionListType, AddItemTransactionCreator } from '../types';
 
 const createListRule = (regex: RegExp, listType: TaskDecisionListType) => {

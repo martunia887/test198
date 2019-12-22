@@ -1,9 +1,7 @@
 // @flow
 
 import { N20, N500 } from '@atlaskit/theme/colors';
-
 import { CONTENT_NAV_WIDTH } from '../../../common/constants';
-
 import type { ModeColors } from '../../../theme/types';
 
 const baseStyles = {

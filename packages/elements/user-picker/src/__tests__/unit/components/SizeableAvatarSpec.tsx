@@ -1,6 +1,7 @@
-import Avatar from '@atlaskit/avatar';
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
+import Avatar from '@atlaskit/avatar';
+
 import { Props, SizeableAvatar } from '../../../components/SizeableAvatar';
 
 describe('SizeableAvatar', () => {

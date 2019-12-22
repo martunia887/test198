@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Component } from 'react';
+import { ExternalImageIdentifier } from '@atlaskit/media-client';
 import {
   createStorybookMediaClientConfig,
   atlassianLogoUrl,
   imageFileId,
 } from '@atlaskit/media-test-helpers';
-import { ExternalImageIdentifier } from '@atlaskit/media-client';
-import { Card } from '../src';
+
 import { ExternalIdentifierWrapper } from '../example-helpers/styled';
+import { Card } from '../src';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const externalIdentifierWithName: ExternalImageIdentifier = {

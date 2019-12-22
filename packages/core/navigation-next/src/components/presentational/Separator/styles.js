@@ -1,8 +1,7 @@
 // @flow
 
-import { gridSize } from '@atlaskit/theme/constants';
-
 import { N30A } from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
 import type { ModeColors } from '../../../theme/types';
 
 const dividerLineHeight = 2;

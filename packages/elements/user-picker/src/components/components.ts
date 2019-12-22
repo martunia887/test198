@@ -1,13 +1,14 @@
 import memoizeOne from 'memoize-one';
+
 import { ClearIndicator } from './ClearIndicator';
+import { Input } from './Input';
 import { MultiValue } from './MultiValue';
 import { MultiValueContainer } from './MultiValueContainer';
 import { Option } from './Option';
-import { SingleValue } from './SingleValue';
-import { Input } from './Input';
-import { SingleValueContainer } from './SingleValueContainer';
-import { PopupInput } from './PopupInput';
 import { PopupControl } from './PopupControl';
+import { PopupInput } from './PopupInput';
+import { SingleValue } from './SingleValue';
+import { SingleValueContainer } from './SingleValueContainer';
 
 /**
  * Memoize getComponents to avoid rerenders.

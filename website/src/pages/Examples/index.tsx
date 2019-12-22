@@ -1,29 +1,28 @@
 import React, { CSSProperties } from 'react';
-import { match } from 'react-router';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Media from 'react-media';
-
-import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
-import LinkIcon from '@atlaskit/icon/glyph/link';
+import { match } from 'react-router';
+import { Redirect } from 'react-router-dom';
 import Button from '@atlaskit/button';
+import Flag, { FlagGroup } from '@atlaskit/flag';
+import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import CodeIcon from '@atlaskit/icon/glyph/code';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
-import Flag, { FlagGroup } from '@atlaskit/flag';
+import LinkIcon from '@atlaskit/icon/glyph/link';
 import Select, { ValueType, OptionType } from '@atlaskit/select';
-import Tooltip from '@atlaskit/tooltip';
 import { colors } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
 
 import ExampleDisplay from '../../components/Examples/ExampleDisplay';
-import * as fs from '../../utils/fs';
+import { TABLET_BREAKPOINT_MIN } from '../../constants';
 import { getConfig } from '../../site';
+import { externalPackages } from '../../site';
+import * as fs from '../../utils/fs';
 import packageResolver, { getLoaderUrl } from '../../utils/packageResolver';
 import { packageUrl } from '../../utils/url';
-import { externalPackages } from '../../site';
 import CodeSandbox from '../Package/CodeSandbox';
 import CodeSandboxLogo from '../Package/CodeSandboxLogo';
-import { TABLET_BREAKPOINT_MIN } from '../../constants';
 
 import {
   CodeContainer,

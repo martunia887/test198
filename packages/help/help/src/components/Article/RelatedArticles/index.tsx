@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import SectionMessage from '@atlaskit/section-message';
-import Button from '@atlaskit/button';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import Button from '@atlaskit/button';
+import SectionMessage from '@atlaskit/section-message';
 
 import { messages } from '../../../messages';
 import { ArticleItem } from '../../../model/Article';

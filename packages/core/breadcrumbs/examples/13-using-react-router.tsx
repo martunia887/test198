@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, MemoryRouter } from 'react-router-dom';
 import { AtlassianIcon } from '@atlaskit/logo';
+
 import { BreadcrumbsStateless, BreadcrumbsItem } from '../src';
 
 interface Props {

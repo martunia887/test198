@@ -6,26 +6,25 @@ import {
 } from '@atlaskit/analytics-gas-types';
 import { UIAnalyticsEventHandler } from '@atlaskit/analytics-next';
 import { mockStore } from '@atlaskit/media-test-helpers';
-
 import { Action, Dispatch } from 'redux';
 
-import { State } from '../../../domain';
-import analyticsProcessing from '../../analyticsProcessing';
-import { showPopup } from '../../../actions/showPopup';
-import { editorShowImage } from '../../../actions/editorShowImage';
+import { MediaFile } from '../../../../types';
 import { searchGiphy } from '../../../actions';
-import { fileListUpdate } from '../../../actions/fileListUpdate';
-import { startAuth } from '../../../actions/startAuth';
-import { ServiceName } from '../../../domain';
-import { hidePopup } from '../../../actions/hidePopup';
 import { changeService } from '../../../actions/changeService';
 import { editRemoteImage } from '../../../actions/editRemoteImage';
 import { editorClose } from '../../../actions/editorClose';
-import { handleCloudFetchingEvent } from '../../../actions/handleCloudFetchingEvent';
-import { startFileBrowser } from '../../../actions/startFileBrowser';
+import { editorShowImage } from '../../../actions/editorShowImage';
+import { fileListUpdate } from '../../../actions/fileListUpdate';
 import { GET_PREVIEW } from '../../../actions/getPreview';
-import { MediaFile } from '../../../../types';
+import { handleCloudFetchingEvent } from '../../../actions/handleCloudFetchingEvent';
+import { hidePopup } from '../../../actions/hidePopup';
+import { showPopup } from '../../../actions/showPopup';
+import { startAuth } from '../../../actions/startAuth';
+import { startFileBrowser } from '../../../actions/startFileBrowser';
+import { State } from '../../../domain';
+import { ServiceName } from '../../../domain';
 import { buttonClickPayload, Payload } from '../../analyticsHandlers';
+import analyticsProcessing from '../../analyticsProcessing';
 
 type TestPayload = GasCorePayload & { action: string; attributes: {} };
 type UploadType = 'cloudMedia' | 'localMedia';

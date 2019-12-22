@@ -3,7 +3,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import { MultiSelectStateless } from '../..';
-
 import { name } from '../../version.json';
 
 describe(`${name} - stateless`, () => {

@@ -1,8 +1,9 @@
-import { CellSelection, TableMap, Rect } from 'prosemirror-tables';
-import { Transaction, Selection } from 'prosemirror-state';
-import { Node as PMNode, Fragment } from 'prosemirror-model';
-import { getSelectionRect, findTable } from 'prosemirror-utils';
 import { CellAttributes } from '@atlaskit/adf-schema';
+import { Node as PMNode, Fragment } from 'prosemirror-model';
+import { Transaction, Selection } from 'prosemirror-state';
+import { CellSelection, TableMap, Rect } from 'prosemirror-tables';
+import { getSelectionRect, findTable } from 'prosemirror-utils';
+
 import { setMeta } from './metadata';
 
 // re-creates table node with merged cells

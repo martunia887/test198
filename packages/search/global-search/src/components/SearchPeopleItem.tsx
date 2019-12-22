@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { ResultData } from '@atlaskit/quick-search';
+
+import { AnalyticsType } from '../model/Result';
+
 import AdvancedSearchResult from './AdvancedSearchResult';
 import { ADVANCED_PEOPLE_SEARCH_RESULT_ID } from './SearchResultsUtil';
-import { AnalyticsType } from '../model/Result';
 
 export interface Props {
   query: string;

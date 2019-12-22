@@ -1,10 +1,9 @@
 import React, { Component, ElementType } from 'react';
 import styled from 'styled-components';
-
-import Textfield from '@atlaskit/textfield';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
-import Tooltip from '@atlaskit/tooltip';
+import Textfield from '@atlaskit/textfield';
 import { colors, gridSize } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
 
 const IconExplorerLink = styled.a`
   &,

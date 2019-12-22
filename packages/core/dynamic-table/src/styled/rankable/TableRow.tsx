@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import { N20, B100 } from '@atlaskit/theme/colors';
 import { e500 } from '@atlaskit/theme/elevation';
+
 import { TableBodyRow } from '../TableRow';
 
 const rankingStyles = css`

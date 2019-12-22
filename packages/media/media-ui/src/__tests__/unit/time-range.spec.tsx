@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { TimeRange, TimeRangeProps } from '../../customMediaPlayer/timeRange';
+
 import {
   CurrentTimeLine,
   BufferedTime,
@@ -8,6 +8,7 @@ import {
   Thumb,
   TimeRangeWrapper,
 } from '../../customMediaPlayer/styled';
+import { TimeRange, TimeRangeProps } from '../../customMediaPlayer/timeRange';
 
 describe('<TimeRange />', () => {
   const setup = (props?: Partial<TimeRangeProps>) => {

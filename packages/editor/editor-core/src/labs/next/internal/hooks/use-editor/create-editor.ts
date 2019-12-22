@@ -1,20 +1,21 @@
-import { EditorView } from 'prosemirror-view';
-import { EditorState } from 'prosemirror-state';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import {
-  EventDispatcher,
-  createDispatch,
-} from '../../../../../event-dispatcher';
+import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
+import { EditorState } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
 import {
   processPluginsList,
   createPMPlugins,
   createSchema,
 } from '../../../../../create-editor/create-editor';
-import { processRawValue } from '../../../../../utils';
+import {
+  EventDispatcher,
+  createDispatch,
+} from '../../../../../event-dispatcher';
 import { PortalProviderAPI } from '../../../../../ui/PortalProvider';
-import { EditorSharedConfig } from '../../context/shared-config';
+import { processRawValue } from '../../../../../utils';
 import { EditorPropsExtended } from '../../components/EditorInternal';
-import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
+import { EditorSharedConfig } from '../../context/shared-config';
 
 export function createEditor({
   context,

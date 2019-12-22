@@ -1,4 +1,4 @@
-import { EditorView } from 'prosemirror-view';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
   doc,
@@ -9,20 +9,19 @@ import {
   CreateEditorOptions,
 } from '@atlaskit/editor-test-helpers';
 import { nextTick } from '@atlaskit/media-test-helpers';
+import { EditorView } from 'prosemirror-view';
 
-import { getFreshMediaProvider } from '../media/_utils';
-import {
-  pluginKey as mediaEditorPluginKey,
-  getPluginState,
-} from '../../../../plugins/media/pm-plugins/media-editor';
-
-import { MediaEditorState } from '../../../../plugins/media/types';
 import {
   openMediaEditor,
   closeMediaEditor,
   uploadAnnotation,
 } from '../../../../plugins/media/commands/media-editor';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import {
+  pluginKey as mediaEditorPluginKey,
+  getPluginState,
+} from '../../../../plugins/media/pm-plugins/media-editor';
+import { MediaEditorState } from '../../../../plugins/media/types';
+import { getFreshMediaProvider } from '../media/_utils';
 
 describe('media editor', () => {
   const createEditor = createEditorFactory<MediaEditorState>();

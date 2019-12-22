@@ -1,13 +1,14 @@
 import { BlockCardResolvedViewProps } from '@atlaskit/media-ui';
 import { genericExtractPropsFromJSONLD } from '..';
-import { extractPropsFromObject } from './extractPropsFromObject';
+
 import { extractPropsFromDocument } from './extractPropsFromDocument';
-import { extractPropsFromSpreadsheet } from './extractPropsFromSpreadsheet';
-import { extractBlockViewPropsFromTask } from './extractPropsFromTask';
+import { extractPropsFromObject } from './extractPropsFromObject';
 import { extractPropsFromPresentation } from './extractPropsFromPresentation';
-import { extractPropsFromTextDocument } from './extractPropsFromTextDocument';
 import { extractBlockViewPropsFromProject } from './extractPropsFromProject';
 import { extractPropsFromSourceCodeRepository } from './extractPropsFromSourceCodeRepository';
+import { extractPropsFromSpreadsheet } from './extractPropsFromSpreadsheet';
+import { extractBlockViewPropsFromTask } from './extractPropsFromTask';
+import { extractPropsFromTextDocument } from './extractPropsFromTextDocument';
 
 const extractorPrioritiesByType = {
   Object: 0,

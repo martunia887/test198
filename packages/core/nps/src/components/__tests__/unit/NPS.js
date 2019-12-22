@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import NPS from '../../NPS';
 import { NPSWrapper } from '../../styled/nps';
 

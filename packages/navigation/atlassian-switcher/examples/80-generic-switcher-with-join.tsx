@@ -1,13 +1,15 @@
 import * as React from 'react';
+import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
 import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
-import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+
 import AtlassianSwitcher from '../src';
 import {
   createJoinableSitesProvider,
   defaultJoinableSitesFetch,
 } from '../src/index';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 const onJoinableSiteClicked = (returnUrl?: string) => {
   console.log('joinable site clicked');

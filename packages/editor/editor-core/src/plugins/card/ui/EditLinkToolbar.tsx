@@ -1,24 +1,19 @@
 import * as React from 'react';
-
-import { EditorView } from 'prosemirror-view';
-import { Node } from 'prosemirror-model';
-
 import { ProviderFactory } from '@atlaskit/editor-common';
-
-import HyperlinkToolbar from '../../hyperlink/ui/HyperlinkAddToolbar';
-import { showLinkToolbar, hideLinkToolbar } from '../pm-plugins/actions';
+import { Node } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
 
 import { Command } from '../../../types';
-import {
-  FloatingToolbarItem,
-  FloatingToolbarConfig,
-} from '../../floating-toolbar/types';
-
 import {
   RECENT_SEARCH_HEIGHT_IN_PX,
   RECENT_SEARCH_WIDTH_IN_PX,
 } from '../../../ui/RecentSearch/ToolbarComponents';
-
+import {
+  FloatingToolbarItem,
+  FloatingToolbarConfig,
+} from '../../floating-toolbar/types';
+import HyperlinkToolbar from '../../hyperlink/ui/HyperlinkAddToolbar';
+import { showLinkToolbar, hideLinkToolbar } from '../pm-plugins/actions';
 import { changeSelectedCardToLink } from '../pm-plugins/doc';
 import { findCardInfo, displayInfoForCard } from '../utils';
 

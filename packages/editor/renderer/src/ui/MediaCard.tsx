@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { Component } from 'react';
-
+import styled from 'styled-components';
+import { MediaType } from '@atlaskit/adf-schema';
 import { filter, ADFEntity } from '@atlaskit/adf-utils';
+import {
+  withImageLoader,
+  ImageStatus,
+  ContextIdentifierProvider,
+} from '@atlaskit/editor-common';
 import {
   CardAppearance,
   CardDimensions,
@@ -10,7 +16,6 @@ import {
   CardError,
   CardOnClickCallback,
 } from '@atlaskit/media-card';
-import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   ImageResizeMode,
   FileIdentifier,
@@ -19,15 +24,11 @@ import {
   getMediaClient,
   FileState,
 } from '@atlaskit/media-client';
-import { MediaType } from '@atlaskit/adf-schema';
-import {
-  withImageLoader,
-  ImageStatus,
-  ContextIdentifierProvider,
-} from '@atlaskit/editor-common';
-import { RendererAppearance } from './Renderer/types';
+import { MediaClientConfig } from '@atlaskit/media-core';
+
 import { RendererContext } from '../react';
-import styled from 'styled-components';
+
+import { RendererAppearance } from './Renderer/types';
 
 export type MediaProvider = {
   viewMediaClientConfig: MediaClientConfig;

@@ -1,11 +1,13 @@
 import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
+
 import {
   MentionNameDetails,
   MentionNameResolver,
   MentionNameStatus,
 } from '../types';
-import { MentionNameClient } from './MentionNameClient';
 import { fireAnalyticsMentionHydrationEvent } from '../util/analytics';
+
+import { MentionNameClient } from './MentionNameClient';
 
 interface Callback {
   (value?: MentionNameDetails): void;

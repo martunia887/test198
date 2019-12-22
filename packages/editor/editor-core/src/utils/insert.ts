@@ -1,13 +1,15 @@
+import { Node, Fragment, NodeType, ResolvedPos } from 'prosemirror-model';
+import { Transaction } from 'prosemirror-state';
+import { ReplaceStep, ReplaceAroundStep } from 'prosemirror-transform';
 import {
   isNodeSelection,
   canInsert,
   hasParentNodeOfType,
 } from 'prosemirror-utils';
-import { Node, Fragment, NodeType, ResolvedPos } from 'prosemirror-model';
-import { Transaction } from 'prosemirror-state';
-import { ReplaceStep, ReplaceAroundStep } from 'prosemirror-transform';
-import { isEmptyParagraph } from './document';
+
 import { GapCursorSelection, Side } from '../plugins/gap-cursor';
+
+import { isEmptyParagraph } from './document';
 
 export type InsertableContent = Node | Fragment;
 export enum LookDirection {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+import { FormattedRelative, IntlProvider } from 'react-intl';
 
-import { atlassianTask } from './_fixtures';
 import {
   buildTaskTitle,
   buildTaskDescription,
@@ -13,7 +13,8 @@ import {
   buildTaskDetailsLozenge,
   buildTaskContext,
 } from '../../extractPropsFromTask';
-import { FormattedRelative, IntlProvider } from 'react-intl';
+
+import { atlassianTask } from './_fixtures';
 
 describe('extractPropsFromTask()', () => {
   describe('build a title', () => {

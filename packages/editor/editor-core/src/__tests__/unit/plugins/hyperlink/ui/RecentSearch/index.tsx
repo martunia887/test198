@@ -1,9 +1,10 @@
-import { ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { mountWithIntl } from '@atlaskit/editor-test-helpers';
+
 import RecentSearch from '../../../../../../plugins/hyperlink/ui/HyperlinkAddToolbar/HyperlinkAddToolbar';
 import RecentItem from '../../../../../../ui/RecentSearch/RecentItem';
 import { activityProviderMock } from '../../utils';
-import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 
 const timeout = () => new Promise(resolve => window.setTimeout(resolve, 1));
 

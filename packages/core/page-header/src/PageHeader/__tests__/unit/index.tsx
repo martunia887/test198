@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import renderer from 'react-test-renderer';
+
 import PageHeader from '../../..';
 import { name } from '../../../version.json';
 import { StyledTitle } from '../../styled';

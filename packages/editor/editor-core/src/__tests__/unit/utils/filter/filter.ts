@@ -1,5 +1,5 @@
-import { Slice } from 'prosemirror-model';
 import { defaultSchema, doc, p, strong } from '@atlaskit/editor-test-helpers';
+import { Slice } from 'prosemirror-model';
 
 import { toJSON } from '../../../../utils';
 import {

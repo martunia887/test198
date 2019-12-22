@@ -3,6 +3,7 @@ import {
   AnalyticsListener,
   UIAnalyticsEventHandler,
 } from '@atlaskit/analytics-next';
+
 import { ListenerProps, FabricChannel } from '../types';
 
 import { handleEvent } from './handle-event';

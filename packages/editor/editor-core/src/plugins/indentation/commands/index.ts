@@ -1,10 +1,12 @@
-import { Node as PmNode, Schema } from 'prosemirror-model';
 import { IndentationMarkAttributes } from '@atlaskit/adf-schema';
+import { Node as PmNode, Schema } from 'prosemirror-model';
+
 import { toggleBlockMark } from '../../../commands';
 import { Command } from '../../../types/command';
-import { createAnalyticsDispatch } from './utils';
-import { INDENT_DIR } from '../../analytics';
 import getAttrsWithChangesRecorder from '../../../utils/getAttrsWithChangesRecorder';
+import { INDENT_DIR } from '../../analytics';
+
+import { createAnalyticsDispatch } from './utils';
 
 const MAX_INDENTATION_LEVEL = 6;
 

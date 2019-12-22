@@ -1,4 +1,7 @@
 import { IndentationMarkAttributes } from '@atlaskit/adf-schema';
+import { EditorState, Transaction } from 'prosemirror-state';
+
+import { GetAttrsChange } from '../../../utils/getAttrsWithChangesRecorder';
 import {
   addAnalytics,
   INDENT_TYPE,
@@ -10,8 +13,6 @@ import {
   EVENT_TYPE,
   FormatEventPayload,
 } from '../../analytics';
-import { EditorState, Transaction } from 'prosemirror-state';
-import { GetAttrsChange } from '../../../utils/getAttrsWithChangesRecorder';
 
 // Analytics GAS v3 Utils
 type PrevAttributes = IndentationMarkAttributes | undefined;

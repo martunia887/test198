@@ -3,8 +3,9 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ServiceAccountLink, State } from '../../../domain';
-import FolderViewer from './folderView/folderView';
+
 import Auth from './auth/auth';
+import FolderViewer from './folderView/folderView';
 import { Wrapper } from './styled';
 
 export interface BrowserStateProps {

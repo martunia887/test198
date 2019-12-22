@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
-import Lozenge from '@atlaskit/lozenge';
 import { md, Example, Props } from '@atlaskit/docs';
+import Lozenge from '@atlaskit/lozenge';
 import SectionMessage from '@atlaskit/section-message';
 
 const Experimental = ({ children }: { children: ReactNode }) => (

@@ -1,5 +1,6 @@
-import { mount, ReactWrapper } from 'enzyme';
 import React from 'react';
+import { mount, ReactWrapper } from 'enzyme';
+
 import ThemedCodeBlock from '../../ThemedCodeBlock';
 import CodeBlock from '../../components/CodeBlock';
 

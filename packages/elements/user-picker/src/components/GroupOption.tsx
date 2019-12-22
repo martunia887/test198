@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
-
-import { colors } from '@atlaskit/theme';
 import PeopleIcon from '@atlaskit/icon/glyph/people';
+import { colors } from '@atlaskit/theme';
 
 import { Group } from '../types';
+
 import { AvatarItemOption, TextWrapper } from './AvatarItemOption';
-import { messages } from './i18n';
 import { HighlightText } from './HighlightText';
+import { messages } from './i18n';
 
 export const GroupOptionIconWrapper = styled.span`
   padding: 2px;

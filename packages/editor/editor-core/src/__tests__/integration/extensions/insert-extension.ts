@@ -1,5 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
+import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 import {
   getDocFromElement,
   fullpage,
@@ -7,8 +9,6 @@ import {
   insertBlockMenuItem,
   forEach,
 } from '../_helpers';
-
-import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 
 BrowserTestCase(
   `insert-extension.ts: Extension: Insert Inline/Block extension`,

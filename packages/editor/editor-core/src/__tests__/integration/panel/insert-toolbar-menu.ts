@@ -1,16 +1,17 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
 import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
+import {
   editable,
   getDocFromElement,
   fullpage,
   insertBlockMenuItem,
 } from '../_helpers';
+
 import { selectors } from './_utils';
-import {
-  mountEditor,
-  goToEditorTestingExample,
-} from '../../__helpers/testing-example-helpers';
 
 BrowserTestCase(
   'insert-toolbar-menu.ts: Insert panel via toolbar menu',

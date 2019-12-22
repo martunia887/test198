@@ -1,6 +1,5 @@
 import * as React from 'react';
 import HelpArticle from '@atlaskit/help-article';
-
 import { LoadingRectangle } from '../styled';
 
 export interface Props {

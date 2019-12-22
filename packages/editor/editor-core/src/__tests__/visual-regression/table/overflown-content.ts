@@ -1,6 +1,7 @@
-import { Device, initFullPageEditorWithAdf, snapshot } from '../_utils';
-import { tableSelectors } from '../../__helpers/page-objects/_table';
 import { EditorProps } from '../../../types';
+import { tableSelectors } from '../../__helpers/page-objects/_table';
+import { Device, initFullPageEditorWithAdf, snapshot } from '../_utils';
+
 import adf from './__fixtures__/table-with-overflown-content.adf.json';
 
 describe('Overflown content', () => {

@@ -1,10 +1,10 @@
-import { safeInsert } from 'prosemirror-utils';
 import { Node, Fragment, Slice, Schema } from 'prosemirror-model';
-import { Command } from '../../types';
-import { pluginKey, LayoutState } from './pm-plugins/main';
 import { EditorState, Transaction, TextSelection } from 'prosemirror-state';
-import { mapChildren, flatmap } from '../../utils/slice';
+import { safeInsert } from 'prosemirror-utils';
+
+import { Command } from '../../types';
 import { isEmptyDocument, getStepRange } from '../../utils';
+import { mapChildren, flatmap } from '../../utils/slice';
 import {
   addAnalytics,
   ACTION,
@@ -15,6 +15,8 @@ import {
 } from '../analytics';
 import { LAYOUT_TYPE } from '../analytics/types/node-events';
 import { TOOLBAR_MENU_TYPE } from '../insert-block/ui/ToolbarInsertBlock';
+
+import { pluginKey, LayoutState } from './pm-plugins/main';
 
 export type PresetLayout =
   | 'two_equal'

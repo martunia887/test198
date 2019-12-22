@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
+import FieldRange from '@atlaskit/field-range';
 
 import RendererDemo from './helper/RendererDemo';
-import FieldRange from '@atlaskit/field-range';
 
 interface State {
   fadeHeight: number;

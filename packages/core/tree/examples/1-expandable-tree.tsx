@@ -1,8 +1,10 @@
 import React, { Component, KeyboardEvent } from 'react';
 import styled from 'styled-components';
-import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
+import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
+
+import { treeWithTwoBranches } from '../mockdata/treeWithTwoBranches';
 import Tree, {
   mutateTree,
   RenderItemParams,
@@ -10,7 +12,6 @@ import Tree, {
   TreeData,
   ItemId,
 } from '../src';
-import { treeWithTwoBranches } from '../mockdata/treeWithTwoBranches';
 
 const Container = styled.div`
   display: flex;

@@ -1,8 +1,9 @@
+import * as React from 'react';
 import Avatar from '@atlaskit/avatar';
 import LockCircleIcon from '@atlaskit/icon/glyph/lock-circle';
 import Lozenge from '@atlaskit/lozenge';
 import { colors } from '@atlaskit/theme';
-import * as React from 'react';
+
 import {
   isRestricted,
   MentionDescription,
@@ -11,7 +12,10 @@ import {
 } from '../../types';
 import { NoAccessLabel } from '../../util/i18n';
 import { leftClick } from '../../util/mouse';
+import MentionDescriptionByline from '../MentionDescriptionByline';
 import { NoAccessTooltip } from '../NoAccessTooltip';
+
+import { renderHighlight } from './MentionHighlightHelpers';
 import {
   AccessSectionStyle,
   AvatarStyle,
@@ -22,8 +26,6 @@ import {
   RowStyle,
   TimeStyle,
 } from './styles';
-import { renderHighlight } from './MentionHighlightHelpers';
-import MentionDescriptionByline from '../MentionDescriptionByline';
 
 function renderLozenge(lozenge?: string) {
   if (lozenge) {

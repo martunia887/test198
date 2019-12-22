@@ -1,7 +1,8 @@
-import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import RendererBridgeImpl from '../../../renderer/native-to-web/implementation';
+import { mount, ReactWrapper } from 'enzyme';
+
 import HeightObserver from '../../../renderer/height-observer';
+import RendererBridgeImpl from '../../../renderer/native-to-web/implementation';
 
 describe('height observer', () => {
   afterAll(() => {

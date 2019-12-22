@@ -1,7 +1,6 @@
 import * as React from 'react';
-
-import { EmojiId, OnEmojiEvent, OptionalEmojiDescription } from '../../types';
 import { EmojiProvider } from '../../api/EmojiResource';
+import { EmojiId, OnEmojiEvent, OptionalEmojiDescription } from '../../types';
 
 /**
  * A function that will wrap any configured Emoji 'onSelection' function to ensure recordSelection is always

@@ -1,6 +1,6 @@
+import { TextSelection } from 'prosemirror-state';
 import { safeInsert } from 'prosemirror-utils';
 import { Command } from '../../../types';
-import { TextSelection } from 'prosemirror-state';
 
 export function insertTypeAheadQuery(
   trigger: string,

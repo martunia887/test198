@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import Lozenge, { ThemeAppearance } from '@atlaskit/lozenge';
 import {
   WithAnalyticsEventsProps,
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
   withAnalyticsEvents,
 } from '@atlaskit/analytics-next';
+import Lozenge, { ThemeAppearance } from '@atlaskit/lozenge';
+
 import { createStatusAnalyticsAndFire } from './analytics';
 import { ANALYTICS_HOVER_DELAY } from './constants';
 

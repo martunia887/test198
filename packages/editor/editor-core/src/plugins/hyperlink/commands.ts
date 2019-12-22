@@ -1,13 +1,9 @@
-import { Command } from '../../types';
-import { normalizeUrl } from './utils';
-import {
-  stateKey,
-  LinkAction,
-  canLinkBeCreatedInRange,
-} from './pm-plugins/main';
-import { EditorState, Selection } from 'prosemirror-state';
-import { filter, Predicate } from '../../utils/commands';
+import { LinkAttributes } from '@atlaskit/adf-schema';
 import { Mark, Node, ResolvedPos } from 'prosemirror-model';
+import { EditorState, Selection } from 'prosemirror-state';
+
+import { Command } from '../../types';
+import { filter, Predicate } from '../../utils/commands';
 import {
   addAnalytics,
   ACTION,
@@ -18,9 +14,15 @@ import {
   withAnalytics,
 } from '../analytics';
 import { queueCardsFromChangedTr } from '../card/pm-plugins/doc';
-import { LinkInputType } from './ui/HyperlinkAddToolbar/HyperlinkAddToolbar';
+
 import { getLinkCreationAnalyticsEvent } from './analytics';
-import { LinkAttributes } from '@atlaskit/adf-schema';
+import {
+  stateKey,
+  LinkAction,
+  canLinkBeCreatedInRange,
+} from './pm-plugins/main';
+import { LinkInputType } from './ui/HyperlinkAddToolbar/HyperlinkAddToolbar';
+import { normalizeUrl } from './utils';
 
 export function isTextAtPos(pos: number): Predicate {
   return (state: EditorState) => {

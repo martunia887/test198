@@ -1,9 +1,8 @@
-import FullPage from '../ui/Appearance/FullPage';
+import { EditorAppearance, EditorAppearanceComponentProps } from '../types';
 import Chromeless from '../ui/Appearance/Chromeless';
 import Comment from '../ui/Appearance/Comment';
+import FullPage from '../ui/Appearance/FullPage';
 import Mobile from '../ui/Appearance/Mobile';
-
-import { EditorAppearance, EditorAppearanceComponentProps } from '../types';
 
 export default function getUiComponent(
   appearance: EditorAppearance,

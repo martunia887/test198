@@ -1,7 +1,6 @@
 // @flow
 import fs from 'fs';
 import path from 'path';
-
 import { createEntryPointsDirWithPkgJson } from '../../createEntryPointsUtils';
 
 const bolt = require('bolt');

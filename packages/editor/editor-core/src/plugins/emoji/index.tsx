@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Plugin, StateField, EditorState, PluginKey } from 'prosemirror-state';
 import { emoji } from '@atlaskit/adf-schema';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   EmojiTypeAheadItem,
@@ -8,12 +8,12 @@ import {
   EmojiDescription,
   SearchSort,
 } from '@atlaskit/emoji';
-import { EditorPlugin, Command } from '../../types';
+import { Plugin, StateField, EditorState, PluginKey } from 'prosemirror-state';
+
+import { analyticsService } from '../../analytics';
 import { Dispatch } from '../../event-dispatcher';
+import { EditorPlugin, Command } from '../../types';
 import { PortalProviderAPI } from '../../ui/PortalProvider';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import { inputRulePlugin as asciiInputRulePlugin } from './pm-plugins/ascii-input-rules';
 import {
   addAnalytics,
   EVENT_TYPE,
@@ -22,11 +22,13 @@ import {
   ACTION,
   ACTION_SUBJECT_ID,
 } from '../analytics';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { IconEmoji } from '../quick-insert/assets';
-import emojiNodeView from './nodeviews/emoji';
 import { typeAheadPluginKey, TypeAheadPluginState } from '../type-ahead';
-import { analyticsService } from '../../analytics';
 import { TypeAheadItem } from '../type-ahead/types';
+
+import emojiNodeView from './nodeviews/emoji';
+import { inputRulePlugin as asciiInputRulePlugin } from './pm-plugins/ascii-input-rules';
 import { EmojiContextProvider } from './ui/EmojiContextProvider';
 
 export const defaultListLimit = 50;

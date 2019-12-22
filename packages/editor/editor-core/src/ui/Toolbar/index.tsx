@@ -1,12 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { EditorView } from 'prosemirror-view';
-import WidthDetector from '@atlaskit/width-detector';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { EditorAppearance, ToolbarUIComponentFactory } from '../../types';
-import { EventDispatcher } from '../../event-dispatcher';
+import WidthDetector from '@atlaskit/width-detector';
+import { EditorView } from 'prosemirror-view';
+
 import EditorActions from '../../actions';
+import { EventDispatcher } from '../../event-dispatcher';
 import { DispatchAnalyticsEvent } from '../../plugins/analytics';
+import { EditorAppearance, ToolbarUIComponentFactory } from '../../types';
 import { isFullPage } from '../../utils/is-full-page';
 
 const ToolbarComponentsWrapper = styled.div`

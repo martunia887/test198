@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import uuid from 'uuid';
 
+import type { ItemId } from '../../types';
+import { focusManagerContext } from '../../util/contextNamespace';
 import getDisplayName from '../../util/getDisplayName';
 import safeContextCall from '../../util/safeContextCall';
-import { focusManagerContext } from '../../util/contextNamespace';
-import type { ItemId } from '../../types';
 
 // HOC that typically wraps @atlaskit/item
 

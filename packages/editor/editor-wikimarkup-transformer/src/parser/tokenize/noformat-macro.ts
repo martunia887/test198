@@ -1,9 +1,11 @@
-import { Schema, Node as PMNode } from 'prosemirror-model';
 import { Token, TokenParser } from '.';
+import { Schema, Node as PMNode } from 'prosemirror-model';
+
 import { Context } from '../../interfaces';
-import { commonMacro } from './common-macro';
 import { parseAttrs } from '../utils/attrs';
 import { title } from '../utils/title';
+
+import { commonMacro } from './common-macro';
 
 export const noformatMacro: TokenParser = ({
   input,

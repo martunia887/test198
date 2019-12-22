@@ -5,6 +5,8 @@ import {
 } from 'prosemirror-inputrules';
 import { Schema, NodeType } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
+import { safeInsert } from 'prosemirror-utils';
+
 import { analyticsService, trackAndInvoke } from '../../../analytics';
 import {
   createInputRule,
@@ -12,12 +14,6 @@ import {
   leafNodeReplacementCharacter,
   InputRuleWithHandler,
 } from '../../../utils/input-rules';
-import {
-  isConvertableToCodeBlock,
-  transformToCodeBlockAction,
-} from '../commands/transform-to-code-block';
-import { insertBlock } from '../commands/insert-block';
-import { safeInsert } from 'prosemirror-utils';
 import {
   addAnalytics,
   INPUT_METHOD,
@@ -28,7 +24,11 @@ import {
   AnalyticsEventPayload,
   ruleWithAnalytics,
 } from '../../analytics';
-
+import { insertBlock } from '../commands/insert-block';
+import {
+  isConvertableToCodeBlock,
+  transformToCodeBlockAction,
+} from '../commands/transform-to-code-block';
 import { HeadingLevelsAndNormalText } from '../types';
 
 const MAX_HEADING_LEVEL = 6;

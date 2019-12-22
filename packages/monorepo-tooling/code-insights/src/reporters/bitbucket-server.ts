@@ -1,14 +1,16 @@
+import chalk from 'chalk';
+import crypto from 'crypto';
 import fetch, { Response } from 'node-fetch';
 import urlParse from 'url-parse';
-import envWithGuard from '../util/env-with-guard';
+
 import {
   InsightsReportResults,
   InsightsReport,
   Severity,
 } from '../reports/insights-report';
-import crypto from 'crypto';
+import envWithGuard from '../util/env-with-guard';
+
 import { GitReporter } from './git-reporter';
-import chalk from 'chalk';
 
 // TODO: Expose this through the CLI
 const REPORT_KEY = 'beautiful.insights.duplicates';

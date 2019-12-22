@@ -1,5 +1,5 @@
-import uuidV4 from 'uuid/v4';
 import Rusha from 'rusha';
+import uuidV4 from 'uuid/v4';
 import { Hasher } from './hasher';
 
 interface HasherWorker {

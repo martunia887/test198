@@ -1,8 +1,8 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { AnalyticsPayload } from './types';
 
 export const ANALYTICS_CHANNEL = 'media';

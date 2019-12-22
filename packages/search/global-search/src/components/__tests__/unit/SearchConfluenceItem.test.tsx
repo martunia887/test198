@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { CancelableEvent } from '@atlaskit/quick-search';
+
 import AdvancedSearchResult from '../../AdvancedSearchResult';
 import SearchConfluenceItem, { Props } from '../../SearchConfluenceItem';
 

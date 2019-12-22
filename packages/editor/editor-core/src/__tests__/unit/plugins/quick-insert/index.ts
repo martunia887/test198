@@ -1,3 +1,4 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
@@ -8,7 +9,7 @@ import {
   sleep,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+
 import { pluginKey as quickInsertPluginKey } from '../../../../plugins/quick-insert';
 import { TypeAheadInsert } from '../../../../plugins/type-ahead/types';
 

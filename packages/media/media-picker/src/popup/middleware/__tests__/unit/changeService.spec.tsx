@@ -1,7 +1,8 @@
+import { mockStore } from '@atlaskit/media-test-helpers';
+
+import { ServiceAccountWithType } from '../../../../popup/domain';
 import { changeService as changeServiceActionCreator } from '../../../actions';
 import { changeService } from '../../changeService';
-import { mockStore } from '@atlaskit/media-test-helpers';
-import { ServiceAccountWithType } from '../../../../popup/domain';
 
 describe('changeService()', () => {
   it('should NOT dispatch CHANGE_ACCOUNT given unknown action', () => {

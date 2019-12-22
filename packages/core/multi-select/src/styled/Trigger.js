@@ -1,8 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
-
-import { fontSize, gridSize } from '@atlaskit/theme/constants';
 import { placeholderText, text } from '@atlaskit/theme/colors';
+import { fontSize, gridSize } from '@atlaskit/theme/constants';
 
 const gridSizeUnitless = gridSize();
 

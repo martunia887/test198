@@ -1,3 +1,4 @@
+import AndroidBridge from './android-impl';
 import {
   ListBridge,
   MediaBridge,
@@ -10,10 +11,9 @@ import {
   UndoRedoBridge,
   AnalyticsBridge,
 } from './bridge';
-import AndroidBridge from './android-impl';
-import IosBridge from './ios-impl';
-import DummyBridge from './dummy-impl';
 import NativeBridge from './bridge';
+import DummyBridge from './dummy-impl';
+import IosBridge from './ios-impl';
 
 export interface EditorBridges {
   mentionsBridge?: MentionBridge;

@@ -1,4 +1,8 @@
 import * as React from 'react';
+import { ReactElement } from 'react';
+import { shallow } from 'enzyme';
+import { IntlProvider } from 'react-intl';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   bodiedExtension,
   createEditorFactory,
@@ -24,14 +28,12 @@ import {
   fakeMediaClient,
   getDefaultMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import { shallow } from 'enzyme';
-import { ReactElement } from 'react';
-import { IntlProvider } from 'react-intl';
+
 import commonMessages from '../../../../../messages';
-import { messages as altTextMessages } from '../../../../../plugins/media/pm-plugins/alt-text/messages';
 import { FloatingToolbarCustom } from '../../../../../plugins/floating-toolbar/types';
 import Button from '../../../../../plugins/floating-toolbar/ui/Button';
 import { MediaOptions } from '../../../../../plugins/media';
+import { messages as altTextMessages } from '../../../../../plugins/media/pm-plugins/alt-text/messages';
 import {
   MediaPluginState,
   stateKey,
@@ -43,15 +45,14 @@ import {
 } from '../../../../../plugins/media/toolbar/annotation';
 import { setNodeSelection } from '../../../../../utils';
 import {
+  getToolbarItems,
+  findToolbarBtn,
+} from '../../floating-toolbar/_helpers';
+import {
   getFreshMediaProvider,
   temporaryFileId,
   testCollectionName,
 } from '../_utils';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import {
-  getToolbarItems,
-  findToolbarBtn,
-} from '../../floating-toolbar/_helpers';
 
 describe('media', () => {
   const createEditor = createEditorFactory<MediaPluginState>();

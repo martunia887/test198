@@ -1,6 +1,6 @@
-import profilecard from './profilecard';
-import * as mention from './mention';
 import * as emoji from './emoji';
+import * as mention from './mention';
+import profilecard from './profilecard';
 import taskDecision from './task-decision';
 import { userPickerData } from './user-picker';
 

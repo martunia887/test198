@@ -6,12 +6,14 @@ import {
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
 import GlobalTheme from '@atlaskit/theme/components';
+
+import { TextAreaWrapper } from '../styled';
+import { Theme, ThemeTokens } from '../theme';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-import { Theme, ThemeTokens } from '../theme';
-import { TextAreaWrapper } from '../styled';
+
 import TextareaElement from './TextAreaElement';
 
 export interface Props extends WithAnalyticsEventsProps {

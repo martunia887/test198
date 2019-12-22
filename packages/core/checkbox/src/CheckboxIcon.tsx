@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import memoize from 'memoize-one';
 import Icon from '@atlaskit/icon/glyph/checkbox';
-import GlobalTheme from '@atlaskit/theme/components';
 import IconIndeterminate from '@atlaskit/icon/glyph/checkbox-indeterminate';
-import Theme, { componentTokens } from './theme';
-import { createExtender, ExtenderType } from './utils';
+import GlobalTheme from '@atlaskit/theme/components';
+import memoize from 'memoize-one';
+
 import { IconWrapperOverrides } from './elements';
+import Theme, { componentTokens } from './theme';
 import {
   CheckboxIconProps,
   ThemeProps,
@@ -13,6 +13,7 @@ import {
   CheckboxIconDefaults,
   CheckboxIconOverrides,
 } from './types';
+import { createExtender, ExtenderType } from './utils';
 
 const defaults: CheckboxIconDefaults = {
   IconWrapper: IconWrapperOverrides,

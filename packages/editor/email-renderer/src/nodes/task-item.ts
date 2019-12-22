@@ -1,8 +1,8 @@
-import { NodeSerializerOpts } from '../interfaces';
-import { TableData, createTable } from '../table-util';
 import { createTag } from '../create-tag';
+import { NodeSerializerOpts } from '../interfaces';
 import { createContentId } from '../static';
 import { createClassName } from '../styles/util';
+import { TableData, createTable } from '../table-util';
 
 enum TaskState {
   TODO = 'TODO',

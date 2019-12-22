@@ -1,5 +1,5 @@
-import { createSchema, SchemaConfig } from './create-schema';
 import { Schema } from 'prosemirror-model';
+import { createSchema, SchemaConfig } from './create-schema';
 import { mediaWithAltText } from './nodes';
 
 export const getSchemaBasedOnStage = (stage = 'final') => {

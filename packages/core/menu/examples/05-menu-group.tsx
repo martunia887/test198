@@ -1,4 +1,9 @@
 import React from 'react';
+import Blog24Icon from '@atlaskit/icon-object/glyph/blog/24';
+import EditorSearchIcon from '@atlaskit/icon/glyph/editor/search';
+import EmojiCustomIcon from '@atlaskit/icon/glyph/emoji/custom';
+import StarIcon from '@atlaskit/icon/glyph/star';
+
 import {
   MenuGroup,
   Section,
@@ -8,11 +13,6 @@ import {
   SkeletonItem,
   SkeletonHeadingItem,
 } from '../src';
-
-import StarIcon from '@atlaskit/icon/glyph/star';
-import EditorSearchIcon from '@atlaskit/icon/glyph/editor/search';
-import EmojiCustomIcon from '@atlaskit/icon/glyph/emoji/custom';
-import Blog24Icon from '@atlaskit/icon-object/glyph/blog/24';
 
 export default () => {
   return (

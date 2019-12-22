@@ -1,14 +1,16 @@
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { Component } from 'react';
+import * as PropTypes from 'prop-types';
+
 import EmojiProvider from '../../api/EmojiResource';
+import { EmojiId, OptionalEmojiDescription } from '../../types';
 import { defaultEmojiHeight } from '../../util/constants';
 import { isPromise } from '../../util/type-helpers';
-import { EmojiId, OptionalEmojiDescription } from '../../types';
+
 import CachingEmoji from './CachingEmoji';
 import EmojiPlaceholder from './EmojiPlaceholder';
-import { EmojiContext } from './internal-types';
 import { State as LoadingState } from './LoadingEmojiComponent';
+import { EmojiContext } from './internal-types';
 
 export interface BaseResourcedEmojiProps {
   emojiId: EmojiId;

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 
-import ToolbarButton from '../../ToolbarButton';
 import { AlignmentState } from '../../../plugins/alignment/pm-plugins/main';
+import ToolbarButton from '../../ToolbarButton';
 
 export interface Props {
   value: AlignmentState;

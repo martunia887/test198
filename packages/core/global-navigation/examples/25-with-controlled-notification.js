@@ -1,12 +1,12 @@
 // @flow
 
 import React, { Component } from 'react';
-import fetchMock from 'fetch-mock';
-import EmojiAtlassianIcon from '@atlaskit/icon/glyph/emoji/atlassian';
-import Button from '@atlaskit/button';
-import Tag from '@atlaskit/tag';
-import { LayoutManager, NavigationProvider } from '@atlaskit/navigation-next';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
+import Button from '@atlaskit/button';
+import EmojiAtlassianIcon from '@atlaskit/icon/glyph/emoji/atlassian';
+import { LayoutManager, NavigationProvider } from '@atlaskit/navigation-next';
+import Tag from '@atlaskit/tag';
+import fetchMock from 'fetch-mock';
 
 import GlobalNavigation from '../src';
 

@@ -1,5 +1,31 @@
 import * as React from 'react';
 import Spinner from '@atlaskit/spinner';
+
+import {
+  ColorWithAlpha,
+  Dimensions,
+  ExportedImage,
+  ShapeParameters,
+  TextDirection,
+  Tool,
+} from '../common';
+import {
+  DefaultDrawingArea,
+  OutputSize,
+} from '../engine/components/drawingArea';
+import {
+  DefaultImageProvider,
+  urlImageLoader,
+} from '../engine/components/imageProvider';
+import { DefaultImageReceiver } from '../engine/components/imageReceiver';
+import { DefaultKeyboardInput } from '../engine/components/keyboardInput';
+import { DefaultMouseInput } from '../engine/components/mouseInput';
+import { DefaultShapeDeleter } from '../engine/components/shapeDeleter';
+import { DefaultToolbar } from '../engine/components/toolbar';
+import { DefaultUndoerRedoer } from '../engine/components/undoerRedoer';
+import { Engine } from '../engine/engine';
+import { colorWithAlphaSame, dimensionsSame } from '../util';
+
 import {
   MediaEditorContainer,
   OutputArea,
@@ -9,31 +35,6 @@ import {
   SupplementaryCanvas,
   SpinnerWrapper,
 } from './styled';
-import { Engine } from '../engine/engine';
-import {
-  ColorWithAlpha,
-  Dimensions,
-  ExportedImage,
-  ShapeParameters,
-  TextDirection,
-  Tool,
-} from '../common';
-import { colorWithAlphaSame, dimensionsSame } from '../util';
-
-import {
-  DefaultDrawingArea,
-  OutputSize,
-} from '../engine/components/drawingArea';
-import {
-  DefaultImageProvider,
-  urlImageLoader,
-} from '../engine/components/imageProvider';
-import { DefaultMouseInput } from '../engine/components/mouseInput';
-import { DefaultToolbar } from '../engine/components/toolbar';
-import { DefaultKeyboardInput } from '../engine/components/keyboardInput';
-import { DefaultImageReceiver } from '../engine/components/imageReceiver';
-import { DefaultShapeDeleter } from '../engine/components/shapeDeleter';
-import { DefaultUndoerRedoer } from '../engine/components/undoerRedoer';
 
 export type ImageGetter = (format?: string) => ExportedImage;
 

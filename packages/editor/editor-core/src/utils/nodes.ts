@@ -1,5 +1,5 @@
-import { Transaction } from 'prosemirror-state';
 import { Node as PMNode, Slice } from 'prosemirror-model';
+import { Transaction } from 'prosemirror-state';
 import { Step } from 'prosemirror-transform';
 
 /**

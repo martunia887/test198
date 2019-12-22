@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
-import { first } from 'rxjs/operators/first';
+import Button from '@atlaskit/button';
+import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
+import { CardEvent, CardAction } from '@atlaskit/media-card';
+import {
+  FileItem,
+  UploadableFile,
+  MediaClient,
+  FileIdentifier,
+} from '@atlaskit/media-client';
 import {
   createUploadMediaClient,
   genericFileId,
@@ -10,17 +18,10 @@ import {
   externalImageIdentifier,
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
-import { CardEvent, CardAction } from '@atlaskit/media-card';
-import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
-import { Filmstrip, FilmstripItem } from '../src';
+import { first } from 'rxjs/operators/first';
+
 import { ExampleWrapper, FilmstripWrapper } from '../example-helpers/styled';
-import {
-  FileItem,
-  UploadableFile,
-  MediaClient,
-  FileIdentifier,
-} from '@atlaskit/media-client';
-import Button from '@atlaskit/button';
+import { Filmstrip, FilmstripItem } from '../src';
 
 export interface ExampleState {
   items: FilmstripItem[];

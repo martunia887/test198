@@ -1,16 +1,17 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import { Page } from '../../__helpers/page-objects/_types';
-import * as col2 from './__fixtures__/column2-adf.json';
-import * as col3 from './__fixtures__/column3-adf.json';
-import * as layoutWithAction from './__fixtures__/layout-with-action-adf.json';
-import * as colLeftSidebar from './__fixtures__/columnLeftSidebar-adf.json';
-import * as colRightSidebar from './__fixtures__/columnRightSidebar-adf.json';
-import * as col3WithSidebars from './__fixtures__/column3WithSidebars-adf.json';
-import { pressKey } from '../../__helpers/page-objects/_keyboard';
 import {
   selectors,
   typeInEditorAtEndOfDocument,
 } from '../../__helpers/page-objects/_editor';
+import { pressKey } from '../../__helpers/page-objects/_keyboard';
+import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import * as col2 from './__fixtures__/column2-adf.json';
+import * as col3 from './__fixtures__/column3-adf.json';
+import * as col3WithSidebars from './__fixtures__/column3WithSidebars-adf.json';
+import * as colLeftSidebar from './__fixtures__/columnLeftSidebar-adf.json';
+import * as colRightSidebar from './__fixtures__/columnRightSidebar-adf.json';
+import * as layoutWithAction from './__fixtures__/layout-with-action-adf.json';
 
 const layoutColSelector = '[data-layout-column]';
 

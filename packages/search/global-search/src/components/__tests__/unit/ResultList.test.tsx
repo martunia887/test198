@@ -1,13 +1,20 @@
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { shallow } from 'enzyme';
+import { FormattedMessage } from 'react-intl';
+import BoardIcon from '@atlaskit/icon/glyph/board';
 import {
   ObjectResult as ObjectResultComponent,
   PersonResult as PersonResultComponent,
   ContainerResult as ContainerResultComponent,
 } from '@atlaskit/quick-search';
-import BoardIcon from '@atlaskit/icon/glyph/board';
-import { UnwrappedResultList as ResultList, Props } from '../../ResultList';
+
+import {
+  makeConfluenceObjectResult,
+  makeConfluenceContainerResult,
+  makePersonResult,
+  makeJiraObjectResult,
+} from '../../../__tests__/unit/_test-util';
+import { messages } from '../../../messages';
 import {
   Result,
   JiraResult,
@@ -18,18 +25,12 @@ import {
   ContainerResult,
 } from '../../../model/Result';
 import {
-  makeConfluenceObjectResult,
-  makeConfluenceContainerResult,
-  makePersonResult,
-  makeJiraObjectResult,
-} from '../../../__tests__/unit/_test-util';
-import * as JiraAvatarUtil from '../../../util/jira-avatar-util';
-import {
   DEFAULT_FEATURES,
   ConfluenceFeatures,
   JiraFeatures,
 } from '../../../util/features';
-import { messages } from '../../../messages';
+import * as JiraAvatarUtil from '../../../util/jira-avatar-util';
+import { UnwrappedResultList as ResultList, Props } from '../../ResultList';
 
 const DUMMY_ANALYTICS_DATA = {
   resultCount: 123,

@@ -5,6 +5,7 @@ import {
   ContextIdentifierProvider,
 } from '@atlaskit/editor-common';
 import { ProviderFactory } from '@atlaskit/editor-common';
+
 import { MediaCard, MediaCardProps, MediaProvider } from '../../ui/MediaCard';
 
 export interface MediaProps extends MediaCardProps {

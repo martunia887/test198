@@ -11,7 +11,7 @@
 // When you find an error in these declarations, fix the getdocs comment upstream or 'getdocs2ts', then regenerate.
 declare module 'prosemirror-markdown' {
   import { MarkdownIt } from 'markdown-it';
-  import { Node as ProsemirrorNode, Schema, Mark } from 'prosemirror-model';
+import { Node as ProsemirrorNode, Schema, Mark } from 'prosemirror-model';
 
   /**
    * A configuration of a Markdown parser. Such a parser uses

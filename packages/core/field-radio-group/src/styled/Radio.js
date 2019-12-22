@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { themed } from '@atlaskit/theme/components';
 import * as colors from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
 
 export const HiddenInput = styled.input`
   border: 0;

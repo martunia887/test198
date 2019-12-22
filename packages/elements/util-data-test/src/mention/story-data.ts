@@ -1,9 +1,9 @@
+import { enableLogger } from '../logger';
 import {
   MockMentionResource as MentionResource,
   createMockMentionNameResolver,
 } from './MockMentionResource';
 import { MockMentionResourceWithInfoHints as MentionResourceWithInfoHints } from './MockMentionResourceWithInfoHints';
-import { enableLogger } from '../logger';
 
 enableLogger(true);
 

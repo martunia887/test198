@@ -1,6 +1,6 @@
 import { useContext, createContext } from 'react';
-import { CardContext } from './types';
 import { SmartCardProvider, ProviderProps } from './provider';
+import { CardContext } from './types';
 
 export const SmartCardContext = createContext<CardContext | undefined>(
   undefined,

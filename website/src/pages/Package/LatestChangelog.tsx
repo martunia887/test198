@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Lozenge from '@atlaskit/lozenge';
 import Icon from '@atlaskit/icon/glyph/bullet-list';
-
+import Lozenge from '@atlaskit/lozenge';
 import { colors, gridSize, math, themed } from '@atlaskit/theme';
 
 import Changelog, { Logs } from '../../components/ChangeLog';

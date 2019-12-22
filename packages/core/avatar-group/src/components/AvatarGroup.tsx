@@ -1,15 +1,17 @@
 import React, { Component, ElementType } from 'react';
 import { ThemeProvider } from 'styled-components';
-import DropdownMenu, { DropdownItemGroup } from '@atlaskit/dropdown-menu';
 import Avatar, {
   AvatarClickType,
   AvatarPropTypes,
   SizeType,
 } from '@atlaskit/avatar';
+import DropdownMenu, { DropdownItemGroup } from '@atlaskit/dropdown-menu';
+
 import { Grid, Stack } from '../styled/AvatarGroup';
-import MoreIndicator, { MoreIndicatorProps } from './MoreIndicator';
 import itemTheme from '../theme/itemTheme';
+
 import AvatarGroupItem from './AvatarGroupItem';
+import MoreIndicator, { MoreIndicatorProps } from './MoreIndicator';
 
 const GROUP_COMPONENT = {
   grid: Grid,

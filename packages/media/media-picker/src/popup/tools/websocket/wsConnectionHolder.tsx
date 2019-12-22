@@ -1,6 +1,7 @@
 import { Auth } from '@atlaskit/media-core';
-import { WsConnection } from './wsConnection';
+
 import { WsActivity } from './wsActivity';
+import { WsConnection } from './wsConnection';
 import { WsMessageData } from './wsMessageData';
 
 // Responsible for creating a websocket connection when necessary and holding it until all activities are finished

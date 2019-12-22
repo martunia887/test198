@@ -1,13 +1,15 @@
-import {
-  GraphqlResponse,
-  SearchResult,
-} from '../../src/api/PeopleSearchClient';
+import uuid from 'uuid/v4';
+
 import {
   CrossProductSearchResponse,
   CrossProductExperimentResponse,
   Filter,
   SpaceFilter,
 } from '../../src/api/CrossProductSearchClient';
+import {
+  GraphqlResponse,
+  SearchResult,
+} from '../../src/api/PeopleSearchClient';
 import {
   Scope,
   ConfluenceItem,
@@ -18,13 +20,13 @@ import {
   UrsPersonItem,
   NavScopeResultItem,
 } from '../../src/api/types';
+
 import {
   generateRandomJiraIssue,
   generateRandomJiraBoard,
   generateRandomJiraFilter,
   generateRandomJiraProject,
 } from './mockJira';
-import uuid from 'uuid/v4';
 
 const DUMMY_BASE_URL = 'http://localhost';
 

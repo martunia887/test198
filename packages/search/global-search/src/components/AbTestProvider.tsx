@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { QuickSearchContext } from '../api/types';
+import memoizeOne from 'memoize-one';
+
 import {
   ABTest,
   CrossProductSearchClient,
   DEFAULT_AB_TEST,
 } from '../api/CrossProductSearchClient';
-import memoizeOne from 'memoize-one';
+import { QuickSearchContext } from '../api/types';
 
 interface Props {
   context: QuickSearchContext;

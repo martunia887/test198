@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   MentionProvider,
   isResolvingMentionProvider,
@@ -9,6 +10,7 @@ import {
   MentionNameDetails,
   MentionNameStatus,
 } from '../../types';
+
 import Mention, { UNKNOWN_USER_ID } from './';
 
 export interface Props {

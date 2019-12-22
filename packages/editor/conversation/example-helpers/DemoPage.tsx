@@ -1,12 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ResourceProvider } from '../src/api/ConversationResource';
-import { Conversation } from '../src';
-import SingleSelect from '@atlaskit/single-select';
-import { Conversation as ConversationType, User } from '../src/model';
-import { State } from '../src/internal/store';
-import { MOCK_USERS } from './MockData';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import SingleSelect from '@atlaskit/single-select';
+
+import { Conversation } from '../src';
+import { ResourceProvider } from '../src/api/ConversationResource';
+import { State } from '../src/internal/store';
+import { Conversation as ConversationType, User } from '../src/model';
+
+import { MOCK_USERS } from './MockData';
 
 const DUMMY_CODE = `
 class Main() {

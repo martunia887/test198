@@ -8,19 +8,20 @@ import {
   getFileInfo,
   getFileInfoFromSrc,
 } from '@atlaskit/media-ui';
-import { ImagePlacerContainer } from './container';
-import { ImagePlacerImage } from './image';
-import { Margin } from './margin';
-import { ImagePlacerWrapper, ImagePlacerErrorWrapper } from './styled';
-import {
-  initialiseImagePreview,
-  renderImageAtCurrentView,
-} from './imageProcessor';
+
 import {
   zoomToFit,
   applyConstraints,
   transformVisibleBoundsToImageCoords,
 } from './constraints';
+import { ImagePlacerContainer } from './container';
+import { ImagePlacerImage } from './image';
+import {
+  initialiseImagePreview,
+  renderImageAtCurrentView,
+} from './imageProcessor';
+import { Margin } from './margin';
+import { ImagePlacerWrapper, ImagePlacerErrorWrapper } from './styled';
 
 /*
 "container(Width|Height)" is the outputed size of the final image plus "margin"s.

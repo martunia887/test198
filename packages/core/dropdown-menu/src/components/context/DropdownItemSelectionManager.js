@@ -2,11 +2,12 @@
 
 import React, { Component, type Node } from 'react';
 import PropTypes from 'prop-types';
+
+import type { CachedItem, ItemId, Behaviors } from '../../types';
 import {
   selectionCacheContext,
   selectionManagerContext,
 } from '../../util/contextNamespace';
-import type { CachedItem, ItemId, Behaviors } from '../../types';
 
 type Props = {
   behavior: Behaviors,

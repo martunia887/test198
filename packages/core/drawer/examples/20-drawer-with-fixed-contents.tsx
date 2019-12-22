@@ -1,12 +1,13 @@
 /** @jsx jsx */
 
-import { jsx } from '@emotion/core';
 import { Component } from 'react';
 import Button from '@atlaskit/button';
 import DropdownMenu, {
   DropdownItemGroup,
   DropdownItem,
 } from '@atlaskit/dropdown-menu';
+import { jsx } from '@emotion/core';
+
 import Drawer from '../src';
 
 interface State {

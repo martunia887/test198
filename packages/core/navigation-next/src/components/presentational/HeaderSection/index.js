@@ -3,7 +3,9 @@
 import React, { Component } from 'react';
 import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 import { ClassNames } from '@emotion/core';
+
 import Section from '../Section';
+
 import type { HeaderSectionProps } from './types';
 
 const gridSize = gridSizeFn();

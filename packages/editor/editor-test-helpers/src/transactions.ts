@@ -1,5 +1,5 @@
-import { EditorView } from 'prosemirror-view';
 import { Schema } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
 import { RefsNode, Refs, coerce, offsetRefs } from './schema-builder';
 
 /**

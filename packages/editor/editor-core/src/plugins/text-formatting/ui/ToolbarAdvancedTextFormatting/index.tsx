@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
-import { EditorView } from 'prosemirror-view';
-import MoreIcon from '@atlaskit/icon/glyph/editor/more';
 import { akEditorMenuZIndex } from '@atlaskit/editor-common';
+import MoreIcon from '@atlaskit/icon/glyph/editor/more';
+import { EditorView } from 'prosemirror-view';
+
 import { analyticsService } from '../../../../analytics';
-import { TextFormattingState } from '../../pm-plugins/main';
-import { ClearFormattingState } from '../../pm-plugins/clear-formatting';
 import {
   toggleUnderline,
   toggleStrikethrough,
@@ -14,17 +13,19 @@ import {
   clearFormatting as clearFormattingKeymap,
   tooltip,
 } from '../../../../keymaps';
-import ToolbarButton from '../../../../ui/ToolbarButton';
 import DropdownMenu, { MenuItem } from '../../../../ui/DropdownMenu';
+import ToolbarButton from '../../../../ui/ToolbarButton';
 import {
   TriggerWrapper,
   Wrapper,
   Separator,
   Shortcut,
 } from '../../../../ui/styles';
-import * as commands from '../../commands/text-formatting';
-import { clearFormattingWithAnalytics } from '../../commands/clear-formatting';
 import { INPUT_METHOD } from '../../../analytics';
+import { clearFormattingWithAnalytics } from '../../commands/clear-formatting';
+import * as commands from '../../commands/text-formatting';
+import { ClearFormattingState } from '../../pm-plugins/clear-formatting';
+import { TextFormattingState } from '../../pm-plugins/main';
 
 export interface Props {
   isDisabled?: boolean;

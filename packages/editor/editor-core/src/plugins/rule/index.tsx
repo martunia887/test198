@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { rule } from '@atlaskit/adf-schema';
-import { EditorPlugin } from '../../types';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import keymapPlugin from './pm-plugins/keymap';
-import inputRulePlugin from './pm-plugins/input-rule';
+import { Fragment } from 'prosemirror-model';
+import { Transaction } from 'prosemirror-state';
 
+import { EditorPlugin } from '../../types';
+import { safeInsert } from '../../utils/insert';
 import {
   addAnalytics,
   ACTION,
@@ -13,11 +13,12 @@ import {
   INPUT_METHOD,
   EVENT_TYPE,
 } from '../analytics';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { IconDivider } from '../quick-insert/assets';
-import { safeInsert } from '../../utils/insert';
-import { Transaction } from 'prosemirror-state';
-import { Fragment } from 'prosemirror-model';
 import { getEditorProps } from '../shared-context';
+
+import inputRulePlugin from './pm-plugins/input-rule';
+import keymapPlugin from './pm-plugins/keymap';
 
 const rulePlugin = (): EditorPlugin => ({
   name: 'rule',

@@ -1,15 +1,15 @@
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { mockStore, mockFetcher } from '@atlaskit/media-test-helpers';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { of } from 'rxjs/observable/of';
+
 import {
   getFilesInRecentsFullfilled,
   getFilesInRecentsFailed,
   saveCollectionItemsSubscription,
 } from '../../../actions';
-
 import { getFilesInRecents, requestRecentFiles } from '../../getFilesInRecents';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { Observer } from 'rxjs/Observer';
 
 describe('getFilesInRecents middleware', () => {
   describe('getFilesInRecents()', () => {

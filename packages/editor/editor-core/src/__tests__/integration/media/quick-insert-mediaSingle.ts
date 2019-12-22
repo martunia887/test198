@@ -1,5 +1,10 @@
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
+import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
@@ -7,10 +12,6 @@ import {
   quickInsert,
   fullpage,
 } from '../_helpers';
-import {
-  mountEditor,
-  goToEditorTestingExample,
-} from '../../__helpers/testing-example-helpers';
 import { selectors } from '../panel/_utils';
 
 [

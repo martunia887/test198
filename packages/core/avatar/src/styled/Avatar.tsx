@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { ReactNode } from 'react';
+
 import { Theme } from '../theme';
 import { SizeType, AppearanceType } from '../types';
 

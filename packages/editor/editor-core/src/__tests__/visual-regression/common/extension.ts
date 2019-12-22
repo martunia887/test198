@@ -1,10 +1,11 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import { Page } from '../../__helpers/page-objects/_types';
 import {
   clickBlockMenuItem,
   BlockMenuItem,
 } from '../../__helpers/page-objects/_blocks';
 import { clickOnExtension } from '../../__helpers/page-objects/_extensions';
+import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
 import adf from './__fixtures__/extension-wide.adf.json';
 
 describe('Extension:', () => {

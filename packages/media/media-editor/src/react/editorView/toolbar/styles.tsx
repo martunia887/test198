@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { N30A } from '@atlaskit/theme/colors';
 
 export const ToolbarContainer: ComponentClass<HTMLAttributes<{}>> = styled.div`

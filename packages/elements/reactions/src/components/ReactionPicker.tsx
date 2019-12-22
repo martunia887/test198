@@ -1,16 +1,18 @@
-import { EmojiId } from '@atlaskit/emoji/types';
-import { EmojiPicker } from '@atlaskit/emoji/picker';
-import { EmojiProvider } from '@atlaskit/emoji/resource';
-import Layer from '@atlaskit/layer';
-import { borderRadius, colors } from '@atlaskit/theme';
-import cx from 'classnames';
 import * as React from 'react';
 import { PureComponent } from 'react';
 import * as ReactDOM from 'react-dom';
+import { EmojiPicker } from '@atlaskit/emoji/picker';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
+import { EmojiId } from '@atlaskit/emoji/types';
+import Layer from '@atlaskit/layer';
+import { borderRadius, colors } from '@atlaskit/theme';
+import cx from 'classnames';
 import { style } from 'typestyle';
+
+import { ReactionSource } from '../types';
+
 import { Selector } from './Selector';
 import { Trigger } from './Trigger';
-import { ReactionSource } from '../types';
 
 const akBorderRadius = `${borderRadius()}px`;
 const akColorN0 = colors.N0;

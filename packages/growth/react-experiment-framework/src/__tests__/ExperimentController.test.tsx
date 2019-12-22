@@ -1,8 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import ExperimentController from '../ExperimentController';
 import { ExperimentConsumer } from '../ExperimentContext';
+import ExperimentController from '../ExperimentController';
 
 describe('ExperimentController', () => {
   it('should provide context to a consumer', async () => {

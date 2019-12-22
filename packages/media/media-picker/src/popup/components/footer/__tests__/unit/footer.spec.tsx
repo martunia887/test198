@@ -1,4 +1,3 @@
-import { SelectedItem } from '../../../../domain';
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import {
@@ -6,9 +5,11 @@ import {
   mockStore,
   mockState,
 } from '@atlaskit/media-test-helpers';
+
+import { startImport, hidePopup, resetView } from '../../../../actions';
+import { SelectedItem } from '../../../../domain';
 import { Footer, default as ConnectedFooter } from '../../footer';
 import { Wrapper, CancelButton, InsertButton } from '../../styled';
-import { startImport, hidePopup, resetView } from '../../../../actions';
 
 const ConnectedFooterWithStore = getComponentClassWithStore(ConnectedFooter);
 

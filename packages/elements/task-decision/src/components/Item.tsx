@@ -2,9 +2,8 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 
 import { ContentWrapper, Wrapper } from '../styled/Item';
-
-import { Appearance, ContentRef } from '../types';
 import { Placeholder } from '../styled/Placeholder';
+import { Appearance, ContentRef } from '../types';
 
 export interface Props {
   icon: JSX.Element;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
+
 import { Avatar, AvatarList, AvatarListProps } from '../../avatar-list';
 import { SmallAvatarImage } from '../../predefined-avatar-view/styled';
 

@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import { SizeType } from '@atlaskit/avatar';
-import { themed, withTheme } from '@atlaskit/theme/components';
-import { N40, DN70, B200, N500, DN400 } from '@atlaskit/theme/colors';
 import {
   AppearanceType,
   getBorderRadius,
   getInnerStyles,
   BORDER_WIDTH,
 } from '@atlaskit/avatar';
+import { N40, DN70, B200, N500, DN400 } from '@atlaskit/theme/colors';
+import { themed, withTheme } from '@atlaskit/theme/components';
 
 const EXCESS_INDICATOR_FONT_SIZE: Record<SizeType, number> = {
   xsmall: 10,

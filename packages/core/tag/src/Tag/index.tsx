@@ -1,24 +1,22 @@
 import React, { Component, ReactNode, ComponentType } from 'react';
-
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
+
+import Chrome from '../Chrome';
+import Content from '../Content';
+import RemoveButton from '../RemoveButton';
+import { AppearanceType, TagColor } from '../types';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
 
-import Chrome from '../Chrome';
-import Content from '../Content';
-import RemoveButton from '../RemoveButton';
-
 import Before from './styledBefore';
 import Container from './styledContainer';
-
-import { AppearanceType, TagColor } from '../types';
 
 const colorList: TagColor[] = [
   'standard',

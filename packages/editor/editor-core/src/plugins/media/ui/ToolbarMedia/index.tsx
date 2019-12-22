@@ -1,12 +1,13 @@
 import * as React from 'react';
+import AttachmentIcon from '@atlaskit/icon/glyph/editor/attachment';
 import { PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import AttachmentIcon from '@atlaskit/icon/glyph/editor/attachment';
+
 import { withAnalytics } from '../../../../analytics';
-import ToolbarButton from '../../../../ui/ToolbarButton';
-import { MediaPluginState } from '../../pm-plugins/main';
-import WithPluginState from '../../../../ui/WithPluginState';
 import { EventDispatcher } from '../../../../event-dispatcher';
+import ToolbarButton from '../../../../ui/ToolbarButton';
+import WithPluginState from '../../../../ui/WithPluginState';
+import { MediaPluginState } from '../../pm-plugins/main';
 
 export interface Props {
   editorView: EditorView;

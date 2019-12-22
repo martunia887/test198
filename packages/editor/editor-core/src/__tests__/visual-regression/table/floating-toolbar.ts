@@ -1,5 +1,3 @@
-import { snapshot, initFullPageEditorWithAdf } from '../_utils';
-import adf from './__fixtures__/default-table.adf.json';
 import {
   clickFirstCell,
   clickTableOptions,
@@ -7,6 +5,8 @@ import {
   getSelectorForTableCell,
   selectCellOption,
 } from '../../__helpers/page-objects/_table';
+import { snapshot, initFullPageEditorWithAdf } from '../_utils';
+import adf from './__fixtures__/default-table.adf.json';
 
 describe('Table floating toolbar:fullpage', () => {
   let page: any;

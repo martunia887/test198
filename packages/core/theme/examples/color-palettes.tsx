@@ -1,6 +1,6 @@
 import React from 'react';
-import { ColorPill, Heading } from './colors';
 import { colorPalettes } from '../src';
+import { ColorPill, Heading } from './colors';
 
 export default () => {
   return (

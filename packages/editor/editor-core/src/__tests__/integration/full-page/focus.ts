@@ -1,6 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
+import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
 import { fullpage } from '../_helpers';
 
 const fullPageEditor = getExampleUrl('editor', 'editor-core', 'full-page');

@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
-import * as jsc from 'jsverify';
 import Button from '@atlaskit/button';
 import {
   createMouseEvent,
   mountWithIntlContext,
 } from '@atlaskit/media-test-helpers';
 import { Rectangle, Camera, Vector2 } from '@atlaskit/media-ui';
+import * as jsc from 'jsverify';
+
+import { Outcome } from '../../../../../newgen/domain';
+import { ZoomLevel } from '../../../../../newgen/domain/zoomLevel';
+import { ImageWrapper, Img } from '../../../../../newgen/styled';
 import {
   InteractiveImgComponent,
   zoomLevelAfterResize,
@@ -14,9 +18,6 @@ import {
   State,
 } from '../../../../../newgen/viewers/image/interactive-img';
 import { ZoomControls } from '../../../../../newgen/zoomControls';
-import { ImageWrapper, Img } from '../../../../../newgen/styled';
-import { ZoomLevel } from '../../../../../newgen/domain/zoomLevel';
-import { Outcome } from '../../../../../newgen/domain';
 
 function createFixture(props?: Partial<Props>) {
   const onClose = jest.fn();

@@ -8,6 +8,9 @@ import {
   tdCursor,
   tdEmpty,
 } from '@atlaskit/editor-test-helpers';
+
+import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
+import { TablePluginState } from '../../../../plugins/table/types';
 import {
   getColumnsWidths,
   getRowHeights,
@@ -19,8 +22,6 @@ import {
   getColumnClassNames,
   getRowClassNames,
 } from '../../../../plugins/table/utils';
-import { TablePluginState } from '../../../../plugins/table/types';
-import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
 
 describe('table plugin: utils', () => {
   const createEditor = createEditorFactory<TablePluginState>();

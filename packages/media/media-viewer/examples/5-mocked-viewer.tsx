@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { canUseDOM } from 'exenv';
-
 import { MediaClient, MediaFile, Identifier } from '@atlaskit/media-client';
 import {
   MediaMock,
@@ -10,6 +8,7 @@ import {
   defaultBaseUrl,
   generateFilesFromTestData,
 } from '@atlaskit/media-test-helpers';
+import { canUseDOM } from 'exenv';
 
 import { wideImage } from '../example-helpers/assets/wide-image';
 import { MediaViewer } from '../src/components/media-viewer';

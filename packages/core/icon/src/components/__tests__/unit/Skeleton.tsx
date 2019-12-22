@@ -1,6 +1,5 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-
 import Skeleton from '../../Skeleton';
 
 test('sets color as currentColor by default', () => {

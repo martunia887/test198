@@ -5,6 +5,7 @@ import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-conte
 
 import GroupHeading from '../GroupHeading';
 import Separator from '../Separator';
+
 import type { GroupProps } from './types';
 
 export default class Group extends Component<GroupProps> {

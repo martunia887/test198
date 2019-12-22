@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 import {
   isPastDate,
   timestampToString,
   timestampToTaskContext,
   DateSharedCssClassName,
 } from '@atlaskit/editor-common';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 export interface Props {
   timestamp: string;

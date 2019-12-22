@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import BoardIcon from '@atlaskit/icon/glyph/board';
-import IssueIcon from '@atlaskit/icon/glyph/issue';
 import FilterIcon from '@atlaskit/icon/glyph/filter';
+import IssueIcon from '@atlaskit/icon/glyph/issue';
 
-import { getDefaultAvatar } from '../../jira-avatar-util';
 import { ContentType } from '../../../model/Result';
+import { getDefaultAvatar } from '../../jira-avatar-util';
 
 const renderAvatar = (avatar: JSX.Element | null) => {
   const Wrapper = (props: { children: React.ReactNode }) => (

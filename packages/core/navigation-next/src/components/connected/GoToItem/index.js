@@ -6,11 +6,11 @@ import ArrowRightCircleIcon from '@atlaskit/icon/glyph/arrow-right-circle';
 import Spinner from '@atlaskit/spinner';
 
 import { withNavigationViewController } from '../../../view-controller';
+import { ScrollProviderRef } from '../../presentational/ContentNavigation/primitives';
+import type { ItemPresentationProps } from '../../presentational/Item/types';
 import ConnectedItem from '../ConnectedItem';
 
-import { ScrollProviderRef } from '../../presentational/ContentNavigation/primitives';
 import type { GoToItemProps, AfterComponentProps } from './types';
-import type { ItemPresentationProps } from '../../presentational/Item/types';
 
 const After = ({
   afterGoTo,

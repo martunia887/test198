@@ -1,3 +1,10 @@
+import { ELEMENTS_CHANNEL } from './_constants';
+import ContextMentionResource from './api/ContextMentionResource';
+import { MentionNameClient } from './api/MentionNameClient';
+import {
+  DefaultMentionNameResolver,
+  MentionNameResolver,
+} from './api/MentionNameResolver';
 import MentionResource, {
   AbstractMentionResource,
   MentionContextIdentifier,
@@ -8,22 +15,17 @@ import MentionResource, {
   TeamMentionResourceConfig,
   isResolvingMentionProvider,
 } from './api/MentionResource';
-import TeamMentionResource from './api/TeamMentionResource';
 import PresenceResource, {
   PresenceProvider,
   AbstractPresenceResource,
 } from './api/PresenceResource';
-import {
-  DefaultMentionNameResolver,
-  MentionNameResolver,
-} from './api/MentionNameResolver';
-import { MentionNameClient } from './api/MentionNameClient';
-import MentionItem from './components/MentionItem';
-import MentionList from './components/MentionList';
-import ResourcedMentionList from './components/ResourcedMentionList';
-import { MentionPickerWithAnalytics as MentionPicker } from './components/MentionPicker';
+import TeamMentionResource from './api/TeamMentionResource';
 import Mention from './components/Mention';
 import ResourcedMention from './components/Mention/ResourcedMention';
+import MentionItem from './components/MentionItem';
+import MentionList from './components/MentionList';
+import { MentionPickerWithAnalytics as MentionPicker } from './components/MentionPicker';
+import ResourcedMentionList from './components/ResourcedMentionList';
 import TeamMentionHighlight from './components/TeamMentionHighlight';
 import TeamMentionHighlightController from './components/TeamMentionHighlight/TeamMentionHighlightController';
 import {
@@ -34,8 +36,6 @@ import {
   isSpecialMention,
   TeamMember,
 } from './types';
-import { ELEMENTS_CHANNEL } from './_constants';
-import ContextMentionResource from './api/ContextMentionResource';
 
 export {
   // Classes

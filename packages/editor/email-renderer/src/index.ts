@@ -1,20 +1,20 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
-import { Fragment, Node as PMNode, Schema } from 'prosemirror-model';
-// TODO: Import individual lodash functions that are specified in package.json
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as _ from 'lodash';
+import juice from 'juice';
+import { Fragment, Node as PMNode, Schema } from 'prosemirror-model';
+
+import { escapeHtmlString } from './escape-html-string';
+import { MetaDataContext, EmailSerializerOpts } from './interfaces';
+import { nodeSerializers } from './node-serializers';
 import {
   SerializeFragmentWithAttachmentsResult,
   SerializerWithImages,
 } from './serializer';
-import { nodeSerializers } from './node-serializers';
-import styles from './styles';
-import juice from 'juice';
-import { escapeHtmlString } from './escape-html-string';
 import { processImages } from './static';
-import { createClassName } from './styles/util';
+import styles from './styles';
 import { fontFamily, fontSize } from './styles/common';
-import { MetaDataContext, EmailSerializerOpts } from './interfaces';
+import { createClassName } from './styles/util';
 
 const serializeNode = (
   node: PMNode,

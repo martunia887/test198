@@ -1,16 +1,7 @@
 import * as React from 'react';
 import { layoutSection, layoutColumn } from '@atlaskit/adf-schema';
+
 import { EditorPlugin } from '../../types';
-import { FloatingToolbarConfig } from '../floating-toolbar/types';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import {
-  default as createLayoutPlugin,
-  pluginKey,
-  LayoutState,
-} from './pm-plugins/main';
-import { buildToolbar } from './toolbar';
-import { createDefaultLayoutSection } from './actions';
-import { IconLayout } from '../quick-insert/assets';
 import {
   addAnalytics,
   ACTION,
@@ -19,6 +10,17 @@ import {
   INPUT_METHOD,
   EVENT_TYPE,
 } from '../analytics';
+import { FloatingToolbarConfig } from '../floating-toolbar/types';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { IconLayout } from '../quick-insert/assets';
+
+import { createDefaultLayoutSection } from './actions';
+import {
+  default as createLayoutPlugin,
+  pluginKey,
+  LayoutState,
+} from './pm-plugins/main';
+import { buildToolbar } from './toolbar';
 
 export { pluginKey };
 

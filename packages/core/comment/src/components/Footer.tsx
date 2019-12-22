@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
-
 import {
   ActionsContainer,
   ActionsItem,

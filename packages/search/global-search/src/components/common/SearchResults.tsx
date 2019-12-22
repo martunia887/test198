@@ -1,18 +1,20 @@
 import * as React from 'react';
-import PreQueryState from './PreQueryState';
-import { isEmpty } from '../SearchResultsUtil';
-import { PostQueryAnalyticsComponent } from './ScreenAnalyticsHelper';
+import { CancelableEvent } from '@atlaskit/quick-search';
+import deepEqual from 'deep-equal';
+
+import { FilterWithMetadata } from '../../api/CrossProductSearchClient';
+import { Scope } from '../../api/types';
+import { ResultsGroup } from '../../model/Result';
 import { ScreenCounter } from '../../util/ScreenCounter';
 import { ReferralContextIdentifiers } from '../GlobalQuickSearchWrapper';
+import SearchError from '../SearchError';
+import { isEmpty } from '../SearchResultsUtil';
+
+import PreQueryState from './PreQueryState';
 import ResultGroupsComponent, {
   ResultGroupType,
 } from './ResultGroupsComponent';
-import { ResultsGroup } from '../../model/Result';
-import SearchError from '../SearchError';
-import deepEqual from 'deep-equal';
-import { Scope } from '../../api/types';
-import { CancelableEvent } from '@atlaskit/quick-search';
-import { FilterWithMetadata } from '../../api/CrossProductSearchClient';
+import { PostQueryAnalyticsComponent } from './ScreenAnalyticsHelper';
 
 export interface Props {
   isPreQuery: boolean;

@@ -1,22 +1,22 @@
 import * as React from 'react';
-
-import { colors } from '@atlaskit/theme';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { EditorView } from 'prosemirror-view';
-import { Node as PMNode } from 'prosemirror-model';
-import { findParentDomRefOfType } from 'prosemirror-utils';
+import styled from 'styled-components';
 import { Popup } from '@atlaskit/editor-common';
 import CollapseIcon from '@atlaskit/icon/glyph/editor/collapse';
 import ExpandIcon from '@atlaskit/icon/glyph/editor/expand';
-import ToolbarButton from '../../../ui/ToolbarButton';
-import styled from 'styled-components';
-import { getBreakoutMode } from '../utils/get-breakout-mode';
-import { setBreakoutMode, BreakoutMode } from '../commands/set-breakout-mode';
-import { removeBreakout } from '../commands/remove-breakout';
-import { getPluginState } from '../index';
+import { colors } from '@atlaskit/theme';
+import { Node as PMNode } from 'prosemirror-model';
+import { findParentDomRefOfType } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
 import commonMessages from '../../../messages';
+import ToolbarButton from '../../../ui/ToolbarButton';
+import { removeBreakout } from '../commands/remove-breakout';
+import { setBreakoutMode, BreakoutMode } from '../commands/set-breakout-mode';
 import { BreakoutCssClassName } from '../constants';
+import { getBreakoutMode } from '../utils/get-breakout-mode';
 import { isBreakoutMarkAllowed } from '../utils/is-breakout-mark-allowed';
+import { getPluginState } from '../index';
 
 const { B300, N300, N20A } = colors;
 

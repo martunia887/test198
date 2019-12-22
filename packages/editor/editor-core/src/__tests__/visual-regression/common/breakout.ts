@@ -1,10 +1,11 @@
-import { initFullPageEditorWithAdf, Device, snapshot } from '../_utils';
-import adf from './__fixtures__/columns.adf.json';
 import {
   clickOnLayoutColumn,
   scrollToLayoutColumn,
 } from '../../__helpers/page-objects/_layouts';
 import { Page } from '../../__helpers/page-objects/_types';
+import { initFullPageEditorWithAdf, Device, snapshot } from '../_utils';
+
+import adf from './__fixtures__/columns.adf.json';
 
 describe('Columns:', () => {
   let page: Page;

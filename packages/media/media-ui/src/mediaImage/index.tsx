@@ -1,7 +1,8 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { Component, CSSProperties } from 'react';
+import * as ReactDOM from 'react-dom';
 import { getCssFromImageOrientation, isRotated } from '..';
+
 import { ImageComponent } from './styled';
 
 export interface MediaImageProps {

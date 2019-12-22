@@ -1,12 +1,14 @@
 import styled, { css } from 'styled-components';
-import { gridSize, fontSize } from '@atlaskit/theme/constants';
 import { link, linkHover } from '@atlaskit/theme/colors';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
 import { divide } from '@atlaskit/theme/math';
+
 import {
   buttonWidthUnitless,
   maxTextWidth,
   maxTextWidthUnitless,
 } from '../constants';
+
 import { StyledProps } from './index';
 
 // Common styles for Text & Link

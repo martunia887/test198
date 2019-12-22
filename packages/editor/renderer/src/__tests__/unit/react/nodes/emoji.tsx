@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+import { Emoji } from '@atlaskit/editor-common';
 
 import RendererEmoji from '../../../../react/nodes/emoji';
-import { Emoji } from '@atlaskit/editor-common';
 
 describe('Emoji', () => {
   it('should render Emoji UI component', () => {

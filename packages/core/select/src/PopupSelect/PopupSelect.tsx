@@ -1,13 +1,12 @@
 import React, { PureComponent, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import Select from 'react-select';
-import createFocusTrap, { FocusTrap } from 'focus-trap';
-import { Manager, Reference, Popper, PopperProps } from 'react-popper';
 import NodeResolver from 'react-node-resolver';
-import shallowEqualObjects from 'shallow-equal/objects';
+import { Manager, Reference, Popper, PopperProps } from 'react-popper';
+import Select from 'react-select';
 import { N80 } from '@atlaskit/theme/colors';
+import createFocusTrap, { FocusTrap } from 'focus-trap';
+import shallowEqualObjects from 'shallow-equal/objects';
 
-import { MenuDialog, DummyControl, defaultComponents } from './components';
 import {
   GroupType,
   OptionType,
@@ -16,6 +15,8 @@ import {
   ReactSelectProps,
   StylesConfig,
 } from '../types';
+
+import { MenuDialog, DummyControl, defaultComponents } from './components';
 
 type Placement =
   | 'auto-start'

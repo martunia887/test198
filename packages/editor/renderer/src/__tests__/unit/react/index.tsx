@@ -1,16 +1,16 @@
 import { mount, shallow, ReactWrapper } from 'enzyme';
-import { ReactSerializer } from '../../../index';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
+
+import { nextTick } from '../../../../../../media/media-test-helpers/src';
 import { Heading } from '../../../react/nodes';
 import { Emoji } from '../../../react/nodes';
-
-import * as doc from '../../__fixtures__/hello-world.adf.json';
+import { ReactSerializer } from '../../../index';
 import * as headingDoc from '../../__fixtures__/heading-doc.adf.json';
-import * as mediaDoc from '../../__fixtures__/media.adf.json';
+import * as doc from '../../__fixtures__/hello-world.adf.json';
+import * as linkDoc from '../../__fixtures__/links.adf.json';
 import * as mediaFragment from '../../__fixtures__/media-fragment.json';
 import * as mediaGroupFragment from '../../__fixtures__/media-group-fragment.json';
-import * as linkDoc from '../../__fixtures__/links.adf.json';
-import { nextTick } from '../../../../../../media/media-test-helpers/src';
+import * as mediaDoc from '../../__fixtures__/media.adf.json';
 
 const docFromSchema = schema.nodeFromJSON(doc);
 const headingDocFromSchema = schema.nodeFromJSON(headingDoc);

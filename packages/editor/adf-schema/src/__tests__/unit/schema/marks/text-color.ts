@@ -1,6 +1,6 @@
-import { name } from '../../../../version.json';
-import { createSchema } from '../../../../schema/create-schema';
 import { fromHTML, toHTML, textWithMarks } from '../../../../../test-helpers';
+import { createSchema } from '../../../../schema/create-schema';
+import { name } from '../../../../version.json';
 
 const testColorObj1 = { color: '#97a0af' };
 const testColorObj2 = { color: '#97A0AF' };

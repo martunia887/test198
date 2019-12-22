@@ -1,6 +1,6 @@
-import { withAnalytics } from '../../../analytics/withAnalytics';
 import { AnalyticsHandler } from '../../../analytics/handler';
 import service from '../../../analytics/service';
+import { withAnalytics } from '../../../analytics/withAnalytics';
 
 describe('analytics withAnalytics', () => {
   let spy: any;

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { SmartCardContext as Context } from '../..';
-import CardClient from '../../../client';
 import { SmartCardProvider } from '..';
+
+import CardClient from '../../../client';
+import { SmartCardContext as Context } from '../..';
 
 describe('Provider', () => {
   it('should setup provider with default options', () => {

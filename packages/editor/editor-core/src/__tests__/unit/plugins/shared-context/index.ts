@@ -1,5 +1,4 @@
 import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
-
 import { getEditorProps } from '../../../../plugins/shared-context';
 
 describe('shared context plugin', () => {

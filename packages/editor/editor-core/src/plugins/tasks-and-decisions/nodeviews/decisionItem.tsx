@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { NodeView, Decoration } from 'prosemirror-view';
-import DecisionItem from '../ui/Decision';
+
 import { ReactNodeView, ForwardRef, getPosHandler } from '../../../nodeviews';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
+import DecisionItem from '../ui/Decision';
 
 class Decision extends ReactNodeView {
   private isContentEmpty(node: PMNode) {

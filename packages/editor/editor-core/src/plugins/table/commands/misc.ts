@@ -1,4 +1,6 @@
 // #region Imports
+import { CellAttributes } from '@atlaskit/adf-schema';
+import { Node as PMNode, Slice, Schema } from 'prosemirror-model';
 import { Transaction, TextSelection, Selection } from 'prosemirror-state';
 import {
   goToNextCell as baseGotoNextCell,
@@ -7,8 +9,6 @@ import {
   CellSelection,
   splitCellWithType,
 } from 'prosemirror-tables';
-import { EditorView, DecorationSet } from 'prosemirror-view';
-import { Node as PMNode, Slice, Schema } from 'prosemirror-model';
 import {
   findTable,
   getCellsInColumn,
@@ -23,7 +23,26 @@ import {
   selectRow as selectRowTransform,
   ContentNodeWithPos,
 } from 'prosemirror-utils';
+import { EditorView, DecorationSet } from 'prosemirror-view';
+
+import { analyticsService } from '../../../analytics';
+import { Command } from '../../../types';
+import {
+  closestElement,
+  isTextSelection,
+  isNodeTypeParagraph,
+} from '../../../utils';
+import { mapSlice } from '../../../utils/slice';
+import { INPUT_METHOD } from '../../analytics';
+import { outdentList } from '../../lists/commands';
+import { insertRowWithAnalytics } from '../commands-with-analytics';
 import { createCommand, getPluginState } from '../pm-plugins/main';
+import { fixAutoSizedTable } from '../transforms';
+import {
+  TableCssClassName as ClassName,
+  TableDecorations,
+  TablePluginState,
+} from '../types';
 import {
   checkIfHeaderRowEnabled,
   checkIfHeaderColumnEnabled,
@@ -31,24 +50,6 @@ import {
   updatePluginStateDecorations,
   createColumnControlsDecoration,
 } from '../utils';
-import { Command } from '../../../types';
-import { analyticsService } from '../../../analytics';
-import { outdentList } from '../../lists/commands';
-import { mapSlice } from '../../../utils/slice';
-import {
-  closestElement,
-  isTextSelection,
-  isNodeTypeParagraph,
-} from '../../../utils';
-import { fixAutoSizedTable } from '../transforms';
-import { INPUT_METHOD } from '../../analytics';
-import { insertRowWithAnalytics } from '../commands-with-analytics';
-import {
-  TableCssClassName as ClassName,
-  TableDecorations,
-  TablePluginState,
-} from '../types';
-import { CellAttributes } from '@atlaskit/adf-schema';
 import {
   createResizeHandleDecoration,
   updateNodeDecorations,

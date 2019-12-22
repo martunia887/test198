@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { N700A } from '@atlaskit/theme/colors';
 
 // z-index is set to 200 for the main container to be above the dropzone which has z-index 100

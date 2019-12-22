@@ -12,11 +12,11 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
+import '../../../components/Button';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../../version.json';
-import '../../../components/Button';
 
 describe('Button', () => {
   it('should be wrapped with analytics context', () => {

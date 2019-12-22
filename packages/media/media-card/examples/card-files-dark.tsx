@@ -1,5 +1,6 @@
 // eslint-disable-line no-console
 import * as React from 'react';
+import { FileIdentifier } from '@atlaskit/media-client';
 import {
   StoryList,
   createStorybookMediaClientConfig,
@@ -7,12 +8,10 @@ import {
   unknownFileId,
   errorFileId,
 } from '@atlaskit/media-test-helpers';
-
-// @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { FileIdentifier } from '@atlaskit/media-client';
-import { Card } from '../src';
+
 import { createApiCards, actions } from '../example-helpers';
+import { Card } from '../src';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 // standard

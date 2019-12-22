@@ -7,9 +7,10 @@ import {
   WithEditorActions,
 } from '@atlaskit/editor-core';
 import { mention, taskDecision } from '@atlaskit/util-data-test';
-import { BitbucketTransformer } from '../src';
-import exampleBitbucketHTML from '../example-helpers/exampleHTML';
+
 import imageUploadHandler from '../../editor-core/example-helpers/imageUpload';
+import exampleBitbucketHTML from '../example-helpers/exampleHTML';
+import { BitbucketTransformer } from '../src';
 
 const Container = styled.div`
   display: grid;

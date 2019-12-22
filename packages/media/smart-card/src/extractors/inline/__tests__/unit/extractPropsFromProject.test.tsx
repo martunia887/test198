@@ -1,6 +1,5 @@
-import { shallow } from 'enzyme';
 import { ReactElement } from 'react';
-
+import { shallow } from 'enzyme';
 import { extractInlineViewPropsFromProject } from '../../extractPropsFromProject';
 
 describe('extractInlineViewPropsFromProject', () => {

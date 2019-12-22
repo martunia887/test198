@@ -39,10 +39,11 @@ jest.doMock('../../context', () => ({
 }));
 
 import { useSmartCardActions } from '..';
-import { mocks } from '../../../utils/mocks';
+
 import { FetchError } from '../../../client/errors';
-import { CardContext } from '../../context';
 import { JsonLd } from '../../../client/types';
+import { mocks } from '../../../utils/mocks';
+import { CardContext } from '../../context';
 import { CardState } from '../../types';
 
 describe('Smart Card: Actions', () => {

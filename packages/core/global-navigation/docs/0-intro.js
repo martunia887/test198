@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { code, Props, md } from '@atlaskit/docs';
-
 import { Hr, IframeExample } from './shared';
 
 export default md`This component is a wrapper around the \`GlobalNav\` primitive component from \`navigation-next\`. It provides a lot of features, configuration, and state management out of the box while exposing a more opinionated API. If you are building an Atlassian product you should use this component to ensure that our users get a consistent experience across our products. It will also make it easier for platform to ship updates to the experience without you needing to do any work!

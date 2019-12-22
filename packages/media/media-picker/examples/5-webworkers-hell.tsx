@@ -1,13 +1,13 @@
 // eslint-disable-line no-console
 import * as React from 'react';
 import { Component } from 'react';
+import Button from '@atlaskit/button';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   mediaPickerAuthProvider,
   defaultMediaPickerCollectionName,
 } from '@atlaskit/media-test-helpers';
-import Button from '@atlaskit/button';
-import { Browser } from '../src';
-import { BrowserConfig, UploadPreviewUpdateEventPayload } from '../src/types';
+
 import {
   PreviewsWrapper,
   PopupHeader,
@@ -15,7 +15,8 @@ import {
   PreviewsTitle,
 } from '../example-helpers/styled';
 import { UploadPreview } from '../example-helpers/upload-preview';
-import { MediaClientConfig } from '@atlaskit/media-core';
+import { Browser } from '../src';
+import { BrowserConfig, UploadPreviewUpdateEventPayload } from '../src/types';
 
 export interface BrowserWrapperState {
   previewsData: any[];

@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
 import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
-import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
-import { withIntlProvider } from './helpers';
+
 import AtlassianSwitcher from '../src';
+
+import { withIntlProvider } from './helpers';
 class JiraSwitcherExample extends React.Component {
   state = {
     isDrawerOpen: false,

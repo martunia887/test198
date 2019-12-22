@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
+
 import { withGlobalTheme, light, ThemeProvider } from '../../../theme';
+
 import BaseGlobalNavigationSkeleton from './GlobalNavigationSkeleton';
 import type { GlobalNavigationSkeletonProps } from './types';
 

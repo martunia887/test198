@@ -1,5 +1,5 @@
-import { UploadEvent } from '../../domain/uploadEvent';
 import { Action } from 'redux';
+import { UploadEvent } from '../../domain/uploadEvent';
 
 export const SEND_UPLOAD_EVENT = 'SEND_UPLOAD_EVENT';
 

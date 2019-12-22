@@ -1,8 +1,6 @@
-import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
 import { HTMLAttributes, ClassAttributes } from 'react';
 import * as React from 'react';
+import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
 
 export const Content: React.ComponentClass<HTMLAttributes<{}>> = styled.div`

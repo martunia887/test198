@@ -1,6 +1,6 @@
 import { Node, NodeSpec } from 'prosemirror-model';
-import { TaskItemDefinition as TaskItemNode } from './task-item';
 import { uuid } from '../../utils/uuid';
+import { TaskItemDefinition as TaskItemNode } from './task-item';
 
 export type BaseTaskListDefinition = {
   type: 'taskList';

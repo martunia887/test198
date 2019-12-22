@@ -1,9 +1,9 @@
 // @flow
 /** @jsx jsx */
 
-import { jsx } from '@emotion/core';
 import CloseIcon from '@atlaskit/icon/glyph/editor/close';
 import { borderRadius, colors } from '@atlaskit/theme';
+import { jsx } from '@emotion/core';
 
 const hiddenStyles = {
   background: 0,

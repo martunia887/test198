@@ -1,15 +1,16 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
 import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
+import {
   editable,
   getDocFromElement,
   fullpage,
   quickInsert,
 } from '../_helpers';
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
+
 import { selectors } from './_utils';
 
 BrowserTestCase(

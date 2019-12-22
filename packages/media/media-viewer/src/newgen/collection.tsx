@@ -6,14 +6,16 @@ import {
   isExternalImageIdentifier,
   MediaCollectionItem,
 } from '@atlaskit/media-client';
+import { WithShowControlMethodProp } from '@atlaskit/media-ui';
+import { Subscription } from 'rxjs/Subscription';
+
+import { MediaViewerExtensions } from '../components/types';
+
 import { Outcome } from './domain';
 import ErrorMessage, { createError, MediaViewerError } from './error';
 import { List } from './list';
-import { Subscription } from 'rxjs/Subscription';
-import { toIdentifier } from './utils';
 import { Spinner } from './loading';
-import { WithShowControlMethodProp } from '@atlaskit/media-ui';
-import { MediaViewerExtensions } from '../components/types';
+import { toIdentifier } from './utils';
 
 export type Props = Readonly<
   {

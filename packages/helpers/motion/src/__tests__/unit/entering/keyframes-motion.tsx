@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
-import KeyframesMotion from '../../../entering/keyframes-motion';
+
 import ExitingPersistence from '../../../entering/exiting-persistence';
+import KeyframesMotion from '../../../entering/keyframes-motion';
 import StaggeredEntrance from '../../../entering/staggered-entrance';
 
 window.matchMedia = (): any => ({ matches: false });

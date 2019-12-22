@@ -1,8 +1,9 @@
 /** @jsx jsx */
 import { md } from '@atlaskit/docs';
 import { jsx } from '@emotion/core';
-import { FadeIn, StaggeredEntrance } from '../src';
+
 import { Block, RetryContainer, Centered } from '../examples-utils';
+import { FadeIn, StaggeredEntrance } from '../src';
 
 export default () => md`
   ## Single element

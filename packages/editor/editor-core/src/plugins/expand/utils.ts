@@ -1,9 +1,10 @@
+import { Slice, Schema, Node as PMNode, Fragment } from 'prosemirror-model';
 import { EditorState, Selection } from 'prosemirror-state';
 import {
   findSelectedNodeOfType,
   findParentNodeOfType,
 } from 'prosemirror-utils';
-import { Slice, Schema, Node as PMNode, Fragment } from 'prosemirror-model';
+
 import { mapChildren } from '../../utils/slice';
 
 export const findExpand = (

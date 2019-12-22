@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { IntlProvider } from 'react-intl';
+import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import TableTree, {
   Headers,
@@ -7,13 +9,9 @@ import TableTree, {
   Row,
   Cell,
 } from '@atlaskit/table-tree';
-import { Provider, Card, CardAppearance } from '../src';
-import urlsJSON from '../examples-helpers/example-urls.json';
-import styled from 'styled-components';
-import { IntlProvider } from 'react-intl';
 
-type EnvironmentsKeys = 'prod' | 'stg' | 'dev';
-const environments = ['prod', 'stg', 'dev'];
+import urlsJSON from '../examples-helpers/example-urls.json';
+import { Provider, Card, CardAppearance } from '../src';
 import SmartCardClient from '../src/client';
 
 enum GroupingModes {

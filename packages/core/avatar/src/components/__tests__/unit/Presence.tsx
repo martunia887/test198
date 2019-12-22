@@ -1,6 +1,5 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-
 import Presence from '../../Presence';
 
 const PRESENCE_TYPES = ['busy', 'focus', 'offline', 'online'];

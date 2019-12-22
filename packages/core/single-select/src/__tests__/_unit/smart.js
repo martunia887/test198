@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { mount } from 'enzyme';
-import SmartSelect, { StatelessSelect } from '../..';
 
+import SmartSelect, { StatelessSelect } from '../..';
 import { name } from '../../version.json';
 
 describe(`${name} - smart`, () => {

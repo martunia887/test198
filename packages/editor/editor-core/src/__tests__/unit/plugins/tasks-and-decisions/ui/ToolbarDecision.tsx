@@ -6,8 +6,9 @@ import {
   createEditorFactory,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
-import ToolbarButton from '../../../../../ui/ToolbarButton';
+
 import ToolbarDecision from '../../../../../plugins/tasks-and-decisions/ui/ToolbarDecision';
+import ToolbarButton from '../../../../../ui/ToolbarButton';
 
 describe('@atlaskit/editor-core/ui/ToolbarDecision', () => {
   const createEditor = createEditorFactory();

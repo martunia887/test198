@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { Transition } from 'react-transition-group';
 import styled from 'styled-components';
 
+import { SpinnerProps, SpinnerState } from '../types';
+
 import { SIZES_MAP, DEFAULT_SIZE } from './constants';
 import Container from './styledContainer';
 import Svg from './styledSvg';
-import { SpinnerProps, SpinnerState } from '../types';
 
 const Outer = styled.span`
   display: inline-block;

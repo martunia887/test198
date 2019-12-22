@@ -12,11 +12,11 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
+import '../../components/TextArea';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version.json';
-import '../../components/TextArea';
 
 describe('TextArea', () => {
   it('should be wrapped with analytics context', () => {

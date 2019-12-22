@@ -2,6 +2,7 @@ import * as React from 'react';
 import { HTMLAttributes, ComponentClass } from 'react';
 import styled from 'styled-components';
 import { EditorView } from 'prosemirror-view';
+
 import { createParagraphAtEnd } from '../../../commands';
 import { setCursorForTopLevelBlocks } from '../../../plugins/gap-cursor';
 import { closestElement } from '../../../utils';

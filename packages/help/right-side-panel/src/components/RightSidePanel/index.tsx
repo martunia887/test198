@@ -1,8 +1,8 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
-import { canUseDOM } from 'exenv';
 import { createPortal } from 'react-dom';
 import { Transition } from 'react-transition-group';
+import { canUseDOM } from 'exenv';
 
 import { transitionDurationMs, panelWidth } from './constants';
 import { RightSidePanelDrawer, RightSidePanelDrawerContent } from './styled';

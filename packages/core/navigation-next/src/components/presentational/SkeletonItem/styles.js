@@ -1,8 +1,7 @@
 // @flow
 
-import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
-
 import { N40 } from '@atlaskit/theme/colors';
+import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 import type { ModeColors } from '../../../theme/types';
 
 const gridSize = gridSizeFn();

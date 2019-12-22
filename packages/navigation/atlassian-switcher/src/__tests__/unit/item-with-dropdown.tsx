@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { BitbucketIcon, JiraSoftwareIcon, OpsGenieIcon } from '@atlaskit/logo';
 import { shallow } from 'enzyme';
+import { BitbucketIcon, JiraSoftwareIcon, OpsGenieIcon } from '@atlaskit/logo';
+
 import { SwitcherItemWithDropdown } from '../../primitives';
 import { createIcon } from '../../utils/icon-themes';
 

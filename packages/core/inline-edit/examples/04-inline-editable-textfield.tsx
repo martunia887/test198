@@ -1,6 +1,5 @@
 import React from 'react';
 import { gridSize } from '@atlaskit/theme';
-
 import { InlineEditableTextfield } from '../src';
 
 interface State {

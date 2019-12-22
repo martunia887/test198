@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
-import GlobalItem from './GlobalItem';
 import DrawerTriggerInner from '../styled/DrawerTriggerInner';
+import GlobalItem from './GlobalItem';
 
 type Props = {
   children?: Node,

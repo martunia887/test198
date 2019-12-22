@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { Content } from '../../../newgen/content';
 import {
   InactivityDetector,
   WithShowControlMethodProp,
 } from '@atlaskit/media-ui';
+
+import { Content } from '../../../newgen/content';
 
 class DummyChild extends React.Component<WithShowControlMethodProp> {
   render() {

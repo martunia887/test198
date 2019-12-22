@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { ServiceName, Path } from '../domain';
 
 export const CHANGE_CLOUD_ACCOUNT_FOLDER = 'CHANGE_CLOUD_ACCOUNT_FOLDER';

@@ -1,9 +1,11 @@
-import AkButton from '@atlaskit/button';
 import * as React from 'react';
 import { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
+import AkButton from '@atlaskit/button';
+
 import { EmojiDescription } from '../../types';
 import { messages } from '../i18n';
+
 import CachingEmoji from './CachingEmoji';
 import EmojiErrorMessage from './EmojiErrorMessage';
 import RetryableButton from './RetryableButton';

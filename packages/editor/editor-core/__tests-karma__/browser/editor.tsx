@@ -1,6 +1,6 @@
-import { expect } from 'chai';
-import { mount } from 'enzyme';
 import * as React from 'react';
+import { mount } from 'enzyme';
+import { expect } from 'chai';
 
 import Editor from '../../src/editor';
 

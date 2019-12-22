@@ -1,16 +1,22 @@
+import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { FormattedMessage } from 'react-intl';
+import {
+  WithAnalyticsEventsProps,
+  AnalyticsListener,
+} from '@atlaskit/analytics-next';
 import AkButton from '@atlaskit/button';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
+import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { waitUntil } from '@atlaskit/util-common-test';
 import { MockEmojiResourceConfig } from '@atlaskit/util-data-test';
-import { ReactWrapper } from 'enzyme';
-import * as React from 'react';
+
 import Emoji from '../../../../components/common/Emoji';
 import EmojiDeletePreview from '../../../../components/common/EmojiDeletePreview';
 import EmojiErrorMessage from '../../../../components/common/EmojiErrorMessage';
 import EmojiUploadPreview from '../../../../components/common/EmojiUploadPreview';
-import ErrorIcon from '@atlaskit/icon/glyph/error';
+import FileChooser from '../../../../components/common/FileChooser';
 import * as commonStyles from '../../../../components/common/styles';
-import { CategoryGroupKey } from '../../../../components/picker/categories';
 import CategorySelector from '../../../../components/picker/CategorySelector';
 import EmojiPicker, { Props } from '../../../../components/picker/EmojiPicker';
 import EmojiPickerCategoryHeading from '../../../../components/picker/EmojiPickerCategoryHeading';
@@ -18,15 +24,10 @@ import EmojiPickerComponent from '../../../../components/picker/EmojiPickerCompo
 import EmojiPickerEmojiRow from '../../../../components/picker/EmojiPickerEmojiRow';
 import EmojiPickerList from '../../../../components/picker/EmojiPickerList';
 import EmojiPickerListSearch from '../../../../components/picker/EmojiPickerListSearch';
+import { CategoryGroupKey } from '../../../../components/picker/categories';
 import { EmojiDescription } from '../../../../types';
 import { hasSelector } from '../../_emoji-selectors';
 import { getEmojiResourcePromise, newEmojiRepository } from '../../_test-data';
-import { FormattedMessage } from 'react-intl';
-import FileChooser from '../../../../components/common/FileChooser';
-import {
-  WithAnalyticsEventsProps,
-  AnalyticsListener,
-} from '@atlaskit/analytics-next';
 
 export function setupPickerWithoutToneSelector(): Promise<
   ReactWrapper<any, any>

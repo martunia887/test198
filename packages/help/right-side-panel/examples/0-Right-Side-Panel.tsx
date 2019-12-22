@@ -2,9 +2,9 @@ import React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import Page from '@atlaskit/page';
 
-import { ButtonsWrapper, TextWrapper } from './utils/styled';
-
 import { RightSidePanel, FlexContainer, ContentWrapper } from '../src';
+
+import { ButtonsWrapper, TextWrapper } from './utils/styled';
 
 export default class extends React.Component {
   state = {

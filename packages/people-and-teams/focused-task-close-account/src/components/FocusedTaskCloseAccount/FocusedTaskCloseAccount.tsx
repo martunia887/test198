@@ -4,10 +4,11 @@ import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 
-import * as Styled from './styled';
-import Footer from '../Footer';
 import { commonMessages } from '../../messages';
+import Footer from '../Footer';
 import MessagesIntlProvider from '../MessagesIntlProvider';
+
+import * as Styled from './styled';
 
 export interface Props {
   isOpen: boolean;

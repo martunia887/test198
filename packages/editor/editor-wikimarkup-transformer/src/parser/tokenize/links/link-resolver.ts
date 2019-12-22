@@ -1,11 +1,13 @@
-import { ContentLink } from './link-parser';
-import { Token } from '../index';
-import { Context } from '../../../interfaces';
 import { Node as PMNode, Schema } from 'prosemirror-model';
-import { mentionLinkResolver } from './mention-link';
+
+import { Context } from '../../../interfaces';
+import { Token } from '../index';
+
 import { attachmentLinkResolver } from './attachment-link';
-import { urlLinkResolver } from './url-link';
 import { issueLinkResolver } from './issue-link';
+import { ContentLink } from './link-parser';
+import { mentionLinkResolver } from './mention-link';
+import { urlLinkResolver } from './url-link';
 
 /**
  * Given some parsed link text, convert it into a link object that can then be rendered into

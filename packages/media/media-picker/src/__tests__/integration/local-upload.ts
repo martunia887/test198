@@ -1,8 +1,8 @@
-import * as path from 'path';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+import * as path from 'path';
 
-import { gotoPopupSimplePage } from '../../../pages/popup-simple-page';
 import { MediaMockControlsBackdoor } from '../../../examples/6-popup-simple';
+import { gotoPopupSimplePage } from '../../../pages/popup-simple-page';
 //
 BrowserTestCase(
   'local-upload.ts: MediaPicker - insert newly fully uploaded file',

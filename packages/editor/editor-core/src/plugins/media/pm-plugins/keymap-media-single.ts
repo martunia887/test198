@@ -1,15 +1,16 @@
+import { selectNodeBackward } from 'prosemirror-commands';
 import { keymap } from 'prosemirror-keymap';
 import { Schema, NodeType, Node } from 'prosemirror-model';
 import { Plugin, EditorState, Selection } from 'prosemirror-state';
+import { safeInsert } from 'prosemirror-utils';
+
 import * as keymaps from '../../../keymaps';
+import { Command, CommandDispatch } from '../../../types';
 import {
   isEmptyNode,
   atTheEndOfDoc,
   isSelectionInsideLastNodeInDocument,
 } from '../../../utils';
-import { Command, CommandDispatch } from '../../../types';
-import { safeInsert } from 'prosemirror-utils';
-import { selectNodeBackward } from 'prosemirror-commands';
 
 /**
  * Check if is an empty selection at the start of the node

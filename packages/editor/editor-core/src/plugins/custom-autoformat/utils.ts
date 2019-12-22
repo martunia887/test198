@@ -1,5 +1,4 @@
 import { PluginKey, EditorState, Transaction } from 'prosemirror-state';
-
 import { CustomAutoformatState, CustomAutoformatAction } from './types';
 
 export const pluginKey = new PluginKey('customAutoformatPlugin');

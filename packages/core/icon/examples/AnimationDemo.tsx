@@ -1,11 +1,11 @@
 import React, { Component, ComponentType, ChangeEvent } from 'react';
 import sample from 'lodash.sample';
 
-import BookIcon from '../glyph/book';
-import ArrowUpIcon from '../glyph/arrow-up';
 import ArrowDownIcon from '../glyph/arrow-down';
 import ArrowLeftIcon from '../glyph/arrow-left';
 import ArrowRightIcon from '../glyph/arrow-right';
+import ArrowUpIcon from '../glyph/arrow-up';
+import BookIcon from '../glyph/book';
 
 type State = {
   components: ComponentType<any>[];

@@ -1,12 +1,14 @@
 import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
-import { CardProvider, CardPluginState, Request } from '../types';
-import reducer from './reducers';
 import { EditorView } from 'prosemirror-view';
+
+import { PMPluginFactoryParams } from '../../../types';
+import { BlockCard } from '../nodeviews/blockCard';
+import { InlineCard } from '../nodeviews/inlineCard';
+import { CardProvider, CardPluginState, Request } from '../types';
+
 import { setProvider, resolveCard } from './actions';
 import { replaceQueuedUrlWithCard } from './doc';
-import { PMPluginFactoryParams } from '../../../types';
-import { InlineCard } from '../nodeviews/inlineCard';
-import { BlockCard } from '../nodeviews/blockCard';
+import reducer from './reducers';
 
 export const pluginKey = new PluginKey('cardPlugin');
 

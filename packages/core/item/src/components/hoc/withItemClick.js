@@ -7,9 +7,9 @@
 import React, { Component, type Node, type ComponentType } from 'react';
 import PropTypes from 'prop-types';
 
+import { clickManagerContext } from '../../util/contextNamespace';
 import getDisplayName from '../../util/getDisplayName';
 import safeContextCall from '../../util/safeContextCall';
-import { clickManagerContext } from '../../util/contextNamespace';
 
 type Props = {
   /** Content to be displayed inside the item. Same as @atlaskit/item `children` prop. */

@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { MediaPluginState, MediaProvider } from '../../pm-plugins/main';
+import { ErrorReporter } from '@atlaskit/editor-common';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { MediaPicker } from '@atlaskit/media-picker';
 import {
   ClipboardConfig,
   BrowserConfig,
   DropzoneConfig,
 } from '@atlaskit/media-picker/types';
-import { MediaClientConfig } from '@atlaskit/media-core';
-import { ErrorReporter } from '@atlaskit/editor-common';
+
 import PickerFacade from '../../picker-facade';
+import { MediaPluginState, MediaProvider } from '../../pm-plugins/main';
 import { CustomMediaPicker } from '../../types';
 
 export interface ChildrenProps {

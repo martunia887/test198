@@ -1,7 +1,9 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Fragment, MouseEvent } from 'react';
+import { jsx } from '@emotion/core';
+
 import { useTheme } from '../../theme';
+
 import {
   productHomeButtonCSS,
   customProductIconCSS,

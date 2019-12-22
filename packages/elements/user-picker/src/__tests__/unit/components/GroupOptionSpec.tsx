@@ -1,20 +1,19 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
 import { FormattedMessage } from 'react-intl';
-
-import { colors } from '@atlaskit/theme';
 import PeopleIcon from '@atlaskit/icon/glyph/people';
+import { colors } from '@atlaskit/theme';
 
 import {
   AvatarItemOption,
   TextWrapper,
 } from '../../../components/AvatarItemOption';
-import { HighlightText } from '../../../components/HighlightText';
 import {
   GroupOption,
   GroupOptionProps,
   GroupOptionIconWrapper,
 } from '../../../components/GroupOption';
+import { HighlightText } from '../../../components/HighlightText';
 import { Group } from '../../../types';
 
 describe('GroupOption', () => {

@@ -1,5 +1,4 @@
 import fetchMock from 'fetch-mock/src/client';
-
 import { ReactionServiceClient } from '../../../client';
 
 describe('ReactionServiceClient', () => {

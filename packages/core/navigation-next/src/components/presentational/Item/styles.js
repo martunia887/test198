@@ -1,15 +1,15 @@
 // @flow
 
+import * as colors from '@atlaskit/theme/colors';
 import {
   fontSize,
   fontFamily,
   gridSize as gridSizeFn,
 } from '@atlaskit/theme/constants';
 
-import * as colors from '@atlaskit/theme/colors';
+import type { ModeColors } from '../../../theme/types';
 
 import type { ItemPresentationProps } from './types';
-import type { ModeColors } from '../../../theme/types';
 
 const targetEdgeAndIE11 = styles => {
   // From https://browserstrangeness.github.io/css_hacks.html

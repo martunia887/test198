@@ -6,10 +6,11 @@ import {
   tdEmpty,
   tdCursor,
 } from '@atlaskit/editor-test-helpers';
-import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
-import { TablePluginState } from '../../../../../plugins/table/types';
+
 import { whenTableInFocus } from '../../../../../plugins/table/event-handlers';
+import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
 import { setDragging } from '../../../../../plugins/table/pm-plugins/table-resizing/commands';
+import { TablePluginState } from '../../../../../plugins/table/types';
 
 describe('event-handlers', () => {
   let editor: any;

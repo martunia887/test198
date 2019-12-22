@@ -1,8 +1,9 @@
-import { mount } from 'enzyme';
 import * as React from 'react';
+import { mount } from 'enzyme';
 import * as PropTypes from 'prop-types';
-import EditorContext from '../../../ui/EditorContext';
+
 import EditorActions from '../../../actions';
+import EditorContext from '../../../ui/EditorContext';
 
 class EditorContextReceiver extends React.Component {
   static contextTypes = {

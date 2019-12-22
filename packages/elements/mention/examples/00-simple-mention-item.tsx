@@ -1,8 +1,8 @@
 import * as React from 'react';
-
-import { MentionItem } from '../src/item';
-import { generateMentionItem, onSelection } from '../example-helpers';
 import { IntlProvider } from 'react-intl';
+
+import { generateMentionItem, onSelection } from '../example-helpers';
+import { MentionItem } from '../src/item';
 
 export default function Example() {
   const mention = {

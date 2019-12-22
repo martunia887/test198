@@ -2,9 +2,9 @@
 
 import React, { Component } from 'react';
 import Page from '@atlaskit/page';
-import Toggle from '@atlaskit/toggle';
 import SingleSelect from '@atlaskit/single-select';
 import { colors } from '@atlaskit/theme';
+import Toggle from '@atlaskit/toggle';
 
 import { Skeleton, presetThemes, createGlobalTheme } from '../src';
 

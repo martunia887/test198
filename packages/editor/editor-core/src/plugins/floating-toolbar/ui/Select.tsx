@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Component, HTMLAttributes, ComponentClass } from 'react';
 import styled from 'styled-components';
-
 import Select, { ValueType } from '@atlaskit/select';
 
 export interface RenderOptionsPropsT<T> {

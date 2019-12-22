@@ -1,16 +1,17 @@
 import { defineMessages } from 'react-intl';
-import SuccessIcon from '@atlaskit/icon/glyph/editor/success';
+import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
 import InfoIcon from '@atlaskit/icon/glyph/editor/info';
 import NoteIcon from '@atlaskit/icon/glyph/editor/note';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
+import SuccessIcon from '@atlaskit/icon/glyph/editor/success';
 import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
-import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
 
 import commonMessages from '../../messages';
+import { hoverDecoration } from '../base/pm-plugins/decoration';
 import { FloatingToolbarHandler } from '../floating-toolbar/types';
+
 import { removePanel, changePanelType } from './actions';
 import { getPluginState } from './pm-plugins/main';
-import { hoverDecoration } from '../base/pm-plugins/decoration';
 
 export const messages = defineMessages({
   info: {

@@ -1,9 +1,10 @@
 import React from 'react';
 import Button from '@atlaskit/button';
-import TextField from '@atlaskit/textfield';
-import TextArea from '@atlaskit/textarea';
 import { FieldTextStateless } from '@atlaskit/field-text';
 import { FieldTextAreaStateless } from '@atlaskit/field-text-area';
+import TextArea from '@atlaskit/textarea';
+import TextField from '@atlaskit/textfield';
+
 import Form, { Field, FormFooter } from '../src';
 
 export default () => (

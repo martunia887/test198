@@ -4,19 +4,20 @@ import {
   MediaViewedEventPayload,
   ProcessedFileState,
 } from '@atlaskit/media-client';
+import { Auth } from '@atlaskit/media-core';
 import {
   mountWithIntlContext,
   nextTick,
   fakeMediaClient,
   expectFunctionToHaveBeenCalledWith,
 } from '@atlaskit/media-test-helpers';
+import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import Spinner from '@atlaskit/spinner';
-import { Auth } from '@atlaskit/media-core';
+
+import { ErrorMessage } from '../../../../../newgen/error';
+import { DefaultCoverWrapper, AudioCover } from '../../../../../newgen/styled';
 import { AudioViewer } from '../../../../../newgen/viewers/audio';
 import { Props } from '../../../../../newgen/viewers/video';
-import { DefaultCoverWrapper, AudioCover } from '../../../../../newgen/styled';
-import { ErrorMessage } from '../../../../../newgen/error';
-import { CustomMediaPlayer } from '@atlaskit/media-ui';
 
 const token = 'some-token';
 const clientId = 'some-client-id';

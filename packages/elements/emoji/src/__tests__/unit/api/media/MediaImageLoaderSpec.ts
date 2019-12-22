@@ -1,5 +1,5 @@
 import { waitUntil } from '@atlaskit/util-common-test';
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
+import 'es6-promise/auto';
 import fetchMock from 'fetch-mock/src/client';
 
 import MediaImageLoader from '../../../../api/media/MediaImageLoader';

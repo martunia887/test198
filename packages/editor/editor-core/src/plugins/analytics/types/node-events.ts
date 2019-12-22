@@ -1,10 +1,10 @@
-import { TrackAEP } from './events';
 import {
   ACTION_SUBJECT,
   INPUT_METHOD,
   ACTION,
   ACTION_SUBJECT_ID,
 } from './enums';
+import { TrackAEP } from './events';
 
 export enum PANEL_TYPE {
   INFO = 'info',

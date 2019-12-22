@@ -4,25 +4,25 @@
  * run `yarn build --help` for more information.
  */
 /* eslint-disable no-throw-literal */
+import { isDefined } from '@atlaskit/build-utils/guards';
+import { prefixConsoleLog } from '@atlaskit/build-utils/logging';
+import runCommands, {
+  Options as RunOptions,
+} from '@atlaskit/build-utils/runCommands';
+import {
+  getPackagesInfo,
+  TOOL_NAME_TO_FILTERS,
+} from '@atlaskit/build-utils/tools';
+import { PackageInfo, Tool } from '@atlaskit/build-utils/types';
 import * as bolt from 'bolt';
 import chalk from 'chalk';
 import meow from 'meow';
 import * as yalc from 'yalc';
 
-import { isDefined } from '@atlaskit/build-utils/guards';
-import { PackageInfo, Tool } from '@atlaskit/build-utils/types';
-import {
-  getPackagesInfo,
-  TOOL_NAME_TO_FILTERS,
-} from '@atlaskit/build-utils/tools';
-import { prefixConsoleLog } from '@atlaskit/build-utils/logging';
-import getGlobPackagesForTools from './get.glob.packages.for.tools';
-import createEntryPointsDirectories from './create.entry.points.directories';
 import copyVersion from './copy.version';
+import createEntryPointsDirectories from './create.entry.points.directories';
+import getGlobPackagesForTools from './get.glob.packages.for.tools';
 import validateDists from './validate.dists';
-import runCommands, {
-  Options as RunOptions,
-} from '@atlaskit/build-utils/runCommands';
 
 type DistType = 'cjs' | 'esm' | 'none';
 // Its intentional to set the keys here to mandatory

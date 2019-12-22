@@ -1,5 +1,5 @@
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { EditorPlugin, EditorProps } from '../types';
+
 import {
   basePlugin,
   breakoutPlugin,
@@ -56,8 +56,9 @@ import {
   scrollIntoViewPlugin,
   mobileScrollPlugin,
 } from '../plugins';
-import { isFullPage as fullPageCheck } from '../utils/is-full-page';
 import { ScrollGutterPluginOptions } from '../plugins/base/pm-plugins/scroll-gutter';
+import { EditorPlugin, EditorProps } from '../types';
+import { isFullPage as fullPageCheck } from '../utils/is-full-page';
 
 /**
  * Returns list of plugins that are absolutely necessary for editor to work

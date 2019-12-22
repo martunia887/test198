@@ -1,9 +1,10 @@
-import { EventEmitter } from 'events';
-import { Step } from 'prosemirror-transform';
-import { Transaction } from 'prosemirror-state';
 import { CollabEditProvider, CollabEvent } from '@atlaskit/editor-common';
-import { participants } from './user-profile';
+import { EventEmitter } from 'events';
+import { Transaction } from 'prosemirror-state';
+import { Step } from 'prosemirror-transform';
+
 import { ParticipantData } from './types';
+import { participants } from './user-profile';
 
 const others = (sid: string) =>
   (Object.keys(participants) as Array<keyof typeof participants>).reduce<

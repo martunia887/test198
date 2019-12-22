@@ -9,17 +9,17 @@ import {
 } from '@atlaskit/analytics-next';
 import baseItem, { withItemClick, withItemFocus } from '@atlaskit/item';
 
+import { isInOverflowDropdown } from '../../theme/util';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version.json';
 import NavigationItemAction from '../styled/NavigationItemAction';
 import NavigationItemAfter from '../styled/NavigationItemAfter';
+import NavigationItemAfterWrapper from '../styled/NavigationItemAfterWrapper';
 import NavigationItemCaption from '../styled/NavigationItemCaption';
 import NavigationItemIcon from '../styled/NavigationItemIcon';
 import NavigationItemTextAfter from '../styled/NavigationItemTextAfter';
-import NavigationItemAfterWrapper from '../styled/NavigationItemAfterWrapper';
-import { isInOverflowDropdown } from '../../theme/util';
 
 const Item = withItemClick(withItemFocus(baseItem));
 

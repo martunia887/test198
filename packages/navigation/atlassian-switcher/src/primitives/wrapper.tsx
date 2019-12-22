@@ -1,8 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { gridSize, colors } from '@atlaskit/theme';
-import ManageButton from './manage-button';
+
 import { Appearance } from '../theme/types';
+
+import ManageButton from './manage-button';
 
 const Wrapper = styled.div<{ appearance?: Appearance }>`
   box-sizing: border-box;

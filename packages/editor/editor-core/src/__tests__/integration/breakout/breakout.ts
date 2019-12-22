@@ -1,12 +1,12 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+
+import commonMessages from '../../../messages';
+import { messages } from '../../../plugins/block-type/types';
 import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
 import { getDocFromElement, editable } from '../_helpers';
-
-import { messages } from '../../../plugins/block-type/types';
-import commonMessages from '../../../messages';
 
 const wideBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutWide.defaultMessage}"]`;
 const fullWidthBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutFullWidth.defaultMessage}"]`;

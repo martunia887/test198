@@ -1,6 +1,8 @@
-import { Selection, EditorState, Transaction } from 'prosemirror-state';
+import { CardAttributes, UrlType } from '@atlaskit/adf-schema';
+import { createCompareNodes } from '@atlaskit/editor-common';
 import { Node as PMNode } from 'prosemirror-model';
-import { createCommand } from '../pm-plugins/main';
+import { Selection, EditorState, Transaction } from 'prosemirror-state';
+import { TableMap } from 'prosemirror-tables';
 import {
   findTable,
   convertTableNodeToArrayOfRows,
@@ -9,16 +11,14 @@ import {
   getSelectionRect,
   findCellRectClosestToPos,
 } from 'prosemirror-utils';
-import { createCompareNodes } from '@atlaskit/editor-common';
 
-import { TablePluginState, SortOrder } from '../types';
-import { TableSortStep } from '../utils';
-import { getPluginState } from '../pm-plugins/main';
 import { Command } from '../../../types';
-import { TableMap } from 'prosemirror-tables';
 import { pluginKey } from '../../card/pm-plugins/main';
 import { CardPluginState } from '../../card/types';
-import { CardAttributes, UrlType } from '@atlaskit/adf-schema';
+import { createCommand } from '../pm-plugins/main';
+import { getPluginState } from '../pm-plugins/main';
+import { TablePluginState, SortOrder } from '../types';
+import { TableSortStep } from '../utils';
 
 function createGetInlineCardTextFromStore(state: EditorState) {
   const cardState = pluginKey.getState(state) as CardPluginState | undefined;

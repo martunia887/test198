@@ -1,4 +1,4 @@
-import { Rect } from 'prosemirror-tables';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   doc,
   p,
@@ -12,15 +12,11 @@ import {
   tdCursor,
   td,
 } from '@atlaskit/editor-test-helpers';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { colors } from '@atlaskit/theme';
+import { Rect } from 'prosemirror-tables';
 
-import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
-import {
-  TablePluginState,
-  PluginConfig,
-} from '../../../../plugins/table/types';
 import { AnalyticsHandler } from '../../../../analytics';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 import {
   deleteTableWithAnalytics,
   emptyMultipleCellsWithAnalytics,
@@ -36,8 +32,12 @@ import {
   deleteRowsWithAnalytics,
   deleteColumnsWithAnalytics,
 } from '../../../../plugins/table/commands-with-analytics';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
 import { handleCut } from '../../../../plugins/table/event-handlers';
+import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
+import {
+  TablePluginState,
+  PluginConfig,
+} from '../../../../plugins/table/types';
 
 const defaultTable = table()(
   tr(thEmpty, thEmpty, thEmpty),

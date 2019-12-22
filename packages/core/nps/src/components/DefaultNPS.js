@@ -1,6 +1,9 @@
 //@flow
 
 import React from 'react';
+
+import Feedback from './Feedback';
+import Followup from './Followup';
 import NPS, {
   type Rating,
   type Comment,
@@ -8,8 +11,6 @@ import NPS, {
   type AllowContact,
   type NPSResult,
 } from './NPS';
-import Feedback from './Feedback';
-import Followup from './Followup';
 import Thankyou from './Thankyou';
 
 export function getDefaultMessages(product: string) {

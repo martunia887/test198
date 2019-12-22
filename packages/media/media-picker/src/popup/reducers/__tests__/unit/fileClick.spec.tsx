@@ -1,5 +1,5 @@
-import fileClick from '../../fileClick';
 import { PopupConfig } from '../../../../types';
+import fileClick from '../../fileClick';
 
 describe('fileClick()', () => {
   const stateBase = {

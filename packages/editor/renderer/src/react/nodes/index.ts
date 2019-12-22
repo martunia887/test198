@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Loadable from 'react-loadable';
 import { Fragment, Node } from 'prosemirror-model';
 
 import Blockquote from './blockquote';
@@ -15,8 +16,8 @@ import Image from './image';
 import InlineExtension, {
   Props as InlineExtensionProps,
 } from './inlineExtension';
-import LayoutSection from './layoutSection';
 import LayoutColumn from './layoutColumn';
+import LayoutSection from './layoutSection';
 import ListItem from './listItem';
 import MediaSingle from './mediaSingle';
 import OrderedList from './orderedList';
@@ -24,12 +25,11 @@ import Panel from './panel';
 import Paragraph from './paragraph';
 import Placeholder from './placeholder';
 import Rule from './rule';
-import TaskList from './taskList';
 import Table from './table';
 import { TableCell, TableHeader } from './tableCell';
 import TableRow from './tableRow';
+import TaskList from './taskList';
 import UnknownBlock from './unknownBlock';
-import Loadable from 'react-loadable';
 
 const CodeBlock = Loadable({
   loader: () =>

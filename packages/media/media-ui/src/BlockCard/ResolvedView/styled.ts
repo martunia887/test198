@@ -1,6 +1,7 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { N900, N300, N800, N30 } from '@atlaskit/theme/colors';
+
 import { ellipsis, borderRadius, size } from '../../mixins';
 
 const thumbnailWidth = 40;

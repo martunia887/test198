@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { CancelableEvent } from '@atlaskit/quick-search';
-import SearchPeopleItem, { Props } from '../../SearchPeopleItem';
+
 import AdvancedSearchResult from '../../AdvancedSearchResult';
+import SearchPeopleItem, { Props } from '../../SearchPeopleItem';
 
 function render(partialProps: Partial<Props>) {
   const props: Props = {

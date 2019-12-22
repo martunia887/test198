@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component, type ComponentType, type Node } from 'react';
-
 import { diffArr, objectMap } from '../utils';
 
 export const RefinementBarContext = React.createContext({});

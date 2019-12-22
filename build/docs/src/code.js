@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import stringRaw from 'string-raw';
 import { AkCodeBlock } from '@atlaskit/code';
+import stringRaw from 'string-raw';
 
 /*
  * Tag function to render a code block, e.g. code`console.log("hello world")`

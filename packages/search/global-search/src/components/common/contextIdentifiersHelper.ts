@@ -1,9 +1,9 @@
+import { JiraResultQueryParams } from '../../api/types';
 import {
   Result,
   ConfluenceResultsMap,
   JiraResultsMap,
 } from '../../model/Result';
-import { JiraResultQueryParams } from '../../api/types';
 import { addQueryParam } from '../../util/url-utils';
 
 const CONFLUENCE_SEARCH_SESSION_ID_PARAM_NAME = 'search_id';

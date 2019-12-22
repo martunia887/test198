@@ -1,8 +1,9 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { gridSize } from '@atlaskit/theme/constants';
 import { heading } from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
 import { multiply } from '@atlaskit/theme/math';
+
 import placeholderStyles from './placeholderStyles';
 
 /* Placeholder has been temporarily inlined until we have a helper library for such things */

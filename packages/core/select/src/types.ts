@@ -1,4 +1,3 @@
-import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 import {
   Props as ReactSelectProps,
   FormatOptionLabelMeta,
@@ -22,6 +21,7 @@ import {
   ValueContainerProps,
 } from 'react-select';
 import { AsyncProps as ReactAsyncSelectProps } from 'react-select/async';
+import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 
 export type ValidationState = 'default' | 'error' | 'success';
 

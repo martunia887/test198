@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { fakeMediaClient, nextTick } from '@atlaskit/media-test-helpers';
 import { FileIdentifier } from '@atlaskit/media-client';
+import { fakeMediaClient, nextTick } from '@atlaskit/media-test-helpers';
+
 import { CardLoading } from '../../../utils/lightCards/cardLoading';
 import CardLoader, {
   CardWithMediaClientConfigProps,

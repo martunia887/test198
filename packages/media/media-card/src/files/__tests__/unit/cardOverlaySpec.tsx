@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper, ReactWrapper } from 'enzyme';
-import { Ellipsify } from '@atlaskit/media-ui';
-import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
-import { CardOverlay } from '../../cardImageView/cardOverlay';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
+import { Ellipsify } from '@atlaskit/media-ui';
+
+import { CardActionsView } from '../../../utils/';
+import { CardOverlay } from '../../cardImageView/cardOverlay';
 import {
   TitleWrapper,
   Metadata,
   ErrorMessage,
   Retry,
 } from '../../cardImageView/cardOverlay/styled';
-
-import { CardActionsView } from '../../../utils/';
-import { FabricChannel } from '@atlaskit/analytics-listeners';
 
 describe('CardOverlay', () => {
   const errorMessage = 'Loading failed';

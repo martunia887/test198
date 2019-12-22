@@ -1,8 +1,9 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-import { ABTestProvider } from '../../AbTestProvider';
-import { QuickSearchContext } from '../../../api/types';
+import { shallow } from 'enzyme';
+
 import { ABTest, DEFAULT_AB_TEST } from '../../../api/CrossProductSearchClient';
+import { QuickSearchContext } from '../../../api/types';
+import { ABTestProvider } from '../../AbTestProvider';
 
 describe('ABTestProvider', () => {
   const DummyComponent = ({ abTest }: { abTest: ABTest }) => (

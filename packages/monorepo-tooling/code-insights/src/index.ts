@@ -1,11 +1,12 @@
-import duplicateDependenciesReport from './reports/duplicate-dependencies/duplicate-dependencies-report';
 import chalk from 'chalk';
 import meow from 'meow';
+
+import BitbucketServerReporter from './reporters/bitbucket-server';
 import consoleReporter from './reporters/console';
 import { GitReporter } from './reporters/git-reporter';
-import BitbucketServerReporter from './reporters/bitbucket-server';
-import { getRef, getOriginUrl } from './util/git';
 import { InsightsReporter } from './reporters/insights-reporter';
+import duplicateDependenciesReport from './reports/duplicate-dependencies/duplicate-dependencies-report';
+import { getRef, getOriginUrl } from './util/git';
 
 type Flags = {
   commit: string;

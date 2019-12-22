@@ -1,5 +1,5 @@
-import { extendMetadata } from '../../metadata';
 import { FileState, FileDetails } from '@atlaskit/media-client';
+import { extendMetadata } from '../../metadata';
 
 describe('metadata utils', () => {
   describe('extendMetadata()', () => {

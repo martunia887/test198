@@ -1,7 +1,8 @@
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { mockStore } from '@atlaskit/media-test-helpers';
-import { removeFileFromRecents } from '../../removeFileFromRecents';
+
 import { RemoveFileFromRecentsAction } from '../../../actions/removeFileFromRecents';
+import { removeFileFromRecents } from '../../removeFileFromRecents';
 
 describe('removeFileFromRecents middleware', () => {
   const setup = () => {

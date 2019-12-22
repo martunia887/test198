@@ -1,6 +1,5 @@
 import React from 'react';
 import { md, code } from '@atlaskit/docs';
-
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 
 interface TableProps {

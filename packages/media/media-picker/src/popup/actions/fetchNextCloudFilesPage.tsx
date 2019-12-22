@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { ServiceName, Path } from '../domain';
 
 const FETCH_NEXT_CLOUD_FILES_PAGE = 'FETCH_NEXT_CLOUD_FILES_PAGE';

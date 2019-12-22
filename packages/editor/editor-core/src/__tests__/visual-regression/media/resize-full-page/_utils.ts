@@ -1,4 +1,4 @@
-import { initFullPageEditorWithAdf, snapshot } from '../../_utils';
+import { EditorProps } from '../../../../types';
 import {
   getEditorWidth,
   typeInEditor,
@@ -15,10 +15,10 @@ import {
   isLayoutAvailable,
   waitForMediaToBeLoaded,
 } from '../../../__helpers/page-objects/_media';
-import * as layout2Col from '../../common/__fixtures__/basic-columns.adf.json';
-import { EditorProps } from '../../../../types';
 import { Page } from '../../../__helpers/page-objects/_types';
 import { editable } from '../../../integration/_helpers';
+import * as layout2Col from '../../common/__fixtures__/basic-columns.adf.json';
+import { initFullPageEditorWithAdf, snapshot } from '../../_utils';
 
 export function createResizeFullPageForConfig(config: TestPageConfig) {
   const initEditor = async (

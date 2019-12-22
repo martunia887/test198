@@ -1,14 +1,15 @@
 import * as React from 'react';
-import ImageCropper, { ImageCropperProp } from '../../image-cropper';
+import { smallImage, mountWithIntlContext } from '@atlaskit/media-test-helpers';
+import { MediaImage } from '@atlaskit/media-ui';
+
 import { ERROR } from '../../avatar-picker-dialog';
+import ImageCropper, { ImageCropperProp } from '../../image-cropper';
 import {
   Container,
   DragOverlay,
   ImageContainer,
   RemoveImageButton,
 } from '../../image-cropper/styled';
-import { smallImage, mountWithIntlContext } from '@atlaskit/media-test-helpers';
-import { MediaImage } from '@atlaskit/media-ui';
 
 const imageWidth = 600;
 const imageHeight = 400;

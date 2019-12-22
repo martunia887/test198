@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-
 import PanelStateless, { BasePanelProps } from './PanelStateless';
 
 type Props = BasePanelProps & {

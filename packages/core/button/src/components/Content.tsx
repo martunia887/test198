@@ -1,7 +1,8 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { gridSize } from '@atlaskit/theme/constants';
+import { jsx } from '@emotion/core';
+
 import { getLoadingStyle } from './utils';
 
 interface Props {

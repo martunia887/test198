@@ -1,5 +1,5 @@
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import React from 'react';
+import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import Lozenge from '../src';
 
 export default function Example() {

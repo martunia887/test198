@@ -1,9 +1,10 @@
 import * as React from 'react';
+import DocumentFilledIcon from '@atlaskit/icon/glyph/document-filled';
 import { ObjectResult } from '@atlaskit/quick-search';
 import * as colors from '@atlaskit/theme/colors';
-import DocumentFilledIcon from '@atlaskit/icon/glyph/document-filled';
 
 import { ArticleItem } from '../../model/Article';
+
 import { SearchResultsList } from './styled';
 
 export interface Props {

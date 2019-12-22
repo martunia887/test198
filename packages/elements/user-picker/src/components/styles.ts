@@ -1,6 +1,7 @@
 import { AVATAR_SIZES, BORDER_WIDTH } from '@atlaskit/avatar';
 import { colors } from '@atlaskit/theme';
 import memoizeOne from 'memoize-one';
+
 import { getAvatarSize } from './utils';
 
 export const BORDER_PADDING = 6;

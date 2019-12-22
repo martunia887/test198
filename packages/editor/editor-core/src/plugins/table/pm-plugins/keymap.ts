@@ -7,12 +7,6 @@ import {
   addRowAfter,
 } from 'prosemirror-tables';
 
-import {
-  createTable,
-  goToNextCell,
-  moveCursorBackward,
-  triggerUnlessTableHeader,
-} from '../commands';
 import * as keymaps from '../../../keymaps';
 import {
   withAnalytics,
@@ -22,6 +16,12 @@ import {
   INPUT_METHOD,
   EVENT_TYPE,
 } from '../../analytics';
+import {
+  createTable,
+  goToNextCell,
+  moveCursorBackward,
+  triggerUnlessTableHeader,
+} from '../commands';
 import { emptyMultipleCellsWithAnalytics } from '../commands-with-analytics';
 
 const createTableWithAnalytics = () =>

@@ -173,6 +173,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "eslint-plugin-tangerine": "^0.4.2",
     "events": "1.1.1",
     "extract-react-types": "^0.22.1",
     "fetch-mock": "^7.3.3",
@@ -644,5 +645,10 @@
     "@atlassian/prosemirror-synchrony-plugin": "^0.28.454",
     "@atlassiansox/analytics-node-client": "^1.0.103",
     "@atlassiansox/analytics-web-client": "^1.7.1"
+  },
+  "jest-runner-eslint": {
+    "cliOptions": {
+      "fix": true
+    }
   }
 }

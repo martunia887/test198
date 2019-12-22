@@ -1,5 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { uuid } from '@atlaskit/adf-schema';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { ProviderFactory, MediaSingle } from '@atlaskit/editor-common';
 import {
   code_block,
   strong,
@@ -40,25 +43,21 @@ import {
   inlineCard,
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
-import { ProviderFactory, MediaSingle } from '@atlaskit/editor-common';
 import { EmojiProvider } from '@atlaskit/emoji';
+import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers/fakeMediaClient';
 import {
   emoji as emojiData,
   mention as mentionData,
 } from '@atlaskit/util-data-test';
 import { TextSelection, Transaction } from 'prosemirror-state';
-import { uuid } from '@atlaskit/adf-schema';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { setMacroProvider, MacroAttributes } from '../../../macro';
 import { EditorView } from 'prosemirror-view';
+import { __serializeForClipboard } from 'prosemirror-view';
+
+import { EditorProps } from '../../../../types/editor-props';
 import { ACTION_SUBJECT_ID } from '../../../analytics';
 import { CardProvider } from '../../../card';
 import { GapCursorSelection, Side } from '../../../gap-cursor';
-import { EditorProps } from '../../../../types/editor-props';
-
-// @ts-ignore
-import { __serializeForClipboard } from 'prosemirror-view';
-import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers/fakeMediaClient';
+import { setMacroProvider, MacroAttributes } from '../../../macro';
 
 describe('paste plugins', () => {
   const createEditor = createEditorFactory();

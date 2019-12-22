@@ -1,6 +1,6 @@
-import { extractInlineViewPropsFromSourceCodePullRequest } from '../../extractPropsFromSourceCodePullRequest';
 import { ReactElement } from 'react';
 import { shallow } from 'enzyme';
+import { extractInlineViewPropsFromSourceCodePullRequest } from '../../extractPropsFromSourceCodePullRequest';
 
 describe('extractInlineViewPropsFromSourceCodePullRequest', () => {
   it('should set the icon to the appropriate default icon', () => {

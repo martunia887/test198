@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import ResultGroupsComponent, {
-  Props,
-  ResultGroupType,
-} from '../../ResultGroupsComponent';
+
 import {
   makeConfluenceObjectResult,
   makeConfluenceContainerResult,
   makePersonResult,
 } from '../../../../__tests__/unit/_test-util';
 import { mountWithIntl } from '../../../../__tests__/unit/helpers/_intl-enzyme-test-helper';
-import ResultGroup from '../../../ResultGroup';
 import { messages } from '../../../../messages';
+import ResultGroup from '../../../ResultGroup';
+import ResultGroupsComponent, {
+  Props,
+  ResultGroupType,
+} from '../../ResultGroupsComponent';
 
 function render(partialProps: Partial<Props>) {
   const props: Props = {

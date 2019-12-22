@@ -1,13 +1,15 @@
 import * as React from 'react';
-import Button from '@atlaskit/button';
-import { N0 } from '@atlaskit/theme/colors';
-import LockFilledIcon from '@atlaskit/icon/glyph/lock-filled';
-import { CollapsedFrame } from '../CollapsedFrame';
-import { minWidth, maxWidth } from '../dimensions';
-import { CollapsedIconTitleDescriptionLayout } from '../CollapsedIconTitleDescriptionLayout';
-import { IconBackground } from './styled';
-import { messages } from '../../messages';
 import { FormattedMessage } from 'react-intl';
+import Button from '@atlaskit/button';
+import LockFilledIcon from '@atlaskit/icon/glyph/lock-filled';
+import { N0 } from '@atlaskit/theme/colors';
+
+import { messages } from '../../messages';
+import { CollapsedFrame } from '../CollapsedFrame';
+import { CollapsedIconTitleDescriptionLayout } from '../CollapsedIconTitleDescriptionLayout';
+import { minWidth, maxWidth } from '../dimensions';
+
+import { IconBackground } from './styled';
 
 export interface BlockCardForbiddenViewProps {
   /** The url to display */

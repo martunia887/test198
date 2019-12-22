@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+import { defaultSchema as schema } from '@atlaskit/adf-schema';
+import { table, tr, th, td, p, inlineCard } from '@atlaskit/adf-utils';
 import {
   akEditorTableNumberColumnWidth,
   akEditorDefaultLayoutWidth,
   akEditorTableLegacyCellMinWidth as tableCellMinWidth,
   SortOrder,
 } from '@atlaskit/editor-common';
-import { defaultSchema as schema } from '@atlaskit/adf-schema';
-import { table, tr, th, td, p, inlineCard } from '@atlaskit/adf-utils';
+
 import Table, {
   calcScalePercent,
   TableContainer,

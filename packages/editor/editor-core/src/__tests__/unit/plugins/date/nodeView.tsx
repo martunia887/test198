@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
+import { uuid } from '@atlaskit/adf-schema';
 import {
   mountWithIntl,
   createEditorFactory,
@@ -7,9 +8,9 @@ import {
   taskList,
   taskItem,
 } from '@atlaskit/editor-test-helpers';
+
 import { insertDate } from '../../../../plugins/date/actions';
 import DateNodeView from '../../../../plugins/date/nodeviews/date';
-import { uuid } from '@atlaskit/adf-schema';
 
 describe('date plugin', () => {
   const createEditor = createEditorFactory();

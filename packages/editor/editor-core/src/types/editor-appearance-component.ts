@@ -1,15 +1,17 @@
-import { EditorView } from 'prosemirror-view';
 import { ProviderFactory, ExtensionHandlers } from '@atlaskit/editor-common';
-import { EventDispatcher } from '../event-dispatcher';
+import { EditorView } from 'prosemirror-view';
+
 import EditorActions from '../actions';
+import { EventDispatcher } from '../event-dispatcher';
+import { DispatchAnalyticsEvent } from '../plugins/analytics';
+import { CollabEditOptions } from '../plugins/collab-edit';
 import {
   UIComponentFactory,
   ToolbarUIComponentFactory,
   ReactComponents,
   InsertMenuCustomItem,
 } from '../types';
-import { CollabEditOptions } from '../plugins/collab-edit';
-import { DispatchAnalyticsEvent } from '../plugins/analytics';
+
 import { EditorAppearance } from './editor-props';
 
 export interface EditorAppearanceComponentProps {

@@ -1,8 +1,9 @@
 //@flow
 import * as fs from 'fs';
+import makeDir from 'mkdirp';
 import * as path from 'path';
 import { promisify } from 'util';
-import makeDir from 'mkdirp';
+
 import styleSheet from '../src';
 
 const writeFile = promisify(fs.writeFile);

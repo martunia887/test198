@@ -3,13 +3,13 @@
 // 'chromatism' adds 1.9kb to the bundle.
 // After the nwb merge it should be able to be tree shaken out for those who are not using it
 import chromatism from 'chromatism';
+import * as presets from './presets';
 import type {
   Text,
   Background,
   ItemTheme,
   CustomisableThemeProperties,
 } from './types';
-import * as presets from './presets';
 
 const { global: globalTheme } = presets;
 

@@ -1,10 +1,12 @@
-import { Plugin, PluginKey } from 'prosemirror-state';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   isPerformanceAPIAvailable,
   measureRender,
 } from '@atlaskit/editor-common';
+import { Plugin, PluginKey } from 'prosemirror-state';
+
 import { EditorPlugin } from '../../types';
+
 import { ACTION, AnalyticsEventPayload, EVENT_TYPE } from './types';
 import { fireAnalyticsEvent, getAnalyticsEventsFromTransaction } from './utils';
 

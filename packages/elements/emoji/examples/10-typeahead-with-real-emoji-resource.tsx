@@ -1,6 +1,7 @@
-import { layers } from '@atlaskit/theme';
 import * as React from 'react';
 import { Component } from 'react';
+import { layers } from '@atlaskit/theme';
+
 import { onClose, onOpen, onSelection } from '../example-helpers';
 import ResourcedEmojiControl, {
   getEmojiConfig,
@@ -12,8 +13,8 @@ import {
   TypeaheadState,
 } from '../example-helpers/typeahead-props';
 import { EmojiTypeAhead } from '../src/typeahead';
-import { emojiTypeAheadMaxHeight } from '../src/util/shared-styles';
 import { EmojiId, OptionalEmojiDescription } from '../src/types';
+import { emojiTypeAheadMaxHeight } from '../src/util/shared-styles';
 
 class EmojiTypeAheadTextInput extends Component<
   TypeaheadProps,

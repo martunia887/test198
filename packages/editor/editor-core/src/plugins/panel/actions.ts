@@ -1,5 +1,6 @@
-import { setParentNodeMarkup, removeParentNodeOfType } from 'prosemirror-utils';
 import { PanelType } from '@atlaskit/adf-schema';
+import { setParentNodeMarkup, removeParentNodeOfType } from 'prosemirror-utils';
+
 import { analyticsService } from '../../analytics';
 import { Command } from '../../types';
 import {
@@ -10,8 +11,9 @@ import {
   EVENT_TYPE,
   addAnalytics,
 } from '../analytics';
-import { pluginKey } from './pm-plugins/main';
 import { PANEL_TYPE } from '../analytics/types/node-events';
+
+import { pluginKey } from './pm-plugins/main';
 
 export type DomAtPos = (pos: number) => { node: HTMLElement; offset: number };
 

@@ -1,10 +1,12 @@
 import React, { useLayoutEffect } from 'react';
+
+import { easeIn } from '../utils/curves';
+import { smallDurationMs } from '../utils/durations';
+import { useRequestAnimationFrame, useSetTimeout } from '../utils/timer-hooks';
+import { useElementRef } from '../utils/use-element-ref';
+
 import { useExitingPersistence } from './exiting-persistence';
 import { MotionProps } from './types';
-import { useElementRef } from '../utils/use-element-ref';
-import { useRequestAnimationFrame, useSetTimeout } from '../utils/timer-hooks';
-import { smallDurationMs } from '../utils/durations';
-import { easeIn } from '../utils/curves';
 
 interface ShrinkOutProps extends MotionProps<{ ref: React.Ref<any> }> {}
 

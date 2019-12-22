@@ -1,12 +1,11 @@
+import { colors } from '@atlaskit/theme';
 import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
 
-import { colors } from '@atlaskit/theme';
-
 import { Dispatch } from '../../../event-dispatcher';
+import textColorPalette from '../../../ui/ColorPalette/Palettes/textColorPalette';
+import { PaletteColor } from '../../../ui/ColorPalette/Palettes/type';
 import { getActiveColor } from '../utils/color';
 import { getDisabledState } from '../utils/disabled';
-import { PaletteColor } from '../../../ui/ColorPalette/Palettes/type';
-import textColorPalette from '../../../ui/ColorPalette/Palettes/textColorPalette';
 
 export type TextColorPluginState = {
   palette: Array<PaletteColor>;

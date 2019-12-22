@@ -1,11 +1,13 @@
-import { DecorationSet, Decoration } from 'prosemirror-view';
-import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { Color as ColorType } from '@atlaskit/status/element';
-import statusNodeView from './nodeviews/status';
-import { ZeroWidthSpace } from '../../utils';
-import { mayGetStatusAtSelection, isEmptyStatus } from './utils';
+import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
+import { DecorationSet, Decoration } from 'prosemirror-view';
+
 import { Dispatch } from '../../event-dispatcher';
 import { PortalProviderAPI } from '../../ui/PortalProvider';
+import { ZeroWidthSpace } from '../../utils';
+
+import statusNodeView from './nodeviews/status';
+import { mayGetStatusAtSelection, isEmptyStatus } from './utils';
 import { StatusPluginOptions } from './index';
 
 export const pluginKeyName = 'statusPlugin';

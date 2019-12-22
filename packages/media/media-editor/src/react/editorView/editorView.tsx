@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { messages } from '@atlaskit/media-ui';
 import { ThemeProvider } from 'styled-components';
-import { MediaEditor, LoadParameters } from '../mediaEditor';
+import { Theme as ButtonTheme } from '@atlaskit/button';
+import { messages } from '@atlaskit/media-ui';
+import { R300 } from '@atlaskit/theme/colors';
+
 import {
   CancelInputType,
   Tool,
   Dimensions,
   ShapeParameters,
 } from '../../common';
-import Toolbar, { tools } from './toolbar/toolbar';
-import { EditorContainer } from './styles';
-import { R300 } from '@atlaskit/theme/colors';
-import { Theme as ButtonTheme } from '@atlaskit/button';
 import { rgbToHex } from '../../util';
+import { MediaEditor, LoadParameters } from '../mediaEditor';
+
+import { EditorContainer } from './styles';
 import { DEFAULT_COLOR } from './toolbar/popups/colorPopup';
+import Toolbar, { tools } from './toolbar/toolbar';
 
 const DEFAULT_WIDTH = 845;
 const DEFAULT_HEIGHT = 530;

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
-import { TextSelection, NodeSelection } from 'prosemirror-state';
 import {
   createEditorFactory,
   doc,
@@ -10,15 +9,16 @@ import {
   status,
 } from '@atlaskit/editor-test-helpers';
 import { Status } from '@atlaskit/status/element';
+import { TextSelection, NodeSelection } from 'prosemirror-state';
+import { __serializeForClipboard } from 'prosemirror-view';
+
+import * as Actions from '../../../../../plugins/status/actions';
 import {
   ContainerProps,
   messages,
   IntlStatusContainerView,
 } from '../../../../../plugins/status/nodeviews/status';
 import { pluginKey, StatusType } from '../../../../../plugins/status/plugin';
-import * as Actions from '../../../../../plugins/status/actions';
-// @ts-ignore
-import { __serializeForClipboard } from 'prosemirror-view';
 import { EditorInstance } from '../../../../../types';
 
 describe('Status - NodeView', () => {

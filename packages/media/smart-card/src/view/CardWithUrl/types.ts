@@ -1,6 +1,6 @@
 import { EventHandler, MouseEvent, KeyboardEvent } from 'react';
-import { CardAppearance } from '../Card/types';
 import { AnalyticsHandler } from '../../utils/types';
+import { CardAppearance } from '../Card/types';
 
 export type CardWithUrlContentProps = {
   url: string;

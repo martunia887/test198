@@ -1,11 +1,12 @@
+import { selectors } from '../../__helpers/page-objects/_editor';
+import { pressKey } from '../../__helpers/page-objects/_keyboard';
+import { clickOnStatus } from '../../__helpers/page-objects/_status';
+import { Page } from '../../__helpers/page-objects/_types';
 import { Appearance, initEditorWithAdf, snapshot } from '../_utils';
+
 import gapcursor from './__fixtures__/gap-cursor-adf.json';
 import gapCursorLayout from './__fixtures__/gap-cursor-layout-adf.json';
 import paragraph from './__fixtures__/paragraph-of-text.adf.json';
-import { selectors } from '../../__helpers/page-objects/_editor';
-import { pressKey } from '../../__helpers/page-objects/_keyboard';
-import { Page } from '../../__helpers/page-objects/_types';
-import { clickOnStatus } from '../../__helpers/page-objects/_status';
 
 let page: Page;
 

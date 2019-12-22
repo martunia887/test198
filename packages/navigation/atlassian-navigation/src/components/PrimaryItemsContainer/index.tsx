@@ -1,19 +1,19 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { useCallback, useState } from 'react';
 import Popup from '@atlaskit/popup';
 import { TriggerProps } from '@atlaskit/popup/types';
 import WidthDetector from '@atlaskit/width-detector';
-import { useCallback, useState } from 'react';
+import { jsx } from '@emotion/core';
 
 import {
   useOverflowController,
   OverflowProvider,
 } from '../../controllers/overflow';
+import { NavigationTheme } from '../../theme';
 import { PrimaryDropdownButton } from '../PrimaryDropdownButton';
 
 import { containerCSS, widthDetectorContainerStyle } from './styles';
 import { PrimaryItemsContainerProps } from './types';
-import { NavigationTheme } from '../../theme';
 
 export const PrimaryItemsContainer = ({
   moreLabel,

@@ -1,4 +1,3 @@
-import { Fragment } from 'prosemirror-model';
 import {
   createEditorFactory,
   doc,
@@ -9,13 +8,15 @@ import {
   bodiedExtension,
   extension,
 } from '@atlaskit/editor-test-helpers';
+import { Fragment } from 'prosemirror-model';
+
+import { datePlugin } from '../../../../../plugins';
 import {
   selectCurrentItem,
   selectSingleItemOrDismiss,
   selectByIndex,
   selectItem,
 } from '../../../../../plugins/type-ahead/commands/select-item';
-import { datePlugin } from '../../../../../plugins';
 import { TypeAheadSelectItem } from '../../../../../plugins/type-ahead/types';
 
 const createTypeAheadPlugin = ({

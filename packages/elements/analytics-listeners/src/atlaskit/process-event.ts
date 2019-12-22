@@ -2,9 +2,6 @@
  * Inspired by analytics-web-react
  */
 
-import last from 'lodash.last';
-import merge from 'lodash.merge';
-
 import {
   DEFAULT_SOURCE,
   UI_EVENT_TYPE,
@@ -13,6 +10,12 @@ import {
   OPERATIONAL_EVENT_TYPE,
   GasPayload,
 } from '@atlaskit/analytics-gas-types';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import last from 'lodash.last';
+import merge from 'lodash.merge';
+
+import Logger from '../helpers/logger';
+import { version as listenerVersion } from '../version.json';
 
 import {
   getSources,
@@ -22,9 +25,6 @@ import {
   getPackageHierarchy,
   getComponents,
 } from './extract-data-from-event';
-import Logger from '../helpers/logger';
-import { version as listenerVersion } from '../version.json';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 const ATLASKIT_TAG = 'atlaskit';
 

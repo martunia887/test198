@@ -1,21 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 import Button, { ButtonGroup } from '@atlaskit/button';
-
-import { WithEditorActions, EditorActions, EditorContext } from '../src';
-import { TitleArea } from '../example-helpers/PageElements';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
 
-export const mediaProvider = storyMediaProviderFactory({
-  includeUserAuthProvider: true,
-});
-
-/**
- * arch next imports
- */
-import { EditorPresetCXHTML } from '../src/labs/next/presets/cxhtml';
+import { TitleArea } from '../example-helpers/PageElements';
+import { WithEditorActions, EditorActions, EditorContext } from '../src';
 import { FullPage as FullPageEditor } from '../src/labs/next/full-page';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
+import { EditorPresetCXHTML } from '../src/labs/next/presets/cxhtml';
 
 export const LOCALSTORAGE_defaultDocKey = 'fabric.editor.example.full-page';
 export const LOCALSTORAGE_defaultTitleKey =

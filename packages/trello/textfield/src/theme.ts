@@ -1,5 +1,5 @@
-import { TextFieldThemeProps, TextFieldStyleProps } from './types';
 import { colors } from './colors';
+import { TextFieldThemeProps, TextFieldStyleProps } from './types';
 
 const textFieldNachosTheme: TextFieldStyleProps = {
   backgroundColor: {

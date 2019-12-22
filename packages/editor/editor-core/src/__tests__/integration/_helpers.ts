@@ -1,16 +1,17 @@
+import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import { Page as PuppeteerPage } from 'puppeteer';
-import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
-import { messages as insertBlockMessages } from '../../plugins/insert-block/ui/ToolbarInsertBlock';
+
 import { ToolbarFeatures } from '../../../example-helpers/ToolsDrawer';
-import { EditorAppearance, EditorProps } from '../../types';
-import { pluginKey as tableResizingPluginKey } from '../../plugins/table/pm-plugins/table-resizing';
 import messages from '../../messages';
+import { messages as insertBlockMessages } from '../../plugins/insert-block/ui/ToolbarInsertBlock';
+import { pluginKey as tableResizingPluginKey } from '../../plugins/table/pm-plugins/table-resizing';
+import { TableCssClassName } from '../../plugins/table/types';
+import { EditorAppearance, EditorProps } from '../../types';
 import {
   tableSelectors,
   getSelectorForTableCell,
 } from '../__helpers/page-objects/_table';
-import { TableCssClassName } from '../../plugins/table/types';
 /**
  * This function will in browser context. Make sure you call `toJSON` otherwise you will get:
  * unknown error: Maximum call stack size exceeded

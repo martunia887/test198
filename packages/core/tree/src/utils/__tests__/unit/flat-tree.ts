@@ -1,9 +1,7 @@
-import { getDestinationPath, getSourcePath } from '../../flat-tree';
-
-import { flattenTree } from '../../tree';
-
-import { treeWithTwoBranches } from '../../../../mockdata/treeWithTwoBranches';
 import { complexTree } from '../../../../mockdata/complexTree';
+import { treeWithTwoBranches } from '../../../../mockdata/treeWithTwoBranches';
+import { getDestinationPath, getSourcePath } from '../../flat-tree';
+import { flattenTree } from '../../tree';
 
 const flatTreeWithTwoBranches = flattenTree(treeWithTwoBranches);
 const flatComplexTree = flattenTree(complexTree);

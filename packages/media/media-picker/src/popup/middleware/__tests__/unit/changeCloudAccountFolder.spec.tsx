@@ -1,12 +1,13 @@
-import { RequestUnlinkCloudAccountAction } from '../../../actions/unlinkCloudAccount';
-import { FileListUpdateAction } from '../../../actions/fileListUpdate';
 import { mockFetcher, mockStore } from '@atlaskit/media-test-helpers';
-import { changeCloudAccountFolderMiddleware } from '../../changeCloudAccountFolder';
+
 import {
   changeCloudAccountFolder,
   FILE_LIST_UPDATE,
   REQUEST_UNLINK_CLOUD_ACCOUNT,
 } from '../../../actions';
+import { FileListUpdateAction } from '../../../actions/fileListUpdate';
+import { RequestUnlinkCloudAccountAction } from '../../../actions/unlinkCloudAccount';
+import { changeCloudAccountFolderMiddleware } from '../../changeCloudAccountFolder';
 
 describe('changePath', () => {
   const clientId = 'some-client-id';

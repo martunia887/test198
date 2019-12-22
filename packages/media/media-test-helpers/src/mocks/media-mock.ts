@@ -1,12 +1,12 @@
-import { Server, Router, Database } from 'kakapo';
+import { MediaFile, MediaType } from '@atlaskit/media-client';
 import * as exenv from 'exenv';
+import { Server, Router, Database } from 'kakapo';
 import uuid from 'uuid/v4';
 
-import { MediaFile, MediaType } from '@atlaskit/media-client';
-
-import { createApiRouter, createMediaPlaygroundRouter } from './routers';
-import { createDatabase, MediaDatabaseSchema } from './database';
 import { mapDataUriToBlob } from '../utils';
+
+import { createDatabase, MediaDatabaseSchema } from './database';
+import { createApiRouter, createMediaPlaygroundRouter } from './routers';
 
 export type MockCollections = {
   [key: string]: Array<MediaFile & { blob: Blob }>;

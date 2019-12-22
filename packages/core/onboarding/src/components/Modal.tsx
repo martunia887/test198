@@ -1,9 +1,10 @@
 import React, { Component, ElementType, ReactNode } from 'react';
+import Button, { Theme as ButtonTheme } from '@atlaskit/button';
 import Modal, {
   HeaderComponentProps,
   FooterComponentProps,
 } from '@atlaskit/modal-dialog';
-import Button, { Theme as ButtonTheme } from '@atlaskit/button';
+
 import {
   Actions as ModalActions,
   ActionItem,
@@ -11,8 +12,9 @@ import {
   Heading,
   Image,
 } from '../styled/Modal';
-import { modalButtonTheme } from './theme';
 import { Actions } from '../types';
+
+import { modalButtonTheme } from './theme';
 
 type Props = {
   /** Buttons to render in the footer */

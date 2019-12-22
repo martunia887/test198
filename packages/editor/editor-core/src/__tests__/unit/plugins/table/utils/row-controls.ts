@@ -1,5 +1,3 @@
-import { TableMap } from 'prosemirror-tables';
-import { findTable } from 'prosemirror-utils';
 import {
   doc,
   p,
@@ -9,6 +7,9 @@ import {
   th,
   td,
 } from '@atlaskit/editor-test-helpers';
+import { TableMap } from 'prosemirror-tables';
+import { findTable } from 'prosemirror-utils';
+
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
 import { TablePluginState } from '../../../../../plugins/table/types';
 import { copyPreviousRow } from '../../../../../plugins/table/utils/row-controls';

@@ -11,9 +11,6 @@ import {
   FileState,
 } from '@atlaskit/media-client';
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
-import { ReplaySubject } from 'rxjs';
-const globalEmitSpy = jest.spyOn(globalMediaEventEmitter, 'emit');
-import uuidV4 from 'uuid/v4';
 import {
   mockStore,
   mockWsConnectionHolder,
@@ -24,7 +21,32 @@ import {
   expectToEqual,
 } from '@atlaskit/media-test-helpers';
 import { Action, Dispatch } from 'redux';
+import { ReplaySubject } from 'rxjs';
+import uuidV4 from 'uuid/v4';
 
+import {
+  UploadEndEvent,
+  UploadPreviewUpdateEvent,
+  UploadProcessingEvent,
+  UploadEventName,
+} from '../../../../domain/uploadEvent';
+import { MediaFile } from '../../../../types';
+import { SCALE_FACTOR_DEFAULT } from '../../../../util/getPreviewFromImage';
+import { finalizeUpload } from '../../../actions/finalizeUpload';
+import { getPreview } from '../../../actions/getPreview';
+import { hidePopup } from '../../../actions/hidePopup';
+import { resetView } from '../../../actions/resetView';
+import {
+  isSendUploadEventAction,
+  SendUploadEventAction,
+  SendUploadEventActionPayload,
+} from '../../../actions/sendUploadEvent';
+import {
+  setEventProxy,
+  SetEventProxyAction,
+} from '../../../actions/setEventProxy';
+import { startImport } from '../../../actions/startImport';
+import { LocalUpload, LocalUploads } from '../../../domain';
 import {
   importFilesMiddleware,
   isRemoteService,
@@ -33,30 +55,8 @@ import {
   getTenantFileState,
   touchSelectedFile,
 } from '../../importFiles';
-import { LocalUpload, LocalUploads } from '../../../domain';
-import { finalizeUpload } from '../../../actions/finalizeUpload';
-import { startImport } from '../../../actions/startImport';
-import { resetView } from '../../../actions/resetView';
-import {
-  UploadEndEvent,
-  UploadPreviewUpdateEvent,
-  UploadProcessingEvent,
-  UploadEventName,
-} from '../../../../domain/uploadEvent';
 import MockContext = jest.MockContext;
-import {
-  setEventProxy,
-  SetEventProxyAction,
-} from '../../../actions/setEventProxy';
-import { getPreview } from '../../../actions/getPreview';
-import { hidePopup } from '../../../actions/hidePopup';
-import { MediaFile } from '../../../../types';
-import {
-  isSendUploadEventAction,
-  SendUploadEventAction,
-  SendUploadEventActionPayload,
-} from '../../../actions/sendUploadEvent';
-import { SCALE_FACTOR_DEFAULT } from '../../../../util/getPreviewFromImage';
+const globalEmitSpy = jest.spyOn(globalMediaEventEmitter, 'emit');
 
 describe('importFiles middleware', () => {
   const expectUUID = expect.stringMatching(/[a-f0-9\-]+/);

@@ -1,10 +1,12 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { MacroProvider } from './types';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { setMacroProvider } from './actions';
+
 import { Dispatch } from '../../event-dispatcher';
 import { PMPluginFactoryParams, EditorPlugin } from '../../types';
+
+import { setMacroProvider } from './actions';
+import { MacroProvider } from './types';
 
 export * from './types';
 export * from './actions';

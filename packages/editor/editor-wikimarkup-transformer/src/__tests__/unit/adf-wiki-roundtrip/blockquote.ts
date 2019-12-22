@@ -1,7 +1,6 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
-import { adf2wiki } from '../_test-helpers';
-
 import { blockquote, doc, hardBreak, p } from '@atlaskit/editor-test-helpers';
+import { adf2wiki } from '../_test-helpers';
 
 describe('ADF => WikiMarkup => ADF - BlockQuote', () => {
   test('should convert blockquote node', () => {

@@ -1,25 +1,24 @@
 import * as React from 'react';
+import { InjectedIntl, InjectedIntlProps } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
 import EditorUnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
-import { InjectedIntl, InjectedIntlProps } from 'react-intl';
+
+import { linkToolbarMessages } from '../../../messages';
 import PanelTextInput from '../../../ui/PanelTextInput';
-import Button from '../../floating-toolbar/ui/Button';
-import Separator from '../../floating-toolbar/ui/Separator';
+import RecentSearch from '../../../ui/RecentSearch';
 import {
   Container,
   UrlInputWrapper,
 } from '../../../ui/RecentSearch/ToolbarComponents';
-import RecentSearch from '../../../ui/RecentSearch';
 import {
   ChildProps,
   RecentSearchSubmitOptions,
   RecentSearchInputTypes,
 } from '../../../ui/RecentSearch/types';
-import { linkToolbarMessages } from '../../../messages';
-
-// Common Translations will live here
-import { defineMessages } from 'react-intl';
+import Button from '../../floating-toolbar/ui/Button';
+import Separator from '../../floating-toolbar/ui/Separator';
 
 export const mediaLinkToolbarMessages = defineMessages({
   backLink: {

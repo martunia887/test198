@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { shallow, mount, ReactWrapper } from 'enzyme';
-import Button from '@atlaskit/button';
 import Avatar from '@atlaskit/avatar';
 import AvatarGroup from '@atlaskit/avatar-group';
-import { BlockCardResolvedView, Action } from '../..';
+import Button from '@atlaskit/button';
+
 import { ImageIcon } from '../../../../BlockCard/ImageIcon';
+import { BlockCardResolvedView, Action } from '../..';
+import AlertView from '../../AlertView';
+import { PreviewView } from '../../PreviewView';
 import {
   Title,
   Byline,
@@ -12,8 +15,6 @@ import {
   Thumbnail,
   ActionsWrapper,
 } from '../../styled';
-import { PreviewView } from '../../PreviewView';
-import AlertView from '../../AlertView';
 
 function getActionButtons(element: ReactWrapper) {
   return element.find(ActionsWrapper).find(Button);

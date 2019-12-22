@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isChangeCloudAccountFolderAction } from '../actions/changeCloudAccountFolder';
 import { State } from '../domain';
 

@@ -1,16 +1,16 @@
 import * as React from 'react';
-import algoliasearch from 'algoliasearch';
 import Page from '@atlaskit/page';
+import algoliasearch from 'algoliasearch';
 
 import LocaleIntlProvider from '../example-helpers/LocaleIntlProvider';
+import Help from '../src';
+
 import {
   ExampleWrapper,
   HelpWrapper,
   FooterContent,
   ExampleDefaultContent,
 } from './utils/styled';
-
-import Help from '../src';
 
 var client = algoliasearch('8K6J5OJIQW', 'c982b4b1a6ca921131d35edb63359b8c');
 var index = client.initIndex('product_help_uat');

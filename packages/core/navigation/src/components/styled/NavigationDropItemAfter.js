@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
-import NavigationItemAfter from './NavigationItemAfter';
 import { whenCollapsed } from '../../theme/util';
+import NavigationItemAfter from './NavigationItemAfter';
 
 const NavigationDropItemAfter = styled(NavigationItemAfter)`
   ${whenCollapsed`

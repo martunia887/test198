@@ -1,8 +1,8 @@
-import { ConfluenceRecentsMap, Result } from '../../../model/Result';
 import {
   SearchResultsMap,
   EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE,
 } from '../../../api/CrossProductSearchClient';
+import { ConfluenceRecentsMap, Result } from '../../../model/Result';
 
 const confluenceRecentItemsPromise: Promise<ConfluenceRecentsMap> = Promise.resolve(
   {

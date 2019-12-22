@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { shallow } from 'enzyme';
 import Button from '@atlaskit/button';
+
+import * as Utils from '../../SearchResultsUtil';
 import { ShowMoreButton, ShowMoreButtonProps } from '../../ShowMoreButton';
 import { AnalyticsNextEvent } from '../../analytics/types';
-import * as Utils from '../../SearchResultsUtil';
-import { shallow } from 'enzyme';
 
 const createAnalyticsEventSpy = jest.fn();
 const showMoreClickSpy = jest.fn();

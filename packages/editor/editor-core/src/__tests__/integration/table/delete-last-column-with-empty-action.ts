@@ -1,16 +1,16 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
+import { TableCssClassName as ClassName } from '../../../plugins/table/types';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
   fullpage,
   quickInsert,
 } from '../_helpers';
-import { TableCssClassName as ClassName } from '../../../plugins/table/types';
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
 
 BrowserTestCase(
   'delete-last-column-with-empty-action.ts: Delete last table column with empty action',

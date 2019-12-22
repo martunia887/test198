@@ -1,14 +1,16 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   createEditorFactory,
   doc,
   p,
   status,
 } from '@atlaskit/editor-test-helpers';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import { pluginKey } from '../../../../plugins/status/plugin';
+import { EditorView } from 'prosemirror-view';
+
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 import {
   commitStatusPicker,
   createStatus,
@@ -16,8 +18,7 @@ import {
   updateStatus,
   updateStatusWithAnalytics,
 } from '../../../../plugins/status/actions';
-import { EditorView } from 'prosemirror-view';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { pluginKey } from '../../../../plugins/status/plugin';
 
 describe('status plugin: actions', () => {
   const createEditor = createEditorFactory();

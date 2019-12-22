@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Component } from 'react';
-import InlineDialog from '@atlaskit/inline-dialog';
 import Button from '@atlaskit/button';
+import InlineDialog from '@atlaskit/inline-dialog';
+
+import { Tool } from '../../../../common';
+import { ShapeTitle } from '../buttons/styles';
+import { toolIcons } from '../buttons/toolButton';
 
 import { ShapePopupContentWrapper } from './popupStyles';
-import { Tool } from '../../../../common';
-import { toolIcons } from '../buttons/toolButton';
-import { ShapeTitle } from '../buttons/styles';
 
 export const shapeTools: Tool[] = ['rectangle', 'oval', 'line'];
 

@@ -4,15 +4,14 @@ import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { defaultRegistry } from 'react-sweet-state';
 
-import { ResourceStore } from '../../../../../controllers/resource-store';
-import { createResource } from '../../../../../controllers/resource-utils';
-
-import { ResourceSubscriber } from '../../../../../controllers/subscribers/resource';
 import {
   DEFAULT_ROUTE,
   DEFAULT_MATCH,
   DEFAULT_HISTORY,
 } from '../../../../../common/constants';
+import { ResourceStore } from '../../../../../controllers/resource-store';
+import { createResource } from '../../../../../controllers/resource-utils';
+import { ResourceSubscriber } from '../../../../../controllers/subscribers/resource';
 
 describe('ResourceSubscriber', () => {
   const type = 'type';

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { FadeIn } from '../src';
-import { Block, RetryContainer, Centered } from '../examples-utils';
 import Button from '@atlaskit/button';
+
+import { Block, RetryContainer, Centered } from '../examples-utils';
+import { FadeIn } from '../src';
 
 export default () => {
   const directions = [

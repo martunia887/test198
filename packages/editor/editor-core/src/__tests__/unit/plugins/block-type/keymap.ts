@@ -1,4 +1,8 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   insertText,
   sendKeyToPm,
   createEditorFactory,
@@ -19,13 +23,10 @@ import {
   simulatePlatform,
   Platforms,
 } from '@atlaskit/editor-test-helpers';
+import { EditorView } from 'prosemirror-view';
+
 import { AnalyticsHandler } from '../../../../analytics';
 import { setNodeSelection } from '../../../../utils';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import { EditorView } from 'prosemirror-view';
 
 const codeBlockGASV3Payload = {
   action: 'formatted',

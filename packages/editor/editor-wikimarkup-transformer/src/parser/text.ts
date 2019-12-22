@@ -1,13 +1,15 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
+
+import { Context } from '../interfaces';
+
 import { createTextNode } from './nodes/text';
+import { parseToken, TokenType } from './tokenize';
 import {
   parseOtherKeyword,
   parseLeadingKeyword,
   parseMacroKeyword,
   parseIssueKeyword,
 } from './tokenize/keyword';
-import { parseToken, TokenType } from './tokenize';
-import { Context } from '../interfaces';
 import { parseWhitespaceOnly } from './tokenize/whitespace';
 import { escapeHandler } from './utils/escape';
 

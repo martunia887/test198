@@ -3,7 +3,6 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 
 import { Label } from '../..';
-// import { type Props } from '../components/Label';
 import { RequiredIndicator, LabelInner } from '../../styled/Label';
 
 // const defaultProps = {

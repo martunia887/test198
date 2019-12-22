@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { ServiceFile, SelectedItem, ServiceName } from '../domain';
 
 export const FILE_CLICK = 'FILE_CLICK';

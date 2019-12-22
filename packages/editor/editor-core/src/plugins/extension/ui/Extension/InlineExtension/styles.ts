@@ -1,6 +1,7 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { borderRadius } from '@atlaskit/theme';
+
 import { Wrapper as WrapperDefault } from '../styles';
 
 export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled(

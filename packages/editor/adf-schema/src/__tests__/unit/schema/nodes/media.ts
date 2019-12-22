@@ -1,4 +1,4 @@
-import { name } from '../../../../version.json';
+import { fromHTML, toDOM, schema } from '../../../../../test-helpers';
 import {
   media,
   camelCaseToKebabCase,
@@ -6,7 +6,7 @@ import {
   toJSON,
   createMediaSpec,
 } from '../../../../schema/nodes/media';
-import { fromHTML, toDOM, schema } from '../../../../../test-helpers';
+import { name } from '../../../../version.json';
 
 // Note: We can't use dom.dataset in jest until it's upgraded to use latest version
 //       of jsdom. In the meantime we can use this helper-method.

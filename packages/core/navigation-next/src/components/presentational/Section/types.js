@@ -1,7 +1,6 @@
 // @flow
 
 import type { Node } from 'react';
-
 import type { StyleReducer, WithContentThemeProps } from '../../../theme/types';
 
 export type RenderProvided = {

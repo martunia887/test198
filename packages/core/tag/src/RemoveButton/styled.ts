@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { R300, R200, N500, R500 } from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { borderRadius } from '@atlaskit/theme/constants';
-import { R300, R200, N500, R500 } from '@atlaskit/theme/colors';
+
 import { buttonWidthUnitless, focusRingColor } from '../constants';
 
 const focusColor = themed({ light: R300, dark: R200 });

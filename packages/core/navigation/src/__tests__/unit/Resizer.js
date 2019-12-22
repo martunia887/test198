@@ -1,15 +1,17 @@
 // @flow
+import React from 'react';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import React from 'react';
+
 import Resizer from '../../components/js/Resizer';
-import ResizerInner from '../../components/styled/ResizerInner';
 import ResizerButton from '../../components/js/ResizerButton';
-import WithElectronTheme from '../../theme/with-electron-theme';
+import ResizerInner from '../../components/styled/ResizerInner';
 import {
   standardOpenWidth as standardOpenWidthGenerator,
   globalOpenWidth as globalOpenWidthGenerator,
 } from '../../shared-variables';
+import WithElectronTheme from '../../theme/with-electron-theme';
+
 import { dispatchMouseEvent } from './_event-util';
 
 configure({ adapter: new Adapter() });

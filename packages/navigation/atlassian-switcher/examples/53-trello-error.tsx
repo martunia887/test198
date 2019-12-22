@@ -1,11 +1,13 @@
 import React, { ComponentType } from 'react';
+import styled from 'styled-components';
+
+import ErrorBoundary from '../src/components/error-boundary';
+import { Product } from '../src/types';
+import { enrichFetchError } from '../src/utils/fetch';
+import messages from '../src/utils/messages';
+
 import { withAnalyticsLogger, withIntlProvider } from './helpers';
 import { FakeTrelloChrome } from './helpers/FakeTrelloChrome';
-import ErrorBoundary from '../src/components/error-boundary';
-import { enrichFetchError } from '../src/utils/fetch';
-import { Product } from '../src/types';
-import messages from '../src/utils/messages';
-import styled from 'styled-components';
 
 type Props = {
   status: number;

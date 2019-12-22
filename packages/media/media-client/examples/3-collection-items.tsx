@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Component } from 'react';
+import Button from '@atlaskit/button';
+import { Card } from '@atlaskit/media-card';
 import { createUserMediaClient } from '@atlaskit/media-test-helpers';
 import { Subscription } from 'rxjs/Subscription';
-import { Card } from '@atlaskit/media-card';
-import Button from '@atlaskit/button';
+
 import { CardsWrapper, Header } from '../example-helpers/styled';
 import { FileIdentifier, RECENTS_COLLECTION } from '../src';
 

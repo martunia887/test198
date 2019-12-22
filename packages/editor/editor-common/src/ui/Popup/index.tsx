@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import rafSchedule from 'raf-schd';
+
 import { akEditorFloatingPanelZIndex } from '../../styles';
+
 import {
   calculatePosition,
   calculatePlacement,

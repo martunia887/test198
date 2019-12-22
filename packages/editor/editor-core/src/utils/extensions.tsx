@@ -5,6 +5,7 @@ import {
   combineProviders,
   getItemsFromModule,
 } from '@atlaskit/editor-common';
+
 import {
   QuickInsertProvider,
   QuickInsertItem,

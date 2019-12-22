@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import ImageLoader from 'react-render-image';
+
 import { PreviewView, LoadingView, NoImageView, LoadedView } from '../..';
 
 const exampleURL = 'https://placekitten.com/g/200/300';

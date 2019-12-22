@@ -1,12 +1,19 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import { EditorTestCardProvider } from '@atlaskit/editor-test-helpers/card-provider';
+import createEditorFactory from '@atlaskit/editor-test-helpers/create-editor';
+import {
   doc,
   p,
   a,
   code_block,
   code,
 } from '@atlaskit/editor-test-helpers/schema-builder';
-import { EditorTestCardProvider } from '@atlaskit/editor-test-helpers/card-provider';
-import createEditorFactory from '@atlaskit/editor-test-helpers/create-editor';
+
+import { INPUT_METHOD } from '../../../analytics';
+import { pluginKey as cardPluginKey } from '../../../card/pm-plugins/main';
 import {
   setLinkHref,
   setLinkText,
@@ -21,12 +28,6 @@ import {
   stateKey as hyperlinkStateKey,
   LinkAction,
 } from '../../pm-plugins/main';
-import { pluginKey as cardPluginKey } from '../../../card/pm-plugins/main';
-import { INPUT_METHOD } from '../../../analytics';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 
 const googleUrl = 'https://google.com';
 const yahooUrl = 'https://yahoo.com';

@@ -1,6 +1,6 @@
-import { extractInlineViewPropsFromDigitalDocument } from '../../extractPropsFromDigitalDocument';
 import { ReactElement } from 'react';
 import { shallow } from 'enzyme';
+import { extractInlineViewPropsFromDigitalDocument } from '../../extractPropsFromDigitalDocument';
 
 describe('extractInlineViewPropsFromDigitalDocument', () => {
   it('should set the icon to the appropriate default icon', () => {

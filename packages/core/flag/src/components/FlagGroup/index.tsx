@@ -4,8 +4,9 @@ import Portal from '@atlaskit/portal';
 import { layers } from '@atlaskit/theme/constants';
 
 import Wrapper, { flagAnimationTime } from '../../styled/Wrapper';
-import Group, { SROnly, Inner } from './styledFlagGroup';
 import { ChildrenType, FunctionType } from '../../types';
+
+import Group, { SROnly, Inner } from './styledFlagGroup';
 
 type Props = {
   /** Flag elements to be displayed. */

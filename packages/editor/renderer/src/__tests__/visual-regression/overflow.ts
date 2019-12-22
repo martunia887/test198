@@ -1,6 +1,6 @@
-import { snapshot, initRendererWithADF } from './_utils';
-import * as document from '../../../examples/helper/overflow.adf.json';
 import { Page } from 'puppeteer';
+import * as document from '../../../examples/helper/overflow.adf.json';
+import { snapshot, initRendererWithADF } from './_utils';
 
 const initRenderer = async (page: Page, adf: any) => {
   await initRendererWithADF(page, {

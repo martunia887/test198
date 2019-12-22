@@ -1,5 +1,6 @@
-import { EditorView } from 'prosemirror-view';
 import { CardAppearance } from '@atlaskit/smart-card';
+import { EditorView } from 'prosemirror-view';
+
 import { INPUT_METHOD } from '../../../../plugins/analytics';
 import { setProvider } from '../../../../plugins/card/pm-plugins/actions';
 import {

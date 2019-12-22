@@ -1,6 +1,12 @@
 import { Node as PMNode, NodeType, Fragment } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
+import {
+  safeInsert,
+  hasParentNode,
+  ContentNodeWithPos,
+} from 'prosemirror-utils';
 import { EditorView } from 'prosemirror-view';
+
 import {
   atTheEndOfDoc,
   atTheEndOfBlock,
@@ -14,6 +20,7 @@ import {
   findFarthestParentNode,
 } from '../../../utils';
 import { MediaState } from '../types';
+
 import {
   posOfPrecedingMediaGroup,
   posOfMediaGroupNearby,
@@ -22,11 +29,6 @@ import {
   isInsidePotentialEmptyParagraph,
   copyOptionalAttrsFromMediaState,
 } from './media-common';
-import {
-  safeInsert,
-  hasParentNode,
-  ContentNodeWithPos,
-} from 'prosemirror-utils';
 
 export interface Range {
   start: number;

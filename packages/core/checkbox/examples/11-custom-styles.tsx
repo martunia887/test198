@@ -1,5 +1,6 @@
 import React from 'react';
 import { CSSObject } from '@emotion/core';
+
 import { Checkbox } from '../src';
 import { IconWrapperCSSProps } from '../src/types';
 

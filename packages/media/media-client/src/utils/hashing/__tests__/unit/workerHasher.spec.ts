@@ -5,9 +5,8 @@ jest.mock('uuid/v4', () => ({
   default: jest.fn(),
 }));
 
-import uuidV4 from 'uuid/v4';
 import Rusha from 'rusha';
-
+import uuidV4 from 'uuid/v4';
 import { WorkerHasher } from '../../workerHasher';
 
 interface FakeWorker {

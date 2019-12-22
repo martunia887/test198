@@ -1,6 +1,6 @@
 import React from 'react';
-import { Presence } from '../src';
 import { Block, ShrinkWrap } from '../examples-util/helpers';
+import { Presence } from '../src';
 
 export default () => (
   <Block>

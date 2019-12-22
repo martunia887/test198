@@ -1,5 +1,5 @@
-import { ABTest } from '../api/CrossProductSearchClient';
 import { FormattedMessage } from 'react-intl';
+import { ABTest } from '../api/CrossProductSearchClient';
 
 export enum ResultType {
   JiraObjectResult = 'jira-object-result',

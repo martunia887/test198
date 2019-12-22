@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { QS_ANALYTICS_EV_SUBMIT } from '../constants';
+
 import ResultItem from '../ResultItem/ResultItem';
-import { AnalyticsData, CommonResultProps } from './types';
+import { QS_ANALYTICS_EV_SUBMIT } from '../constants';
 import {
   ResultContext,
   SelectedResultIdContext,
   ResultContextType,
 } from '../context';
+
+import { AnalyticsData, CommonResultProps } from './types';
 
 export type Props = CommonResultProps & {
   /** Type of the result. This is passed as a parameter to certain callbacks. */

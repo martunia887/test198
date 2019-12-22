@@ -1,18 +1,9 @@
 import * as React from 'react';
 import { status } from '@atlaskit/adf-schema';
 import { findDomRefAtPos } from 'prosemirror-utils';
+
 import { EditorPlugin } from '../../types';
-import createStatusPlugin, {
-  StatusState,
-  pluginKey,
-  StatusType,
-} from './plugin';
 import WithPluginState from '../../ui/WithPluginState';
-import StatusPicker from './ui/statusPicker';
-import { commitStatusPicker, updateStatus, createStatus } from './actions';
-import { keymapPlugin } from './keymap';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import { IconStatus } from '../quick-insert/assets';
 import {
   addAnalytics,
   ACTION,
@@ -21,6 +12,17 @@ import {
   INPUT_METHOD,
   EVENT_TYPE,
 } from '../analytics';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { IconStatus } from '../quick-insert/assets';
+
+import { commitStatusPicker, updateStatus, createStatus } from './actions';
+import { keymapPlugin } from './keymap';
+import createStatusPlugin, {
+  StatusState,
+  pluginKey,
+  StatusType,
+} from './plugin';
+import StatusPicker from './ui/statusPicker';
 
 export interface StatusPluginOptions {
   menuDisabled: boolean;

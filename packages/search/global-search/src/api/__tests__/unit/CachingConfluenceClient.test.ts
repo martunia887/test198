@@ -1,17 +1,5 @@
 import fetchMock from 'fetch-mock';
-import CachingConfluenceClient from '../../CachingConfluenceClient';
-import {
-  ConfluenceClient,
-  RecentPage,
-  RecentSpace,
-} from '../../ConfluenceClient';
-import {
-  AnalyticsType,
-  ConfluenceRecentsMap,
-  ContainerResult,
-  ContentType,
-  ResultType,
-} from '../../../model/Result';
+
 import {
   buildMockPage,
   DUMMY_CONFLUENCE_HOST,
@@ -19,6 +7,19 @@ import {
   MOCK_SPACE,
   mockRecentlyViewedSpaces,
 } from '../../../__tests__/unit/helpers/_confluence-client-mocks';
+import {
+  AnalyticsType,
+  ConfluenceRecentsMap,
+  ContainerResult,
+  ContentType,
+  ResultType,
+} from '../../../model/Result';
+import CachingConfluenceClient from '../../CachingConfluenceClient';
+import {
+  ConfluenceClient,
+  RecentPage,
+  RecentSpace,
+} from '../../ConfluenceClient';
 
 describe('CachingConfluenceClient', () => {
   let confluenceClient: ConfluenceClient;

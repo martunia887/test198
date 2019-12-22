@@ -1,12 +1,13 @@
-import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { mount, ReactWrapper } from 'enzyme';
 import * as PropTypes from 'prop-types';
 import AkButton from '@atlaskit/button';
 import { Popup } from '@atlaskit/editor-common';
-import ToolbarFeedback from '../../../ui/ToolbarFeedback';
+
 import { analyticsService } from '../../../analytics';
 import { analyticsEventKey } from '../../../plugins/analytics';
 import { openFeedbackDialog } from '../../../plugins/feedback-dialog';
+import ToolbarFeedback from '../../../ui/ToolbarFeedback';
 
 jest.mock('../../../plugins/feedback-dialog', () => ({
   openFeedbackDialog: jest.fn(),

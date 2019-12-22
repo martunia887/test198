@@ -5,6 +5,7 @@ import {
   tablePrefixSelector,
 } from '@atlaskit/adf-schema';
 import { fontSize, themed, colors } from '@atlaskit/theme';
+
 import {
   akEditorTableBorder,
   akEditorTableBorderDark,

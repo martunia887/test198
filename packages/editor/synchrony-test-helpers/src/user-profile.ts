@@ -2,8 +2,8 @@
  * NOTE: This is just used for testing. We can remove this file once we have a proper profile/user-integration
  *
  */
-import { ParticipantData, SynchronyUser } from './types';
 import { CollabParticipant } from '@atlaskit/editor-common';
+import { ParticipantData, SynchronyUser } from './types';
 
 type AvailableParticipants = 'rick' | 'morty' | 'summer';
 

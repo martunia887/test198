@@ -1,16 +1,17 @@
 // @flow
-import { shallow, mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
+import { shallow, mount, configure } from 'enzyme';
 import styled from 'styled-components';
+import Adapter from 'enzyme-adapter-react-16';
+
 import ContainerNavigation from '../../components/js/ContainerNavigation';
-import { globalSecondaryActions } from '../../shared-variables';
-import { isCollapsed } from '../../theme/util';
-import * as presets from '../../theme/presets';
+import GlobalSecondaryActions from '../../components/js/GlobalSecondaryActions';
 import Reveal from '../../components/js/Reveal';
 import GlobalNavigationSecondaryContainer from '../../components/styled/GlobalNavigationSecondaryContainer';
-import GlobalSecondaryActions from '../../components/js/GlobalSecondaryActions';
 import ScrollHintScrollContainer from '../../components/styled/ScrollHintScrollContainer';
+import { globalSecondaryActions } from '../../shared-variables';
+import * as presets from '../../theme/presets';
+import { isCollapsed } from '../../theme/util';
 
 configure({ adapter: new Adapter() });
 

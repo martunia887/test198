@@ -2,7 +2,6 @@ import { Dispatch, MiddlewareAPI, Action } from 'redux';
 
 import { isStartAppAction } from '../actions/startApp';
 import { updatePopupUrls } from '../actions/updatePopupUrls';
-
 import { State } from '../domain';
 
 export default function() {

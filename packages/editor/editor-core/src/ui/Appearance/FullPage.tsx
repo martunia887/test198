@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { taskListSelector, decisionListSelector } from '@atlaskit/adf-schema';
 import {
   akEditorMenuZIndex,
   akEditorFullWidthLayoutWidth,
@@ -9,21 +9,22 @@ import {
   akEditorSwoopCubicBezier,
   akLayoutGutterOffset,
 } from '@atlaskit/editor-common';
-import { taskListSelector, decisionListSelector } from '@atlaskit/adf-schema';
-import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
+import { colors } from '@atlaskit/theme';
+import rafSchedule from 'raf-schd';
+
 import Avatars from '../../plugins/collab-edit/ui/avatars';
-import PluginSlot from '../PluginSlot';
-import Toolbar from '../Toolbar';
-import ContentStyles from '../ContentStyles';
-import { ClickAreaBlock } from '../Addon';
 import {
   tableFullPageEditorStyles,
   tableMarginFullWidthMode,
 } from '../../plugins/table/ui/styles';
 import { akEditorToolbarKeylineHeight } from '../../styles';
-import rafSchedule from 'raf-schd';
-import { scrollbarStyles } from '../styles';
+import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
+import { ClickAreaBlock } from '../Addon';
+import ContentStyles from '../ContentStyles';
+import PluginSlot from '../PluginSlot';
+import Toolbar from '../Toolbar';
 import WidthEmitter from '../WidthEmitter';
+import { scrollbarStyles } from '../styles';
 
 const SWOOP_ANIMATION = `0.5s ${akEditorSwoopCubicBezier}`;
 const TOTAL_PADDING = akEditorGutterPadding * 2;

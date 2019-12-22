@@ -1,11 +1,13 @@
 import { Node as PMNode, ResolvedPos, Schema } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
 import { findDomRefAtPos, findPositionOfNodeBefore } from 'prosemirror-utils';
-import { GapCursorSelection, Side } from './selection';
-import { TableCssClassName } from '../table/types';
-import { tableInsertColumnButtonSize } from '../table/ui/styles';
+import { EditorView } from 'prosemirror-view';
+
 import { closestElement, containsClassName } from '../../utils';
 import { expandClassNames } from '../expand/ui/class-names';
+import { TableCssClassName } from '../table/types';
+import { tableInsertColumnButtonSize } from '../table/ui/styles';
+
+import { GapCursorSelection, Side } from './selection';
 
 // Returns DOM node's vertical margin. It descents into the node and reads margins of nested DOM nodes
 const getDomNodeVerticalMargin = (

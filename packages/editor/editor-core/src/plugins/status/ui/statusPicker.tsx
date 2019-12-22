@@ -1,21 +1,21 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Popup, akEditorFloatingDialogZIndex } from '@atlaskit/editor-common';
-import { colors, borderRadius, gridSize } from '@atlaskit/theme';
-import {
-  StatusPicker as AkStatusPicker,
-  ColorType as Color,
-} from '@atlaskit/status/picker';
-
-import { dropShadow } from '../../../ui/styles';
-import withOuterListeners from '../../../ui/with-outer-listeners';
-import { DEFAULT_STATUS } from '../actions';
-import { StatusType } from '../plugin';
 import {
   withAnalyticsEvents,
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
+import { Popup, akEditorFloatingDialogZIndex } from '@atlaskit/editor-common';
+import {
+  StatusPicker as AkStatusPicker,
+  ColorType as Color,
+} from '@atlaskit/status/picker';
+import { colors, borderRadius, gridSize } from '@atlaskit/theme';
+
+import { dropShadow } from '../../../ui/styles';
+import withOuterListeners from '../../../ui/with-outer-listeners';
+import { DEFAULT_STATUS } from '../actions';
 import { analyticsState, createStatusAnalyticsAndFire } from '../analytics';
+import { StatusType } from '../plugin';
 
 const PopupWithListeners = withOuterListeners(Popup);
 

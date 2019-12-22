@@ -1,10 +1,11 @@
 // @flow
+import React from 'react';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import React from 'react';
+
 import { AkCreateDrawer } from '../../..';
-import { drawerIconOffset } from '../../../shared-variables';
 import Drawer from '../../../components/js/Drawer';
+import { drawerIconOffset } from '../../../shared-variables';
 import requiredProps from '../_drawer-util';
 
 configure({ adapter: new Adapter() });

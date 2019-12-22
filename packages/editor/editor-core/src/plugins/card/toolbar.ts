@@ -1,17 +1,17 @@
 import { InjectedIntl, defineMessages } from 'react-intl';
-import { EditorState, NodeSelection } from 'prosemirror-state';
-import { removeSelectedNode } from 'prosemirror-utils';
-
+import { isSafeUrl } from '@atlaskit/adf-schema';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
 import OpenIcon from '@atlaskit/icon/glyph/shortcut';
+import { Node } from 'prosemirror-model';
+import { EditorState, NodeSelection } from 'prosemirror-state';
+import { removeSelectedNode } from 'prosemirror-utils';
 
 import { analyticsService } from '../../analytics';
+import { linkToolbarMessages } from '../../messages';
+import commonMessages from '../../messages';
 import { Command } from '../../types';
-import {
-  FloatingToolbarConfig,
-  FloatingToolbarItem,
-} from '../floating-toolbar/types';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -21,15 +21,15 @@ import {
   AnalyticsEventPayload,
   ACTION_SUBJECT_ID,
 } from '../analytics';
-import { linkToolbarMessages } from '../../messages';
-import commonMessages from '../../messages';
-
-import { Node } from 'prosemirror-model';
 import { hoverDecoration } from '../base/pm-plugins/decoration';
+import {
+  FloatingToolbarConfig,
+  FloatingToolbarItem,
+} from '../floating-toolbar/types';
+
 import { changeSelectedCardToText } from './pm-plugins/doc';
-import { CardPluginState } from './types';
 import { pluginKey } from './pm-plugins/main';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import { CardPluginState } from './types';
 import {
   buildEditLinkToolbar,
   editLink,
@@ -40,7 +40,6 @@ import {
   findCardInfo,
   titleUrlPairFromNode,
 } from './utils';
-import { isSafeUrl } from '@atlaskit/adf-schema';
 
 export const messages = defineMessages({
   block: {

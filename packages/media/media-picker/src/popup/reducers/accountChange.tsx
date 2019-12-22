@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isChangeAccountAction } from '../actions/changeAccount';
 import { State } from '../domain';
 

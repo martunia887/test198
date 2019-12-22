@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { mount, render } from 'enzyme';
-
 import { background } from '@atlaskit/theme/colors';
-import { name } from '../../../version.json';
+
 import Icon, { size, IconProps } from '../../..';
 import { sizes as sizeValues } from '../../../constants';
-import { IconWrapper } from '../../Icon';
 import { sizeOpts } from '../../../types';
+import { name } from '../../../version.json';
+import { IconWrapper } from '../../Icon';
 
 describe(name, () => {
   describe('Icon', () => {

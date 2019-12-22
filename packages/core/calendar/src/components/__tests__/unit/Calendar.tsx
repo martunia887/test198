@@ -4,12 +4,12 @@ import { mount, shallow } from 'enzyme';
 import { parse } from 'date-fns';
 import cases from 'jest-in-case';
 
+import { DateTd } from '../../../styled/Date';
 import Btn from '../../Btn';
 import CalendarWithAnalytics, {
   CalendarWithoutAnalytics as Calendar,
 } from '../../Calendar';
 import Date from '../../Date';
-import { DateTd } from '../../../styled/Date';
 
 function createEvent(
   opts: { key?: string } = {},

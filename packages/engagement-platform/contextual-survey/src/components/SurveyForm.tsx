@@ -1,8 +1,6 @@
 /** @jsx jsx */
 import { useState, useRef, useCallback, RefObject } from 'react';
 import { Transition } from 'react-transition-group';
-import { jsx, css } from '@emotion/core';
-import Textarea from '@atlaskit/textarea';
 import Button from '@atlaskit/button';
 import { Checkbox } from '@atlaskit/checkbox';
 import Form, {
@@ -11,10 +9,13 @@ import Form, {
   CheckboxField,
   OnSubmitHandler,
 } from '@atlaskit/form';
+import Textarea from '@atlaskit/textarea';
 import { fontSize } from '@atlaskit/theme';
+import { jsx, css } from '@emotion/core';
+
+import { FormValues } from '../types';
 
 import FeedbackScoreButtons from './FeedbackScoreButtons';
-import { FormValues } from '../types';
 
 interface Props {
   question: string;

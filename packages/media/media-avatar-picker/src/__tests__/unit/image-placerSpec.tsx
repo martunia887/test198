@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { Vector2, Rectangle, FileInfo } from '@atlaskit/media-ui';
 import {
   nextTick,
   mockCanvas,
@@ -8,12 +7,7 @@ import {
   mockLoadImageError,
   unMockLoadImage,
 } from '@atlaskit/media-test-helpers';
-
-const mockImagePlacerUtil = {
-  getCanvas: mockCanvas,
-};
-
-jest.mock('../../util', () => mockImagePlacerUtil);
+import { Vector2, Rectangle, FileInfo } from '@atlaskit/media-ui';
 
 import {
   ImagePlacer,
@@ -23,8 +17,8 @@ import {
 } from '../../image-placer';
 import { ImagePlacerContainer } from '../../image-placer/container';
 import { ImagePlacerImage } from '../../image-placer/image';
-import { ImagePlacerErrorWrapper } from '../../image-placer/styled';
 import { initialiseImagePreview } from '../../image-placer/imageProcessor';
+import { ImagePlacerErrorWrapper } from '../../image-placer/styled';
 
 interface SetupInfo {
   wrapper: ShallowWrapper;

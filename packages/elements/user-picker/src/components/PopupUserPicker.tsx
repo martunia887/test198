@@ -1,10 +1,12 @@
-import { PopupSelect } from '@atlaskit/select';
 import * as React from 'react';
+import { PopupSelect } from '@atlaskit/select';
+
 import { PopupUserPickerProps } from '../types';
-import { getPopupComponents } from './components';
-import { getPopupStyles } from './styles';
-import { getPopupProps } from './popup';
+
 import { BaseUserPicker } from './BaseUserPicker';
+import { getPopupComponents } from './components';
+import { getPopupProps } from './popup';
+import { getPopupStyles } from './styles';
 
 interface State {
   flipped: boolean;

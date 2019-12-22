@@ -1,14 +1,15 @@
 import * as React from 'react';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import Emoji from '../ui/Emoji';
+
 import { ReactNodeView, getPosHandler } from '../../../nodeviews';
 import InlineNodeWrapper, {
   createMobileInlineDomRef,
 } from '../../../ui/InlineNodeWrapper';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { ZeroWidthSpace } from '../../../utils';
+import Emoji from '../ui/Emoji';
 import { EmojiPluginOptions } from '../index';
 
 export interface Props {

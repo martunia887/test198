@@ -1,12 +1,14 @@
 // @flow
 import React, { PureComponent, type ComponentType, type Element } from 'react';
-import GlobalItem from './GlobalItem';
-import DrawerTrigger from './DrawerTrigger';
-import GlobalPrimaryActionsList from './GlobalPrimaryActionsList';
-import GlobalPrimaryActionsInner from '../styled/GlobalPrimaryActionsInner';
-import GlobalPrimaryActionsPrimaryItem from '../styled/GlobalPrimaryActionsPrimaryItem';
-import GlobalPrimaryActionsItemsWrapper from '../styled/GlobalPrimaryActionsItemsWrapper';
+
 import type { IconAppearance } from '../../types';
+import GlobalPrimaryActionsInner from '../styled/GlobalPrimaryActionsInner';
+import GlobalPrimaryActionsItemsWrapper from '../styled/GlobalPrimaryActionsItemsWrapper';
+import GlobalPrimaryActionsPrimaryItem from '../styled/GlobalPrimaryActionsPrimaryItem';
+
+import DrawerTrigger from './DrawerTrigger';
+import GlobalItem from './GlobalItem';
+import GlobalPrimaryActionsList from './GlobalPrimaryActionsList';
 
 type Props = {
   actions?: Array<Element<any>>,

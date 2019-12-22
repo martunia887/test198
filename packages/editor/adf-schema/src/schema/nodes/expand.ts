@@ -1,6 +1,6 @@
 import { NodeSpec, Node as PMNode } from 'prosemirror-model';
-import { ExtensionContent } from './doc';
 import { BreakoutMarkDefinition } from '../marks';
+import { ExtensionContent } from './doc';
 
 /**
  * @name expand_node

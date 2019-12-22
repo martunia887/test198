@@ -1,4 +1,3 @@
-import { name } from '../../../version.json';
 import {
   doc,
   p,
@@ -22,6 +21,7 @@ import {
   processRawValue,
   hasVisibleContent,
 } from '../../../utils/document';
+import { name } from '../../../version.json';
 
 describe(name, () => {
   describe('Utils -> Document', () => {

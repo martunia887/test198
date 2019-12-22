@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import Button from '@atlaskit/button';
+import EditorMoreIcon from '@atlaskit/icon/glyph/editor/more';
 
 import { AvatarList, Avatar } from '../avatar-list';
 
-import EditorMoreIcon from '@atlaskit/icon/glyph/editor/more';
-import Button from '@atlaskit/button';
 import { PredefinedAvatarsWrapper } from './styled';
 
 interface ShowMoreButtonProps {

@@ -1,20 +1,20 @@
 import * as React from 'react';
-import * as colors from '@atlaskit/theme/colors';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
+import * as colors from '@atlaskit/theme/colors';
 
+import { withAnalyticsEvents, withAnalyticsContext } from '../../../analytics';
+import { messages } from '../../../messages';
+import { Analytics } from '../../../model/Analytics';
+import { ArticleItem, ARTICLE_ITEM_TYPES } from '../../../model/Article';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../../version.json';
-import { withAnalyticsEvents, withAnalyticsContext } from '../../../analytics';
-import { Analytics } from '../../../model/Analytics';
-import { ArticleItem, ARTICLE_ITEM_TYPES } from '../../../model/Article';
-import { messages } from '../../../messages';
 
 import {
   ArticlesListItemTypeTitle,

@@ -1,11 +1,22 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
 import { MediaType, ImageResizeMode } from '@atlaskit/media-client';
 import { Ellipsify, MediaImage } from '@atlaskit/media-ui';
-import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
 
-import { CardDimensions, CardStatus } from '../../index';
 import { CardAction } from '../../actions';
+import { AnalyticsLoadingAction } from '../../root/card/getCardStatus';
+import { createAndFireCustomMediaEvent } from '../../utils/analytics';
+import CardActions from '../../utils/cardActions';
+import { isLoadingImage } from '../../utils/isLoadingImage';
+import { CardLoading } from '../../utils/lightCards/cardLoading';
+import { ProgressBar } from '../../utils/progressBar';
+import { shouldDisplayImageThumbnail } from '../../utils/shouldDisplayImageThumbnail';
+import { CardDimensions, CardStatus } from '../../index';
 
 import { CardOverlay } from './cardOverlay';
 import {
@@ -18,17 +29,6 @@ import {
   ProgressWrapper,
   Title,
 } from './styled';
-import { isLoadingImage } from '../../utils/isLoadingImage';
-import { CardLoading } from '../../utils/lightCards/cardLoading';
-import { shouldDisplayImageThumbnail } from '../../utils/shouldDisplayImageThumbnail';
-import { ProgressBar } from '../../utils/progressBar';
-import CardActions from '../../utils/cardActions';
-import {
-  withAnalyticsEvents,
-  WithAnalyticsEventsProps,
-} from '@atlaskit/analytics-next';
-import { createAndFireCustomMediaEvent } from '../../utils/analytics';
-import { AnalyticsLoadingAction } from '../../root/card/getCardStatus';
 
 export interface FileCardImageViewProps {
   readonly mediaName?: string;

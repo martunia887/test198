@@ -1,6 +1,6 @@
 import { isRotated } from '@atlaskit/media-ui';
-import { CONTAINER_PADDING } from './styled';
 import { getCanvas } from '../util';
+import { CONTAINER_PADDING } from './styled';
 
 export interface Rect {
   top: number;

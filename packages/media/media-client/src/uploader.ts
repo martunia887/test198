@@ -1,6 +1,5 @@
-import chunkinator, { Chunk, ChunkinatorFile } from 'chunkinator';
-
 import { MediaStore } from '.';
+import chunkinator, { Chunk, ChunkinatorFile } from 'chunkinator';
 import { createHasher } from './utils/hashing/hasherCreator';
 
 // TODO: Allow to pass multiple files

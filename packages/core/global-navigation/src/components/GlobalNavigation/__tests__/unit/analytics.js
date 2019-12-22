@@ -1,7 +1,6 @@
 // @flow
 
 import cases from 'jest-in-case';
-
 import { NAVIGATION_CHANNEL } from '../../../../constants';
 import { fireDrawerDismissedEvents } from '../../analytics';
 

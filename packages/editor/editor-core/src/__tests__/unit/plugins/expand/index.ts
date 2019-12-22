@@ -1,3 +1,4 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
@@ -10,7 +11,6 @@ import {
   insertText,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   deleteExpand,
   insertExpand,

@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { RefObject } from 'react';
-import classnames from 'classnames';
-import { Resizable, ResizeDirection } from 're-resizable';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
-import { gridTypeForLayout } from '../../../grid';
-import { snapTo, handleSides } from './utils';
-import { Props as ResizableMediaSingleProps, EnabledHandles } from './types';
 import {
   mediaSingleClassName,
   akMediaSingleResizeZIndex,
 } from '@atlaskit/editor-common';
+import classnames from 'classnames';
+import { Resizable, ResizeDirection } from 're-resizable';
+
+import { gridTypeForLayout } from '../../../grid';
+
+import { Props as ResizableMediaSingleProps, EnabledHandles } from './types';
+import { snapTo, handleSides } from './utils';
 
 interface ReResizableNumberSize {
   width: number;

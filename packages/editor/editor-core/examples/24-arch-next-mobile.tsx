@@ -1,20 +1,16 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
-
-import { EditorActions, MentionProvider } from '../src';
-import { EditorProps } from '../src/types/editor-props';
 import {
   ProviderFactoryProvider,
   ProviderFactory,
 } from '@atlaskit/editor-common/provider-factory';
 import { MentionDescription } from '@atlaskit/mention/types';
 
-/**
- * arch next imports
- */
-import { EditorPresetMobile } from '../src/labs/next/presets/mobile';
+import { EditorActions, MentionProvider } from '../src';
 import { Mobile as MobileEditor } from '../src/labs/next/mobile';
+import { EditorPresetMobile } from '../src/labs/next/presets/mobile';
+import { EditorProps } from '../src/types/editor-props';
 
 function initializeProviderFactory() {
   class MentionProviderImpl implements MentionProvider {

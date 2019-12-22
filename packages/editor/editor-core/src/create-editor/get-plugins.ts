@@ -1,6 +1,7 @@
+import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
 import { Schema } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
-import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
+
 import { EventDispatcher, Dispatch } from '../event-dispatcher';
 
 export type LightPMPluginFactoryParams = {

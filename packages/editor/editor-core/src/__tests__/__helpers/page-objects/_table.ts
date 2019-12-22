@@ -2,6 +2,18 @@ import {
   waitForTooltip,
   waitForNoTooltip,
 } from '@atlaskit/visual-regression/helper';
+import { Page } from 'puppeteer';
+
+import messages from '../../../messages';
+import { TableCssClassName as ClassName } from '../../../plugins/table/types';
+import { RESIZE_HANDLE_AREA_DECORATION_GAP } from '../../../plugins/table/types';
+import { animationFrame } from '../../__helpers/page-objects/_editor';
+import {
+  pressKeyDown,
+  pressKeyUp,
+} from '../../__helpers/page-objects/_keyboard';
+import { isVisualRegression } from '../utils';
+
 import {
   hoverElementWithText,
   clickElementWithText,
@@ -9,16 +21,6 @@ import {
   scrollToElement,
 } from './_editor';
 import { clickToolbarMenu, ToolbarMenuItem } from './_toolbar';
-import { TableCssClassName as ClassName } from '../../../plugins/table/types';
-import messages from '../../../messages';
-import {
-  pressKeyDown,
-  pressKeyUp,
-} from '../../__helpers/page-objects/_keyboard';
-import { animationFrame } from '../../__helpers/page-objects/_editor';
-import { isVisualRegression } from '../utils';
-import { Page } from 'puppeteer';
-import { RESIZE_HANDLE_AREA_DECORATION_GAP } from '../../../plugins/table/types';
 
 export const tableSelectors = {
   contextualMenu: `.${ClassName.CONTEXTUAL_MENU_BUTTON}`,

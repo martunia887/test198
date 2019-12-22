@@ -1,10 +1,10 @@
 import React, { Component, ElementType } from 'react';
 import styled from 'styled-components';
-
 import Button from '@atlaskit/button';
 import { FieldTextStateless } from '@atlaskit/field-text';
 
 import { metadata } from '../src';
+
 import IconExplorerCell from './utils/IconExplorerCell';
 
 const allIcons = Promise.all(

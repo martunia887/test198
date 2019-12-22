@@ -1,9 +1,11 @@
 import * as React from 'react';
-import Drawer from '@atlaskit/drawer';
-import Button from '@atlaskit/button';
 import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+import Button from '@atlaskit/button';
+import Drawer from '@atlaskit/drawer';
+
 import AtlassianSwitcher from '../src';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 class SwitcherExample extends React.Component {
   state = {

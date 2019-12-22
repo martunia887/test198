@@ -1,11 +1,11 @@
-import {
-  initEditorWithAdf,
-  Appearance,
-  Device,
-  initFullPageEditorWithAdf,
-  snapshot,
-} from '../_utils';
 import { waitForTooltip } from '@atlaskit/visual-regression/helper';
+
+import { EditorProps } from '../../../types';
+import { animationFrame } from '../../__helpers/page-objects/_editor';
+import {
+  pressKeyDown,
+  pressKeyUp,
+} from '../../__helpers/page-objects/_keyboard';
 import {
   selectCellOption,
   clickCellOptions,
@@ -14,14 +14,16 @@ import {
   tableSelectors,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
-import { animationFrame } from '../../__helpers/page-objects/_editor';
 import {
-  pressKeyDown,
-  pressKeyUp,
-} from '../../__helpers/page-objects/_keyboard';
-import { EditorProps } from '../../../types';
-import adfWithMergedRows from './__fixtures__/table-with-merged-rows.adf.json';
+  initEditorWithAdf,
+  Appearance,
+  Device,
+  initFullPageEditorWithAdf,
+  snapshot,
+} from '../_utils';
+
 import adfWithMedia from './__fixtures__/table-with-media.adf.json';
+import adfWithMergedRows from './__fixtures__/table-with-merged-rows.adf.json';
 
 describe('Table sorting', () => {
   let page: any;

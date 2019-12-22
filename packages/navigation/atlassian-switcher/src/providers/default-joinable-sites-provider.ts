@@ -1,8 +1,8 @@
+import { JoinableSitesResponse } from '../types';
 import {
   createProviderWithCustomFetchData,
   ExportedDataProvider,
 } from './create-data-provider';
-import { JoinableSitesResponse } from '../types';
 
 export type JoinableSiteDataFetcher = () => Promise<JoinableSitesResponse>;
 

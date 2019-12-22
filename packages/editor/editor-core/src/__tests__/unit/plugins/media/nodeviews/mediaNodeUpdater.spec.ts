@@ -1,14 +1,15 @@
 import { ContextIdentifierProvider } from '@atlaskit/editor-common';
-import { EditorView } from 'prosemirror-view';
 import * as MediaClientModule from '@atlaskit/media-client';
 import { getMediaClient, FileState } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   getDefaultMediaClientConfig,
   asMockReturnValue,
   fakeMediaClient,
   asMock,
 } from '@atlaskit/media-test-helpers';
-import { MediaClientConfig } from '@atlaskit/media-core';
+import { EditorView } from 'prosemirror-view';
+
 import * as commands from '../../../../../plugins/media/commands';
 import {
   MediaNodeUpdater,

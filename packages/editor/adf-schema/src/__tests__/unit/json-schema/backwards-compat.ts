@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { validateSchemaCompatibility } from 'json-schema-diff-validator';
+
 import newSchema from '../../../../json-schema/v1/full.json';
 import { version } from '../../../version.json';
 

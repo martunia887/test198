@@ -1,3 +1,13 @@
+import mockJoinableSites from '../../../../test-helpers/mockJoinableSites';
+import { resolveRecommendations } from '../../../providers/recommendations';
+import {
+  JoinableProductDetails,
+  JoinableProducts,
+  Product,
+  ProvisionedProducts,
+  ProductKey,
+  WorklensProductType,
+} from '../../../types';
 import {
   AvailableProductDetails,
   AVAILABLE_PRODUCT_DATA_MAP,
@@ -7,17 +17,6 @@ import {
   getSuggestedProductLink,
   getJoinableSiteLinks,
 } from '../../links';
-import {
-  JoinableProductDetails,
-  JoinableProducts,
-  Product,
-  ProvisionedProducts,
-  ProductKey,
-  WorklensProductType,
-} from '../../../types';
-
-import { resolveRecommendations } from '../../../providers/recommendations';
-import mockJoinableSites from '../../../../test-helpers/mockJoinableSites';
 
 const generateProvisionedProducts = (
   activeProducts: WorklensProductType[],

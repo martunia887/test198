@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { FileDetails } from '@atlaskit/media-client';
 import { FormattedMessage } from 'react-intl';
-import { FileCard, FileCardImageView } from '../..';
+import { FileDetails } from '@atlaskit/media-client';
+
 import { toHumanReadableMediaSize } from '../../../utils';
+import { FileCard, FileCardImageView } from '../..';
 
 describe('FileCard', () => {
   it('should render cardFileView with details passed through to props', function() {

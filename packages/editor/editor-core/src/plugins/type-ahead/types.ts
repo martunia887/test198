@@ -1,9 +1,11 @@
 import { ReactElement } from 'react';
 import { InjectedIntl } from 'react-intl';
-import { EditorState, Transaction } from 'prosemirror-state';
 import { Node } from 'prosemirror-model';
-import { SelectItemMode } from './commands/select-item';
+import { EditorState, Transaction } from 'prosemirror-state';
+
 import { Dispatch } from '../../event-dispatcher';
+
+import { SelectItemMode } from './commands/select-item';
 
 export type TypeAheadItemRenderProps = {
   onClick: () => void;

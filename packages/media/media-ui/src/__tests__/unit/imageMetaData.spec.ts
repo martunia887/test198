@@ -2,7 +2,6 @@ jest.mock('../../imageMetaData/metatags');
 jest.mock('../../imageMetaData/imageOrientationUtil');
 
 import { asMock } from '@atlaskit/media-test-helpers';
-import * as util from '../../util';
 
 import {
   getImageInfo,
@@ -17,6 +16,7 @@ import {
 import { isRotated } from '../../imageMetaData/imageOrientationUtil';
 import { readImageMetaTags } from '../../imageMetaData/metatags';
 import { ExifOrientation } from '../../imageMetaData/types';
+import * as util from '../../util';
 
 describe('Image Meta Data', () => {
   let loadImage: jest.Mock<any>;

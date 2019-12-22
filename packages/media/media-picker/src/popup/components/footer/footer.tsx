@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
 import { messages } from '@atlaskit/media-ui';
-import { Wrapper, InsertButton, CancelButton } from './styled';
+import { Dispatch } from 'redux';
+
 import { startImport, hidePopup, resetView } from '../../actions';
 import { SelectedItem, State } from '../../domain';
+
+import { Wrapper, InsertButton, CancelButton } from './styled';
 
 export interface FooterStateProps {
   readonly selectedItems: SelectedItem[];

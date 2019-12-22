@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Item from '@atlaskit/item';
+import { ReactWrapper } from 'enzyme';
 import AkButton from '@atlaskit/button';
 import {
   doc,
@@ -11,10 +11,11 @@ import {
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
 import TextStyleIcon from '@atlaskit/icon/glyph/editor/text-style';
+import Item from '@atlaskit/item';
 
+import { analyticsService } from '../../../../../analytics';
+import { setBlockType } from '../../../../../plugins/block-type/commands';
 import { pluginKey } from '../../../../../plugins/block-type/pm-plugins/main';
-import ToolbarBlockType from '../../../../../plugins/block-type/ui/ToolbarBlockType';
-import ToolbarButton from '../../../../../ui/ToolbarButton';
 import {
   NORMAL_TEXT,
   HEADING_1,
@@ -25,9 +26,8 @@ import {
   HEADING_6,
   messages,
 } from '../../../../../plugins/block-type/types';
-import { analyticsService } from '../../../../../analytics';
-import { setBlockType } from '../../../../../plugins/block-type/commands';
-import { ReactWrapper } from 'enzyme';
+import ToolbarBlockType from '../../../../../plugins/block-type/ui/ToolbarBlockType';
+import ToolbarButton from '../../../../../ui/ToolbarButton';
 
 describe('@atlaskit/editor-core/ui/ToolbarBlockType', () => {
   const createEditor = createEditorFactory();

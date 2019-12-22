@@ -1,6 +1,8 @@
 import * as React from 'react';
-import Page, { Grid, GridColumn } from '@atlaskit/page';
+import { IntlProvider } from 'react-intl';
 import Button from '@atlaskit/button';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
+
 import {
   BlockCardResolvingView,
   BlockCardErroredView,
@@ -8,7 +10,6 @@ import {
   BlockCardForbiddenView,
   BlockCardResolvedView,
 } from '../src/BlockCard';
-import { IntlProvider } from 'react-intl';
 
 const url = 'https://www.dropbox.com/';
 const icon =

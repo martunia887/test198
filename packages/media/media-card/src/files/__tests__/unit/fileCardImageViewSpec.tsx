@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { mount, shallow, ShallowWrapper, ReactWrapper } from 'enzyme';
 import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
+import { MediaType } from '@atlaskit/media-client';
 import { expectToEqual } from '@atlaskit/media-test-helpers';
 import { Ellipsify, MediaImage } from '@atlaskit/media-ui';
-import { MediaType } from '@atlaskit/media-client';
 
+import CardActions from '../../../utils/cardActions';
+import { CardLoading } from '../../../utils/lightCards/cardLoading';
+import { ProgressBar } from '../../../utils/progressBar';
 import {
   FileCardImageViewBase as FileCardImageView,
   FileCardImageViewProps,
@@ -15,9 +18,6 @@ import {
   PlayIconWrapper,
   ProgressBarWrapper,
 } from '../../cardImageView/styled';
-import { CardLoading } from '../../../utils/lightCards/cardLoading';
-import { ProgressBar } from '../../../utils/progressBar';
-import CardActions from '../../../utils/cardActions';
 
 describe('FileCardImageView', () => {
   let onRetry: FileCardImageViewProps['onRetry'];

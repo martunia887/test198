@@ -2,6 +2,7 @@ import * as React from 'react';
 import { shallow } from 'enzyme';
 import Badge from '@atlaskit/badge';
 import Lozenge from '@atlaskit/lozenge';
+
 import { ImageIcon } from '../../../../../BlockCard/ImageIcon';
 import Widgets from '../..';
 import { WidgetDetails, Title, Text } from '../../styled';

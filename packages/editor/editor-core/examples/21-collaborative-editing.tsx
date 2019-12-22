@@ -1,23 +1,24 @@
 /* eslint-disable no-console */
 
-import styled from 'styled-components';
 import * as React from 'react';
+import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import PubSubClient from '@atlaskit/pubsub';
-
-import Editor from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
   extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
-import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
-import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
-import { CollabProvider } from '../src/plugins/collab-edit';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
+import PubSubClient from '@atlaskit/pubsub';
+import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
+
 import { EditorActions } from '../src';
+import { CollabProvider } from '../src/plugins/collab-edit';
+
+import Editor from './../src/editor';
+import EditorContext from './../src/ui/EditorContext';
+import WithEditorActions from './../src/ui/WithEditorActions';
 
 export const getRandomUser = () => {
   return Math.floor(Math.random() * 10000).toString();

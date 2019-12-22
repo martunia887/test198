@@ -1,9 +1,9 @@
 // @flow
 
 import React, { Component } from 'react';
+import { asyncComponent } from 'react-async-component';
 import { Route, Switch } from 'react-router';
 import { HashRouter } from 'react-router-dom';
-import { asyncComponent } from 'react-async-component';
 import { Label } from '@atlaskit/field-base';
 import { ToggleStateless } from '@atlaskit/toggle';
 

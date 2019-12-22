@@ -1,5 +1,5 @@
-import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import * as React from 'react';
+import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { Props, ShowMore } from '../../../components/ShowMore';
 
 describe('ShowMore', () => {

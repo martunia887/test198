@@ -1,8 +1,10 @@
 import React, { Fragment } from 'react';
 import Form, { Field, ErrorMessage, HelperMessage } from '@atlaskit/form';
-import { cities } from './common/data';
+
 import Select from '../src';
 import { ValidationState } from '../src/types';
+
+import { cities } from './common/data';
 
 const validate = (value: any) => (!value ? 'EMPTY' : undefined);
 

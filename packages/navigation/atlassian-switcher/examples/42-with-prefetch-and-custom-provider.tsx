@@ -1,18 +1,20 @@
 import * as React from 'react';
-import Button from '@atlaskit/button';
-import Drawer from '@atlaskit/drawer';
 import {
   mockAvailableProductsEndpoint,
   REQUEST_MEDIUM,
 } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+import Button from '@atlaskit/button';
+import Drawer from '@atlaskit/drawer';
+
 import AtlassianSwitcher, { AtlassianSwitcherPrefetchTrigger } from '../src';
+import { createJoinableSitesProvider } from '../src/create-custom-provider';
+import { createAvailableProductsProvider } from '../src/providers/default-available-products-provider';
 import { resetAll } from '../src/providers/instance-data-providers';
 import { resetAvailableProducts } from '../src/providers/products-data-provider';
-import { createAvailableProductsProvider } from '../src/providers/default-available-products-provider';
-import { createJoinableSitesProvider } from '../src/create-custom-provider';
-import mockJoinableSites from '../test-helpers/mockJoinableSites';
 import { JoinableSitesResponse } from '../src/types';
+import mockJoinableSites from '../test-helpers/mockJoinableSites';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 const AVAILABLE_PRODUCTS_API_ENDPOINT =
   'https://api-private.atlassian.com/worklens/api/available-products';

@@ -1,5 +1,4 @@
 import { ProductKey, RecommendationItem } from '../../types';
-
 import {
   JSW_OG_EXPANDS_EXPERIMENT_FEATURE_FLAG_KEY,
   JSW_OG_EXPANDS_EXPERIMENT_VARIATIONS,

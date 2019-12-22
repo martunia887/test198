@@ -1,8 +1,9 @@
 /** @jsx jsx */
 
-import { jsx } from '@emotion/core';
 import { Component } from 'react';
 import Button from '@atlaskit/button';
+import { jsx } from '@emotion/core';
+
 import Drawer, { DrawerWidth } from '../src';
 import { widths } from '../src/constants';
 

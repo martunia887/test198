@@ -1,5 +1,4 @@
 import { Node, Schema } from 'prosemirror-model';
-
 import { WikiMarkupTransformer } from '../../index';
 
 export function parseWithSchema(markup: string, schema: Schema) {

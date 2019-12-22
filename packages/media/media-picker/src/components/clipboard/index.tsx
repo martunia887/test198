@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { ClipboardProps } from './clipboard';
-import { ClipboardConfig } from '../../types';
 import { WithMediaClientConfigProps } from '@atlaskit/media-client';
+
+import { ClipboardConfig } from '../../types';
+
+import { ClipboardProps } from './clipboard';
 
 type ClipboardWithMediaClientConfigProps = WithMediaClientConfigProps<
   // ClipboardBase defines config default value, which modifies final shape of ClipboardBase component.

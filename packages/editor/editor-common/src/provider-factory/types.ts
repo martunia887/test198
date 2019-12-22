@@ -1,7 +1,9 @@
 import { EmojiProvider } from '@atlaskit/emoji/types';
 import { MentionProvider } from '@atlaskit/mention/types';
-import { MediaProvider } from './media-provider';
+
 import { ExtensionProvider } from '../extensions/types';
+
+import { MediaProvider } from './media-provider';
 
 export type ProviderHandler = (name: string, provider?: Promise<any>) => void;
 

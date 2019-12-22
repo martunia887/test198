@@ -6,10 +6,12 @@ import {
   UIAnalyticsEvent,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
+
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
+
 import Field from './Field';
 
 interface Props extends WithAnalyticsEventsProps {

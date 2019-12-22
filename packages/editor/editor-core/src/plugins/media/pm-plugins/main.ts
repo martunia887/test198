@@ -1,47 +1,47 @@
-import assert from 'assert';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Node as PMNode, Node, Schema } from 'prosemirror-model';
-import { insertPoint } from 'prosemirror-transform';
-import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
-import {
-  EditorState,
-  NodeSelection,
-  Plugin,
-  PluginKey,
-} from 'prosemirror-state';
-import { findDomRefAtPos } from 'prosemirror-utils';
-import { UploadParams, PopupConfig } from '@atlaskit/media-picker/types';
-import { MediaClientConfig } from '@atlaskit/media-core';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import {
   ContextIdentifierProvider,
   MediaProvider,
   ErrorReporter,
 } from '@atlaskit/editor-common';
+import { MediaClientConfig } from '@atlaskit/media-core';
+import { UploadParams, PopupConfig } from '@atlaskit/media-picker/types';
+import { MediaPMPluginOptions } from '..';
+import assert from 'assert';
+import { Node as PMNode, Node, Schema } from 'prosemirror-model';
+import {
+  EditorState,
+  NodeSelection,
+  Plugin,
+  PluginKey,
+} from 'prosemirror-state';
+import { insertPoint } from 'prosemirror-transform';
+import { findDomRefAtPos } from 'prosemirror-utils';
+import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 
 import analyticsService from '../../../analytics/service';
-import { isImage } from '../../../utils';
 import { Dispatch } from '../../../event-dispatcher';
 import { ProsemirrorGetPosHandler } from '../../../nodeviews';
-import DropPlaceholder, { PlaceholderType } from '../ui/Media/DropPlaceholder';
+import {
+  INPUT_METHOD,
+  InputMethodInsertMedia,
+} from '../../../plugins/analytics';
+import { isImage } from '../../../utils';
+import { updateMediaNodeAttrs } from '../commands';
+import * as helpers from '../commands/helpers';
 import { MediaPluginOptions } from '../media-plugin-options';
-import { insertMediaGroupNode } from '../utils/media-files';
-import { removeMediaNode, splitMediaGroup } from '../utils/media-common';
 import PickerFacade, {
   MediaStateEventListener,
   MediaStateEventSubscriber,
   PickerFacadeConfig,
 } from '../picker-facade';
 import { MediaState, MediaStateStatus } from '../types';
+import DropPlaceholder, { PlaceholderType } from '../ui/Media/DropPlaceholder';
+import { removeMediaNode, splitMediaGroup } from '../utils/media-common';
+import { insertMediaGroupNode } from '../utils/media-files';
 import { insertMediaSingleNode, isMediaSingle } from '../utils/media-single';
-import {
-  INPUT_METHOD,
-  InputMethodInsertMedia,
-} from '../../../plugins/analytics';
-import * as helpers from '../commands/helpers';
-import { updateMediaNodeAttrs } from '../commands';
-import { MediaPMPluginOptions } from '..';
 
 export { MediaState, MediaProvider, MediaStateStatus };
 

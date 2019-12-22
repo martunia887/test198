@@ -1,5 +1,10 @@
 import * as React from 'react';
+import { mount, ReactWrapper } from 'enzyme';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
+import { ResultBase } from '@atlaskit/quick-search';
+import keycode from 'keycode';
+
+import LocaleIntlProvider from '../../../../example-helpers/components/LocaleIntlProvider';
 import {
   setupMocks,
   teardownMocks,
@@ -8,12 +13,6 @@ import {
 import { GlobalQuickSearch, Props } from '../../..';
 import { QuickSearchContainer } from '../../../components/common/QuickSearchContainer';
 import { ABTestProvider } from '../../../components/AbTestProvider';
-import LocaleIntlProvider from '../../../../example-helpers/components/LocaleIntlProvider';
-import { ResultBase } from '@atlaskit/quick-search';
-import keycode from 'keycode';
-
-import { mount, ReactWrapper } from 'enzyme';
-
 import {
   validateEvent,
   getGlobalSearchDrawerEvent,

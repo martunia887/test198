@@ -1,5 +1,5 @@
-import { MediaPluginState, MediaNodeWithPosHandler } from '../pm-plugins/main';
 import { MediaAttributes } from '@atlaskit/adf-schema';
+import { MediaPluginState, MediaNodeWithPosHandler } from '../pm-plugins/main';
 
 export const findMediaSingleNode = (
   mediaPluginState: MediaPluginState,

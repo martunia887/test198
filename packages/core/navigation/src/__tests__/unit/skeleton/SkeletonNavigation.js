@@ -5,7 +5,6 @@ import { shallow } from 'enzyme';
 import SkeletonNavigation from '../../../components/js/skeleton';
 import SkeletonContainerNavigation from '../../../components/js/skeleton/SkeletonContainerNavigation';
 import SkeletonGlobalNavigation from '../../../components/js/skeleton/SkeletonGlobalNavigation';
-
 import { global as globalTheme } from '../../../theme/presets';
 
 test('renders a skeleton representation of the navigation', () => {

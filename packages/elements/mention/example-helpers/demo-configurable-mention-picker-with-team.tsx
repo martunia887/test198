@@ -1,6 +1,6 @@
 import * as React from 'react';
-import TeamMentionResource from '../src/api/TeamMentionResource';
 import { MentionResourceConfig } from '../src/api/MentionResource';
+import TeamMentionResource from '../src/api/TeamMentionResource';
 
 export interface Props {
   children?: any;

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { EditorView } from 'prosemirror-view';
 import { Editor } from '@atlaskit/editor-core';
 import { taskDecision } from '@atlaskit/util-data-test';
+import { EditorView } from 'prosemirror-view';
+
 import { JSONTransformer } from '../src';
 
 const Container = styled.div`

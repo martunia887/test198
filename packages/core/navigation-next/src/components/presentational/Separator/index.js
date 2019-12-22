@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from 'react';
-
 import { withContentTheme } from '../../../theme';
 
 const SeparatorWithTheme = withContentTheme(({ theme }) => {

@@ -3,8 +3,9 @@
 import React, { Fragment, Component } from 'react';
 import Spinner from '@atlaskit/spinner';
 
-import { externalContent, spinnerWrapper } from './styles';
 import addParamToUrl from '../../add-param-to-url';
+
+import { externalContent, spinnerWrapper } from './styles';
 
 export const CONTENT_URL = '/home/notificationsDrawer/iframe.html';
 type Props = {|

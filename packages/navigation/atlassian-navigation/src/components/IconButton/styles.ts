@@ -3,6 +3,7 @@ import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 
 import { skeletonCSS } from '../../common/styles';
 import { NavigationTheme } from '../../theme';
+
 import { IconButtonSkeletonProps } from './types';
 
 const gridSize = gridSizeFn();

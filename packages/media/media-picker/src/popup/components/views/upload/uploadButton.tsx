@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { connect, Dispatch } from 'react-redux';
 import Button from '@atlaskit/button';
-import { FormattedMessage } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
+
+import { BrowserBase } from '../../../../components/browser/browser';
 import { startFileBrowser } from '../../../actions/startFileBrowser';
 import { State } from '../../../domain';
-import { BrowserBase } from '../../../../components/browser/browser';
 
 export interface LocalBrowserButtonProps {
   readonly browserRef: React.RefObject<BrowserBase>;

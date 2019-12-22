@@ -1,6 +1,6 @@
 import * as React from 'react';
-import HyperlinkAddToolbar, { LinkInputType } from './HyperlinkAddToolbar';
 import { ProviderFactory, WithProviders } from '@atlaskit/editor-common';
+import HyperlinkAddToolbar, { LinkInputType } from './HyperlinkAddToolbar';
 
 export interface Props {
   providerFactory: ProviderFactory;

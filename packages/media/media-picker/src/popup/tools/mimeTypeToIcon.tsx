@@ -1,16 +1,16 @@
 import * as React from 'react';
-import FolderFilledIcon from '@atlaskit/icon/glyph/folder-filled';
-import ImageIcon from '@atlaskit/icon/glyph/media-services/image';
-import VideoIcon from '@atlaskit/icon/glyph/media-services/video';
-import AudioIcon from '@atlaskit/icon/glyph/media-services/audio';
-import SpreadSheetIcon from '@atlaskit/icon/glyph/media-services/spreadsheet';
-import PresentationIcon from '@atlaskit/icon/glyph/media-services/presentation';
-import DocumentIcon from '@atlaskit/icon/glyph/media-services/document';
-import PDFDocumentIcon from '@atlaskit/icon/glyph/media-services/pdf';
-import ZipDocumentIcon from '@atlaskit/icon/glyph/media-services/zip';
-import UnknownIcon from '@atlaskit/icon/glyph/media-services/unknown';
-import * as colors from '@atlaskit/theme/colors';
 import styled from 'styled-components';
+import FolderFilledIcon from '@atlaskit/icon/glyph/folder-filled';
+import AudioIcon from '@atlaskit/icon/glyph/media-services/audio';
+import DocumentIcon from '@atlaskit/icon/glyph/media-services/document';
+import ImageIcon from '@atlaskit/icon/glyph/media-services/image';
+import PDFDocumentIcon from '@atlaskit/icon/glyph/media-services/pdf';
+import PresentationIcon from '@atlaskit/icon/glyph/media-services/presentation';
+import SpreadSheetIcon from '@atlaskit/icon/glyph/media-services/spreadsheet';
+import UnknownIcon from '@atlaskit/icon/glyph/media-services/unknown';
+import VideoIcon from '@atlaskit/icon/glyph/media-services/video';
+import ZipDocumentIcon from '@atlaskit/icon/glyph/media-services/zip';
+import * as colors from '@atlaskit/theme/colors';
 
 interface IconWrapperProps {
   color: string;

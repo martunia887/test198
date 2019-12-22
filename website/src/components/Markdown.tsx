@@ -1,8 +1,9 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { AkCodeBlock, AkCode } from '@atlaskit/code';
 import * as CommonMark from 'commonmark';
 import * as ReactRenderer from 'commonmark-react-renderer';
-import { AkCodeBlock, AkCode } from '@atlaskit/code';
+
 import Heading from './Markdown/Heading';
 
 export type Props = {

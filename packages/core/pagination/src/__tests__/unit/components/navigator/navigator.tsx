@@ -1,8 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Button from '@atlaskit/button';
-import { name } from '../../../../version.json';
+
 import Navigator from '../../../../components/Navigators/Navigator';
+import { name } from '../../../../version.json';
 
 const createAnalyticsEventMock = jest.fn();
 

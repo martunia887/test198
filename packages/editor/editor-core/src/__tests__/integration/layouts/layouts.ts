@@ -1,12 +1,13 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
+import { messages as insertBlockMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 import {
   getDocFromElement,
   fullpage,
   editable,
   insertMenuItem,
 } from '../_helpers';
-import { messages as insertBlockMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 
 BrowserTestCase(
   `layouts: Backspacing within a layout shouldnt remove all contents`,

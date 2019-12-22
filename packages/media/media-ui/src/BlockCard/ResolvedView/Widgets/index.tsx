@@ -2,10 +2,12 @@ import * as React from 'react';
 import Badge from '@atlaskit/badge';
 import Lozenge from '@atlaskit/lozenge';
 import Tooltip from '@atlaskit/tooltip';
+
+import { LozengeViewModel } from '../../../common';
 import { ImageIcon } from '../../ImageIcon';
 import { DetailViewModel, BadgeViewModel } from '../../ResolvedView';
+
 import { Wrapper, WidgetWrapper, WidgetDetails, Title, Text } from './styled';
-import { LozengeViewModel } from '../../../common';
 
 export interface WidgetsProps {
   details?: DetailViewModel[];

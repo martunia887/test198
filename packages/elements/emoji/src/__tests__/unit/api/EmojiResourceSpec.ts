@@ -1,15 +1,15 @@
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-
-import fetchMock from 'fetch-mock/src/client';
 import * as sinon from 'sinon';
+import { waitUntil } from '@atlaskit/util-common-test';
 import {
   OnProviderChange,
   SecurityOptions,
   ServiceConfig,
 } from '@atlaskit/util-service-support';
+import 'es6-promise/auto';
+import fetchMock from 'fetch-mock/src/client';
 
-import { waitUntil } from '@atlaskit/util-common-test';
-
+import EmojiRepository from '../../../api/EmojiRepository';
+import EmojiResource, { EmojiResourceConfig } from '../../../api/EmojiResource';
 import {
   EmojiDescription,
   EmojiId,
@@ -18,9 +18,7 @@ import {
   MediaApiRepresentation,
   SearchSort,
 } from '../../../types';
-import EmojiResource, { EmojiResourceConfig } from '../../../api/EmojiResource';
-import EmojiRepository from '../../../api/EmojiRepository';
-
+import { convertMediaToImageRepresentation } from '../../../util/type-helpers';
 import {
   atlassianEmojis,
   atlassianServiceEmojis,
@@ -41,9 +39,8 @@ import {
   standardServiceEmojis,
   thumbsupEmoji,
 } from '../_test-data';
-
 import { alwaysPromise } from '../_test-util';
-import { convertMediaToImageRepresentation } from '../../../util/type-helpers';
+
 import { ErrorEmojiResource } from './_resource-spec-util';
 
 /**

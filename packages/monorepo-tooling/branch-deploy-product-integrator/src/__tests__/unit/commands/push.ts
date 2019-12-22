@@ -1,7 +1,8 @@
 jest.enableAutomock();
-import simpleGit from 'simple-git/promise';
-import { push } from '../../../commands/push';
 import fetch from 'node-fetch';
+import simpleGit from 'simple-git/promise';
+
+import { push } from '../../../commands/push';
 import * as gitUtil from '../../../lib/git';
 import { getWorkspaceDirs } from '../../../lib/packageEngine';
 

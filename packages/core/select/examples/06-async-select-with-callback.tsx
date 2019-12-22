@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AsyncSelect } from '../src';
 import { OptionsType } from '../src/types';
 

@@ -3,6 +3,7 @@ import { ReactNode, WheelEvent, MouseEvent, ReactElement } from 'react';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 import ArrowRight from '@atlaskit/icon/glyph/arrow-right';
 import debounce from 'debounce';
+
 import {
   FilmStripViewWrapper,
   FilmStripListWrapper,

@@ -1,6 +1,5 @@
 import React from 'react';
 import Spinner from '@atlaskit/spinner';
-import { SpinnerSizeType } from '../types';
 
 import { LARGE, LOADING_CONTENTS_OPACITY } from '../internal/constants';
 import {
@@ -8,6 +7,7 @@ import {
   ContentsContainer,
   SpinnerContainer,
 } from '../styled/LoadingContainer';
+import { SpinnerSizeType } from '../types';
 
 interface Props {
   children: React.ReactNode;

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import chromatism from 'chromatism';
-import Color from './Color';
-
-import { ColorPaletteWrapper } from './styles';
-import { PaletteColor } from './Palettes/type';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import * as colors from '@atlaskit/theme/colors';
+import chromatism from 'chromatism';
+
+import Color from './Color';
+import { PaletteColor } from './Palettes/type';
+import { ColorPaletteWrapper } from './styles';
 
 export interface Props {
   palette: PaletteColor[];

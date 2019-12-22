@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
+
 import { ErrorIcon } from '../errorIcon';
+
+import { getDimensionsWithDefault } from './getDimensionsWithDefault';
 import { Wrapper } from './styled';
 import { StaticCardProps } from './types';
-import { getDimensionsWithDefault } from './getDimensionsWithDefault';
 
 export interface ErrorCardProps extends StaticCardProps {
   readonly size: 'small' | 'medium' | 'large' | 'xlarge';

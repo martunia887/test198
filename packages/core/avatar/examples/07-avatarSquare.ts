@@ -1,6 +1,5 @@
-import nucleusImage from '../examples-util/nucleus.png';
-
 import fullAvatarExample from '../examples-util/fullAvatarExample';
+import nucleusImage from '../examples-util/nucleus.png';
 
 export default () =>
   fullAvatarExample({

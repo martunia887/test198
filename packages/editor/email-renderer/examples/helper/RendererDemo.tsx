@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { defaultSchema } from '@atlaskit/adf-schema';
 
-import { document as storyDataDocument } from './story-data';
-
 import EmailSerializer, { MetaDataContext } from '../../src';
+
+import { document as storyDataDocument } from './story-data';
 
 export interface DemoRendererProps {
   serializer: 'email';

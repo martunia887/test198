@@ -1,9 +1,12 @@
-import { TableMap } from 'prosemirror-tables';
-import { Node as PMNode } from 'prosemirror-model';
-import { isTableSelected } from 'prosemirror-utils';
 import { tableCellMinWidth } from '@atlaskit/editor-common';
+import { Node as PMNode } from 'prosemirror-model';
+import { Transaction } from 'prosemirror-state';
+import { TableMap } from 'prosemirror-tables';
+import { isTableSelected } from 'prosemirror-utils';
+
 import { Command, DomAtPos } from '../../../../types';
 import { updateColumnWidths } from '../../transforms';
+
 import { createCommand, getPluginState } from './plugin';
 import {
   addContainerLeftRightPadding,
@@ -18,7 +21,6 @@ import {
   isClickNear,
   evenAllColumnsWidths,
 } from './utils';
-import { Transaction } from 'prosemirror-state';
 
 export const handleBreakoutContent = (
   tableRef: HTMLTableElement,

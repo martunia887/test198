@@ -2,6 +2,7 @@ import React, { useCallback, forwardRef } from 'react';
 import StarIcon from '@atlaskit/icon/glyph/star';
 import StarFilledIcon from '@atlaskit/icon/glyph/star-filled';
 import { colors } from '@atlaskit/theme';
+
 import Rating, { RatingProps, RatingRender } from './rating';
 
 export interface StarProps extends RatingProps {

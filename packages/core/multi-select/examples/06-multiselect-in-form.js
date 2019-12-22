@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import Button from '@atlaskit/button';
+
 import Select from '../src';
 import type { GroupType } from '../src/types';
 

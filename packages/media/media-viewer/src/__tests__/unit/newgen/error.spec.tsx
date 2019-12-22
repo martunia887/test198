@@ -10,10 +10,11 @@ jest.mock('../../../newgen/analytics/item-viewer', () => mockItemViewer);
 
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { ErrorMessage, createError } from '../../../newgen/error';
 import Button from '@atlaskit/button';
-import { fakeIntl } from '@atlaskit/media-test-helpers';
 import { FileState } from '@atlaskit/media-client';
+import { fakeIntl } from '@atlaskit/media-test-helpers';
+
+import { ErrorMessage, createError } from '../../../newgen/error';
 
 describe('Error Message', () => {
   it('should render the right error for retrieving metadata', () => {

@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { mount } from 'enzyme';
 import { FabricElementsAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import {
   AnalyticsContext,
@@ -5,8 +7,7 @@ import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import { mount } from 'enzyme';
-import * as React from 'react';
+
 import {
   createComponentWithAnalytics,
   createComponentWithAttributesWithAnalytics,

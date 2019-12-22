@@ -1,9 +1,9 @@
 import fetchMock from 'fetch-mock';
+import { ProductKey } from '../../../types';
 import {
   fetchJoinableSites,
   transformExperimentSitesToSwitcherSites,
 } from '../../default-joinable-sites-fetch';
-import { ProductKey } from '../../../types';
 
 describe('default-joinable-sites-fetch', () => {
   const experimentApiSites = {

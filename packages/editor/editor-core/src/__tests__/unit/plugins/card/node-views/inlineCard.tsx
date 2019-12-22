@@ -11,9 +11,9 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import { inlineCard, defaultSchema } from '@atlaskit/editor-test-helpers';
 import { Card } from '@atlaskit/smart-card';
+import { EditorView } from 'prosemirror-view';
 
 import { InlineCardComponent } from '../../../../../plugins/card/nodeviews/inlineCard';
-import { EditorView } from 'prosemirror-view';
 
 describe('inlineCard', () => {
   let mockEditorView: EditorView;

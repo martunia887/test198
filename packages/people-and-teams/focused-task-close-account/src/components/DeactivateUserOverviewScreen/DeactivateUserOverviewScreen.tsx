@@ -2,11 +2,12 @@ import * as React from 'react';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 
 import { deactivateUserOverviewMessages } from '../../messages';
-import UserInfo from '../UserInfo';
-import { DeactivateUserOverviewScreenProps } from './types';
-import * as Styled from './styled';
 import { DropdownList } from '../DropdownList';
 import MessagesIntlProvider from '../MessagesIntlProvider';
+import UserInfo from '../UserInfo';
+
+import * as Styled from './styled';
+import { DeactivateUserOverviewScreenProps } from './types';
 
 export class DeactivateUserOverviewScreen extends React.Component<
   DeactivateUserOverviewScreenProps

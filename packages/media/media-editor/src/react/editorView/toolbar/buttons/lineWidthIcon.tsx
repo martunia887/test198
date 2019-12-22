@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { Component } from 'react';
+
+import { THICKNESS_MAX, THICKNESS_MIN } from '../popups/lineWidthPopup';
+
 import {
   FrontArea,
   MainArea,
   TOTAL_CIRCLE_SIZE,
 } from './lineWidthButtonStyles';
-import { THICKNESS_MAX, THICKNESS_MIN } from '../popups/lineWidthPopup';
 
 export interface LineWidthButtonProps {
   readonly isActive: boolean;

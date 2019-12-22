@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FormattedHTMLMessage } from 'react-intl';
 import uuid from 'uuid/v4';
+
 import { QuickSearchContext } from '../../../api/types';
 import {
   BaseConfluenceQuickSearchContainer,
@@ -12,6 +13,7 @@ import SearchResultsComponent, {
   Props as SearchResultsComponentProps,
 } from '../../../components/common/SearchResults';
 import StickyFooter from '../../../components/common/StickyFooter';
+import * as SearchResultUtils from '../../../components/SearchResultsUtil';
 import ConfluenceAdvancedSearchGroup from '../../../components/confluence/AdvancedSearchGroup';
 import {
   ConfluenceQuickSearchContainer,
@@ -24,7 +26,6 @@ import {
   Props as JiraProps,
 } from '../../../components/jira/JiraQuickSearchContainer';
 import JiraNoResultsState from '../../../components/jira/NoResultsState';
-import * as SearchResultUtils from '../../../components/SearchResultsUtil';
 import { messages } from '../../../messages';
 import {
   AnalyticsType,
@@ -34,8 +35,13 @@ import {
   ResultsGroup,
   ResultType,
 } from '../../../model/Result';
-import { DEFAULT_FEATURES } from '../../../util/features';
 import { SearchScreenCounter } from '../../../util/ScreenCounter';
+import { DEFAULT_FEATURES } from '../../../util/features';
+import {
+  makeConfluenceContainerResult,
+  makeJiraObjectResult,
+  makePersonResult,
+} from '../_test-util';
 import { shallowWithIntl } from '../helpers/_intl-enzyme-test-helper';
 import {
   mockAutocompleteClient,
@@ -45,11 +51,6 @@ import { noResultsCrossProductSearchClient } from '../mocks/_mockCrossProductSea
 import { mockNoResultJiraClient } from '../mocks/_mockJiraClient';
 import { mockLogger } from '../mocks/_mockLogger';
 import { noResultsPeopleSearchClient } from '../mocks/_mockPeopleSearchClient';
-import {
-  makeConfluenceContainerResult,
-  makeJiraObjectResult,
-  makePersonResult,
-} from '../_test-util';
 
 const getIssues = (searchSessionId: string) => [
   makeJiraObjectResult({

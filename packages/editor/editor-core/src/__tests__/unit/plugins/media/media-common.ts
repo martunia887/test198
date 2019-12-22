@@ -1,3 +1,4 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
   createEditorFactory,
@@ -9,17 +10,17 @@ import {
   mention,
   randomId,
 } from '@atlaskit/editor-test-helpers';
+import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers/fakeMediaClient';
+import { MockMentionResource } from '@atlaskit/util-data-test';
 import { undo } from 'prosemirror-history';
 import { NodeSelection, TextSelection } from 'prosemirror-state';
-import { MockMentionResource } from '@atlaskit/util-data-test';
-import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers/fakeMediaClient';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { setNodeSelection } from '../../../../utils';
+
 import {
   removeMediaNode,
   splitMediaGroup,
   getMediaNodeFromSelection,
 } from '../../../../plugins/media/utils/media-common';
+import { setNodeSelection } from '../../../../utils';
 
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 

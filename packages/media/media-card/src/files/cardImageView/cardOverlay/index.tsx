@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { MouseEvent, Component, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
-import cx from 'classnames';
-import { MediaType } from '@atlaskit/media-client';
-import TickIcon from '@atlaskit/icon/glyph/check';
-import { Ellipsify } from '@atlaskit/media-ui';
-import { messages } from '@atlaskit/media-ui';
-// We dont require things directly from "utils" to avoid circular dependencies
-import { FileIcon } from '../../../utils/fileIcon';
-import { ErrorIcon } from '../../../utils/errorIcon';
-import CardActions from '../../../utils/cardActions';
-import { CardAction, CardEventHandler } from '../../../actions';
-import { createAndFireMediaEvent } from '../../../utils/analytics';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
+import TickIcon from '@atlaskit/icon/glyph/check';
+import { MediaType } from '@atlaskit/media-client';
+import { Ellipsify } from '@atlaskit/media-ui';
+import { messages } from '@atlaskit/media-ui';
+import cx from 'classnames';
+
+import { CardAction, CardEventHandler } from '../../../actions';
+import { createAndFireMediaEvent } from '../../../utils/analytics';
+import CardActions from '../../../utils/cardActions';
+import { ErrorIcon } from '../../../utils/errorIcon';
+import { FileIcon } from '../../../utils/fileIcon';
 
 import {
   TickBox,

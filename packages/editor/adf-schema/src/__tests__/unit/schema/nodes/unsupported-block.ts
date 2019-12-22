@@ -1,5 +1,5 @@
-import { name } from '../../../../version.json';
 import { schema, toDOM, fromHTML } from '../../../../../test-helpers';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema unsupportedBlock node`, () => {
   const originalValue = {

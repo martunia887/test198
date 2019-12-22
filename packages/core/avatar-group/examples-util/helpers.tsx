@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { SizeType } from '@atlaskit/avatar';
-import { gridSize } from '@atlaskit/theme/constants';
 import { N100, R50, R400, subtleHeading, text } from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
 import { divide, multiply } from '@atlaskit/theme/math';
 
 const Wrapper = styled.div`

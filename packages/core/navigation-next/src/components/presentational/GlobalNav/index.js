@@ -7,8 +7,9 @@
 
 import React, { Component } from 'react';
 
-import GlobalItem from '../GlobalItem';
 import { withGlobalTheme } from '../../../theme';
+import GlobalItem from '../GlobalItem';
+
 import GlobalNavigation from './GlobalNavigation';
 import type { ConnectedGlobalNavigationProps } from './types';
 

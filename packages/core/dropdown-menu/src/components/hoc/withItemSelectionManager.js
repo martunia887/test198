@@ -1,9 +1,10 @@
 // @flow
 
 import React, { Component, type Node } from 'react';
+
+import type { Behaviors } from '../../types';
 import getDisplayName from '../../util/getDisplayName';
 import DropdownItemSelectionManager from '../context/DropdownItemSelectionManager';
-import type { Behaviors } from '../../types';
 
 type Props = {
   children?: Node,

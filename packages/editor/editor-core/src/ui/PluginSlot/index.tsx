@@ -1,11 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { EditorView } from 'prosemirror-view';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { EditorAppearance, UIComponentFactory } from '../../types';
-import { EventDispatcher } from '../../event-dispatcher';
+import { EditorView } from 'prosemirror-view';
+
 import EditorActions from '../../actions';
+import { EventDispatcher } from '../../event-dispatcher';
 import { DispatchAnalyticsEvent } from '../../plugins/analytics';
+import { EditorAppearance, UIComponentFactory } from '../../types';
 import { whichTransitionEvent } from '../../utils';
 
 const PluginsComponentsWrapper = styled.div`

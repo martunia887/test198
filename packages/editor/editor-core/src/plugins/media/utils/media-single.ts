@@ -1,32 +1,27 @@
-import { Node as PMNode, Schema, Fragment, Slice } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
-import {
-  safeInsert as pmSafeInsert,
-  hasParentNodeOfType,
-} from 'prosemirror-utils';
-import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { MediaSingleLayout, MediaSingleAttributes } from '@atlaskit/adf-schema';
 import {
   calcPxFromPct,
   breakoutWideScaleRatio,
   akEditorBreakoutPadding,
 } from '@atlaskit/editor-common';
+import { Node as PMNode, Schema, Fragment, Slice } from 'prosemirror-model';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
+import {
+  safeInsert as pmSafeInsert,
+  hasParentNodeOfType,
+} from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
 
-import { getEditorProps } from '../../shared-context';
-
+import { Command } from '../../../types';
 import {
   isImage,
   atTheBeginningOfBlock,
   checkNodeDown,
   isEmptyParagraph,
 } from '../../../utils';
-import { copyOptionalAttrsFromMediaState } from '../utils/media-common';
-import { MediaState } from '../types';
-import { Command } from '../../../types';
-import { mapSlice } from '../../../utils/slice';
+import { safeInsert } from '../../../utils/insert';
 import { getParentNodeWidth } from '../../../utils/node-width';
-import { alignmentLayouts } from '../ui/ResizableMediaSingle/utils';
-import { WidthPluginState } from '../../width';
+import { mapSlice } from '../../../utils/slice';
 import {
   addAnalytics,
   ACTION,
@@ -36,7 +31,11 @@ import {
   InputMethodInsertMedia,
   InsertEventPayload,
 } from '../../analytics';
-import { safeInsert } from '../../../utils/insert';
+import { getEditorProps } from '../../shared-context';
+import { WidthPluginState } from '../../width';
+import { MediaState } from '../types';
+import { alignmentLayouts } from '../ui/ResizableMediaSingle/utils';
+import { copyOptionalAttrsFromMediaState } from '../utils/media-common';
 
 export const wrappedLayouts: MediaSingleLayout[] = [
   'wrap-left',

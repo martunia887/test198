@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from 'react';
-import { Inner, Outer } from '../styled/Icon';
+
 import getStatusSVG from '../helpers/getStatusSVG';
+import { Inner, Outer } from '../styled/Icon';
 import { StatusType, SizeType } from '../types';
 
 interface StatusProps {

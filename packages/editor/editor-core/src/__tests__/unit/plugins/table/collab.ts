@@ -8,13 +8,13 @@ import {
   th,
 } from '@atlaskit/editor-test-helpers';
 import { removeColumnAt } from 'prosemirror-utils';
+
+import { pluginKey as tablePluginKey } from '../../../../plugins/table/pm-plugins/main';
+import { setResizeHandlePos } from '../../../../plugins/table/pm-plugins/table-resizing/commands';
 import {
   TablePluginState,
   PluginConfig,
 } from '../../../../plugins/table/types';
-
-import { pluginKey as tablePluginKey } from '../../../../plugins/table/pm-plugins/main';
-import { setResizeHandlePos } from '../../../../plugins/table/pm-plugins/table-resizing/commands';
 
 describe('Tables with Collab editing', () => {
   const createEditor = createEditorFactory<TablePluginState>();

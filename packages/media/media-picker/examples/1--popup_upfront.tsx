@@ -6,18 +6,19 @@ import * as React from 'react';
 import { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
+import { Card } from '@atlaskit/media-card';
 import {
   defaultMediaPickerCollectionName,
   createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import { Card } from '@atlaskit/media-card';
-import { MediaPicker } from '../src';
+
 import {
   PopupContainer,
   PopupHeader,
   CardsWrapper,
   CardItemWrapper,
 } from '../example-helpers/styled';
+import { MediaPicker } from '../src';
 import {
   UploadEndEventPayload,
   UploadsStartEventPayload,

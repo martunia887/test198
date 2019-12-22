@@ -2,20 +2,21 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router';
 import { HashRouter, Link } from 'react-router-dom';
-import Question from '@atlaskit/icon/glyph/question';
-import Arrow from '@atlaskit/icon/glyph/arrow-right';
 import Avatar from '@atlaskit/avatar';
+import Arrow from '@atlaskit/icon/glyph/arrow-right';
+import Question from '@atlaskit/icon/glyph/question';
 import Lozenge from '@atlaskit/lozenge';
-import Tooltip from '@atlaskit/tooltip';
 import { colors, gridSize } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
+
 import Item from '../src';
+
+import ItemThemeDemo from './00-basic';
 import {
   DropImitation,
   GroupsWrapper,
   ItemsNarrowContainer,
 } from './styled/StoryHelpers';
-
-import ItemThemeDemo from './00-basic';
 
 // eslint-disable-next-line react/prop-types
 const Icon = () => <Question label="test question" />;

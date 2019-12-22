@@ -1,3 +1,5 @@
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   mention,
   em,
@@ -16,7 +18,9 @@ import {
   BuilderContent,
   createAnalyticsEventMock,
 } from '@atlaskit/editor-test-helpers';
+import { EditorView } from 'prosemirror-view';
 
+import { AnalyticsHandler } from '../../../../analytics';
 import {
   strongRegex1,
   strongRegex2,
@@ -25,10 +29,6 @@ import {
   strikeRegex,
   codeRegex,
 } from '../../../../plugins/text-formatting/pm-plugins/input-rule';
-import { EditorView } from 'prosemirror-view';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { AnalyticsHandler } from '../../../../analytics';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 const createProductPayload = (product: string, originalSpelling: string) => ({
   action: 'autoSubstituted',

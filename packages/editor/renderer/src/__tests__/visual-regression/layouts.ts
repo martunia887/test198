@@ -1,13 +1,15 @@
 import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
 import { Page } from 'puppeteer';
-import { snapshot, initRendererWithADF } from './_utils';
-import * as layoutWithDefaultBreakoutMark from '../__fixtures__/layout-default-breakout.adf.json';
+
 import * as layout2Col from '../__fixtures__/layout-2-columns.adf.json';
+import * as layout3ColWithSidebars from '../__fixtures__/layout-3-columns-with-sidebars.adf.json';
 import * as layout3Col from '../__fixtures__/layout-3-columns.adf.json';
+import * as layoutWithDefaultBreakoutMark from '../__fixtures__/layout-default-breakout.adf.json';
 import * as layoutLeftSidebar from '../__fixtures__/layout-left-sidebar.adf.json';
 import * as layoutRightSidebar from '../__fixtures__/layout-right-sidebar.adf.json';
-import * as layout3ColWithSidebars from '../__fixtures__/layout-3-columns-with-sidebars.adf.json';
 import { emojiReadySelector } from '../__helpers/page-objects/_emoji';
+
+import { snapshot, initRendererWithADF } from './_utils';
 
 const initRenderer = async (page: Page, adf: any) => {
   await initRendererWithADF(page, {

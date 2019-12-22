@@ -1,6 +1,16 @@
 /** @jsx jsx */
 import { Fragment } from 'react';
 import { jsx, ClassNames } from '@emotion/core';
+
+import {
+  ButtonItemProps,
+  LinkItemProps,
+  BaseItemProps,
+  CustomItemProps,
+  SkeletonItemProps,
+  Width,
+} from '../types';
+
 import {
   linkItemCSS,
   customItemCSS,
@@ -15,15 +25,6 @@ import {
   truncateCSS,
   contentCSSWrapper,
 } from './styles';
-
-import {
-  ButtonItemProps,
-  LinkItemProps,
-  BaseItemProps,
-  CustomItemProps,
-  SkeletonItemProps,
-  Width,
-} from '../types';
 
 export const HeadingItem = ({ children }: { children: React.ReactNode }) => (
   <div css={itemHeadingCSS}>{children}</div>

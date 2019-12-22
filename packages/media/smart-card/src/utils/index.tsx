@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
 
-import { CardProps } from '../view/Card';
 import { CardState } from '../state/types';
+import { CardProps } from '../view/Card';
 
 export const isCardWithData = (props: CardProps) => !!props.data;
 

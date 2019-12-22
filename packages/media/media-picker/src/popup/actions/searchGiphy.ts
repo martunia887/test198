@@ -1,5 +1,5 @@
-import { ImageCardModel } from '../tools/fetcher/fetcher';
 import { Action } from 'redux';
+import { ImageCardModel } from '../tools/fetcher/fetcher';
 
 export const SEARCH_GIPHY = 'SEARCH_GIPHY';
 export const SEARCH_GIPHY_FULFILLED = 'SEARCH_GIPHY_FULFILLED';

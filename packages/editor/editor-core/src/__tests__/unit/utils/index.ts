@@ -21,6 +21,7 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import { MockMentionResource } from '@atlaskit/util-data-test';
 import { toggleMark } from 'prosemirror-commands';
+import { Node, Schema } from 'prosemirror-model';
 
 import {
   isMarkTypeAllowedInCurrentSelection,
@@ -33,7 +34,6 @@ import {
   isSelectionInsideLastNodeInDocument,
   shallowEqual,
 } from '../../../utils';
-import { Node, Schema } from 'prosemirror-model';
 
 describe('@atlaskit/editore-core/utils', () => {
   const createEditor = createEditorFactory();

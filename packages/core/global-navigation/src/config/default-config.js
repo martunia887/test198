@@ -1,13 +1,15 @@
 // @flow
 
-import SearchIcon from '@atlaskit/icon/glyph/search';
 import CreateIcon from '@atlaskit/icon/glyph/add';
-import StarLargeIcon from '@atlaskit/icon/glyph/star-large';
-import NotificationIcon from '@atlaskit/icon/glyph/notification';
-import SettingsIcon from '@atlaskit/icon/glyph/settings';
-import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import InviteTeamIcon from '@atlaskit/icon/glyph/invite-team';
+import NotificationIcon from '@atlaskit/icon/glyph/notification';
+import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
+import SearchIcon from '@atlaskit/icon/glyph/search';
+import SettingsIcon from '@atlaskit/icon/glyph/settings';
+import StarLargeIcon from '@atlaskit/icon/glyph/star-large';
+
 import RecentIcon from '../components/CustomIcons';
+
 import type { DefaultConfigShape } from './types';
 
 export default function generateDefaultConfig(): DefaultConfigShape {

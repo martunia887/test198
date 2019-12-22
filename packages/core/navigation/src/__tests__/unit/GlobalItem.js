@@ -1,8 +1,10 @@
 // @flow
 import React from 'react';
-import { GlobalItemBase } from '../../components/js/GlobalItem';
+
 import DefaultLinkComponent from '../../components/js/DefaultLinkComponent';
+import { GlobalItemBase } from '../../components/js/GlobalItem';
 import GlobalItemInner from '../../components/styled/GlobalItemInner';
+
 import { shallowWithTheme, mountWithRootTheme } from './_theme-util';
 
 describe('<GlobalItemBase />', () => {

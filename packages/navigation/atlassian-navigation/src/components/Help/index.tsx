@@ -1,8 +1,9 @@
-import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import React, { forwardRef, Ref } from 'react';
+import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 
 import { useTheme } from '../../theme';
 import { IconButton } from '../IconButton';
+
 import { HelpProps } from './types';
 
 export const Help = forwardRef((props: HelpProps, ref: Ref<any>) => {

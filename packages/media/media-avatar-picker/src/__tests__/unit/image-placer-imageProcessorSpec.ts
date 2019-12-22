@@ -1,16 +1,10 @@
 import { mockCanvas } from '@atlaskit/media-test-helpers';
-import { FileInfo, Rectangle, Bounds } from '@atlaskit/media-ui';
 import {
   mockLoadImage,
   mockLoadImageError,
   unMockLoadImage,
 } from '@atlaskit/media-test-helpers';
-
-const getCanvasMock = mockCanvas();
-const mockImagePlacerUtil = {
-  getCanvas: jest.fn().mockReturnValue(getCanvasMock),
-};
-jest.mock('../../util', () => mockImagePlacerUtil);
+import { FileInfo, Rectangle, Bounds } from '@atlaskit/media-ui';
 
 import {
   applyOrientation,

@@ -1,9 +1,10 @@
 import React, { forwardRef } from 'react';
 import { render } from '@testing-library/react';
+
 import { useResizingHeight } from '../../../resizing/height';
 import { isReducedMotion } from '../../../utils/accessibility';
-import { mediumDurationMs } from '../../../utils/durations';
 import { easeInOut } from '../../../utils/curves';
+import { mediumDurationMs } from '../../../utils/durations';
 import * as raf from '../../__utils__/raf';
 
 jest.mock('../../../utils/accessibility');

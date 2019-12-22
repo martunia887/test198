@@ -1,6 +1,7 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { PureComponent } from 'react';
+import classNames from 'classnames';
+
 import {
   EmojiDescription,
   EmojiDescriptionWithVariations,
@@ -14,6 +15,7 @@ import EmojiDeletePreview, {
 } from '../common/EmojiDeletePreview';
 import EmojiPreview from '../common/EmojiPreview';
 import EmojiUploadPicker, { OnUploadEmoji } from '../common/EmojiUploadPicker';
+
 import * as styles from './styles';
 
 export interface Props {

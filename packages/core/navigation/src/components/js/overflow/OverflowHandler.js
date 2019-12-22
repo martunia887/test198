@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import type { Node } from 'react';
 import PropTypes from 'prop-types';
-import OverflowHeightReportEnabler from './OverflowHeightReportEnabler';
-import OverflowDropdown from './OverflowDropdown';
+
 import HeightDetector from './HeightDetector';
+import OverflowDropdown from './OverflowDropdown';
+import OverflowHeightReportEnabler from './OverflowHeightReportEnabler';
 import {
   overflowManagerNamespace,
   dropdownHeight,

@@ -6,6 +6,7 @@ import {
   findCellClosestToPos,
   emptyCell,
 } from 'prosemirror-utils';
+
 import { Command } from '../../../types';
 // #endregion
 

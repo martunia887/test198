@@ -1,10 +1,10 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import DashboardIcon from '@atlaskit/icon/glyph/dashboard';
 import BacklogIcon from '@atlaskit/icon/glyph/backlog';
-import IssuesIcon from '@atlaskit/icon/glyph/issue';
+import DashboardIcon from '@atlaskit/icon/glyph/dashboard';
 import ReportsIcon from '@atlaskit/icon/glyph/graph-line';
+import IssuesIcon from '@atlaskit/icon/glyph/issue';
 import { colors, gridSize as gridSizeFn } from '@atlaskit/theme';
 
 import {

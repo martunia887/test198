@@ -1,14 +1,14 @@
 import {
+  RequestServiceOptions,
+  ServiceConfig,
+  utils,
+} from '@atlaskit/util-service-support';
+import {
   PersonResult,
   ResultType,
   AnalyticsType,
   ContentType,
 } from '../model/Result';
-import {
-  RequestServiceOptions,
-  ServiceConfig,
-  utils,
-} from '@atlaskit/util-service-support';
 
 export interface GraphqlResponse {
   errors?: GraphqlError[];

@@ -1,5 +1,6 @@
-import { ThemeProp } from '@atlaskit/theme/components';
 import React, { Component } from 'react';
+import { ThemeProp } from '@atlaskit/theme/components';
+
 import { Input } from './styled';
 import { Theme, ThemeTokens } from './theme';
 

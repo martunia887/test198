@@ -1,11 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-
 import Button, { ButtonGroup } from '@atlaskit/button';
 import Spinner from '@atlaskit/spinner';
 
 import EmptyState from '../../EmptyState';
-
 import { Image, Description } from '../../styled';
 
 describe('Empty state', () => {

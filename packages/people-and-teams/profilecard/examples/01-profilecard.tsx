@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+
 import { profiles } from '../mock-helpers/index';
 import { ProfileCard } from '../src';
+
 import LocaleIntlProvider from './helper/locale-intl-provider';
 
 export const MainStage = styled.div`

@@ -1,3 +1,4 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   insertText,
   createEditorFactory,
@@ -10,7 +11,6 @@ import {
   sendKeyToPm,
   dispatchPasteEvent,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { AnalyticsHandler } from '../../../../analytics';
 
 describe('hyperlink', () => {

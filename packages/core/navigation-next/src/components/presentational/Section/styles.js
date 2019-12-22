@@ -1,10 +1,10 @@
 // @flow
 
+import { N30A, N20 } from '@atlaskit/theme/colors';
 import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 
-import { N30A, N20 } from '@atlaskit/theme/colors';
-
 import type { ModeColors } from '../../../theme/types';
+
 import type { SectionPresentationProps } from './types';
 
 const gridSize = gridSizeFn();

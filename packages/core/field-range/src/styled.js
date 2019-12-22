@@ -3,6 +3,7 @@
 import styled, { css } from 'styled-components';
 import { B200, N60A, N30A } from '@atlaskit/theme/colors';
 import { e200 } from '@atlaskit/theme/elevation';
+
 import { thumb, track } from './theme';
 
 const sliderThumbSize = 16;

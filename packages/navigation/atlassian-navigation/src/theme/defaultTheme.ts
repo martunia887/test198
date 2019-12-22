@@ -9,9 +9,8 @@ import {
   N600,
   N700,
 } from '@atlaskit/theme/colors';
-
-import { Mode } from './types';
 import { hexToRGBA } from './themeHelpers';
+import { Mode } from './types';
 
 const defaultTheme: { mode: Mode } = {
   mode: {

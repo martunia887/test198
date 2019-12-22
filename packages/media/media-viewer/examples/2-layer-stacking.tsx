@@ -1,13 +1,14 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
-import ModalDialog from '@atlaskit/modal-dialog';
+import { Identifier } from '@atlaskit/media-client';
 import {
   createStorybookMediaClientConfig,
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
+import ModalDialog from '@atlaskit/modal-dialog';
+
 import { imageItem } from '../example-helpers';
 import { MediaViewer } from '../src';
-import { Identifier } from '@atlaskit/media-client';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 

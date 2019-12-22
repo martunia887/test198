@@ -1,15 +1,16 @@
 import * as React from 'react';
+
 import { prefetchAll } from './providers/instance-data-providers';
-import {
-  prefetchAvailableProducts,
-  AvailableProductsDataProvider,
-} from './providers/products-data-provider';
 import {
   prefetchJoinableSites,
   JoinableSitesDataProvider,
 } from './providers/joinable-sites-data-provider';
-import prefetchSwitcherBundles from './utils/prefetch-bundles';
+import {
+  prefetchAvailableProducts,
+  AvailableProductsDataProvider,
+} from './providers/products-data-provider';
 import { FeatureFlagProps } from './types';
+import prefetchSwitcherBundles from './utils/prefetch-bundles';
 
 type PrefetchTriggerProps = {
   cloudId?: string;

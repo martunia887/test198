@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
-import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 import styled from 'styled-components';
+import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 
 const FakeTrelloInlineDialog = styled.div`
   width: 280px;

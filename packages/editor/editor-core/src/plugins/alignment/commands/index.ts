@@ -1,7 +1,7 @@
-import { AlignmentState } from '../pm-plugins/main';
 import { toggleBlockMark, changeImageAlignment } from '../../../commands';
 import { Command } from '../../../types/command';
 import { cascadeCommands } from '../../../utils/action';
+import { AlignmentState } from '../pm-plugins/main';
 
 export const isAlignable = (align?: AlignmentState): Command => (
   state,

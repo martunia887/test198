@@ -1,6 +1,5 @@
 import { TextSelection, Selection } from 'prosemirror-state';
-import { hasCode } from '../utils';
-import { markActive } from '../utils';
+
 import { analyticsService } from '../../../analytics';
 import { Command } from '../../../types';
 import { toggleMark, applyMarkOnRange } from '../../../utils/commands';
@@ -12,6 +11,8 @@ import {
   EVENT_TYPE,
   INPUT_METHOD,
 } from '../../analytics';
+import { hasCode } from '../utils';
+import { markActive } from '../utils';
 
 export const moveRight = (): Command => {
   return (state, dispatch) => {

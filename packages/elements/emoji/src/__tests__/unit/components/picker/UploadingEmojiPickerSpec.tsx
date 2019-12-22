@@ -1,7 +1,9 @@
+import { ReactWrapper } from 'enzyme';
+import { FormattedMessage } from 'react-intl';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import { waitUntil } from '@atlaskit/util-common-test';
 import { MockEmojiResource } from '@atlaskit/util-data-test';
-import { FormattedMessage } from 'react-intl';
+
 import EmojiRepository from '../../../../api/EmojiRepository';
 import Emoji from '../../../../components/common/Emoji';
 import EmojiDeletePreview from '../../../../components/common/EmojiDeletePreview';
@@ -10,12 +12,23 @@ import EmojiUploadPreview from '../../../../components/common/EmojiUploadPreview
 import { messages } from '../../../../components/i18n';
 import EmojiPickerCategoryHeading from '../../../../components/picker/EmojiPickerCategoryHeading';
 import EmojiPickerList from '../../../../components/picker/EmojiPickerList';
+import { EmojiDescription } from '../../../../types';
+import {
+  deleteBeginEvent,
+  deleteCancelEvent,
+  deleteConfirmEvent,
+  selectedFileEvent,
+  uploadBeginButton,
+  uploadCancelButton,
+  uploadConfirmButton,
+  uploadFailedEvent,
+  uploadSucceededEvent,
+} from '../../../../util/analytics';
 import {
   customCategory,
   customTitle,
   userCustomTitle,
 } from '../../../../util/constants';
-import { EmojiDescription } from '../../../../types';
 import * as ImageUtil from '../../../../util/image';
 import {
   createPngFile,
@@ -28,19 +41,8 @@ import {
   siteEmojiFoo,
 } from '../../_test-data';
 import * as commonHelper from '../common/_common-test-helpers';
+
 import * as helper from './_emoji-picker-test-helpers';
-import { ReactWrapper } from 'enzyme';
-import {
-  deleteBeginEvent,
-  deleteCancelEvent,
-  deleteConfirmEvent,
-  selectedFileEvent,
-  uploadBeginButton,
-  uploadCancelButton,
-  uploadConfirmButton,
-  uploadFailedEvent,
-  uploadSucceededEvent,
-} from '../../../../util/analytics';
 
 describe('<UploadingEmojiPicker />', () => {
   let onEvent: jest.SpyInstance;

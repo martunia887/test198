@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Page, { Grid, GridColumn } from '@atlaskit/page';
-import TextField from '@atlaskit/field-text';
 import { IntlProvider } from 'react-intl';
+import TextField from '@atlaskit/field-text';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
+
 import { InlineCardUnauthorizedView } from '../src/InlineCard/UnauthorisedView';
 
 class Example extends React.Component {

@@ -1,3 +1,4 @@
+import { SortOrder } from '@atlaskit/editor-common';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -5,7 +6,6 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
 } from './enums';
-import { SortOrder } from '@atlaskit/editor-common';
 
 export enum PLATFORM {
   NATIVE = 'mobileNative',

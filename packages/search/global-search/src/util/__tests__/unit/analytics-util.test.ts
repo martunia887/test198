@@ -1,10 +1,10 @@
-import { buildShownEventDetails } from '../../analytics-util';
 import {
   makeConfluenceContainerResult,
   makeConfluenceObjectResult,
   makePersonResult,
 } from '../../../__tests__/unit/_test-util';
 import { ResultType } from '../../../model/Result';
+import { buildShownEventDetails } from '../../analytics-util';
 
 describe('Analytics', () => {
   describe('buildShownEventDetails', () => {

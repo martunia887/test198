@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { gridSize, math } from '@atlaskit/theme';
+
 import NoResultsImage from '../assets/NoResultsImage';
 
 const NoResultsWrapper = styled.div`

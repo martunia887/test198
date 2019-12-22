@@ -1,7 +1,7 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
-import { EditorPlugin } from '../../types';
-import { Dispatch } from '../../event-dispatcher';
 
+import { Dispatch } from '../../event-dispatcher';
+import { EditorPlugin } from '../../types';
 import { pluginFactory } from '../../utils/plugin-state-factory';
 
 export const pluginKey = new PluginKey('editorDisabledPlugin');

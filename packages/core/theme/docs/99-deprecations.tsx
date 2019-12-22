@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
-import Lozenge from '@atlaskit/lozenge';
 import { md, Example, Props } from '@atlaskit/docs';
+import Lozenge from '@atlaskit/lozenge';
 
 const Deprecated = ({ children }: { children: ReactNode }) => (
   <h2>

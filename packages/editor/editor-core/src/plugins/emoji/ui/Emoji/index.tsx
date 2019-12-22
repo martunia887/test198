@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { ResourcedEmoji } from '@atlaskit/emoji/element';
-import { EmojiId } from '@atlaskit/emoji/types';
 import {
   ProviderFactory,
   Providers,
   WithProviders,
 } from '@atlaskit/editor-common';
+import { ResourcedEmoji } from '@atlaskit/emoji/element';
+import { EmojiId } from '@atlaskit/emoji/types';
+
 import { ClickSelectWrapper } from '../../../../ui/styles';
 
 export interface EmojiProps extends EmojiId {

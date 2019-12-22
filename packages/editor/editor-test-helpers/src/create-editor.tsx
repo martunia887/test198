@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { mount, ReactWrapper } from 'enzyme';
 import { IntlProvider } from 'react-intl';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   EditorInstance,
   EditorPlugin,
@@ -10,13 +13,11 @@ import {
   PortalRenderer,
   ReactEditorView,
 } from '@atlaskit/editor-core';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { mount, ReactWrapper } from 'enzyme';
-import { Refs, RefsNode } from './schema-builder';
 import { Schema } from 'prosemirror-model';
 import { PluginKey } from 'prosemirror-state';
+
 import patchEditorViewForJSDOM from './jsdom-fixtures';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { Refs, RefsNode } from './schema-builder';
 import { setSelection } from './utils/set-selection';
 
 class TestReactEditorView extends ReactEditorView<{

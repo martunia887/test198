@@ -8,7 +8,6 @@ import {
   docFileId,
   unknownFileId,
 } from '@atlaskit/media-test-helpers';
-
 import { Card } from '../src';
 
 const mediaClientConfig = createStorybookMediaClientConfig();

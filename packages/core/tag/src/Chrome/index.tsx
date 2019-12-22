@@ -4,8 +4,8 @@ import React, {
   FocusEvent,
   KeyboardEvent,
 } from 'react';
-import { Span } from './styled';
 import { TagColor } from '../types';
+import { Span } from './styled';
 
 interface Props {
   children: ReactNode;

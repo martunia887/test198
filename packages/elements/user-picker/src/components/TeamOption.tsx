@@ -1,11 +1,13 @@
-import { colors } from '@atlaskit/theme';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { colors } from '@atlaskit/theme';
+
 import { Team } from '../types';
+
 import { AvatarItemOption, TextWrapper } from './AvatarItemOption';
 import { HighlightText } from './HighlightText';
-import { messages } from './i18n';
 import { SizeableAvatar } from './SizeableAvatar';
+import { messages } from './i18n';
 
 export type TeamOptionProps = {
   team: Team;

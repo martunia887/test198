@@ -1,7 +1,8 @@
 import * as React from 'react';
-import ManagedStatusPicker from '../example-helpers/ManagedStatusPicker';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import * as frLocaleData from 'react-intl/locale-data/fr';
+
+import ManagedStatusPicker from '../example-helpers/ManagedStatusPicker';
 import fr from '../src/i18n/fr';
 
 addLocaleData(frLocaleData);

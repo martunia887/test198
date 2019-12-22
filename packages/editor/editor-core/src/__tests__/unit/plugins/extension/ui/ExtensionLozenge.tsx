@@ -4,11 +4,11 @@ import {
   inlineExtensionData,
   bodiedExtensionData,
 } from '@atlaskit/editor-test-helpers';
-import { StyledImage } from '../../../../../plugins/extension/ui/Extension/styles';
 
 import Lozenge, {
   ICON_SIZE,
 } from '../../../../../plugins/extension/ui/Extension/Lozenge';
+import { StyledImage } from '../../../../../plugins/extension/ui/Extension/styles';
 import { PlaceholderFallback } from '../../../../../plugins/extension/ui/Extension/styles';
 
 describe('@atlaskit/editor-core/ui/Extension/Lozenge', () => {

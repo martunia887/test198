@@ -3,11 +3,12 @@ import { SyntheticEvent } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { akEditorTableNumberColumnWidth } from '@atlaskit/editor-common';
 import Tooltip from '@atlaskit/tooltip';
-import { TableCssClassName as ClassName } from '../../types';
-import { tableToolbarSize } from '../styles';
-import tableMessages from '../messages';
-import { closestElement } from '../../../../utils';
+
 import * as keymaps from '../../../../keymaps';
+import { closestElement } from '../../../../utils';
+import { TableCssClassName as ClassName } from '../../types';
+import tableMessages from '../messages';
+import { tableToolbarSize } from '../styles';
 
 export interface ButtonProps {
   type: 'row' | 'column';

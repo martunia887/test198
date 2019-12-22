@@ -1,12 +1,14 @@
 import * as React from 'react';
+import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
 import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
-import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+
 import AtlassianSwitcher from '../src';
 import { createJoinableSitesProvider } from '../src/providers/default-joinable-sites-provider';
 import { JoinableSitesResponse } from '../src/types';
 import mockJoinableSites from '../test-helpers/mockJoinableSites';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 const fetchJoinableSites: () => Promise<JoinableSitesResponse> = () =>
   new Promise(resolve => {

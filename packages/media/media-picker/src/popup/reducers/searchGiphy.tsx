@@ -1,11 +1,10 @@
 import { Action } from 'redux';
-
-import { State } from '../domain';
 import {
   isSearchGiphyAction,
   isSearchGiphyFulfilledAction,
   isSearchGiphyFailedAction,
 } from '../actions/searchGiphy';
+import { State } from '../domain';
 
 export const giphySearchStarted = (state: State, action: Action): State => {
   if (isSearchGiphyAction(action)) {

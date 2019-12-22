@@ -1,6 +1,6 @@
 import React from 'react';
-import Pagination from '@atlaskit/pagination';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import Pagination from '@atlaskit/pagination';
 
 interface Props {
   value?: number;

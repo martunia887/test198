@@ -1,8 +1,8 @@
 // @flow
 import React, { Children, Component, type Node } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
-import { withTheme, ThemeProvider } from 'styled-components';
 import { TransitionGroup } from 'react-transition-group';
+import { withTheme, ThemeProvider } from 'styled-components';
 
 type Props = {
   children: Node,

@@ -1,3 +1,4 @@
+import * as baseCommand from 'prosemirror-commands';
 import {
   ResolvedPos,
   Fragment,
@@ -6,6 +7,7 @@ import {
   NodeType,
   Node,
 } from 'prosemirror-model';
+import * as baseListCommand from 'prosemirror-schema-list';
 import {
   EditorState,
   Transaction,
@@ -13,28 +15,25 @@ import {
   NodeSelection,
 } from 'prosemirror-state';
 import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
-import { EditorView } from 'prosemirror-view';
-import * as baseCommand from 'prosemirror-commands';
-import * as baseListCommand from 'prosemirror-schema-list';
 import {
   hasParentNodeOfType,
   findPositionOfNodeBefore,
 } from 'prosemirror-utils';
-import { hasVisibleContent, isNodeEmpty } from '../../utils/document';
+import { EditorView } from 'prosemirror-view';
+
+import { Command } from '../../types';
+import {
+  isRangeOfType,
+  compose,
+  sanitiseSelectionMarksForWrapping,
+} from '../../utils';
 import {
   filter,
   isEmptySelectionAtStart,
   isFirstChildOfParent,
   findCutBefore,
 } from '../../utils/commands';
-import {
-  isRangeOfType,
-  compose,
-  sanitiseSelectionMarksForWrapping,
-} from '../../utils';
-import { liftFollowingList, liftSelectionList } from './transforms';
-import { Command } from '../../types';
-import { GapCursorSelection } from '../gap-cursor';
+import { hasVisibleContent, isNodeEmpty } from '../../utils/document';
 import {
   withAnalytics,
   ACTION,
@@ -46,6 +45,9 @@ import {
   INDENT_TYPE,
   addAnalytics,
 } from '../analytics';
+import { GapCursorSelection } from '../gap-cursor';
+
+import { liftFollowingList, liftSelectionList } from './transforms';
 
 export type InputMethod = INPUT_METHOD.KEYBOARD | INPUT_METHOD.TOOLBAR;
 

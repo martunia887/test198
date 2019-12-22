@@ -1,3 +1,4 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
   p,
@@ -8,19 +9,19 @@ import {
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
 
+import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { MediaState } from '../../../../plugins/media/pm-plugins/main';
 import {
   insertMediaSingleNode,
   insertMediaAsMediaSingle,
 } from '../../../../plugins/media/utils/media-single';
-import { MediaState } from '../../../../plugins/media/pm-plugins/main';
+
 import {
   temporaryFileId,
   testCollectionName,
   temporaryMediaWithDimensions,
   temporaryMedia,
 } from './_utils';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 const createMediaState = (
   id: string,

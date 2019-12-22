@@ -9,7 +9,6 @@ import React, {
   useMemo,
 } from 'react';
 import throttle from 'lodash.throttle';
-
 import { OverflowProviderProps } from './types';
 
 // Prevent width detector from triggering too many re-renders

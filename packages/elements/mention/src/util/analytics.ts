@@ -1,21 +1,20 @@
 import {
+  GasPayload,
+  OPERATIONAL_EVENT_TYPE,
+  UI_EVENT_TYPE,
+} from '@atlaskit/analytics-gas-types';
+import {
   UIAnalyticsEvent,
   WithAnalyticsEventsProps,
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 
-import {
-  GasPayload,
-  OPERATIONAL_EVENT_TYPE,
-  UI_EVENT_TYPE,
-} from '@atlaskit/analytics-gas-types';
 import { ELEMENTS_CHANNEL } from '../_constants';
+import { isSpecialMentionText } from '../types';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-
-import { isSpecialMentionText } from '../types';
 
 export enum ComponentNames {
   TYPEAHEAD = 'mentionTypeahead',

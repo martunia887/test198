@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import { render } from '@testing-library/react';
 import Item, { ItemGroup } from '@atlaskit/item';
+import { render } from '@testing-library/react';
 
 import DropList from '../..';
 

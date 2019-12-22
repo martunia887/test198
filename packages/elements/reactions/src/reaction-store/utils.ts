@@ -1,6 +1,6 @@
-import { ReactionsReadyState } from '../types/ReactionsState';
 import { ReactionStatus } from '../types/ReactionStatus';
 import { ReactionSummary } from '../types/ReactionSummary';
+import { ReactionsReadyState } from '../types/ReactionsState';
 import { Updater } from '../types/Updater';
 
 export const compareEmojiId = (l: string, r: string): number => {

@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import Button from '@atlaskit/button';
-import { gridSize } from '@atlaskit/theme';
 import styled from 'styled-components';
+import Button from '@atlaskit/button';
 import { CancelableEvent } from '@atlaskit/quick-search';
+import { gridSize } from '@atlaskit/theme';
+
 import { messages } from '../../messages';
+import { JiraApplicationPermission } from '../GlobalQuickSearchWrapper';
 import {
   getJiraAdvancedSearchUrl,
   JiraEntityTypes,
 } from '../SearchResultsUtil';
-import { JiraApplicationPermission } from '../GlobalQuickSearchWrapper';
 
 type onAdvancedSearchClick = (
   e: CancelableEvent,

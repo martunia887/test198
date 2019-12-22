@@ -1,8 +1,9 @@
+import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { waitUntil } from '@atlaskit/util-common-test';
 import { mention, MockMentionResource } from '@atlaskit/util-data-test';
-import { ReactWrapper } from 'enzyme';
-import * as React from 'react';
+
 import { HttpError } from '../../../api/MentionResource';
 import MentionItem from '../../../components/MentionItem';
 import MentionList from '../../../components/MentionList';

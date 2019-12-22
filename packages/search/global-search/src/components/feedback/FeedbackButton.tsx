@@ -2,8 +2,9 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
-import { colors, gridSize } from '@atlaskit/theme';
 import FeedbackIcon from '@atlaskit/icon/glyph/feedback';
+import { colors, gridSize } from '@atlaskit/theme';
+
 import { messages } from '../../messages';
 
 interface Props {

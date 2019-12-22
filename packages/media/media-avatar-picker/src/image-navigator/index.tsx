@@ -2,8 +2,6 @@ import * as React from 'react';
 import { Component } from 'react';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import Button from '@atlaskit/button';
-import ImageCropper from '../image-cropper';
-import Spinner from '@atlaskit/spinner';
 import {
   fileToDataURI,
   dataURItoFile,
@@ -13,7 +11,20 @@ import {
   Vector2,
   messages,
 } from '@atlaskit/media-ui';
+import Spinner from '@atlaskit/spinner';
 import * as exenv from 'exenv';
+
+import { ERROR, MAX_SIZE_MB, ACCEPT } from '../avatar-picker-dialog';
+import {
+  CONTAINER_SIZE,
+  CONTAINER_PADDING,
+} from '../avatar-picker-dialog/layout-const';
+import ImageCropper from '../image-cropper';
+import { fileSizeMb } from '../util';
+import { Viewport, renderViewport } from '../viewport';
+
+import { uploadPlaceholder, errorIcon } from './images';
+import { Slider } from './slider';
 import {
   Container,
   SliderContainer,
@@ -26,15 +37,6 @@ import {
   PaddedBreak,
   ImageBg,
 } from './styled';
-import { uploadPlaceholder, errorIcon } from './images';
-import { fileSizeMb } from '../util';
-import { ERROR, MAX_SIZE_MB, ACCEPT } from '../avatar-picker-dialog';
-import { Viewport, renderViewport } from '../viewport';
-import { Slider } from './slider';
-import {
-  CONTAINER_SIZE,
-  CONTAINER_PADDING,
-} from '../avatar-picker-dialog/layout-const';
 
 export interface LoadParameters {
   export: () => string;

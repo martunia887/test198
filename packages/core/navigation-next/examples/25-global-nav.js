@@ -13,10 +13,10 @@ import {
   DropdownItemGroup,
   DropdownMenuStateless,
 } from '@atlaskit/dropdown-menu';
-import StarIcon from '@atlaskit/icon/glyph/star';
 import CreateIcon from '@atlaskit/icon/glyph/add';
-import SearchIcon from '@atlaskit/icon/glyph/search';
 import HelpIcon from '@atlaskit/icon/glyph/question-circle';
+import SearchIcon from '@atlaskit/icon/glyph/search';
+import StarIcon from '@atlaskit/icon/glyph/star';
 import { AtlassianIcon } from '@atlaskit/logo';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
 import { colors } from '@atlaskit/theme';

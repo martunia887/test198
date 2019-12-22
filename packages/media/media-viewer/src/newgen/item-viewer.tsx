@@ -1,4 +1,13 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
+import {
+  GasPayload,
+  GasScreenEventPayload,
+} from '@atlaskit/analytics-gas-types';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import {
   MediaClient,
   FileState,
@@ -6,25 +15,10 @@ import {
   isExternalImageIdentifier,
   isFileIdentifier,
 } from '@atlaskit/media-client';
-import { FormattedMessage } from 'react-intl';
 import { messages, WithShowControlMethodProp } from '@atlaskit/media-ui';
-import { Outcome } from './domain';
-import { ImageViewer } from './viewers/image';
-import { VideoViewer } from './viewers/video';
-import { DocViewer } from './viewers/doc';
-import { Spinner } from './loading';
-import { Subscription } from 'rxjs/Subscription';
 import deepEqual from 'deep-equal';
-import ErrorMessage, {
-  createError,
-  MediaViewerError,
-  ErrorName,
-} from './error';
-import { ErrorViewDownloadButton } from './download';
-import {
-  withAnalyticsEvents,
-  WithAnalyticsEventsProps,
-} from '@atlaskit/analytics-next';
+import { Subscription } from 'rxjs/Subscription';
+
 import {
   ViewerLoadPayload,
   mediaFileCommencedEvent,
@@ -32,12 +26,19 @@ import {
   mediaFileLoadFailedEvent,
 } from './analytics/item-viewer';
 import { channel } from './analytics/index';
-import {
-  GasPayload,
-  GasScreenEventPayload,
-} from '@atlaskit/analytics-gas-types';
+import { Outcome } from './domain';
+import { ErrorViewDownloadButton } from './download';
+import ErrorMessage, {
+  createError,
+  MediaViewerError,
+  ErrorName,
+} from './error';
+import { Spinner } from './loading';
 import { AudioViewer } from './viewers/audio';
+import { DocViewer } from './viewers/doc';
+import { ImageViewer } from './viewers/image';
 import { InteractiveImg } from './viewers/image/interactive-img';
+import { VideoViewer } from './viewers/video';
 
 export type Props = Readonly<{
   identifier: Identifier;

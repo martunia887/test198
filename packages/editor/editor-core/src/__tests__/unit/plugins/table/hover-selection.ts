@@ -1,9 +1,3 @@
-import { DecorationSet, EditorView } from 'prosemirror-view';
-import {
-  getCellsInColumn,
-  getCellsInRow,
-  getCellsInTable,
-} from 'prosemirror-utils';
 import {
   doc,
   p,
@@ -15,6 +9,12 @@ import {
   selectColumns,
   selectCell,
 } from '@atlaskit/editor-test-helpers';
+import {
+  getCellsInColumn,
+  getCellsInRow,
+  getCellsInTable,
+} from 'prosemirror-utils';
+import { DecorationSet, EditorView } from 'prosemirror-view';
 
 import {
   clearHoverSelection,

@@ -1,7 +1,8 @@
 // @flow
 import React, { type Node, createRef } from 'react';
-import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
+import ReactDOM from 'react-dom';
+
 import { FocusLock } from '../../..';
 
 // TODO: Couple of tests have been already tracked in react-focus-lock no need to repeat them.

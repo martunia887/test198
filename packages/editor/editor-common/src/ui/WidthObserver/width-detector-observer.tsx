@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { useInView } from './hooks';
 import { WidthObserverProps } from './types';
 import { browser } from './utils';

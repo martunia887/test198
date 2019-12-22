@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { useEffect, useState, useRef, SyntheticEvent } from 'react';
+import { jsx } from '@emotion/core';
 
 import { iframeCSS } from './styles';
 import { NotificationsProps } from './types';

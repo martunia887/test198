@@ -1,16 +1,17 @@
-import { Node as PMNode } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
 import {
   ContextIdentifierProvider,
   ProviderFactory,
   MediaProvider,
 } from '@atlaskit/editor-common';
-import { ProsemirrorGetPosHandler } from '../../../nodeviews';
+import { Node as PMNode } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
+
 import { EventDispatcher } from '../../../event-dispatcher';
-import { MediaOptions, MediaPMPluginOptions } from '../index';
-import { MediaPluginState } from '../pm-plugins/main';
-import { DispatchAnalyticsEvent } from '../../analytics';
+import { ProsemirrorGetPosHandler } from '../../../nodeviews';
 import { EditorAppearance } from '../../../types';
+import { DispatchAnalyticsEvent } from '../../analytics';
+import { MediaPluginState } from '../pm-plugins/main';
+import { MediaOptions, MediaPMPluginOptions } from '../index';
 
 export interface MediaSingleNodeProps {
   view: EditorView;

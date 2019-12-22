@@ -7,8 +7,8 @@ import Radio from '../../RadioBase';
 import AkFieldRadioGroupWithAnalytics, {
   AkFieldRadioGroupWithoutAnalytics as AkFieldRadioGroup,
 } from '../../RadioGroupStateless';
-import { name } from '../../version.json';
 import type { ItemPropTypeSmart } from '../../types';
+import { name } from '../../version.json';
 
 describe(name, () => {
   describe('AkFieldRadioGroup (stateless)', () => {

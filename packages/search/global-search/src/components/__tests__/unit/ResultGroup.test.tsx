@@ -1,10 +1,10 @@
 import * as React from 'react';
-
 import { shallow } from 'enzyme';
-import { ResultGroup, Props } from '../../ResultGroup';
-import { makeConfluenceObjectResult } from '../../../__tests__/unit/_test-util';
-import ResultList from '../../ResultList';
 import { ResultItemGroup } from '@atlaskit/quick-search';
+
+import { makeConfluenceObjectResult } from '../../../__tests__/unit/_test-util';
+import { ResultGroup, Props } from '../../ResultGroup';
+import ResultList from '../../ResultList';
 
 const mockedIntl: ReactIntl.InjectedIntl = {} as ReactIntl.InjectedIntl;
 

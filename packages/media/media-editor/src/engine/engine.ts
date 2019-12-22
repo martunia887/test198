@@ -1,23 +1,22 @@
-import * as Core from './core/binaries/mediaEditor';
 import { ExportedImage, ShapeParameters, TextDirection, Tool } from '../common';
-import { ResourceManager } from './resourceManager';
+import { DEFAULT_COLOR } from '../react/editorView/toolbar/popups/colorPopup';
+import { hexToRgb, rgbToHex } from '../util';
 
 import { DrawingArea } from './components/drawingArea';
 import { ImageProvider } from './components/imageProvider';
-import { MouseInput } from './components/mouseInput';
-import { Toolbar } from './components/toolbar';
-import { InputCommand, KeyboardInput } from './components/keyboardInput';
 import { ImageReceiver } from './components/imageReceiver';
+import { InputCommand, KeyboardInput } from './components/keyboardInput';
+import { MouseInput } from './components/mouseInput';
 import { ShapeDeleter } from './components/shapeDeleter';
+import { Toolbar } from './components/toolbar';
 import { UndoerRedoer } from './components/undoerRedoer';
-
+import * as Core from './core/binaries/mediaEditor';
 import { BitmapExporter } from './core/bitmapExporter';
 import { BitmapProvider } from './core/bitmaps/bitmapProvider';
-import { BrowserTypesetter } from './core/typesetter/browserTypesetter';
 import { ContextHolder } from './core/contextHolder';
 import { TimerFactory } from './core/timerFactory';
-import { hexToRgb, rgbToHex } from '../util';
-import { DEFAULT_COLOR } from '../react/editorView/toolbar/popups/colorPopup';
+import { BrowserTypesetter } from './core/typesetter/browserTypesetter';
+import { ResourceManager } from './resourceManager';
 
 export type CoreErrorHandler = (message: string) => void;
 

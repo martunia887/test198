@@ -1,5 +1,4 @@
 import { ADFEntity } from '@atlaskit/adf-utils';
-
 import {
   ExtensionManifest,
   ExtensionKey,

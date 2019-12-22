@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import styled from 'styled-components';
 import { ActivityItem } from '@atlaskit/activity';
 import Spinner from '@atlaskit/spinner';
-import styled from 'styled-components';
+
 import RecentItem from './RecentItem';
 
 const Container = styled.div`

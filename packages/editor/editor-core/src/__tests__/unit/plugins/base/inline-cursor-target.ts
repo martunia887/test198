@@ -1,3 +1,4 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
   doc,
@@ -8,10 +9,9 @@ import {
   td,
   tdEmpty,
 } from '@atlaskit/editor-test-helpers';
-
 import { emoji as emojiData } from '@atlaskit/util-data-test';
+
 import { inlineCursorTargetStateKey } from '../../../../plugins/base/pm-plugins/inline-cursor-target';
-import { ProviderFactory } from '@atlaskit/editor-common';
 
 const emojiProvider = emojiData.testData.getEmojiResourcePromise();
 const providerFactory = ProviderFactory.create({ emojiProvider });

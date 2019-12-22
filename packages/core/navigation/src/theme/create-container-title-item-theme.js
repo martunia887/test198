@@ -1,10 +1,10 @@
 // @flow
 import cloneDeep from 'lodash.clonedeep';
-import type { AnyTheme, ThemeMap } from './types';
 import {
   containerTitleHorizontalPadding,
   containerTitleIconSpacing,
 } from '../shared-variables';
+import type { AnyTheme, ThemeMap } from './types';
 
 const overrideItemTheme = (outerTheme: ThemeMap, key: string): ThemeMap => {
   const original: AnyTheme = outerTheme[key];

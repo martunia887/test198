@@ -1,10 +1,12 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { toEmojiId } from '../../util/type-helpers';
+import classNames from 'classnames';
+
 import { EmojiDescription, OnEmojiEvent } from '../../types';
 import { leftClick } from '../../util/mouse';
+import { toEmojiId } from '../../util/type-helpers';
 import EmojiPreview from '../common/EmojiPreview';
+
 import * as styles from './styles';
 
 export interface Props {

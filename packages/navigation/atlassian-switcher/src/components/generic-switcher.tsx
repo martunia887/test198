@@ -1,7 +1,17 @@
 import * as React from 'react';
 import { Messages } from 'react-intl';
+
 import Switcher from '../primitives/themed-switcher';
 import CommonDataProvider from '../providers/common-data-provider';
+import {
+  JoinableSitesProvider,
+  JoinableSitesDataProvider,
+} from '../providers/joinable-sites-data-provider';
+import {
+  AvailableProductsProvider,
+  AvailableProductsDataProvider,
+} from '../providers/products-data-provider';
+import { WithTheme } from '../theme/types';
 import {
   Product,
   FeatureMap,
@@ -10,15 +20,6 @@ import {
   WithRecommendationsFeatureFlags,
 } from '../types';
 import { mapResultsToSwitcherProps } from '../utils/map-results-to-switcher-props';
-import {
-  AvailableProductsProvider,
-  AvailableProductsDataProvider,
-} from '../providers/products-data-provider';
-import {
-  JoinableSitesProvider,
-  JoinableSitesDataProvider,
-} from '../providers/joinable-sites-data-provider';
-import { WithTheme } from '../theme/types';
 
 export type GenericSwitcherProps = WithTheme &
   Partial<WithRecommendationsFeatureFlags> & {

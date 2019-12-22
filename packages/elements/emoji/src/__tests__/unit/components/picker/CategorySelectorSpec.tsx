@@ -1,16 +1,17 @@
-import { mountWithIntl } from '@atlaskit/editor-test-helpers';
-import { ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { mountWithIntl } from '@atlaskit/editor-test-helpers';
+
 import { messages } from '../../../../components/i18n';
-import { CategoryDescriptionMap } from '../../../../components/picker/categories';
 import CategorySelector, {
   Props,
   sortCategories,
 } from '../../../../components/picker/CategorySelector';
+import { CategoryDescriptionMap } from '../../../../components/picker/categories';
 import * as styles from '../../../../components/picker/styles';
+import { CategoryId } from '../../../../types';
 import { defaultCategories } from '../../../../util/constants';
 import { isMessagesKey } from '../../../../util/type-helpers';
-import { CategoryId } from '../../../../types';
 
 const setupComponent = (props?: Props): ReactWrapper<any, any> =>
   mountWithIntl(<CategorySelector {...props} />);

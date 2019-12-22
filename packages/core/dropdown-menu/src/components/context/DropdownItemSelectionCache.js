@@ -2,8 +2,9 @@
 import React, { Component, type Node } from 'react';
 import PropTypes from 'prop-types';
 import find from 'array-find';
-import { selectionCacheContext } from '../../util/contextNamespace';
+
 import type { CachedItem, GroupId, ItemId } from '../../types';
+import { selectionCacheContext } from '../../util/contextNamespace';
 
 type Props = {
   children?: Node,

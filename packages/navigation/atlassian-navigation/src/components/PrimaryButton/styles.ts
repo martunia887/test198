@@ -1,6 +1,7 @@
 import { ThemeProps, ThemeTokens } from '@atlaskit/button/types';
-import { CSSObject } from '@emotion/core';
 import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
+import { CSSObject } from '@emotion/core';
+
 import { skeletonCSS } from '../../common/styles';
 import { NavigationTheme } from '../../theme';
 

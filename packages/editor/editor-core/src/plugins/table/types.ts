@@ -1,6 +1,3 @@
-import { Node as PmNode } from 'prosemirror-model';
-import { Transaction } from 'prosemirror-state';
-import { DecorationSet } from 'prosemirror-view';
 import {
   TableLayout,
   tablePrefixSelector,
@@ -8,7 +5,10 @@ import {
   tableHeaderSelector,
 } from '@atlaskit/adf-schema';
 import { TableSharedCssClassName } from '@atlaskit/editor-common';
+import { Node as PmNode } from 'prosemirror-model';
+import { Transaction } from 'prosemirror-state';
 import { Rect } from 'prosemirror-tables';
+import { DecorationSet } from 'prosemirror-view';
 
 export enum SortOrder {
   ASC = 'asc',

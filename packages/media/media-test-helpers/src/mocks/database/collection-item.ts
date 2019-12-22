@@ -1,5 +1,8 @@
-import * as uuid from 'uuid';
 import { MediaCollectionItem } from '@atlaskit/media-client';
+import * as uuid from 'uuid';
+
+import { mapDataUriToBlob } from '../../utils';
+
 import {
   getHackerNoun,
   getPastDate,
@@ -7,8 +10,6 @@ import {
   getFakeFileName,
   getTextFileType,
 } from './mockData';
-
-import { mapDataUriToBlob } from '../../utils';
 
 export type CollectionItem = MediaCollectionItem & {
   readonly collectionName?: string;

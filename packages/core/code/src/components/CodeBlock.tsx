@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
+
 import { normalizeLanguage, SupportedLanguages } from '../supportedLanguages';
 import { Theme, ThemeProps, applyTheme } from '../themes/themeBuilder';
+
 import Code from './Code';
 
 export interface CodeBlockProps {

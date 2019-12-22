@@ -1,5 +1,3 @@
-import { Rect } from 'prosemirror-tables';
-import { getSelectionRect } from 'prosemirror-utils';
 import {
   doc,
   p,
@@ -11,9 +9,12 @@ import {
   thEmpty,
   tdEmpty,
 } from '@atlaskit/editor-test-helpers';
-import { TablePluginState } from '../../../../../plugins/table/types';
-import { deleteRows } from '../../../../../plugins/table/transforms';
+import { Rect } from 'prosemirror-tables';
+import { getSelectionRect } from 'prosemirror-utils';
+
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
+import { deleteRows } from '../../../../../plugins/table/transforms';
+import { TablePluginState } from '../../../../../plugins/table/types';
 
 const rowsToRect = (rows: Array<number>, noOfColumns: number): Rect => ({
   left: 0,

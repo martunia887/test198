@@ -1,3 +1,4 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   doc,
   hr,
@@ -8,7 +9,6 @@ import {
   hardBreak,
   blockquote,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 describe('inputrules', () => {
   const createEditor = createEditorFactory();

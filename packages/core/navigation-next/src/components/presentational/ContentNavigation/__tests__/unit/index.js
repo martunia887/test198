@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { mount, shallow } from 'enzyme';
 
-import ContentNavigation from '../../index';
 import { transitionDurationMs } from '../../../../../common/constants';
+import ContentNavigation from '../../index';
 
 const defaultProps = {
   isVisible: false,

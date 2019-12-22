@@ -1,12 +1,11 @@
+import { todayTimestampInUTC } from '@atlaskit/editor-common';
 import {
   EditorState,
   Transaction,
   NodeSelection,
   Selection,
 } from 'prosemirror-state';
-import { todayTimestampInUTC } from '@atlaskit/editor-common';
-import { pluginKey } from './plugin';
-import { DateType } from './index';
+
 import { Command } from '../../types';
 import {
   addAnalytics,
@@ -16,6 +15,9 @@ import {
   EVENT_TYPE,
 } from '../analytics';
 import { TOOLBAR_MENU_TYPE } from '../insert-block/ui/ToolbarInsertBlock';
+
+import { pluginKey } from './plugin';
+import { DateType } from './index';
 
 export const insertDate = (
   date?: DateType,

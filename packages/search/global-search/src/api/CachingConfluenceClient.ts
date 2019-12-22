@@ -3,8 +3,8 @@ import {
   Result,
   ConfluenceObjectResult,
 } from '../model/Result';
-import ConfluenceClientImpl from './ConfluenceClient';
 import { SimpleCache } from '../util/simple-cache';
+import ConfluenceClientImpl from './ConfluenceClient';
 
 export default class CachingConfluenceClient extends ConfluenceClientImpl {
   itemCache: SimpleCache<Promise<ConfluenceObjectResult[]>>;

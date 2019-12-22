@@ -1,6 +1,6 @@
-import { LocalUploadComponent } from './localUpload';
 import { UploadEventPayloadMap, UploadParams } from '../types';
 import { UploadComponent, UploadEventEmitter } from './component';
+import { LocalUploadComponent } from './localUpload';
 
 export interface LocalUploadConfig {
   uploadParams: UploadParams; // This is tenant upload params

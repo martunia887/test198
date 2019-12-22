@@ -1,4 +1,10 @@
 import {
+  RequestServiceOptions,
+  ServiceConfig,
+  utils,
+} from '@atlaskit/util-service-support';
+
+import {
   Result,
   PersonResult,
   ResultType,
@@ -8,13 +14,11 @@ import {
   PeopleResults,
   ConfluenceObjectResults,
 } from '../model/Result';
-import { mapJiraItemToResult } from './JiraItemMapper';
+import { ModelParam } from '../util/model-parameters';
+
 import { mapConfluenceItemToResult } from './ConfluenceItemMapper';
-import {
-  RequestServiceOptions,
-  ServiceConfig,
-  utils,
-} from '@atlaskit/util-service-support';
+import { mapJiraItemToResult } from './JiraItemMapper';
+import { GlobalSearchPrefetchedResults } from './prefetchResults';
 import {
   Scope,
   ConfluenceItem,
@@ -24,8 +28,6 @@ import {
   UrsPersonItem,
   NavScopeResultItem,
 } from './types';
-import { ModelParam } from '../util/model-parameters';
-import { GlobalSearchPrefetchedResults } from './prefetchResults';
 
 export const DEFAULT_AB_TEST: ABTest = Object.freeze({
   experimentId: 'default',

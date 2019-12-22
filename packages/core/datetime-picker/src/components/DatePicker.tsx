@@ -1,28 +1,25 @@
-import Calendar, { CalendarClassType, ArrowKeys } from '@atlaskit/calendar';
-import pick from 'lodash.pick';
-import CalendarIcon from '@atlaskit/icon/glyph/calendar';
-import Select, { mergeStyles } from '@atlaskit/select';
-import styled from '@emotion/styled';
-import {
-  createLocalizationProvider,
-  LocalizationProvider,
-} from '@atlaskit/locale';
-import { borderRadius, layers, gridSize } from '@atlaskit/theme/constants';
-import { N20, B100 } from '@atlaskit/theme/colors';
-import { e200 } from '@atlaskit/theme/elevation';
+import React, { CSSProperties } from 'react';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
+import Calendar, { CalendarClassType, ArrowKeys } from '@atlaskit/calendar';
+import CalendarIcon from '@atlaskit/icon/glyph/calendar';
+import {
+  createLocalizationProvider,
+  LocalizationProvider,
+} from '@atlaskit/locale';
+import Select, { mergeStyles } from '@atlaskit/select';
+import { N20, B100 } from '@atlaskit/theme/colors';
+import { borderRadius, layers, gridSize } from '@atlaskit/theme/constants';
+import { e200 } from '@atlaskit/theme/elevation';
+import pick from 'lodash.pick';
+import styled from '@emotion/styled';
 // eslint-disable-next-line no-restricted-imports
 import { format, isValid, parse, lastDayOfMonth } from 'date-fns';
-import React, { CSSProperties } from 'react';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
+
 import {
   ClearIndicator,
   defaultDateFormat,
@@ -31,6 +28,10 @@ import {
 } from '../internal';
 import FixedLayer from '../internal/FixedLayer';
 import { SelectProps, Appearance, Spacing } from '../types';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 
 /* eslint-disable react/no-unused-prop-types */
 export interface Props extends WithAnalyticsEventsProps {

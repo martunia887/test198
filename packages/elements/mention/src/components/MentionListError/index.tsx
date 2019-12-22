@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { HttpError } from '../../api/MentionResource';
 import {
   DefaultAdvisedAction,
@@ -7,6 +8,7 @@ import {
   Formatter,
   LoginAgain,
 } from '../../util/i18n';
+
 import { GenericErrorIllustration } from './GenericErrorIllustration';
 import {
   MentionListAdviceStyle,

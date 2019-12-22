@@ -1,7 +1,4 @@
-import { snapshot, initFullPageEditorWithAdf, Device } from '../_utils';
-import complexTableWithMergedCells from './__fixtures__/complex-table-with-merged-cells.adf.json';
-import lastColumnMergedTable from './__fixtures__/last-column-merged-table.adf.json';
-import tableWithNumberedColumn from './__fixtures__/table-with-numbered-column.adf.json';
+import { selectors } from '../../__helpers/page-objects/_editor';
 import {
   selectRow,
   selectColumn,
@@ -9,8 +6,12 @@ import {
   selectNumberedColumnRow,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
-import { selectors } from '../../__helpers/page-objects/_editor';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initFullPageEditorWithAdf, Device } from '../_utils';
+
+import complexTableWithMergedCells from './__fixtures__/complex-table-with-merged-cells.adf.json';
+import lastColumnMergedTable from './__fixtures__/last-column-merged-table.adf.json';
+import tableWithNumberedColumn from './__fixtures__/table-with-numbered-column.adf.json';
 
 describe('Snapshot Test: Table selection', () => {
   let page: Page;

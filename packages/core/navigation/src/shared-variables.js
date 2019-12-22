@@ -1,8 +1,7 @@
 // @flow
-import { themed } from '@atlaskit/theme/components';
-
-import { gridSize as akGridSize, layers } from '@atlaskit/theme/constants';
 import { B100, N0 } from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
+import { gridSize as akGridSize, layers } from '@atlaskit/theme/constants';
 
 /**
  * NOTE: changing the width of the Navigation is considered a breaking change

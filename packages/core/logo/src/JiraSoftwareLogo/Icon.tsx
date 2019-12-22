@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { uid } from 'react-uid';
 
-import { Props, DefaultProps } from '../constants';
 import Wrapper from '../Wrapper';
+import { Props, DefaultProps } from '../constants';
 
 const svg = (iconGradientStart: string, iconGradientStop: string) => {
   const id = uid({ iconGradientStart: iconGradientStop });

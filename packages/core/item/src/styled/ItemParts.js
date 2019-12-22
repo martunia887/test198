@@ -2,6 +2,7 @@
 import { type StatelessFunctionalComponent } from 'react';
 import styled, { css } from 'styled-components';
 import { fontSize, fontSizeSmall } from '@atlaskit/theme/constants';
+
 import {
   getThemeStyle,
   themeNamespace,

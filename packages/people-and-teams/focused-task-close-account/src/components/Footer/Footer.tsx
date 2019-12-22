@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
-
 import * as Styled from './styled';
 
 interface FooterProps {

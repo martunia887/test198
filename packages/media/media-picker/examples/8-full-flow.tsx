@@ -1,18 +1,20 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import Button from '@atlaskit/button';
+import { Card } from '@atlaskit/media-card';
+import {
+  FileIdentifier,
+  globalMediaEventEmitter,
+} from '@atlaskit/media-client';
 import {
   defaultCollectionName,
   createStorybookMediaClientConfig,
   createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import { Card } from '@atlaskit/media-card';
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
-import {
-  FileIdentifier,
-  globalMediaEventEmitter,
-} from '@atlaskit/media-client';
-import Button from '@atlaskit/button';
 import Select, { ValueType } from '@atlaskit/select';
+
 import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
 import { MediaPicker } from '../src';
 import {
@@ -22,7 +24,6 @@ import {
   UploadProcessingEventPayload,
   UploadEndEventPayload,
 } from '../src/types';
-import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 
 addGlobalEventEmitterListeners();
 

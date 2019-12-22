@@ -1,5 +1,5 @@
-import { Component } from './component';
 import { isImageRemote } from '@atlaskit/media-client';
+import { Component } from './component';
 
 export interface ImageProvider extends Component {
   readonly backImage: HTMLImageElement;

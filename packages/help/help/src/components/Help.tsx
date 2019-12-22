@@ -5,12 +5,13 @@ import {
   withAnalyticsContext,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
+
 import { defaultAnalyticsAttributes } from '../analytics';
 import { Article, ArticleItem, ArticleFeedback } from '../model/Article';
-import { HelpContextProvider } from './HelpContext';
-import MessagesIntlProvider from './MessagesIntlProvider';
 
 import HelpContent from './HelpContent';
+import { HelpContextProvider } from './HelpContext';
+import MessagesIntlProvider from './MessagesIntlProvider';
 
 export interface Props extends WithAnalyticsEventsProps {
   // Id of the article to display. This prop is optional, if is not defined the default content will be displayed

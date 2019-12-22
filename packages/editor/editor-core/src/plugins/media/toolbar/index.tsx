@@ -1,27 +1,28 @@
 import { InjectedIntl } from 'react-intl';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import { EditorState } from 'prosemirror-state';
 import { removeSelectedNode } from 'prosemirror-utils';
-import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
-import { ProviderFactory } from '@atlaskit/editor-common';
 
 import commonMessages from '../../../messages';
-import { Command } from '../../../types';
 import {
   FloatingToolbarConfig,
   FloatingToolbarItem,
 } from '../../../plugins/floating-toolbar/types';
-import { stateKey, MediaPluginState } from '../pm-plugins/main';
+import { Command } from '../../../types';
 import { hoverDecoration } from '../../base/pm-plugins/decoration';
+import { getPluginState as getMediaAltTextPluginState } from '../pm-plugins/alt-text';
+import { MediaLinkingState, getMediaLinkingState } from '../pm-plugins/linking';
+import { stateKey, MediaPluginState } from '../pm-plugins/main';
+
+import { altTextButton, getAltTextToolbar } from './alt-text';
 import { renderAnnotationButton } from './annotation';
+import buildLayoutButtons from './buildMediaLayoutButtons';
 import {
   getLinkingToolbar,
   buildLinkingButtons,
   shouldShowMediaLinkToolbar,
 } from './linking';
-import buildLayoutButtons from './buildMediaLayoutButtons';
-import { MediaLinkingState, getMediaLinkingState } from '../pm-plugins/linking';
-import { getPluginState as getMediaAltTextPluginState } from '../pm-plugins/alt-text';
-import { altTextButton, getAltTextToolbar } from './alt-text';
 
 const remove: Command = (state, dispatch) => {
   if (dispatch) {

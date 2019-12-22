@@ -1,7 +1,3 @@
-import * as chai from 'chai';
-import { expect } from 'chai';
-import * as assert from 'assert';
-import { Node as PMNode, Schema } from 'prosemirror-model';
 import { confluenceSchemaWithMediaSingle as schema } from '@atlaskit/adf-schema';
 import { chaiPlugin } from '@atlaskit/editor-test-helpers';
 import {
@@ -53,13 +49,17 @@ import {
   decisionItem,
   hardBreak,
 } from '@atlaskit/editor-test-helpers';
+import { colors } from '@atlaskit/theme';
+import * as assert from 'assert';
+import * as chai from 'chai';
+import { expect } from 'chai';
+import { Node as PMNode, Schema } from 'prosemirror-model';
 
 import {
   ConfluenceTransformer,
   CONFLUENCE_LANGUAGE_MAP as LANGUAGE_MAP,
 } from '../../src';
 import { mapPanelTypeToPm } from '../../src/utils';
-import { colors } from '@atlaskit/theme';
 
 chai.use(chaiPlugin);
 

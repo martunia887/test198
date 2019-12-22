@@ -1,15 +1,10 @@
-import uuidV4 from 'uuid/v4';
-import {
-  updateMediaNodeAttrs,
-  replaceExternalMedia,
-  updateAllMediaNodesAttrs,
-} from '../commands';
 import { MediaAttributes, ExternalMediaAttributes } from '@atlaskit/adf-schema';
 import {
   DEFAULT_IMAGE_HEIGHT,
   DEFAULT_IMAGE_WIDTH,
   MediaProvider,
 } from '@atlaskit/editor-common';
+import { ContextIdentifierProvider } from '@atlaskit/editor-common';
 import {
   getMediaClient,
   isMediaBlobUrl,
@@ -17,14 +12,20 @@ import {
 } from '@atlaskit/media-client';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { ContextIdentifierProvider } from '@atlaskit/editor-common';
-import { MediaPMPluginOptions } from '../';
+import uuidV4 from 'uuid/v4';
+
 import {
   DispatchAnalyticsEvent,
   ACTION,
   ACTION_SUBJECT,
   EVENT_TYPE,
 } from '../../analytics';
+import { MediaPMPluginOptions } from '../';
+import {
+  updateMediaNodeAttrs,
+  replaceExternalMedia,
+  updateAllMediaNodesAttrs,
+} from '../commands';
 
 export type RemoteDimensions = { id: string; height: number; width: number };
 

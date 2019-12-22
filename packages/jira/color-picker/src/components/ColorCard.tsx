@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
 import { colors } from '@atlaskit/theme';
+
 import { ColorCardOption, ColorCardContent } from '../styled/ColorCard';
 
 export interface Props {

@@ -1,11 +1,11 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { NodeEncoder, NodeEncoderOpts } from '..';
+import { Node as PMNode } from 'prosemirror-model';
 
 import { emoji } from './emoji';
 import { hardBreak } from './hard-break';
+import { inlineCard } from './inline-card';
 import { mention } from './mention';
 import { text } from './text';
-import { inlineCard } from './inline-card';
 import { unknown } from './unknown';
 
 const inlinesEncoderMapping: { [key: string]: NodeEncoder } = {

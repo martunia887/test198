@@ -1,5 +1,5 @@
-import { MobileScrollPluginState } from './index';
 import { MobileScrollAction, MobileScrollActionTypes } from './actions';
+import { MobileScrollPluginState } from './index';
 
 export default function(
   state: MobileScrollPluginState,

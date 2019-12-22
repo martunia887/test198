@@ -1,9 +1,10 @@
 import * as React from 'react';
-import Button from '@atlaskit/button';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { withHelp, HelpContextInterface } from '../../HelpContext';
-import { messages } from '../../../messages';
+import Button from '@atlaskit/button';
+
 import SomethingWrongImageFile from '../../../assets/SomethingWrong';
+import { messages } from '../../../messages';
+import { withHelp, HelpContextInterface } from '../../HelpContext';
 
 import { LoadingErrorMessage, LoadingErrorButtonContainer } from './styled';
 

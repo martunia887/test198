@@ -1,6 +1,7 @@
-import { shallow } from 'enzyme';
 import React from 'react';
+import { shallow } from 'enzyme';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers/src/enzyme';
+
 import { HardBreak } from '../../../../react/nodes';
 import Expand from '../../../../ui/Expand';
 

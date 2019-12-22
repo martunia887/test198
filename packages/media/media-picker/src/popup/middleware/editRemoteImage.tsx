@@ -1,13 +1,13 @@
 import { Store, Dispatch } from 'redux';
 
-import { couldNotLoadImage } from '../components/views/editor/phrases';
-import { editorShowError } from '../actions/editorShowError';
-import { editorShowImage } from '../actions/editorShowImage';
-import { editorShowLoading } from '../actions/editorShowLoading';
 import {
   EDIT_REMOTE_IMAGE,
   EditRemoteImageAction,
 } from '../actions/editRemoteImage';
+import { editorShowError } from '../actions/editorShowError';
+import { editorShowImage } from '../actions/editorShowImage';
+import { editorShowLoading } from '../actions/editorShowLoading';
+import { couldNotLoadImage } from '../components/views/editor/phrases';
 import { State } from '../domain';
 
 // When we complete upload, we need to check if we can open the editor.

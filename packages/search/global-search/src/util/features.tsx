@@ -1,6 +1,6 @@
-import { ABTest, DEFAULT_AB_TEST } from '../api/CrossProductSearchClient';
-import memoizeOne from 'memoize-one';
 import deepEqual from 'deep-equal';
+import memoizeOne from 'memoize-one';
+import { ABTest, DEFAULT_AB_TEST } from '../api/CrossProductSearchClient';
 
 const FASTER_SEARCH_EXPERIMENT = 'faster-search';
 const SEARCH_EXTENSIONS_COMPLEX_EXPERIMENT = 'search-extensions-complex';

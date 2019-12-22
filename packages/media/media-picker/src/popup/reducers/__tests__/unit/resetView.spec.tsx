@@ -1,5 +1,5 @@
-import resetView from '../../resetView';
 import { State } from '../../../domain';
+import resetView from '../../resetView';
 
 describe('resetView reducer', () => {
   const action = { type: 'RESET_VIEW' };

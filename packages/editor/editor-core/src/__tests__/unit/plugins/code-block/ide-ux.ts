@@ -1,3 +1,4 @@
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
@@ -8,6 +9,7 @@ import {
   createAnalyticsEventMock,
 } from '@atlaskit/editor-test-helpers';
 import { AllSelection } from 'prosemirror-state';
+
 import {
   AnalyticsEventPayload,
   ACTION,
@@ -18,7 +20,6 @@ import {
   INDENT_DIR,
   INDENT_TYPE,
 } from '../../../../plugins/analytics';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 const createIndentationAttributes = (
   previousIndentationLevel: number,

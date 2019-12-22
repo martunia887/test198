@@ -1,7 +1,8 @@
-import { Action } from 'redux';
-import { isChangeServiceAction } from '../../actions/changeService';
-import { buttonClickPayload, HandlerResult } from '.';
 import { SCREEN_EVENT_TYPE } from '@atlaskit/analytics-gas-types';
+import { Action } from 'redux';
+import { buttonClickPayload, HandlerResult } from '.';
+
+import { isChangeServiceAction } from '../../actions/changeService';
 
 export default (action: Action): HandlerResult => {
   if (isChangeServiceAction(action)) {

@@ -1,5 +1,5 @@
-import { ZoomLevel } from '../../../../newgen/domain/zoomLevel';
 import * as jsc from 'jsverify';
+import { ZoomLevel } from '../../../../newgen/domain/zoomLevel';
 
 const scaleGenerator = () =>
   jsc.oneof(

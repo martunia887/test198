@@ -1,9 +1,9 @@
 /** @jsx jsx */
 
 import { Component, FC, ReactChildren, MouseEvent } from 'react';
-import { layers, gridSize } from '@atlaskit/theme/constants';
-import { N0, N500, N30A, B50 } from '@atlaskit/theme/colors';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
+import { N0, N500, N30A, B50 } from '@atlaskit/theme/colors';
+import { layers, gridSize } from '@atlaskit/theme/constants';
 import { jsx } from '@emotion/core';
 
 import { Slide } from './transitions';

@@ -1,7 +1,7 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import { Page } from '../../__helpers/page-objects/_types';
 import { typeInEditorAtEndOfDocument } from '../../__helpers/page-objects/_editor';
 import { waitForMenuIconsToLoad } from '../../__helpers/page-objects/_quick-insert';
+import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 
 describe('Quick Insert:', () => {
   let page: Page;

@@ -3,6 +3,7 @@ import NotificationIcon from '@atlaskit/icon/glyph/notification';
 
 import { BadgeContainer, NOTIFICATIONS_BADGE_ID } from '../BadgeContainer';
 import { IconButton } from '../IconButton';
+
 import { NotificationsProps } from './types';
 
 export const Notifications = forwardRef(

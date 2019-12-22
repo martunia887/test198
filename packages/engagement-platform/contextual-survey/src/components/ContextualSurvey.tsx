@@ -1,12 +1,14 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
-import SurveyContainer from './SurveyContainer';
-import SurveyForm from './SurveyForm';
+import { FormApi, OnSubmitHandler } from '@atlaskit/form';
+
+import { FormValues } from '../types';
+
+import FeedbackAcknowledgement from './FeedbackAcknowledgement';
 import SignUpPrompt from './SignUpPrompt';
 import SignUpSuccess from './SignUpSuccess';
-import FeedbackAcknowledgement from './FeedbackAcknowledgement';
-import { FormValues } from '../types';
+import SurveyContainer from './SurveyContainer';
+import SurveyForm from './SurveyForm';
 import useEscapeToDismiss from './useEscapeToDismiss';
-import { FormApi, OnSubmitHandler } from '@atlaskit/form';
 
 export enum DismissTrigger {
   AutoDismiss = 'AUTO_DISMISS',

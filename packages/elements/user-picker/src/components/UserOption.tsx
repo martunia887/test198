@@ -1,6 +1,8 @@
-import { colors } from '@atlaskit/theme';
 import * as React from 'react';
+import { colors } from '@atlaskit/theme';
+
 import { User } from '../types';
+
 import { AvatarItemOption, TextWrapper } from './AvatarItemOption';
 import { HighlightText } from './HighlightText';
 import { SizeableAvatar } from './SizeableAvatar';

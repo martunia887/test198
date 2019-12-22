@@ -18,7 +18,6 @@ import {
   labelIconColor,
   bgColor,
 } from '../styled/constants';
-
 import { Elevation } from '../types';
 
 interface FullNameLabelProps {

@@ -5,11 +5,12 @@ import {
   createAndFireEvent,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
+
+import EditedStyles from '../styled/EditedStyles';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-import EditedStyles from '../styled/EditedStyles';
 
 interface Props extends WithAnalyticsEventsProps {
   /** Content to render indicating that the comment has been edited. */

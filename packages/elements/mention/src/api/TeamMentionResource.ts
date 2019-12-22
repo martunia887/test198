@@ -10,13 +10,14 @@ import {
   UserAccessLevel,
   MentionDescription,
 } from '../types';
+import debug from '../util/logger';
+
 import MentionResource, {
   MentionContextIdentifier,
   MentionResourceConfig,
   TeamMentionResourceConfig,
   TeamMentionProvider,
 } from './MentionResource';
-import debug from '../util/logger';
 
 const MAX_QUERY_TEAMS = 20;
 

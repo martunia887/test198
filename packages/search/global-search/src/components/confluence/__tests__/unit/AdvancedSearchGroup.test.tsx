@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
+import { FormattedMessage } from 'react-intl';
 import { ResultData } from '@atlaskit/quick-search';
-import AdvancedSearchGroup, { Props } from '../../AdvancedSearchGroup';
+
 import SearchConfluenceItem from '../../../SearchConfluenceItem';
 import SearchPeopleItem from '../../../SearchPeopleItem';
-import { FormattedMessage } from 'react-intl';
+import AdvancedSearchGroup, { Props } from '../../AdvancedSearchGroup';
 
 function render(partialProps: Partial<Props>) {
   const props: Props = {

@@ -1,6 +1,7 @@
-import Button from '@atlaskit/button';
-import { mount, shallow } from 'enzyme';
 import * as React from 'react';
+import { mount, shallow } from 'enzyme';
+import Button from '@atlaskit/button';
+
 import { Trigger } from '../../../components/Trigger';
 
 const noop = () => {};

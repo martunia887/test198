@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Component } from 'react';
 import classnames from 'classnames';
-import { EditorView } from 'prosemirror-view';
-import { isTableSelected, selectTable, findTable } from 'prosemirror-utils';
 import { TableMap } from 'prosemirror-tables';
+import { isTableSelected, selectTable, findTable } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
 
 import { clearHoverSelection, hoverTable } from '../../../commands';
 import { TableCssClassName as ClassName } from '../../../types';

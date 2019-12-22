@@ -1,10 +1,11 @@
 import * as React from 'react';
-import scrollParent from 'scrollparent';
 import styled from 'styled-components';
 import {
   createStorybookMediaClientConfig,
   genericFileId,
 } from '@atlaskit/media-test-helpers';
+import scrollParent from 'scrollparent';
+
 import { Card } from '../src';
 
 const GradientBackground: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`

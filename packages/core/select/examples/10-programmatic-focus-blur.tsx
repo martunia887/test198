@@ -1,6 +1,5 @@
 import React, { FC, Fragment, ReactNode, useRef } from 'react';
 import Btn from '@atlaskit/button';
-
 import Select from '../src';
 
 const Button = ({

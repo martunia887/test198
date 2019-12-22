@@ -2,9 +2,10 @@ import * as React from 'react';
 import { PureComponent, ReactElement } from 'react';
 import styled from 'styled-components';
 import DropList from '@atlaskit/droplist';
+import { Popup, akEditorFloatingPanelZIndex } from '@atlaskit/editor-common';
 import Item, { ItemGroup } from '@atlaskit/item';
 import Tooltip from '@atlaskit/tooltip';
-import { Popup, akEditorFloatingPanelZIndex } from '@atlaskit/editor-common';
+
 import withOuterListeners from '../with-outer-listeners';
 
 const Wrapper = styled.div`

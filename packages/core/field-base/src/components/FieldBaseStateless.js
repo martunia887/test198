@@ -1,9 +1,11 @@
 // @flow
 import React, { Component } from 'react';
 import InlineDialog from '@atlaskit/inline-dialog';
+
 import { Content, ContentWrapper, ChildWrapper } from '../styled/Content';
-import ValidationElement from './ValidationElement';
 import type { FieldBaseStatelessProps } from '../types';
+
+import ValidationElement from './ValidationElement';
 
 if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
   // eslint-disable-next-line no-console

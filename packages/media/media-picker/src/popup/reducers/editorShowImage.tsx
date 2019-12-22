@@ -1,9 +1,8 @@
-import { State } from '../domain';
-
 import {
   EditorShowImageAction,
   isEditorShowImageAction,
 } from '../actions/editorShowImage';
+import { State } from '../domain';
 
 export default function editorShowImage(
   state: State,

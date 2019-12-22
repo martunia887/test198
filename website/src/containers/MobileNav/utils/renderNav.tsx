@@ -1,7 +1,9 @@
 import React from 'react';
 import { AkNavigationItemGroup } from '@atlaskit/navigation';
-import { RouterNavigationItem, ExternalNavigationItem } from './linkComponents';
+
 import { NavGroup } from '../../../types';
+
+import { RouterNavigationItem, ExternalNavigationItem } from './linkComponents';
 
 export type Props = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;

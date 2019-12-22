@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { FormattedMessage as FormattedMessageNamespace } from 'react-intl';
-
-import DiscoverFilledGlyph from '@atlaskit/icon/glyph/discover-filled';
 import AddIcon from '@atlaskit/icon/glyph/add';
-import SettingsGlyph from '@atlaskit/icon/glyph/settings';
+import DiscoverFilledGlyph from '@atlaskit/icon/glyph/discover-filled';
 import MarketplaceGlyph from '@atlaskit/icon/glyph/marketplace';
-
+import SettingsGlyph from '@atlaskit/icon/glyph/settings';
+import WorldIcon from '@atlaskit/icon/glyph/world';
 import {
   BitbucketIcon,
   ConfluenceIcon,
@@ -16,6 +15,7 @@ import {
   StatuspageIcon,
   TrelloIcon,
 } from '@atlaskit/logo';
+
 import FormattedMessage from '../primitives/formatted-message';
 import {
   RecentContainerType,
@@ -32,10 +32,10 @@ import {
   JoinableSiteUserAvatarPropTypes,
   JoinableProductDetails,
 } from '../types';
-import messages from './messages';
 import { CustomLink, RecentContainer, SwitcherChildItem } from '../types';
-import WorldIcon from '@atlaskit/icon/glyph/world';
+
 import { createIcon, createImageIcon, IconType } from './icon-themes';
+import messages from './messages';
 
 interface MessagesDict {
   [index: string]: FormattedMessageNamespace.MessageDescriptor;

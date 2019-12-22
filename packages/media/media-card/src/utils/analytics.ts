@@ -1,17 +1,16 @@
-import { FileDetails, MediaType, FileState } from '@atlaskit/media-client';
-
 import { GasCorePayload } from '@atlaskit/analytics-gas-types';
-import {
-  version as packageVersion,
-  name as packageName,
-} from '../version.json';
 import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
+import { FileDetails, MediaType, FileState } from '@atlaskit/media-client';
 
 import { ANALYTICS_MEDIA_CHANNEL } from '../root/media-card-analytics-error-boundary';
+import {
+  version as packageVersion,
+  name as packageName,
+} from '../version.json';
 
 export interface MediaCardAnalyticsFileAttributes {
   fileSource: string;

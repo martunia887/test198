@@ -1,18 +1,17 @@
 import React from 'react';
-import { Link, LinkProps } from '../../components/WrappedLink';
-import { toClass } from 'recompose';
+import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import {
   AkSearchDrawer,
   AkNavigationItem,
   AkNavigationItemGroup,
 } from '@atlaskit/navigation';
 import { AkSearch } from '@atlaskit/quick-search';
+import { toClass } from 'recompose';
 
-import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
-
-import * as fs from '../../utils/fs';
-import { Directory } from '../../types';
 import { AtlaskitIcon } from '../../components/AtlaskitIcon';
+import { Link, LinkProps } from '../../components/WrappedLink';
+import { Directory } from '../../types';
+import * as fs from '../../utils/fs';
 
 export type LinkComponentProps = LinkProps & {
   href: string | Record<string, string | Location>;

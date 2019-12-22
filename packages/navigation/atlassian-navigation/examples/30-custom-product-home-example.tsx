@@ -1,6 +1,10 @@
 import React from 'react';
 
+import { AtlassianNavigation } from '../src';
+
 import { DefaultCreate } from './shared/Create';
+import { HelpPopup } from './shared/HelpPopup';
+import { NotificationsPopup } from './shared/NotificationsPopup';
 import {
   bitbucketPrimaryItems,
   confluencePrimaryItems,
@@ -16,14 +20,10 @@ import {
   JiraSoftwareProductHome,
   OpsGenieProductHome,
 } from './shared/ProductHome';
+import { ProfilePopup } from './shared/ProfilePopup';
 import { DefaultSearch } from './shared/Search';
 import { DefaultSettings } from './shared/Settings';
-import { AtlassianNavigation } from '../src';
-
-import { ProfilePopup } from './shared/ProfilePopup';
 import { SwitcherPopup } from './shared/SwitcherPopup';
-import { HelpPopup } from './shared/HelpPopup';
-import { NotificationsPopup } from './shared/NotificationsPopup';
 
 const CustomProductHomeExample = () => (
   <div>

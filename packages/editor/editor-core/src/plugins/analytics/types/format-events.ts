@@ -1,11 +1,11 @@
-import { TrackAEP } from './events';
+import { HeadingLevelsAndNormalText } from '../../block-type/types';
 import {
   ACTION,
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
   INPUT_METHOD,
 } from './enums';
-import { HeadingLevelsAndNormalText } from '../../block-type/types';
+import { TrackAEP } from './events';
 
 export enum INDENT_DIR {
   INDENT = 'indent',

@@ -1,6 +1,6 @@
-import { DateLozenge, Color } from './DateLozenge';
 import * as React from 'react';
 import format from 'date-fns/format';
+import { DateLozenge, Color } from './DateLozenge';
 
 export type ValueType = number;
 

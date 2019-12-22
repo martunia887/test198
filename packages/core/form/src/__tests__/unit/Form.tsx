@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import TextField from '@atlaskit/textfield';
 import { act } from 'react-test-renderer';
-import Form from '../../Form';
+import TextField from '@atlaskit/textfield';
+
 import Field from '../../Field';
+import Form from '../../Form';
 
 describe('Form', () => {
   const submitForm = (wrapper: ReactWrapper<any>) => {

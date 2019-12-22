@@ -1,10 +1,10 @@
 import { Store, Dispatch } from 'redux';
 
+import { changeService } from '../actions/changeService';
 import {
   REQUEST_UNLINK_CLOUD_ACCOUNT,
   RequestUnlinkCloudAccountAction,
 } from '../actions/unlinkCloudAccount';
-import { changeService } from '../actions/changeService';
 import { unlinkCloudAccount } from '../actions/unlinkCloudAccount';
 import { State } from '../domain';
 import { Fetcher } from '../tools/fetcher/fetcher';

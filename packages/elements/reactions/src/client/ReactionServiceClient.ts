@@ -3,8 +3,10 @@ import {
   ServiceConfig,
   utils,
 } from '@atlaskit/util-service-support';
-import { Reactions } from '../types/Reactions';
+
 import { ReactionSummary } from '../types/ReactionSummary';
+import { Reactions } from '../types/Reactions';
+
 import { ReactionClient } from './ReactionClient';
 
 type ReactionsResponse = { ari: string; reactions: ReactionSummary[] };

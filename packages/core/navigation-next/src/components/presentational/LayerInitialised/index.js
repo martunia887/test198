@@ -4,6 +4,7 @@ import { Component } from 'react';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 
 import { navigationUILoaded } from '../../../common/analytics';
+
 import type { LayerInitialisedProps } from './types';
 
 class LayerInitialised extends Component<LayerInitialisedProps> {

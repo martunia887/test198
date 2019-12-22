@@ -1,7 +1,7 @@
 // @flow
 import React, { Component, type Element, type ChildrenArray } from 'react';
-import Header from './Header';
 import { HeadersContainer } from '../styled';
+import Header from './Header';
 
 type Props = {
   children: ChildrenArray<Element<typeof Header>>,

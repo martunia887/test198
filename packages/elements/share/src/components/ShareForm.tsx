@@ -1,12 +1,13 @@
+import * as React from 'react';
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
+import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import Form, { FormFooter, FormSection } from '@atlaskit/form';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { colors, typography } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
 import { LoadOptions, OptionData } from '@atlaskit/user-picker';
-import * as React from 'react';
-import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
-import styled from 'styled-components';
+
 import { messages } from '../i18n';
 import {
   Comment,
@@ -15,6 +16,7 @@ import {
   FormChildrenArgs,
   ProductName,
 } from '../types';
+
 import { CommentField } from './CommentField';
 import CopyLinkButton from './CopyLinkButton';
 import { ShareHeader } from './ShareHeader';

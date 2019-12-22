@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import UploadIcon from '@atlaskit/icon/glyph/upload';
 import DropboxIcon from '@atlaskit/icon/glyph/dropbox';
 import GoogleDriveIcon from '@atlaskit/icon/glyph/googledrive';
-import { FormattedMessage } from 'react-intl';
+import UploadIcon from '@atlaskit/icon/glyph/upload';
 import { messages } from '@atlaskit/media-ui';
+
 import { State } from '../../domain';
-import SidebarItem from './item/sidebarItem';
+
 import GiphySidebarItem from './item/giphySidebarItem';
+import SidebarItem from './item/sidebarItem';
 import { Wrapper, ServiceList, Separator, SeparatorLine } from './styled';
 
 export interface SidebarStateProps {

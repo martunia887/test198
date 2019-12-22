@@ -1,8 +1,10 @@
 import React from 'react';
 import Button from '@atlaskit/button';
 import InlineDialog from '@atlaskit/inline-dialog';
-import IconForType from '../IconForType';
+
 import { IconType, InlineDialogPlacement } from '../../types';
+import IconForType from '../IconForType';
+
 import { Root, ButtonContents, Text, Title } from './styledInlineMessage';
 
 interface Props {

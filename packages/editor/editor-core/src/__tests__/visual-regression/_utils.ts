@@ -1,14 +1,15 @@
+import { CreateCollabProviderOptions } from '@atlaskit/synchrony-test-helpers';
 import {
   getExampleUrl,
   disableAllSideEffects,
   navigateToUrl,
   compareScreenshot,
 } from '@atlaskit/visual-regression/helper';
-import { EditorProps } from '../../types';
-import { Page } from '../__helpers/page-objects/_types';
-import { animationFrame } from '../__helpers/page-objects/_editor';
+
 import { GUTTER_SELECTOR } from '../../plugins/base/pm-plugins/scroll-gutter';
-import { CreateCollabProviderOptions } from '@atlaskit/synchrony-test-helpers';
+import { EditorProps } from '../../types';
+import { animationFrame } from '../__helpers/page-objects/_editor';
+import { Page } from '../__helpers/page-objects/_types';
 
 export {
   setupMediaMocksProviders,

@@ -1,7 +1,8 @@
 import fetchMock from 'fetch-mock';
-import PeopleSearchClient, { GraphqlResponse } from '../../PeopleSearchClient';
-import { AnalyticsType, ResultType, PersonResult } from '../../../model/Result';
+
 import { recentPeopleApiWillReturn } from '../../../__tests__/unit/helpers/_people-client-mocks';
+import { AnalyticsType, ResultType, PersonResult } from '../../../model/Result';
+import PeopleSearchClient, { GraphqlResponse } from '../../PeopleSearchClient';
 
 describe('PeopleSearchClient', () => {
   let searchClient: PeopleSearchClient;

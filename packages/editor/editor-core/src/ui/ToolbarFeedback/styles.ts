@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ImgHTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { gridSize, borderRadius, colors } from '@atlaskit/theme';
 
 export const ButtonContent: ComponentClass<HTMLAttributes<{}>> = styled.span`

@@ -1,10 +1,11 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import adfWithMixedContent from './__fixtures__/mixed-content.adf.json';
-import adfWithMedia from './__fixtures__/content-with-media.adf.json';
-import adfWithBreakout from './__fixtures__/mixed-content-with-breakout.adf.json';
-import adfWithHScrollContent from './__fixtures__/horizontal-scroll-content.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
 import { scrollToTop } from '../../__helpers/page-objects/_editor';
+import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adfWithMedia from './__fixtures__/content-with-media.adf.json';
+import adfWithHScrollContent from './__fixtures__/horizontal-scroll-content.adf.json';
+import adfWithBreakout from './__fixtures__/mixed-content-with-breakout.adf.json';
+import adfWithMixedContent from './__fixtures__/mixed-content.adf.json';
 
 describe('Full-width mode', () => {
   let page: Page;

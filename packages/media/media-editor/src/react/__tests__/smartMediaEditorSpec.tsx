@@ -1,6 +1,14 @@
 import * as React from 'react';
-import { InjectedIntlProps } from 'react-intl';
 import { ReactWrapper } from 'enzyme';
+import { InjectedIntlProps } from 'react-intl';
+import {
+  MediaClient,
+  FileState,
+  FileIdentifier,
+  TouchedFiles,
+  UploadableFileUpfrontIds,
+} from '@atlaskit/media-client';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import {
   asMock,
   expectFunctionToHaveBeenCalledWith,
@@ -14,25 +22,17 @@ import {
 import { Shortcut } from '@atlaskit/media-ui';
 import ModalDialog from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
-import {
-  MediaClient,
-  FileState,
-  FileIdentifier,
-  TouchedFiles,
-  UploadableFileUpfrontIds,
-} from '@atlaskit/media-client';
-import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+import { ANALYTICS_MEDIA_CHANNEL } from '../../common';
+import { EditorView, EditorViewProps } from '../editorView/editorView';
+import ErrorView, { ErrorViewProps } from '../editorView/errorView/errorView';
 import {
   SmartMediaEditor,
   SmartMediaEditorProps,
   SmartMediaEditorState,
   convertFileNameToPng,
 } from '../smartMediaEditor';
-
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { EditorView, EditorViewProps } from '../editorView/editorView';
-import ErrorView, { ErrorViewProps } from '../editorView/errorView/errorView';
-import { ANALYTICS_MEDIA_CHANNEL } from '../../common';
 import { Blanket } from '../styled';
 
 describe('Smart Media Editor', () => {

@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import GlobalNavigation from '@atlaskit/global-navigation';
 import { JiraIcon } from '@atlaskit/logo';
+
 import {
   LayoutManagerWithViewController,
   NavigationProvider,

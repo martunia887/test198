@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import styled from 'styled-components';
+import { ButtonAppearances } from '@atlaskit/button';
 import Select from '@atlaskit/select';
 import { ToggleStateless as Toggle } from '@atlaskit/toggle';
 import { OptionData } from '@atlaskit/user-picker';
 import { userPickerData } from '@atlaskit/util-data-test';
-import { ButtonAppearances } from '@atlaskit/button';
 
 import App from '../example-helpers/AppWithFlag';
 import RestrictionMessage from '../example-helpers/RestrictionMessage';
 import { ProductName, ShareDialogContainer } from '../src';
+import {
+  ShortenResponse,
+  UrlShortenerClient,
+} from '../src/clients/AtlassianUrlShortenerClient';
 import {
   Comment,
   ConfigResponse,
@@ -26,10 +30,6 @@ import {
   TooltipPosition,
   User,
 } from '../src/types';
-import {
-  ShortenResponse,
-  UrlShortenerClient,
-} from '../src/clients/AtlassianUrlShortenerClient';
 
 type UserData = {
   avatarUrl?: string;

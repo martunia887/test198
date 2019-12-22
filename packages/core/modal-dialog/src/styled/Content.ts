@@ -1,12 +1,12 @@
+import { N30, DN30, R400, Y400 } from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
+import { gridSize } from '@atlaskit/theme/constants';
+import { divide } from '@atlaskit/theme/math';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 
-import { themed } from '@atlaskit/theme/components';
-import { gridSize } from '@atlaskit/theme/constants';
-import { N30, DN30, R400, Y400 } from '@atlaskit/theme/colors';
-import { divide } from '@atlaskit/theme/math';
-import { flexMaxHeightIEFix } from '../utils/flex-max-height-ie-fix';
 import { AppearanceType } from '../types';
+import { flexMaxHeightIEFix } from '../utils/flex-max-height-ie-fix';
 
 // Constants
 // ==============================

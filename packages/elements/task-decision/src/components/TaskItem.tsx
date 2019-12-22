@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { CheckBoxWrapper } from '../styled/TaskItem';
-
-import Item from './Item';
-import { Appearance, ContentRef } from '../types';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
+
 import { createAndFireEventInElementsChannel } from '../analytics';
+import { CheckBoxWrapper } from '../styled/TaskItem';
+import { Appearance, ContentRef } from '../types';
+
+import Item from './Item';
 
 export interface Props {
   taskId: string;

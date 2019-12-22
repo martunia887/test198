@@ -1,7 +1,8 @@
-import { colors } from '@atlaskit/theme';
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
 import { FormattedMessage } from 'react-intl';
+import { colors } from '@atlaskit/theme';
+
 import {
   AvatarItemOption,
   TextWrapper,

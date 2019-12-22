@@ -1,9 +1,10 @@
-import { name } from '../../../version.json';
-import { mount } from 'enzyme';
 import * as React from 'react';
+import { mount } from 'enzyme';
+
 import Editor from '../../../editor';
-import CollapsedEditor from '../../../ui/CollapsedEditor';
 import ChromeCollapsed from '../../../ui/ChromeCollapsed';
+import CollapsedEditor from '../../../ui/CollapsedEditor';
+import { name } from '../../../version.json';
 
 describe(name, () => {
   describe('CollapsedEditor', () => {

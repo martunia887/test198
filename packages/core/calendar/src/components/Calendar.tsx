@@ -1,9 +1,3 @@
-import {
-  createLocalizationProvider,
-  LocalizationProvider,
-} from '@atlaskit/locale';
-import { Calendar as CalendarBase } from 'calendar-base';
-import pick from 'lodash.pick';
 import React, { Component, KeyboardEvent } from 'react';
 import { uid } from 'react-uid';
 import {
@@ -13,12 +7,12 @@ import {
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
-import { dateToString } from '../util';
-import DateComponent from './Date';
-import Heading from './Heading';
+  createLocalizationProvider,
+  LocalizationProvider,
+} from '@atlaskit/locale';
+import pick from 'lodash.pick';
+import { Calendar as CalendarBase } from 'calendar-base';
+
 import {
   Announcer,
   CalendarTable,
@@ -27,8 +21,15 @@ import {
   CalendarThead,
   Wrapper,
 } from '../styled/Calendar';
-
 import { ChangeEvent, SelectEvent, DateObj, ArrowKeys } from '../types';
+import { dateToString } from '../util';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
+
+import DateComponent from './Date';
+import Heading from './Heading';
 
 const arrowKeys: Record<string, ArrowKeys> = {
   ArrowDown: 'down',

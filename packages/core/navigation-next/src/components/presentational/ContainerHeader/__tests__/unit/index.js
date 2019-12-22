@@ -4,8 +4,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import Item from '../../../Item';
-import ContainerHeader from '../..';
 import ItemAvatar from '../../../ItemAvatar/index';
+import ContainerHeader from '../..';
 
 const commonProps = {
   id: 'checking-if-props-are-passed-through-the-children',

@@ -1,13 +1,15 @@
 // @flow
 import React from 'react';
+import { ThemeProvider } from 'styled-components';
 import Item from '@atlaskit/item';
 import { toClass } from 'recompose';
-import { ThemeProvider } from 'styled-components';
+
 import Navigation from '../../components/js/Navigation';
 import NavigationItem from '../../components/js/NavigationItem';
-import NavigationItemIcon from '../../components/styled/NavigationItemIcon';
 import NavigationItemAfter from '../../components/styled/NavigationItemAfter';
+import NavigationItemIcon from '../../components/styled/NavigationItemIcon';
 import { isDropdownOverflowKey } from '../../theme/util';
+
 import { mountWithRootTheme } from './_theme-util';
 
 describe('<NavigationItem />', () => {

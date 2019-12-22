@@ -1,13 +1,14 @@
 // @flow
 
 import React, { Fragment, type Node } from 'react';
-import { css, keyframes } from '@emotion/core';
 import { N70A } from '@atlaskit/theme/colors';
+import { css, keyframes } from '@emotion/core';
 
 import {
   transitionDuration,
   transitionTimingFunction,
 } from '../../../common/constants';
+import { applyDisabledProperties } from '../../../common/helpers';
 import {
   light,
   withContentTheme,
@@ -15,7 +16,6 @@ import {
   type ProductTheme,
 } from '../../../theme';
 import type { Resizable } from '../LayoutManager/primitives';
-import { applyDisabledProperties } from '../../../common/helpers';
 
 import type {
   ContainerNavigationPrimitiveBaseProps,

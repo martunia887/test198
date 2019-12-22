@@ -8,16 +8,16 @@ import {
 } from '@atlaskit/analytics-next';
 import { Popper, Placement } from '@atlaskit/popper';
 
+import { Image } from '../styled/Dialog';
+import { Actions } from '../types';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
 
-import { Actions } from '../types';
-import { Image } from '../styled/Dialog';
+import { CardTokens } from './Card';
 import SpotlightCard from './SpotlightCard';
 import ValueChanged from './ValueChanged';
-import { CardTokens } from './Card';
 
 export interface SpotlightDialogProps extends WithAnalyticsEventsProps {
   /** Buttons to render in the footer */

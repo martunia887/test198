@@ -1,4 +1,3 @@
-import uuidV4 from 'uuid/v4';
 import {
   MediaStore,
   MediaStoreCopyFileWithTokenBody,
@@ -18,19 +17,21 @@ import {
 } from '@atlaskit/media-client';
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { EventEmitter2 } from 'eventemitter2';
-import { MediaFile, UploadParams } from '../types';
+import uuidV4 from 'uuid/v4';
 
-import { mapAuthToSourceFileOwner } from '../popup/domain/source-file';
-import { getPreviewFromImage } from '../util/getPreviewFromImage';
 import { SmartMediaProgress } from '../domain/progress';
+import { mapAuthToSourceFileOwner } from '../popup/domain/source-file';
+import { LocalFileSource, LocalFileWithSource } from '../service/types';
+import { MediaFile, UploadParams } from '../types';
 import { MediaErrorName } from '../types';
+import { getPreviewFromBlob } from '../util/getPreviewFromBlob';
+import { getPreviewFromImage } from '../util/getPreviewFromImage';
+
 import {
   UploadService,
   UploadServiceEventListener,
   UploadServiceEventPayloadTypes,
 } from './types';
-import { LocalFileSource, LocalFileWithSource } from '../service/types';
-import { getPreviewFromBlob } from '../util/getPreviewFromBlob';
 
 export interface CancellableFileUpload {
   mediaFile: MediaFile;

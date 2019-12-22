@@ -2,8 +2,8 @@
 /** @jsx jsx */
 
 import { PureComponent } from 'react';
-import { jsx } from '@emotion/core';
 import { colors } from '@atlaskit/theme';
+import { jsx } from '@emotion/core';
 
 import { BaseSelect, selectComponents } from './Select';
 

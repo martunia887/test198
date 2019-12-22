@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import PackageIcon from '@atlaskit/icon/glyph/chevron-right';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
+import PackageIcon from '@atlaskit/icon/glyph/chevron-right';
 
-import * as fs from '../../../utils/fs';
-import renderNav from '../utils/renderNav';
-import { isSubNavExpanded } from '../utils/linkComponents';
-import { packageUrl, packageDocUrl } from '../../../utils/url';
 import { Directory, File, NavGroup, NavGroupItem } from '../../../types';
+import * as fs from '../../../utils/fs';
+import { packageUrl, packageDocUrl } from '../../../utils/url';
+import { isSubNavExpanded } from '../utils/linkComponents';
+import renderNav from '../utils/renderNav';
 
 const CenteredIcon = styled.span`
   align-items: center;

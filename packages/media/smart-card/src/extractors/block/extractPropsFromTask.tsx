@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { FormattedRelative } from 'react-intl';
+import ChatIcon from '@atlaskit/icon/glyph/comment';
 import {
   BlockCardResolvedViewProps,
   LozengeViewModel,
 } from '@atlaskit/media-ui';
-import ChatIcon from '@atlaskit/icon/glyph/comment';
 import { N600 } from '@atlaskit/theme/colors';
-import { FormattedRelative } from 'react-intl';
 
 export const buildTaskTitle = (json: any) => {
   let name = json.name && json.name.trim();

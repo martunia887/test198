@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import { pluginKey as disabledPluginKey } from '../../plugins/editor-disabled';
-import WithPluginState from '../../ui/WithPluginState';
 import ToolBar from '../../ui/Toolbar';
+import WithPluginState from '../../ui/WithPluginState';
+
 import { useEditorSharedConfig } from './Editor';
 
 export function Toolbar() {

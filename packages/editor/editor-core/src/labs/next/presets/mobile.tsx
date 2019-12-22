@@ -29,8 +29,9 @@ import {
 } from '../../../plugins';
 import { CustomMediaPicker } from '../../../plugins/media';
 import { PresetProvider } from '../Editor';
-import { EditorPresetProps } from './types';
+
 import { useDefaultPreset } from './default';
+import { EditorPresetProps } from './types';
 import { addExcludesFromProviderFactory, getPluginsFromPreset } from './utils';
 
 // #endregion

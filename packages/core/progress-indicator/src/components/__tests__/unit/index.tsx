@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import { mount, shallow } from 'enzyme';
 
 import { ProgressDots as ProgressDotsWithAnalytics } from '../../..';
-import { ProgressDotsWithoutAnalytics as ProgressDots } from '../../Dots';
 import { IndicatorButton, IndicatorDiv } from '../../../styled/Dots';
+import { ProgressDotsWithoutAnalytics as ProgressDots } from '../../Dots';
 
 // NOTE: "StubComponent" saves duplicating required props; avoids errors in the logs
 const StubComponent: FC<{ onSelect?: () => any }> = props => (

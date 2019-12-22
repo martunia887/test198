@@ -1,15 +1,16 @@
+import React from 'react';
 import { InjectedIntl } from 'react-intl';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { NodeType, Node } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { NodeType, Node } from 'prosemirror-model';
 
 import { Command } from '../../types';
+import { DispatchAnalyticsEvent } from '../analytics';
+
 import { ButtonAppearance } from './ui/Button';
 import { DropdownOptions, RenderOptionsPropsT } from './ui/Dropdown';
 import { SelectOption } from './ui/Select';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import React from 'react';
-import { DispatchAnalyticsEvent } from '../analytics';
 
 export type Icon = React.ComponentType<{ label: string }>;
 export type RenderOptionsProps = RenderOptionsPropsT<Command>;

@@ -1,6 +1,7 @@
-import { mount } from 'enzyme';
 import * as React from 'react';
+import { mount } from 'enzyme';
 import Tooltip from '@atlaskit/tooltip';
+
 import ToolbarButton from '../../../ui/ToolbarButton';
 
 const noop = () => {};

@@ -2,6 +2,7 @@ import { keymap } from 'prosemirror-keymap';
 import { ResolvedPos } from 'prosemirror-model';
 import { Transaction, Plugin } from 'prosemirror-state';
 import { setTextSelection } from 'prosemirror-utils';
+
 import { Command } from '../../../types';
 
 // Somewhat broken and subverted: https://product-fabric.atlassian.net/browse/ED-6504

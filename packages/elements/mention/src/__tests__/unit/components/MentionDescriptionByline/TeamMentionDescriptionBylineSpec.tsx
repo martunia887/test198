@@ -1,7 +1,9 @@
-import { render } from 'enzyme';
 import * as React from 'react';
-import TeamMentionDescriptionByline from '../../../../components/MentionDescriptionByline';
+import { render } from 'enzyme';
+
 import { MentionDescription } from '../../../..//types';
+import TeamMentionDescriptionByline from '../../../../components/MentionDescriptionByline';
+
 import { teamMention } from './_commonData';
 
 const renderByline = (teamData: MentionDescription) => {

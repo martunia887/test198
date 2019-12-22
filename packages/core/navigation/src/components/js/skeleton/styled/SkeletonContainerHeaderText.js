@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components';
-
 import { gridSize } from '@atlaskit/theme/constants';
 import { multiply, divide } from '@atlaskit/theme/math';
 

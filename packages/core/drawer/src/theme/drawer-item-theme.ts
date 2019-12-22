@@ -1,13 +1,15 @@
 import { itemThemeNamespace } from '@atlaskit/item';
-import { themed } from '@atlaskit/theme/components';
 import * as colors from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
 import chromatism from 'chromatism';
-import { DrawerTheme, Background, ItemTheme, ScrollBarTheme } from './types';
+
 import {
   gridSize,
   darkDrawerItemHoverBackground,
   darkDrawerItemActiveBackground,
 } from '../constants';
+
+import { DrawerTheme, Background, ItemTheme, ScrollBarTheme } from './types';
 
 // These themes are copied over from @atlaskit/global-navigation to preserve the theming
 // of search and starred drawers.

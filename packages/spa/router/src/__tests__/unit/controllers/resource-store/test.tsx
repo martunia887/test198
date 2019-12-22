@@ -5,22 +5,21 @@ import { mount } from 'enzyme';
 import { defaultRegistry, BoundActions } from 'react-sweet-state';
 
 import { useResource } from '../../../../controllers/hooks';
-import { createResource } from '../../../../controllers/resource-utils';
-import * as routerStoreModule from '../../../../controllers/router-store';
-
+import { getResourceStore } from '../../../../controllers/resource-store';
 import { BASE_DEFAULT_STATE_SLICE } from '../../../../controllers/resource-store/constants';
 import { getSliceForResource } from '../../../../controllers/resource-store/selectors';
+import {
+  Actions as ResourceStoreActions,
+  State as ResourceStoreState,
+} from '../../../../controllers/resource-store/types';
 import {
   shouldUseCache,
   getExpiresAt,
   getDefaultStateSlice,
   serializeError,
 } from '../../../../controllers/resource-store/utils';
-import { getResourceStore } from '../../../../controllers/resource-store';
-import {
-  Actions as ResourceStoreActions,
-  State as ResourceStoreState,
-} from '../../../../controllers/resource-store/types';
+import { createResource } from '../../../../controllers/resource-utils';
+import * as routerStoreModule from '../../../../controllers/router-store';
 
 jest.mock('../../../../controllers/resource-store/utils', () => ({
   ...jest.requireActual('../../../../controllers/resource-store/utils'),

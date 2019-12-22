@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import * as React from 'react';
-
+import { extensionHandlers } from '@atlaskit/editor-test-helpers';
 import {
   Provider as SmartCardProvider,
   Client,
@@ -9,7 +9,6 @@ import {
   CardAppearance,
   EditorCardProvider,
 } from '@atlaskit/smart-card';
-import { extensionHandlers } from '@atlaskit/editor-test-helpers';
 
 import Editor from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';

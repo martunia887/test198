@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-
 import Avatar, { SizeType, AppearanceType } from '@atlaskit/avatar';
 import { DropdownItem } from '@atlaskit/dropdown-menu';
+
 import AvatarGroup from '../../AvatarGroup';
 import MoreIndicator from '../../MoreIndicator';
 

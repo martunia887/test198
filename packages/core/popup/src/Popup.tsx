@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import { FC, forwardRef, memo, useState } from 'react';
-import { layers } from '@atlaskit/theme/constants';
 import { Manager, Popper, Reference } from '@atlaskit/popper';
 import Portal from '@atlaskit/portal';
+import { layers } from '@atlaskit/theme/constants';
 import { jsx } from '@emotion/core';
 
+import { RepositionOnUpdate } from './RepositionOnUpdate';
 import { containerCSS, popupCSS } from './styles';
 import { PopupComponentProps, PopupProps } from './types';
-import { RepositionOnUpdate } from './RepositionOnUpdate';
 import { useCloseManager } from './useCloseManager';
 import { useFocusManager } from './useFocusManager';
 

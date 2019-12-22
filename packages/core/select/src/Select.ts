@@ -4,8 +4,9 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import { name as packageName, version as packageVersion } from './version.json';
+
 import createSelect from './createSelect';
+import { name as packageName, version as packageVersion } from './version.json';
 
 export const SelectWithoutAnalytics = createSelect(Select);
 const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');

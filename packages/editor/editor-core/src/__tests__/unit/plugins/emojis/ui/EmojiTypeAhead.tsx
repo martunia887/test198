@@ -1,5 +1,3 @@
-import { EditorState } from 'prosemirror-state';
-import { EmojiProvider } from '@atlaskit/emoji';
 import {
   createEditorFactory,
   doc,
@@ -7,6 +5,9 @@ import {
   insertText,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
+import { EmojiProvider } from '@atlaskit/emoji';
+import { EditorState } from 'prosemirror-state';
+
 import { analyticsService, AnalyticsHandler } from '../../../../../analytics';
 import { emojiPlugin, analyticsPlugin } from '../../../../../plugins';
 import { selectCurrentItem } from '../../../../../plugins/type-ahead/commands/select-item';

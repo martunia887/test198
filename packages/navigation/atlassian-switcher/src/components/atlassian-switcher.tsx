@@ -1,17 +1,18 @@
 import * as React from 'react';
-import ErrorBoundary from './error-boundary';
+
 import { Product, AtlassianSwitcherProps } from '../types';
-import IntlProvider from './intl-provider';
-import messages from '../utils/messages';
 import {
   analyticsAttributes,
   NavigationAnalyticsContext,
   SWITCHER_COMPONENT,
   SWITCHER_SOURCE,
 } from '../utils/analytics';
-import packageContext from '../utils/package-context';
 import mapPropsToFeatures from '../utils/map-props-to-features';
+import messages from '../utils/messages';
+import packageContext from '../utils/package-context';
 
+import ErrorBoundary from './error-boundary';
+import IntlProvider from './intl-provider';
 import {
   JiraSwitcherLoader,
   ConfluenceSwitcherLoader,

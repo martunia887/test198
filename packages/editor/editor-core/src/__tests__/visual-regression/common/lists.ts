@@ -1,31 +1,6 @@
-import {
-  snapshot,
-  Device,
-  initEditorWithAdf,
-  Appearance,
-  deviceViewPorts,
-} from '../_utils';
 import { traverse } from '@atlaskit/adf-utils/traverse';
-import smartLinksAdf from './__fixtures__/smart-link-nested-in-list.adf.json';
-import extensionAdf from './__fixtures__/inline-extension-inside-lists.adf.json';
-import statusAdf from './__fixtures__/status-inside-lists.adf.json';
-import dateAdf from './__fixtures__/date-inside-lists.adf.json';
-import floatsAdf from './__fixtures__/lists-adjacent-floats-adf.json';
-import floatsAdf2 from './__fixtures__/action-decision-lists-adjacent-floats-adf.json';
-import list100ItemsAdf from './__fixtures__/lists-100-items.adf';
-import {
-  waitForCardToolbar,
-  clickOnCard,
-} from '../../__helpers/page-objects/_smart-links';
-import {
-  waitForExtensionToolbar,
-  clickOnExtension,
-} from '../../__helpers/page-objects/_extensions';
-import {
-  waitForStatusToolbar,
-  clickOnStatus,
-} from '../../__helpers/page-objects/_status';
-import { Page } from '../../__helpers/page-objects/_types';
+import { EditorTestCardProvider } from '@atlaskit/editor-test-helpers';
+
 import {
   waitForDatePicker,
   clickOnDate,
@@ -34,7 +9,34 @@ import {
   animationFrame,
   scrollToBottom,
 } from '../../__helpers/page-objects/_editor';
-import { EditorTestCardProvider } from '@atlaskit/editor-test-helpers';
+import {
+  waitForExtensionToolbar,
+  clickOnExtension,
+} from '../../__helpers/page-objects/_extensions';
+import {
+  waitForCardToolbar,
+  clickOnCard,
+} from '../../__helpers/page-objects/_smart-links';
+import {
+  waitForStatusToolbar,
+  clickOnStatus,
+} from '../../__helpers/page-objects/_status';
+import { Page } from '../../__helpers/page-objects/_types';
+import {
+  snapshot,
+  Device,
+  initEditorWithAdf,
+  Appearance,
+  deviceViewPorts,
+} from '../_utils';
+
+import floatsAdf2 from './__fixtures__/action-decision-lists-adjacent-floats-adf.json';
+import dateAdf from './__fixtures__/date-inside-lists.adf.json';
+import extensionAdf from './__fixtures__/inline-extension-inside-lists.adf.json';
+import list100ItemsAdf from './__fixtures__/lists-100-items.adf';
+import floatsAdf from './__fixtures__/lists-adjacent-floats-adf.json';
+import smartLinksAdf from './__fixtures__/smart-link-nested-in-list.adf.json';
+import statusAdf from './__fixtures__/status-inside-lists.adf.json';
 // TODO: https://product-fabric.atlassian.net/browse/ED-7721
 describe.skip('Lists', () => {
   let page: Page;

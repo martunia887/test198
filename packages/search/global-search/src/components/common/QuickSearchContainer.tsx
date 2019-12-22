@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {
-  LinkComponent,
-  Logger,
-  ReferralContextIdentifiers,
-} from '../GlobalQuickSearchWrapper';
-import GlobalQuickSearch from '../GlobalQuickSearch';
-import performanceNow from '../../util/performance-now';
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import deepEqual from 'deep-equal';
+
+import { Filter, FilterWithMetadata } from '../../api/CrossProductSearchClient';
+import { Scope, QuickSearchContext } from '../../api/types';
 import {
   ResultsWithTiming,
   Result,
@@ -15,28 +16,28 @@ import {
   JiraResultsMap,
 } from '../../model/Result';
 import {
-  ShownAnalyticsAttributes,
-  buildShownEventDetails,
-  PerformanceTiming,
-} from '../../util/analytics-util';
-import {
   firePreQueryShownEvent,
   firePostQueryShownEvent,
   fireExperimentExposureEvent,
 } from '../../util/analytics-event-helper';
 import {
-  withAnalyticsEvents,
-  WithAnalyticsEventsProps,
-} from '@atlaskit/analytics-next';
-import deepEqual from 'deep-equal';
+  ShownAnalyticsAttributes,
+  buildShownEventDetails,
+  PerformanceTiming,
+} from '../../util/analytics-util';
+import { CONF_OBJECTS_ITEMS_PER_PAGE } from '../../util/experiment-utils';
 import {
   JiraFeatures,
   ConfluenceFeatures,
   CommonFeatures,
 } from '../../util/features';
-import { Scope, QuickSearchContext } from '../../api/types';
-import { CONF_OBJECTS_ITEMS_PER_PAGE } from '../../util/experiment-utils';
-import { Filter, FilterWithMetadata } from '../../api/CrossProductSearchClient';
+import performanceNow from '../../util/performance-now';
+import GlobalQuickSearch from '../GlobalQuickSearch';
+import {
+  LinkComponent,
+  Logger,
+  ReferralContextIdentifiers,
+} from '../GlobalQuickSearchWrapper';
 import {
   injectSearchSession,
   SearchSessionProps,

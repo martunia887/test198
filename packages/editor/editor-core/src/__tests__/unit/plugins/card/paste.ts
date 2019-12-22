@@ -1,6 +1,3 @@
-import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
-import { setProvider } from '../../../../plugins/card/pm-plugins/actions';
-
 import {
   doc,
   createEditorFactory,
@@ -8,6 +5,8 @@ import {
   dispatchPasteEvent,
   EditorTestCardProvider,
 } from '@atlaskit/editor-test-helpers';
+import { setProvider } from '../../../../plugins/card/pm-plugins/actions';
+import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
 
 describe('card', () => {
   const createEditor = createEditorFactory();

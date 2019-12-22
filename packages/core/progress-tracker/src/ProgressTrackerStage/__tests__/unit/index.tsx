@@ -1,11 +1,11 @@
-import { shallow } from 'enzyme';
 import React from 'react';
-
-import * as colors from '@atlaskit/theme/colors';
+import { shallow } from 'enzyme';
 import { GridColumn } from '@atlaskit/page';
+import * as colors from '@atlaskit/theme/colors';
+
+import ProgressTrackerLink from '../../../ProgressTrackerLink';
 import { Stage, LinkComponentProps } from '../../../types';
 import ProgressTrackerStage from '../../';
-import ProgressTrackerLink from '../../../ProgressTrackerLink';
 import {
   ProgressTrackerStageContainer,
   ProgressTrackerStageMarker,

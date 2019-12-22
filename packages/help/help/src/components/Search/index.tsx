@@ -1,15 +1,14 @@
 import * as React from 'react';
-import debounce from 'lodash.debounce';
-import { QuickSearch } from '@atlaskit/quick-search';
-
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { messages } from '../../messages';
+import { QuickSearch } from '@atlaskit/quick-search';
+import debounce from 'lodash.debounce';
 
+import { messages } from '../../messages';
 import { REQUEST_STATE } from '../../model/Requests';
 import { withHelp, HelpContextInterface } from '../HelpContext';
 
-import { SearchContainer } from './styled';
 import SearchContent from './SearchContent';
+import { SearchContainer } from './styled';
 export interface Props {
   displayResults: boolean;
 }

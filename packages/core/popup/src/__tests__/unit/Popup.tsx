@@ -1,5 +1,6 @@
-import { fireEvent, render } from '@testing-library/react';
 import React, { Dispatch, forwardRef, SetStateAction } from 'react';
+import { fireEvent, render } from '@testing-library/react';
+
 import { Popup } from '../../Popup';
 import { ContentProps, PopupComponentProps, TriggerProps } from '../../types';
 

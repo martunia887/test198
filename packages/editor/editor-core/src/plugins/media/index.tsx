@@ -1,16 +1,36 @@
 import * as React from 'react';
-import { MediaProvider } from '@atlaskit/editor-common';
 import {
   media,
   mediaGroup,
   mediaSingle,
   mediaWithAltText,
 } from '@atlaskit/adf-schema';
+import { MediaProvider } from '@atlaskit/editor-common';
+
 import {
   EditorPlugin,
   EditorAppearance,
   PMPluginFactoryParams,
 } from '../../types';
+import WithPluginState from '../../ui/WithPluginState';
+import {
+  addAnalytics,
+  ACTION,
+  ACTION_SUBJECT,
+  INPUT_METHOD,
+  EVENT_TYPE,
+  ACTION_SUBJECT_ID,
+} from '../analytics';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { IconImages } from '../quick-insert/assets';
+
+import { ReactMediaGroupNode } from './nodeviews/mediaGroup';
+import { ReactMediaSingleNode } from './nodeviews/mediaSingle';
+import { createPlugin as createMediaAltTextPlugin } from './pm-plugins/alt-text';
+import keymapMediaAltTextPlugin from './pm-plugins/alt-text/keymap';
+import keymapPlugin from './pm-plugins/keymap';
+import keymapMediaSinglePlugin from './pm-plugins/keymap-media-single';
+import linkingPlugin from './pm-plugins/linking';
 import {
   stateKey as pluginKey,
   createPlugin,
@@ -20,30 +40,11 @@ import {
   createPlugin as createMediaEditorPlugin,
   pluginKey as mediaEditorPluginKey,
 } from './pm-plugins/media-editor';
-import { createPlugin as createMediaAltTextPlugin } from './pm-plugins/alt-text';
-import keymapMediaAltTextPlugin from './pm-plugins/alt-text/keymap';
-import keymapMediaSinglePlugin from './pm-plugins/keymap-media-single';
-import keymapPlugin from './pm-plugins/keymap';
-import linkingPlugin from './pm-plugins/linking';
-import ToolbarMedia from './ui/ToolbarMedia';
-import { ReactMediaGroupNode } from './nodeviews/mediaGroup';
-import { ReactMediaSingleNode } from './nodeviews/mediaSingle';
-import { CustomMediaPicker, MediaEditorState } from './types';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { floatingToolbar } from './toolbar';
-
-import {
-  addAnalytics,
-  ACTION,
-  ACTION_SUBJECT,
-  INPUT_METHOD,
-  EVENT_TYPE,
-  ACTION_SUBJECT_ID,
-} from '../analytics';
-import { IconImages } from '../quick-insert/assets';
-import WithPluginState from '../../ui/WithPluginState';
+import { CustomMediaPicker, MediaEditorState } from './types';
 import MediaEditor from './ui/MediaEditor';
 import { MediaPickerComponents } from './ui/MediaPicker';
+import ToolbarMedia from './ui/ToolbarMedia';
 
 export { MediaState, MediaProvider, CustomMediaPicker };
 export { insertMediaSingleNode } from './utils/media-single';

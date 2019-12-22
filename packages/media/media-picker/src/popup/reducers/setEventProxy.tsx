@@ -1,5 +1,5 @@
-import { State } from '../domain';
 import { SetEventProxyAction } from '../actions/setEventProxy';
+import { State } from '../domain';
 
 export default function setEventProxy(
   state: State,

@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import {
-  TableHeader,
-  withSortableColumn,
-  CellWithSortingProps,
-} from '../../../../react/nodes/tableCell';
-import { MODE, PLATFORM } from '../../../../analytics/events';
+import { SortOrder } from '@atlaskit/editor-common';
+
 import {
   ACTION,
   ACTION_SUBJECT,
   EVENT_TYPE,
 } from '../../../../analytics/enums';
+import { MODE, PLATFORM } from '../../../../analytics/events';
 import { RendererCssClassName } from '../../../../consts';
-import { SortOrder } from '@atlaskit/editor-common';
+import {
+  TableHeader,
+  withSortableColumn,
+  CellWithSortingProps,
+} from '../../../../react/nodes/tableCell';
 
 describe('Renderer - React/Nodes/TableHeader', () => {
   const baseProps = {

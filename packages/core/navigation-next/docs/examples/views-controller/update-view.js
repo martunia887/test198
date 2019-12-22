@@ -7,6 +7,7 @@ import FolderIcon from '@atlaskit/icon/glyph/folder';
 import IssueIcon from '@atlaskit/icon/glyph/issue';
 import PortfolioIcon from '@atlaskit/icon/glyph/portfolio';
 import { JiraIcon, JiraWordmark } from '@atlaskit/logo';
+
 import {
   LayoutManagerWithViewController,
   NavigationProvider,

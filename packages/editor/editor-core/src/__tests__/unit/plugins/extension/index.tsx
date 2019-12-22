@@ -20,13 +20,14 @@ import {
   randomId,
 } from '@atlaskit/editor-test-helpers';
 import { NodeSelection } from 'prosemirror-state';
+import { findParentNodeOfType } from 'prosemirror-utils';
+
 import { editExtension } from '../../../../plugins/extension/actions';
 import {
   removeExtension,
   updateExtensionLayout,
 } from '../../../../plugins/extension/commands';
 import { getPluginState } from '../../../../plugins/extension/plugin';
-import { findParentNodeOfType } from 'prosemirror-utils';
 import { setNodeSelection } from '../../../../utils';
 
 const macroProviderPromise = Promise.resolve(macroProvider);

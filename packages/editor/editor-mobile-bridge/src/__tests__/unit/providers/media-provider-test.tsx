@@ -11,7 +11,6 @@ import {
   MediaState,
   MediaProvider,
 } from '@atlaskit/editor-core';
-
 import {
   doc,
   p,
@@ -21,15 +20,13 @@ import {
   randomId,
   sleep,
 } from '@atlaskit/editor-test-helpers';
-
-import { Auth, AuthProvider, MediaClientConfig } from '@atlaskit/media-core';
 import {
   getMediaClient,
   withMediaClient,
   MediaClient,
   ProcessedFileState,
 } from '@atlaskit/media-client';
-import uuid from 'uuid/v4';
+import { Auth, AuthProvider, MediaClientConfig } from '@atlaskit/media-core';
 import {
   asMock,
   asMockReturnValue,
@@ -37,6 +34,8 @@ import {
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
 import { of } from 'rxjs/observable/of';
+import uuid from 'uuid/v4';
+
 import { INPUT_METHOD } from '../../../../../editor-core/src/plugins/analytics';
 
 let testFileId: string;

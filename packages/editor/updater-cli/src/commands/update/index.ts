@@ -1,15 +1,16 @@
 import { createCommand } from '../../runner';
 import { loadPackageJsonTask } from '../common-tasks/load-package-json';
+import { projectChecksTask } from '../common-tasks/project-checks';
+
 import { applyPreset } from './apply-preset';
-import { getVersionsTask } from './tasks/get-versions';
+import { commitChangedTask } from './tasks/commit-changes';
 import { compareVersionsTask } from './tasks/compare-version';
-import { getDependenciesTask } from './tasks/get-dependencies';
 import { getCommonDependenciesTask } from './tasks/get-common-dependencies';
+import { getDependenciesTask } from './tasks/get-dependencies';
+import { getVersionsTask } from './tasks/get-versions';
 import { showDependenciesListTask } from './tasks/show-dependencies-list';
 import { updateDependenciesTask } from './tasks/update-dependencies';
 import { UpdateTaskParams, UpdateTaskCtx, UpdateTaskFlags } from './types';
-import { projectChecksTask } from '../common-tasks/project-checks';
-import { commitChangedTask } from './tasks/commit-changes';
 
 const updateTasks = createCommand<UpdateTaskCtx, UpdateTaskParams>([
   projectChecksTask,

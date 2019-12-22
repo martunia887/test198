@@ -4,12 +4,13 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import { ModalTransition } from '@atlaskit/modal-dialog';
+
+import { generateAvatars } from '../example-helpers';
 import {
   Avatar,
   AvatarPickerDialog,
   AsyncAvatarPickerDialogProps,
 } from '../src';
-import { generateAvatars } from '../example-helpers';
 
 const avatars: Array<Avatar> = generateAvatars(30);
 

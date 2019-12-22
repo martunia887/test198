@@ -1,9 +1,10 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-import Tooltip from '@atlaskit/tooltip';
+import { shallow } from 'enzyme';
 import Button from '@atlaskit/button';
-import * as styles from '../../../../components/common/styles';
+import Tooltip from '@atlaskit/tooltip';
+
 import Emoji from '../../../../components/common/Emoji';
+import * as styles from '../../../../components/common/styles';
 import { spriteEmoji, imageEmoji } from '../../_test-data';
 
 describe('<Emoji />', () => {

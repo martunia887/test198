@@ -1,7 +1,6 @@
 // @flow
 
 import { N0, B500, DN500, DN10, N800 } from '@atlaskit/theme/colors';
-
 import modeGenerator from './modeGenerator';
 
 export const light = modeGenerator({

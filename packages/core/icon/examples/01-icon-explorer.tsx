@@ -1,15 +1,15 @@
 import React, { Component, SyntheticEvent, ComponentType } from 'react';
 import styled from 'styled-components';
-
 import Button from '@atlaskit/button';
-import Textfield from '@atlaskit/textfield';
-import { metadata as objectIconMetadata } from '@atlaskit/icon-object';
 import { metadata as fileTypeIconMetadata } from '@atlaskit/icon-file-type';
+import { metadata as objectIconMetadata } from '@atlaskit/icon-object';
 import { metadata as priorityIconMetadata } from '@atlaskit/icon-priority';
+import Textfield from '@atlaskit/textfield';
 
 import { metadata } from '../src';
-import IconExplorerCell from './utils/IconExplorerCell';
 import logoIcons from '../utils/logoIcons';
+
+import IconExplorerCell from './utils/IconExplorerCell';
 
 type IconsList = Record<string, IconType>;
 

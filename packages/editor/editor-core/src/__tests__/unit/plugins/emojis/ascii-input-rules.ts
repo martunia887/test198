@@ -1,5 +1,8 @@
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { EmojiDescription } from '@atlaskit/emoji';
 import {
   insertText,
   createEditorFactory,
@@ -11,10 +14,7 @@ import {
   emoji,
   typeAheadQuery,
 } from '@atlaskit/editor-test-helpers';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+import { EmojiDescription } from '@atlaskit/emoji';
 import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { EditorState } from 'prosemirror-state';
 

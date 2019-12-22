@@ -2,24 +2,25 @@ import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import Button from '@atlaskit/button';
-import Pagination from '../../managedPagination';
-import TableHead from '../../TableHead';
+
+import DynamicTable, { DynamicTableStateless } from '../../..';
+import { Caption } from '../../../styled/DynamicTable';
 import {
   EmptyViewContainer,
   EmptyViewWithFixedHeight,
 } from '../../../styled/EmptyBody';
+import { RowType, RowCellType, StatelessProps } from '../../../types';
+import { name } from '../../../version.json';
 import Body from '../../Body';
-import RankableTableBody from '../../rankable/Body';
 import LoadingContainer from '../../LoadingContainer';
 import LoadingContainerAdvanced from '../../LoadingContainerAdvanced';
-import { Caption } from '../../../styled/DynamicTable';
-import DynamicTable, { DynamicTableStateless } from '../../..';
+import { State } from '../../Stateless';
+import TableHead from '../../TableHead';
+import Pagination from '../../managedPagination';
+import RankableTableBody from '../../rankable/Body';
+
 import { rows, head, rowsWithKeys } from './_data';
 import { headNumeric, rowsNumeric } from './_dataNumeric';
-
-import { name } from '../../../version.json';
-import { RowType, RowCellType, StatelessProps } from '../../../types';
-import { State } from '../../Stateless';
 
 describe(name, () => {
   describe('stateless', () => {

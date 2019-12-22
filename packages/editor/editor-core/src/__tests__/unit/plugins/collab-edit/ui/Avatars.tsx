@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
@@ -7,15 +6,15 @@ import {
   createEditorFactory,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
+import { createMockCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
+import { EditorView } from 'prosemirror-view';
 
 import {
   PluginState,
   pluginKey,
 } from '../../../../../plugins/collab-edit/plugin';
-
 import Avatars from '../../../../../plugins/collab-edit/ui/avatars';
 import ToolbarButton from '../../../../../ui/ToolbarButton';
-import { createMockCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
 
 describe('collab-edit | Avatars', () => {
   const createEditor = createEditorFactory<PluginState>();

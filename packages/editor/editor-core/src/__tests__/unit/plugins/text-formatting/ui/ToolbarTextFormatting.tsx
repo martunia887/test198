@@ -1,23 +1,18 @@
 import * as React from 'react';
-import AkButton from '@atlaskit/button';
 import { ReactWrapper } from 'enzyme';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import AkButton from '@atlaskit/button';
 import {
   doc,
   p,
   createEditorFactory,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
+
 import { analyticsService, AnalyticsHandler } from '../../../../../analytics';
-import ToolbarButton from '../../../../../ui/ToolbarButton';
-import {
-  TextFormattingState,
-  pluginKey,
-} from '../../../../../plugins/text-formatting/pm-plugins/main';
-import ToolbarTextFormatting from '../../../../../plugins/text-formatting/ui/ToolbarTextFormatting';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 import {
   AnalyticsEventPayload,
   ACTION_SUBJECT_ID,
@@ -26,6 +21,12 @@ import {
   EVENT_TYPE,
   INPUT_METHOD,
 } from '../../../../../plugins/analytics';
+import {
+  TextFormattingState,
+  pluginKey,
+} from '../../../../../plugins/text-formatting/pm-plugins/main';
+import ToolbarTextFormatting from '../../../../../plugins/text-formatting/ui/ToolbarTextFormatting';
+import ToolbarButton from '../../../../../ui/ToolbarButton';
 
 describe('ToolbarTextFormatting', () => {
   const createEditor = createEditorFactory<TextFormattingState>();

@@ -1,13 +1,5 @@
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
-  filter,
-  isNthParentOfType,
-  isEmptySelectionAtStart,
-  isFirstChildOfParent,
-  findCutBefore,
-  toggleMark,
-} from '../../../utils/commands';
-import {
   createEditorFactory,
   p,
   table,
@@ -27,7 +19,16 @@ import {
   emoji,
   mention,
 } from '@atlaskit/editor-test-helpers';
+
 import { Command } from '../../../types';
+import {
+  filter,
+  isNthParentOfType,
+  isEmptySelectionAtStart,
+  isFirstChildOfParent,
+  findCutBefore,
+  toggleMark,
+} from '../../../utils/commands';
 
 describe('utils -> commands', () => {
   const createEditor = createEditorFactory();

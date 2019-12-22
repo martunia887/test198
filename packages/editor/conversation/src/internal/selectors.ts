@@ -1,5 +1,5 @@
-import { State } from './store';
 import { Comment, Conversation, User } from '../model';
+import { State } from './store';
 
 export const getConversation = (
   state: State,

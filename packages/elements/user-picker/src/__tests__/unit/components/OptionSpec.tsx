@@ -1,11 +1,12 @@
-import { components } from '@atlaskit/select';
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
+import { components } from '@atlaskit/select';
+
 import { EmailOption } from '../../../components/EmailOption';
+import { GroupOption } from '../../../components/GroupOption';
 import { Option, OptionProps } from '../../../components/Option';
 import { TeamOption } from '../../../components/TeamOption';
 import { UserOption } from '../../../components/UserOption';
-import { GroupOption } from '../../../components/GroupOption';
 import { Email, Team, User, Group } from '../../../types';
 
 describe('Option', () => {

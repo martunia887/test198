@@ -1,3 +1,6 @@
+import { ReactElement } from 'react';
+import { ReactWrapper } from 'enzyme';
+import { IntlProvider } from 'react-intl';
 import { ActivityItem } from '@atlaskit/activity';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
@@ -19,10 +22,8 @@ import {
   mountWithIntl,
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
-import { ReactWrapper } from 'enzyme';
 import { EditorView } from 'prosemirror-view';
-import { ReactElement } from 'react';
-import { IntlProvider } from 'react-intl';
+
 import { linkToolbarMessages } from '../../../../../messages';
 import { INPUT_METHOD } from '../../../../../plugins/analytics';
 import {
@@ -50,16 +51,16 @@ import {
 } from '../../../../../plugins/media/ui/MediaLinkingToolbar';
 import { Command } from '../../../../../types';
 import { setNodeSelection } from '../../../../../utils';
-import {
-  getFreshMediaProvider,
-  temporaryFileId,
-  testCollectionName,
-} from '../_utils';
 import safeUnmount from '../../../../__helpers/safeUnmount';
 import {
   findToolbarBtn,
   getToolbarItems,
 } from '../../floating-toolbar/_helpers';
+import {
+  getFreshMediaProvider,
+  temporaryFileId,
+  testCollectionName,
+} from '../_utils';
 
 interface ToolbarWrapper {
   editorView: EditorView;

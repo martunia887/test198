@@ -1,9 +1,10 @@
 /** @jsx jsx */
+import { forwardRef, Ref } from 'react';
 import ChevronIcon from '@atlaskit/icon/glyph/chevron-down';
 import { jsx } from '@emotion/core';
-import { forwardRef, Ref } from 'react';
 
 import { PrimaryButton } from '../PrimaryButton';
+
 import { chevronIconCSS } from './styles';
 import { PrimaryDropdownButtonProps } from './types';
 

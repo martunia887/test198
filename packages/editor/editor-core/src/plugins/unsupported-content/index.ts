@@ -5,8 +5,10 @@ import {
   unsupportedInline,
 } from '@atlaskit/adf-schema';
 import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
-import { EditorPlugin, PMPluginFactory } from '../../types';
+
 import { ReactNodeView } from '../../nodeviews';
+import { EditorPlugin, PMPluginFactory } from '../../types';
+
 import ReactUnsupportedBlockNode from './nodeviews/unsupported-block';
 import ReactUnsupportedInlineNode from './nodeviews/unsupported-inline';
 import { traverseNode } from './utils';

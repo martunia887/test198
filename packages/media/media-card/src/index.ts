@@ -1,14 +1,14 @@
 import { MouseEvent } from 'react';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   FileDetails,
   MediaClient,
   Identifier,
   ImageResizeMode,
 } from '@atlaskit/media-client';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { MediaViewerDataSource } from '@atlaskit/media-viewer';
 
 import { CardAction } from './actions';
-import { MediaViewerDataSource } from '@atlaskit/media-viewer';
 
 export {
   MediaCardAnalyticsPayload,

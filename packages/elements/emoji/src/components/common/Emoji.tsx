@@ -1,24 +1,26 @@
+import * as React from 'react';
+import { MouseEvent, SyntheticEvent } from 'react';
 import Button from '@atlaskit/button';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import { colors } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
 import classNames from 'classnames';
-import * as React from 'react';
-import { MouseEvent, SyntheticEvent } from 'react';
+
 import { shouldUseAltRepresentation } from '../../api/EmojiUtils';
+import {
+  EmojiDescription,
+  OnEmojiEvent,
+  SpriteRepresentation,
+} from '../../types';
 import { deleteEmojiLabel } from '../../util/constants';
+import { leftClick } from '../../util/mouse';
 import {
   isImageRepresentation,
   isMediaRepresentation,
   isSpriteRepresentation,
   toEmojiId,
 } from '../../util/type-helpers';
-import {
-  EmojiDescription,
-  OnEmojiEvent,
-  SpriteRepresentation,
-} from '../../types';
-import { leftClick } from '../../util/mouse';
+
 import * as styles from './styles';
 
 export interface Props {

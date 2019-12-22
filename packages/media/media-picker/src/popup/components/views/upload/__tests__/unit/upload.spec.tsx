@@ -1,58 +1,55 @@
-import { mount, ReactWrapper } from 'enzyme';
-import { IntlProvider } from 'react-intl';
 import * as React from 'react';
 import { RefObject } from 'react';
+import { mount, ReactWrapper } from 'enzyme';
+import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
-import Spinner from '@atlaskit/spinner';
+import Button from '@atlaskit/button';
 import { FlagGroup } from '@atlaskit/flag';
 import { Card, CardAction } from '@atlaskit/media-card';
-import {
-  asMock,
-  fakeIntl,
-  nextTick,
-  fakeMediaClient,
-} from '@atlaskit/media-test-helpers';
-import ModalDialog from '@atlaskit/modal-dialog';
-import Button from '@atlaskit/button';
-import { InfiniteScroll } from '@atlaskit/media-ui';
 import {
   MediaClient,
   MediaCollectionItem,
   RECENTS_COLLECTION,
 } from '@atlaskit/media-client';
 import {
-  State,
-  SelectedItem,
-  LocalUpload,
-  ServiceFile,
-} from '../../../../../domain';
+  asMock,
+  fakeIntl,
+  nextTick,
+  fakeMediaClient,
+} from '@atlaskit/media-test-helpers';
 import {
   mockStore,
   mockState,
   getComponentClassWithStore,
   mockIsWebGLNotAvailable,
 } from '@atlaskit/media-test-helpers';
+import { InfiniteScroll } from '@atlaskit/media-ui';
+import ModalDialog from '@atlaskit/modal-dialog';
+import Spinner from '@atlaskit/spinner';
 
-mockIsWebGLNotAvailable(); // mock WebGL fail check before StatelessUploadView is imported
+import { BrowserBase } from '../../../../../../components/browser/browser';
+import { editRemoteImage } from '../../../../../actions/editRemoteImage';
+import { editorShowImage } from '../../../../../actions/editorShowImage';
+import { fileClick } from '../../../../../actions/fileClick';
+import {
+  State,
+  SelectedItem,
+  LocalUpload,
+  ServiceFile,
+} from '../../../../../domain';
+import { LocalUploadFileMetadata } from '../../../../../domain/local-upload';
 import { isWebGLAvailable } from '../../../../../tools/webgl';
+import { LocalBrowserButton } from '../../../../views/upload/uploadButton';
+import { menuDelete } from '../../../editor/phrases';
+import { Dropzone } from '../../dropzone';
+import { LoadingNextPageWrapper } from '../../styled';
+import { SpinnerWrapper, Wrapper } from '../../styled';
 import {
   StatelessUploadView,
   default as ConnectedUploadView,
   UploadViewProps,
   UploadViewState,
 } from '../../upload';
-import { LoadingNextPageWrapper } from '../../styled';
-import { fileClick } from '../../../../../actions/fileClick';
-import { editorShowImage } from '../../../../../actions/editorShowImage';
-import { editRemoteImage } from '../../../../../actions/editRemoteImage';
-
-import { Dropzone } from '../../dropzone';
-
-import { SpinnerWrapper, Wrapper } from '../../styled';
-import { LocalBrowserButton } from '../../../../views/upload/uploadButton';
-import { menuDelete } from '../../../editor/phrases';
-import { LocalUploadFileMetadata } from '../../../../../domain/local-upload';
-import { BrowserBase } from '../../../../../../components/browser/browser';
 
 const ConnectedUploadViewWithStore = getComponentClassWithStore(
   ConnectedUploadView,

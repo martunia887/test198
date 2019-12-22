@@ -10,8 +10,8 @@ import {
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
 
-import { pluginKey } from '../../../../plugins/custom-autoformat/utils';
 import { AutoformattingProvider } from '../../../../plugins/custom-autoformat/types';
+import { pluginKey } from '../../../../plugins/custom-autoformat/utils';
 
 describe('custom-autoformat', () => {
   const createEditor = createEditorFactory();

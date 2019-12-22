@@ -2,7 +2,6 @@
 /* eslint-disable react/sort-comp */
 import React, { Component, type Element } from 'react';
 import PropTypes from 'prop-types';
-
 import matchEvent from './matchEvent';
 
 /* The Decorator component extends analytics event data for any events fired by

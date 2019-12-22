@@ -3,9 +3,10 @@ import GlobalTheme from '@atlaskit/theme/components';
 import { ThemeProp } from '@atlaskit/theme/components';
 import { GlobalThemeTokens } from '@atlaskit/theme/components';
 
+import { Theme, ThemeAppearance, ThemeProps, ThemeTokens } from '../theme';
+
 import Container from './Container';
 import Format from './Format';
-import { Theme, ThemeAppearance, ThemeProps, ThemeTokens } from '../theme';
 
 export interface BadgeProps {
   /** Affects the visual style of the badge. */

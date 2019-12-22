@@ -1,3 +1,4 @@
+import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   code,
   code_block,
@@ -7,7 +8,6 @@ import {
   strong,
 } from '@atlaskit/editor-test-helpers';
 import { checkParseEncodeRoundTrips } from '../../_test-helpers';
-import { defaultSchema } from '@atlaskit/adf-schema';
 
 // Nodes
 

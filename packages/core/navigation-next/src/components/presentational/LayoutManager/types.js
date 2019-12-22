@@ -1,7 +1,6 @@
 // @flow
 
 import type { ComponentType, ElementRef, Node } from 'react';
-
 import type { WithNavigationUIControllerProps } from '../../../ui-controller/types';
 import type { CollapseListener } from '../ResizeTransition/types';
 

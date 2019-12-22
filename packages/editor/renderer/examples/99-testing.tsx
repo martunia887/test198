@@ -1,17 +1,19 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { taskDecision, emoji } from '@atlaskit/util-data-test';
-import { Provider } from '@atlaskit/smart-card';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
   extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
-import { default as Renderer } from '../src/ui/Renderer';
-import { document as defaultDoc } from './helper/story-data';
-import Sidebar from './helper/NavigationNext';
 import { MentionProvider } from '@atlaskit/mention/types';
+import { Provider } from '@atlaskit/smart-card';
+import { taskDecision, emoji } from '@atlaskit/util-data-test';
+
+import { default as Renderer } from '../src/ui/Renderer';
+
+import Sidebar from './helper/NavigationNext';
+import { document as defaultDoc } from './helper/story-data';
 
 const mediaProvider = storyMediaProviderFactory();
 const emojiProvider = emoji.storyData.getEmojiResource();

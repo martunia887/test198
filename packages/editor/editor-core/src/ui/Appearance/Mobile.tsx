@@ -1,16 +1,17 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import PluginSlot from '../PluginSlot';
-import WithPluginState from '../WithPluginState';
-import ContentStyles from '../ContentStyles';
-import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
+
 import {
   pluginKey as maxContentSizePluginKey,
   MaxContentSizePluginState,
 } from '../../plugins/max-content-size';
 import { mentionPluginKey } from '../../plugins/mentions';
-import WithFlash from '../WithFlash';
+import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
 import { ClickAreaMobile as ClickArea } from '../Addon';
+import ContentStyles from '../ContentStyles';
+import PluginSlot from '../PluginSlot';
+import WithFlash from '../WithFlash';
+import WithPluginState from '../WithPluginState';
 
 export interface MobileEditorProps {
   isMaxContentSizeReached?: boolean;

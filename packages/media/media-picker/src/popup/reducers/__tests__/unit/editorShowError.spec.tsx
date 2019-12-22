@@ -1,5 +1,5 @@
-import editorShowError from '../../editorShowError';
 import { EDITOR_SHOW_ERROR } from '../../../actions/editorShowError';
+import editorShowError from '../../editorShowError';
 
 describe('editorShowError() reducer', () => {
   const stateBase: any = {

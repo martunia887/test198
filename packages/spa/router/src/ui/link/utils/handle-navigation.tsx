@@ -1,5 +1,5 @@
-import { isKeyboardEvent, isModifiedEvent } from '../../../common/utils/event';
 import { KeyboardEvent, MouseEvent } from 'react';
+import { isKeyboardEvent, isModifiedEvent } from '../../../common/utils/event';
 
 type LinkNavigationEvent = MouseEvent | KeyboardEvent;
 

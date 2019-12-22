@@ -1,10 +1,10 @@
-import { TrackAEP } from './events';
 import {
   ACTION,
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
   INPUT_METHOD,
 } from './enums';
+import { TrackAEP } from './events';
 import { InsertSmartLinkAEP } from './smart-links';
 
 export enum PANEL_TYPE {

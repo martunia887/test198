@@ -1,11 +1,10 @@
-import styled from 'styled-components';
-
 import {
   HTMLAttributes,
   ComponentClass,
   LiHTMLAttributes,
   SVGProps,
 } from 'react';
+import styled from 'styled-components';
 
 // TODO: ECEEF1 is not an atlaskit colour
 // https://product-fabric.atlassian.net/browse/MSW-156

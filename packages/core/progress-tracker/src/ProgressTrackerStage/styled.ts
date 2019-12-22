@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { gridSize, fontSize } from '@atlaskit/theme/constants';
 import { B300 } from '@atlaskit/theme/colors';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
+
 import { spacing } from '../constants';
 
 const halfGridSize = gridSize() / 2;

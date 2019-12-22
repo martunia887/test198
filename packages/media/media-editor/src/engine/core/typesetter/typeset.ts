@@ -1,9 +1,10 @@
 import { TextDirection } from '../../../common';
+import { adjustSize } from '../../../util';
 import * as Core from '../binaries/mediaEditor';
+
 import { FontInfo, FontMetrics } from './fontInfo';
 import { Fragment, FragmentPosition } from './fragment';
 import { Paragraph } from './paragraph';
-import { adjustSize } from '../../../util';
 
 export interface TypesetConfig {
   gl: WebGLRenderingContext;

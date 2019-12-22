@@ -1,6 +1,6 @@
 import { NodeSpec } from 'prosemirror-model';
-import { LayoutColumnDefinition } from './layout-column';
 import { BreakoutMarkDefinition } from '../marks';
+import { LayoutColumnDefinition } from './layout-column';
 
 /**
  * @name layoutSection_node

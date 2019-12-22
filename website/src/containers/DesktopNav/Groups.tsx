@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, matchPath } from 'react-router-dom';
-
 import { AkContainerNavigationNested as NestedNav } from '@atlaskit/navigation';
 
-import DefaultNav from './navigations/Default';
-import PackagesNav from './navigations/Packages';
-import DocsNav from './navigations/Docs';
-import PatternsNav from './navigations/Patterns';
-
 import { Directory } from '../../types';
+
+import DefaultNav from './navigations/Default';
+import DocsNav from './navigations/Docs';
+import PackagesNav from './navigations/Packages';
+import PatternsNav from './navigations/Patterns';
 
 export type GroupsProps = {
   docs: Directory;

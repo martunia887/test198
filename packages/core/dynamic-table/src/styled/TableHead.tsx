@@ -1,5 +1,9 @@
 import styled, { css } from 'styled-components';
 import { B100 } from '@atlaskit/theme/colors';
+
+import { head } from '../theme';
+import { SortOrderType } from '../types';
+
 import {
   arrowsStyle,
   cellStyle,
@@ -7,8 +11,6 @@ import {
   truncateStyle,
   TruncateStyleProps,
 } from './constants';
-import { SortOrderType } from '../types';
-import { head } from '../theme';
 
 const rankingStyles = css`
   display: block;

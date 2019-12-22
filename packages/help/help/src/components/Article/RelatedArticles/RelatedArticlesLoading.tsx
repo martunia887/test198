@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { LoadingRectangle } from '../styled';
 import {
   LoadignRelatedArticleList,

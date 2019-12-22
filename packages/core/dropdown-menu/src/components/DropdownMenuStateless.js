@@ -12,21 +12,21 @@ import Button from '@atlaskit/button';
 import Droplist, { Item, Group } from '@atlaskit/droplist';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
-
-import DropdownItemFocusManager from './context/DropdownItemFocusManager';
-import DropdownItemClickManager from './context/DropdownItemClickManager';
-import DropdownItemSelectionCache from './context/DropdownItemSelectionCache';
 import WidthConstrainer from '../styled/WidthConstrainer';
-import { KEY_DOWN, KEY_SPACE, KEY_ENTER } from '../util/keys';
 import type {
   DeprecatedItem,
   DeprecatedItemGroup,
   DropdownMenuStatelessProps,
 } from '../types';
+import { KEY_DOWN, KEY_SPACE, KEY_ENTER } from '../util/keys';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
+
+import DropdownItemClickManager from './context/DropdownItemClickManager';
+import DropdownItemFocusManager from './context/DropdownItemFocusManager';
+import DropdownItemSelectionCache from './context/DropdownItemSelectionCache';
 
 type OpenCloseArgs = {
   event: SyntheticMouseEvent<any> | SyntheticKeyboardEvent<any>,

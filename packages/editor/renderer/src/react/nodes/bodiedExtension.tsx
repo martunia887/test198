@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { RendererContext } from '..';
-import { renderNodes, Serializer } from '../..';
 import { ExtensionLayout } from '@atlaskit/adf-schema';
 import {
   ADNode,
   ExtensionHandlers,
   ProviderFactory,
 } from '@atlaskit/editor-common';
-import { renderExtension } from './extension';
+import { RendererContext } from '..';
+
+import { renderNodes, Serializer } from '../..';
 import ExtensionRenderer from '../../ui/ExtensionRenderer';
+
+import { renderExtension } from './extension';
 
 export interface Props {
   serializer: Serializer<any>;

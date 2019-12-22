@@ -3,8 +3,8 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 
-import { NavigationProvider } from '../../../../../index';
 import ItemsRenderer from '../../../../../renderer';
+import { NavigationProvider } from '../../../../../index';
 import SkeletonContainerView from '../../../../presentational/SkeletonContainerView';
 import AsyncLayoutManagerWithViewController from '../../../AsyncLayoutManagerWithViewController';
 import LayoutManagerWithViewController from '../../LayoutManagerWithViewController';

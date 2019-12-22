@@ -1,6 +1,5 @@
-import styled, { keyframes } from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled, { keyframes } from 'styled-components';
 import { DropzoneProps } from './dropzone';
 
 export const Wrapper: ComponentClass<HTMLAttributes<{}> &

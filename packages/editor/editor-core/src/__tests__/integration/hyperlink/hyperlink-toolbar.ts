@@ -1,7 +1,8 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import { comment, fullpage, editable, linkToolbar } from '../_helpers';
+
 import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
+import { comment, fullpage, editable, linkToolbar } from '../_helpers';
 
 const linkText1 = 'http://hello.com ';
 

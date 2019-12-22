@@ -1,7 +1,8 @@
-import { name } from '../../../../version.json';
-import { schema, toDOM, fromHTML } from '../../../../../test-helpers';
-import { nestedExpand } from '../../../../../src';
 import { Schema, Node } from 'prosemirror-model';
+
+import { nestedExpand } from '../../../../../src';
+import { schema, toDOM, fromHTML } from '../../../../../test-helpers';
+import { name } from '../../../../version.json';
 
 const findNestedExpand = (doc: Node, schema: Schema) => {
   let expand: Node | null = null;

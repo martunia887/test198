@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { Wrapper } from '../../styled';
+
 import { CardDimensions } from '../../..';
+import { Wrapper } from '../../styled';
 
 describe('Root Wrapper', () => {
   const dimensions: CardDimensions = {

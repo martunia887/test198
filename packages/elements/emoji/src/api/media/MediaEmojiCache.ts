@@ -1,18 +1,19 @@
+import { LRUCache } from 'lru-fast';
+
 import {
   EmojiDescription,
   OptionalEmojiDescription,
   EmojiRepresentation,
 } from '../../types';
+import debug from '../../util/logger';
 import {
   convertMediaToImageEmoji,
   isMediaRepresentation,
   isPromise,
 } from '../../util/type-helpers';
-import MediaImageLoader from './MediaImageLoader';
-import debug from '../../util/logger';
-import TokenManager from './TokenManager';
 
-import { LRUCache } from 'lru-fast';
+import MediaImageLoader from './MediaImageLoader';
+import TokenManager from './TokenManager';
 
 const getRequiredRepresentation = (
   emoji: EmojiDescription,

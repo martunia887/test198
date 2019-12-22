@@ -1,6 +1,5 @@
 import { DefaultExtensionProvider } from '@atlaskit/editor-common';
 import { createFakeExtensionManifest } from '@atlaskit/editor-test-helpers/extensions';
-
 import { extensionProviderToQuickInsertProvider } from '../../../utils/extensions';
 
 const dummyExtension1 = createFakeExtensionManifest({

@@ -1,5 +1,5 @@
-import editorShowImage from '../../editorShowImage';
 import { EDITOR_SHOW_IMAGE } from '../../../actions/editorShowImage';
+import editorShowImage from '../../editorShowImage';
 
 describe('editorShowImage() reducer', () => {
   const stateBase: any = {

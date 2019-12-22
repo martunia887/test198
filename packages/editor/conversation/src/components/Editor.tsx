@@ -1,9 +1,7 @@
 import * as React from 'react';
-import debounce from 'lodash.debounce';
 import styled from 'styled-components';
 import AkAvatar from '@atlaskit/avatar';
 import { ProviderFactory } from '@atlaskit/editor-common';
-
 import {
   Editor as AkEditor,
   EditorActions,
@@ -16,6 +14,7 @@ import {
   name as packageName,
   version as packageVersion,
 } from '@atlaskit/editor-core';
+import debounce from 'lodash.debounce';
 
 import { User } from '../model';
 

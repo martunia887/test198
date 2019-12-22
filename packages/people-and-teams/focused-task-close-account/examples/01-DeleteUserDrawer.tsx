@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import { Checkbox } from '@atlaskit/checkbox';
 
-import accessibleSites from '../src/mocks/accessibleSites';
-import { catherineHirons } from '../src/mocks/users';
-import StatefulInlineDialog from '../src/components/StatefulInlineDialog';
 import {
   FocusedTaskCloseAccount,
   DeleteUserOverviewScreen,
   DeleteUserContentPreviewScreen,
 } from '../src';
+import StatefulInlineDialog from '../src/components/StatefulInlineDialog';
+import accessibleSites from '../src/mocks/accessibleSites';
+import { catherineHirons } from '../src/mocks/users';
 
 const Controls = styled.div`
   display: flex;

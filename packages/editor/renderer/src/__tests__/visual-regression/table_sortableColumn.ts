@@ -1,11 +1,13 @@
 import { Page } from 'puppeteer';
-import { snapshot, animationFrame, initRendererWithADF } from './_utils';
-import * as tableSortable from '../__fixtures__/table-sortable.adf.json';
-import * as tableWithMergedCells from '../__fixtures__/table-with-merged-cells.adf.json';
-import * as tableWithHeaderColumnButWithoutHeaderRow from '../__fixtures__/table-with-header-column-but-without-header-row.adf.json';
-import * as tableWithHeaderColumnButWithoutHeaderRowWithoutNumberColumn from '../__fixtures__/table-with-header-column-but-without-header-row-without-number-column.adf.json';
+
 import { RendererCssClassName } from '../../consts';
 import { StatusClassNames } from '../../ui/SortingIcon';
+import * as tableSortable from '../__fixtures__/table-sortable.adf.json';
+import * as tableWithHeaderColumnButWithoutHeaderRowWithoutNumberColumn from '../__fixtures__/table-with-header-column-but-without-header-row-without-number-column.adf.json';
+import * as tableWithHeaderColumnButWithoutHeaderRow from '../__fixtures__/table-with-header-column-but-without-header-row.adf.json';
+import * as tableWithMergedCells from '../__fixtures__/table-with-merged-cells.adf.json';
+
+import { snapshot, animationFrame, initRendererWithADF } from './_utils';
 
 const initRenderer = async (page: Page, adf: any) => {
   await initRendererWithADF(page, {

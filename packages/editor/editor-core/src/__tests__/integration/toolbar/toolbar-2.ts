@@ -1,11 +1,12 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { comment, fullpage, editable } from '../_helpers';
-import { messages as blockTypeMessages } from '../../../plugins/block-type/ui/ToolbarBlockType';
+
 import { messages } from '../../../plugins/block-type/types';
+import { messages as blockTypeMessages } from '../../../plugins/block-type/ui/ToolbarBlockType';
 import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
+import { comment, fullpage, editable } from '../_helpers';
 
 const changeFormatting = `[aria-label="${blockTypeMessages.textStyles.defaultMessage}"]`;
 const input = 'helloworld';

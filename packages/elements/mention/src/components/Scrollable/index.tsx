@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
+
 import MentionItem from '../MentionItem';
+
 import { ScrollableStyle } from './styles';
 
 export interface Props {

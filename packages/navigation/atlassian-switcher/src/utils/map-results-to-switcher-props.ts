@@ -1,16 +1,4 @@
 import {
-  getAdministrationLinks,
-  getAvailableProductLinks,
-  getCustomLinkItems,
-  getFixedProductLinks,
-  getProvisionedProducts,
-  getRecentLinkItems,
-  getSuggestedProductLink,
-  getDiscoverSectionLinks,
-  getJoinableSiteLinks,
-  SwitcherItemType,
-} from './links';
-import {
   hasLoaded,
   isComplete,
   isError,
@@ -27,8 +15,21 @@ import {
   UserSiteDataResponse,
   JoinableSitesResponse,
 } from '../types';
-import { JoinableSiteItemType } from './links';
+
 import { createCollector } from './create-collector';
+import {
+  getAdministrationLinks,
+  getAvailableProductLinks,
+  getCustomLinkItems,
+  getFixedProductLinks,
+  getProvisionedProducts,
+  getRecentLinkItems,
+  getSuggestedProductLink,
+  getDiscoverSectionLinks,
+  getJoinableSiteLinks,
+  SwitcherItemType,
+} from './links';
+import { JoinableSiteItemType } from './links';
 
 function collectAvailableProductLinks(
   cloudId: string | null | undefined,

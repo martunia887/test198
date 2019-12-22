@@ -1,19 +1,8 @@
 // @flow
 
 import React, { Component } from 'react';
-
-/*
- * Routing and Server Side Rendering
- * Make sure you correctly configure your
- * application's routes to be compatible
- * with SSR. For instructions on how to
- * SSR with React Router, check out their docs:
- * https://reacttraining.com/react-router/web/guides/server-rendering
- */
-
 import { Route, Switch } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
-
 import { Label } from '@atlaskit/field-base';
 import { ToggleStateless } from '@atlaskit/toggle';
 
@@ -24,15 +13,14 @@ import {
   LinkItem,
   ProjectSwitcher,
 } from './shared/components';
-import RootViews from './shared/views/root';
-import ContainerViews from './shared/views/container';
-
 import {
   BacklogView,
   ProjectsView,
   DashboardsView,
   SearchIssuesView,
 } from './shared/routes';
+import ContainerViews from './shared/views/container';
+import RootViews from './shared/views/root';
 
 export default class App extends Component<
   {},

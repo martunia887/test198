@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import Prism from 'prismjs';
-import { colors, gridSize, themed } from '@atlaskit/theme';
-
-import '!style-loader!css-loader!prismjs/themes/prism-tomorrow.css';
-import 'prismjs/components/prism-jsx';
 import { replaceSrc } from '@atlaskit/docs';
+import { colors, gridSize, themed } from '@atlaskit/theme';
+import '!style-loader!css-loader!prismjs/themes/prism-tomorrow.css';
 import { replaceImports } from 'codesandboxer';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-jsx';
 
 const Code = styled.pre`
   border-radius: 3px;

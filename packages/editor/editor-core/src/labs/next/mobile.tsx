@@ -1,16 +1,18 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import WithPluginState from '../../ui/WithPluginState';
-import ContentStyles from '../../ui/ContentStyles';
-import { EditorProps } from './internal/editor-props-type';
+
 import {
   pluginKey as maxContentSizePluginKey,
   MaxContentSizePluginState,
 } from '../../plugins/max-content-size';
-import WithFlash from '../../ui/WithFlash';
 import { ClickAreaMobile as ClickArea } from '../../ui/Addon';
-import { EditorSharedConfigConsumer, Editor, EditorContent } from './Editor';
+import ContentStyles from '../../ui/ContentStyles';
+import WithFlash from '../../ui/WithFlash';
+import WithPluginState from '../../ui/WithPluginState';
+
 import { ContentComponents } from './ContentComponents';
+import { EditorSharedConfigConsumer, Editor, EditorContent } from './Editor';
+import { EditorProps } from './internal/editor-props-type';
 
 export interface MobileEditorProps extends EditorProps {
   isMaxContentSizeReached?: boolean;

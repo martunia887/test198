@@ -1,4 +1,8 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+import {
+  typeInEditor,
+  clickEditableContent,
+} from '../../__helpers/page-objects/_editor';
+import { pressKey } from '../../__helpers/page-objects/_keyboard';
 import {
   changeMediaLayout,
   insertMedia,
@@ -7,13 +11,10 @@ import {
   mediaSingleLayouts,
   MediaLayout,
 } from '../../__helpers/page-objects/_media';
-import {
-  typeInEditor,
-  clickEditableContent,
-} from '../../__helpers/page-objects/_editor';
-import { pressKey } from '../../__helpers/page-objects/_keyboard';
-import * as singleCellTable from './__fixtures__/single-cell-table-adf.json';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import * as singleCellTable from './__fixtures__/single-cell-table-adf.json';
 
 describe('Snapshot Test: Media', () => {
   let page: Page;

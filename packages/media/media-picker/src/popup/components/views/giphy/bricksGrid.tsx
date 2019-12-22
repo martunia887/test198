@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { Component } from 'react';
-
-// We need to import Bricks in both ways because the way they create the dist doesn't play well with TS
 import DefaultImportBricks from 'bricks.js';
 import * as Bricks from 'bricks.js';
-
 import { BricksInstance, SizeDetail } from 'bricks.js';
 
 export interface BricksLayoutProps {

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { md, Example, code, AtlassianInternalWarning } from '@atlaskit/docs';
-
 import PubSubExample from '../examples/00-client';
 
 const PubSubdSource = require('!!raw-loader!../examples/00-client');

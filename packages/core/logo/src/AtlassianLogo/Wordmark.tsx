@@ -1,8 +1,7 @@
 /* eslint-disable max-len */
 import React, { Component } from 'react';
-
-import { Props, DefaultProps } from '../constants';
 import Wrapper from '../Wrapper';
+import { Props, DefaultProps } from '../constants';
 
 const svg = `<canvas height="32" width="158" aria-hidden="true"></canvas>
 <svg viewBox="0 0 158 32" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">>

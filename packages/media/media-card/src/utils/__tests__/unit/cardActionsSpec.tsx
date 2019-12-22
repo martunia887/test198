@@ -1,21 +1,21 @@
 import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
-import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
-import CrossIcon from '@atlaskit/icon/glyph/cross';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
 import {
   AnalyticsListener,
   UIAnalyticsEventHandler,
 } from '@atlaskit/analytics-next';
-import { FabricChannel } from '@atlaskit/analytics-listeners';
+import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
+import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
 
+import { CardAction } from '../../../actions';
 import {
   CardActionsView,
   CardActionIconButton,
   CardActionsDropdownMenu,
 } from '../../cardActions';
 import { CardActionButton } from '../../cardActions/styled';
-import { CardAction } from '../../../actions';
 import PreventClickThrough from '../../preventClickThrough';
 
 describe('CardActions', () => {

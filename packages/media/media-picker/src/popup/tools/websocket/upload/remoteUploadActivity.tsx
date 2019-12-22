@@ -1,6 +1,7 @@
 import { EventEmitter2 } from 'eventemitter2';
+
+import { ServiceName } from '../../../domain';
 import { WsActivity, WsActivityEvents } from '../wsActivity';
-import { WsUploadEvents, RemoteUploadBasePayload } from './wsUploadEvents';
 import {
   WsUploadMessageData,
   isRemoteUploadStartData,
@@ -9,7 +10,8 @@ import {
   isRemoteUploadErrorData,
   isNotifyMetadata,
 } from '../wsMessageData';
-import { ServiceName } from '../../../domain';
+
+import { WsUploadEvents, RemoteUploadBasePayload } from './wsUploadEvents';
 
 export type DispatchUploadEvent<T extends keyof WsUploadEvents> = (
   event: T,

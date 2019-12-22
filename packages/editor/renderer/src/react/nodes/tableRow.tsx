@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { RendererCssClassName } from '../../consts';
 import { SortOrder } from '@atlaskit/editor-common';
+import { RendererCssClassName } from '../../consts';
 
 type Props = {
   isNumberColumnEnabled?: number;

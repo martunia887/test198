@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-// @ts-ignore
-import uid from 'uid';
 import styled from 'styled-components';
-// @ts-ignore
 import { AtlasKitThemeProvider, colors, themed } from '@atlaskit/theme';
+import uid from 'uid';
+
 import { profiles } from '../../mock-helpers';
 import { ProfileCard } from '../../src';
-
 import { StatusType, StatusModifiedDateType } from '../../src/types';
 
 const StoryWrapper = styled.div`

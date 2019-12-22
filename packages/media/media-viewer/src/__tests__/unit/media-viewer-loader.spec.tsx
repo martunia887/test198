@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { fakeMediaClient, nextTick } from '@atlaskit/media-test-helpers';
 import { Identifier } from '@atlaskit/media-client';
-
+import { fakeMediaClient, nextTick } from '@atlaskit/media-test-helpers';
 import { ModalSpinner } from '@atlaskit/media-ui';
+
 import AsyncMediaViewer, {
   MediaViewerWithMediaClientConfigProps,
   AsyncMediaViewerState,

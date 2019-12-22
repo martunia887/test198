@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+import { MediaSingle } from '@atlaskit/editor-common';
 import {
   doc,
   layoutColumn,
@@ -11,13 +12,12 @@ import {
   td,
   tr,
 } from '@atlaskit/editor-test-helpers';
-import { MediaSingle } from '@atlaskit/editor-common';
 
+import { EventDispatcher } from '../../../../../../event-dispatcher';
 import { MediaOptions } from '../../../../../../plugins/media';
-import { mediaEditor, testCollectionName } from '../../_utils';
 import NodeViewMediaSingle from '../../../../../../plugins/media/nodeviews/mediaSingle';
 import ResizableMediaSingle from '../../../../../../plugins/media/ui/ResizableMediaSingle';
-import { EventDispatcher } from '../../../../../../event-dispatcher';
+import { mediaEditor, testCollectionName } from '../../_utils';
 
 describe('media resizing', () => {
   const eventDispatcher = new EventDispatcher();

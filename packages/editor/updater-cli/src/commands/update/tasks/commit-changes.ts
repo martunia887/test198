@@ -1,6 +1,6 @@
-import { UpdateTask } from '../types';
 import { resolveToCwd } from '../../../utils/fs';
 import * as git from '../../../utils/git';
+import { UpdateTask } from '../types';
 
 export const commitChangedTask: UpdateTask = {
   title: 'Committing changes',

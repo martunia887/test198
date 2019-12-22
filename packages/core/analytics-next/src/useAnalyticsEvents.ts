@@ -1,12 +1,13 @@
 import { useContext, useRef } from 'react';
 import { useCallbackOne } from 'use-memo-one';
+
+import { AnalyticsEventPayload } from './AnalyticsEvent';
 import {
   AnalyticsReactContext,
   AnalyticsReactContextInterface,
 } from './AnalyticsReactContext';
-import { CreateUIAnalyticsEvent } from './types';
 import UIAnalyticsEvent from './UIAnalyticsEvent';
-import { AnalyticsEventPayload } from './AnalyticsEvent';
+import { CreateUIAnalyticsEvent } from './types';
 
 export type UseAnalyticsEventsHook = {
   createAnalyticsEvent: CreateUIAnalyticsEvent;

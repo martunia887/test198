@@ -4,16 +4,15 @@ import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { defaultRegistry } from 'react-sweet-state';
 
-import { ResourceStore } from '../../../../../controllers/resource-store';
-import { createResource } from '../../../../../controllers/resource-utils';
-import { getRouterState } from '../../../../../controllers/router-store';
-
-import { useResource } from '../../../../../controllers/hooks/resource-store';
 import {
   DEFAULT_ROUTE,
   DEFAULT_MATCH,
   DEFAULT_HISTORY,
 } from '../../../../../common/constants';
+import { useResource } from '../../../../../controllers/hooks/resource-store';
+import { ResourceStore } from '../../../../../controllers/resource-store';
+import { createResource } from '../../../../../controllers/resource-utils';
+import { getRouterState } from '../../../../../controllers/router-store';
 
 jest.mock('../../../../../controllers/router-store', () => ({
   ...jest.requireActual('../../../../../controllers/router-store'),

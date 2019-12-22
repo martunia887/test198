@@ -1,7 +1,7 @@
 // @flow
 
-import type { Props } from '../Layer';
 import type { PositionType } from '../../types';
+import type { Props } from '../Layer';
 
 const positionMap = {
   'top left': { position: 'top-start', animation: 'top' },

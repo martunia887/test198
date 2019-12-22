@@ -1,5 +1,5 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { encode, NodeEncoder } from '..';
+import { Node as PMNode } from 'prosemirror-model';
 import { unknown } from './unknown';
 
 export const table: NodeEncoder = (node: PMNode): string => {

@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { ActionAny as Action } from 'react-sweet-state';
-
 import {
   Href,
   Location,

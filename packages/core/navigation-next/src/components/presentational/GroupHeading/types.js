@@ -1,7 +1,6 @@
 // @flow
 
 import type { ComponentType, Node } from 'react';
-
 import type { WithContentThemeProps } from '../../../theme/types';
 
 export type ConnectedGroupHeadingProps = {

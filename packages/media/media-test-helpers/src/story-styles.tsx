@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { TableHTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 
 export const Matrix: ComponentClass<TableHTMLAttributes<{}>> = styled.table`
   thead {

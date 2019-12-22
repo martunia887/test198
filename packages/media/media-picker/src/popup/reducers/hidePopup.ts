@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isHidePopupAction } from '../actions/hidePopup';
 import { State } from '../domain';
 

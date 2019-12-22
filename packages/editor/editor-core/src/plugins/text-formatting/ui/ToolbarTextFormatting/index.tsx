@@ -1,23 +1,24 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
-import { EditorView } from 'prosemirror-view';
 import BoldIcon from '@atlaskit/icon/glyph/editor/bold';
 import ItalicIcon from '@atlaskit/icon/glyph/editor/italic';
+import { EditorView } from 'prosemirror-view';
+
 import { withAnalytics } from '../../../../analytics';
 import {
   toggleBold,
   toggleItalic,
   renderTooltipContent,
 } from '../../../../keymaps';
-import { TextFormattingState } from '../../pm-plugins/main';
 import ToolbarButton from '../../../../ui/ToolbarButton';
 import { ButtonGroup } from '../../../../ui/styles';
+import { INPUT_METHOD } from '../../../analytics';
 import {
   toggleStrongWithAnalytics,
   toggleEmWithAnalytics,
 } from '../../commands/text-formatting';
-import { INPUT_METHOD } from '../../../analytics';
+import { TextFormattingState } from '../../pm-plugins/main';
 
 export const messages = defineMessages({
   bold: {

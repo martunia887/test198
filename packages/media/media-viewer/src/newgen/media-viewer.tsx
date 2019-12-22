@@ -1,27 +1,29 @@
 import * as React from 'react';
 import { SyntheticEvent } from 'react';
-import { MediaClient, Identifier } from '@atlaskit/media-client';
 import { IntlProvider, intlShape } from 'react-intl';
-import { Shortcut } from '@atlaskit/media-ui';
+import {
+  GasPayload,
+  GasScreenEventPayload,
+} from '@atlaskit/analytics-gas-types';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import { mediaViewerModalEvent } from './analytics/media-viewer';
+import { MediaClient, Identifier } from '@atlaskit/media-client';
+import { Shortcut } from '@atlaskit/media-ui';
+import { start } from 'perf-marks';
+
+import { MediaViewerExtensions } from '../components/types';
+
 import { closedEvent, ClosedInputType } from './analytics/closed';
+import { mediaViewerModalEvent } from './analytics/media-viewer';
 import { channel } from './analytics/index';
-import {
-  GasPayload,
-  GasScreenEventPayload,
-} from '@atlaskit/analytics-gas-types';
-import { ItemSource, MediaViewerFeatureFlags } from './domain';
-import { List } from './list';
 import { Collection } from './collection';
 import { Content } from './content';
+import { ItemSource, MediaViewerFeatureFlags } from './domain';
+import { List } from './list';
 import { Blanket, SidebarWrapper } from './styled';
-import { start } from 'perf-marks';
-import { MediaViewerExtensions } from '../components/types';
 
 export type Props = {
   onClose?: () => void;

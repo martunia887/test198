@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import FieldBaseStateless from './FieldBaseStateless';
 import type { FieldBaseProps } from '../types';
+import FieldBaseStateless from './FieldBaseStateless';
 
 const ON_BLUR_KEY = 'onBlurKey';
 const ON_CONTENT_BLUR_KEY = 'onContentBlurKey';

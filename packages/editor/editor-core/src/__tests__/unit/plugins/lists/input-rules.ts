@@ -1,4 +1,8 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   insertText,
   code_block,
   doc,
@@ -9,12 +13,9 @@ import {
   ul,
   hardBreak,
 } from '@atlaskit/editor-test-helpers';
-import { analyticsService, AnalyticsHandler } from '../../../../analytics';
 import { EditorView } from 'prosemirror-view';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+
+import { analyticsService, AnalyticsHandler } from '../../../../analytics';
 
 describe('inputrules', () => {
   const createEditor = createEditorFactory();

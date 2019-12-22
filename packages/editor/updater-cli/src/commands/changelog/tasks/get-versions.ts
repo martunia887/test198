@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+
 import { Task } from '../../../runner';
 import { getLatest } from '../../../utils/npm';
 import { getPackageVersion, PackageJson } from '../../../utils/package-json';

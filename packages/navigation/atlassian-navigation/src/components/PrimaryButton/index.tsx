@@ -1,10 +1,11 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { forwardRef, Ref } from 'react';
 import Button from '@atlaskit/button';
 import Tooltip from '@atlaskit/tooltip';
-import { forwardRef, Ref } from 'react';
+import { jsx } from '@emotion/core';
 
 import { useTheme } from '../../theme';
+
 import { getPrimaryButtonTheme, isHighlightedCSS } from './styles';
 import { PrimaryButtonProps } from './types';
 

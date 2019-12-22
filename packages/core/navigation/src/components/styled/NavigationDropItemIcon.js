@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
-import NavigationItemIcon from './NavigationItemIcon';
 import { whenCollapsed } from '../../theme/util';
+import NavigationItemIcon from './NavigationItemIcon';
 
 const NavigationDropItemIcon = styled(NavigationItemIcon)`
   padding-right: 0;

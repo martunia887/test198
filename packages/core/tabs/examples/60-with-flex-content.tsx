@@ -1,6 +1,7 @@
 import React from 'react';
 import Spinner from '@atlaskit/spinner';
 import { colors } from '@atlaskit/theme';
+
 import Tabs from '../src';
 
 export default () => (

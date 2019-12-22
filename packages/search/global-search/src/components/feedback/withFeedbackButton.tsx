@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { ComponentType } from 'react';
-import FeedbackButton from './FeedbackButton';
 import FeedbackCollector, { FeedbackFlag } from '@atlaskit/feedback-collector';
 import { FlagGroup } from '@atlaskit/flag';
+
 import { FeaturesProviderProps, injectFeatures } from '../FeaturesProvider';
+
+import FeedbackButton from './FeedbackButton';
 
 const EMBEDDABLE_KEY = '85dc6027-c074-4800-ba54-4ecb844b29f8';
 const REQUEST_TYPE_ID = '182';

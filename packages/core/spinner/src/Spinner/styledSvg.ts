@@ -1,7 +1,9 @@
 import styled, { css, keyframes } from 'styled-components';
-import { themed } from '@atlaskit/theme/components';
 import { N500, N0 } from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
+
 import { SpinnerPhases } from '../types';
+
 import { SIZES_MAP } from './constants';
 
 type StyleParams = {

@@ -6,10 +6,8 @@ import React, {
   ReactNode,
   FC,
 } from 'react';
-import { canUseDOM } from 'exenv';
-import Portal from '@atlaskit/portal';
-import { ThemeProvider } from 'styled-components';
 import { TransitionGroup, Transition } from 'react-transition-group';
+import { ThemeProvider } from 'styled-components';
 import {
   createAndFireEvent,
   withAnalyticsEvents,
@@ -17,11 +15,15 @@ import {
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 import Blanket from '@atlaskit/blanket';
+import Portal from '@atlaskit/portal';
+import { canUseDOM } from 'exenv';
+
+import drawerItemTheme from '../theme/drawer-item-theme';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-import drawerItemTheme from '../theme/drawer-item-theme';
+
 import FocusLock from './focus-lock';
 import DrawerPrimitive from './primitives';
 import { Fade } from './transitions';

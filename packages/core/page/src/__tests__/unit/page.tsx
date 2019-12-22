@@ -1,8 +1,7 @@
-import { shallow } from 'enzyme';
 import React from 'react';
+import { shallow } from 'enzyme';
 
 import Page from '../..';
-
 import { name } from '../../version.json';
 
 describe(name, () => {

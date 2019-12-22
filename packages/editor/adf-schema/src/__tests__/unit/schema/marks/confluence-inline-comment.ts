@@ -1,6 +1,6 @@
-import { name } from '../../../../version.json';
-import { createSchema } from '../../../../schema/create-schema';
 import { toHTML } from '../../../../../test-helpers';
+import { createSchema } from '../../../../schema/create-schema';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema confluence-inline-comment mark`, () => {
   it('serializes to <span data-reference="hash-ref-goes-here">', () => {

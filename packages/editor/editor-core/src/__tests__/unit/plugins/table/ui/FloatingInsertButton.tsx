@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
 import {
   createEditorFactory,
   doc,
@@ -11,10 +13,9 @@ import {
   thEmpty,
   tr,
 } from '@atlaskit/editor-test-helpers';
-import { ReactWrapper } from 'enzyme';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { EditorView } from 'prosemirror-view';
-import * as React from 'react';
+
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
 import { TablePluginState } from '../../../../../plugins/table/types';
 import FloatingInsertButton, {

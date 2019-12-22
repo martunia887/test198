@@ -1,6 +1,7 @@
 import React, { Component, ChangeEvent, FormEvent } from 'react';
-import { gridSize } from '@atlaskit/theme';
 import Button, { ButtonProps } from '@atlaskit/button';
+import { gridSize } from '@atlaskit/theme';
+
 import { Note } from '../examples-util/helpers';
 import Avatar from '../src';
 

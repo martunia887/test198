@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
-import Popup from '@atlaskit/popup';
 import { DropdownItem, DropdownItemGroup } from '@atlaskit/dropdown-menu';
+import Popup from '@atlaskit/popup';
 
 import { Profile } from '../../src';
 

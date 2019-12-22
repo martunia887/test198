@@ -1,15 +1,17 @@
-import { Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import classnames from 'classnames';
-import { getResizeCellPos } from './utils';
+import { Plugin, PluginKey, Transaction } from 'prosemirror-state';
+
+import { Dispatch } from '../../../../event-dispatcher';
+import { pluginFactory } from '../../../../utils/plugin-state-factory';
 import {
   ColumnResizingPluginState,
   TableCssClassName as ClassName,
 } from '../../types';
-import { Dispatch } from '../../../../event-dispatcher';
-import { handleMouseDown } from './event-handlers';
-import { pluginFactory } from '../../../../utils/plugin-state-factory';
-import reducer from './reducer';
+
 import { setResizeHandlePos } from './commands';
+import { handleMouseDown } from './event-handlers';
+import reducer from './reducer';
+import { getResizeCellPos } from './utils';
 
 export const pluginKey = new PluginKey('tableFlexiColumnResizing');
 

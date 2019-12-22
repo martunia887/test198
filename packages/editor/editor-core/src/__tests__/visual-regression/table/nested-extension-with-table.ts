@@ -1,7 +1,8 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import adf from './__fixtures__/nested-table.adf.json';
 import { clickFirstCell } from '../../__helpers/page-objects/_table';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adf from './__fixtures__/nested-table.adf.json';
 
 describe('Snapshot Test: nested block extension with table', () => {
   let page: Page;

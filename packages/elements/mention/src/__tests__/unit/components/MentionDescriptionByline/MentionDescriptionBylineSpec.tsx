@@ -1,7 +1,9 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-import { MentionDescription } from '../../../../types';
+import { shallow } from 'enzyme';
+
 import MentionDescriptionByline from '../../../../components/MentionDescriptionByline';
+import { MentionDescription } from '../../../../types';
+
 import { userMention, teamMention } from './_commonData';
 
 const shallowRender = (mention: MentionDescription) =>

@@ -1,24 +1,24 @@
 /* eslint-disable no-console */
 
 import * as React from 'react';
-
 import Button, { ButtonGroup } from '@atlaskit/button';
-import LockCircleIcon from '@atlaskit/icon/glyph/lock-circle';
-import Editor, { EditorProps } from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
-import ToolbarHelp from './../src/ui/ToolbarHelp';
-import ToolsDrawer from '../example-helpers/ToolsDrawer';
-import CollapsedEditor from '../src/ui/CollapsedEditor';
-import ToolbarFeedback from '../src/ui/ToolbarFeedback';
-import { name, version } from '../package.json';
-
 import {
   customInsertMenuItems,
   extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
+import LockCircleIcon from '@atlaskit/icon/glyph/lock-circle';
+
 import { DevTools } from '../example-helpers/DevTools';
+import ToolsDrawer from '../example-helpers/ToolsDrawer';
 import withSentry from '../example-helpers/withSentry';
+import { name, version } from '../package.json';
+import CollapsedEditor from '../src/ui/CollapsedEditor';
+import ToolbarFeedback from '../src/ui/ToolbarFeedback';
+
+import Editor, { EditorProps } from './../src/editor';
+import EditorContext from './../src/ui/EditorContext';
+import ToolbarHelp from './../src/ui/ToolbarHelp';
+import WithEditorActions from './../src/ui/WithEditorActions';
 
 const SAVE_ACTION = () => console.log('Save');
 const CANCEL_ACTION = () => console.log('Cancel');

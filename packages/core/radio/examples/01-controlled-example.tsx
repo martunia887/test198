@@ -1,6 +1,7 @@
 import React from 'react';
-import Form, { Field, FormFooter } from '@atlaskit/form';
 import Button from '@atlaskit/button';
+import Form, { Field, FormFooter } from '@atlaskit/form';
+
 import { RadioGroup } from '../src';
 
 const options = [

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Avatar from '@atlaskit/avatar';
+
 import ResultBase from './ResultBase';
 import { CommonResultProps } from './types';
 

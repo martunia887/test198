@@ -1,8 +1,10 @@
-import { snapshot, initRendererWithADF } from './_utils';
-import mediaLink from './__fixtures__/media-link.adf.json';
-import { Page } from 'puppeteer';
-import { defaultMediaLinkOpacity } from '../../react/marks/link';
 import { mediaSingleClassName } from '@atlaskit/editor-common';
+import { Page } from 'puppeteer';
+
+import { defaultMediaLinkOpacity } from '../../react/marks/link';
+
+import mediaLink from './__fixtures__/media-link.adf.json';
+import { snapshot, initRendererWithADF } from './_utils';
 
 // TODO: Unskip when we fixed ED-8011
 describe.skip('media link:', () => {

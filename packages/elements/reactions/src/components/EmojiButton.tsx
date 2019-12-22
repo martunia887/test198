@@ -1,9 +1,10 @@
-import { EmojiId, OnEmojiEvent } from '@atlaskit/emoji/types';
-import { EmojiProvider } from '@atlaskit/emoji/resource';
-import { ResourcedEmoji } from '@atlaskit/emoji/element';
 import * as React from 'react';
 import { PureComponent } from 'react';
+import { ResourcedEmoji } from '@atlaskit/emoji/element';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
+import { EmojiId, OnEmojiEvent } from '@atlaskit/emoji/types';
 import { style } from 'typestyle';
+
 import { isLeftClick } from './utils';
 
 const emojiButtonStyle = style({

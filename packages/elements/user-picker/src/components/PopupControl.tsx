@@ -1,7 +1,7 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { Label } from '@atlaskit/field-base';
 import { components, ControlProps } from '@atlaskit/select';
-import styled from 'styled-components';
 
 const ControlWrapper = styled.div`
   display: flex;

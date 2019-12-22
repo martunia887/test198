@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { Node as PMNode } from 'prosemirror-model';
-import { Card as SmartCard } from '@atlaskit/smart-card';
 import * as PropTypes from 'prop-types';
+import { Card as SmartCard } from '@atlaskit/smart-card';
+import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import rafSchedule from 'raf-schd';
 
-import { SmartCardProps, Card } from './genericCard';
-import UnsupportedBlockNode from '../../unsupported-content/nodeviews/unsupported-block';
 import {
   SelectionBasedNodeView,
   getPosHandler,
 } from '../../../nodeviews/ReactNodeView';
+import UnsupportedBlockNode from '../../unsupported-content/nodeviews/unsupported-block';
 import { registerCard } from '../pm-plugins/actions';
+
+import { SmartCardProps, Card } from './genericCard';
 
 export interface Props {
   children?: React.ReactNode;

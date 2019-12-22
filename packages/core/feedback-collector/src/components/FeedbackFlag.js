@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { AutoDismissFlag } from '@atlaskit/flag';
-import { G300 } from '@atlaskit/theme/colors';
 import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
+import { G300 } from '@atlaskit/theme/colors';
 
 type AkProps = {
   isDismissAllowed?: boolean,

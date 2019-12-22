@@ -1,7 +1,6 @@
-import { of } from 'rxjs/observable/of';
-
-import { MediaApiConfig, MediaClientConfig } from '@atlaskit/media-core';
 import { MediaClient } from '@atlaskit/media-client';
+import { MediaApiConfig, MediaClientConfig } from '@atlaskit/media-core';
+import { of } from 'rxjs/observable/of';
 
 import { asMock } from './jestHelpers';
 

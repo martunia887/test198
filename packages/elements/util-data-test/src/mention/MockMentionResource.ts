@@ -1,5 +1,7 @@
-import { Search } from 'js-search';
-
+import {
+  UIAnalyticsEvent,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import {
   MentionDescription,
   MentionsResult,
@@ -11,13 +13,12 @@ import {
   MentionNameStatus,
   TeamMentionProvider,
 } from '@atlaskit/mention/resource';
-import {
-  UIAnalyticsEvent,
-  WithAnalyticsEventsProps,
-} from '@atlaskit/analytics-next';
+import { Search } from 'js-search';
+
 import debug from '../logger';
-import { mentionResult } from './mention-data';
+
 import { MockMentionNameClient } from './MockMentionNameClient';
+import { mentionResult } from './mention-data';
 import { HttpError } from './utils';
 
 const search = new Search('id');

@@ -1,6 +1,6 @@
 import { TextSelection } from 'prosemirror-state';
-import { pluginKey, ACTIONS } from '../pm-plugins/main';
 import { Command } from '../../../types';
+import { pluginKey, ACTIONS } from '../pm-plugins/main';
 
 export const removeColor = (): Command => (state, dispatch) => {
   const { textColor } = state.schema.marks;

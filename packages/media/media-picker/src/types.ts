@@ -1,4 +1,5 @@
 import { MediaClient } from '@atlaskit/media-client';
+
 import { UploadEventEmitter } from './components/component';
 import { LocalUploadConfig } from './components/types';
 import { AppProxyReactContext } from './popup/components/app';

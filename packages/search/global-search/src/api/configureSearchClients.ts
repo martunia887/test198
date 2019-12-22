@@ -1,3 +1,10 @@
+import deepEqual from 'deep-equal';
+import memoizeOne from 'memoize-one';
+
+import {
+  AutocompleteClientImpl,
+  AutocompleteClient,
+} from './AutocompleteClient';
 import CachingConfluenceClient from './CachingConfluenceClient';
 import { CachingPeopleSearchClient } from './CachingPeopleSearchClient';
 import { ConfluenceClient } from './ConfluenceClient';
@@ -10,12 +17,6 @@ import {
   ConfluencePrefetchedResults,
   GlobalSearchPrefetchedResults,
 } from './prefetchResults';
-import {
-  AutocompleteClientImpl,
-  AutocompleteClient,
-} from './AutocompleteClient';
-import memoizeOne from 'memoize-one';
-import deepEqual from 'deep-equal';
 
 export interface SearchClients {
   crossProductSearchClient: CrossProductSearchClient;

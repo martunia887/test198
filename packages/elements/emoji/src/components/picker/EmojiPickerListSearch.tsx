@@ -1,10 +1,12 @@
-import AkFieldBase from '@atlaskit/field-base';
-import SearchIcon from '@atlaskit/icon/glyph/search';
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
+import AkFieldBase from '@atlaskit/field-base';
+import SearchIcon from '@atlaskit/icon/glyph/search';
+
 import { Styles } from '../../types';
 import { messages } from '../i18n';
+
 import * as styles from './styles';
 
 export interface Props {

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
-
-import { BlockCardResolvedViewProps } from '@atlaskit/media-ui';
-import { extractPropsFromObject } from './extractPropsFromObject';
 import ChatIcon from '@atlaskit/icon/glyph/comment';
+import { BlockCardResolvedViewProps } from '@atlaskit/media-ui';
 import { N600 } from '@atlaskit/theme/colors';
+
 import { getIconForFileType, getLabelForFileType } from '../../utils';
+
+import { extractPropsFromObject } from './extractPropsFromObject';
 
 type Person = {
   name: string;

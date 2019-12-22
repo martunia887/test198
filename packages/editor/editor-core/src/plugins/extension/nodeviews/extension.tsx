@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { EditorView, NodeView } from 'prosemirror-view';
-import { Node as PmNode } from 'prosemirror-model';
 import { ProviderFactory, ExtensionHandlers } from '@atlaskit/editor-common';
+import { Node as PmNode } from 'prosemirror-model';
+import { EditorView, NodeView } from 'prosemirror-view';
+
 import { ReactNodeView } from '../../../nodeviews';
-import Extension from '../ui/Extension';
-import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { ForwardRef, getPosHandler } from '../../../nodeviews/ReactNodeView';
+import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { ZeroWidthSpace } from '../../../utils';
+import Extension from '../ui/Extension';
 
 export interface Props {
   node: PmNode;

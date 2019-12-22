@@ -8,9 +8,10 @@ import {
   findTable,
   safeInsert,
 } from 'prosemirror-utils';
+
+import { Command } from '../../../types';
 import { getPluginState } from '../pm-plugins/main';
 import { checkIfHeaderRowEnabled, copyPreviousRow } from '../utils';
-import { Command } from '../../../types';
 // #endregion
 
 // #region Commands

@@ -1,11 +1,11 @@
 // @flow
 import React, { Component } from 'react';
-import { WithRootTheme } from '../../../theme/util';
+
 import type { Provided } from '../../../theme/types';
+import { WithRootTheme } from '../../../theme/util';
 
-import SkeletonGlobalTopItems from './SkeletonGlobalTopItems';
 import SkeletonGlobalBottomItems from './SkeletonGlobalBottomItems';
-
+import SkeletonGlobalTopItems from './SkeletonGlobalTopItems';
 import SkeletonGlobalNavigationInner from './styled/SkeletonGlobalNavigationInner';
 import SkeletonNavigationContentOuter from './styled/SkeletonNavigationContentOuter';
 

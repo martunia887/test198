@@ -1,23 +1,22 @@
 // @flow
 /* eslint-disable no-console */
-import { shallow, mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import React, { PureComponent } from 'react';
 import sinon from 'sinon';
+import { shallow, mount, configure } from 'enzyme';
 import AddIcon from '@atlaskit/icon/glyph/add';
-import NavigationWithAnalytics, {
-  NavigationWithoutAnalytics as Navigation,
-} from '../../components/js/Navigation';
+import Adapter from 'enzyme-adapter-react-16';
+
+import ContainerNavigation from '../../components/js/ContainerNavigation';
 import ContainerNavigationChildren from '../../components/js/ContainerNavigationChildren';
 import Drawer from '../../components/js/Drawer';
 import GlobalNavigation from '../../components/js/GlobalNavigation';
-import ContainerNavigation from '../../components/js/ContainerNavigation';
 import GlobalSecondaryActions from '../../components/js/GlobalSecondaryActions';
+import NavigationWithAnalytics, {
+  NavigationWithoutAnalytics as Navigation,
+} from '../../components/js/Navigation';
 import Resizer from '../../components/js/Resizer';
 import Spacer from '../../components/js/Spacer';
 import SpacerInner from '../../components/styled/SpacerInner';
-import WithElectronTheme from '../../theme/with-electron-theme';
-import * as presets from '../../theme/presets';
 import {
   containerClosedWidth as containerClosedWidthFn,
   globalOpenWidth as globalOpenWidthFn,
@@ -25,6 +24,8 @@ import {
   containerOpenWidth,
   resizeClosedBreakpoint as resizeClosedBreakpointFn,
 } from '../../shared-variables';
+import * as presets from '../../theme/presets';
+import WithElectronTheme from '../../theme/with-electron-theme';
 
 configure({ adapter: new Adapter() });
 const containerClosedWidth = containerClosedWidthFn(false);

@@ -1,7 +1,6 @@
 import { ProductKey } from '../../../types';
-
-import { resolveRecommendations } from '../index';
 import { JSW_OG_EXPANDS_EXPERIMENT_FEATURE_FLAG_KEY } from '../constants';
+import { resolveRecommendations } from '../index';
 
 describe('recommendations-provider-recommendations', () => {
   it('should return base recommendations if no feature flag provided', () => {

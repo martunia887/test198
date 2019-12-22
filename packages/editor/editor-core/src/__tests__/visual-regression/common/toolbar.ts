@@ -1,3 +1,11 @@
+import { waitForNoTooltip } from '@atlaskit/visual-regression/helper';
+
+import {
+  clickToolbarMenu,
+  ToolbarMenuItem,
+  toolbarMenuItemsSelectors as selectors,
+} from '../../__helpers/page-objects/_toolbar';
+import { Page } from '../../__helpers/page-objects/_types';
 import {
   snapshot,
   initEditorWithAdf,
@@ -6,13 +14,6 @@ import {
   deviceViewPorts,
   editorSelector,
 } from '../_utils';
-import { waitForNoTooltip } from '@atlaskit/visual-regression/helper';
-import {
-  clickToolbarMenu,
-  ToolbarMenuItem,
-  toolbarMenuItemsSelectors as selectors,
-} from '../../__helpers/page-objects/_toolbar';
-import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Toolbar', () => {
   let page: Page;

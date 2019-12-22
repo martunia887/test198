@@ -5,7 +5,6 @@ import {
   code,
   hardBreak,
 } from '@atlaskit/editor-test-helpers';
-
 import { clearEditorContent, insertNewLine } from '../../../commands';
 
 describe('commands', () => {

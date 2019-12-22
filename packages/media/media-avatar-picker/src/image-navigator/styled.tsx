@@ -1,15 +1,16 @@
-import styled, { keyframes } from 'styled-components';
-import { borderRadius, gridSize } from '@atlaskit/theme/constants';
-import { N200 } from '@atlaskit/theme/colors';
-import { checkeredBg } from './images';
-
 import {
   HTMLAttributes,
   ComponentClass,
   InputHTMLAttributes,
   ImgHTMLAttributes,
 } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { N200 } from '@atlaskit/theme/colors';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+
 import { AVATAR_DIALOG_WIDTH } from '../avatar-picker-dialog/layout-const';
+
+import { checkeredBg } from './images';
 
 const spin = keyframes`
   from { transform: rotate(0deg); }

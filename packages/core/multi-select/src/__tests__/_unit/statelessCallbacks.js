@@ -2,10 +2,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Tag from '@atlaskit/tag';
-import type { GroupType } from '../../types';
 
 import { MultiSelectStateless } from '../..';
-
+import type { GroupType } from '../../types';
 import { name } from '../../version.json';
 
 describe(`${name} - stateless`, () => {

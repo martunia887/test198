@@ -1,6 +1,6 @@
+import { Mark } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { mapSlice } from '../../../utils/slice';
-import { Mark } from 'prosemirror-model';
 
 export function transformToCodeBlockAction(
   state: EditorState,

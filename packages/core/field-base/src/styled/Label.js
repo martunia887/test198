@@ -1,8 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
+import { N200, DN90, N60, DN300, red } from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { gridSize } from '@atlaskit/theme/constants';
-import { N200, DN90, N60, DN300, red } from '@atlaskit/theme/colors';
 
 const spacing = gridSize();
 const fontSize = 12;

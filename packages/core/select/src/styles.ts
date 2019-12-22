@@ -1,6 +1,5 @@
-import { gridSize } from '@atlaskit/theme/constants';
 import * as colors from '@atlaskit/theme/colors';
-
+import { gridSize } from '@atlaskit/theme/constants';
 import { StylesConfig, ValidationState } from './types';
 
 const BORDER_WIDTH = 2;

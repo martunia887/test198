@@ -1,24 +1,23 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
 import ReactDOM from 'react-dom';
-
 import Droplist from '@atlaskit/droplist';
 import { Label } from '@atlaskit/field-base';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 
-import { SelectWrapper } from '../styled/Stateless';
-import Trigger from './Trigger';
-import Footer from './Footer';
 import {
   filterItems,
   getNextFocusable,
   getPrevFocusable,
   groupItems,
 } from '../internal/sharedFunctions';
+import { SelectWrapper } from '../styled/Stateless';
+import type { ItemType, GroupType, FooterType } from '../types';
+
+import Footer from './Footer';
 import renderGroups from './Groups';
 import renderOptGroups from './Options';
-
-import type { ItemType, GroupType, FooterType } from '../types';
+import Trigger from './Trigger';
 
 // =============================================================
 // NOTE: Duplicated in ./internal/appearances until docgen can follow imports.

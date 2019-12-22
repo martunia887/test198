@@ -1,9 +1,9 @@
 // @flow
-import styled from 'styled-components';
 import React, { Component } from 'react';
-import { yellow } from '@atlaskit/theme/colors';
-import Spinner from '@atlaskit/spinner';
+import styled from 'styled-components';
 import Icon from '@atlaskit/icon/glyph/warning';
+import Spinner from '@atlaskit/spinner';
+import { yellow } from '@atlaskit/theme/colors';
 
 // exported for testing
 export const WarningIcon = styled.div`

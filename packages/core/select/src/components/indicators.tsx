@@ -1,11 +1,12 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { FC } from 'react';
 import { components } from 'react-select';
-import { IndicatorProps } from '../types';
-import Spinner from '@atlaskit/spinner';
-import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import DownIcon from '@atlaskit/icon/glyph/hipchat/chevron-down';
+import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
+import Spinner from '@atlaskit/spinner';
+import { jsx } from '@emotion/core';
+
+import { IndicatorProps } from '../types';
 
 export const ClearIndicator: FC<IndicatorProps<any>> = props => (
   <components.ClearIndicator {...props}>

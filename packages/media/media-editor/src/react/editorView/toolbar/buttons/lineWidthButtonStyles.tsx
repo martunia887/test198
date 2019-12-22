@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { N500, N30, N0 } from '@atlaskit/theme/colors';
 
 export interface AreaProps {

@@ -7,12 +7,11 @@ import {
   td,
   th,
 } from '@atlaskit/editor-test-helpers';
+import { pluginKey as tablePluginKey } from '../../../../plugins/table/pm-plugins/main';
 import {
   TablePluginState,
   PluginConfig,
 } from '../../../../plugins/table/types';
-
-import { pluginKey as tablePluginKey } from '../../../../plugins/table/pm-plugins/main';
 
 describe('fix tables', () => {
   const createEditor = createEditorFactory<TablePluginState>();

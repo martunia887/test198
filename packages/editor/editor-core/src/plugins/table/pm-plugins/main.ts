@@ -1,3 +1,4 @@
+import { browser } from '@atlaskit/editor-common';
 import {
   EditorState,
   Plugin,
@@ -12,19 +13,14 @@ import {
 } from 'prosemirror-utils';
 import { EditorView, DecorationSet } from 'prosemirror-view';
 
-import { browser } from '@atlaskit/editor-common';
 import { Dispatch } from '../../../event-dispatcher';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { pluginFactory } from '../../../utils/plugin-state-factory';
-
-import { createTableView } from '../nodeviews/table';
 import {
   setTableRef,
   clearHoverSelection,
   addBoldInEmptyHeaderCells,
 } from '../commands';
-import { PluginConfig } from '../types';
-import { handleDocOrSelectionChanged } from '../handlers';
 import {
   handleMouseOver,
   handleMouseLeave,
@@ -38,10 +34,13 @@ import {
   handleMouseDown,
   whenTableInFocus,
 } from '../event-handlers';
-import { findControlsHoverDecoration, updateResizeHandles } from '../utils';
-import { fixTables } from '../transforms';
-import { TableCssClassName as ClassName } from '../types';
+import { handleDocOrSelectionChanged } from '../handlers';
+import { createTableView } from '../nodeviews/table';
 import reducer from '../reducer';
+import { fixTables } from '../transforms';
+import { PluginConfig } from '../types';
+import { TableCssClassName as ClassName } from '../types';
+import { findControlsHoverDecoration, updateResizeHandles } from '../utils';
 
 export const pluginKey = new PluginKey('tablePlugin');
 

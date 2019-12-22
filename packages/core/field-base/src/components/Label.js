@@ -1,6 +1,5 @@
 // @flow
 import React, { Component, type Node } from 'react';
-
 import { LabelWrapper, RequiredIndicator, LabelInner } from '../styled/Label';
 
 type Props = {

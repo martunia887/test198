@@ -1,38 +1,38 @@
-import EmailSerializer, { EmailSerializerOpts } from '../..';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 
-import * as paragraphIndents from './__fixtures__/paragraph-indents.adf.json';
-import * as paragraphAlign from './__fixtures__/paragraph-align.adf.json';
-import * as heading from './__fixtures__/heading.adf.json';
-import * as headingAlign from './__fixtures__/heading-align.adf.json';
-import * as em from './__fixtures__/em.adf.json';
+import EmailSerializer, { EmailSerializerOpts } from '../..';
+import { MetaDataContext } from '../../interfaces';
+
+import * as annotation from './__fixtures__/annotation.adf.json';
+import * as blockCards from './__fixtures__/block-cards.adf.json';
+import * as breakout from './__fixtures__/breakout.adf.json';
 import * as codeBlock from './__fixtures__/code-block.adf.json';
+import * as date from './__fixtures__/date.adf.json';
+import * as decisionList from './__fixtures__/decision-list.adf.json';
+import * as em from './__fixtures__/em.adf.json';
+import * as expand from './__fixtures__/expand.adf.json';
+import * as extensions from './__fixtures__/extensions.adf.json';
+import * as headingAlign from './__fixtures__/heading-align.adf.json';
+import * as heading from './__fixtures__/heading.adf.json';
+import * as image from './__fixtures__/image.adf.json';
+import * as inlineCards from './__fixtures__/inline-cards.adf.json';
 import * as inlineCodeProps from './__fixtures__/inline-code-props.adf.json';
 import * as inlineTextProps from './__fixtures__/inline-text-props.adf.json';
-import * as panels from './__fixtures__/panels.adf.json';
+import * as layoutColumnSection from './__fixtures__/layout-column-section.adf.json';
 import * as link from './__fixtures__/link.adf.json';
-import * as decisionList from './__fixtures__/decision-list.adf.json';
-import * as taskList from './__fixtures__/task-list.adf.json';
+import * as lists from './__fixtures__/lists.adf.json';
+import * as mediaGroupAllTypes from './__fixtures__/media-group-all-types.adf.json';
+import * as mediaGroup from './__fixtures__/media-group.adf.json';
+import * as mediaSingle from './__fixtures__/media-single.adf.json';
 import * as nestedTaskList from './__fixtures__/nested-task-list.adf.json';
-import * as blockCards from './__fixtures__/block-cards.adf.json';
-import * as inlineCards from './__fixtures__/inline-cards.adf.json';
+import * as panels from './__fixtures__/panels.adf.json';
+import * as paragraphAlign from './__fixtures__/paragraph-align.adf.json';
+import * as paragraphIndents from './__fixtures__/paragraph-indents.adf.json';
+import * as placeholder from './__fixtures__/placeholder.adf.json';
 import * as status from './__fixtures__/status.adf.json';
 import * as tableNumberedColumn from './__fixtures__/table-numbered-column.adf.json';
-import * as layoutColumnSection from './__fixtures__/layout-column-section.adf.json';
-import * as extensions from './__fixtures__/extensions.adf.json';
-import * as date from './__fixtures__/date.adf.json';
-import * as mediaSingle from './__fixtures__/media-single.adf.json';
-import * as mediaGroup from './__fixtures__/media-group.adf.json';
-import * as mediaGroupAllTypes from './__fixtures__/media-group-all-types.adf.json';
-import * as lists from './__fixtures__/lists.adf.json';
+import * as taskList from './__fixtures__/task-list.adf.json';
 import * as text from './__fixtures__/text.adf.json';
-import * as expand from './__fixtures__/expand.adf.json';
-
-import * as image from './__fixtures__/image.adf.json';
-import * as placeholder from './__fixtures__/placeholder.adf.json';
-import * as annotation from './__fixtures__/annotation.adf.json';
-import * as breakout from './__fixtures__/breakout.adf.json';
-import { MetaDataContext } from '../../interfaces';
 
 const defaultTestOpts: EmailSerializerOpts = {
   isImageStubEnabled: false,

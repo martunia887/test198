@@ -1,7 +1,7 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
-import { colors, gridSize } from '@atlaskit/theme';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
+import { colors, gridSize } from '@atlaskit/theme';
+import { jsx, css } from '@emotion/core';
 
 interface Props {
   children: React.ReactNode;

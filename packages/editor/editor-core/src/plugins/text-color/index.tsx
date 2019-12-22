@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { textColor } from '@atlaskit/adf-schema';
+
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
+
 import {
   pluginKey as textColorPluginKey,
   createPlugin,

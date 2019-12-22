@@ -1,6 +1,7 @@
-import { CardAppearance } from '../../view/Card';
-import { getResolverUrl, getBaseUrl } from '../../utils/environments';
 import { EnvironmentsKeys } from '../../client/types';
+import { getResolverUrl, getBaseUrl } from '../../utils/environments';
+import { CardAppearance } from '../../view/Card';
+
 import { CardProvider, ORSCheckResponse } from './types';
 
 export class EditorCardProvider implements CardProvider {

@@ -1,58 +1,55 @@
 import { NodeSpec } from 'prosemirror-model';
 
-// Nodes
+import { AnnotationMarkDefinition as Annotation } from '../marks/annotation';
+import { CodeDefinition as Code } from '../marks/code';
+import { EmDefinition as Em } from '../marks/em';
+import { LinkDefinition as Link } from '../marks/link';
+import { StrikeDefinition as Strike } from '../marks/strike';
+import { StrongDefinition as Strong } from '../marks/strong';
+import { SubSupDefinition as SubSup } from '../marks/subsup';
+import { TextColorDefinition as TextColor } from '../marks/text-color';
+import { UnderlineDefinition as Underline } from '../marks/underline';
+
+import { BlockCardDefinition as BlockCard } from './block-card';
+import { BlockQuoteDefinition as Blockquote } from './blockquote';
+import { BodiedExtensionDefinition as BodiedExtension } from './bodied-extension';
+import { BulletListDefinition as BulletList } from './bullet-list';
+import {
+  CodeBlockDefinition as CodeBlock,
+  CodeBlockWithMarksDefinition as CodeBlockWithMarks,
+} from './code-block';
+import { DateDefinition as Date } from './date';
+import { DecisionListDefinition as DecisionList } from './decision-list';
+import { EmojiDefinition as Emoji } from './emoji';
+import { ExpandDefinition as Expand } from './expand';
+import { ExtensionDefinition as Extension } from './extension';
+import { HardBreakDefinition as HardBreak } from './hard-break';
+import {
+  HeadingDefinition as Heading,
+  HeadingWithMarksDefinition as HeadingWithMarks,
+} from './heading';
+import { InlineCardDefinition as InlineCard } from './inline-card';
+import { InlineExtensionDefinition as InlineExtension } from './inline-extension';
+import { LayoutSectionDefinition as LayoutSection } from './layout-section';
+import { MediaGroupDefinition as MediaGroup } from './media-group';
+import { MediaSingleDefinition as MediaSingle } from './media-single';
+import { MentionDefinition as Mention } from './mention';
+import { NestedExpandDefinition as NestedExpand } from './nested-expand';
+import { OrderedListDefinition as OrderedList } from './ordered-list';
 import { PanelDefinition as Panel } from './panel';
 import {
   ParagraphDefinition as Paragraph,
   ParagraphWithMarksDefinition as ParagraphWithMarks,
 } from './paragraph';
-import { BlockQuoteDefinition as Blockquote } from './blockquote';
-import { OrderedListDefinition as OrderedList } from './ordered-list';
-import { BulletListDefinition as BulletList } from './bullet-list';
+import { PlaceholderDefinition as Placeholder } from './placeholder';
 import { RuleDefinition as Rule } from './rule';
-import {
-  HeadingDefinition as Heading,
-  HeadingWithMarksDefinition as HeadingWithMarks,
-} from './heading';
-import {
-  CodeBlockDefinition as CodeBlock,
-  CodeBlockWithMarksDefinition as CodeBlockWithMarks,
-} from './code-block';
-import { MediaGroupDefinition as MediaGroup } from './media-group';
-import { MediaSingleDefinition as MediaSingle } from './media-single';
-import { DecisionListDefinition as DecisionList } from './decision-list';
+import { StatusDefinition as Status } from './status';
+import { TableDefinition as Table } from './tableNodes';
 import {
   TaskListDefinition as TaskList,
   TaskListWithNestingDefinition as NestableTaskList,
 } from './task-list';
-import { TableDefinition as Table } from './tableNodes';
-import { ExtensionDefinition as Extension } from './extension';
-import { InlineExtensionDefinition as InlineExtension } from './inline-extension';
-import { BodiedExtensionDefinition as BodiedExtension } from './bodied-extension';
-import { ExpandDefinition as Expand } from './expand';
-import { NestedExpandDefinition as NestedExpand } from './nested-expand';
-
 import { TextDefinition as Text } from './text';
-import { HardBreakDefinition as HardBreak } from './hard-break';
-import { MentionDefinition as Mention } from './mention';
-import { EmojiDefinition as Emoji } from './emoji';
-import { DateDefinition as Date } from './date';
-import { StatusDefinition as Status } from './status';
-import { PlaceholderDefinition as Placeholder } from './placeholder';
-import { InlineCardDefinition as InlineCard } from './inline-card';
-import { BlockCardDefinition as BlockCard } from './block-card';
-import { LayoutSectionDefinition as LayoutSection } from './layout-section';
-
-// Marks
-import { LinkDefinition as Link } from '../marks/link';
-import { EmDefinition as Em } from '../marks/em';
-import { StrongDefinition as Strong } from '../marks/strong';
-import { StrikeDefinition as Strike } from '../marks/strike';
-import { CodeDefinition as Code } from '../marks/code';
-import { SubSupDefinition as SubSup } from '../marks/subsup';
-import { UnderlineDefinition as Underline } from '../marks/underline';
-import { TextColorDefinition as TextColor } from '../marks/text-color';
-import { AnnotationMarkDefinition as Annotation } from '../marks/annotation';
 
 // NOTE: BlockContent is only being used by layoutColumn now.
 /**

@@ -16,9 +16,9 @@ import BacklogIcon from '@atlaskit/icon/glyph/backlog';
 import BoardIcon from '@atlaskit/icon/glyph/board';
 import ChevD from '@atlaskit/icon/glyph/chevron-down';
 import GraphLineIcon from '@atlaskit/icon/glyph/graph-line';
-import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import SearchIcon from '@atlaskit/icon/glyph/search';
+import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
 import { JiraIcon } from '@atlaskit/logo';
 import { gridSize as gridSizeFn } from '@atlaskit/theme';
 

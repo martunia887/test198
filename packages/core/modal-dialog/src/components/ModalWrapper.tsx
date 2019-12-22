@@ -1,16 +1,16 @@
 import React from 'react';
-import { layers } from '@atlaskit/theme/constants';
+import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 import Portal from '@atlaskit/portal';
-import { ModalTransitionConsumer } from './ModalTransition';
-import StackConsumer from './StackConsumer';
+import { layers } from '@atlaskit/theme/constants';
 
+import { WidthNames } from '../shared-variables';
 import { AppearanceType, KeyboardOrMouseEvent, ActionProps } from '../types';
 
-import Modal from './Modal';
-import { WidthNames } from '../shared-variables';
-import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 import { FooterComponentProps } from './Footer';
 import { HeaderComponentProps } from './Header';
+import Modal from './Modal';
+import { ModalTransitionConsumer } from './ModalTransition';
+import StackConsumer from './StackConsumer';
 
 export interface WrapperProps extends WithAnalyticsEventsProps {
   /**

@@ -1,9 +1,10 @@
 // FIXME - FAB-1732 looking at making a shared component for this
 
-import classNames from 'classnames';
 import * as React from 'react';
 import { MouseEventHandler, PureComponent, ReactNode, UIEvent } from 'react';
 import { findDOMNode } from 'react-dom';
+import classNames from 'classnames';
+
 import * as styles from './styles';
 
 export interface OnScroll {

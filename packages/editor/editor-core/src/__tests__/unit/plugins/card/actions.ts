@@ -1,10 +1,4 @@
-import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
-import {
-  setProvider,
-  queueCards,
-  resolveCard,
-} from '../../../../plugins/card/pm-plugins/actions';
-
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   doc,
   createEditorFactory,
@@ -15,10 +9,17 @@ import {
   blockCard,
   Refs,
 } from '@atlaskit/editor-test-helpers';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { setNodeSelection } from '../../../../utils';
-import { visitCardLink, removeCard } from '../../../../plugins/card/toolbar';
 import { EditorView } from 'prosemirror-view';
+
+import {
+  setProvider,
+  queueCards,
+  resolveCard,
+} from '../../../../plugins/card/pm-plugins/actions';
+import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
+import { visitCardLink, removeCard } from '../../../../plugins/card/toolbar';
+import { setNodeSelection } from '../../../../utils';
+
 import { createCardRequest } from './_helpers';
 
 const atlassianUrl = 'http://www.atlassian.com/';

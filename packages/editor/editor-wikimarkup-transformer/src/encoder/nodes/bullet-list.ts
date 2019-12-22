@@ -1,6 +1,5 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { NodeEncoder, NodeEncoderOpts } from '..';
-
+import { Node as PMNode } from 'prosemirror-model';
 import { listItem } from './listItem';
 
 export const bulletList: NodeEncoder = (

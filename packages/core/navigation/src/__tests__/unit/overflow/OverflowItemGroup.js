@@ -2,6 +2,7 @@
 import React from 'react';
 import { mount, shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+
 import OverflowItemGroup from '../../../components/js/overflow/OverflowItemGroup';
 import {
   overflowManagerNamespace,

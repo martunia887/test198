@@ -5,8 +5,8 @@ import {
   code,
   strong,
 } from '@atlaskit/editor-test-helpers';
-import textFormattingCursorPlugin from '../../../../plugins/text-formatting/pm-plugins/cursor';
 import { EditorView } from 'prosemirror-view';
+import textFormattingCursorPlugin from '../../../../plugins/text-formatting/pm-plugins/cursor';
 
 type HandleClick = (
   view: EditorView,

@@ -1,8 +1,9 @@
 jest.mock('react-dom');
 import { render } from 'react-dom';
-import { PopupImpl } from '../../popup';
-import { UploadParams, PopupConfig } from '../../../types';
 import { fakeMediaClient } from '@atlaskit/media-test-helpers';
+
+import { UploadParams, PopupConfig } from '../../../types';
+import { PopupImpl } from '../../popup';
 
 describe('MediaPickerPopup', () => {
   const mediaClient = fakeMediaClient({

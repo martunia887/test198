@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 
 import * as React from 'react';
-import { mention } from '@atlaskit/util-data-test';
 import { Editor, EditorContext, CollapsedEditor } from '@atlaskit/editor-core';
-import { taskDecision } from '@atlaskit/util-data-test';
-import ToolsDrawer, { RenderEditorProps } from '../example-helpers/ToolsDrawer';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+import { mention } from '@atlaskit/util-data-test';
+import { taskDecision } from '@atlaskit/util-data-test';
+
+import ToolsDrawer, { RenderEditorProps } from '../example-helpers/ToolsDrawer';
 
 const SAVE_ACTION = () => console.log('Save');
 const CANCEL_ACTION = () => console.log('Cancel');

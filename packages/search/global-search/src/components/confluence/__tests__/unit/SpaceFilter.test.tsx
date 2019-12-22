@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ConfluenceSpaceFilter as SpaceFilter } from '../../SpaceFilter';
 import { shallow } from 'enzyme';
+import { ConfluenceSpaceFilter as SpaceFilter } from '../../SpaceFilter';
 
 const onFilterChanged = jest.fn();
 let updateFn: () => any;

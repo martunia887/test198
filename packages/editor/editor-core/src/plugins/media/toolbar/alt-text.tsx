@@ -1,20 +1,21 @@
 import React from 'react';
 import { InjectedIntl } from 'react-intl';
+import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+
+import * as keymaps from '../../../keymaps';
+import { Command } from '../../../types';
 import {
   FloatingToolbarButton,
   FloatingToolbarCustom,
   FloatingToolbarConfig,
 } from '../../floating-toolbar/types';
-import { Command } from '../../../types';
 import { openMediaAltTextMenu } from '../pm-plugins/alt-text/commands';
-import * as keymaps from '../../../keymaps';
-import { MediaToolbarBaseConfig } from '../types';
 import { messages } from '../pm-plugins/alt-text/messages';
 import AltTextEdit from '../pm-plugins/alt-text/ui/AltTextEdit';
 import { CONTAINER_WIDTH_IN_PX } from '../pm-plugins/alt-text/ui/AltTextEdit';
+import { MediaToolbarBaseConfig } from '../types';
 import { getMediaNodeFromSelection } from '../utils/media-common';
-import { EditorState } from 'prosemirror-state';
 
 export const altTextButton = (
   intl: InjectedIntl,

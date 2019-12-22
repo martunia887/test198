@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
+import * as colors from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { gridSize } from '@atlaskit/theme/constants';
-import * as colors from '@atlaskit/theme/colors';
 import { multiply, divide } from '@atlaskit/theme/math';
 
 const TRANSITION_DURATION = '0.25s ease-in-out';

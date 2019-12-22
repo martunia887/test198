@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { Node as PMNode } from 'prosemirror-model';
-import { NodeView, Decoration } from 'prosemirror-view';
-import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   AnalyticsListener,
   UIAnalyticsEvent,
   AnalyticsEventPayload,
 } from '@atlaskit/analytics-next';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { Node as PMNode } from 'prosemirror-model';
+import { NodeView, Decoration } from 'prosemirror-view';
+
 import { ReactNodeView, ForwardRef, getPosHandler } from '../../../nodeviews';
-import TaskItem from '../ui/Task';
+import { getPosHandlerNode } from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import WithPluginState from '../../../ui/WithPluginState';
 import { stateKey as taskPluginKey } from '../pm-plugins/main';
-import { getPosHandlerNode } from '../../../nodeviews/ReactNodeView';
+import TaskItem from '../ui/Task';
 
 export interface Props {
   providerFactory: ProviderFactory;

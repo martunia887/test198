@@ -1,16 +1,17 @@
 import * as React from 'react';
+import Button from '@atlaskit/button';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   storyMediaProviderFactory,
   extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
-import Button from '@atlaskit/button';
 
-import { default as Renderer } from '../src/ui/Renderer';
 import {
   LOCALSTORAGE_defaultDocKey,
   LOCALSTORAGE_defaultTitleKey,
 } from '../../editor-core/examples/5-full-page';
+import { default as Renderer } from '../src/ui/Renderer';
+
 import Sidebar from './helper/NavigationNext';
 
 const mediaProvider = storyMediaProviderFactory();

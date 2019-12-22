@@ -1,5 +1,5 @@
-import * as colors from '@atlaskit/theme/colors';
 import { gridSize, createTheme } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 import { ThemeProps, ThemeTokens, ThemingPublicApi } from './types';
 
 export const defaultThemingColors: ThemingPublicApi = {

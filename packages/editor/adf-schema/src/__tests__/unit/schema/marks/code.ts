@@ -1,6 +1,6 @@
-import { name } from '../../../../version.json';
-import { createSchema } from '../../../../schema/create-schema';
 import { fromHTML, toHTML, textWithMarks } from '../../../../../test-helpers';
+import { createSchema } from '../../../../schema/create-schema';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema code mark`, () => {
   itMatches('<span class="code">text</span>', 'text');

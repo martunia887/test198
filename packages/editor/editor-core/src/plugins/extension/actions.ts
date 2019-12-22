@@ -1,11 +1,13 @@
+import { UpdateExtension } from '@atlaskit/editor-common';
 import { Slice, Schema, Node as PmNode } from 'prosemirror-model';
 import { EditorState, NodeSelection } from 'prosemirror-state';
 import { replaceSelectedNode } from 'prosemirror-utils';
-import { UpdateExtension } from '@atlaskit/editor-common';
-import { MacroProvider, insertMacroFromMacroBrowser } from '../macro';
-import { getSelectedExtension } from './utils';
-import { mapFragment } from '../../utils/slice';
+
 import { Command, CommandDispatch } from '../../types';
+import { mapFragment } from '../../utils/slice';
+import { MacroProvider, insertMacroFromMacroBrowser } from '../macro';
+
+import { getSelectedExtension } from './utils';
 
 export const updateExtensionParams = (
   updateExtension: UpdateExtension<object>,

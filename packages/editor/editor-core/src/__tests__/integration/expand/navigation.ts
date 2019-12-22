@@ -1,15 +1,15 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, getDocFromElement, fullpage } from '../_helpers';
-import emptyExpandAdf from './__fixtures__/empty-expand.json';
-import twoLineExpandAdf from './__fixtures__/two-line-expand.json';
-import doubleExpand from './__fixtures__/double-expand.json';
 
+import { expandClassNames } from '../../../plugins/expand/ui/class-names';
 import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
+import { editable, getDocFromElement, fullpage } from '../_helpers';
 
-import { expandClassNames } from '../../../plugins/expand/ui/class-names';
+import doubleExpand from './__fixtures__/double-expand.json';
+import emptyExpandAdf from './__fixtures__/empty-expand.json';
+import twoLineExpandAdf from './__fixtures__/two-line-expand.json';
 
 const expandContentSelector = `.${expandClassNames.content} p`;
 

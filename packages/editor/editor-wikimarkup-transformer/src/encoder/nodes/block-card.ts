@@ -1,5 +1,5 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { NodeEncoder } from '..';
+import { Node as PMNode } from 'prosemirror-model';
 import { unknown } from './unknown';
 
 export const blockCard: NodeEncoder = (node: PMNode): string => {

@@ -1,6 +1,6 @@
-import { CSSObject } from '@emotion/core';
-import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 import { N30 } from '@atlaskit/theme/colors';
+import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
+import { CSSObject } from '@emotion/core';
 
 const gridSize = gridSizeFn();
 export const menuGroupCSS = (maxHeight?: string | number): CSSObject => ({

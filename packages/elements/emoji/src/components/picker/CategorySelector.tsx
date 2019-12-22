@@ -1,10 +1,12 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { defaultCategories } from '../../util/constants';
+import classNames from 'classnames';
+
 import { CategoryDescription, OnCategory } from '../../types';
+import { defaultCategories } from '../../util/constants';
 import { messages } from '../i18n';
+
 import {
   CategoryDescriptionMap,
   CategoryGroupKey,

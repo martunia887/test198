@@ -1,27 +1,28 @@
 // @flow
 
 import React from 'react';
-import { IntlProvider } from 'react-intl';
 import { mount, shallow } from 'enzyme';
-import Badge from '@atlaskit/badge';
-import { DropdownItem } from '@atlaskit/dropdown-menu';
+import { IntlProvider } from 'react-intl';
 import Avatar from '@atlaskit/avatar';
+import Badge from '@atlaskit/badge';
 import Drawer from '@atlaskit/drawer';
-import CrossIcon from '@atlaskit/icon/glyph/cross';
-import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
-import SearchIcon from '@atlaskit/icon/glyph/search';
+import { DropdownItem } from '@atlaskit/dropdown-menu';
 import CreateIcon from '@atlaskit/icon/glyph/add';
-import StarLargeIcon from '@atlaskit/icon/glyph/star-large';
+import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
+import InviteTeamIcon from '@atlaskit/icon/glyph/invite-team';
 import NotificationIcon from '@atlaskit/icon/glyph/notification';
+import QuestionIcon from '@atlaskit/icon/glyph/question-circle';
+import SearchIcon from '@atlaskit/icon/glyph/search';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
 import SignInIcon from '@atlaskit/icon/glyph/sign-in';
-import QuestionIcon from '@atlaskit/icon/glyph/question-circle';
-import InviteTeamIcon from '@atlaskit/icon/glyph/invite-team';
+import StarLargeIcon from '@atlaskit/icon/glyph/star-large';
 import { NotificationIndicator } from '@atlaskit/notification-indicator';
-import GlobalNavigation from '../../index';
-import ScreenTracker from '../../../ScreenTracker';
-import ItemComponent from '../../../ItemComponent';
+
 import RecentIcon from '../../../CustomIcons';
+import ItemComponent from '../../../ItemComponent';
+import ScreenTracker from '../../../ScreenTracker';
+import GlobalNavigation from '../../index';
 
 const DrawerContents = () => <div>drawer</div>;
 const EmojiAtlassianIcon = () => <button>EmojiAtlassianIcon</button>;

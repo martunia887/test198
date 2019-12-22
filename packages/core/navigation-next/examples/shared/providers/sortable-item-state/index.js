@@ -3,8 +3,8 @@
 import { Component, type Node } from 'react';
 import type { DropResult } from 'react-beautiful-dnd';
 
-import updateSortableItems from './update-sortable-items';
 import type { ItemsByGroup } from './types';
+import updateSortableItems from './update-sortable-items';
 
 type Props = {
   children: State => Node,

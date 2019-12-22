@@ -1,6 +1,6 @@
+import { CodeBlockAttrs } from '@atlaskit/adf-schema';
 import { setParentNodeMarkup, removeParentNodeOfType } from 'prosemirror-utils';
 import { Command } from '../../types';
-import { CodeBlockAttrs } from '@atlaskit/adf-schema';
 
 export type DomAtPos = (pos: number) => { node: HTMLElement; offset: number };
 export const removeCodeBlock: Command = (state, dispatch) => {

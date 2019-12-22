@@ -1,3 +1,8 @@
+import { uuid } from '@atlaskit/adf-schema';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   doc,
   createEditorFactory,
@@ -9,11 +14,6 @@ import {
   decisionList,
   decisionItem,
 } from '@atlaskit/editor-test-helpers';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import { uuid } from '@atlaskit/adf-schema';
 import { EditorView } from 'prosemirror-view';
 
 describe('tasks and decisions', () => {

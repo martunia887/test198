@@ -1,7 +1,8 @@
 import { EmojiId } from '@atlaskit/emoji';
-import { safeInsert } from 'prosemirror-utils';
 import { Fragment } from 'prosemirror-model';
 import { Selection } from 'prosemirror-state';
+import { safeInsert } from 'prosemirror-utils';
+
 import { Command } from '../../../types';
 import {
   INPUT_METHOD,

@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { UploadStatusUpdateEvent } from '../../domain/uploadEvent';
 import { MediaFile, UploadStatusUpdateEventPayload } from '../../types';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
-import rafSchedule from 'raf-schd';
+import { Popup, ProviderFactory } from '@atlaskit/editor-common';
+import { Node } from 'prosemirror-model';
 import {
   Plugin,
   PluginKey,
@@ -9,19 +9,19 @@ import {
   Transaction,
 } from 'prosemirror-state';
 import { findDomRefAtPos, findSelectedNodeOfType } from 'prosemirror-utils';
-import { Popup, ProviderFactory } from '@atlaskit/editor-common';
-import { Node } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
+import rafSchedule from 'raf-schd';
 
-import WithPluginState from '../../ui/WithPluginState';
-import { EditorPlugin } from '../../types';
 import { Dispatch } from '../../event-dispatcher';
-import { ToolbarLoader } from './ui/ToolbarLoader';
-import { FloatingToolbarHandler, FloatingToolbarConfig } from './types';
-
+import { EditorPlugin } from '../../types';
+import WithPluginState from '../../ui/WithPluginState';
 import {
   pluginKey as editorDisabledPluginKey,
   EditorDisabledPluginState,
 } from '../editor-disabled';
+
+import { FloatingToolbarHandler, FloatingToolbarConfig } from './types';
+import { ToolbarLoader } from './ui/ToolbarLoader';
 
 type ConfigWithNodeInfo = {
   config: FloatingToolbarConfig | undefined;

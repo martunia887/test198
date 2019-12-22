@@ -1,10 +1,12 @@
-import { ContentLink } from './link-parser';
-import { TokenType } from '../index';
-import { Context } from '../../../interfaces';
 import { isSafeUrl } from '@atlaskit/adf-schema';
+import { Node as PMNode, Schema } from 'prosemirror-model';
+
+import { Context } from '../../../interfaces';
 import { parseString } from '../../text';
 import { hasAnyOfMarks } from '../../utils/text';
-import { Node as PMNode, Schema } from 'prosemirror-model';
+import { TokenType } from '../index';
+
+import { ContentLink } from './link-parser';
 
 export function urlLinkResolver(
   link: ContentLink,

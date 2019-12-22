@@ -7,13 +7,13 @@ import React, {
   type Ref,
   type ElementRef,
 } from 'react';
-import raf from 'raf-schd';
-import { Global } from '@emotion/core';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import * as colors from '@atlaskit/theme/colors';
 import ChevronLeft from '@atlaskit/icon/glyph/chevron-left';
 import ChevronRight from '@atlaskit/icon/glyph/chevron-right';
+import * as colors from '@atlaskit/theme/colors';
 import Tooltip from '@atlaskit/tooltip';
+import { Global } from '@emotion/core';
+import raf from 'raf-schd';
 
 import { navigationExpandedCollapsed } from '../../../common/analytics';
 import {

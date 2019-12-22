@@ -11,18 +11,20 @@ import {
   DroppableProvided,
 } from 'react-beautiful-dnd-next';
 import { getBox } from 'css-box-model';
-import { calculateFinalDropPositions } from './Tree-utils';
-import { Props, State, DragState } from './Tree-types';
-import { noop } from '../../utils/handy';
-import { flattenTree, mutateTree } from '../../utils/tree';
+
 import { FlattenedItem, ItemId, Path, TreeData } from '../../types';
-import TreeItem from '../TreeItem';
+import DelayedFunction from '../../utils/delayed-function';
 import {
   getDestinationPath,
   getItemById,
   getIndexById,
 } from '../../utils/flat-tree';
-import DelayedFunction from '../../utils/delayed-function';
+import { noop } from '../../utils/handy';
+import { flattenTree, mutateTree } from '../../utils/tree';
+import TreeItem from '../TreeItem';
+
+import { Props, State, DragState } from './Tree-types';
+import { calculateFinalDropPositions } from './Tree-utils';
 
 export default class Tree extends Component<Props, State> {
   static defaultProps = {

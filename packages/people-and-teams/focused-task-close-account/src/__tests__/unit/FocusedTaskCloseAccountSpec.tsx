@@ -6,7 +6,6 @@ import {
   Props,
   State,
 } from '../../components/FocusedTaskCloseAccount';
-
 import Footer from '../../components/Footer';
 
 const defaultProps = {

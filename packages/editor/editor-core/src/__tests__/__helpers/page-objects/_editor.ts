@@ -1,5 +1,5 @@
-import { Page } from './_types';
 import { ElementHandle } from 'puppeteer';
+import { Page } from './_types';
 
 export const selectors = {
   editor: '.ProseMirror',

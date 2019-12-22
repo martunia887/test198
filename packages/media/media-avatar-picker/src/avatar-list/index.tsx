@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 
-import { AvatarListWrapper } from './styled';
 import { SmallAvatarImage } from '../predefined-avatar-view/styled';
+
+import { AvatarListWrapper } from './styled';
 
 export interface Avatar {
   dataURI: string;

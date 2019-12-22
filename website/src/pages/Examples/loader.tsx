@@ -4,18 +4,18 @@ import FabricAnalyticsListeners, {
   AnalyticsWebClient,
 } from '@atlaskit/analytics-listeners';
 import { colors } from '@atlaskit/theme';
-import Loadable from '../../components/WrappedLoader';
 import qs from 'query-string';
 
-import packageResolver from '../../utils/packageResolver';
-import * as fs from '../../utils/fs';
-import { File } from '../../types';
-import Loading from '../../components/Loading';
 import {
   sendInitialApdex,
   initializeGA,
   observePerformanceMetrics,
 } from '../../components/Analytics/GoogleAnalyticsListener';
+import Loading from '../../components/Loading';
+import Loadable from '../../components/WrappedLoader';
+import { File } from '../../types';
+import * as fs from '../../utils/fs';
+import packageResolver from '../../utils/packageResolver';
 
 const ErrorMessage = styled.div`
   background-color: ${colors.R400};

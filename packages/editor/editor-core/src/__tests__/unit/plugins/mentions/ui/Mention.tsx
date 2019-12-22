@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { ResourcedMention } from '@atlaskit/mention/element';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import Mention from '../../../../../plugins/mentions/ui/Mention';
+import { ResourcedMention } from '@atlaskit/mention/element';
 import { MentionProvider } from '@atlaskit/mention/types';
+
+import Mention from '../../../../../plugins/mentions/ui/Mention';
 // avoid polluting test logs with error message in console
 // please ensure you fix it if you expect console.error to be thrown
 // eslint-disable-next-line no-console

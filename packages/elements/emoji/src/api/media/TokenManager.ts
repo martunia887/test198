@@ -1,8 +1,8 @@
-import { MediaApiToken } from '../../types';
 import {
   ServiceConfig,
   utils as serviceUtils,
 } from '@atlaskit/util-service-support';
+import { MediaApiToken } from '../../types';
 
 // expire 30 seconds early to factor in latency, slow services, etc
 export const expireAdjustment = 30;

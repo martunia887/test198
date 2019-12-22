@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass, ImgHTMLAttributes } from 'react';
+import styled from 'styled-components';
 import { fontSize, gridSize } from '@atlaskit/theme';
 import { colors, borderRadius, themed } from '@atlaskit/theme';
 

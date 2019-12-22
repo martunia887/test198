@@ -1,5 +1,5 @@
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-
+import { mention } from '@atlaskit/util-data-test';
+import 'es6-promise/auto';
 import fetchMock from 'fetch-mock/src/client';
 
 import PresenceResource, {
@@ -7,7 +7,6 @@ import PresenceResource, {
   DefaultPresenceParser,
   PresenceMap,
 } from '../../../api/PresenceResource';
-import { mention } from '@atlaskit/util-data-test';
 
 // avoid polluting test logs with error message in console
 // please ensure you fix it if you expect console.error to be thrown

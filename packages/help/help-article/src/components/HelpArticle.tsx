@@ -1,12 +1,12 @@
 import * as React from 'react';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
 
+import ArticleBody from './ArticleBody';
 import {
   ArticleContentInner,
   ArticleContentTitle,
   ArticleContentTitleLink,
 } from './styled';
-import ArticleBody from './ArticleBody';
 export interface Props {
   // Article Title
   title?: string;

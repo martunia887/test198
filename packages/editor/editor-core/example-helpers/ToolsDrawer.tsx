@@ -1,22 +1,21 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
-import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 import Button from '@atlaskit/button';
-import Tooltip from '@atlaskit/tooltip';
-
-import { Content, ButtonGroup } from './styles';
-import imageUploadHandler from './imageUpload';
-
-import { TeamMentionResource, MentionResource, EmojiResource } from '../src';
-import { toJSON } from '../src/utils';
 import {
   storyContextIdentifierProviderFactory,
   storyMediaProviderFactory,
 } from '@atlaskit/editor-test-helpers';
+import Tooltip from '@atlaskit/tooltip';
+import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
+import { EditorView } from 'prosemirror-view';
 
+import { TeamMentionResource, MentionResource, EmojiResource } from '../src';
+import { toJSON } from '../src/utils';
+
+import imageUploadHandler from './imageUpload';
 import mediaMock from './media-mock';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
+import { Content, ButtonGroup } from './styles';
 
 const rejectedPromise = Promise.reject(
   new Error('Simulated provider rejection'),

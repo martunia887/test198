@@ -1,6 +1,6 @@
 import React from 'react';
-import { Skeleton, presetThemes } from '@atlaskit/navigation';
 import { RouteComponentProps } from 'react-router-dom';
+import { Skeleton, presetThemes } from '@atlaskit/navigation';
 
 const SkeletonNav = ({ location }: RouteComponentProps) => {
   const isContainerNavOpen = location ? location.pathname === '/' : true;

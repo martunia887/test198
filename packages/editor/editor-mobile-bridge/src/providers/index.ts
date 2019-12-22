@@ -1,8 +1,9 @@
-import emojiProvider from './emojiProvider';
-import mentionProvider from './mentionProvider';
-import mediaProvider from './mediaProvider';
-import createTaskDecisionProvider from './taskDecisionProvider';
 import { ProviderFactory } from '@atlaskit/editor-common/provider-factory';
+
+import emojiProvider from './emojiProvider';
+import mediaProvider from './mediaProvider';
+import mentionProvider from './mentionProvider';
+import createTaskDecisionProvider from './taskDecisionProvider';
 
 export { default as mediaProvider } from './mediaProvider';
 export { default as mentionProvider } from './mentionProvider';

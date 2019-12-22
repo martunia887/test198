@@ -1,5 +1,4 @@
 import { Component, ComponentClass } from 'react';
-
 import { EmojiProvider } from '../../api/EmojiResource';
 
 export interface Props {

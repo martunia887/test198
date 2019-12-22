@@ -1,16 +1,17 @@
 /* eslint-disable no-console */
 
 import * as React from 'react';
-
 import Button, { ButtonGroup } from '@atlaskit/button';
-import Editor from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
-import ToolbarHelp from './../src/ui/ToolbarHelp';
+
 import ToolsDrawer from '../example-helpers/ToolsDrawer';
+import { name, version } from '../package.json';
 import CollapsedEditor from '../src/ui/CollapsedEditor';
 import ToolbarFeedback from '../src/ui/ToolbarFeedback';
-import { name, version } from '../package.json';
+
+import Editor from './../src/editor';
+import EditorContext from './../src/ui/EditorContext';
+import ToolbarHelp from './../src/ui/ToolbarHelp';
+import WithEditorActions from './../src/ui/WithEditorActions';
 
 const SAVE_ACTION = () => console.log('Save');
 const CANCEL_ACTION = () => console.log('Cancel');

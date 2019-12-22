@@ -1,10 +1,11 @@
 // @flow
 import React, { Component, type Node, type ElementRef } from 'react';
 import { ItemGroup } from '@atlaskit/item';
-import NavigationItemGroupTitle from '../styled/NavigationItemGroupTitle';
-import NavigationItemGroupSeparator from '../styled/NavigationItemGroupSeparator';
-import NavigationItemGroupHeader from '../styled/NavigationItemGroupHeader';
+
 import NavigationItemGroupAction from '../styled/NavigationItemGroupAction';
+import NavigationItemGroupHeader from '../styled/NavigationItemGroupHeader';
+import NavigationItemGroupSeparator from '../styled/NavigationItemGroupSeparator';
+import NavigationItemGroupTitle from '../styled/NavigationItemGroupTitle';
 
 type Props = {
   /** React element to be displayed to the right of the group header. */

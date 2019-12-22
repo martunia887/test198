@@ -1,5 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+
+import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 import {
   getDocFromElement,
   comment,
@@ -7,7 +9,6 @@ import {
   editable,
   linkToolbar,
 } from '../_helpers';
-import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 
 const linkText1 = 'http://hello.com ';
 const linkText2 = 'FAB-983';

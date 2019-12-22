@@ -2,14 +2,14 @@ import React, { Component, ReactNode } from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import PriorityTrivial from '../glyph/priority-trivial';
-import PriorityLowest from '../glyph/priority-lowest';
-import PriorityLow from '../glyph/priority-low';
-import PriorityMinor from '../glyph/priority-minor';
-import PriorityMidium from '../glyph/priority-medium';
-import PriorityMajor from '../glyph/priority-major';
-import PriorityCritical from '../glyph/priority-critical';
 import PriorityBlocker from '../glyph/priority-blocker';
+import PriorityCritical from '../glyph/priority-critical';
+import PriorityLow from '../glyph/priority-low';
+import PriorityLowest from '../glyph/priority-lowest';
+import PriorityMajor from '../glyph/priority-major';
+import PriorityMidium from '../glyph/priority-medium';
+import PriorityMinor from '../glyph/priority-minor';
+import PriorityTrivial from '../glyph/priority-trivial';
 
 const IconRow = styled.div`
   display: flex;

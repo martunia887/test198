@@ -1,6 +1,6 @@
 import React from 'react';
-import { md, code, Example } from '@atlaskit/docs';
 import { Link } from 'react-router-dom';
+import { md, code, Example } from '@atlaskit/docs';
 
 export default md`
 

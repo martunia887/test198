@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { create, ReactTestRenderer } from 'react-test-renderer';
-import { Editor, EditorContent, EditorProps } from '../../Editor';
+
 import { basePlugin } from '../../../../plugins';
+import { Editor, EditorContent, EditorProps } from '../../Editor';
 
 export const TestEditor = (props: EditorProps) => (
   <Editor plugins={[basePlugin()]} {...props}>

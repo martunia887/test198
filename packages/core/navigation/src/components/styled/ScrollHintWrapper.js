@@ -1,11 +1,11 @@
 // @flow
 import styled from 'styled-components';
-import { getProvided, whenNotCollapsed } from '../../theme/util';
 import {
   scrollBarSize,
   scrollHintSpacing,
   scrollHintHeight,
 } from '../../shared-variables';
+import { getProvided, whenNotCollapsed } from '../../theme/util';
 
 const doubleIfNotWebkit = width =>
   width *

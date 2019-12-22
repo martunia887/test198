@@ -4,8 +4,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import { DropdownItem, DropdownItemGroup } from '../../..';
-import DropdownItemFocusManager from '../../context/DropdownItemFocusManager';
 import { KEY_UP, KEY_DOWN, KEY_TAB } from '../../../util/keys';
+import DropdownItemFocusManager from '../../context/DropdownItemFocusManager';
 
 const closeSpy = jest.fn();
 

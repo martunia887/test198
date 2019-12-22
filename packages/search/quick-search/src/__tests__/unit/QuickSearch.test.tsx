@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import keycode from 'keycode';
 import * as PropTypes from 'prop-types';
-import { QuickSearch, ResultItemGroup, PersonResult } from '../..';
-import AkSearch from '../../components/Search/Search';
-import ResultItem from '../../components/ResultItem/ResultItem';
+import keycode from 'keycode';
 
+import { QuickSearch, ResultItemGroup, PersonResult } from '../..';
+import ResultItem from '../../components/ResultItem/ResultItem';
+import AkSearch from '../../components/Search/Search';
 import {
   QS_ANALYTICS_EV_CLOSE,
   QS_ANALYTICS_EV_KB_CTRLS_USED,

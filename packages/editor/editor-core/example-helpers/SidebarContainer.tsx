@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
-import { ConfluenceIcon } from '@atlaskit/logo';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
+import { ConfluenceIcon } from '@atlaskit/logo';
+import { colors } from '@atlaskit/theme';
 
 export const App = styled.div`
   display: flex;

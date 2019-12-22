@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { CardDimensions } from '@atlaskit/media-card';
-import { EditorView } from 'prosemirror-view';
-import { media } from '@atlaskit/editor-test-helpers';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { media } from '@atlaskit/editor-test-helpers';
+import { CardDimensions } from '@atlaskit/media-card';
+import { EditorView } from 'prosemirror-view';
+
 import Media from '../../../../../plugins/media/nodeviews/media';
 import {
   MediaPluginState,

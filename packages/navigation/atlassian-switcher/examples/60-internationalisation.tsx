@@ -1,11 +1,13 @@
 import * as React from 'react';
-import Button from '@atlaskit/button';
-import Drawer from '@atlaskit/drawer';
-import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger } from './helpers';
-import AtlassianSwitcher from '../src';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import es from 'react-intl/locale-data/es';
+import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
+import Button from '@atlaskit/button';
+import Drawer from '@atlaskit/drawer';
+
+import AtlassianSwitcher from '../src';
+
+import { withAnalyticsLogger } from './helpers';
 
 addLocaleData([...es]);
 

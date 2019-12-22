@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { colors } from '@atlaskit/theme';
-import { Group, Item } from '../../../src';
 
+import { Group, Item } from '../../../src';
 import { CONTENT_NAV_WIDTH } from '../../../src/common/constants';
 
 export default () => (

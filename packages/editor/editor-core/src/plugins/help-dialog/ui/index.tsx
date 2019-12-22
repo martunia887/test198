@@ -6,11 +6,21 @@ import {
   InjectedIntl,
   InjectedIntlProps,
 } from 'react-intl';
-import { Schema } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
 import { browser } from '@atlaskit/editor-common';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
+import { Schema } from 'prosemirror-model';
+import { EditorView } from 'prosemirror-view';
+
+import * as keymaps from '../../../keymaps';
+import ToolbarButton from '../../../ui/ToolbarButton';
+import { messages as blockTypeMessages } from '../../block-type/types';
+import { messages as insertBlockMessages } from '../../insert-block/ui/ToolbarInsertBlock';
+import { messages as listMessages } from '../../lists/messages';
+import { messages as advancedTextFormattingMessages } from '../../text-formatting/ui/ToolbarAdvancedTextFormatting';
+import { messages as textFormattingMessages } from '../../text-formatting/ui/ToolbarTextFormatting';
+import { closeHelpCommand } from '../';
+
 import {
   Header,
   Footer,
@@ -25,14 +35,6 @@ import {
   CodeLg,
   Title,
 } from './styles';
-import * as keymaps from '../../../keymaps';
-import ToolbarButton from '../../../ui/ToolbarButton';
-import { messages as textFormattingMessages } from '../../text-formatting/ui/ToolbarTextFormatting';
-import { messages as advancedTextFormattingMessages } from '../../text-formatting/ui/ToolbarAdvancedTextFormatting';
-import { messages as blockTypeMessages } from '../../block-type/types';
-import { messages as listMessages } from '../../lists/messages';
-import { messages as insertBlockMessages } from '../../insert-block/ui/ToolbarInsertBlock';
-import { closeHelpCommand } from '../';
 
 const messages = defineMessages({
   editorHelp: {

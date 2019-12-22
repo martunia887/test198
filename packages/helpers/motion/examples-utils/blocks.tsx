@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { forwardRef } from 'react';
-import { jsx, keyframes, css } from '@emotion/core';
-import { colors, elevation } from '@atlaskit/theme';
 import { AtlassianIcon } from '@atlaskit/logo';
+import { colors, elevation } from '@atlaskit/theme';
+import { jsx, keyframes, css } from '@emotion/core';
 
 interface BlockProps extends React.HTMLProps<HTMLDivElement> {
   appearance?: 'small' | 'medium' | 'large';

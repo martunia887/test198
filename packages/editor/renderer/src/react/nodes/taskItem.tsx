@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { PureComponent, ReactNode } from 'react';
-import { ProviderFactory, WithProviders } from '@atlaskit/editor-common';
-import TaskItemWithProviders from './task-item-with-providers';
-import { RendererContext } from '../';
 import { FabricElementsAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import { ProviderFactory, WithProviders } from '@atlaskit/editor-common';
+
+import { RendererContext } from '../';
+
+import TaskItemWithProviders from './task-item-with-providers';
 
 export interface Props {
   localId: string;

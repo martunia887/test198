@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { FileIdentifier } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   StoryList,
   imageFileId,
@@ -8,10 +10,8 @@ import {
   MediaMock,
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
-import { FileIdentifier } from '@atlaskit/media-client';
 
 import { Card } from '../src';
-import { MediaClientConfig } from '@atlaskit/media-core';
 
 const files = generateFilesFromTestData([
   {

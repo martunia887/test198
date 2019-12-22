@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import dateformat from 'dateformat'; // ToDo: FIL-3207 | replace dateformat library with native solution
-import filesize from 'filesize'; // ToDo: FIL-3208 | replace filesize library with native solution
+import AkButton from '@atlaskit/button';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
+import Spinner from '@atlaskit/spinner';
+import dateformat from 'dateformat';
+import filesize from 'filesize';
+
 import { changeCloudAccountFolder } from '../../../../actions/changeCloudAccountFolder';
 import { fetchNextCloudFilesPage } from '../../../../actions/fetchNextCloudFilesPage';
-import AkButton from '@atlaskit/button';
-import Spinner from '@atlaskit/spinner';
-
-/* Actions */
 import { fileClick } from '../../../../actions/fileClick';
-
 import {
   isServiceFile,
   isServiceFolder,
@@ -24,9 +22,9 @@ import {
   ServiceName,
   State,
 } from '../../../../domain';
-
-/* Components */
+import { mapMimeTypeToIcon } from '../../../../tools/mimeTypeToIcon';
 import Navigation from '../../../navigation/navigation';
+
 import {
   SpinnerWrapper,
   FolderViewerWrapper,
@@ -40,8 +38,6 @@ import {
   FolderViewerContent,
   SelectedFileIconWrapper,
 } from './styled';
-
-import { mapMimeTypeToIcon } from '../../../../tools/mimeTypeToIcon';
 
 const getDateString = (timestamp?: number) => {
   if (!timestamp) {

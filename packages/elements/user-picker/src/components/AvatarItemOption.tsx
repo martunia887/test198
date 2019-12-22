@@ -1,6 +1,6 @@
-import { AvatarItem } from '@atlaskit/avatar';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
+import { AvatarItem } from '@atlaskit/avatar';
 
 const AvatarComponent = styled.div`
   &,

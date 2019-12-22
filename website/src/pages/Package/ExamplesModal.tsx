@@ -1,20 +1,16 @@
 import React from 'react';
-import { match } from 'react-router';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
-import { Redirect } from 'react-router-dom';
-import LinkButton from '../../components/LinkButton';
 import { Helmet } from 'react-helmet';
-
+import { match } from 'react-router';
+import { Redirect } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 import Button from '@atlaskit/button';
-import CodeIcon from '@atlaskit/icon/glyph/code';
-import CloseIcon from '@atlaskit/icon/glyph/cross';
-import ScreenIcon from '@atlaskit/icon/glyph/screen';
-import LinkIcon from '@atlaskit/icon/glyph/link';
-
 import { ButtonGroup } from '@atlaskit/button';
 import { FlagGroup } from '@atlaskit/flag';
-import Tooltip from '@atlaskit/tooltip';
+import CodeIcon from '@atlaskit/icon/glyph/code';
+import CloseIcon from '@atlaskit/icon/glyph/cross';
+import LinkIcon from '@atlaskit/icon/glyph/link';
+import ScreenIcon from '@atlaskit/icon/glyph/screen';
 import Modal, {
   ModalBody as Body,
   ModalHeader as OgModalHeader,
@@ -22,12 +18,15 @@ import Modal, {
   HeaderComponentProps,
 } from '@atlaskit/modal-dialog';
 import { colors, elevation, gridSize } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
 
-import * as fs from '../../utils/fs';
-import { File } from '../../types';
-import packageResolver, { getLoaderUrl } from '../../utils/packageResolver';
 import ExampleDisplay from '../../components/Examples/ExampleDisplay';
+import LinkButton from '../../components/LinkButton';
 import { getConfig } from '../../site';
+import { File } from '../../types';
+import * as fs from '../../utils/fs';
+import packageResolver, { getLoaderUrl } from '../../utils/packageResolver';
+
 import CodeSandbox from './CodeSandbox';
 import CodeSandboxLogo from './CodeSandboxLogo';
 

@@ -3,9 +3,8 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import SkeletonContainerNavigation from '../../../components/js/skeleton/SkeletonContainerNavigation';
-
-import { WithRootTheme } from '../../../theme/util';
 import * as presets from '../../../theme/presets';
+import { WithRootTheme } from '../../../theme/util';
 
 const DummyContainerHeader = () => <div />;
 

@@ -1,7 +1,9 @@
 import { GasPayload } from '@atlaskit/analytics-gas-types';
 import { Identifier, isFileIdentifier } from '@atlaskit/media-client';
-import { packageAttributes, PackageAttributes } from './index';
+
 import { NavigationDirection, NavigationSource } from '../navigation';
+
+import { packageAttributes, PackageAttributes } from './index';
 
 function actionFromDirection(direction: NavigationDirection): string {
   switch (direction) {

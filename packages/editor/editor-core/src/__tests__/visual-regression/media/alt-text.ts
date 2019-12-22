@@ -1,11 +1,4 @@
-import { snapshot, Appearance, initEditorWithAdf } from '../_utils';
-
-import {
-  insertMedia,
-  waitForMediaToBeLoaded,
-  clickMediaInPosition,
-  scrollToMedia,
-} from '../../__helpers/page-objects/_media';
+import { EditorProps } from '../../../types';
 import {
   clickEditableContent,
   animationFrame,
@@ -14,8 +7,14 @@ import {
   pressKey,
   pressKeyCombo,
 } from '../../__helpers/page-objects/_keyboard';
+import {
+  insertMedia,
+  waitForMediaToBeLoaded,
+  clickMediaInPosition,
+  scrollToMedia,
+} from '../../__helpers/page-objects/_media';
 import { Page } from '../../__helpers/page-objects/_types';
-import { EditorProps } from '../../../types';
+import { snapshot, Appearance, initEditorWithAdf } from '../_utils';
 
 describe('Snapshot Test: Media with alt text', () => {
   let page: Page;

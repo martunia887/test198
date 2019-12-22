@@ -1,8 +1,9 @@
 import chalk from 'chalk';
 import { satisfies } from 'semver';
+
+import { PrintableOutput } from '../../../runner';
 import { getChangelog, getLogDetails, Log } from '../../../utils/changelog';
 import { ChangeLogTasks } from '../types';
-import { PrintableOutput } from '../../../runner';
 
 export function getUpdated(logs: Log[], currentVersion: string): string[] {
   return Array.from(

@@ -1,37 +1,24 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Dispatch, Store } from 'redux';
-import { connect, Provider } from 'react-redux';
 import { IntlShape } from 'react-intl';
-import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
+import { connect, Provider } from 'react-redux';
+import { UIAnalyticsEventHandler } from '@atlaskit/analytics-next';
 import { MediaClient } from '@atlaskit/media-client';
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
-import { UIAnalyticsEventHandler } from '@atlaskit/analytics-next';
+import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
+import { Dispatch, Store } from 'redux';
 
-import { ServiceName, State } from '../domain';
-
-/* Components */
-import Footer from './footer/footer';
-import Sidebar from './sidebar/sidebar';
-import UploadView from './views/upload/upload';
-import GiphyView from './views/giphy/giphyView';
-import Browser from './views/browser/browser';
-import { Dropzone as DropzonePlaceholder } from './dropzone/dropzone';
-import MainEditorView from './views/editor/mainEditorView';
-
-/* actions */
-import { startApp, StartAppActionPayload } from '../actions/startApp';
-import { hidePopup } from '../actions/hidePopup';
-import { fileUploadsStart } from '../actions/fileUploadsStart';
-import { fileUploadPreviewUpdate } from '../actions/fileUploadPreviewUpdate';
-import { fileUploadProgress } from '../actions/fileUploadProgress';
-import { fileUploadProcessingStart } from '../actions/fileUploadProcessingStart';
-import { fileUploadEnd } from '../actions/fileUploadEnd';
-import { fileUploadError } from '../actions/fileUploadError';
-import { dropzoneDropIn } from '../actions/dropzoneDropIn';
-import { dropzoneDragIn } from '../actions/dropzoneDragIn';
-import { dropzoneDragOut } from '../actions/dropzoneDragOut';
-import PassContext from './passContext';
+import {
+  Browser as BrowserComponent,
+  BrowserBase,
+} from '../../components/browser/browser';
+import { Clipboard } from '../../components/clipboard/clipboard';
+import { Dropzone, DropzoneBase } from '../../components/dropzone/dropzone';
+import { LocalUploadComponent } from '../../components/localUpload';
+import {
+  DropzoneDragEnterEventPayload,
+  DropzoneDragLeaveEventPayload,
+} from '../../components/types';
 import {
   UploadsStartEventPayload,
   UploadPreviewUpdateEventPayload,
@@ -44,20 +31,29 @@ import {
   UploadParams,
   PopupConfig,
 } from '../../types';
-import { MediaPickerPopupWrapper, SidebarWrapper, ViewWrapper } from './styled';
-import {
-  DropzoneDragEnterEventPayload,
-  DropzoneDragLeaveEventPayload,
-} from '../../components/types';
-
-import { Clipboard } from '../../components/clipboard/clipboard';
-import { Dropzone, DropzoneBase } from '../../components/dropzone/dropzone';
-import {
-  Browser as BrowserComponent,
-  BrowserBase,
-} from '../../components/browser/browser';
-import { LocalUploadComponent } from '../../components/localUpload';
+import { dropzoneDragIn } from '../actions/dropzoneDragIn';
+import { dropzoneDragOut } from '../actions/dropzoneDragOut';
+import { dropzoneDropIn } from '../actions/dropzoneDropIn';
+import { fileUploadEnd } from '../actions/fileUploadEnd';
+import { fileUploadError } from '../actions/fileUploadError';
+import { fileUploadPreviewUpdate } from '../actions/fileUploadPreviewUpdate';
+import { fileUploadProcessingStart } from '../actions/fileUploadProcessingStart';
+import { fileUploadProgress } from '../actions/fileUploadProgress';
+import { fileUploadsStart } from '../actions/fileUploadsStart';
+import { hidePopup } from '../actions/hidePopup';
 import { resetView } from '../actions/resetView';
+import { startApp, StartAppActionPayload } from '../actions/startApp';
+import { ServiceName, State } from '../domain';
+
+import { Dropzone as DropzonePlaceholder } from './dropzone/dropzone';
+import Footer from './footer/footer';
+import PassContext from './passContext';
+import Sidebar from './sidebar/sidebar';
+import { MediaPickerPopupWrapper, SidebarWrapper, ViewWrapper } from './styled';
+import Browser from './views/browser/browser';
+import MainEditorView from './views/editor/mainEditorView';
+import GiphyView from './views/giphy/giphyView';
+import UploadView from './views/upload/upload';
 
 export interface AppStateProps {
   readonly selectedServiceName: ServiceName;

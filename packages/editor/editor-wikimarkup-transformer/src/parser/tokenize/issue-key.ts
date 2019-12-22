@@ -1,7 +1,9 @@
 import { Schema, Node as PMNode } from 'prosemirror-model';
-import { Token, TokenParser } from './';
+
 import { Context, ConversionMap } from '../../interfaces';
 import { isNotBlank } from '../utils/text';
+
+import { Token, TokenParser } from './';
 
 /**
  * Inline Card From Text (ICFT).

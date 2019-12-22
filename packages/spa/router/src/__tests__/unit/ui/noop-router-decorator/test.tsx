@@ -3,7 +3,6 @@ import { mount } from 'enzyme';
 
 import { NOOP_HISTORY } from '../../../../common/constants';
 import { Router } from '../../../../controllers/router';
-
 import { noopRouterDecorator } from '../../../../ui/noop-router-decorator';
 
 const MyStory = () => <div>contents</div>;

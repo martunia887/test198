@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
-import { themed } from '@atlaskit/theme/components';
 import { N0, N700, N200, text } from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
 
 const wrapperBackgroundColor = themed({ light: N0, dark: N700 });
 const getCalendarThColor = themed({ light: N200, dark: N200 });

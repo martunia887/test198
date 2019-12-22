@@ -1,13 +1,14 @@
 import { css } from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
 import {
   blockNodesVerticalMargin,
   akLayoutGutterOffset,
   sharedExpandStyles,
 } from '@atlaskit/editor-common';
+import { colors, gridSize } from '@atlaskit/theme';
+
+import { BreakoutCssClassName } from '../../breakout/constants';
 
 import { expandClassNames } from './class-names';
-import { BreakoutCssClassName } from '../../breakout/constants';
 
 const EXPAND_SELECTED_BACKGROUND = 'rgba(255, 255, 255, 0.6)';
 

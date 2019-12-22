@@ -1,8 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Page from '@atlaskit/page';
-import { RightSidePanel, FlexContainer, ContentWrapper } from '../../index';
+
 import { RightSidePanelDrawer } from '../../components/RightSidePanel/styled';
+import { RightSidePanel, FlexContainer, ContentWrapper } from '../../index';
 
 describe('RightSidePanel', () => {
   let flexContainerElm: HTMLElement | null;

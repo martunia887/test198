@@ -1,4 +1,3 @@
-import { fileStateToFileGasPayload } from '../../../../newgen/analytics/index';
 import {
   ProcessedFileState,
   ProcessingFileState,
@@ -6,6 +5,7 @@ import {
   ErrorFileState,
   ProcessingFailedState,
 } from '@atlaskit/media-client';
+import { fileStateToFileGasPayload } from '../../../../newgen/analytics/index';
 
 export const processedFile: ProcessedFileState = {
   status: 'processed',

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx, CSSObject } from '@emotion/core';
-import { defaultAttributesFn } from '../utils';
 import { LabelProps, LabelCSSProps } from '../types';
+import { defaultAttributesFn } from '../utils';
 
 export const labelCSS = ({ isDisabled, tokens }: LabelCSSProps): CSSObject => ({
   alignItems: 'flex-start',

@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { Component } from 'react';
+import Slider from '@atlaskit/field-range';
+import { Identifier } from '@atlaskit/media-client';
 import {
   createStorybookMediaClientConfig,
   genericFileId,
 } from '@atlaskit/media-test-helpers';
 import Toggle from '@atlaskit/toggle';
-import Slider from '@atlaskit/field-range';
-import { Identifier } from '@atlaskit/media-client';
-import { Card, CardDimensions } from '../src';
+
 import { CardDimensionsWrapper } from '../example-helpers/styled';
 import {
   EditableCardOptions,
   EditableCardContent,
 } from '../example-helpers/styled';
+import { Card, CardDimensions } from '../src';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 

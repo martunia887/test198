@@ -1,11 +1,13 @@
+import { parseToken } from '.';
 import { Schema } from 'prosemirror-model';
-import { Token, TokenType } from './';
+
 import { Context } from '../../interfaces';
+import { escapeHandler } from '../utils/escape';
+
+import { Token, TokenType } from './';
+import { parseMacroKeyword } from './keyword';
 import { linkFormat } from './links/link-format';
 import { parseNewlineOnly } from './whitespace';
-import { parseMacroKeyword } from './keyword';
-import { parseToken } from '.';
-import { escapeHandler } from '../utils/escape';
 
 export interface FormatterOption {
   context: Context;

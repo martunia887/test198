@@ -7,24 +7,26 @@ import {
   underline,
   code,
 } from '@atlaskit/adf-schema';
+
 import { EditorPlugin } from '../../types';
+import WithPluginState from '../../ui/WithPluginState';
 import { ButtonGroup } from '../../ui/styles';
-import {
-  plugin as textFormattingPlugin,
-  pluginKey as textFormattingPluginKey,
-} from './pm-plugins/main';
+
 import {
   plugin as clearFormattingPlugin,
   pluginKey as clearFormattingPluginKey,
 } from './pm-plugins/clear-formatting';
+import clearFormattingKeymapPlugin from './pm-plugins/clear-formatting-keymap';
 import textFormattingCursorPlugin from './pm-plugins/cursor';
 import textFormattingInputRulePlugin from './pm-plugins/input-rule';
-import clearFormattingKeymapPlugin from './pm-plugins/clear-formatting-keymap';
-import textFormattingSmartInputRulePlugin from './pm-plugins/smart-input-rule';
 import keymapPlugin from './pm-plugins/keymap';
+import {
+  plugin as textFormattingPlugin,
+  pluginKey as textFormattingPluginKey,
+} from './pm-plugins/main';
+import textFormattingSmartInputRulePlugin from './pm-plugins/smart-input-rule';
 import ToolbarAdvancedTextFormatting from './ui/ToolbarAdvancedTextFormatting';
 import ToolbarTextFormatting from './ui/ToolbarTextFormatting';
-import WithPluginState from '../../ui/WithPluginState';
 
 export interface TextFormattingOptions {
   disableSuperscriptAndSubscript?: boolean;

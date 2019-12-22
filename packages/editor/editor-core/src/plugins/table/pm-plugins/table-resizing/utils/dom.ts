@@ -1,9 +1,10 @@
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { TableCssClassName as ClassName } from '../../../types';
-import { getPluginState as getMainPluginState } from '../../main';
+
 import { containsClassName, closestElement } from '../../../../../utils';
 import { updateOverflowShadows } from '../../../nodeviews/TableComponent';
+import { TableCssClassName as ClassName } from '../../../types';
+import { getPluginState as getMainPluginState } from '../../main';
 
 function getHeights(
   children: NodeListOf<HTMLElement>,

@@ -1,7 +1,9 @@
 import { Page } from 'puppeteer';
-import { snapshot, initRendererWithADF, Device } from './_utils';
-import * as nestedIframe from '../__fixtures__/extension-iframe-nested.adf.json';
+
 import * as breakoutExtensions from '../__fixtures__/extension-breakout.adf.json';
+import * as nestedIframe from '../__fixtures__/extension-iframe-nested.adf.json';
+
+import { snapshot, initRendererWithADF, Device } from './_utils';
 
 const initRenderer = async (
   page: Page,

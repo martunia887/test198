@@ -1,14 +1,13 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
 import { FieldBaseStateless } from '@atlaskit/field-base';
-import TagGroup from '@atlaskit/tag-group';
-import Tag from '@atlaskit/tag';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import Spinner from '@atlaskit/spinner';
+import Tag from '@atlaskit/tag';
+import TagGroup from '@atlaskit/tag-group';
 
-import { Content, Expand, Input, TriggerDiv } from '../styled/Trigger';
 import { mapAppearanceToFieldBase } from '../internal/appearances';
-
+import { Content, Expand, Input, TriggerDiv } from '../styled/Trigger';
 import type { ItemType } from '../types';
 
 // =============================================================

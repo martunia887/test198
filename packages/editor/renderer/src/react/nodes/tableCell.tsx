@@ -2,10 +2,11 @@ import * as React from 'react';
 import { CSSProperties } from 'react';
 import { CellAttributes } from '@atlaskit/adf-schema';
 import { SortOrder, compose } from '@atlaskit/editor-common';
-import SortingIcon from '../../ui/SortingIcon';
-import { AnalyticsEventPayload, MODE, PLATFORM } from '../../analytics/events';
+
 import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../../analytics/enums';
+import { AnalyticsEventPayload, MODE, PLATFORM } from '../../analytics/events';
 import { RendererCssClassName } from '../../consts';
+import SortingIcon from '../../ui/SortingIcon';
 
 type CellProps = CellAttributes & {
   children?: React.ReactNode;

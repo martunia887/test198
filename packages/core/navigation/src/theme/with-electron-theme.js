@@ -2,6 +2,7 @@
 import React, { PureComponent, type Node } from 'react';
 import { ThemeProvider } from 'styled-components';
 import memoizeOne from 'memoize-one';
+
 import { isElectronMacKey } from './util';
 
 type Props = {

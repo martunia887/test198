@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { shallow } from 'enzyme';
-
 import SkeletonContainerItemText from '../../../components/js/skeleton/styled/SkeletonContainerItemText';
 
 test('renders an item text skeleton', () => {

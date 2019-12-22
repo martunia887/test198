@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { messages } from '@atlaskit/media-ui';
-import deepEqual from 'deep-equal';
 import {
   MediaClient,
   FileState,
   globalMediaEventEmitter,
 } from '@atlaskit/media-client';
+import { messages } from '@atlaskit/media-ui';
+import deepEqual from 'deep-equal';
+
 import { Outcome } from '../domain';
+import { ErrorViewDownloadButton } from '../download';
 import ErrorMessage, { MediaViewerError } from '../error';
 import { Spinner } from '../loading';
-import { ErrorViewDownloadButton } from '../download';
 
 export type BaseProps = {
   mediaClient: MediaClient;

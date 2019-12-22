@@ -2,17 +2,16 @@
 
 import React, { Component } from 'react';
 
-import Section from '../Section';
-import SkeletonContainerHeader from '../SkeletonContainerHeader';
-import SkeletonItem from '../SkeletonItem';
-import type { SkeletonContainerViewProps } from './types';
-
 import {
   ProductNavigationTheme,
   ContainerNavigationTheme,
 } from '../ContentNavigation/primitives';
+import Section from '../Section';
+import SkeletonContainerHeader from '../SkeletonContainerHeader';
+import SkeletonItem from '../SkeletonItem';
 
 import { Container, HeaderContainer } from './primitives';
+import type { SkeletonContainerViewProps } from './types';
 
 export default class SkeletonContainerView extends Component<SkeletonContainerViewProps> {
   static defaultProps = {

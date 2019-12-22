@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import { Email } from '../types';
+
 import { AddOptionAvatar } from './AddOptionAvatar';
 import { AvatarItemOption } from './AvatarItemOption';
-import { messages } from './i18n';
 import { EmailValidationResponse } from './emailValidation';
+import { messages } from './i18n';
 
 export type EmailOptionProps = {
   email: Email;

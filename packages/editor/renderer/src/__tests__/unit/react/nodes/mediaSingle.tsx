@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+import { WidthProvider } from '@atlaskit/editor-common';
 import { imageFileId } from '@atlaskit/media-test-helpers';
+
 import Media from '../../../../react/nodes/media';
 import MediaSingle from '../../../../react/nodes/mediaSingle';
-import { WidthProvider } from '@atlaskit/editor-common';
 
 describe('MediaSingle', () => {
   const editorWidth = 123;

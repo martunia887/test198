@@ -1,6 +1,7 @@
-import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
+import { shallow, ShallowWrapper } from 'enzyme';
 import { FormattedMessage } from 'react-intl';
+
 import { MultiValueContainer } from '../../../components/MultiValueContainer';
 import { renderProp } from '../_testUtils';
 

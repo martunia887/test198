@@ -1,5 +1,6 @@
-import { removeSelectedNode, removeParentNodeOfType } from 'prosemirror-utils';
 import { ExtensionLayout } from '@atlaskit/adf-schema';
+import { removeSelectedNode, removeParentNodeOfType } from 'prosemirror-utils';
+
 import { createCommand } from './plugin';
 import { ExtensionState } from './types';
 import { getSelectedExtension } from './utils';

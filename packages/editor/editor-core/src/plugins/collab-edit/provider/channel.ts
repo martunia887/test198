@@ -1,6 +1,9 @@
 import { utils } from '@atlaskit/util-service-support';
 import { EventEmitter2 } from 'eventemitter2';
 import { getVersion, sendableSteps } from 'prosemirror-collab';
+import { Step } from 'prosemirror-transform';
+
+import { logger } from './';
 import {
   Config,
   CollabEvent,
@@ -9,8 +12,6 @@ import {
   StepResponse,
   MixedResponse,
 } from './types';
-import { logger } from './';
-import { Step } from 'prosemirror-transform';
 
 export interface RequestOptions {
   method: 'GET' | 'POST';

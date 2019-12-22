@@ -1,8 +1,9 @@
-import { LocalUploadComponent } from '../../localUpload';
+import { fakeMediaClient } from '@atlaskit/media-test-helpers';
+
 import { UploadServiceImpl } from '../../../service/uploadServiceImpl';
 import { MediaFile } from '../../../types';
 import { SCALE_FACTOR_DEFAULT } from '../../../util/getPreviewFromImage';
-import { fakeMediaClient } from '@atlaskit/media-test-helpers';
+import { LocalUploadComponent } from '../../localUpload';
 
 describe('MediaLocalUpload', () => {
   const imageFile: MediaFile = {

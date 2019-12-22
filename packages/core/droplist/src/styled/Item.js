@@ -1,8 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
+import * as colors from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { fontSize, gridSize } from '@atlaskit/theme/constants';
-import * as colors from '@atlaskit/theme/colors';
 import { multiply, divide } from '@atlaskit/theme/math';
 
 const activeBackgroundColor = themed({ light: colors.B75, dark: colors.DN30 });

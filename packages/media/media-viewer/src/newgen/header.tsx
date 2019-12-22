@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ReactNode, ReactChild } from 'react';
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import {
   MediaClient,
   FileState,
@@ -9,16 +10,24 @@ import {
   Identifier,
   isExternalImageIdentifier,
 } from '@atlaskit/media-client';
-import { Subscription } from 'rxjs/Subscription';
-import deepEqual from 'deep-equal';
 import {
   hideControlsClassName,
   messages,
   toHumanReadableMediaSize,
   MediaButton,
 } from '@atlaskit/media-ui';
-import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
+import deepEqual from 'deep-equal';
+import { Subscription } from 'rxjs/Subscription';
+
+import { MediaViewerExtensions } from '../components/types';
+
 import { Outcome } from './domain';
+import {
+  ToolbarDownloadButton,
+  DisabledToolbarDownloadButton,
+} from './download';
+import { MediaViewerError, createError } from './error';
+import { MediaTypeIcon } from './media-type-icon';
 import {
   Header as HeaderWrapper,
   LeftHeader,
@@ -29,13 +38,6 @@ import {
   MetadataIconWrapper,
   MetadataFileName,
 } from './styled';
-import { MediaTypeIcon } from './media-type-icon';
-import { MediaViewerError, createError } from './error';
-import {
-  ToolbarDownloadButton,
-  DisabledToolbarDownloadButton,
-} from './download';
-import { MediaViewerExtensions } from '../components/types';
 
 export type Props = {
   readonly identifier: Identifier;

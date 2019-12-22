@@ -1,12 +1,12 @@
 import { Action, Store, Dispatch } from 'redux';
 
-import { updateServiceList } from '../actions/updateServiceList';
-import { Fetcher } from '../tools/fetcher/fetcher';
-import { State } from '../domain';
 import {
   GET_CONNECTED_REMOTE_ACCOUNTS,
   GetConnectedRemoteAccountsAction,
 } from '../actions/getConnectedRemoteAccounts';
+import { updateServiceList } from '../actions/updateServiceList';
+import { State } from '../domain';
+import { Fetcher } from '../tools/fetcher/fetcher';
 
 const isGetConnectedRemoteAccountsAction = (
   action: Action,

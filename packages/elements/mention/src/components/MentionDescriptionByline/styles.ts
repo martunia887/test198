@@ -1,7 +1,5 @@
-import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
 
 export const DescriptionBylineStyle: ComponentClass<HTMLAttributes<{}>> = styled.span`

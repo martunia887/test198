@@ -1,7 +1,6 @@
 // @flow
 
 import type { Element } from 'react';
-
 import type {
   InitialUIControllerShape,
   UIControllerCache,

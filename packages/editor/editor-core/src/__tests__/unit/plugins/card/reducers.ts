@@ -1,12 +1,14 @@
-import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
 import {
   doc,
   createEditorFactory,
   p,
   cardProvider,
 } from '@atlaskit/editor-test-helpers';
+
+import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
 import reduce from '../../../../plugins/card/pm-plugins/reducers';
 import { CardPluginState } from '../../../../plugins/card/types';
+
 import { createCardRequest } from './_helpers';
 
 const atlassianUrl = 'http://www.atlassian.com/';

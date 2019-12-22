@@ -1,10 +1,11 @@
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   WithAnalyticsEventsProps,
   withAnalyticsEvents,
 } from '@atlaskit/analytics-next';
 import debounce from 'lodash.debounce';
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import {
   cancelEvent,
   clearEvent,
@@ -27,6 +28,7 @@ import {
   UserPickerProps,
   UserPickerState,
 } from '../types';
+
 import { batchByKey } from './batch';
 import { messages } from './i18n';
 import {

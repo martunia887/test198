@@ -1,6 +1,3 @@
-import { createTag } from '../create-tag';
-import { createClassName } from '../styles/util';
-import { NodeSerializerOpts } from '../interfaces';
 import {
   B50,
   B500,
@@ -15,6 +12,10 @@ import {
   N40,
   N500,
 } from '@atlaskit/adf-schema';
+
+import { createTag } from '../create-tag';
+import { NodeSerializerOpts } from '../interfaces';
+import { createClassName } from '../styles/util';
 
 const commonStyle = `
   border-radius: 3px;

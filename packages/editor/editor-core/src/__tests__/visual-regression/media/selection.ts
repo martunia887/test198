@@ -1,17 +1,17 @@
+import { EditorProps } from '../../../types';
+import { clickEditableContent } from '../../__helpers/page-objects/_editor';
+import { pressKey } from '../../__helpers/page-objects/_keyboard';
+import {
+  insertMedia,
+  scrollToMedia,
+} from '../../__helpers/page-objects/_media';
+import { Page } from '../../__helpers/page-objects/_types';
 import {
   snapshot,
   Appearance,
   initEditorWithAdf,
   editorCommentContentSelector,
 } from '../_utils';
-import {
-  insertMedia,
-  scrollToMedia,
-} from '../../__helpers/page-objects/_media';
-import { clickEditableContent } from '../../__helpers/page-objects/_editor';
-import { pressKey } from '../../__helpers/page-objects/_keyboard';
-import { Page } from '../../__helpers/page-objects/_types';
-import { EditorProps } from '../../../types';
 
 describe('Snapshot Test: Media', () => {
   let page: Page;

@@ -1,15 +1,16 @@
 import React from 'react';
 
-import { DefaultCreate } from './shared/Create';
-import { defaultPrimaryItems } from './shared/PrimaryItems';
-import { DefaultProductHome } from './shared/ProductHome';
-import { DefaultSearch } from './shared/Search';
-import { DefaultSettings } from './shared/Settings';
 import { AtlassianNavigation } from '../src';
-import { ProfilePopup } from './shared/ProfilePopup';
-import { SwitcherPopup } from './shared/SwitcherPopup';
+
+import { DefaultCreate } from './shared/Create';
 import { HelpPopup } from './shared/HelpPopup';
 import { NotificationsPopup } from './shared/NotificationsPopup';
+import { defaultPrimaryItems } from './shared/PrimaryItems';
+import { DefaultProductHome } from './shared/ProductHome';
+import { ProfilePopup } from './shared/ProfilePopup';
+import { DefaultSearch } from './shared/Search';
+import { DefaultSettings } from './shared/Settings';
+import { SwitcherPopup } from './shared/SwitcherPopup';
 
 const AuthenticatedExample = () => (
   <AtlassianNavigation

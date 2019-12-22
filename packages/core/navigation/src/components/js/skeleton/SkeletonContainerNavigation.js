@@ -1,17 +1,17 @@
 // @flow
 import React, { Component, type ComponentType } from 'react';
-import { WithRootTheme } from '../../../theme/util';
+
 import type { Provided } from '../../../theme/types';
+import { WithRootTheme } from '../../../theme/util';
 
-import SkeletonGlobalTopItems from './SkeletonGlobalTopItems';
-import SkeletonGlobalBottomItems from './SkeletonGlobalBottomItems';
 import SkeletonContainerItems from './SkeletonContainerItems';
+import { type SkeletonContainerHeaderProps } from './SkeletonDefaultContainerHeader';
+import SkeletonGlobalBottomItems from './SkeletonGlobalBottomItems';
+import SkeletonGlobalTopItems from './SkeletonGlobalTopItems';
 import { ShownWhenCollapsed } from './ToggleWhenCollapsed';
-
+import SkeletonContainerHeaderWrapper from './styled/SkeletonContainerHeaderWrapper';
 import SkeletonContainerNavigationInner from './styled/SkeletonContainerNavigationInner';
 import SkeletonNavigationContentOuter from './styled/SkeletonNavigationContentOuter';
-import SkeletonContainerHeaderWrapper from './styled/SkeletonContainerHeaderWrapper';
-import { type SkeletonContainerHeaderProps } from './SkeletonDefaultContainerHeader';
 
 export type Props = {
   isCollapsed?: boolean,

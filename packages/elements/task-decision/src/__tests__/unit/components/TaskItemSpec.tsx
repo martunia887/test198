@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import FabricAnalyticsListener, {
   AnalyticsWebClient,
 } from '@atlaskit/analytics-listeners';
+
 import TaskItem from '../../../components/TaskItem';
 import { ContentWrapper } from '../../../styled/Item';
 import { Placeholder } from '../../../styled/Placeholder';

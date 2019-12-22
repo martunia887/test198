@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import { ImagePlacer, ImageActions } from '../src/image-placer';
+
 import {
   Slider,
   Label,
   ExportedImage,
   ExportedImageWrapper,
 } from '../example-helpers/styled';
+import { ImagePlacer, ImageActions } from '../src/image-placer';
 
 export interface ExampleState {
   containerWidth: number;

@@ -1,6 +1,8 @@
 import { EditorState } from 'prosemirror-state';
 import { findParentNode } from 'prosemirror-utils';
+
 import { BreakoutMode } from '../commands/set-breakout-mode';
+
 import { isSupportedNodeForBreakout } from './is-supported-node';
 
 export function getBreakoutMode(state: EditorState): BreakoutMode | undefined {

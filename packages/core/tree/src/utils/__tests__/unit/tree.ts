@@ -1,3 +1,6 @@
+import { treeWithThreeLeaves } from '../../../../mockdata/treeWithThreeLeaves';
+import { treeWithTwoBranches } from '../../../../mockdata/treeWithTwoBranches';
+import { TreeData } from '../../../types';
 import {
   flattenTree,
   getItem,
@@ -5,9 +8,6 @@ import {
   getTreePosition,
   moveItemOnTree,
 } from '../../tree';
-import { TreeData } from '../../../types';
-import { treeWithThreeLeaves } from '../../../../mockdata/treeWithThreeLeaves';
-import { treeWithTwoBranches } from '../../../../mockdata/treeWithTwoBranches';
 
 describe('@atlaskit/tree - utils/tree', () => {
   describe('#flattenTree', () => {

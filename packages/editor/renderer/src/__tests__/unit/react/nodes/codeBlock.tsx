@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import CodeBlock from '../../../../react/nodes/codeBlock';
 import { AkCodeBlock } from '@atlaskit/code';
+
+import CodeBlock from '../../../../react/nodes/codeBlock';
 
 describe('Renderer - React/Nodes/CodeBlock', () => {
   it('should render @atlaskit/code component', () => {

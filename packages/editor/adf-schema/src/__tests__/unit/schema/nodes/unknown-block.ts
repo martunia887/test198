@@ -1,6 +1,6 @@
-import { name } from '../../../../version.json';
 import { schema, fromHTML, toHTML } from '../../../../../test-helpers';
 import { inlineNodes } from '../../../../schema/inline-nodes';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema unknownBlock node`, () => {
   describe('should be able to parse inline node', () => {

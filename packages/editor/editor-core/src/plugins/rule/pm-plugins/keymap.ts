@@ -1,8 +1,9 @@
 import { keymap } from 'prosemirror-keymap';
 import { Plugin } from 'prosemirror-state';
-import * as keymaps from '../../../keymaps';
-import * as commands from '../../../commands';
+
 import { trackAndInvoke } from '../../../analytics';
+import * as commands from '../../../commands';
+import * as keymaps from '../../../keymaps';
 import {
   withAnalytics,
   ACTION,

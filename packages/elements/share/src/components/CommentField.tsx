@@ -1,7 +1,8 @@
-import FieldTextArea from '@atlaskit/field-text-area';
-import { Field } from '@atlaskit/form';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import FieldTextArea from '@atlaskit/field-text-area';
+import { Field } from '@atlaskit/form';
+
 import { messages } from '../i18n';
 import { Comment } from '../types';
 

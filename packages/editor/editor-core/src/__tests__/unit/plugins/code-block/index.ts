@@ -1,4 +1,8 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   code_block,
   doc,
   createEditorFactory,
@@ -10,16 +14,12 @@ import {
   createEvent,
   insertText,
 } from '@atlaskit/editor-test-helpers';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 
-import { pluginKey as codeBlockPluginKey } from '../../../../plugins/code-block/pm-plugins/main';
 import {
   removeCodeBlock,
   changeLanguage,
 } from '../../../../plugins/code-block/actions';
+import { pluginKey as codeBlockPluginKey } from '../../../../plugins/code-block/pm-plugins/main';
 import { setTextSelection } from '../../../../utils';
 
 describe('code-block', () => {

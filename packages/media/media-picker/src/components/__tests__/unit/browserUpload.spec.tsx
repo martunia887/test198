@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-
-import { fakeMediaClient } from '@atlaskit/media-test-helpers';
-import { Browser } from '../../browser/browser';
 import { TouchFileDescriptor, FileState } from '@atlaskit/media-client';
+import { fakeMediaClient } from '@atlaskit/media-test-helpers';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+
 import { LocalUploadConfig } from '../../../../src/components/types';
 import { BrowserConfig } from '../../../../src/types';
+import { Browser } from '../../browser/browser';
 
 describe('Browser upload phases', () => {
   const browseConfig: BrowserConfig & LocalUploadConfig = {

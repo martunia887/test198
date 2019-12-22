@@ -1,8 +1,9 @@
 // @flow
 import React, { Children, Component, type Node } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { TransitionGroup } from 'react-transition-group';
+import styled from 'styled-components';
+
 import { GatewayDest, GatewayProvider } from './gateway';
 
 // NOTE: lock the app wrapper to a 0 z-index. This allows layer manager to

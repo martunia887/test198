@@ -1,19 +1,19 @@
-import * as sinon from 'sinon';
 import * as React from 'react';
+import * as sinon from 'sinon';
 import { mount } from 'enzyme';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 
-import ToneSelector from '../../../../components/common/ToneSelector';
 import EmojiButton from '../../../../components/common/EmojiButton';
+import ToneSelector from '../../../../components/common/ToneSelector';
 import {
   EmojiDescription,
   EmojiDescriptionWithVariations,
 } from '../../../../types';
-import { imageEmoji, generateSkinVariation } from '../../_test-data';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
 import {
   toneSelectedEvent,
   toneSelectorOpenedEvent,
 } from '../../../../util/analytics';
+import { imageEmoji, generateSkinVariation } from '../../_test-data';
 
 const baseHandEmoji: EmojiDescription = {
   ...imageEmoji,

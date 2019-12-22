@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { layers } from '@atlaskit/theme';
-import MentionTextInput from '../example-helpers/demo-mention-text-input';
+
 import {
   onSelection,
   slowResourceProvider,
   MockPresenceResource,
 } from '../example-helpers';
+import MentionTextInput from '../example-helpers/demo-mention-text-input';
 
 const tallPageStyle: React.CSSProperties = {
   height: '2000px',

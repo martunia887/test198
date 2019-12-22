@@ -1,5 +1,5 @@
-import Avatar from '@atlaskit/avatar';
 import * as React from 'react';
+import Avatar from '@atlaskit/avatar';
 import { getAvatarSize } from './utils';
 
 export class Props {

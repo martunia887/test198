@@ -1,9 +1,10 @@
-import { OnLifecycle } from '../src/components/typeahead/EmojiTypeAheadComponent';
-import debug, { enableLogger } from '../src/util/logger';
-import { OnEmojiEvent, OnToneSelected, EmojiUpload } from '../src/types';
-import { OnUploadEmoji } from '../src/components/common/EmojiUploadPicker';
 import { emoji, UsageClearEmojiResource } from '@atlaskit/util-data-test';
+
 import EmojiRepository from '../src/api/EmojiRepository';
+import { OnUploadEmoji } from '../src/components/common/EmojiUploadPicker';
+import { OnLifecycle } from '../src/components/typeahead/EmojiTypeAheadComponent';
+import { OnEmojiEvent, OnToneSelected, EmojiUpload } from '../src/types';
+import debug, { enableLogger } from '../src/util/logger';
 
 const storyData = emoji.storyData;
 

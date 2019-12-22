@@ -1,3 +1,6 @@
+import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
+import { EditorState, Transaction } from 'prosemirror-state';
+
 import {
   addAnalytics,
   analyticsPluginKey,
@@ -8,11 +11,9 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
 } from '../../../../plugins/analytics';
-import { extendPayload } from '../../../../plugins/analytics/plugin';
-import { EditorState, Transaction } from 'prosemirror-state';
-import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
-import { CommandDispatch } from '../../../../types';
 import { AnalyticsStep } from '../../../../plugins/analytics/analytics-step';
+import { extendPayload } from '../../../../plugins/analytics/plugin';
+import { CommandDispatch } from '../../../../types';
 
 describe('analytics', () => {
   const createEditor = createEditorFactory();

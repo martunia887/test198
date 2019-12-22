@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
 import Button from '@atlaskit/button';
-import Tooltip from '@atlaskit/tooltip';
 import { gridSize, colors } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
+import { jsx, css } from '@emotion/core';
 
 interface Props {
   onChange: (value: number) => void;

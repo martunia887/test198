@@ -4,26 +4,23 @@ import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-
 import Button, { ButtonGroup } from '@atlaskit/button';
 import Form, { Field, FormFooter } from '@atlaskit/form';
 import { RadioGroup } from '@atlaskit/radio';
 import TextArea from '@atlaskit/textarea';
 import { gridSize } from '@atlaskit/theme/constants';
 
+import { withAnalyticsEvents, withAnalyticsContext } from '../../../analytics';
+import { messages } from '../../../messages';
+import { ArticleFeedback } from '../../../model/Article';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../../version.json';
-import { withAnalyticsEvents, withAnalyticsContext } from '../../../analytics';
-import { messages } from '../../../messages';
-
-import { ArticleFeedback } from '../../../model/Article';
 import { withHelp, HelpContextInterface } from '../../HelpContext';
 
-import ArticleWasHelpfulYesButton from './WasHelpfulYesButton';
 import ArticleWasHelpfulNoButton from './WasHelpfulNoButton';
-
+import ArticleWasHelpfulYesButton from './WasHelpfulYesButton';
 import {
   ArticleRateContainer,
   ArticleRateText,

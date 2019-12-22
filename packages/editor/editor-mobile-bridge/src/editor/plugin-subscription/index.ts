@@ -1,5 +1,3 @@
-import { PluginKey } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import {
   EventDispatcher,
   textFormattingStateKey,
@@ -21,12 +19,14 @@ import {
   historyPluginKey,
   HistoryPluginState,
 } from '@atlaskit/editor-core';
+import { PluginKey } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 
-import { valueOf as valueOfListState } from '../web-to-native/listState';
-import { valueOf as valueOfMarkState } from '../web-to-native/markState';
+import { hasValue } from '../../utils';
 import WebBridgeImpl from '../native-to-web';
 import { toNativeBridge, EditorPluginBridges } from '../web-to-native';
-import { hasValue } from '../../utils';
+import { valueOf as valueOfListState } from '../web-to-native/listState';
+import { valueOf as valueOfMarkState } from '../web-to-native/markState';
 
 interface BridgePluginListener<T> {
   bridge: EditorPluginBridges;

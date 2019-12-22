@@ -1,13 +1,15 @@
 import * as React from 'react';
+import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
+import AkDrawer from '@atlaskit/drawer';
+import SwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
 import { AtlassianIcon } from '@atlaskit/logo';
 import Navigation, { AkGlobalItem } from '@atlaskit/navigation';
-import Tooltip from '@atlaskit/tooltip';
-import SwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
 import * as colors from '@atlaskit/theme/colors';
-import AkDrawer from '@atlaskit/drawer';
-import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+import Tooltip from '@atlaskit/tooltip';
+
 import AtlassianSwitcher from '../src';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 class ConfluenceSwitcherExample extends React.Component {
   state = {

@@ -2,9 +2,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { name } from '../../version.json';
 import { MultiSelectStateless } from '../..';
 import type { ItemType, GroupType } from '../../types';
+import { name } from '../../version.json';
 
 describe(`${name} - shared functions`, () => {
   it('should render an array of items', () => {

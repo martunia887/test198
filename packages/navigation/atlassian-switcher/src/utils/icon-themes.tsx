@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { ComponentType } from 'react';
 import styled from 'styled-components';
 import { colors, elevation, gridSize, ThemedValue } from '@atlaskit/theme';
-import { ComponentType } from 'react';
 
 interface IconBaseProps {
   bgColor?: string;

@@ -1,5 +1,5 @@
-import { createFeatures, FeaturesParameters } from '../../features';
 import { ABTest, DEFAULT_AB_TEST } from '../../../api/CrossProductSearchClient';
+import { createFeatures, FeaturesParameters } from '../../features';
 
 describe('features', () => {
   const abTestData = (experimentId: string, abTestId: string): ABTest => ({

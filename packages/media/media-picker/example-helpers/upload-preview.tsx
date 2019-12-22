@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { PreviewImageWrapper, InfoWrapper } from './styled';
-import { PreviewData } from './types';
 import { Card } from '@atlaskit/media-card';
 import { FileIdentifier } from '@atlaskit/media-client';
 import { createUploadMediaClientConfig } from '@atlaskit/media-test-helpers';
+
 import { Preview, ImagePreview } from '../src/types';
+
+import { PreviewImageWrapper, InfoWrapper } from './styled';
+import { PreviewData } from './types';
 
 const mediaClientConfig = createUploadMediaClientConfig();
 

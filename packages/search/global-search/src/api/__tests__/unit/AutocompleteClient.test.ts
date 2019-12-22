@@ -1,5 +1,4 @@
 import { utils } from '@atlaskit/util-service-support';
-
 import {
   AutocompleteClient,
   AutocompleteClientImpl,

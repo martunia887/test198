@@ -1,7 +1,8 @@
 // @flow
 import styled from 'styled-components';
-import { themed } from '@atlaskit/theme/components';
 import { N500, DN500 } from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
+
 import { drawerBackIconSize } from '../../utils/drawer-style-variables';
 
 const DrawerPrimaryIcon = styled.div`

@@ -1,16 +1,14 @@
-import { style } from 'typestyle';
 import { borderRadius, colors } from '@atlaskit/theme';
+import { style } from 'typestyle';
 
+import { emojiPickerHeight, emojiPickerWidth } from '../../util/constants';
 import {
   akEmojiSelectedBackgroundColor,
   emojiFooterBoxShadow,
   emojiPickerBorderColor,
   emojiPickerBoxShadow,
 } from '../../util/shared-styles';
-
 import { emojiSprite, placeholder, emojiNode } from '../common/styles';
-
-import { emojiPickerHeight, emojiPickerWidth } from '../../util/constants';
 
 export const active = 'emoji-picker-active';
 export const disable = 'emoji-picker-disable';

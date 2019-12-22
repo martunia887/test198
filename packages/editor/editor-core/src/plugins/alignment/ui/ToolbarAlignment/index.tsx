@@ -1,17 +1,14 @@
 import * as React from 'react';
 import { defineMessages } from 'react-intl';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
-import ToolbarButton from '../../../../ui/ToolbarButton';
-import Dropdown from '../../../../ui/Dropdown';
-import EditorAlignLeftIcon from '@atlaskit/icon/glyph/editor/align-left';
 import EditorAlignCenterIcon from '@atlaskit/icon/glyph/editor/align-center';
+import EditorAlignLeftIcon from '@atlaskit/icon/glyph/editor/align-left';
 import EditorAlignRightIcon from '@atlaskit/icon/glyph/editor/align-right';
 
-export const iconMap = {
-  start: <EditorAlignLeftIcon label="Align left" />,
-  end: <EditorAlignRightIcon label="Align right" />,
-  center: <EditorAlignCenterIcon label="Align center" />,
-};
+import Alignment from '../../../../ui/Alignment';
+import Dropdown from '../../../../ui/Dropdown';
+import ToolbarButton from '../../../../ui/ToolbarButton';
+import { AlignmentPluginState, AlignmentState } from '../../pm-plugins/main';
 
 import {
   TriggerWrapper,
@@ -19,8 +16,6 @@ import {
   Wrapper,
   ExpandIconWrapper,
 } from './styles';
-import Alignment from '../../../../ui/Alignment';
-import { AlignmentPluginState, AlignmentState } from '../../pm-plugins/main';
 
 export const messages = defineMessages({
   alignment: {

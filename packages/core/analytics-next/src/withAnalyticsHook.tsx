@@ -4,11 +4,11 @@
  * us test the hook logic to make sure that it accomplishes the expected behavior.
  */
 import React from 'react';
-
 import { Omit } from '@atlaskit/type-helpers';
+
 import { CreateUIAnalyticsEvent, CreateEventMap } from './types';
-import { usePatchedProps } from './usePatchedProps';
 import { useAnalyticsEvents } from './useAnalyticsEvents';
+import { usePatchedProps } from './usePatchedProps';
 
 export interface WithAnalyticsHookProps {
   /**

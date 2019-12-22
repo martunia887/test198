@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { MentionStyle } from './styles';
-import { NoAccessTooltip } from '../NoAccessTooltip';
-import { isRestricted, MentionType, MentionEventHandler } from '../../types';
-import { fireAnalyticsMentionEvent } from '../../util/analytics';
-
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
+
+import { isRestricted, MentionType, MentionEventHandler } from '../../types';
+import { fireAnalyticsMentionEvent } from '../../util/analytics';
+import { NoAccessTooltip } from '../NoAccessTooltip';
 import { messages } from '../i18n';
+
+import { MentionStyle } from './styles';
 
 export const ANALYTICS_HOVER_DELAY = 1000;
 export const UNKNOWN_USER_ID = '_|unknown|_';

@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-
 import Drawer from '../../index';
 
 describe('Drawer portal', () => {

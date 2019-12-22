@@ -1,8 +1,8 @@
 import React from 'react';
-import * as colors from '@atlaskit/theme/colors';
 import PackagesIcon from '@atlaskit/icon/glyph/component';
-import DocumentationIcon from '@atlaskit/icon/glyph/overview';
 import PatternsIcon from '@atlaskit/icon/glyph/issues';
+import DocumentationIcon from '@atlaskit/icon/glyph/overview';
+import * as colors from '@atlaskit/theme/colors';
 
 export type IconProps = { label: string; primaryColor: string };
 

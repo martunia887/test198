@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { AnalyticsListener } from '@atlaskit/analytics';
 import Navigation, { AkSearchDrawer } from '@atlaskit/navigation';
-import { randomJiraIconUrl, randomConfluenceIconUrl } from './utils/mockData';
+
 import { QuickSearch, ResultItemGroup, ObjectResult } from '../src';
+
+import { randomJiraIconUrl, randomConfluenceIconUrl } from './utils/mockData';
 
 export default class extends React.Component {
   onEvent = (eventName: string, eventData: Object) => {

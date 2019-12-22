@@ -9,8 +9,9 @@ import {
   ManageButton,
   Skeleton,
 } from '../../src/primitives';
-import MockProvider from './mock-provider';
 import { createIcon } from '../../src/utils/icon-themes';
+
+import MockProvider from './mock-provider';
 
 const OneIcon = createIcon(({ primaryColor }) => (
   <strong style={{ color: primaryColor }}>1</strong>

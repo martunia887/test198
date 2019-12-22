@@ -1,9 +1,9 @@
-import { name } from '../../../version.json';
 import Ajv from 'ajv';
-import { readFilesSync } from '../../../../test-helpers';
 
 import v1schemaFull from '../../../../json-schema/v1/full.json';
 import v1schemaStage0 from '../../../../json-schema/v1/stage-0.json';
+import { readFilesSync } from '../../../../test-helpers';
+import { name } from '../../../version.json';
 
 const ajv = new Ajv();
 

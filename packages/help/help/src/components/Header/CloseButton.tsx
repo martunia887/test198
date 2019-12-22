@@ -4,20 +4,20 @@ import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import Tooltip from '@atlaskit/tooltip';
 import Button from '@atlaskit/button';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
+import Tooltip from '@atlaskit/tooltip';
 
+import { withAnalyticsEvents, withAnalyticsContext } from '../../analytics';
+import { messages } from '../../messages';
+import { Analytics } from '../../model/Analytics';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version.json';
-import { withAnalyticsEvents, withAnalyticsContext } from '../../analytics';
-import { messages } from '../../messages';
-import { Analytics } from '../../model/Analytics';
-
-import CrossIcon from '@atlaskit/icon/glyph/cross';
-import { CloseButtonContainer } from './styled';
 import { withHelp, HelpContextInterface } from '../HelpContext';
+
+import { CloseButtonContainer } from './styled';
 
 export interface Props {
   createAnalyticsEvent: CreateUIAnalyticsEvent;

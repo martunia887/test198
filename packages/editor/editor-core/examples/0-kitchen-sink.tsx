@@ -1,19 +1,29 @@
 import * as React from 'react';
-import styled from 'styled-components';
-
-import Select from '@atlaskit/select';
-import Button from '@atlaskit/button';
-
 import { IntlProvider, addLocaleData } from 'react-intl';
-import { ReactRenderer } from '@atlaskit/renderer';
-import { colors, AtlaskitThemeProvider } from '@atlaskit/theme';
+import styled from 'styled-components';
+import Button from '@atlaskit/button';
 import {
   ProviderFactory,
   combineExtensionProviders,
 } from '@atlaskit/editor-common';
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
+import { ReactRenderer } from '@atlaskit/renderer';
+import Select from '@atlaskit/select';
+import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { colors, AtlaskitThemeProvider } from '@atlaskit/theme';
 
+import ErrorReport, { Error } from '../example-helpers/ErrorReport';
+import KitchenSinkEditor from '../example-helpers/KitchenSinkEditor';
+import LanguagePicker from '../example-helpers/LanguagePicker';
+import { getXProductExtensionProvider } from '../example-helpers/fake-x-product-extensions';
+import FullWidthToggle from '../example-helpers/full-width-toggle';
+import withSentry from '../example-helpers/withSentry';
+import { EditorActions } from '../src';
 import enMessages from '../src/i18n/en';
 import languages from '../src/i18n/languages';
+import { EditorAppearance } from '../src/types';
+
+import EditorContext from './../src/ui/EditorContext';
 import WithEditorActions from './../src/ui/WithEditorActions';
 import {
   SaveAndCancelButtons,
@@ -21,18 +31,6 @@ import {
   mediaProvider,
   LOCALSTORAGE_defaultDocKey,
 } from './5-full-page';
-import LanguagePicker from '../example-helpers/LanguagePicker';
-import EditorContext from './../src/ui/EditorContext';
-import { EditorAppearance } from '../src/types';
-import { EditorActions } from '../src';
-
-import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
-import ErrorReport, { Error } from '../example-helpers/ErrorReport';
-import KitchenSinkEditor from '../example-helpers/KitchenSinkEditor';
-import withSentry from '../example-helpers/withSentry';
-import FullWidthToggle from '../example-helpers/full-width-toggle';
-import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
-import { getXProductExtensionProvider } from '../example-helpers/fake-x-product-extensions';
 
 addGlobalEventEmitterListeners();
 

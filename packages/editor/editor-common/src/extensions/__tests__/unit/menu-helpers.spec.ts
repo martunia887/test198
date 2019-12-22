@@ -1,8 +1,8 @@
-import { getItemsFromModule } from '../../menu-helpers';
 import {
   createFakeExtensionManifest,
   createFakeModule,
 } from '@atlaskit/editor-test-helpers/extensions';
+import { getItemsFromModule } from '../../menu-helpers';
 
 describe('menu-helpers', () => {
   describe('getItemsFromCapability', () => {

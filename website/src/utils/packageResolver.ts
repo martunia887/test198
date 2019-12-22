@@ -1,6 +1,6 @@
-import * as fs from './fs';
 import { packages as packagesData } from '../site';
 import { Directory } from '../types';
+import * as fs from './fs';
 
 export default (
   groupId?: string,

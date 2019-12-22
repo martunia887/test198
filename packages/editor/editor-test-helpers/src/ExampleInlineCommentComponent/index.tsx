@@ -1,16 +1,14 @@
 import * as React from 'react';
-
+import { generateUuid } from '@atlaskit/adf-schema';
 import Avatar, { AvatarItem } from '@atlaskit/avatar';
 import Button from '@atlaskit/button';
 import { Popup } from '@atlaskit/editor-common';
-import EditorRemoveIcon from '@atlaskit/icon/glyph/editor/remove';
-import TextArea from '@atlaskit/textarea';
-import { generateUuid } from '@atlaskit/adf-schema';
-
 import {
   AnnotationComponentProps,
   AnnotationInfo,
 } from '@atlaskit/editor-core';
+import EditorRemoveIcon from '@atlaskit/icon/glyph/editor/remove';
+import TextArea from '@atlaskit/textarea';
 
 const getInlineCommentId = () => `inline-comment-${generateUuid()}`;
 

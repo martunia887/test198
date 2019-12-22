@@ -1,7 +1,6 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-
 import { withContentTheme, styleReducerNoOp } from '../../../theme';
 import type { SkeletonItemProps } from './types';
 

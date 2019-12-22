@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useRef, useState, useEffect } from 'react';
 
+import { browser as browserVersion } from '../../utils';
+
 import { useInView } from './hooks';
 import { WidthObserverProps } from './types';
-import { browser as browserVersion } from '../../utils';
 import { browser } from './utils';
 
 type Unsubscribe = () => void;

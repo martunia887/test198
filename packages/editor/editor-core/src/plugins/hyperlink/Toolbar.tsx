@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { FloatingToolbarHandler, AlignType } from '../floating-toolbar/types';
+import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
+import OpenIcon from '@atlaskit/icon/glyph/shortcut';
+import { Mark } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
+import { linkToolbarMessages as linkToolbarCommonMessages } from '../../messages';
 import {
-  stateKey,
-  HyperlinkState,
-  InsertState,
-  EditInsertedState,
-} from './pm-plugins/main';
+  RECENT_SEARCH_HEIGHT_IN_PX,
+  RECENT_SEARCH_WIDTH_IN_PX,
+} from '../../ui/RecentSearch/ToolbarComponents';
+import { FloatingToolbarHandler, AlignType } from '../floating-toolbar/types';
+
 import {
   removeLink,
   setLinkText,
@@ -16,18 +22,14 @@ import {
   updateLink,
   insertLinkWithAnalytics,
 } from './commands';
-import RecentList from './ui/HyperlinkAddToolbar';
-import { EditorView } from 'prosemirror-view';
-import { Mark } from 'prosemirror-model';
-import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
-import OpenIcon from '@atlaskit/icon/glyph/shortcut';
-import { normalizeUrl } from './utils';
-import { EditorState } from 'prosemirror-state';
-import { linkToolbarMessages as linkToolbarCommonMessages } from '../../messages';
 import {
-  RECENT_SEARCH_HEIGHT_IN_PX,
-  RECENT_SEARCH_WIDTH_IN_PX,
-} from '../../ui/RecentSearch/ToolbarComponents';
+  stateKey,
+  HyperlinkState,
+  InsertState,
+  EditInsertedState,
+} from './pm-plugins/main';
+import RecentList from './ui/HyperlinkAddToolbar';
+import { normalizeUrl } from './utils';
 
 /* type guard for edit links */
 function isEditLink(

@@ -1,5 +1,12 @@
 import { Auth, AuthProvider } from '@atlaskit/media-core';
 import {
+  expectFunctionToHaveBeenCalledWith,
+  asMock,
+  fakeMediaClient,
+} from '@atlaskit/media-test-helpers';
+import uuid from 'uuid';
+
+import {
   ResponseFileItem,
   MediaFile,
   RECENTS_COLLECTION,
@@ -8,13 +15,7 @@ import {
   getFileStreamsCache,
 } from '../..';
 import * as MediaClientModule from '../..';
-import uuid from 'uuid';
 import { FileFetcherImpl, getItemsFromKeys } from '../../client/file-fetcher';
-import {
-  expectFunctionToHaveBeenCalledWith,
-  asMock,
-  fakeMediaClient,
-} from '@atlaskit/media-test-helpers';
 import { observableToPromise } from '../../utils/observableToPromise';
 jest.mock('../../utils/getDimensionsFromBlob', () => {
   return {

@@ -4,7 +4,6 @@ import {
   themeWithKeys,
   getThemeStyle,
 } from '../../../util/theme';
-
 import { name } from '../../../version.json';
 
 describe(`${name} - theme`, () => {

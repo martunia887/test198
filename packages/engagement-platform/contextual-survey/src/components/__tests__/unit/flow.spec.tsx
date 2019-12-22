@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import SurveyMarshal from '../../SurveyMarshal';
+
 import { FormValues } from '../../../types';
 import ContextualSurvey, {
   AUTO_DISAPPEAR_DURATION,
 } from '../../ContextualSurvey';
+import SurveyMarshal from '../../SurveyMarshal';
 
 jest.useFakeTimers();
 

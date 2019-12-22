@@ -1,12 +1,13 @@
-import { mockStore } from '@atlaskit/media-test-helpers';
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
-import { handleCloudFetchingEvent } from '../../handleCloudFetchingEvent';
+import { mockStore } from '@atlaskit/media-test-helpers';
+
+import { FINALIZE_UPLOAD } from '../../../actions/finalizeUpload';
 import {
   HANDLE_CLOUD_FETCHING_EVENT,
   HandleCloudFetchingEventAction,
 } from '../../../actions/handleCloudFetchingEvent';
-import { FINALIZE_UPLOAD } from '../../../actions/finalizeUpload';
 import { sendUploadEvent } from '../../../actions/sendUploadEvent';
+import { handleCloudFetchingEvent } from '../../handleCloudFetchingEvent';
 
 describe('handleCloudFetchingEvent', () => {
   const uploadId = 'some-upload-id';

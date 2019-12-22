@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { colors } from '@atlaskit/theme';
 import cx from 'classnames';
-import * as React from 'react';
 import { keyframes, style } from 'typestyle';
 
 export type Props = {

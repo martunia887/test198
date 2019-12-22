@@ -1,4 +1,7 @@
-import { NodeSelection } from 'prosemirror-state';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
@@ -7,7 +10,10 @@ import {
   sendKeyToPm,
   insertText,
 } from '@atlaskit/editor-test-helpers';
+import { NodeSelection } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 import {
   setDatePickerAt,
   insertDate,
@@ -15,12 +21,6 @@ import {
   closeDatePicker,
 } from '../../../../plugins/date/actions';
 import { pluginKey } from '../../../../plugins/date/plugin';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
-import { EditorView } from 'prosemirror-view';
 
 describe('date plugin', () => {
   const createEditor = createEditorFactory();

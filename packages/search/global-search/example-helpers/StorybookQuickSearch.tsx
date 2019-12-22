@@ -1,20 +1,22 @@
 import * as React from 'react';
-import BasicNavigation from './components/BasicNavigation';
-import LocaleIntlProvider from './components/LocaleIntlProvider';
-import { QuickSearchContext } from '../src/api/types';
-import { LayoutManager, NavigationProvider } from '@atlaskit/navigation-next';
 import { DrawerItemTheme } from '@atlaskit/drawer';
+import { LayoutManager, NavigationProvider } from '@atlaskit/navigation-next';
+
+import { QuickSearchContext } from '../src/api/types';
+import PrefetchedResultsProvider from '../src/components/PrefetchedResultsProvider';
+
+import BasicNavigation from './components/BasicNavigation';
 import {
   DefaultQuickSearchWrapper,
   PartialProps,
 } from './components/DefaultQuickSearchWrapper';
+import LocaleIntlProvider from './components/LocaleIntlProvider';
 import { RadioGroup, RadioWithLabel } from './components/RadioWithLabel';
-import { setupMocks, teardownMocks, MocksConfig } from './mocks/mockApis';
 import {
   MessageContainer,
   TogglesAndMessagePanel,
 } from './components/ToggleAndMessageContainer';
-import PrefetchedResultsProvider from '../src/components/PrefetchedResultsProvider';
+import { setupMocks, teardownMocks, MocksConfig } from './mocks/mockApis';
 
 const availableContext = ['jira', 'confluence'];
 const presetConfig = {

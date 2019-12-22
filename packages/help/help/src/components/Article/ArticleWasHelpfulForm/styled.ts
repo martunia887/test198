@@ -1,8 +1,8 @@
 /** @jsx jsx */
 
-import styled from '@emotion/styled';
-import { gridSize } from '@atlaskit/theme/constants';
 import * as colors from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
+import styled from '@emotion/styled';
 
 export const ArticleRateContainer = styled.div`
   padding-bottom: ${2 * gridSize()}px;

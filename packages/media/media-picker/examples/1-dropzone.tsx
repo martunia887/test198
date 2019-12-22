@@ -1,6 +1,8 @@
 // eslint-disable-line no-console
 import * as React from 'react';
 import { Component } from 'react';
+import Button from '@atlaskit/button';
+import { FileState } from '@atlaskit/media-client';
 import {
   userAuthProvider,
   defaultMediaPickerCollectionName,
@@ -8,10 +10,9 @@ import {
   createStorybookMediaClientConfig,
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
-import Button from '@atlaskit/button';
-import Toggle from '@atlaskit/toggle';
 import Spinner from '@atlaskit/spinner';
-import { FileState } from '@atlaskit/media-client';
+import Toggle from '@atlaskit/toggle';
+
 import {
   DropzoneContainer,
   PopupHeader,
@@ -20,7 +21,6 @@ import {
   DropzoneItemsInfo,
 } from '../example-helpers/styled';
 import { UploadPreviews } from '../example-helpers/upload-previews';
-
 import { Dropzone } from '../src';
 import { DropzoneConfig, UploadsStartEventPayload } from '../src/types';
 

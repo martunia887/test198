@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Button from '@atlaskit/button';
 import SectionMessage from '@atlaskit/section-message';
+
 import Pagination from '../src';
 
 export default class extends Component<{}, { max: number }> {

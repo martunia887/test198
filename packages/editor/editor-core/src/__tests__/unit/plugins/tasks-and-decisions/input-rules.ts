@@ -1,3 +1,8 @@
+import { uuid } from '@atlaskit/adf-schema';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   sendKeyToPm,
   insertText,
@@ -26,11 +31,6 @@ import {
   layoutSection,
 } from '@atlaskit/editor-test-helpers';
 import { taskDecision } from '@atlaskit/util-data-test';
-import { uuid } from '@atlaskit/adf-schema';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 
 describe('tasks and decisions - input rules', () => {
   const createEditor = createEditorFactory();

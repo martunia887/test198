@@ -1,17 +1,18 @@
-import { name } from '../../../version.json';
-import { mount } from 'enzyme';
 import * as React from 'react';
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { mount } from 'enzyme';
 import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
-import WithPluginState from '../../../ui/WithPluginState';
-import { EditorPlugin } from '../../../types/editor-plugin';
+import { Plugin, PluginKey } from 'prosemirror-state';
+
+import EditorActions from '../../../actions';
 import {
   EventDispatcher,
   createDispatch,
   Dispatch,
 } from '../../../event-dispatcher';
-import EditorActions from '../../../actions';
+import { EditorPlugin } from '../../../types/editor-plugin';
 import EditorContext from '../../../ui/EditorContext';
+import WithPluginState from '../../../ui/WithPluginState';
+import { name } from '../../../version.json';
 
 describe(name, () => {
   const createEditor = createEditorFactory();

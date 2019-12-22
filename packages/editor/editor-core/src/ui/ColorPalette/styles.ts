@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { gridSize } from '@atlaskit/theme';
 
 export const ColorPaletteWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`

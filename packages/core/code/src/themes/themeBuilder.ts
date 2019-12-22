@@ -4,7 +4,6 @@ import {
   gridSize,
   fontSize,
 } from '@atlaskit/theme/constants';
-
 import { defaultColors } from './defaultTheme';
 
 export type ThemeModes = 'light' | 'dark';

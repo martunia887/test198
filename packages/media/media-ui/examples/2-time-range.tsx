@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { TimeRange } from '../src';
+
 import { Container, Group, TimeRangeWrapper } from '../example-helpers/styled';
+import { TimeRange } from '../src';
 
 export interface ExampleState {
   currentTime1: number;

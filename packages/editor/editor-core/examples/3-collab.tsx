@@ -1,19 +1,8 @@
 /* eslint-disable no-console */
 
-import styled from 'styled-components';
 import * as React from 'react';
+import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { borderRadius } from '@atlaskit/theme';
-import { ShareDialogContainer } from '@atlaskit/share';
-
-import {
-  emoji,
-  mention,
-  taskDecision,
-  userPickerData,
-} from '@atlaskit/util-data-test';
-import { EmojiProvider } from '@atlaskit/emoji/resource';
-import { OptionData, User } from '@atlaskit/user-picker';
 import {
   cardProviderStaging,
   customInsertMenuItems,
@@ -21,22 +10,31 @@ import {
   storyContextIdentifierProviderFactory,
   storyMediaProviderFactory,
 } from '@atlaskit/editor-test-helpers';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
+import { ResolvingMentionProvider } from '@atlaskit/mention/resource';
+import { ShareDialogContainer } from '@atlaskit/share';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
+import { borderRadius } from '@atlaskit/theme';
+import { OptionData, User } from '@atlaskit/user-picker';
+import {
+  emoji,
+  mention,
+  taskDecision,
+  userPickerData,
+} from '@atlaskit/util-data-test';
 
-import Editor, { EditorProps } from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
-
+import { TitleInput } from '../example-helpers/PageElements';
+import { EditorActions, MediaProvider, MentionProvider } from '../src';
+import { InviteToEditComponentProps } from '../src/plugins/collab-edit/types';
 import {
   akEditorCodeBackground,
   akEditorCodeBlockPadding,
   akEditorCodeFontFamily,
 } from '../src/styles';
 
-import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
-import { TitleInput } from '../example-helpers/PageElements';
-import { EditorActions, MediaProvider, MentionProvider } from '../src';
-import { InviteToEditComponentProps } from '../src/plugins/collab-edit/types';
-import { ResolvingMentionProvider } from '@atlaskit/mention/resource';
+import Editor, { EditorProps } from './../src/editor';
+import EditorContext from './../src/ui/EditorContext';
+import WithEditorActions from './../src/ui/WithEditorActions';
 
 export const Content = styled.div`
   padding: 0 20px;

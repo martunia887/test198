@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass, ImgHTMLAttributes } from 'react';
+import styled from 'styled-components';
 import { N300 } from '@atlaskit/theme/colors';
 
 export const Container: ComponentClass<HTMLAttributes<{}>> = styled.div`

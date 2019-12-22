@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { Icon } from '../Icon';
 import {
   IconTitleWrapper,
   IconWrapper,
   IconTitleHeadNoBreakWrapper,
 } from './styled';
-import { Icon } from '../Icon';
 
 export interface IconAndTitleLayoutProps {
   icon?: string | React.ReactNode;

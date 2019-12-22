@@ -1,34 +1,35 @@
+import { MentionAttributes } from '@atlaskit/adf-schema';
+import { CardAppearance } from '@atlaskit/smart-card';
+import { closeHistory } from 'prosemirror-history';
+import { Slice, Mark, Node as PMNode, Fragment } from 'prosemirror-model';
+import { Node as ProsemirrorNode, Schema } from 'prosemirror-model';
 import { TextSelection, Selection } from 'prosemirror-state';
+import { EditorState, Transaction } from 'prosemirror-state';
 import {
   hasParentNodeOfType,
   findParentNodeOfType,
   safeInsert,
 } from 'prosemirror-utils';
-
-import { taskDecisionSliceFilter } from '../../utils/filter';
-import { linkifyContent } from '../hyperlink/utils';
-import { Slice, Mark, Node as PMNode, Fragment } from 'prosemirror-model';
-import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { runMacroAutoConvert } from '../macro';
-import { closeHistory } from 'prosemirror-history';
-import { applyTextMarksToSlice, hasOnlyNodesOfType } from './util';
+
+import { CommandDispatch, Command } from '../../types';
+import { compose, processRawValue } from '../../utils';
+import { insideTable } from '../../utils';
+import { taskDecisionSliceFilter } from '../../utils/filter';
+import { mapSlice } from '../../utils/slice';
+import { INPUT_METHOD, InputMethodInsertMedia } from '../analytics';
+import { CardOptions } from '../card';
 import { queueCardsFromChangedTr, insertCard } from '../card/pm-plugins/doc';
+import { GapCursorSelection, Side } from '../gap-cursor/';
+import { linkifyContent } from '../hyperlink/utils';
+import { runMacroAutoConvert } from '../macro';
+import { insertMediaAsMediaSingle } from '../media/utils/media-single';
 import {
   pluginKey as textFormattingPluginKey,
   TextFormattingState,
 } from '../text-formatting/pm-plugins/main';
-import { compose, processRawValue } from '../../utils';
-import { mapSlice } from '../../utils/slice';
-import { CommandDispatch, Command } from '../../types';
-import { insertMediaAsMediaSingle } from '../media/utils/media-single';
-import { INPUT_METHOD, InputMethodInsertMedia } from '../analytics';
-import { CardOptions } from '../card';
-import { CardAppearance } from '@atlaskit/smart-card';
-import { Node as ProsemirrorNode, Schema } from 'prosemirror-model';
-import { MentionAttributes } from '@atlaskit/adf-schema';
-import { insideTable } from '../../utils';
-import { GapCursorSelection, Side } from '../gap-cursor/';
+
+import { applyTextMarksToSlice, hasOnlyNodesOfType } from './util';
 
 // remove text attribute from mention for copy/paste (GDPR)
 export function handleMention(slice: Slice, schema: Schema): Slice {

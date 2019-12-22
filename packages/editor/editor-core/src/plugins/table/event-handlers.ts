@@ -1,11 +1,11 @@
-import { EditorView } from 'prosemirror-view';
+import { browser } from '@atlaskit/editor-common';
+import { Node as PmNode } from 'prosemirror-model';
 import {
   EditorState,
   Transaction,
   TextSelection,
   Selection,
 } from 'prosemirror-state';
-import { Node as PmNode } from 'prosemirror-model';
 import { TableMap, cellAround, CellSelection } from 'prosemirror-tables';
 import {
   findTable,
@@ -13,16 +13,10 @@ import {
   removeTable,
   findCellRectClosestToPos,
 } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
 import rafSchedule from 'raf-schd';
-import { browser } from '@atlaskit/editor-common';
 
 import { analyticsService } from '../../analytics';
-import {
-  addAnalytics,
-  TABLE_ACTION,
-  ACTION_SUBJECT,
-  EVENT_TYPE,
-} from '../analytics';
 import {
   isElementInTableCell,
   setNodeSelection,
@@ -30,17 +24,12 @@ import {
   closestElement,
 } from '../../utils/';
 import {
-  isCell,
-  isInsertRowButton,
-  isColumnControlsDecorations,
-  isTableControlsButton,
-  isRowControlsButton,
-  isCornerButton,
-  isResizeHandleDecoration,
-  getColumnOrRowIndex,
-  getMousePositionHorizontalRelativeByElement,
-  getMousePositionVerticalRelativeByElement,
-} from './utils';
+  addAnalytics,
+  TABLE_ACTION,
+  ACTION_SUBJECT,
+  EVENT_TYPE,
+} from '../analytics';
+
 import {
   setEditorFocus,
   showInsertColumnButton,
@@ -55,9 +44,21 @@ import {
 } from './commands';
 import { getPluginState } from './pm-plugins/main';
 import { getPluginState as getResizePluginState } from './pm-plugins/table-resizing/plugin';
-import { getSelectedCellInfo } from './utils';
 import { deleteColumns, deleteRows } from './transforms';
 import { RESIZE_HANDLE_AREA_DECORATION_GAP } from './types';
+import {
+  isCell,
+  isInsertRowButton,
+  isColumnControlsDecorations,
+  isTableControlsButton,
+  isRowControlsButton,
+  isCornerButton,
+  isResizeHandleDecoration,
+  getColumnOrRowIndex,
+  getMousePositionHorizontalRelativeByElement,
+  getMousePositionVerticalRelativeByElement,
+} from './utils';
+import { getSelectedCellInfo } from './utils';
 
 export const handleBlur = (view: EditorView, event: Event): boolean => {
   const { state, dispatch } = view;

@@ -1,11 +1,11 @@
 import * as React from 'react';
-
-jest.mock('../../../../../../plugins/media/nodeviews/mediaNodeUpdater');
-
-import { MediaNodeUpdater } from '../../../../../../plugins/media/nodeviews/mediaNodeUpdater';
-
 import { mount, ReactWrapper } from 'enzyme';
-import { EditorView } from 'prosemirror-view';
+import { defaultSchema, MediaAttributes } from '@atlaskit/adf-schema';
+import {
+  ProviderFactory,
+  MediaSingle as MediaSingleWrapper,
+  ContextIdentifierProvider,
+} from '@atlaskit/editor-common';
 import {
   mediaSingle,
   media,
@@ -13,32 +13,29 @@ import {
   fakeMediaProvider,
   Image,
 } from '@atlaskit/editor-test-helpers';
-import { defaultSchema, MediaAttributes } from '@atlaskit/adf-schema';
+import {
+  nextTick,
+  asMock,
+  asMockReturnValue,
+} from '@atlaskit/media-test-helpers';
+import { EditorView } from 'prosemirror-view';
+
+import { EventDispatcher } from '../../../../../../event-dispatcher';
+import { stateKey as SelectionChangePluginKey } from '../../../../../../plugins/base/pm-plugins/react-nodeview';
+import { MediaOptions } from '../../../../../../plugins/media';
+import Media from '../../../../../../plugins/media/nodeviews/media';
+import { MediaNodeUpdater } from '../../../../../../plugins/media/nodeviews/mediaNodeUpdater';
+import MediaSingle, {
+  ReactMediaSingleNode,
+} from '../../../../../../plugins/media/nodeviews/mediaSingle';
 import {
   stateKey as mediaStateKey,
   MediaPluginState,
   MediaState,
   MediaProvider,
 } from '../../../../../../plugins/media/pm-plugins/main';
-import MediaSingle, {
-  ReactMediaSingleNode,
-} from '../../../../../../plugins/media/nodeviews/mediaSingle';
-import Media from '../../../../../../plugins/media/nodeviews/media';
-import {
-  ProviderFactory,
-  MediaSingle as MediaSingleWrapper,
-  ContextIdentifierProvider,
-} from '@atlaskit/editor-common';
-import { EventDispatcher } from '../../../../../../event-dispatcher';
-import { PortalProviderAPI } from '../../../../../../ui/PortalProvider';
-import { stateKey as SelectionChangePluginKey } from '../../../../../../plugins/base/pm-plugins/react-nodeview';
-import { MediaOptions } from '../../../../../../plugins/media';
 import ResizableMediaSingle from '../../../../../../plugins/media/ui/ResizableMediaSingle';
-import {
-  nextTick,
-  asMock,
-  asMockReturnValue,
-} from '@atlaskit/media-test-helpers';
+import { PortalProviderAPI } from '../../../../../../ui/PortalProvider';
 
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 

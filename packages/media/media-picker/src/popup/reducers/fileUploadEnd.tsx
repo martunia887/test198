@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isFileUploadEndAction } from '../actions/fileUploadEnd';
 import { State } from '../domain';
 

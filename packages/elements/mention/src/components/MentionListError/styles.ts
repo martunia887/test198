@@ -1,7 +1,5 @@
-import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { borderRadius, colors, typography } from '@atlaskit/theme';
 
 export const MentionListErrorStyle: ComponentClass<HTMLAttributes<{}>> = styled.div`

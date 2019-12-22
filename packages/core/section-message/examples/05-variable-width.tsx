@@ -1,6 +1,7 @@
 import React from 'react';
 import { AkCodeBlock } from '@atlaskit/code';
 import FieldRange from '@atlaskit/field-range';
+
 import SectionMessage from '../src';
 
 class Example extends React.Component<any, any> {

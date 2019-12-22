@@ -1,10 +1,10 @@
 import { Action, Store, Dispatch } from 'redux';
 
-import { requestUnlinkCloudAccount } from '../actions/unlinkCloudAccount';
 import { isChangeCloudAccountFolderAction } from '../actions/changeCloudAccountFolder';
 import { fileListUpdate } from '../actions/fileListUpdate';
-import { Fetcher } from '../tools/fetcher/fetcher';
+import { requestUnlinkCloudAccount } from '../actions/unlinkCloudAccount';
 import { State } from '../domain';
+import { Fetcher } from '../tools/fetcher/fetcher';
 
 export const changeCloudAccountFolderMiddleware = (fetcher: Fetcher) => (
   store: Store<State>,

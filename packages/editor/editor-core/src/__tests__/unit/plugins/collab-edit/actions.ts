@@ -1,3 +1,4 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
   doc,
@@ -5,9 +6,8 @@ import {
   mention,
   unsupportedInline,
 } from '@atlaskit/editor-test-helpers';
-import { mention as mentionData } from '@atlaskit/util-data-test';
 import { MentionProvider } from '@atlaskit/mention/resource';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import { mention as mentionData } from '@atlaskit/util-data-test';
 
 import { handleInit } from '../../../../plugins/collab-edit/actions';
 import {

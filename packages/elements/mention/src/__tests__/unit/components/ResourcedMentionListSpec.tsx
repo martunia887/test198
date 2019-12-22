@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
+
 import { MockMentionResource } from '../../../../../util-data-test/src/mention/MockMentionResource';
 import MentionList from '../../..//components/MentionList';
 import ResourcedMentionList, {

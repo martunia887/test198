@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
 
 import { IconButton } from '../IconButton';
+
 import { SettingsProps } from './types';
 
 export const Settings = forwardRef(

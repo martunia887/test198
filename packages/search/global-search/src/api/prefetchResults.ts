@@ -1,5 +1,5 @@
 import { AnalyticsType, ConfluenceRecentsMap } from '../model/Result';
-import configureSearchClients from './configureSearchClients';
+
 import { ConfluenceClient } from './ConfluenceClient';
 import {
   ABTest,
@@ -8,6 +8,7 @@ import {
   EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE,
 } from './CrossProductSearchClient';
 import { mapJiraItemToResult } from './JiraItemMapper';
+import configureSearchClients from './configureSearchClients';
 import { JiraItem, Scope } from './types';
 
 interface CommonPrefetchedResults {

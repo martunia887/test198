@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
+import PeopleIcon from '@atlaskit/icon/glyph/people';
+import Tag from '@atlaskit/tag';
+import { colors } from '@atlaskit/theme';
+
+import { Option, UserPickerProps } from '../types';
 
 import { AddOptionAvatar } from './AddOptionAvatar';
 import { SizeableAvatar } from './SizeableAvatar';
 import { messages } from './i18n';
 import { getAvatarUrl, isEmail, isGroup } from './utils';
-import { Option, UserPickerProps } from '../types';
-
-import Tag from '@atlaskit/tag';
-import PeopleIcon from '@atlaskit/icon/glyph/people';
-import { colors } from '@atlaskit/theme';
 
 export const scrollToValue = (
   valueContainer: HTMLDivElement,

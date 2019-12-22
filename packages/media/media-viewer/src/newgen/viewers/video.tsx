@@ -9,12 +9,14 @@ import {
   CustomMediaPlayer,
   WithShowControlMethodProp,
 } from '@atlaskit/media-ui';
+
 import { Outcome } from '../domain';
-import { Video, CustomVideoPlayerWrapper } from '../styled';
-import { isIE } from '../utils/isIE';
 import { createError, MediaViewerError } from '../error';
-import { BaseState, BaseViewer } from './base-viewer';
+import { Video, CustomVideoPlayerWrapper } from '../styled';
 import { getObjectUrlFromFileState } from '../utils/getObjectUrlFromFileState';
+import { isIE } from '../utils/isIE';
+
+import { BaseState, BaseViewer } from './base-viewer';
 
 export type Props = Readonly<
   {

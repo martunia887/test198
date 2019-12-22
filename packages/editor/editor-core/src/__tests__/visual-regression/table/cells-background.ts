@@ -1,12 +1,11 @@
-import { Device, initFullPageEditorWithAdf, snapshot } from '../_utils';
-
 import {
   selectCellBackground,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
+import { Page } from '../../__helpers/page-objects/_types';
+import { Device, initFullPageEditorWithAdf, snapshot } from '../_utils';
 
 import adf from './__fixtures__/default-table.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Table context menu: cells background', () => {
   let page: Page;

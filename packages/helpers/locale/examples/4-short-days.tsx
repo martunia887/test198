@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-
 import { LocalizationProvider, createLocalizationProvider } from '../src';
 import LocaleSelect, { Locale } from '../src/LocaleSelect';
 

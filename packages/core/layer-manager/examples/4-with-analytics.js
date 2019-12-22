@@ -7,6 +7,7 @@ import {
 } from '@atlaskit/analytics-next';
 import Button from '@atlaskit/button';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
+
 import LayerManager from '../src';
 
 type State = {

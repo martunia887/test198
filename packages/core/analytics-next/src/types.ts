@@ -1,5 +1,5 @@
-import UIAnalyticsEvent from './UIAnalyticsEvent';
 import { AnalyticsEventPayload } from './AnalyticsEvent';
+import UIAnalyticsEvent from './UIAnalyticsEvent';
 
 export type CreateUIAnalyticsEvent = (
   payload: AnalyticsEventPayload,

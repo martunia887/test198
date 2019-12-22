@@ -1,7 +1,9 @@
 import { Node as PMNode } from 'prosemirror-model';
+
+import { parseString } from '../text';
+
 import { Token, TokenType, TokenParser } from './';
 import { commonFormatter } from './common-formatter';
-import { parseString } from '../text';
 
 export const monospace: TokenParser = ({
   input,

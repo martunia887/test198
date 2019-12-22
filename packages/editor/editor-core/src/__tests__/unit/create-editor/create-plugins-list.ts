@@ -35,6 +35,7 @@ const mockPlugins: { [name: string]: jest.Mock } = {
 };
 jest.mock('../../../plugins', () => mockPlugins);
 
+import createPluginsList from '../../../create-editor/create-plugins-list';
 import {
   analyticsPlugin,
   tablesPlugin,
@@ -51,8 +52,6 @@ import {
   scrollIntoViewPlugin,
   mobileScrollPlugin,
 } from '../../../plugins';
-
-import createPluginsList from '../../../create-editor/create-plugins-list';
 
 describe('createPluginsList', () => {
   afterEach(() => {

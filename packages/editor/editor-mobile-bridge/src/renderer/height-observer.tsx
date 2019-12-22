@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { RefObject } from 'react';
 import debounce from 'lodash.debounce';
+
 import { eventDispatcher } from './dispatcher';
 import { toNativeBridge } from './web-to-native/implementation';
-import { RefObject } from 'react';
 
 export type Props = {};
 export type State = {

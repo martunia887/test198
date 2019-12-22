@@ -1,8 +1,8 @@
 /**
  * Utils
  */
-import { ReleasePrefix } from './constants';
 import { PullRequestClient } from '@atlaskit/build-utils/bitbucket';
+import { ReleasePrefix } from './constants';
 
 export function capitalise(str: string) {
   return str[0].toUpperCase() + str.slice(1);

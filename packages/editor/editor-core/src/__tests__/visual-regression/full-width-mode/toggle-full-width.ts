@@ -1,3 +1,6 @@
+import { clickFirstCell } from '../../../__tests__/__helpers/page-objects/_table';
+import { pressKey } from '../../__helpers/page-objects/_keyboard';
+import { Page } from '../../__helpers/page-objects/_types';
 import {
   initFullPageEditorWithAdf,
   snapshot,
@@ -6,19 +9,17 @@ import {
   initEditorWithAdf,
   Appearance,
 } from '../_utils';
-import { Page } from '../../__helpers/page-objects/_types';
-import mixedContentAdf from './__fixtures__/mixed-content.adf.json';
-import layoutWithBreakoutAdf from './__fixtures__/layout-with-breakout.adf.json';
-import breakoutAdf from './__fixtures__/mixed-content-with-breakout.adf.json';
-import mediaAdf from './__fixtures__/media-single.adf.json';
-import resizedTableAdf from './__fixtures__/resized-table.adf.json';
-import resizedTableWideAdf from './__fixtures__/resized-table-wide.adf.json';
-import resizedTableFullWidthAdf from './__fixtures__/resized-table-full-width.adf.json';
-import resizedTableInLayout from './__fixtures__/resized-table-in-layout.adf.json';
 import resizedTableInExt from '../table/__fixtures__/nested-table-inside-bodied-ext.adf.json';
+
+import layoutWithBreakoutAdf from './__fixtures__/layout-with-breakout.adf.json';
+import mediaAdf from './__fixtures__/media-single.adf.json';
+import breakoutAdf from './__fixtures__/mixed-content-with-breakout.adf.json';
+import mixedContentAdf from './__fixtures__/mixed-content.adf.json';
+import resizedTableFullWidthAdf from './__fixtures__/resized-table-full-width.adf.json';
 import resizedTableFWM from './__fixtures__/resized-table-fwm.adf.json';
-import { pressKey } from '../../__helpers/page-objects/_keyboard';
-import { clickFirstCell } from '../../../__tests__/__helpers/page-objects/_table';
+import resizedTableInLayout from './__fixtures__/resized-table-in-layout.adf.json';
+import resizedTableWideAdf from './__fixtures__/resized-table-wide.adf.json';
+import resizedTableAdf from './__fixtures__/resized-table.adf.json';
 
 type ToggleFullWidthOptions = {
   // Focus is lost after toggling full width mode so if your test

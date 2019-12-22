@@ -1,6 +1,6 @@
 import React, { Component, ChangeEvent } from 'react';
-import styled from 'styled-components';
 import Lorem from 'react-lorem-component';
+import styled from 'styled-components';
 import Button, { ButtonGroup, ButtonAppearances } from '@atlaskit/button';
 import {
   AtlaskitThemeProvider,
@@ -8,6 +8,7 @@ import {
   themed,
   ThemeModes,
 } from '@atlaskit/theme';
+
 import { ProgressDots } from '../src';
 
 type Appearances = 'default' | 'help' | 'inverted' | 'primary';

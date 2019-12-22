@@ -1,8 +1,9 @@
 // @flow
 import styled from 'styled-components';
+
+import { gridSize } from '../../shared-variables';
 import { whenCollapsedAndNotInOverflowDropdown } from '../../theme/util';
 import { truncate } from '../../utils/mixins';
-import { gridSize } from '../../shared-variables';
 
 const groupTitleFontSize = 11;
 

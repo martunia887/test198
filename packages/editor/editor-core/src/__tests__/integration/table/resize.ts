@@ -1,6 +1,17 @@
-import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { tableNewColumnMinWidth } from '@atlaskit/editor-common';
 import { sleep } from '@atlaskit/editor-test-helpers';
+import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+
+import { TableCssClassName } from '../../../plugins/table/types';
+import {
+  insertColumn,
+  clickFirstCell,
+  selectTable,
+} from '../../__helpers/page-objects/_table';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
@@ -9,12 +20,6 @@ import {
   quickInsert,
   selectColumns,
 } from '../_helpers';
-
-import {
-  insertColumn,
-  clickFirstCell,
-  selectTable,
-} from '../../__helpers/page-objects/_table';
 
 import {
   tableWithRowSpan,
@@ -29,13 +34,6 @@ import {
   tableForBulkResizeWithNumberCol,
 } from './__fixtures__/resize-documents';
 import { tableWithMinWidthColumnsDocument } from './__fixtures__/table-with-min-width-columns-document';
-
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
-
-import { TableCssClassName } from '../../../plugins/table/types';
 
 BrowserTestCase(
   'Can resize normally with a rowspan in the non last column.',

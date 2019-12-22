@@ -1,18 +1,19 @@
+import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
+import { FormattedMessage } from 'react-intl';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
+import { mountWithIntl, shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import { EmojiProvider } from '@atlaskit/emoji';
 import Tooltip from '@atlaskit/tooltip';
 import { emoji } from '@atlaskit/util-data-test';
-import { mountWithIntl, shallowWithIntl } from '@atlaskit/editor-test-helpers';
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { reaction } from '../../../client/MockReactionsClient';
-import { messages } from '../../../components/i18n';
 import { Reaction } from '../../../components/Reaction';
 import { ReactionPicker } from '../../../components/ReactionPicker';
 import { Props, Reactions } from '../../../components/Reactions';
 import { Trigger } from '../../../components/Trigger';
+import { messages } from '../../../components/i18n';
 import { ReactionStatus } from '../../../types/ReactionStatus';
-import { ReactWrapper } from 'enzyme';
 
 const { getEmojiResourcePromise } = emoji.testData;
 

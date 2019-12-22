@@ -1,15 +1,10 @@
 import { InjectedIntl } from 'react-intl';
-import { Plugin, PluginKey } from 'prosemirror-state';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { Plugin, PluginKey } from 'prosemirror-state';
+
 import { analyticsService } from '../../analytics';
 import { EditorPlugin, Command } from '../../types';
 import { dedupe } from '../../utils';
-import {
-  QuickInsertItem,
-  QuickInsertProvider,
-  QuickInsertHandler,
-} from './types';
-import { find } from './search';
 import {
   analyticsEventKey,
   AnalyticsDispatch,
@@ -19,6 +14,13 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
 } from '../analytics';
+
+import { find } from './search';
+import {
+  QuickInsertItem,
+  QuickInsertProvider,
+  QuickInsertHandler,
+} from './types';
 
 const quickInsertPlugin = (): EditorPlugin => ({
   name: 'quickInsert',

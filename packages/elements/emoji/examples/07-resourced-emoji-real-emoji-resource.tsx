@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+
 import ResourcedEmojiControl, {
   getEmojiConfig,
   getRealEmojiResource,
 } from '../example-helpers/demo-resource-control';
-import { EmojiProvider, OnEmojiProviderChange } from '../src/resource';
 import { ResourcedEmoji } from '../src/element';
+import { EmojiProvider, OnEmojiProviderChange } from '../src/resource';
+import { EmojiDescription, EmojiSearchResult } from '../src/types';
 import { customCategory } from '../src/util/constants';
 import { toEmojiId } from '../src/util/type-helpers';
-import { EmojiDescription, EmojiSearchResult } from '../src/types';
 
 const customFilter = (emoji: EmojiDescription) =>
   emoji.category === customCategory;

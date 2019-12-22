@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   defaultCollectionName,
   mediaPickerAuthProvider,
 } from '@atlaskit/media-test-helpers';
-import { MediaClientConfig } from '@atlaskit/media-core';
-import { FileState, MediaClient, UploadController } from '../src';
-import { FilesWrapper, FileWrapper } from '../example-helpers/styled';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+
+import { FilesWrapper, FileWrapper } from '../example-helpers/styled';
+import { FileState, MediaClient, UploadController } from '../src';
 
 export interface ComponentProps {}
 export interface ComponentState {

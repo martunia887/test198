@@ -1,7 +1,8 @@
-import { FormHeader } from '@atlaskit/form';
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
 import { FormattedMessage } from 'react-intl';
+import { FormHeader } from '@atlaskit/form';
+
 import { ShareHeader } from '../../../components/ShareHeader';
 import { messages } from '../../../i18n';
 

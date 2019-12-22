@@ -1,8 +1,6 @@
 import { createCommand } from '.';
-import {
-  isSelectionMediaSingleNode,
-  getMediaNodeFromSelection,
-} from '../../utils/media-common';
+import { EditorState, Transaction } from 'prosemirror-state';
+
 import {
   ACTION_SUBJECT,
   EVENT_TYPE,
@@ -10,9 +8,12 @@ import {
   ACTION_SUBJECT_ID,
   ACTION,
 } from '../../../analytics';
-import { EditorState, Transaction } from 'prosemirror-state';
-
 import { MediaAltTextActionType } from '../../../analytics/types/media-events';
+import {
+  isSelectionMediaSingleNode,
+  getMediaNodeFromSelection,
+} from '../../utils/media-common';
+
 import {
   OpenMediaAltTextMenu,
   CloseMediaAltTextMenu,

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { act, ReactTestRenderer } from 'react-test-renderer';
 import { doc, p } from '@atlaskit/editor-test-helpers';
-import { createEditorFactory, TestEditor } from './__create-editor-helper';
+
 import EditorActions from '../../../../actions';
+
+import { createEditorFactory, TestEditor } from './__create-editor-helper';
 
 describe('next/Editor', () => {
   const createEditor = createEditorFactory();

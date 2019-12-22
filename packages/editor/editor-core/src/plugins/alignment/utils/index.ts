@@ -1,7 +1,8 @@
-import { findParentNodeOfType } from 'prosemirror-utils';
-import { CellSelection } from 'prosemirror-tables';
-import { AlignmentState } from '../pm-plugins/main';
 import { EditorState } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
+import { findParentNodeOfType } from 'prosemirror-utils';
+
+import { AlignmentState } from '../pm-plugins/main';
 
 export const getActiveAlignment = (
   state: EditorState,

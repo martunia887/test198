@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { DropdownItem } from '@atlaskit/dropdown-menu';
 import Avatar, {
   withPseudoState,
   getProps,
   AvatarClickType,
 } from '@atlaskit/avatar';
+import { DropdownItem } from '@atlaskit/dropdown-menu';
 
 interface Props {
   avatar: Record<string, any>;

@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { WithMediaClientConfigProps } from '@atlaskit/media-client';
 import { ModalSpinner } from '@atlaskit/media-ui';
 import * as colors from '@atlaskit/theme/colors';
-import { WithMediaClientConfigProps } from '@atlaskit/media-client';
-import { MediaViewerProps } from './types';
+
 import { MediaViewerAnalyticsErrorBoundaryProps } from './media-viewer-analytics-error-boundary';
+import { MediaViewerProps } from './types';
 
 export type MediaViewerWithMediaClientConfigProps = WithMediaClientConfigProps<
   MediaViewerProps

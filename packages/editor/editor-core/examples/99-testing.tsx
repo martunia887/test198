@@ -1,11 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Step } from 'prosemirror-transform';
-import { EditorView } from 'prosemirror-view';
 import { IntlProvider, addLocaleData } from 'react-intl';
-import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
-import { EmojiProvider } from '@atlaskit/emoji/resource';
-import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import {
   cardProvider,
@@ -15,17 +11,23 @@ import {
   customInsertMenuItems,
   extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
-import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
+import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
+import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
+import { Step } from 'prosemirror-transform';
+import { EditorView } from 'prosemirror-view';
+
+import { TitleInput } from '../example-helpers/PageElements';
+import { withSidebarContainer } from '../example-helpers/SidebarContainer';
+import mediaMockServer from '../example-helpers/media-mock';
 import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
+import { MountOptions } from '../src/__tests__/visual-regression/_utils';
+
 import { Editor, EditorProps, EventDispatcher } from './../src';
 import ClipboardHelper from './1-clipboard-helper';
 import { SaveAndCancelButtons } from './5-full-page';
-import { TitleInput } from '../example-helpers/PageElements';
-import mediaMockServer from '../example-helpers/media-mock';
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { withSidebarContainer } from '../example-helpers/SidebarContainer';
-import { MountOptions } from '../src/__tests__/visual-regression/_utils';
-import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
 
 function createMediaMockEnableOnce() {
   let enabled = false;

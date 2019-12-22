@@ -1,5 +1,3 @@
-import { MarkdownTransformer } from '../index';
-
 import {
   doc,
   blockquote,
@@ -15,6 +13,7 @@ import {
   th,
   td,
 } from '@atlaskit/editor-test-helpers';
+import { MarkdownTransformer } from '../index';
 
 describe('MarkdownTransformer', () => {
   const transformer = new MarkdownTransformer();

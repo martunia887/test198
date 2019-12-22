@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { colors } from '@atlaskit/theme';
 import { Link, BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import { colors } from '@atlaskit/theme';
+
 import { ProgressTracker, Stage, Stages } from '../src';
 
 const items: Stages = [

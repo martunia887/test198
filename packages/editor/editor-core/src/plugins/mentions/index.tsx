@@ -1,11 +1,14 @@
 import * as React from 'react';
-import uuid from 'uuid';
-import { Schema, Node, Fragment } from 'prosemirror-model';
-import { EditorState, Plugin, PluginKey, StateField } from 'prosemirror-state';
+import { mention } from '@atlaskit/adf-schema';
 import {
   AnalyticsEventPayload,
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
+import {
+  ProviderFactory,
+  ContextIdentifierProvider,
+} from '@atlaskit/editor-common';
+import { MentionItem } from '@atlaskit/mention/item';
 import {
   MentionProvider,
   TeamMentionProvider,
@@ -18,32 +21,16 @@ import {
   TeamMentionHighlight,
   TeamMentionHighlightController,
 } from '@atlaskit/mention/spotlight';
-import { MentionItem } from '@atlaskit/mention/item';
 import { TeamMember } from '@atlaskit/mention/team-resource';
-import { mention } from '@atlaskit/adf-schema';
-import {
-  ProviderFactory,
-  ContextIdentifierProvider,
-} from '@atlaskit/editor-common';
+import { Schema, Node, Fragment } from 'prosemirror-model';
+import { EditorState, Plugin, PluginKey, StateField } from 'prosemirror-state';
+import uuid from 'uuid';
 
 import { analyticsService } from '../../analytics';
-import { EditorPlugin, Command } from '../../types';
 import { Dispatch } from '../../event-dispatcher';
+import { EditorPlugin, Command } from '../../types';
 import { PortalProviderAPI } from '../../ui/PortalProvider';
 import WithPluginState from '../../ui/WithPluginState';
-import {
-  pluginKey as typeAheadPluginKey,
-  PluginState as TypeAheadPluginState,
-  createInitialPluginState,
-} from '../type-ahead/pm-plugins/main';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import ToolbarMention from './ui/ToolbarMention';
-import mentionNodeView from './nodeviews/mention';
-import {
-  buildTypeAheadInsertedPayload,
-  buildTypeAheadCancelPayload,
-  buildTypeAheadRenderedPayload,
-} from './analytics';
 import {
   addAnalytics,
   analyticsPluginKey,
@@ -55,9 +42,23 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
 } from '../analytics';
-import { TypeAheadItem } from '../type-ahead/types';
-import { isTeamStats, isTeamType } from './utils';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { IconMention } from '../quick-insert/assets';
+import {
+  pluginKey as typeAheadPluginKey,
+  PluginState as TypeAheadPluginState,
+  createInitialPluginState,
+} from '../type-ahead/pm-plugins/main';
+import { TypeAheadItem } from '../type-ahead/types';
+
+import {
+  buildTypeAheadInsertedPayload,
+  buildTypeAheadCancelPayload,
+  buildTypeAheadRenderedPayload,
+} from './analytics';
+import mentionNodeView from './nodeviews/mention';
+import ToolbarMention from './ui/ToolbarMention';
+import { isTeamStats, isTeamType } from './utils';
 
 export interface TeamInfoAttrAnalytics {
   teamId: String;

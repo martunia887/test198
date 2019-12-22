@@ -1,4 +1,8 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   createEditorFactory,
   doc,
   mediaSingle,
@@ -6,14 +10,7 @@ import {
   CreateEditorOptions,
   p,
 } from '@atlaskit/editor-test-helpers';
-import {
-  updateAltText,
-  openMediaAltTextMenu,
-} from '../../../../plugins/media/pm-plugins/alt-text/commands';
-import { getFreshMediaProvider } from '../media/_utils';
-import { pluginKey as mediaEditorPluginKey } from '../../../../plugins/media/pm-plugins/media-editor';
 
-import { MediaEditorState } from '../../../../plugins/media/types';
 import {
   EVENT_TYPE,
   ACTION,
@@ -21,9 +18,12 @@ import {
   ACTION_SUBJECT_ID,
 } from '../../../../plugins/analytics';
 import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+  updateAltText,
+  openMediaAltTextMenu,
+} from '../../../../plugins/media/pm-plugins/alt-text/commands';
+import { pluginKey as mediaEditorPluginKey } from '../../../../plugins/media/pm-plugins/media-editor';
+import { MediaEditorState } from '../../../../plugins/media/types';
+import { getFreshMediaProvider } from '../media/_utils';
 
 describe('commands', () => {
   const createEditor = createEditorFactory<MediaEditorState>();

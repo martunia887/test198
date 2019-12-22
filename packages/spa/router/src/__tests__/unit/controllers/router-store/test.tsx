@@ -3,6 +3,9 @@ import { mount, render } from 'enzyme';
 import { defaultRegistry } from 'react-sweet-state';
 import * as historyHelper from 'history';
 
+import { DEFAULT_ACTION } from '../../../../common/constants';
+import { mockRoute } from '../../../../common/mocks';
+import { MatchedRoute, HistoryAction } from '../../../../common/types';
 import { MemoryRouter } from '../../../../controllers/memory-router';
 import { getResourceStore } from '../../../../controllers/resource-store';
 import { createResource } from '../../../../controllers/resource-utils';
@@ -13,9 +16,6 @@ import {
   getRouterState,
 } from '../../../../controllers/router-store';
 import { ResourceSubscriber } from '../../../../controllers/subscribers/resource';
-import { MatchedRoute, HistoryAction } from '../../../../common/types';
-import { DEFAULT_ACTION } from '../../../../common/constants';
-import { mockRoute } from '../../../../common/mocks';
 
 const mockLocation = {
   pathname: '/pathname',

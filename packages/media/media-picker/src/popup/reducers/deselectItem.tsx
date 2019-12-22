@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isDeslectItemAction } from '../actions';
 import { State } from '../domain';
 

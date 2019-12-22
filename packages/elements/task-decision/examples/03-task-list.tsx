@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
-import TaskList from '../src/components/TaskList';
-import TaskItem from '../src/components/TaskItem';
+
 import {
   dumpRef,
   document,
   TaskStateManager,
 } from '../example-helpers/story-utils';
+import TaskItem from '../src/components/TaskItem';
+import TaskList from '../src/components/TaskList';
 
 export default () => (
   <div>

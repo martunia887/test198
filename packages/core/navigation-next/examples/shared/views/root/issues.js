@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { JiraWordmark as JiraWordmarkLogo } from '@atlaskit/logo';
-import { LinkItem } from '../../components';
 
+import { LinkItem } from '../../components';
 import ViewRegistrar from '../common/view-registrar';
 
 const logToConsole = () => console.log('item clicked');

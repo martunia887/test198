@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isRemoveFileFromRecentsAction } from '../actions/removeFileFromRecents';
 import { State } from '../domain';
 

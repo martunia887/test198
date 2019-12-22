@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import Avatar from '@atlaskit/avatar';
 
 import { withContentTheme } from '../../../theme';
+
 import type { ItemAvatarProps } from './types';
 
 class ItemAvatar extends Component<ItemAvatarProps> {

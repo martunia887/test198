@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { typography, fontSize, colors } from '@atlaskit/theme';
-
 import gridSizeTimes from '../../util/gridSizeTimes';
 
 const baseHeading = (size: number, lineHeight: number) => `

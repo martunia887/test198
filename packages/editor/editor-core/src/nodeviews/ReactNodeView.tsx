@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { NodeView, EditorView, Decoration } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
-import { PortalProviderAPI } from '../ui/PortalProvider';
 import { Selection, NodeSelection } from 'prosemirror-state';
+import { NodeView, EditorView, Decoration } from 'prosemirror-view';
 
 import {
   stateKey as SelectionChangePluginKey,
   ReactNodeViewState,
 } from '../plugins/base/pm-plugins/react-nodeview';
+import { PortalProviderAPI } from '../ui/PortalProvider';
 
 export type getPosHandler = getPosHandlerNode | boolean;
 export type getPosHandlerNode = () => number;

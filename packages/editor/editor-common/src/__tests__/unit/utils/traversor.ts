@@ -1,5 +1,5 @@
-import ADFTraversor from '../../../utils/traversor';
 import * as sinon from 'sinon';
+import ADFTraversor from '../../../utils/traversor';
 
 describe('@atlaskit/editor-common traversor utils', () => {
   const doc = {

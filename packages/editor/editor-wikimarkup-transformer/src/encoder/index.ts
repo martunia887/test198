@@ -1,5 +1,8 @@
 import { Node as PMNode } from 'prosemirror-model';
 
+import { Context } from '../interfaces';
+
+import { blockCard } from './nodes/block-card';
 import { blockquote } from './nodes/blockquote';
 import { bulletList } from './nodes/bullet-list';
 import { codeBlock } from './nodes/code-block';
@@ -12,8 +15,6 @@ import { paragraph } from './nodes/paragraph';
 import { rule } from './nodes/rule';
 import { table } from './nodes/table';
 import { unknown } from './nodes/unknown';
-import { blockCard } from './nodes/block-card';
-import { Context } from '../interfaces';
 
 export type MarkEncoder = (text: string, attrs: any) => string;
 export type NodeEncoder = (node: PMNode, opts?: NodeEncoderOpts) => string;

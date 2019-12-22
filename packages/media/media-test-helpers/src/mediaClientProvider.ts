@@ -1,5 +1,6 @@
 import { MediaClient } from '@atlaskit/media-client';
 import { MediaClientConfig } from '@atlaskit/media-core';
+
 import { StoryBookAuthProvider } from './authProvider';
 import { collectionNames } from './collectionNames';
 import { mediaPickerAuthProvider } from './mediaPickerAuthProvider';

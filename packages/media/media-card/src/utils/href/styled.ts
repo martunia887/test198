@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { ComponentClass, AnchorHTMLAttributes } from 'react';
+import styled from 'styled-components';
 
 export const A: ComponentClass<AnchorHTMLAttributes<{}>> = styled.a`
   text-decoration: none;

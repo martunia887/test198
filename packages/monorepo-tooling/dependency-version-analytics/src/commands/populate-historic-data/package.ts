@@ -1,9 +1,11 @@
-import { PackageVersionHistory } from '../../util/get-package-version-history';
 import semver from 'semver';
-import { PopulateHistoricDataFlags } from './types';
+
 import { UpgradeEvent } from '../../types';
-import getPackageVersionHistory from '../../util/get-package-version-history';
 import { createUpgradeEvent, sendAnalytics } from '../../util/analytics';
+import { PackageVersionHistory } from '../../util/get-package-version-history';
+import getPackageVersionHistory from '../../util/get-package-version-history';
+
+import { PopulateHistoricDataFlags } from './types';
 
 export type PopulatePackageFlags = PopulateHistoricDataFlags & {
   since?: string;

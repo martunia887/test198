@@ -1,21 +1,22 @@
-import { expect } from 'chai';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
-import { EditorView } from 'prosemirror-view';
 import { createSchema, doc } from '@atlaskit/adf-schema';
 import { browser } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
+import { expect } from 'chai';
+import { EditorView } from 'prosemirror-view';
+
+import EditorActions from '../../../../../src/actions';
+import { EventDispatcher } from '../../../../../src/event-dispatcher';
+import * as keymaps from '../../../../../src/keymaps';
 import HelpDialog, {
   formatting,
   getComponentFromKeymap,
   getSupportedFormatting,
 } from '../../../../../src/plugins/help-dialog/ui';
-import * as keymaps from '../../../../../src/keymaps';
-import EditorActions from '../../../../../src/actions';
-import { EventDispatcher } from '../../../../../src/event-dispatcher';
 
 const intlProvider = new IntlProvider({ locale: 'en' });
 const { intl } = intlProvider.getChildContext();

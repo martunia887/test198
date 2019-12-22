@@ -1,5 +1,5 @@
-import { Reactions } from '../types/Reactions';
 import { ReactionSummary } from '../types/ReactionSummary';
+import { Reactions } from '../types/Reactions';
 
 export type ReactionRequest<T> = (
   containerAri: string,

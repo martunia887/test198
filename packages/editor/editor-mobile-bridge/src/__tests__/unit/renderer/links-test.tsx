@@ -1,6 +1,7 @@
-import { mount } from 'enzyme';
 import * as React from 'react';
+import { mount } from 'enzyme';
 import { ResolveResponse } from '@atlaskit/smart-card';
+
 import { MobileSmartCardClient } from '../../../providers/cardProvider';
 import MobileRenderer from '../../../renderer/mobile-renderer-element';
 

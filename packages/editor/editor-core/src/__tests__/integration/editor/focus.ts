@@ -1,9 +1,9 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { fullpage, editable, updateEditorProps } from '../_helpers';
 import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
+import { fullpage, editable, updateEditorProps } from '../_helpers';
 
 BrowserTestCase(
   'Should focus the editor when shouldFocus is true',

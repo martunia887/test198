@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
-
-import { AlterProps, BuildProps } from './types';
-
 import { BlockCardResolvedViewProps } from '@atlaskit/media-ui';
+
 import { extractPropsFromObject } from './extractPropsFromObject';
+import { AlterProps, BuildProps } from './types';
 
 export type AlterPropsRepository = AlterProps<BlockCardResolvedViewProps>;
 export type BuildPropsRepository = BuildProps<BlockCardResolvedViewProps>;

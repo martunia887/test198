@@ -1,8 +1,9 @@
+import { getMediaClient } from '@atlaskit/media-client';
 import {
   ServiceConfig,
   utils as serviceUtils,
 } from '@atlaskit/util-service-support';
-import { getMediaClient } from '@atlaskit/media-client';
+
 import {
   EmojiDescription,
   EmojiId,
@@ -12,7 +13,7 @@ import {
   MediaApiToken,
   OptionalEmojiDescription,
 } from '../../types';
-
+import debug from '../../util/logger';
 import {
   buildEmojiDescriptionWithAltRepresentation,
   isMediaRepresentation,
@@ -20,15 +21,14 @@ import {
   convertImageToMediaRepresentation,
   isLoadedMediaEmoji,
 } from '../../util/type-helpers';
-import MediaEmojiCache from './MediaEmojiCache';
 import {
   denormaliseEmojiServiceResponse,
   emojiRequest,
   getAltRepresentation,
 } from '../EmojiUtils';
-import TokenManager from './TokenManager';
 
-import debug from '../../util/logger';
+import MediaEmojiCache from './MediaEmojiCache';
+import TokenManager from './TokenManager';
 
 export interface EmojiUploadResponse {
   emojis: EmojiServiceDescription[];

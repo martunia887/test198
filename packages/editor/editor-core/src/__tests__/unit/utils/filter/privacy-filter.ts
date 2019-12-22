@@ -1,9 +1,10 @@
-import { name } from '../../../../version.json';
-import { JSONDocNode } from '../../../../utils/index';
-import { sanitizeNodeForPrivacy } from '../../../../utils/filter/privacy-filter';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { waitUntil } from '@atlaskit/media-test-helpers';
 import { MentionProvider } from '@atlaskit/mention/types';
+
+import { sanitizeNodeForPrivacy } from '../../../../utils/filter/privacy-filter';
+import { JSONDocNode } from '../../../../utils/index';
+import { name } from '../../../../version.json';
 
 describe(name, () => {
   describe('Utils -> filter -> privacy-filter', () => {

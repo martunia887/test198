@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
+
 import { AsyncCreatableSelect as AsyncCreatable, OptionsType } from '../src';
 
 import { cities } from './common/data';

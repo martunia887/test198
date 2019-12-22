@@ -1,10 +1,4 @@
 import {
-  stateKey as hyperlinkStateKey,
-  HyperlinkState,
-  InsertStatus,
-  LinkAction,
-} from '../../../../../plugins/hyperlink/pm-plugins/main';
-import {
   a,
   doc,
   createEditorFactory,
@@ -15,6 +9,12 @@ import {
   ul,
   li,
 } from '@atlaskit/editor-test-helpers';
+import {
+  stateKey as hyperlinkStateKey,
+  HyperlinkState,
+  InsertStatus,
+  LinkAction,
+} from '../../../../../plugins/hyperlink/pm-plugins/main';
 import { setTextSelection } from '../../../../../utils';
 
 describe('hyperlink', () => {

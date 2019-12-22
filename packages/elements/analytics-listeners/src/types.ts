@@ -1,8 +1,8 @@
-import Logger from './helpers/logger';
 import {
   GasPurePayload,
   GasPureScreenEventPayload,
 } from '@atlaskit/analytics-gas-types';
+import Logger from './helpers/logger';
 
 export type AnalyticsWebClient = {
   sendUIEvent: (event: GasPurePayload) => void;

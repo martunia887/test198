@@ -1,9 +1,9 @@
 import { doc, createEditorFactory, p } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
 
-import { setGapCursorSelection } from '../../../../utils';
 import { Side } from '../../../../plugins/gap-cursor';
 import { pluginKey } from '../../../../plugins/gap-cursor/pm-plugins/main';
+import { setGapCursorSelection } from '../../../../utils';
 
 import {
   blockNodes,

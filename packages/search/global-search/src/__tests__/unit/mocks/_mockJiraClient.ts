@@ -1,5 +1,5 @@
-import { JiraResult } from '../../../model/Result';
 import { JiraClient } from '../../../api/JiraClient';
+import { JiraResult } from '../../../model/Result';
 
 const mockJiraClient = (
   recentPromise: () => Promise<JiraResult[]>,

@@ -1,24 +1,25 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import type { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import type { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import Drawer from '@atlaskit/drawer';
+import { GlobalNav } from '@atlaskit/navigation-next';
 import { NotificationIndicator } from '@atlaskit/notification-indicator';
 import { NotificationLogClient } from '@atlaskit/notification-log-client';
-import { GlobalNav } from '@atlaskit/navigation-next';
-import Drawer from '@atlaskit/drawer';
+
+import generateDefaultConfig from '../../config/default-config';
+import generateProductConfig from '../../config/product-config';
+import type { NavItem } from '../../config/types';
+import NotificationDrawerContents from '../../platform-integration';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version.json';
-import generateDefaultConfig from '../../config/default-config';
-import generateProductConfig from '../../config/product-config';
 import ItemComponent from '../ItemComponent';
 import ScreenTracker from '../ScreenTracker';
-import { analyticsIdMap, fireDrawerDismissedEvents } from './analytics';
-import NotificationDrawerContents from '../../platform-integration';
 
-import type { NavItem } from '../../config/types';
+import { analyticsIdMap, fireDrawerDismissedEvents } from './analytics';
 import type { GlobalNavigationProps, DrawerName } from './types';
 
 const noop = () => {};

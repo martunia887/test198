@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
+import { EditorView } from 'prosemirror-view';
+
+import { EditorActions } from '../src';
+
 import WithEditorActions from './../src/ui/WithEditorActions';
 import {
   default as FullPageExample,
   LOCALSTORAGE_defaultDocKey,
   LOCALSTORAGE_defaultTitleKey,
 } from './5-full-page';
-import { EditorActions } from '../src';
 
 export const SaveAndCancelButtons = (props: {
   editorActions: EditorActions;

@@ -9,10 +9,10 @@ import React, {
   MutableRefObject,
 } from 'react';
 import { uid } from 'react-uid';
-import invariant from 'tiny-invariant';
 import { FieldState } from 'final-form';
 import arrayShallowEqual from 'shallow-equal/arrays';
 import objectShallowEqual from 'shallow-equal/objects';
+import invariant from 'tiny-invariant';
 
 import { FormContext, IsDisabledContext } from './Form';
 import FieldWrapper, { Label, RequiredIndicator } from './styled/Field';

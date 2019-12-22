@@ -1,19 +1,21 @@
 import * as React from 'react';
-import Button from '@atlaskit/button';
-import { CancelableEvent } from '@atlaskit/quick-search';
+import { FormattedMessage } from 'react-intl';
 import {
   withAnalyticsEvents,
   UIAnalyticsEvent,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import { FormattedMessage } from 'react-intl';
+import Button from '@atlaskit/button';
+import { CancelableEvent } from '@atlaskit/quick-search';
+
 import { messages } from '../messages';
-import { getConfluenceAdvancedSearchLink } from './SearchResultsUtil';
+import { fireShowMoreButtonClickEvent } from '../util/analytics-event-helper';
 import {
   CONF_OBJECTS_ITEMS_PER_PAGE,
   CONF_MAX_DISPLAYED_RESULTS,
 } from '../util/experiment-utils';
-import { fireShowMoreButtonClickEvent } from '../util/analytics-event-helper';
+
+import { getConfluenceAdvancedSearchLink } from './SearchResultsUtil';
 
 export interface ShowMoreButtonProps extends WithAnalyticsEventsProps {
   resultLength: number;

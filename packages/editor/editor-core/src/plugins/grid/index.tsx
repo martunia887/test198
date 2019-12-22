@@ -1,20 +1,20 @@
 import * as React from 'react';
-import classnames from 'classnames';
 import { withTheme } from 'styled-components';
-
-import { PluginKey } from 'prosemirror-state';
-import { EditorPlugin } from '../../types';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import {
   akEditorFullPageMaxWidth,
   akEditorBreakoutPadding,
   breakoutWideScaleRatio,
 } from '@atlaskit/editor-common';
+import classnames from 'classnames';
+import { PluginKey } from 'prosemirror-state';
+
+import { EventDispatcher, createDispatch } from '../../event-dispatcher';
+import { EditorPlugin } from '../../types';
+import WithPluginState from '../../ui/WithPluginState';
+import { pluginKey as widthPlugin, WidthPluginState } from '../width/index';
 
 import { GridPluginState, GridType } from './types';
-import { pluginKey as widthPlugin, WidthPluginState } from '../width/index';
-import WithPluginState from '../../ui/WithPluginState';
-import { EventDispatcher, createDispatch } from '../../event-dispatcher';
 
 export const stateKey = new PluginKey('gridPlugin');
 export const GRID_SIZE = 12;

@@ -1,5 +1,3 @@
-import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
-import { fontSize, fontSizeSmall } from '@atlaskit/theme/constants';
 import {
   N800,
   N0,
@@ -9,8 +7,11 @@ import {
   subtleHeading,
   subtleText,
 } from '@atlaskit/theme/colors';
+import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
+import { fontSize, fontSizeSmall } from '@atlaskit/theme/constants';
 import { headingSizes } from '@atlaskit/theme/typography';
 import { CSSObject } from '@emotion/core';
+
 import { Width } from '../types';
 
 const gridSize = gridSizeFn();

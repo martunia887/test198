@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 
 const colorSampleOutlineColor = 'rgba(255, 255, 255, 0.5)';
 

@@ -8,6 +8,7 @@ import RefinementBar, {
   SelectFilter,
   SearchFilter,
 } from '../src';
+
 import { Heading, Pre } from './styled';
 
 export default class AnalyticsEventExample extends React.Component {

@@ -3,9 +3,10 @@
 // > but using @atlaskit/drawer it's not working properly
 
 import * as React from 'react';
-import { AkSearchDrawer } from '@atlaskit/navigation';
 import Drawer from '@atlaskit/drawer';
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
+import { AkSearchDrawer } from '@atlaskit/navigation';
+
 import BasicQuickSearch from './utils/BasicQuickSearch';
 
 type State = {

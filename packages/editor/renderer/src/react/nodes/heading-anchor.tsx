@@ -1,9 +1,10 @@
 import React from 'react';
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import LinkIcon from '@atlaskit/icon/glyph/link';
 import { colors } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
+
 import { headingAnchorLinkMessages } from '../../messages';
 
 export const HeadingAnchorWrapperClassName: string = 'heading-anchor-wrapper';

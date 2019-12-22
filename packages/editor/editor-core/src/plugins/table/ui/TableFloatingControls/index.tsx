@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { EditorView } from 'prosemirror-view';
-import { Selection } from 'prosemirror-state';
 import { browser } from '@atlaskit/editor-common';
-import CornerControls from './CornerControls';
-import RowControls from './RowControls';
-import NumberColumn from './NumberColumn';
-import { isSelectionUpdated } from '../../utils';
+import { Selection } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
 import { hoverRows, selectRow } from '../../commands';
 import { TableColumnOrdering } from '../../types';
+import { isSelectionUpdated } from '../../utils';
+
+import CornerControls from './CornerControls';
+import NumberColumn from './NumberColumn';
+import RowControls from './RowControls';
 
 export interface Props {
   editorView: EditorView;

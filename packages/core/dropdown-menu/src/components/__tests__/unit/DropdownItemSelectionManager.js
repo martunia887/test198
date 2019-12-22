@@ -4,10 +4,9 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import { DropdownItemCheckbox, DropdownItemRadio } from '../../..';
-
+import { selectionCacheContext } from '../../../util/contextNamespace';
 import DropdownItemFocusManager from '../../context/DropdownItemFocusManager';
 import DropdownItemSelectionManager from '../../context/DropdownItemSelectionManager';
-import { selectionCacheContext } from '../../../util/contextNamespace';
 
 describe('dropdown menu - DropdownItemSelectionManager', () => {
   jest.useFakeTimers();

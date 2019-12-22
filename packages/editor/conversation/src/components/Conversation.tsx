@@ -1,9 +1,8 @@
 import * as React from 'react';
-import CommentContainer from '../containers/Comment';
+
 import Comment from '../components/Comment';
-import Editor from './Editor';
-import { Conversation as ConversationType } from '../model';
-import { SharedProps, SendAnalyticsEvent } from './types';
+import CommentContainer from '../containers/Comment';
+import { SuccessHandler } from '../internal/actions';
 import {
   createAnalyticsEvent,
   actionSubjectIds,
@@ -11,7 +10,10 @@ import {
   trackEventActions,
   eventTypes,
 } from '../internal/analytics';
-import { SuccessHandler } from '../internal/actions';
+import { Conversation as ConversationType } from '../model';
+
+import Editor from './Editor';
+import { SharedProps, SendAnalyticsEvent } from './types';
 
 export interface Props extends SharedProps {
   id?: string;

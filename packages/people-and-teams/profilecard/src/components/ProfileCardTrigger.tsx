@@ -1,19 +1,11 @@
 import * as React from 'react';
+import NodeResolver from 'react-node-resolver';
 import { Popper } from '@atlaskit/popper';
 import Portal from '@atlaskit/portal';
 import { layers } from '@atlaskit/theme';
-// @ts-ignore
-import NodeResolver from 'react-node-resolver';
 
-import LoadingState from './LoadingState';
-import Profilecard from './ProfileCard';
-import withOuterListeners from './withOuterListeners';
 import filterActions from '../internal/filterActions';
-
 import { CardElevationWrapper, CardTriggerWrapper } from '../styled/Card';
-
-const CardElevationWrapperWithOuter = withOuterListeners(CardElevationWrapper);
-
 import {
   ProfileCardTriggerProps,
   ProfileCardTriggerState,
@@ -21,6 +13,12 @@ import {
   ProfilecardProps,
   ProfileCardClientData,
 } from '../types';
+
+import LoadingState from './LoadingState';
+import Profilecard from './ProfileCard';
+import withOuterListeners from './withOuterListeners';
+
+const CardElevationWrapperWithOuter = withOuterListeners(CardElevationWrapper);
 
 export const DELAY_MS_SHOW = 800;
 export const DELAY_MS_HIDE = 200;

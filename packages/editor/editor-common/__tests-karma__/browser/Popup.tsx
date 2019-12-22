@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { mount } from 'enzyme';
 import * as sinon from 'sinon';
+import { mount } from 'enzyme';
+import { expect } from 'chai';
 import createStub from 'raf-stub/lib';
-import { browser } from '../../src';
 
+import { browser } from '../../src';
+import Popup from '../../src/ui/Popup';
 import {
   isBody,
   findOverflowScrollParent,
@@ -12,8 +13,6 @@ import {
   getHorizontalPlacement,
   calculatePosition,
 } from '../../src/ui/Popup/utils';
-
-import Popup from '../../src/ui/Popup';
 
 describe('Popup', () => {
   describe('Utils', () => {

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import { colors } from '@atlaskit/theme';
 import styled from 'styled-components';
+import { colors } from '@atlaskit/theme';
 
 import {
   BitbucketIcon,

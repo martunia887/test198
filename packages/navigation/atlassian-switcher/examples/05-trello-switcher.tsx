@@ -4,15 +4,17 @@ import {
   mockAvailableProductsEndpoint,
   mockEndpoints,
 } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
+
+import AtlassianSwitcher from '../src';
+import { getAvailableProductsUrl } from '../src/providers/trello/products-provider';
 import {
   AvailableProductsResponse,
   AvailableSite,
   WorklensProductType,
 } from '../src/types';
-import AtlassianSwitcher from '../src';
 import { Environment } from '../src/utils/environment';
-import { getAvailableProductsUrl } from '../src/providers/trello/products-provider';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 import { FakeTrelloChrome } from './helpers/FakeTrelloChrome';
 
 const mockEndpointsDataTransformer: DataTransformer = originalMockData => {

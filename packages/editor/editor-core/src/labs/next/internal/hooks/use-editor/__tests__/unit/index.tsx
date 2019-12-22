@@ -1,6 +1,6 @@
 import { EditorView } from 'prosemirror-view';
-import { createMountUseEffect } from './__hookHelpers';
 import { useHandleEditorUnmount } from '../../index';
+import { createMountUseEffect } from './__hookHelpers';
 describe('useHandleEditorUnmount', () => {
   let mockEditorView: EditorView;
   const mountUseEffect = createMountUseEffect();

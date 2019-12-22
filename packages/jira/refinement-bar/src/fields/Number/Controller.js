@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import FieldController from '../Controller';
 import { isObject, objectMap } from '../../utils';
+import FieldController from '../Controller';
 
 const validateInput = (label, value, name) => {
   let result = null;

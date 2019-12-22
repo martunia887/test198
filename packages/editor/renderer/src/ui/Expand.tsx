@@ -1,17 +1,18 @@
 import * as React from 'react';
+import { injectIntl, InjectedIntlProps, defineMessages } from 'react-intl';
 import styled from 'styled-components';
-import { gridSize, fontSize, colors } from '@atlaskit/theme';
-import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
-import Tooltip from '@atlaskit/tooltip';
 import {
   expandMessages,
   sharedExpandStyles,
   ExpandIconWrapper,
   ExpandLayoutWrapper,
 } from '@atlaskit/editor-common';
-import { AnalyticsEventPayload, PLATFORM, MODE } from '../analytics/events';
+import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
+import { gridSize, fontSize, colors } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
+
 import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../analytics/enums';
-import { injectIntl, InjectedIntlProps, defineMessages } from 'react-intl';
+import { AnalyticsEventPayload, PLATFORM, MODE } from '../analytics/events';
 
 const messages = defineMessages({
   ...expandMessages,

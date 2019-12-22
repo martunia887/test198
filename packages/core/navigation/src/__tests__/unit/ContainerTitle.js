@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
 import { toClass } from 'recompose';
+
 import ContainerTitle from '../../components/js/ContainerTitle';
+
 import { mountWithRootTheme } from './_theme-util';
 
 describe('<ContainerTitle />', () => {

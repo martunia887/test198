@@ -1,8 +1,8 @@
 // TODO: Fix imports
 // import { generateTheme, GenerateThemeArgs } from '../../../';
 
-import { GenerateThemeArgs } from '../../../theme/types';
 import { generateTheme } from '../../../theme/themeGenerator';
+import { GenerateThemeArgs } from '../../../theme/types';
 import { colorSchemes, themes } from './_theme-data';
 
 type Component =

@@ -1,7 +1,8 @@
-import { name } from '../../../../version.json';
-import { createSchema } from '../../../../schema/create-schema';
-import { toHTML, fromHTML, textWithMarks } from '../../../../../test-helpers';
 import { Node } from 'prosemirror-model';
+
+import { toHTML, fromHTML, textWithMarks } from '../../../../../test-helpers';
+import { createSchema } from '../../../../schema/create-schema';
+import { name } from '../../../../version.json';
 
 const href = 'http://atlassian.com';
 const href2 = 'http://atlassian.com/test';

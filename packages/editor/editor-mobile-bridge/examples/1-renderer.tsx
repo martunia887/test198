@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+import { MentionProvider } from '@atlaskit/mention/types';
 
 import Renderer from './../src/renderer/mobile-renderer-element';
-import { MentionProvider } from '@atlaskit/mention/types';
 
 export const Wrapper: any = styled.div`
   position: absolute;

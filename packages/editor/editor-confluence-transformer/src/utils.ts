@@ -1,3 +1,4 @@
+import { normalizeHexColor } from '@atlaskit/adf-schema';
 import {
   Fragment,
   Mark,
@@ -6,7 +7,6 @@ import {
   MarkType,
 } from 'prosemirror-model';
 
-import { normalizeHexColor } from '@atlaskit/adf-schema';
 import { AC_XMLNS } from './encode-cxhtml';
 import { Macro } from './types';
 

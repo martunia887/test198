@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { colors } from '@atlaskit/theme';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
+import { colors } from '@atlaskit/theme';
 
-import BookIcon from '../glyph/book';
-import ArrowUpIcon from '../glyph/arrow-up';
 import ArrowDownIcon from '../glyph/arrow-down';
 import ArrowLeftIcon from '../glyph/arrow-left';
 import ArrowRightIcon from '../glyph/arrow-right';
+import ArrowUpIcon from '../glyph/arrow-up';
+import BookIcon from '../glyph/book';
 
 const ColorDiv = styled.div<{ isColorFlipped: boolean }>`
   align-items: center;

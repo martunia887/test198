@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
-import { drawerBackIconSize } from '../../utils/drawer-style-variables';
 import { getProvided } from '../../theme/util';
+import { drawerBackIconSize } from '../../utils/drawer-style-variables';
 
 const DrawerBackIconOuter = styled.div`
   background-color: ${({ theme }) =>

@@ -1,8 +1,9 @@
 // @flow
 import React, { PureComponent } from 'react';
-import { Label } from '@atlaskit/field-base';
 import Button from '@atlaskit/button';
+import { Label } from '@atlaskit/field-base';
 import Item, { ItemGroup } from '@atlaskit/item';
+
 import DropList from '../src';
 
 type State = {|

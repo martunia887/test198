@@ -1,6 +1,6 @@
 import React from 'react';
-import RendererDemo from './helper/RendererDemo';
 import { Provider, Client } from '@atlaskit/smart-card';
+import RendererDemo from './helper/RendererDemo';
 
 const myComment = {
   version: 1,

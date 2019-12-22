@@ -6,9 +6,9 @@ import EmojiFrequentIcon from '@atlaskit/icon/glyph/emoji/frequent';
 import EmojiNatureIcon from '@atlaskit/icon/glyph/emoji/nature';
 import EmojiObjectsIcon from '@atlaskit/icon/glyph/emoji/objects';
 import EmojiPeopleIcon from '@atlaskit/icon/glyph/emoji/people';
+import EmojiProductivityIcon from '@atlaskit/icon/glyph/emoji/productivity';
 import EmojiSymbolsIcon from '@atlaskit/icon/glyph/emoji/symbols';
 import EmojiTravelIcon from '@atlaskit/icon/glyph/emoji/travel';
-import EmojiProductivityIcon from '@atlaskit/icon/glyph/emoji/productivity';
 
 import { CategoryDescription } from '../../types';
 import {

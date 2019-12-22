@@ -1,6 +1,6 @@
-import { OperationalAEP, AnalyticsEventPayloadWithChannel } from './events';
-import { ACTION, ACTION_SUBJECT } from './enums';
 import { SimplifiedNode } from '../../../utils/document-logger';
+import { ACTION, ACTION_SUBJECT } from './enums';
+import { OperationalAEP, AnalyticsEventPayloadWithChannel } from './events';
 
 type InvalidTransactionErrorAEP = OperationalAEP<
   ACTION.DISPATCHED_INVALID_TRANSACTION,

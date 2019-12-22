@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { MediaFile } from '../../types';
 
 export const GET_PREVIEW = 'GET_PREVIEW';

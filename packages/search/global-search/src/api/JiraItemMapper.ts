@@ -1,5 +1,4 @@
 import uuid from 'uuid';
-
 import {
   ResultType,
   AnalyticsType,
@@ -7,7 +6,6 @@ import {
   ContentType,
   JiraProjectType,
 } from '../model/Result';
-
 import { JiraItem, JiraItemV1, JiraItemV2, JiraItemAttributes } from './types';
 
 export const mapJiraItemToResult = (analyticsType: AnalyticsType) => (

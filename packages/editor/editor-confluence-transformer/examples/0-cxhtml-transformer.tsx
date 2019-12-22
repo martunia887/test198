@@ -1,7 +1,7 @@
-import styled from 'styled-components';
 import * as React from 'react';
 import { Component } from 'react';
-import { pd } from 'pretty-data';
+import styled from 'styled-components';
+import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import {
   Editor,
@@ -9,15 +9,16 @@ import {
   WithEditorActions,
   EditorActions,
 } from '@atlaskit/editor-core';
+import { TitleInput } from '@atlaskit/editor-core/example-helpers/PageElements';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
   macroProvider,
 } from '@atlaskit/editor-test-helpers';
-import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
-import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Spinner from '@atlaskit/spinner';
-import { TitleInput } from '@atlaskit/editor-core/example-helpers/PageElements';
+import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
+import { pd } from 'pretty-data';
+import { Node } from 'prosemirror-model';
 
 import {
   CODE_MACRO,
@@ -31,7 +32,6 @@ import {
   DATE,
 } from '../example-helpers/cxhtml-test-data';
 import { ConfluenceTransformer } from '../src';
-import { Node } from 'prosemirror-model';
 
 export const Content = styled.div`
   padding: 0 20px;

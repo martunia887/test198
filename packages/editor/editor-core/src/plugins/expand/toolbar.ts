@@ -1,10 +1,11 @@
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 
 import commonMessages from '../../messages';
+import { hoverDecoration } from '../base/pm-plugins/decoration';
 import { FloatingToolbarHandler } from '../floating-toolbar/types';
+
 import { deleteExpand } from './commands';
 import { getPluginState } from './pm-plugins/main';
-import { hoverDecoration } from '../base/pm-plugins/decoration';
 
 export const getToolbarConfig: FloatingToolbarHandler = (
   state,

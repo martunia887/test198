@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
-import { AtlassianIcon } from '@atlaskit/logo';
 import Lorem from 'react-lorem-component';
+import { AtlassianIcon } from '@atlaskit/logo';
 import Page from '@atlaskit/page';
+
 import Navigation, { AkContainerTitle } from '../../../src';
+
 import RouterLinkComponent from './RouterLinkComponent';
 import RouterLinkItem from './RouterLinkItem';
 

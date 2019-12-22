@@ -1,7 +1,16 @@
 import { Component } from 'react';
-import { start, end } from 'perf-marks';
+import {
+  TRACK_EVENT_TYPE,
+  OPERATIONAL_EVENT_TYPE,
+  GasPurePayload,
+  GasCorePayload,
+} from '@atlaskit/analytics-gas-types';
+import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 import { MediaClient } from '@atlaskit/media-client';
+import { start, end } from 'perf-marks';
+
 import { UploadService } from '../service/types';
+import { UploadServiceImpl } from '../service/uploadServiceImpl';
 import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
@@ -13,18 +22,11 @@ import {
   UploadParams,
   MediaFile,
 } from '../types';
-import { UploadComponent } from './component';
-import { UploadServiceImpl } from '../service/uploadServiceImpl';
-import { LocalUploadConfig } from './types';
-import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
-import {
-  TRACK_EVENT_TYPE,
-  OPERATIONAL_EVENT_TYPE,
-  GasPurePayload,
-  GasCorePayload,
-} from '@atlaskit/analytics-gas-types';
 import { name as packageName } from '../version.json';
+
+import { UploadComponent } from './component';
 import { ANALYTICS_MEDIA_CHANNEL } from './media-picker-analytics-error-boundary';
+import { LocalUploadConfig } from './types';
 
 export type LocalUploadComponentBaseProps = {
   mediaClient: MediaClient;

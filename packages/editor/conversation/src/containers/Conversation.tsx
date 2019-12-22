@@ -1,13 +1,12 @@
 import * as React from 'react';
+import { Provider, connect, Dispatch } from 'react-redux';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import { CommentAction as AkCommentAction } from '@atlaskit/comment';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { Editor as AkEditor, EditorProps } from '@atlaskit/editor-core';
-import { CommentAction as AkCommentAction } from '@atlaskit/comment';
-import { Provider, connect, Dispatch } from 'react-redux';
-import Conversation, { Props as BaseProps } from '../components/Conversation';
-import { ResourceProvider } from '../api/ConversationResource';
-import { Comment as CommentType } from '../model/Comment';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 
+import { ResourceProvider } from '../api/ConversationResource';
+import Conversation, { Props as BaseProps } from '../components/Conversation';
 import {
   addComment,
   updateComment,
@@ -20,9 +19,10 @@ import {
   saveDraft,
 } from '../internal/actions';
 import { getComments, getConversation, getUser } from '../internal/selectors';
-import { uuid } from '../internal/uuid';
 import { State } from '../internal/store';
+import { uuid } from '../internal/uuid';
 import { User } from '../model';
+import { Comment as CommentType } from '../model/Comment';
 
 export interface Props extends BaseProps {
   localId: string;

@@ -1,10 +1,10 @@
 import React from 'react';
+import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import { AkCustomDrawer } from '@atlaskit/navigation';
 
-import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
-import DefaultNav from './navigations/Default';
-
 import { AtlaskitIcon } from '../../components/AtlaskitIcon';
+
+import DefaultNav from './navigations/Default';
 
 export type Props = {
   closeDrawer: (e: React.MouseEvent<HTMLElement>) => void;

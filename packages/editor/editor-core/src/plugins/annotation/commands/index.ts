@@ -1,5 +1,5 @@
-import { Command } from '../../../types';
 import { INLINE_COMMENT } from '@atlaskit/adf-schema';
+import { Command } from '../../../types';
 
 export const removeInlineCommentNearSelection = (id: string): Command => (
   state,

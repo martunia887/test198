@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { borderRadius, colors, fontSize } from '@atlaskit/theme';
+import { tableBackgroundBorderColor } from '@atlaskit/adf-schema';
 import {
   browser,
   tableMarginTop,
@@ -13,9 +13,10 @@ import {
   akMediaSingleResizeZIndex,
   tableCellBorderWidth,
 } from '@atlaskit/editor-common';
+import { borderRadius, colors, fontSize } from '@atlaskit/theme';
+
 import { scrollbarStyles } from '../../../ui/styles';
 import { TableCssClassName as ClassName, RESIZE_HANDLE_AREA_DECORATION_GAP } from '../types';
-import { tableBackgroundBorderColor } from '@atlaskit/adf-schema';
 
 const {
   N40A,

@@ -1,4 +1,5 @@
 import { uuid } from '@atlaskit/adf-schema';
+import { autoJoin, chainCommands } from 'prosemirror-commands';
 import { keymap } from 'prosemirror-keymap';
 import { Node, Schema, Fragment, ResolvedPos, Slice } from 'prosemirror-model';
 import {
@@ -8,15 +9,13 @@ import {
   TextSelection,
 } from 'prosemirror-state';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
-import { insertTaskDecisionWithAnalytics } from '../commands';
-import { TaskDecisionListType } from '../types';
-import { autoJoin, chainCommands } from 'prosemirror-commands';
+
+import { Command } from '../../../types';
 import {
   filter,
   isEmptySelectionAtEnd,
   isEmptySelectionAtStart,
 } from '../../../utils/commands';
-import { Command } from '../../../types';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -28,7 +27,10 @@ import {
   AnalyticsEventPayload,
   withAnalytics,
 } from '../../analytics';
+import { insertTaskDecisionWithAnalytics } from '../commands';
+import { TaskDecisionListType } from '../types';
 
+import { liftSelection, wrapSelectionInTaskList, joinAtCut } from './commands';
 import {
   isInsideTaskOrDecisionItem,
   isActionOrDecisionList,
@@ -41,8 +43,6 @@ import {
   liftBlock,
   subtreeHeight,
 } from './helpers';
-
-import { liftSelection, wrapSelectionInTaskList, joinAtCut } from './commands';
 
 const indentationAnalytics = (
   curIndentLevel: number,

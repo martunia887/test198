@@ -1,6 +1,6 @@
 import { Action } from 'redux';
-import { isEditorCloseAction } from '../../actions/editorClose';
 import { buttonClickPayload, HandlerResult } from '.';
+import { isEditorCloseAction } from '../../actions/editorClose';
 
 export default (action: Action): HandlerResult => {
   if (isEditorCloseAction(action)) {

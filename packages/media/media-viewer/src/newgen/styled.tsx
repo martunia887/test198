@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { MediaType } from '@atlaskit/media-client';
-import { layers, borderRadius } from '@atlaskit/theme/constants';
+import { ellipsis, hideControlsClassName } from '@atlaskit/media-ui';
 import {
   Y200,
   P200,
@@ -10,7 +10,7 @@ import {
   DN400,
   N0,
 } from '@atlaskit/theme/colors';
-import { ellipsis, hideControlsClassName } from '@atlaskit/media-ui';
+import { layers, borderRadius } from '@atlaskit/theme/constants';
 
 const overlayZindex = layers.modal() + 10;
 const sidebarWidth = 350;

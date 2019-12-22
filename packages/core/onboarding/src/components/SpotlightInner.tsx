@@ -1,16 +1,18 @@
 import React from 'react';
-import { layers } from '@atlaskit/theme/constants';
-import Portal from '@atlaskit/portal';
-import ScrollLock from 'react-scrolllock';
 import NodeResovler from 'react-node-resolver';
-import scrollIntoView from 'scroll-into-view-if-needed';
+import ScrollLock from 'react-scrolllock';
+import Portal from '@atlaskit/portal';
+import { layers } from '@atlaskit/theme/constants';
 import { canUseDOM } from 'exenv';
+import scrollIntoView from 'scroll-into-view-if-needed';
+
+import { ElementBox, ElementBoundingBox } from '../utils/use-element-box';
+
 import { Fade } from './Animation';
 import Clone from './Clone';
+import { Props as SpotlightProps } from './Spotlight';
 import SpotlightDialog from './SpotlightDialog';
 import { SpotlightTransitionConsumer } from './SpotlightTransition';
-import { Props as SpotlightProps } from './Spotlight';
-import { ElementBox, ElementBoundingBox } from '../utils/use-element-box';
 
 export interface Props extends SpotlightProps {
   /** the spotlight tagert dom element */

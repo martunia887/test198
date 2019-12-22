@@ -1,4 +1,3 @@
-import { MarkdownSerializer, marks, nodes } from '../../serializer';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   p,
@@ -12,6 +11,7 @@ import {
   ol,
   li,
 } from '@atlaskit/editor-test-helpers';
+import { MarkdownSerializer, marks, nodes } from '../../serializer';
 
 const markdownSerializer = new MarkdownSerializer(nodes, marks);
 

@@ -1,6 +1,7 @@
-import { DecorationSet, Decoration } from 'prosemirror-view';
 import { ResolvedPos, Node } from 'prosemirror-model';
 import { PluginKey, Plugin, EditorState, Transaction } from 'prosemirror-state';
+import { DecorationSet, Decoration } from 'prosemirror-view';
+
 import { ZeroWidthSpace } from '../../../utils';
 
 export const inlineCursorTargetStateKey = new PluginKey(

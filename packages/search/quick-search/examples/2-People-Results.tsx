@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Avatar from '@atlaskit/avatar';
-import { getPersonAvatarUrl } from './utils/mockData';
+
 import { PersonResult, ResultItemGroup } from '../src';
+
+import { getPersonAvatarUrl } from './utils/mockData';
 
 const defaultProps = {
   resultId: 'result_id',

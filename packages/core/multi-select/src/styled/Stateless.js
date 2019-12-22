@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { gridSize, fontSize } from '@atlaskit/theme/constants';
 import { placeholderText } from '@atlaskit/theme/colors';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
 
 const lineHeightDefault = (gridSize() * 2) / fontSize();
 

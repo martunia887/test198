@@ -1,5 +1,7 @@
 import { Color as StatusColor } from '@atlaskit/status/element';
-import { EditorBridges, EditorPluginBridges } from './index';
+
+import { sendToBridge } from '../../bridge-utils';
+
 import {
   MentionBridge,
   TextFormattingBridge,
@@ -12,8 +14,7 @@ import {
   UndoRedoBridge,
   AnalyticsBridge,
 } from './bridge';
-
-import { sendToBridge } from '../../bridge-utils';
+import { EditorBridges, EditorPluginBridges } from './index';
 
 export default class AndroidBridge implements NativeBridge {
   mentionBridge: MentionBridge;

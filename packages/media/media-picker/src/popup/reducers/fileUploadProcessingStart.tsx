@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isFileUploadProcessingStartAction } from '../actions/fileUploadProcessingStart';
 import { State } from '../domain';
 

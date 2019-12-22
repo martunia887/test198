@@ -2,32 +2,32 @@ import * as React from 'react';
 import { ReactInstance } from 'react';
 import * as ReactDOM from 'react-dom';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
-import { EditorView } from 'prosemirror-view';
-import { Node as PMNode } from 'prosemirror-model';
-import { EditorState } from 'prosemirror-state';
-import AddIcon from '@atlaskit/icon/glyph/editor/add';
-import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
-import TableIcon from '@atlaskit/icon/glyph/editor/table';
-import EditorImageIcon from '@atlaskit/icon/glyph/editor/image';
-import CodeIcon from '@atlaskit/icon/glyph/editor/code';
-import InfoIcon from '@atlaskit/icon/glyph/editor/info';
-import MentionIcon from '@atlaskit/icon/glyph/editor/mention';
-import TaskIcon from '@atlaskit/icon/glyph/editor/task';
-import DecisionIcon from '@atlaskit/icon/glyph/editor/decision';
-import QuoteIcon from '@atlaskit/icon/glyph/quote';
-import EditorMoreIcon from '@atlaskit/icon/glyph/editor/more';
-import LinkIcon from '@atlaskit/icon/glyph/editor/link';
-import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
-import DateIcon from '@atlaskit/icon/glyph/editor/date';
-import StatusIcon from '@atlaskit/icon/glyph/status';
-import ExpandNodeIcon from '@atlaskit/icon/glyph/chevron-right-circle';
-import PlaceholderTextIcon from '@atlaskit/icon/glyph/media-services/text';
-import LayoutTwoEqualIcon from '@atlaskit/icon/glyph/editor/layout-two-equal';
-import HorizontalRuleIcon from '@atlaskit/icon/glyph/editor/horizontal-rule';
+import { Popup, akEditorMenuZIndex } from '@atlaskit/editor-common';
 import { EmojiPicker as AkEmojiPicker } from '@atlaskit/emoji/picker';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { EmojiId } from '@atlaskit/emoji/types';
-import { Popup, akEditorMenuZIndex } from '@atlaskit/editor-common';
+import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
+import ExpandNodeIcon from '@atlaskit/icon/glyph/chevron-right-circle';
+import AddIcon from '@atlaskit/icon/glyph/editor/add';
+import CodeIcon from '@atlaskit/icon/glyph/editor/code';
+import DateIcon from '@atlaskit/icon/glyph/editor/date';
+import DecisionIcon from '@atlaskit/icon/glyph/editor/decision';
+import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
+import HorizontalRuleIcon from '@atlaskit/icon/glyph/editor/horizontal-rule';
+import EditorImageIcon from '@atlaskit/icon/glyph/editor/image';
+import InfoIcon from '@atlaskit/icon/glyph/editor/info';
+import LayoutTwoEqualIcon from '@atlaskit/icon/glyph/editor/layout-two-equal';
+import LinkIcon from '@atlaskit/icon/glyph/editor/link';
+import MentionIcon from '@atlaskit/icon/glyph/editor/mention';
+import EditorMoreIcon from '@atlaskit/icon/glyph/editor/more';
+import TableIcon from '@atlaskit/icon/glyph/editor/table';
+import TaskIcon from '@atlaskit/icon/glyph/editor/task';
+import PlaceholderTextIcon from '@atlaskit/icon/glyph/media-services/text';
+import QuoteIcon from '@atlaskit/icon/glyph/quote';
+import StatusIcon from '@atlaskit/icon/glyph/status';
+import { Node as PMNode } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 
 import EditorActions from '../../../../actions';
 import {
@@ -43,6 +43,7 @@ import {
   renderTooltipContent,
 } from '../../../../keymaps';
 import { InsertMenuCustomItem, CommandDispatch } from '../../../../types';
+import { Command } from '../../../../types';
 import DropdownMenu from '../../../../ui/DropdownMenu';
 import ToolbarButton from '../../../../ui/ToolbarButton';
 import {
@@ -51,20 +52,6 @@ import {
   ExpandIconWrapper,
   Shortcut,
 } from '../../../../ui/styles';
-import { BlockType } from '../../../block-type/types';
-import { MacroProvider } from '../../../macro/types';
-import { createTable } from '../../../table/commands';
-import { insertDate, openDatePicker } from '../../../date/actions';
-import { showPlaceholderFloatingToolbar } from '../../../placeholder-text/actions';
-import { createHorizontalRule } from '../../../rule/pm-plugins/input-rule';
-import { TriggerWrapper } from './styles';
-import { insertLayoutColumnsWithAnalytics } from '../../../layout/actions';
-import { insertTaskDecision } from '../../../tasks-and-decisions/commands';
-import { insertExpand } from '../../../expand/commands';
-import { Command } from '../../../../types';
-import { showLinkToolbar } from '../../../hyperlink/commands';
-import { insertMentionQuery } from '../../../mentions/commands/insert-mention-query';
-import { updateStatusWithAnalytics } from '../../../status/actions';
 import {
   withAnalytics as commandWithAnalytics,
   ACTION,
@@ -74,8 +61,22 @@ import {
   ACTION_SUBJECT_ID,
   DispatchAnalyticsEvent,
 } from '../../../analytics';
-import { insertEmoji } from '../../../emoji/commands/insert-emoji';
+import { BlockType } from '../../../block-type/types';
 import { DropdownItem } from '../../../block-type/ui/ToolbarBlockType';
+import { insertDate, openDatePicker } from '../../../date/actions';
+import { insertEmoji } from '../../../emoji/commands/insert-emoji';
+import { insertExpand } from '../../../expand/commands';
+import { showLinkToolbar } from '../../../hyperlink/commands';
+import { insertLayoutColumnsWithAnalytics } from '../../../layout/actions';
+import { MacroProvider } from '../../../macro/types';
+import { insertMentionQuery } from '../../../mentions/commands/insert-mention-query';
+import { showPlaceholderFloatingToolbar } from '../../../placeholder-text/actions';
+import { createHorizontalRule } from '../../../rule/pm-plugins/input-rule';
+import { updateStatusWithAnalytics } from '../../../status/actions';
+import { createTable } from '../../../table/commands';
+import { insertTaskDecision } from '../../../tasks-and-decisions/commands';
+
+import { TriggerWrapper } from './styles';
 
 export const messages = defineMessages({
   action: {

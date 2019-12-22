@@ -1,12 +1,14 @@
 import * as React from 'react';
+import { ComponentClass } from 'react';
 import { MediaClient, FileState } from '@atlaskit/media-client';
+
 import { Outcome } from '../../domain';
 import { createError, MediaViewerError } from '../../error';
 import { Spinner } from '../../loading';
-import { Props as RendererProps } from './pdfRenderer';
-import { ComponentClass } from 'react';
-import { BaseViewer } from '../base-viewer';
 import { getObjectUrlFromFileState } from '../../utils/getObjectUrlFromFileState';
+import { BaseViewer } from '../base-viewer';
+
+import { Props as RendererProps } from './pdfRenderer';
 
 const moduleLoader = () =>
   import(

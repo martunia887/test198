@@ -1,10 +1,16 @@
 import * as React from 'react';
+import { InjectedIntl } from 'react-intl';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import LinkIcon from '@atlaskit/icon/glyph/editor/link';
 import OpenIcon from '@atlaskit/icon/glyph/shortcut';
 import { EditorState } from 'prosemirror-state';
-import { InjectedIntl } from 'react-intl';
-import { ProviderFactory } from '@atlaskit/editor-common';
+
+import { linkToolbarMessages } from '../../../messages';
 import { Command } from '../../../types';
+import {
+  RECENT_SEARCH_HEIGHT_IN_PX,
+  RECENT_SEARCH_WIDTH_IN_PX,
+} from '../../../ui/RecentSearch/ToolbarComponents';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -23,13 +29,8 @@ import {
   unlink,
 } from '../commands/linking';
 import { getMediaLinkingState, MediaLinkingState } from '../pm-plugins/linking';
-import { linkToolbarMessages } from '../../../messages';
-import MediaLinkingToolbar from '../ui/MediaLinkingToolbar';
-import {
-  RECENT_SEARCH_HEIGHT_IN_PX,
-  RECENT_SEARCH_WIDTH_IN_PX,
-} from '../../../ui/RecentSearch/ToolbarComponents';
 import { MediaToolbarBaseConfig } from '../types';
+import MediaLinkingToolbar from '../ui/MediaLinkingToolbar';
 
 export function shouldShowMediaLinkToolbar(editorState: EditorState): boolean {
   const mediaLinkingState = getMediaLinkingState(editorState);

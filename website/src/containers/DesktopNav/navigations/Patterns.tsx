@@ -1,8 +1,9 @@
 import React from 'react';
 import CodeIcon from '@atlaskit/icon/glyph/code';
+
 import { Directory } from '../../../types';
-import renderNav from '../utils/renderNav';
 import buildNavGroups from '../utils/buildNavGroups';
+import renderNav from '../utils/renderNav';
 
 export type PatternsNavProps = {
   pathname: string;

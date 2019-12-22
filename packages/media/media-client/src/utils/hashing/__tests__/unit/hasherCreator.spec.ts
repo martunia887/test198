@@ -1,9 +1,9 @@
 jest.mock('../../simpleHasher');
 jest.mock('../../workerHasher');
 
+import { createHasher, destroyHasher } from '../../hasherCreator';
 import { SimpleHasher } from '../../simpleHasher';
 import { WorkerHasher } from '../../workerHasher';
-import { createHasher, destroyHasher } from '../../hasherCreator';
 
 describe('createHasher', () => {
   const SimpleHasherStub: jest.Mock<SimpleHasher> = SimpleHasher as any;

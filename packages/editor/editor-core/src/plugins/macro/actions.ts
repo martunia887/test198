@@ -1,18 +1,19 @@
-import { EditorState, NodeSelection } from 'prosemirror-state';
-import { Node as PmNode } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
-import { MacroProvider, MacroAttributes } from './types';
-import { pluginKey } from './';
-import assert from 'assert';
 import { getValidNode } from '@atlaskit/editor-common';
+import assert from 'assert';
+import { Node as PmNode } from 'prosemirror-model';
+import { EditorState, NodeSelection } from 'prosemirror-state';
 import {
   safeInsert,
   replaceSelectedNode,
   replaceParentNodeOfType,
 } from 'prosemirror-utils';
-import { CommandDispatch } from '../../types';
+import { EditorView } from 'prosemirror-view';
 
+import { CommandDispatch } from '../../types';
 import { normaliseNestedLayout } from '../../utils';
+
+import { pluginKey } from './';
+import { MacroProvider, MacroAttributes } from './types';
 
 export const insertMacroFromMacroBrowser = (
   macroProvider: MacroProvider,

@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { N40A, N30 } from '@atlaskit/theme/colors';
+
 import { fadeIn } from '../../../mixins';
 
 const borderRadius = `border-radius: 3px 3px 0 0;`;

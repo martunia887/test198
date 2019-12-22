@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+
+import { treeWithTwoBranches } from '../mockdata/treeWithTwoBranches';
 import Tree, {
   mutateTree,
   moveItemOnTree,
@@ -10,7 +12,6 @@ import Tree, {
   TreeSourcePosition,
   TreeDestinationPosition,
 } from '../src';
-import { treeWithTwoBranches } from '../mockdata/treeWithTwoBranches';
 
 const PADDING_PER_LEVEL = 16;
 

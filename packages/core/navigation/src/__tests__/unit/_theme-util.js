@@ -1,14 +1,15 @@
 // @flow
-import PropTypes from 'prop-types';
 import React, { type Node } from 'react';
 import { mount, shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import PropTypes from 'prop-types';
 import { ThemeProvider } from 'styled-components';
 import { itemThemeNamespace } from '@atlaskit/item';
-import { prefix } from '../../theme/util';
+import Adapter from 'enzyme-adapter-react-16';
+
+import createItemTheme from '../../theme/map-navigation-theme-to-item-theme';
 import * as presets from '../../theme/presets';
 import type { RootTheme, Provided } from '../../theme/types';
-import createItemTheme from '../../theme/map-navigation-theme-to-item-theme';
+import { prefix } from '../../theme/util';
 
 configure({ adapter: new Adapter() });
 

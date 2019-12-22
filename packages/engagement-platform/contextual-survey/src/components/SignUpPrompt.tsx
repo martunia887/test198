@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { useState, useCallback } from 'react';
-import { jsx, css } from '@emotion/core';
 import Button from '@atlaskit/button';
 import { fontSize, gridSize } from '@atlaskit/theme';
+import { jsx, css } from '@emotion/core';
 
 import SuccessContainer from './SuccessContainer';
 

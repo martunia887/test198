@@ -1,10 +1,11 @@
+import * as React from 'react';
+import { shallow } from 'enzyme';
+import { FormattedMessage } from 'react-intl';
 import Button from '@atlaskit/button';
 import Form, { FormFooter, FormSection, HelperMessage } from '@atlaskit/form';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Tooltip from '@atlaskit/tooltip';
-import { shallow } from 'enzyme';
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { CommentField } from '../../../components/CommentField';
 import CopyLinkButton from '../../../components/CopyLinkButton';
 import { ShareForm } from '../../../components/ShareForm';

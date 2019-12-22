@@ -1,8 +1,7 @@
 // @flow
 
-import type { ItemPresentationProps } from '../Item/types';
-
 import type { StyleReducer, ProductTheme } from '../../../theme/types';
+import type { ItemPresentationProps } from '../Item/types';
 
 export type ConnectedItemAvatarProps = {
   /** The current UI state of the Item which this ItemAvatar is within. This should be provided to you by the `after` or `before` prop  */

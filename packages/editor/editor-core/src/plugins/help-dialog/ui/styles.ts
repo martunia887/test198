@@ -1,7 +1,7 @@
 import { ComponentClass } from 'react';
 import styled from 'styled-components';
-import { borderRadius, colors } from '@atlaskit/theme';
 import { akEditorUnitZIndex } from '@atlaskit/editor-common';
+import { borderRadius, colors } from '@atlaskit/theme';
 
 export const Header: any = styled.div`
   z-index: ${akEditorUnitZIndex};

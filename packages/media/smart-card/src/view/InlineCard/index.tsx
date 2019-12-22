@@ -8,9 +8,11 @@ import {
   InlineCardForbiddenView,
   InlineCardUnauthorizedView,
 } from '@atlaskit/media-ui';
-import { InlineCardProps } from './types';
+
 import { extractInlinePropsFromJSONLD } from '../../extractors/inline';
 import { getCollapsedIcon } from '../../utils';
+
+import { InlineCardProps } from './types';
 
 export const InlineCard: FC<InlineCardProps> = ({
   url,

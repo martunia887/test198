@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+
 import { Task, PrintableOutput } from '../../../runner';
 import { getLatest } from '../../../utils/npm';
 import {

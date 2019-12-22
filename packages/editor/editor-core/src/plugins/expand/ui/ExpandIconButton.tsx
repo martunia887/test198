@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { InjectedIntl } from 'react-intl';
 import Button from '@atlaskit/button';
 import {
   akEditorSwoopCubicBezier,
@@ -8,7 +9,7 @@ import {
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
 import { colors } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
-import { InjectedIntl } from 'react-intl';
+
 import { expandClassNames } from './class-names';
 
 interface ExpandIconButtonProps {

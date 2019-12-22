@@ -1,11 +1,12 @@
-import { mockStore, asMockReturnValue } from '@atlaskit/media-test-helpers';
-import getPreviewMiddleware, { getPreview } from '../../getPreview';
-import { sendUploadEvent } from '../../../actions/sendUploadEvent';
-import { GetPreviewAction } from '../../../actions/getPreview';
-import { Observable } from 'rxjs';
-import { Preview } from '../../../../types';
 import { FileState, ImageMetadata } from '@atlaskit/media-client';
 import { Auth } from '@atlaskit/media-core';
+import { mockStore, asMockReturnValue } from '@atlaskit/media-test-helpers';
+import { Observable } from 'rxjs';
+
+import { Preview } from '../../../../types';
+import { GetPreviewAction } from '../../../actions/getPreview';
+import { sendUploadEvent } from '../../../actions/sendUploadEvent';
+import getPreviewMiddleware, { getPreview } from '../../getPreview';
 
 describe('getPreviewMiddleware', () => {
   const auth: Auth = {

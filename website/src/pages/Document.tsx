@@ -1,14 +1,16 @@
 import React from 'react';
 import { match } from 'react-router';
 import { Redirect } from 'react-router-dom';
-import Loadable from '../components/WrappedLoader';
-import * as fs from '../utils/fs';
-import { File } from '../types';
-import Page from '../components/Page';
-import Markdown from '../components/Markdown';
-import FourOhFour from './FourOhFour';
+
 import Loading from '../components/Loading';
+import Markdown from '../components/Markdown';
+import Page from '../components/Page';
+import Loadable from '../components/WrappedLoader';
 import { docs } from '../site';
+import { File } from '../types';
+import * as fs from '../utils/fs';
+
+import FourOhFour from './FourOhFour';
 
 export type DocProps = {
   match: match<Record<string, string>>; // TODO: replace with react router

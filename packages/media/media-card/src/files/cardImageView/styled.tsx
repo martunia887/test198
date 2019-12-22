@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { absolute, borderRadius, size } from '@atlaskit/media-ui';
-import { themed } from '@atlaskit/theme/components';
 import { N20, DN50, N0 } from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
+
 import { Root, cardShadow } from '../../styles';
 import { getSelectedBorderStyle } from '../../styles/getSelectedBorderStyle';
 

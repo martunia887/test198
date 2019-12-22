@@ -6,13 +6,6 @@ import {
   unmockFileReader,
   mockFileReaderError,
 } from '@atlaskit/media-test-helpers';
-
-const GlobalFile = global.File;
-const GlobalFileCtor = (blobParts: [], filename: string, flags?: {}) =>
-  new GlobalFile(blobParts, filename, flags);
-
-global.File = jest.fn().mockImplementation(GlobalFileCtor);
-
 import {
   dataURItoFile,
   fileToArrayBuffer,

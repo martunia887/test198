@@ -10,10 +10,11 @@ import {
   errorFileId,
   createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import Spinner from '@atlaskit/spinner';
 import Select from '@atlaskit/select';
-import { MediaImage } from '../src';
+import Spinner from '@atlaskit/spinner';
+
 import { OptionsWrapper, MediaImageWrapper } from '../example-helpers/styled';
+import { MediaImage } from '../src';
 
 export interface ExampleProps {}
 

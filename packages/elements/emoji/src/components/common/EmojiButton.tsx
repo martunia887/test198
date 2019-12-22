@@ -1,11 +1,12 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { MouseEvent } from 'react';
+import classNames from 'classnames';
 
-import * as styles from './styles';
-import Emoji from './Emoji';
 import { EmojiDescription } from '../../types';
 import { leftClick } from '../../util/mouse';
+
+import Emoji from './Emoji';
+import * as styles from './styles';
 
 export interface Props {
   emoji: EmojiDescription;

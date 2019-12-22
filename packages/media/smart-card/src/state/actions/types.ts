@@ -1,5 +1,5 @@
-import { JsonLd } from '../../client/types';
 import { AnyAction } from 'redux';
+import { JsonLd } from '../../client/types';
 
 export type CardActionType = 'pending' | 'resolving' | 'resolved' | 'errored';
 export type ServerErrors =

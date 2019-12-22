@@ -1,5 +1,5 @@
-import { name } from '../../../../version.json';
 import { fromHTML, toDOM, schema } from '../../../../../test-helpers';
+import { name } from '../../../../version.json';
 
 describe(`${name}/schema mediaGroup node`, () => {
   describe('parse html', () => {

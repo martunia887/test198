@@ -1,10 +1,11 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement, comment, fullpage, editable } from '../_helpers';
+
 import { messages } from '../../../plugins/text-formatting/ui/ToolbarAdvancedTextFormatting';
 import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
+import { getDocFromElement, comment, fullpage, editable } from '../_helpers';
 
 const more = `[aria-label="${messages.moreFormatting.defaultMessage}"]`;
 const underline = `span=${messages.underline.defaultMessage}`;

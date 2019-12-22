@@ -1,10 +1,3 @@
-import { Fragment, Node as PMNode, Schema } from 'prosemirror-model';
-
-import parseHtml from './parse-html';
-import fixDoc from './fix-doc';
-
-import { bfsOrder, convert, ensureBlocks } from './utils';
-
 import {
   isSchemaWithLists,
   isSchemaWithMentions,
@@ -15,6 +8,11 @@ import {
   isSchemaWithTables,
 } from '@atlaskit/adf-schema';
 import { Transformer } from '@atlaskit/editor-common';
+import { Fragment, Node as PMNode, Schema } from 'prosemirror-model';
+
+import fixDoc from './fix-doc';
+import parseHtml from './parse-html';
+import { bfsOrder, convert, ensureBlocks } from './utils';
 
 export type CustomEncoder = (userId: string) => string;
 

@@ -1,8 +1,10 @@
-import { colors, gridSize } from '@atlaskit/theme';
 import * as React from 'react';
 import { ComponentClass, HTMLAttributes } from 'react';
 import styled from 'styled-components';
+import { colors, gridSize } from '@atlaskit/theme';
+
 import { Color as ColorType } from '../Status';
+
 import Color from './color';
 
 // color value, label, background, borderColor

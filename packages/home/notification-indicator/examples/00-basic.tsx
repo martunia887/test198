@@ -1,7 +1,5 @@
 import * as React from 'react';
-
 import { NotificationLogClient } from '@atlaskit/notification-log-client';
-
 import { NotificationIndicator } from '../src';
 
 class MockNotificationLogClient extends NotificationLogClient {

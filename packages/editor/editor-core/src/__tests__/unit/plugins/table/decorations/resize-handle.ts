@@ -1,5 +1,3 @@
-import { DecorationSet, EditorView } from 'prosemirror-view';
-import { getCellsInColumn } from 'prosemirror-utils';
 import {
   td,
   doc,
@@ -10,7 +8,14 @@ import {
   tdEmpty,
   tdCursor,
 } from '@atlaskit/editor-test-helpers';
+import { getCellsInColumn } from 'prosemirror-utils';
+import { ContentNodeWithPos } from 'prosemirror-utils';
+import { DecorationSet, EditorView } from 'prosemirror-view';
 
+import {
+  showResizeHandleLine,
+  hideResizeHandleLine,
+} from '../../../../../plugins/table/commands/hover';
 import {
   pluginKey,
   getPluginState,
@@ -19,11 +24,6 @@ import {
   TablePluginState,
   TableDecorations,
 } from '../../../../../plugins/table/types';
-import { ContentNodeWithPos } from 'prosemirror-utils';
-import {
-  showResizeHandleLine,
-  hideResizeHandleLine,
-} from '../../../../../plugins/table/commands/hover';
 
 describe('table resizer decorations plugin', () => {
   const createEditor = createEditorFactory<TablePluginState>();

@@ -2,7 +2,9 @@
 
 import { Fragment } from 'react';
 import { jsx } from '@emotion/core';
+
 import { useTheme } from '../../theme';
+
 import {
   productHomeButtonSkeletonCSS,
   productIconSkeletonCSS,

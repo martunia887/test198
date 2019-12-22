@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Card } from '@atlaskit/smart-card';
 import { EventHandlers, UnsupportedInline } from '@atlaskit/editor-common';
+import { Card } from '@atlaskit/smart-card';
 
-import { getEventHandler } from '../../utils';
-import { CardErrorBoundary } from './fallback';
 import {
   withSmartCardStorage,
   WithSmartCardStorageProps,
 } from '../../ui/SmartCardStorage';
+import { getEventHandler } from '../../utils';
+
+import { CardErrorBoundary } from './fallback';
 
 export interface InlineCardProps {
   url?: string;

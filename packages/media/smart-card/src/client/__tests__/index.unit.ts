@@ -3,8 +3,8 @@ jest.mock('../api', () => ({
   request: (...args: any) => mockRequest(args[0], args[1], args[2]),
 }));
 
-import { mocks } from '../../utils/mocks';
 import SmartCardClient from '..';
+import { mocks } from '../../utils/mocks';
 
 describe('Smart Card: Client', () => {
   beforeEach(() => {

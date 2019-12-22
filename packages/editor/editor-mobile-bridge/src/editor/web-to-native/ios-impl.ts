@@ -1,7 +1,9 @@
 import { Color as StatusColor } from '@atlaskit/status/element';
-import { EditorBridges, EditorPluginBridges } from './index';
-import NativeBridge from './bridge';
+
 import { sendToBridge } from '../../bridge-utils';
+
+import NativeBridge from './bridge';
+import { EditorBridges, EditorPluginBridges } from './index';
 
 export default class IosBridge implements NativeBridge {
   showMentions(query: string) {

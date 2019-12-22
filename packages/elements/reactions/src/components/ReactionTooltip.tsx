@@ -1,6 +1,7 @@
-import Tooltip from '@atlaskit/tooltip';
 import * as React from 'react';
+import Tooltip from '@atlaskit/tooltip';
 import { style } from 'typestyle';
+
 import { ReactionSummary } from '../types/ReactionSummary';
 
 const tooltipStyle = style({

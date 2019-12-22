@@ -1,4 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+
 import {
   goToEditorTestingExample,
   mountEditor,
@@ -9,6 +10,7 @@ import {
   fullpage,
   insertBlockMenuItem,
 } from '../_helpers';
+
 import placeholderAdf from './__fixtures__/placeholder.adf.json';
 
 const placeholderInputSelector = 'input[placeholder="Add placeholder text"]';

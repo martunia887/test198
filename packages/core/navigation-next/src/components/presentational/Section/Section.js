@@ -1,12 +1,13 @@
 // @flow
 
 import React, { PureComponent, type Node } from 'react';
-import TransitionGroup from 'react-transition-group/TransitionGroup';
 import Transition from 'react-transition-group/Transition';
-import { ClassNames, css } from '@emotion/core';
+import TransitionGroup from 'react-transition-group/TransitionGroup';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import { ClassNames, css } from '@emotion/core';
 
 import { transitionDurationMs } from '../../../common/constants';
+
 import getAnimationStyles from './getAnimationStyles';
 import type { SectionProps, SectionState } from './types';
 

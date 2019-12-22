@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import memoize from 'memoize-one';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
 import GlobalTheme from '@atlaskit/theme/components';
-import Theme, { componentTokens } from './theme';
-import { createExtender, ExtenderType } from './utils';
+import memoize from 'memoize-one';
+
 import CheckboxIcon from './CheckboxIcon';
-
-import { name as packageName, version as packageVersion } from './version.json';
-
 import {
   LabelTextOverrides,
   LabelOverrides,
@@ -19,7 +15,10 @@ import {
   RequiredIndicator,
   HiddenCheckbox,
 } from './elements';
+import Theme, { componentTokens } from './theme';
 import { CheckboxProps, CheckboxDefaults, CheckboxOverrides } from './types';
+import { createExtender, ExtenderType } from './utils';
+import { name as packageName, version as packageVersion } from './version.json';
 
 const defaults: CheckboxDefaults = {
   Label: LabelOverrides,

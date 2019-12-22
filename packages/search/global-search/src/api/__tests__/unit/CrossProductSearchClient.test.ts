@@ -1,15 +1,12 @@
 import { utils } from '@atlaskit/util-service-support';
-
-import CrossProductSearchClient, {
-  CrossProductSearchResponse,
-  ScopeResult,
-  ABTest,
-  CrossProductExperimentResponse,
-  DEFAULT_AB_TEST,
-} from '../../CrossProductSearchClient';
-import { Scope, ConfluenceItem, PersonItem, UrsPersonItem } from '../../types';
-
 import fetchMock from 'fetch-mock';
+import uuid from 'uuid/v4';
+
+import {
+  generateRandomJiraBoard,
+  generateRandomJiraFilter,
+  generateRandomJiraProject,
+} from '../../../../example-helpers/mocks/mockJira';
 import {
   AnalyticsType,
   ConfluenceObjectResult,
@@ -21,15 +18,17 @@ import {
   Result,
 } from '../../../model/Result';
 import {
-  generateRandomJiraBoard,
-  generateRandomJiraFilter,
-  generateRandomJiraProject,
-} from '../../../../example-helpers/mocks/mockJira';
-import {
   buildJiraModelParams,
   buildConfluenceModelParams,
 } from '../../../util/model-parameters';
-import uuid from 'uuid/v4';
+import CrossProductSearchClient, {
+  CrossProductSearchResponse,
+  ScopeResult,
+  ABTest,
+  CrossProductExperimentResponse,
+  DEFAULT_AB_TEST,
+} from '../../CrossProductSearchClient';
+import { Scope, ConfluenceItem, PersonItem, UrsPersonItem } from '../../types';
 
 const DEFAULT_XPSEARCH_OPTS = {
   method: 'post',

@@ -1,7 +1,7 @@
 import React from 'react';
-import { layers } from '@atlaskit/theme/constants';
 import ScrollLock from 'react-scrolllock';
 import { Popper, Manager, Reference } from '@atlaskit/popper';
+import { layers } from '@atlaskit/theme/constants';
 
 interface Props {
   /** A ref to the container that the content should be layered around for height calculation

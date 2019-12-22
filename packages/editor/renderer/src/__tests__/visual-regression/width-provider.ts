@@ -1,10 +1,10 @@
-import { Page } from 'puppeteer';
-import { snapshot, animationFrame } from './_utils';
 import {
   getExampleUrl,
   navigateToUrl,
   disableAllSideEffects,
 } from '@atlaskit/visual-regression/helper';
+import { Page } from 'puppeteer';
+import { snapshot, animationFrame } from './_utils';
 
 describe('Snapshot Test: WidthProvider', () => {
   let page: Page;

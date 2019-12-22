@@ -1,8 +1,5 @@
 import { Command } from '../../../types';
-import { toggleColor } from './toggle-color';
-import { removeColor } from './remove-color';
-import { pluginKey } from '../pm-plugins/main';
-import { getActiveColor } from '../utils/color';
+import { PaletteColor } from '../../../ui/ColorPalette/Palettes/type';
 import {
   withAnalytics,
   ACTION,
@@ -11,7 +8,11 @@ import {
   EVENT_TYPE,
   HigherOrderCommand,
 } from '../../analytics';
-import { PaletteColor } from '../../../ui/ColorPalette/Palettes/type';
+import { pluginKey } from '../pm-plugins/main';
+import { getActiveColor } from '../utils/color';
+
+import { removeColor } from './remove-color';
+import { toggleColor } from './toggle-color';
 
 /**
  * Helper to create a higher order analytics command

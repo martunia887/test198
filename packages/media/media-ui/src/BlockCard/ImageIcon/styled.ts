@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { ComponentClass, ImgHTMLAttributes } from 'react';
+import styled from 'styled-components';
 import { borderRadius, size as csssize } from '../../mixins';
 
 export interface ImageProps {

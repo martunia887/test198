@@ -4,13 +4,12 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 
 import Item, { ItemGroup } from '../../..';
-
-import { name } from '../../../version.json';
 import {
   GroupTitle,
   GroupTitleText,
   GroupTitleAfter,
 } from '../../../styled/ItemGroup';
+import { name } from '../../../version.json';
 
 describe(`${name} - ItemGroup`, () => {
   describe('props', () => {

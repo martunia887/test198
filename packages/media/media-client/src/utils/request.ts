@@ -1,6 +1,5 @@
-import { parse, stringify } from 'query-string';
-
 import { Auth, isClientBasedAuth } from '@atlaskit/media-core';
+import { parse, stringify } from 'query-string';
 import { mapAuthToQueryParameters } from '../models/auth-query-parameters';
 
 export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';

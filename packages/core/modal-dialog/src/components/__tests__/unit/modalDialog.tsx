@@ -3,11 +3,11 @@ import { mount } from 'enzyme';
 import Blanket from '@atlaskit/blanket';
 
 import ModalDialog, { ModalTransition } from '../../..';
-import Positioner from '../../Positioner';
-import Content from '../../Content';
-import Header from '../../Header';
-import Footer from '../../Footer';
 import { dialogHeight, dialogWidth, Dialog } from '../../../styled/Modal';
+import Content from '../../Content';
+import Footer from '../../Footer';
+import Header from '../../Header';
+import Positioner from '../../Positioner';
 
 jest.mock('raf-schd', () => (fn: Function) => fn);
 

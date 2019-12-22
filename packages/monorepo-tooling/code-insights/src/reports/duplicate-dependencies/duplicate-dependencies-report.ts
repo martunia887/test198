@@ -1,12 +1,12 @@
 import loadFileFromGitHistory from '../../util/load-file-from-git-history';
-import getDuplicateDependenciesReport, {
-  DuplicateDependencyReportEntry,
-} from './get-duplicate-dependencies-report';
 import {
   InsightsReportResults,
   InsightsReport,
   Severity,
 } from '../insights-report';
+import getDuplicateDependenciesReport, {
+  DuplicateDependencyReportEntry,
+} from './get-duplicate-dependencies-report';
 
 const message = (annotationCount: number) =>
   `This report interprets the yarn lock file, to tell you if there are any duplicate dependencies introduced by your PR.

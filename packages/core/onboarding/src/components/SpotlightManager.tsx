@@ -4,12 +4,13 @@ import React, {
   ElementType,
   ReactNode,
 } from 'react';
-import memoizeOne from 'memoize-one';
 import Portal from '@atlaskit/portal';
 import { layers } from '@atlaskit/theme/constants';
+import memoizeOne from 'memoize-one';
+
+import Blanket from '../styled/Blanket';
 
 import { Fade } from './Animation';
-import Blanket from '../styled/Blanket';
 
 const noop = () => {};
 

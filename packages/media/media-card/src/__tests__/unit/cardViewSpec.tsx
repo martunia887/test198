@@ -7,25 +7,23 @@ jest.mock('../../../src/utils/shouldDisplayImageThumbnail', () => ({
 }));
 
 import * as React from 'react';
-
 import { shallow, mount } from 'enzyme';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { FileDetails } from '@atlaskit/media-client';
 
-import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { FileCard } from '../../../src/files';
 import {
   CardView,
   CardViewBase,
   CardViewOwnProps,
 } from '../../../src/root/cardView';
-import { FileCard } from '../../../src/files';
 import { Wrapper } from '../../../src/root/styled';
 import {
   breakpointSize,
   BreakpointSizeValue,
 } from '../../../src/utils/breakpoint';
-
 import { shouldDisplayImageThumbnail } from '../../../src/utils/shouldDisplayImageThumbnail';
-import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { CardDimensionValue } from '../../index';
 
 describe('CardView', () => {

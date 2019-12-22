@@ -1,7 +1,7 @@
-import { ImageMetaDataTags, ImageType } from './types';
 import { readJPEGExifMetaData } from './parseJPEG';
 import { readPNGXMPMetaData } from './parsePNG';
 import { parseXMPMetaData } from './parsePNGXMP';
+import { ImageMetaDataTags, ImageType } from './types';
 
 export async function readImageMetaTags(
   file: File,

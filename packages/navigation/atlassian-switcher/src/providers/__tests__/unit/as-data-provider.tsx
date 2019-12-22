@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import asDataProvider from '../../as-data-provider';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
+
+import asDataProvider from '../../as-data-provider';
 
 const RESOLVED_VALUE = {};
 const EXPECTED_ERROR_VALUE = 'ERROR';

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 
 import UiDropdown from '../../../ui/Dropdown';
+
 import Button from './Button';
 import DropdownMenu, { menuItemDimensions, itemSpacing } from './DropdownMenu';
 

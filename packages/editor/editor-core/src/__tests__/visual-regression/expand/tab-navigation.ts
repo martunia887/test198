@@ -2,11 +2,13 @@ import {
   waitForTooltip,
   waitForNoTooltip,
 } from '@atlaskit/visual-regression/helper';
-import { Device, snapshot, initFullPageEditorWithAdf } from '../_utils';
-import * as adfWithExpand from './__fixtures__/simple-expand.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
+
 import { clickEditableContent } from '../../__helpers/page-objects/_editor';
 import { pressKey } from '../../__helpers/page-objects/_keyboard';
+import { Page } from '../../__helpers/page-objects/_types';
+import { Device, snapshot, initFullPageEditorWithAdf } from '../_utils';
+
+import * as adfWithExpand from './__fixtures__/simple-expand.adf.json';
 
 describe('Expand: tab navigation', () => {
   let page: Page;

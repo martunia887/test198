@@ -3,6 +3,7 @@
 import React, { Component, ReactNode, ComponentType } from 'react';
 import { mount } from 'enzyme';
 
+import CohortTracker from '../CohortTracker';
 import { ExperimentProvider } from '../ExperimentContext';
 import asExperiment, { ExperimentComponentMap } from '../asExperiment';
 import {
@@ -12,7 +13,6 @@ import {
   EnrollmentOptions,
   ExposureDetails,
 } from '../types';
-import CohortTracker from '../CohortTracker';
 
 const createDumbComponent = (componentName: string) => {
   class DumbComponent extends Component<{}> {

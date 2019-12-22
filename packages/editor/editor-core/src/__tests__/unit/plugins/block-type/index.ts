@@ -1,4 +1,9 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import { browser } from '@atlaskit/editor-common';
+import {
   createEditorFactory,
   blockquote,
   insertText,
@@ -14,22 +19,7 @@ import {
   p,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import { browser } from '@atlaskit/editor-common';
-import {
-  pluginKey as blockTypePluginKey,
-  BlockTypeState,
-} from '../../../../plugins/block-type/pm-plugins/main';
-import { setTextSelection } from '../../../../utils';
-import {
-  setBlockType,
-  insertBlockType,
-  insertBlockTypesWithAnalytics,
-} from '../../../../plugins/block-type/commands';
-import { HEADING_1 } from '../../../../plugins/block-type/types';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+
 import {
   AnalyticsEventPayload,
   ACTION,
@@ -38,6 +28,17 @@ import {
   ACTION_SUBJECT_ID,
   INPUT_METHOD,
 } from '../../../../plugins/analytics';
+import {
+  setBlockType,
+  insertBlockType,
+  insertBlockTypesWithAnalytics,
+} from '../../../../plugins/block-type/commands';
+import {
+  pluginKey as blockTypePluginKey,
+  BlockTypeState,
+} from '../../../../plugins/block-type/pm-plugins/main';
+import { HEADING_1 } from '../../../../plugins/block-type/types';
+import { setTextSelection } from '../../../../utils';
 
 describe('block-type', () => {
   const createEditor = createEditorFactory<BlockTypeState>();

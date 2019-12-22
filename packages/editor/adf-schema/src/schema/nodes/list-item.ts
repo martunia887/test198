@@ -1,9 +1,10 @@
 import { NodeSpec } from 'prosemirror-model';
-import { ParagraphDefinition as Paragraph } from './paragraph';
-import { OrderedListDefinition as OrderedList } from './ordered-list';
+
 import { BulletListDefinition as BulletList } from './bullet-list';
-import { MediaSingleDefinition as MediaSingle } from './media-single';
 import { CodeBlockDefinition as CodeBlock } from './code-block';
+import { MediaSingleDefinition as MediaSingle } from './media-single';
+import { OrderedListDefinition as OrderedList } from './ordered-list';
+import { ParagraphDefinition as Paragraph } from './paragraph';
 
 export interface ListItemArray
   extends Array<

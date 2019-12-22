@@ -1,6 +1,6 @@
+import { B100, B75 } from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { gridSize } from '@atlaskit/theme/constants';
-import { B100, B75 } from '@atlaskit/theme/colors';
 
 export const focusRingColor = themed({ light: B100, dark: B75 });
 export const tagHeightUnitless = 2.5 * gridSize();

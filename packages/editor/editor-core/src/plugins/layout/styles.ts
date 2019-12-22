@@ -1,5 +1,4 @@
 import { css } from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
 import {
   columnLayoutSharedStyle,
   gridMediumMaxWidth,
@@ -8,6 +7,8 @@ import {
   akEditorSelectedBorderSize,
   akLayoutGutterOffset,
 } from '@atlaskit/editor-common';
+import { colors, gridSize } from '@atlaskit/theme';
+
 import { TableCssClassName } from '../table/types';
 import { tableMarginFullWidthMode } from '../table/ui/styles';
 

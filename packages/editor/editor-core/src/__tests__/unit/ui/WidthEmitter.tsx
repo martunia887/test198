@@ -1,15 +1,15 @@
-import { name } from '../../../version.json';
-import { mount } from 'enzyme';
 import * as React from 'react';
-import { Plugin } from 'prosemirror-state';
-import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
+import { mount } from 'enzyme';
 import { WidthProvider } from '@atlaskit/editor-common';
+import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
+import { Plugin } from 'prosemirror-state';
 
 import {
   pluginKey as widthPluginKey,
   WidthPluginState,
 } from '../../../plugins/width';
 import WidthEmitter from '../../../ui/WidthEmitter';
+import { name } from '../../../version.json';
 
 describe(name, () => {
   const createEditor = createEditorFactory();

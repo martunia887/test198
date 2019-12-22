@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 
 export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   height: 100%;

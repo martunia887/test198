@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { Component } from 'react';
 import FieldRadioGroup from '@atlaskit/field-radio-group';
+import Slider from '@atlaskit/field-range';
+import { ImageResizeMode } from '@atlaskit/media-client';
 import {
   videoFileDetails,
   imageFileDetails,
@@ -15,12 +17,9 @@ import {
   wideImage,
   wideTransparentImage,
 } from '@atlaskit/media-test-helpers';
-import { ImageResizeMode } from '@atlaskit/media-client';
 import Toggle from '@atlaskit/toggle';
-import Slider from '@atlaskit/field-range';
 import * as exenv from 'exenv';
-import { CardView } from '../src/root/cardView';
-import { CardAppearance, CardStatus, CardDimensions, CardAction } from '../src';
+
 import {
   openAction,
   closeAction,
@@ -36,6 +35,8 @@ import {
   MainWrapper,
   CardPreviewWrapper,
 } from '../example-helpers/styled';
+import { CardAppearance, CardStatus, CardDimensions, CardAction } from '../src';
+import { CardView } from '../src/root/cardView';
 import { defaultImageCardDimensions } from '../src/utils/cardDimensions';
 
 const appearanceOptions = [

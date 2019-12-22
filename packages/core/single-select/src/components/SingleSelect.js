@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
-import StatelessSelect, { getTextContent } from './StatelessSelect';
 import type { ItemType, GroupType } from '../types';
+import StatelessSelect, { getTextContent } from './StatelessSelect';
 
 // =============================================================
 // NOTE: Duplicated in ./internal/appearances until docgen can follow imports.

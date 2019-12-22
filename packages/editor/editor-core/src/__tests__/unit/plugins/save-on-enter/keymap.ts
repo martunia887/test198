@@ -1,3 +1,4 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
@@ -8,7 +9,6 @@ import {
   taskList,
   taskItem,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 describe('save on enter', () => {
   const createEditor = createEditorFactory();

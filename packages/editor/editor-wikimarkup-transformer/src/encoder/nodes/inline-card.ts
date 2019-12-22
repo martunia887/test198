@@ -1,7 +1,9 @@
-import { Node as PMNode } from 'prosemirror-model';
 import { NodeEncoder } from '..';
-import { unknown } from './unknown';
+import { Node as PMNode } from 'prosemirror-model';
+
 import { INLINE_CARD_FROM_TEXT_STAMP } from '../../parser/tokenize/issue-key';
+
+import { unknown } from './unknown';
 
 export const inlineCard: NodeEncoder = (node: PMNode): string => {
   if (!node.attrs.url) {

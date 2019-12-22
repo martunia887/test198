@@ -1,5 +1,3 @@
-import { EmojiDescription, EmojiVariationDescription } from '../../../../types';
-
 import {
   AlphabeticalShortnameComparator,
   AsciiMatchComparator,
@@ -11,6 +9,7 @@ import {
   QueryStringPositionMatchComparator,
   UsageFrequencyComparator,
 } from '../../../../api/internal/Comparators';
+import { EmojiDescription, EmojiVariationDescription } from '../../../../types';
 
 class PresetResultComparator implements EmojiComparator {
   private result: number;

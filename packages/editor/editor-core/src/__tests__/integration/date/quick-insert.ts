@@ -1,10 +1,10 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, quickInsert, getDocFromElement } from '../_helpers';
 import {
   goToEditorTestingExample,
   mountEditor,
   loadLocale,
 } from '../../__helpers/testing-example-helpers';
+import { editable, quickInsert, getDocFromElement } from '../_helpers';
 
 const dateLozenge = 'span[timestamp]';
 

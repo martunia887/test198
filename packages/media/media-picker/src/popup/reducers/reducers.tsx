@@ -1,42 +1,42 @@
-import fileClick from './fileClick';
-import updatePopupUrls from './updatePopupUrls';
-import fileListUpdate from './fileListUpdate';
-import serviceListUpdate from './serviceListUpdate';
 import accountChange from './accountChange';
 import accountUnlink from './accountUnlink';
-import serviceConnect from './serviceConnect';
-import pathChangeRequest from './pathChangeRequest';
+import deselectItem from './deselectItem';
+import editorClose from './editorClose';
+import editorShowError from './editorShowError';
+import editorShowImage from './editorShowImage';
+import editorShowLoading from './editorShowLoading';
 import fetchNextCloudFilesPage from './fetchNextCloudFilesPage';
+import fileClick from './fileClick';
+import fileListUpdate from './fileListUpdate';
+import filePreviewUpdate from './filePreviewUpdate';
+import fileUploadEnd from './fileUploadEnd';
+import fileUploadProcessingStart from './fileUploadProcessingStart';
+import fileUploadProgress from './fileUploadProgress';
+import fileUploadsAdd from './fileUploadsAdd';
 import {
   getRecentFilesStarted,
   getRecentFilesFullfilled,
   getRecentFilesFailed,
 } from './getFilesInRecents';
-import fileUploadsAdd from './fileUploadsAdd';
-import filePreviewUpdate from './filePreviewUpdate';
-import fileUploadProgress from './fileUploadProgress';
-import fileUploadProcessingStart from './fileUploadProcessingStart';
-import fileUploadEnd from './fileUploadEnd';
-import setEventProxy from './setEventProxy';
-import removeEventProxy from './removeEventProxy';
-import resetView from './resetView';
-import editorClose from './editorClose';
-import editorShowError from './editorShowError';
-import editorShowImage from './editorShowImage';
-import editorShowLoading from './editorShowLoading';
-import deselectItem from './deselectItem';
+import hidePopup from './hidePopup';
 import isUploading from './isUploading';
+import pathChangeRequest from './pathChangeRequest';
 import remoteUploadStart from './remoteUploadStart';
+import removeEventProxy from './removeEventProxy';
+import removeFileFromRecents from './removeFileFromRecents';
+import resetView from './resetView';
+import saveCollectionItemsSubscription from './saveCollectionItemsSubscription';
 import {
   giphySearchStarted,
   giphySearchFullfilled,
   giphySearchFailed,
 } from './searchGiphy';
+import serviceConnect from './serviceConnect';
+import serviceListUpdate from './serviceListUpdate';
+import setEventProxy from './setEventProxy';
 import showPopup from './showPopup';
-import hidePopup from './hidePopup';
 import startApp from './startApp';
-import saveCollectionItemsSubscription from './saveCollectionItemsSubscription';
-import removeFileFromRecents from './removeFileFromRecents';
+import updatePopupUrls from './updatePopupUrls';
 
 const reducers = combineReducers([
   fileClick,

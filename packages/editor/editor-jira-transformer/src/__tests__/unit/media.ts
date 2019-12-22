@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import { createJIRASchema } from '@atlaskit/adf-schema';
 import {
   doc,
   mediaGroup,
@@ -6,13 +6,15 @@ import {
   media,
   p,
 } from '@atlaskit/editor-test-helpers';
+import * as assert from 'assert';
+
+import { JIRATransformer } from '../../index';
+
 import {
   checkParse,
   checkEncode,
   checkParseEncodeRoundTrips,
 } from './_test-helpers';
-import { createJIRASchema } from '@atlaskit/adf-schema';
-import { JIRATransformer } from '../../index';
 
 const schema = createJIRASchema({ allowMedia: true });
 

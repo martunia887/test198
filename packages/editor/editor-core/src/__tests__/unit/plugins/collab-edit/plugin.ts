@@ -1,10 +1,10 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
   doc,
   p,
   sleep,
 } from '@atlaskit/editor-test-helpers';
-import { ProviderFactory } from '@atlaskit/editor-common';
 
 describe('collab-edit: plugin', () => {
   const createEditor = createEditorFactory();

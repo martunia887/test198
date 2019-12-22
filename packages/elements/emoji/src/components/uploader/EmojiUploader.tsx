@@ -1,19 +1,20 @@
 import * as React from 'react';
 import { ComponentClass } from 'react';
-
-import LoadingEmojiComponent, {
-  Props as LoadingProps,
-  State as LoadingState,
-} from '../common/LoadingEmojiComponent';
-import {
-  UploadRefHandler,
-  Props as ComponentProps,
-} from './EmojiUploadComponent';
-import { EmojiProvider } from '../../api/EmojiResource';
 import {
   CreateUIAnalyticsEvent,
   withAnalyticsEvents,
 } from '@atlaskit/analytics-next';
+
+import { EmojiProvider } from '../../api/EmojiResource';
+import LoadingEmojiComponent, {
+  Props as LoadingProps,
+  State as LoadingState,
+} from '../common/LoadingEmojiComponent';
+
+import {
+  UploadRefHandler,
+  Props as ComponentProps,
+} from './EmojiUploadComponent';
 
 const emojiUploadModuleLoader = () =>
   import(

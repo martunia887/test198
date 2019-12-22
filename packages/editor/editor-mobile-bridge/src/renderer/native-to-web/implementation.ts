@@ -1,10 +1,11 @@
 import { TaskState, ObjectKey } from '@atlaskit/task-decision';
 
-import RendererBridge, { ScrollToContentNode } from './bridge';
-import WebBridge from '../../web-bridge';
-import { eventDispatcher } from '../dispatcher';
 import { resolvePromise, rejectPromise } from '../../cross-platform-promise';
 import { TaskDecisionProviderImpl } from '../../providers/taskDecisionProvider';
+import WebBridge from '../../web-bridge';
+import { eventDispatcher } from '../dispatcher';
+
+import RendererBridge, { ScrollToContentNode } from './bridge';
 
 export default class RendererBridgeImpl extends WebBridge
   implements RendererBridge {

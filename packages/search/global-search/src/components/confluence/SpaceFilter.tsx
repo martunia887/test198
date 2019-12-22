@@ -1,8 +1,9 @@
+import * as React from 'react';
 import { withAnalytics } from '@atlaskit/analytics';
 import Avatar from '@atlaskit/avatar';
 import Checkbox from '@atlaskit/checkbox/Checkbox';
 import baseItem, { withItemFocus } from '@atlaskit/item';
-import * as React from 'react';
+
 import {
   FilterType,
   FilterWithMetadata,

@@ -10,8 +10,10 @@ import {
   ImageLoaderProps,
   akEditorFullWidthLayoutWidth,
 } from '@atlaskit/editor-common';
+
 import { FullPagePadding } from '../../ui/Renderer/style';
 import { RendererAppearance } from '../../ui/Renderer/types';
+
 import { MediaProps } from './media';
 
 export interface Props {

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { EditorView } from 'prosemirror-view';
 import { intlShape, IntlShape, IntlProvider } from 'react-intl';
-import { name, version } from './version-wrapper';
-
+import { FabricEditorAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   ProviderFactory,
   Transformer,
@@ -18,30 +17,30 @@ import {
   combineExtensionProviders,
 } from '@atlaskit/editor-common';
 import { Context as CardContext } from '@atlaskit/smart-card';
-import { FabricEditorAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { EditorView } from 'prosemirror-view';
 
-import { getUiComponent } from './create-editor';
 import EditorActions from './actions';
-import { EditorProps } from './types/editor-props';
+import { getUiComponent } from './create-editor';
 import { ReactEditorView } from './create-editor';
+import ErrorBoundary from './create-editor/ErrorBoundary';
 import { EventDispatcher } from './event-dispatcher';
-import EditorContext from './ui/EditorContext';
-import { PortalProvider, PortalRenderer } from './ui/PortalProvider';
-import { nextMajorVersion } from './version-wrapper';
 import { createContextAdapter } from './nodeviews';
-import measurements from './utils/performance/measure-enum';
-import {
-  combineQuickInsertProviders,
-  extensionProviderToQuickInsertProvider,
-} from './utils/extensions';
 import {
   fireAnalyticsEvent,
   EVENT_TYPE,
   ACTION_SUBJECT,
   ACTION,
 } from './plugins/analytics';
-import ErrorBoundary from './create-editor/ErrorBoundary';
+import { EditorProps } from './types/editor-props';
+import EditorContext from './ui/EditorContext';
+import { PortalProvider, PortalRenderer } from './ui/PortalProvider';
+import {
+  combineQuickInsertProviders,
+  extensionProviderToQuickInsertProvider,
+} from './utils/extensions';
+import measurements from './utils/performance/measure-enum';
+import { name, version } from './version-wrapper';
+import { nextMajorVersion } from './version-wrapper';
 
 export * from './types';
 

@@ -3,9 +3,10 @@
 import React, { PureComponent } from 'react';
 
 import { navigationItemClicked } from '../../../common/analytics';
+import { styleReducerNoOp, withGlobalTheme } from '../../../theme';
 import InteractionStateManager from '../InteractionStateManager';
 import type { InteractionState } from '../InteractionStateManager/types';
-import { styleReducerNoOp, withGlobalTheme } from '../../../theme';
+
 import GlobalItemPrimitive from './primitives';
 import type { GlobalItemProps } from './types';
 

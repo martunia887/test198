@@ -3,13 +3,14 @@ import { MouseEvent, KeyboardEvent } from 'react';
 import LazilyRender from 'react-lazily-render';
 import { CardLinkView } from '@atlaskit/media-ui';
 
-import { CardWithUrlContentProps } from './types';
-import { uiCardClickedEvent } from '../../utils/analytics';
-import { isSpecialEvent } from '../../utils';
+import { useSmartLink } from '../../state';
 import { getDefinitionId, getServices } from '../../state/actions/helpers';
+import { isSpecialEvent } from '../../utils';
+import { uiCardClickedEvent } from '../../utils/analytics';
 import { BlockCard } from '../BlockCard';
 import { InlineCard } from '../InlineCard';
-import { useSmartLink } from '../../state';
+
+import { CardWithUrlContentProps } from './types';
 
 export function LazyCardWithUrlContent(props: CardWithUrlContentProps) {
   const { appearance, isSelected, container, url } = props;

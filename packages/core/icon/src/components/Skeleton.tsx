@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import { sizes } from '../constants';
 import { sizeOpts } from '../types';
 

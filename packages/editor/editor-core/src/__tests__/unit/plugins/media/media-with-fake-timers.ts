@@ -6,7 +6,6 @@ import {
   storyMediaProviderFactory,
   randomId,
 } from '@atlaskit/editor-test-helpers';
-
 import {
   stateKey as mediaPluginKey,
   MediaPluginState,

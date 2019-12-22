@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 
 import { styleReducerNoOp, withContentTheme } from '../../../theme';
+
 import ItemAvatar from './ItemAvatar';
 import type { ConnectedItemAvatarProps } from './types';
 

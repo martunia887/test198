@@ -1,21 +1,21 @@
+import { clickEditableContent } from '../../__helpers/page-objects/_editor';
+import { pressKey } from '../../__helpers/page-objects/_keyboard';
+import {
+  insertMedia,
+  waitForMediaToBeLoaded,
+} from '../../__helpers/page-objects/_media';
+import { scrollToTable } from '../../__helpers/page-objects/_table';
+import {
+  clickToolbarMenu,
+  ToolbarMenuItem,
+} from '../../__helpers/page-objects/_toolbar';
+import { Page } from '../../__helpers/page-objects/_types';
 import {
   snapshot,
   initEditorWithAdf,
   Appearance,
   editorCommentContentSelector,
 } from '../_utils';
-import {
-  insertMedia,
-  waitForMediaToBeLoaded,
-} from '../../__helpers/page-objects/_media';
-import {
-  clickToolbarMenu,
-  ToolbarMenuItem,
-} from '../../__helpers/page-objects/_toolbar';
-import { clickEditableContent } from '../../__helpers/page-objects/_editor';
-import { pressKey } from '../../__helpers/page-objects/_keyboard';
-import { scrollToTable } from '../../__helpers/page-objects/_table';
-import { Page } from '../../__helpers/page-objects/_types';
 
 const editors: { appearance: Appearance; snapshotSelector?: string }[] = [
   { appearance: Appearance.fullPage },

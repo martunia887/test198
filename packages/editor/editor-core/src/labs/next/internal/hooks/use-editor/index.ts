@@ -1,19 +1,21 @@
 import * as React from 'react';
-import { DirectEditorProps } from 'prosemirror-view';
 import { measureRender, getResponseEndTime } from '@atlaskit/editor-common';
+import { DirectEditorProps } from 'prosemirror-view';
+
 import EditorActions from '../../../../../actions';
-import measurements from '../../../../../utils/performance/measure-enum';
-import { getNodesCount } from '../../../../../utils';
 import {
   analyticsEventKey,
   ACTION,
   ACTION_SUBJECT,
   EVENT_TYPE,
 } from '../../../../../plugins/analytics';
+import { getNodesCount } from '../../../../../utils';
+import measurements from '../../../../../utils/performance/measure-enum';
 import { EditorSharedConfig } from '../../context/shared-config';
+import { useAnalyticsHandler } from '../use-analytics';
+
 import { createDispatchTransaction } from './create-dispatch-transaction';
 import { createEditor, CreateEditorParams } from './create-editor';
-import { useAnalyticsHandler } from '../use-analytics';
 
 export function useEditor(
   config: CreateEditorParams & { editorActions?: EditorActions },

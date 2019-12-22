@@ -1,8 +1,8 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
-import WikiMarkupTransformer from '../../../index';
-
 import { doc, mediaGroup, media } from '@atlaskit/editor-test-helpers';
+
 import { Context } from '../../../interfaces';
+import WikiMarkupTransformer from '../../../index';
 
 const wikiContext: Context = {
   conversion: {

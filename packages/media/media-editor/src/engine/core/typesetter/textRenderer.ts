@@ -1,6 +1,6 @@
-import { Fragment, FragmentPosition } from './fragment';
-import { FontInfo } from './fontInfo';
 import { TextDirection } from '../../../common';
+import { FontInfo } from './fontInfo';
+import { Fragment, FragmentPosition } from './fragment';
 
 export interface TextRenderingConfig {
   text: string;

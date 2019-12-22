@@ -1,8 +1,10 @@
-import { render } from 'enzyme';
 import * as React from 'react';
-import UserMentionDescriptionByline from '../../../../components/MentionDescriptionByline';
-import { userMention } from './_commonData';
+import { render } from 'enzyme';
+
 import { MentionDescription } from '../../../..';
+import UserMentionDescriptionByline from '../../../../components/MentionDescriptionByline';
+
+import { userMention } from './_commonData';
 
 const shallowRender = (mention: MentionDescription) =>
   render(<UserMentionDescriptionByline mention={mention} />);

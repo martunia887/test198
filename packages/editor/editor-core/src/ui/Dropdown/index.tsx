@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import DropdownList from '@atlaskit/droplist';
 import { Popup } from '@atlaskit/editor-common';
+
 import withOuterListeners from '../with-outer-listeners';
 
 export interface Props {

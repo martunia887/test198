@@ -2,10 +2,11 @@
 /** @jsx jsx */
 
 import { PureComponent } from 'react';
-import { jsx } from '@emotion/core';
 import { colors } from '@atlaskit/theme';
-import { BaseSelect, selectComponents } from '../../components/Select';
+import { jsx } from '@emotion/core';
+
 import { DialogInner } from '../../components/Popup';
+import { BaseSelect, selectComponents } from '../../components/Select';
 
 // TODO: there's probably a better way to do this, but it's late, and i'm tired.
 export const CLEAR_DATA = {

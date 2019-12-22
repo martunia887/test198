@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
+import { ResultItemGroup, CancelableEvent } from '@atlaskit/quick-search';
+
 import { messages } from '../../messages';
 import NoResults from '../NoResults';
-import { ResultItemGroup, CancelableEvent } from '@atlaskit/quick-search';
-import JiraAdvancedSearch from './JiraAdvancedSearch';
 import { JiraEntityTypes } from '../SearchResultsUtil';
+
+import JiraAdvancedSearch from './JiraAdvancedSearch';
 
 export interface Props {
   query: string;

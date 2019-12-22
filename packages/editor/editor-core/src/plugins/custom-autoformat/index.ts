@@ -1,17 +1,17 @@
+import { keydownHandler } from 'prosemirror-keymap';
 import { Plugin as PMPlugin, EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { keydownHandler } from 'prosemirror-keymap';
 
 import { EditorPlugin, PMPluginFactoryParams } from '../../types';
+
+import { completeReplacements, buildHandler } from './doc';
+import { triggerInputRule, InputRule } from './input-rules';
+import reducers from './reducers';
 import {
   AutoformattingProvider,
   CustomAutoformatState,
   CustomAutoformatAction,
 } from './types';
-
-import reducers from './reducers';
-import { triggerInputRule, InputRule } from './input-rules';
-import { completeReplacements, buildHandler } from './doc';
 import { getPluginState, pluginKey } from './utils';
 
 export const createPMPlugin = ({ providerFactory }: PMPluginFactoryParams) => {

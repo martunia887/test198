@@ -10,10 +10,11 @@ import {
   expectFunctionToHaveBeenCalledWith,
   nextTick,
 } from '@atlaskit/media-test-helpers';
-import { Spinner } from '../../../../../newgen/loading';
-import { DocViewer, Props } from '../../../../../newgen/viewers/doc/index';
-import { BaseState } from '../../../../../newgen/viewers/base-viewer';
+
 import { Content } from '../../../../../newgen/content';
+import { Spinner } from '../../../../../newgen/loading';
+import { BaseState } from '../../../../../newgen/viewers/base-viewer';
+import { DocViewer, Props } from '../../../../../newgen/viewers/doc/index';
 
 function createFixture(
   fetchPromise: Promise<any>,

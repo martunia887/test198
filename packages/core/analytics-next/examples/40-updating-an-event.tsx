@@ -1,6 +1,6 @@
 import React, { Component, MouseEvent, FormEvent } from 'react';
-import FieldText from '@atlaskit/field-text';
 import Button from '@atlaskit/button';
+import FieldText from '@atlaskit/field-text';
 
 import { UIAnalyticsEvent, AnalyticsListener } from '../src';
 

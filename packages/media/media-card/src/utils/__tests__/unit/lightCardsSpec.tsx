@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import FileIcon from '@atlaskit/icon/glyph/file';
 import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
+import FileIcon from '@atlaskit/icon/glyph/file';
 
-import { CardLoading } from '../../lightCards/cardLoading';
-import { CardError } from '../../lightCards/cardError';
-import { getDimensionsWithDefault } from '../../lightCards/getDimensionsWithDefault';
 import { ErrorIcon } from '../../../../src/utils/errorIcon';
+import { CardError } from '../../lightCards/cardError';
+import { CardLoading } from '../../lightCards/cardLoading';
+import { getDimensionsWithDefault } from '../../lightCards/getDimensionsWithDefault';
 
 describe('<CardLoading />', () => {
   it('should render the right icon based on the itemType', () => {

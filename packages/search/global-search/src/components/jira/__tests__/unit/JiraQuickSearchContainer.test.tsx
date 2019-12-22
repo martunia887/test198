@@ -1,42 +1,43 @@
 import * as React from 'react';
+import { ShallowWrapper } from 'enzyme';
+import { CancelableEvent } from '@atlaskit/quick-search';
 import uuid from 'uuid/v4';
+
+import {
+  makeJiraObjectResult,
+  makePersonResult,
+} from '../../../../__tests__/unit/_test-util';
 import { shallowWithIntl } from '../../../../__tests__/unit/helpers/_intl-enzyme-test-helper';
-import {
-  JiraQuickSearchContainer,
-  Props,
-} from '../../JiraQuickSearchContainer';
-import {
-  BaseJiraQuickSearchContainerJira,
-  Props as QuickSearchContainerProps,
-} from '../../../common/QuickSearchContainer';
 import {
   noResultsCrossProductSearchClient,
   errorCrossProductSearchClient,
   mockCrossProductSearchClient,
   mockErrorCrossProductSearchClient,
 } from '../../../../__tests__/unit/mocks/_mockCrossProductSearchClient';
+import { mockNoResultJiraClient } from '../../../../__tests__/unit/mocks/_mockJiraClient';
+import { mockLogger } from '../../../../__tests__/unit/mocks/_mockLogger';
 import {
   noResultsPeopleSearchClient,
   errorPeopleSearchClient,
   mockPeopleSearchClient,
 } from '../../../../__tests__/unit/mocks/_mockPeopleSearchClient';
-import { mockLogger } from '../../../../__tests__/unit/mocks/_mockLogger';
-import { mockNoResultJiraClient } from '../../../../__tests__/unit/mocks/_mockJiraClient';
-import {
-  makeJiraObjectResult,
-  makePersonResult,
-} from '../../../../__tests__/unit/_test-util';
-import { ContentType, JiraResultsMap } from '../../../../model/Result';
-import { Scope } from '../../../../api/types';
-import * as SearchUtils from '../../../SearchResultsUtil';
-import { ShallowWrapper } from 'enzyme';
-import { CancelableEvent } from '@atlaskit/quick-search';
 import {
   DEFAULT_AB_TEST,
   SearchResultsMap,
 } from '../../../../api/CrossProductSearchClient';
-import { ReferralContextIdentifiers } from '../../../GlobalQuickSearchWrapper';
+import { Scope } from '../../../../api/types';
+import { ContentType, JiraResultsMap } from '../../../../model/Result';
 import { DEFAULT_FEATURES } from '../../../../util/features';
+import {
+  BaseJiraQuickSearchContainerJira,
+  Props as QuickSearchContainerProps,
+} from '../../../common/QuickSearchContainer';
+import { ReferralContextIdentifiers } from '../../../GlobalQuickSearchWrapper';
+import * as SearchUtils from '../../../SearchResultsUtil';
+import {
+  JiraQuickSearchContainer,
+  Props,
+} from '../../JiraQuickSearchContainer';
 
 const issues = [
   makeJiraObjectResult({

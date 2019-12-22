@@ -5,9 +5,10 @@ import React from 'react';
 import icons from '!!raw-loader!../src/icons-sprite.svg';
 // eslint-disable-next-line
 import stuff from '!!style-loader!css-loader!../src/bundle.css';
-import Warning from './utils/warning';
 
 import iconIds from '../src/internal/iconIds';
+
+import Warning from './utils/warning';
 
 // eslint-disable-next-line react/no-danger
 const Spritemap = () => <div dangerouslySetInnerHTML={{ __html: icons }} />;

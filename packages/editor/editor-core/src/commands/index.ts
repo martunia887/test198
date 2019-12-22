@@ -13,8 +13,8 @@ import {
   Transaction,
 } from 'prosemirror-state';
 import { CellSelection } from 'prosemirror-tables';
-import { canMoveDown, canMoveUp } from '../utils';
-import { Command } from '../types';
+
+import { AlignmentState } from '../plugins/alignment/pm-plugins/main';
 import {
   withAnalytics,
   EVENT_TYPE,
@@ -22,7 +22,8 @@ import {
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
 } from '../plugins/analytics';
-import { AlignmentState } from '../plugins/alignment/pm-plugins/main';
+import { Command } from '../types';
+import { canMoveDown, canMoveUp } from '../utils';
 
 export function preventDefault(): Command {
   return function() {

@@ -1,6 +1,7 @@
-import uuid from 'uuid/v4';
-import { Observable } from 'rxjs/Observable';
 import { AuthProvider } from '@atlaskit/media-core';
+import { Observable } from 'rxjs/Observable';
+import uuid from 'uuid/v4';
+
 import {
   UploadableFileUpfrontIds,
   uploadFile,

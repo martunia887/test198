@@ -4,6 +4,7 @@ import {
   ServiceConfig,
   utils as serviceUtils,
 } from '@atlaskit/util-service-support';
+
 import {
   AltRepresentations,
   EmojiDescription,
@@ -18,13 +19,13 @@ import {
   EmojiServiceResponse,
   SpriteServiceRepresentation,
 } from '../types';
+import debug from '../util/logger';
 import {
   isImageRepresentation,
   isSpriteServiceRepresentation,
   convertImageToMediaRepresentation,
   buildEmojiDescriptionWithAltRepresentation,
 } from '../util/type-helpers';
-import debug from '../util/logger';
 
 export interface EmojiLoaderConfig extends ServiceConfig {
   getRatio?: () => number;

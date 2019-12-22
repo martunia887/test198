@@ -1,6 +1,3 @@
-import uuid from 'uuid/v4';
-import { Store, Dispatch, Middleware } from 'redux';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import {
   TouchFileDescriptor,
   FileState,
@@ -15,25 +12,28 @@ import {
   safeUnsubscribe,
 } from '@atlaskit/media-client';
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
+import { Store, Dispatch, Middleware } from 'redux';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import uuid from 'uuid/v4';
 
-import { State, SelectedItem, LocalUpload, ServiceName } from '../domain';
-import { isStartImportAction } from '../actions/startImport';
+import { PopupUploadEventEmitter } from '../../components/types';
+import { copyMediaFileForUpload } from '../../domain/file';
+import { getPreviewFromMetadata } from '../../domain/preview';
+import { MediaFile } from '../../types';
 import { finalizeUpload } from '../actions/finalizeUpload';
-import { remoteUploadStart } from '../actions/remoteUploadStart';
 import { getPreview } from '../actions/getPreview';
 import { handleCloudFetchingEvent } from '../actions/handleCloudFetchingEvent';
-import { setEventProxy } from '../actions/setEventProxy';
 import { hidePopup } from '../actions/hidePopup';
+import { remoteUploadStart } from '../actions/remoteUploadStart';
 import { resetView } from '../actions/resetView';
-import { WsProvider } from '../tools/websocket/wsProvider';
-import { WsConnectionHolder } from '../tools/websocket/wsConnectionHolder';
-import { RemoteUploadActivity } from '../tools/websocket/upload/remoteUploadActivity';
-import { copyMediaFileForUpload } from '../../domain/file';
-import { MediaFile } from '../../types';
-import { PopupUploadEventEmitter } from '../../components/types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
-import { getPreviewFromMetadata } from '../../domain/preview';
+import { setEventProxy } from '../actions/setEventProxy';
+import { isStartImportAction } from '../actions/startImport';
+import { State, SelectedItem, LocalUpload, ServiceName } from '../domain';
+import { RemoteUploadActivity } from '../tools/websocket/upload/remoteUploadActivity';
 import { NotifyMetadataPayload } from '../tools/websocket/upload/wsUploadEvents';
+import { WsConnectionHolder } from '../tools/websocket/wsConnectionHolder';
+import { WsProvider } from '../tools/websocket/wsProvider';
 
 export interface RemoteFileItem extends SelectedItem {
   accountId: string;

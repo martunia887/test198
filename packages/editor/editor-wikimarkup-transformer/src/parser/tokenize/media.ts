@@ -1,6 +1,7 @@
 import getMediaSingleNodeView from '../nodes/mediaSingle';
-import { Token, TokenParser } from './';
 import { parseAttrs } from '../utils/attrs';
+
+import { Token, TokenParser } from './';
 import { commonFormatter } from './common-formatter';
 
 export const media: TokenParser = ({ input, position, schema, context }) => {

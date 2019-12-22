@@ -1,18 +1,18 @@
 import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 
+import { analyticsService } from '../../../analytics';
+import { PMPluginFactoryParams } from '../../../types';
 import { isPastedFile } from '../../../utils/clipboard';
 import { isDroppedFile } from '../../../utils/drag-drop';
-import { analyticsService } from '../../../analytics';
-
-import { canInsertMedia, isMediaSelected } from '../utils';
 import {
   ImageUploadHandler,
   ImageUploadPluginState,
   ImageUploadPluginAction,
 } from '../types';
-import { EditorView } from 'prosemirror-view';
+import { canInsertMedia, isMediaSelected } from '../utils';
+
 import { startImageUpload, insertExternalImage } from './commands';
-import { PMPluginFactoryParams } from '../../../types';
 
 type DOMHandlerPredicate = (e: Event) => boolean;
 const createDOMHandler = (pred: DOMHandlerPredicate, eventName: string) => (

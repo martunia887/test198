@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { messages } from '@atlaskit/media-ui';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
 import {
   MediaClient,
   FileState,
@@ -8,17 +10,16 @@ import {
   Identifier,
   isExternalImageIdentifier,
 } from '@atlaskit/media-client';
-import { DownloadButtonWrapper } from './styled';
+import { messages } from '@atlaskit/media-ui';
 import { MediaButton } from '@atlaskit/media-ui';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+
+import { channel } from './analytics';
 import {
   downloadButtonEvent,
   downloadErrorButtonEvent,
 } from './analytics/download';
-import { channel } from './analytics';
-import DownloadIcon from '@atlaskit/icon/glyph/download';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { MediaViewerError } from './error';
+import { DownloadButtonWrapper } from './styled';
 
 const downloadIcon = <DownloadIcon label="Download" />;
 

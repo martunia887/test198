@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { expand, nestedExpand } from '@atlaskit/adf-schema';
+
 import { EditorPlugin, EditorProps } from '../../types';
-import { createPlugin } from './pm-plugins/main';
-import { expandKeymap } from './pm-plugins/keymap';
-import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import { IconExpand } from '../quick-insert/assets';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -13,8 +10,13 @@ import {
   EVENT_TYPE,
   INPUT_METHOD,
 } from '../analytics';
-import { getToolbarConfig } from './toolbar';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { IconExpand } from '../quick-insert/assets';
+
 import { createExpandNode } from './commands';
+import { expandKeymap } from './pm-plugins/keymap';
+import { createPlugin } from './pm-plugins/main';
+import { getToolbarConfig } from './toolbar';
 
 interface ExpandPluginOptions {
   allowInsertion?: boolean;

@@ -5,6 +5,7 @@ import {
   compareScreenshot,
 } from '@atlaskit/visual-regression/helper';
 import { Page } from 'puppeteer';
+
 import { Props } from '../../ui/Renderer';
 import { RendererAppearance } from '../../ui/Renderer/types';
 

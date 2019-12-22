@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Component } from 'react';
-
 import Badge from '@atlaskit/badge';
 import { NotificationLogProvider } from '@atlaskit/notification-log-client';
 

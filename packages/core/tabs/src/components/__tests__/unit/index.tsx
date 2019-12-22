@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { mount, shallow, ReactWrapper } from 'enzyme';
 
 import TabsWithAnalytics, { TabContent, TabItem } from '../../..';
-import { TabsWithoutAnalytics as Tabs } from '../../Tabs';
 import {
   IsSelectedTestFunction,
   TabContentComponentProvided,
   TabItemComponentProvided,
 } from '../../../types';
 import { name } from '../../../version.json';
+import { TabsWithoutAnalytics as Tabs } from '../../Tabs';
 
 declare var global: any;
 

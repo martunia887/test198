@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+
+import { DEFAULT_FEATURES } from '../../../util/features';
 import { injectFeatures } from '../../FeaturesProvider';
 import FeaturesProvider from '../../FeaturesProvider';
-import { DEFAULT_FEATURES } from '../../../util/features';
 
 describe('FeaturesProvider', () => {
   const DUMMY_FEATURES = DEFAULT_FEATURES;

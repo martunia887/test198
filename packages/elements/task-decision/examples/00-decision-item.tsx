@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 
-import DecisionItem from '../src/components/DecisionItem';
 import { dumpRef, document } from '../example-helpers/story-utils';
+import DecisionItem from '../src/components/DecisionItem';
 
 export default () => (
   <div>

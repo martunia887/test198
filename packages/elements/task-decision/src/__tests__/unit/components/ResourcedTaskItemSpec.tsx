@@ -4,6 +4,7 @@ import FabricAnalyticsListener, {
   AnalyticsWebClient,
 } from '@atlaskit/analytics-listeners';
 import { waitUntil } from '@atlaskit/util-common-test';
+
 import ResourcedTaskItem from '../../../components/ResourcedTaskItem';
 import TaskItem from '../../../components/TaskItem';
 import { Placeholder } from '../../../styled/Placeholder';

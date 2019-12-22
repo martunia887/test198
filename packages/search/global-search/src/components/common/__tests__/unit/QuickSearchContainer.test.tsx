@@ -1,35 +1,36 @@
-import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { mount, ReactWrapper } from 'enzyme';
+import keycode from 'keycode';
+import uuid from 'uuid/v4';
+
+import { mockLogger } from '../../../../__tests__/unit/mocks/_mockLogger';
 import {
   ABTest,
   DEFAULT_AB_TEST,
   FilterType,
   FilterWithMetadata,
 } from '../../../../api/CrossProductSearchClient';
-import { CreateAnalyticsEventFn } from '../../../analytics/types';
-import {
-  PartiallyLoadedRecentItems,
-  Props,
-  QuickSearchContainer,
-} from '../../QuickSearchContainer';
-import { GlobalQuickSearch } from '../../../GlobalQuickSearch';
-import * as AnalyticsHelper from '../../../../util/analytics-event-helper';
-import {
-  PerformanceTiming,
-  ShownAnalyticsAttributes,
-} from '../../../../util/analytics-util';
-import { ReferralContextIdentifiers } from '../../../GlobalQuickSearchWrapper';
 import { QuickSearchContext } from '../../../../api/types';
-import { mockLogger } from '../../../../__tests__/unit/mocks/_mockLogger';
 import {
   JiraResultsMap,
   ConfluenceResultsMap,
   ResultsGroup,
   ResultsWithTiming,
 } from '../../../../model/Result';
-import uuid from 'uuid/v4';
+import * as AnalyticsHelper from '../../../../util/analytics-event-helper';
+import {
+  PerformanceTiming,
+  ShownAnalyticsAttributes,
+} from '../../../../util/analytics-util';
 import { DEFAULT_FEATURES } from '../../../../util/features';
-import keycode from 'keycode';
+import { GlobalQuickSearch } from '../../../GlobalQuickSearch';
+import { ReferralContextIdentifiers } from '../../../GlobalQuickSearchWrapper';
+import { CreateAnalyticsEventFn } from '../../../analytics/types';
+import {
+  PartiallyLoadedRecentItems,
+  Props,
+  QuickSearchContainer,
+} from '../../QuickSearchContainer';
 
 const defaultAutocompleteData = ['autocomplete', 'automock', 'automation'];
 const defaultReferralContext = {

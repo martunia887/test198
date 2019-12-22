@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Status, Color } from '../src/element';
 import styled from 'styled-components';
+import { Status, Color } from '../src/element';
 
 const Container = styled.div`
   width: 140px;

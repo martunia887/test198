@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import { AtlaskitThemeProps } from '@atlaskit/theme';
 import { borderRadius, gridSize } from '@atlaskit/theme/constants';
 import { multiply } from '@atlaskit/theme/math';
@@ -11,7 +10,6 @@ import {
   flagShadowColor,
   flagFocusRingColor,
 } from '../../theme';
-
 import { AppearanceTypes } from '../../types';
 
 interface FlagColorProps extends AtlaskitThemeProps {

@@ -1,8 +1,9 @@
 import { EditorState, Transaction, Plugin, PluginKey } from 'prosemirror-state';
 import { findParentNodeOfType } from 'prosemirror-utils';
-import { isWrappingPossible } from '../utils';
+
 import { Dispatch } from '../../../event-dispatcher';
 import { removeBlockMarks } from '../../../utils/mark';
+import { isWrappingPossible } from '../utils';
 
 export const pluginKey = new PluginKey('listsPlugin');
 

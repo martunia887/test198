@@ -1,12 +1,12 @@
 import { utils } from '@atlaskit/util-service-support';
 
-import JiraClientImpl, { JiraClient } from '../../JiraClient';
 import {
   JiraRecentResponse,
   TransformedResponse,
 } from '../../../../example-helpers/mocks/jiraRecentResponseData';
 import { jiraRecentResponseWithAttributes } from '../../../../example-helpers/mocks/jiraRecentResponseDataWithAttributes';
 import { ContentType, JiraResult } from '../../../model/Result';
+import JiraClientImpl, { JiraClient } from '../../JiraClient';
 
 const url = 'https://www.example.jira.dev.com/';
 const cloudId = 'cloudId';

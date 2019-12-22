@@ -1,6 +1,6 @@
-import { pluginKey } from './main';
-import { CardProvider, CardPluginAction, Request, CardInfo } from '../types';
 import { Transaction } from 'prosemirror-state';
+import { CardProvider, CardPluginAction, Request, CardInfo } from '../types';
+import { pluginKey } from './main';
 
 export const cardAction = (
   tr: Transaction,

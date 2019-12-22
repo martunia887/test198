@@ -1,6 +1,7 @@
 import * as React from 'react';
-import rafSchedule from 'raf-schd';
 import styled from 'styled-components';
+import rafSchedule from 'raf-schd';
+
 import { WidthObserver } from '../WidthObserver';
 
 export const Breakpoints = {

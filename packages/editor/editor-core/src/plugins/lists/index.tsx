@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { orderedList, bulletList, listItem } from '@atlaskit/adf-schema';
+
+import { tooltip, toggleBulletList, toggleOrderedList } from '../../keymaps';
 import { EditorPlugin } from '../../types';
 import { ToolbarSize } from '../../ui/Toolbar';
-import ToolbarLists from './ui/ToolbarLists';
-import { createPlugin, pluginKey } from './pm-plugins/main';
-import inputRulePlugin from './pm-plugins/input-rule';
-import keymapPlugin from './pm-plugins/keymap';
 import WithPluginState from '../../ui/WithPluginState';
-import { messages } from '../lists/messages';
 import {
   addAnalytics,
   ACTION,
@@ -16,8 +13,13 @@ import {
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
 } from '../analytics';
-import { tooltip, toggleBulletList, toggleOrderedList } from '../../keymaps';
+import { messages } from '../lists/messages';
 import { IconList, IconListNumber } from '../quick-insert/assets';
+
+import inputRulePlugin from './pm-plugins/input-rule';
+import keymapPlugin from './pm-plugins/keymap';
+import { createPlugin, pluginKey } from './pm-plugins/main';
+import ToolbarLists from './ui/ToolbarLists';
 
 const listPlugin = (): EditorPlugin => ({
   name: 'list',

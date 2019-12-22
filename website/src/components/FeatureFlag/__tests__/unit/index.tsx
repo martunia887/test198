@@ -1,9 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { LDClient } from 'ldclient-js';
+
 import FeatureFlag, {
   LaunchDarklyClientProviderForTesting as Provider,
 } from '../../../FeatureFlag';
-import { LDClient } from 'ldclient-js';
 
 it('should get feature flag value', () => {
   const variation: any = jest.fn().mockReturnValueOnce(true);

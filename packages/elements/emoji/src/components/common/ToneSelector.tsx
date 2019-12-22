@@ -1,22 +1,23 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+  AnalyticsEventPayload,
+} from '@atlaskit/analytics-next';
 
 import {
   EmojiDescription,
   EmojiDescriptionWithVariations,
   OnToneSelected,
 } from '../../types';
-import EmojiButton from './EmojiButton';
-import {
-  withAnalyticsEvents,
-  WithAnalyticsEventsProps,
-  AnalyticsEventPayload,
-} from '@atlaskit/analytics-next';
 import {
   createAndFireEventInElementsChannel,
   toneSelectedEvent,
   toneSelectorOpenedEvent,
 } from '../../util/analytics';
+
+import EmojiButton from './EmojiButton';
 
 export interface Props {
   emoji: EmojiDescriptionWithVariations;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { DropdownItem } from '@atlaskit/dropdown-menu';
+
 import { PrimaryButton, PrimaryButtonProps } from '../../src';
 import { useOverflowStatus } from '../../src/controllers/overflow';
 

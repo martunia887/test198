@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import {
+  ProviderFactory,
+  combineExtensionProviders,
+} from '@atlaskit/editor-common';
+import {
   createEditorFactory,
   doc,
   extension,
   activityProviderFactory,
 } from '@atlaskit/editor-test-helpers';
 import { createFakeExtensionProvider } from '@atlaskit/editor-test-helpers/extensions';
-import {
-  ProviderFactory,
-  combineExtensionProviders,
-} from '@atlaskit/editor-common';
-import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import EditIcon from '@atlaskit/icon/glyph/editor/edit';
+import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 
-import { pluginKey } from '../../../../plugins/extension/plugin';
-import { ExtensionState } from '../../../../plugins/extension/types';
-import { getToolbarConfig } from '../../../../plugins/extension/toolbar';
 import commonMessages from '../../../../messages';
+import { pluginKey } from '../../../../plugins/extension/plugin';
+import { getToolbarConfig } from '../../../../plugins/extension/toolbar';
+import { ExtensionState } from '../../../../plugins/extension/types';
 import { EditorProps } from '../../../../types';
 import { waitForProvider, flushPromises } from '../../../__helpers/utils';
 import { getToolbarItems } from '../floating-toolbar/_helpers';

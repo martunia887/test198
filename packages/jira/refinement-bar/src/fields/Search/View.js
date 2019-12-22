@@ -3,10 +3,10 @@
 
 // $FlowFixMe "there is no `forwardRef` export in `react`"
 import { createRef, forwardRef, PureComponent, type ElementRef } from 'react';
-import { applyRefs } from 'apply-ref';
-import { jsx } from '@emotion/core';
-import { borderRadius, colors, gridSize } from '@atlaskit/theme';
 import SearchIcon from '@atlaskit/icon/glyph/search';
+import { borderRadius, colors, gridSize } from '@atlaskit/theme';
+import { jsx } from '@emotion/core';
+import { applyRefs } from 'apply-ref';
 
 import {
   ClearButton,

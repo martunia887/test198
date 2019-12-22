@@ -4,7 +4,6 @@ import { defaultRegistry } from 'react-sweet-state';
 import noop from 'lodash.noop';
 
 import { Router } from '../../../../controllers';
-
 import { RouterActions } from '../../../../controllers/router-actions';
 
 const MockLocation = {

@@ -1,3 +1,6 @@
+import * as React from 'react';
+import styled from 'styled-components';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import AkAvatar from '@atlaskit/avatar';
 import AkComment, {
   CommentAction,
@@ -8,8 +11,7 @@ import { WithProviders } from '@atlaskit/editor-common';
 import { ConnectedReactionsView } from '@atlaskit/reactions';
 import { ReactRenderer } from '@atlaskit/renderer';
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
-import * as React from 'react';
-import styled from 'styled-components';
+
 import { HttpError } from '../api/HttpError';
 import CommentContainer from '../containers/Comment';
 import {
@@ -19,9 +21,9 @@ import {
   trackEventActions,
 } from '../internal/analytics';
 import { Comment as CommentType, User } from '../model';
+
 import Editor from './Editor';
 import { SharedProps } from './types';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 export interface Props extends SharedProps {
   conversationId: string;

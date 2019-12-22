@@ -8,11 +8,12 @@ jest.doMock('../../client/errors', () => ({
 }));
 import * as React from 'react';
 import { useEffect, useState, ReactNode, FC } from 'react';
-import CardClient from '../../client';
-import { Card } from '../Card';
-import { Provider } from '../..';
-import { fakeFactory, mocks, waitFor } from '../../utils/mocks';
 import { render, cleanup, waitForElement } from '@testing-library/react';
+
+import { Provider } from '../..';
+import CardClient from '../../client';
+import { fakeFactory, mocks, waitFor } from '../../utils/mocks';
+import { Card } from '../Card';
 describe('smart-card: card states', () => {
   let mockClient: CardClient;
   let mockFetch: jest.Mock;

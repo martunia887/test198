@@ -1,5 +1,5 @@
-import { Component } from './component';
 import { Signal } from '../signal';
+import { Component } from './component';
 
 // Each coordinate is a float value between 0.0 and 1.0.
 // (0.0, 0.0) corresponds to the top left corner, (1.0, 1.0) corresponds to the bottom right corner of the input area.

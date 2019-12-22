@@ -1,12 +1,11 @@
 /** @jsx jsx */
 import { FC } from 'react';
-import { jsx } from '@emotion/core';
 import { ReactNode, CSSProperties } from 'react';
 import { components } from 'react-select';
-
-import { layers } from '@atlaskit/theme/constants';
-import { N40A } from '@atlaskit/theme/colors';
 import SearchIcon from '@atlaskit/icon/glyph/editor/search';
+import { N40A } from '@atlaskit/theme/colors';
+import { layers } from '@atlaskit/theme/constants';
+import { jsx } from '@emotion/core';
 
 import { ControlProps, MenuProps } from '../types';
 

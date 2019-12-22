@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, matchPath } from 'react-router-dom';
+import Button from '@atlaskit/button';
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
-import packagesNav from './navigations/Packages';
-import docsNav from './navigations/Docs';
+import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
 import ComponentIcon from '@atlaskit/icon/glyph/component';
 import OverviewIcon from '@atlaskit/icon/glyph/overview';
-import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
-import Button from '@atlaskit/button';
 import {
   AkContainerNavigationNested as NestedNav,
   AkNavigationItem,
 } from '@atlaskit/navigation';
 
 import { Directory } from '../../types';
+
+import docsNav from './navigations/Docs';
+import packagesNav from './navigations/Packages';
 
 export type GroupsProps = {
   docs: Directory;

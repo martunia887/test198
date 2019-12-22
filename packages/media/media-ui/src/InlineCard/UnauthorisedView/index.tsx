@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { IconAndTitleLayout } from '../IconAndTitleLayout';
-import Button from '@atlaskit/button';
-import { Frame } from '../Frame';
-import { B400, N500 } from '@atlaskit/theme/colors';
-import { messages } from '../../messages';
 import { FormattedMessage } from 'react-intl';
+import Button from '@atlaskit/button';
 import LockIcon from '@atlaskit/icon/glyph/lock-filled';
-import { AKIconWrapper } from '../Icon';
+import { B400, N500 } from '@atlaskit/theme/colors';
+
+import { messages } from '../../messages';
 import { ForbiddenWrapper } from '../ForbiddenView/styled';
+import { Frame } from '../Frame';
+import { AKIconWrapper } from '../Icon';
+import { IconAndTitleLayout } from '../IconAndTitleLayout';
 
 export interface InlineCardUnauthorizedViewProps {
   /** The url to display */

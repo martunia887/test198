@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import { SortOrder } from '@atlaskit/editor-common';
+
 import TableRow from '../../../../react/nodes/tableRow';
 
 describe('Renderer - React/Nodes/TableRow', () => {

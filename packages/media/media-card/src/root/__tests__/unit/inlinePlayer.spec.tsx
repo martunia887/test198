@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
-import { Observable } from 'rxjs';
-import { CustomMediaPlayer } from '@atlaskit/media-ui';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   globalMediaEventEmitter,
   MediaViewedEventPayload,
@@ -16,16 +16,17 @@ import {
   mountWithIntlContext,
   nextTick,
 } from '@atlaskit/media-test-helpers';
+import { CustomMediaPlayer } from '@atlaskit/media-ui';
+import { Observable } from 'rxjs';
+
 import {
   InlinePlayer,
   InlinePlayerProps,
   getPreferredVideoArtifact,
   InlinePlayerState,
 } from '../../../root/inlinePlayer';
-import { CardLoading } from '../../../utils/lightCards/cardLoading';
 import { InlinePlayerWrapper } from '../../../root/styled';
-import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { CardLoading } from '../../../utils/lightCards/cardLoading';
 
 const defaultFileState: FileState = {
   status: 'processed',

@@ -1,5 +1,6 @@
-import { NodeSelection } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { uuid } from '@atlaskit/adf-schema';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   compareSelection,
   createEditorFactory,
@@ -16,9 +17,9 @@ import {
   panel,
   insertText,
 } from '@atlaskit/editor-test-helpers';
-import { uuid } from '@atlaskit/adf-schema';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import { NodeSelection } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
 import { insertTaskDecision } from '../../../../plugins/tasks-and-decisions/commands';
 import { TaskDecisionListType } from '../../../../plugins/tasks-and-decisions/types';
 

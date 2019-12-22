@@ -4,9 +4,8 @@ import {
   ServiceConfig,
   utils as serviceUtils,
 } from '@atlaskit/util-service-support';
+
 import { CategoryId } from '../components/picker/categories';
-import { selectedToneStorageKey } from '../util/constants';
-import { isMediaEmoji, isPromise, toEmojiId } from '../util/type-helpers';
 import {
   EmojiDescription,
   EmojiId,
@@ -21,7 +20,10 @@ import {
   UploadingEmojiProvider,
   User,
 } from '../types';
+import { selectedToneStorageKey } from '../util/constants';
 import debug from '../util/logger';
+import { isMediaEmoji, isPromise, toEmojiId } from '../util/type-helpers';
+
 import EmojiLoader from './EmojiLoader';
 import EmojiRepository from './EmojiRepository';
 import SiteEmojiResource from './media/SiteEmojiResource';

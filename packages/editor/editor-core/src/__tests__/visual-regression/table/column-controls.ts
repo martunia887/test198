@@ -1,5 +1,8 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 import { animationFrame } from '../../__helpers/page-objects/_editor';
+import {
+  pressKeyDown,
+  pressKeyUp,
+} from '../../__helpers/page-objects/_keyboard';
 import {
   clickCellOptions,
   getSelectorForTableCell,
@@ -10,13 +13,11 @@ import {
   grabResizeHandle,
   hoverColumnControls,
 } from '../../__helpers/page-objects/_table';
-import {
-  pressKeyDown,
-  pressKeyUp,
-} from '../../__helpers/page-objects/_keyboard';
+import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
 import adf from './__fixtures__/default-table.adf.json';
 import adfTableWithoutTableHeader from './__fixtures__/table-without-table-header.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Table context menu: merge-split cells', () => {
   let page: Page;

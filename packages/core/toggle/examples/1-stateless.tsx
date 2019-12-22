@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import { gridSize } from '@atlaskit/theme';
+
 import { ToggleStateless } from '../src';
 
 interface State {

@@ -1,12 +1,27 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { PureComponent } from 'react';
 import * as PropTypes from 'prop-types';
-import Spinner from '@atlaskit/spinner';
-import { Popup } from '@atlaskit/editor-common';
+import * as ReactDOM from 'react-dom';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import { Popup } from '@atlaskit/editor-common';
+import Spinner from '@atlaskit/spinner';
 
 import { withAnalytics } from '../../analytics';
+import { createDispatch } from '../../event-dispatcher';
+import {
+  analyticsEventKey,
+  AnalyticsDispatch,
+  ACTION,
+  ACTION_SUBJECT,
+  EVENT_TYPE,
+  ACTION_SUBJECT_ID,
+} from '../../plugins/analytics';
+import { openFeedbackDialog } from '../../plugins/feedback-dialog';
+import { FeedbackInfo } from '../../types';
+import deprecationWarnings, {
+  DeprecationWarning,
+} from '../../utils/deprecation-warnings';
+import pickBy from '../../utils/pick-by';
 import ToolbarButton from '../ToolbarButton';
 import withOuterListeners from '../with-outer-listeners';
 
@@ -18,21 +33,6 @@ import {
   ConfirmationHeader,
   ConfirmationImg,
 } from './styles';
-import {
-  analyticsEventKey,
-  AnalyticsDispatch,
-  ACTION,
-  ACTION_SUBJECT,
-  EVENT_TYPE,
-  ACTION_SUBJECT_ID,
-} from '../../plugins/analytics';
-import { createDispatch } from '../../event-dispatcher';
-import { openFeedbackDialog } from '../../plugins/feedback-dialog';
-import { FeedbackInfo } from '../../types';
-import deprecationWarnings, {
-  DeprecationWarning,
-} from '../../utils/deprecation-warnings';
-import pickBy from '../../utils/pick-by';
 
 const PopupWithOutsideListeners: any = withOuterListeners(Popup);
 const POPUP_HEIGHT = 388;

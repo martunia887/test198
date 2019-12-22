@@ -1,6 +1,10 @@
-import * as api from './api';
-import { getResolverUrl } from '../utils/environments';
+import DataLoader from 'dataloader';
+
 import { getError } from '../state/actions/helpers';
+import { getResolverUrl } from '../utils/environments';
+
+import * as api from './api';
+import { FetchError } from './errors';
 import {
   JsonLd,
   CardClient as CardClientInterface,
@@ -8,8 +12,6 @@ import {
   JsonLdBatch,
   JsonLdResponse,
 } from './types';
-import DataLoader from 'dataloader';
-import { FetchError } from './errors';
 
 export default class CardClient implements CardClientInterface {
   private resolverUrl: string;

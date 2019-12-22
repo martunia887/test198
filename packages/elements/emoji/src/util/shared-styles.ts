@@ -1,5 +1,4 @@
 import { borderRadius, colors } from '@atlaskit/theme';
-
 import { emojiPickerWidth } from './constants';
 
 export const emojiPickerListWidth = emojiPickerWidth;

@@ -1,10 +1,10 @@
 import React from 'react';
+import { Location } from '@reach/router';
 import { StaticQuery, graphql } from 'gatsby';
+
+import { HeadingItem } from './side-nav/heading-item';
 import NavItem from './side-nav/nav-item';
 import NavSection from './side-nav/nav-section';
-import { HeadingItem } from './side-nav/heading-item';
-
-import { Location } from '@reach/router';
 
 const ComponentNavItem = ({ docsDisplayName }: { docsDisplayName: string }) => (
   <NavItem

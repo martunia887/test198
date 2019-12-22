@@ -1,6 +1,6 @@
+import { TableLayout, tableBackgroundColorPalette } from '@atlaskit/adf-schema';
 import { Rect } from 'prosemirror-tables';
 import { findCellClosestToPos } from 'prosemirror-utils';
-import { TableLayout, tableBackgroundColorPalette } from '@atlaskit/adf-schema';
 
 import {
   analyticsService as analyticsV2,
@@ -14,6 +14,7 @@ import {
   INPUT_METHOD,
   TABLE_BREAKOUT,
 } from '../analytics';
+
 import {
   insertColumn,
   insertRow,
@@ -27,15 +28,15 @@ import {
   getNextLayout,
   sortByColumn,
 } from './commands';
+import { splitCell } from './commands/misc';
+import { getPluginState } from './pm-plugins/main';
+import { mergeCells, deleteColumns, deleteRows } from './transforms';
+import { SortOrder } from './types';
 import {
   getSelectedCellInfo,
   getSelectedTableInfo,
   checkIfNumberColumnEnabled,
 } from './utils';
-import { getPluginState } from './pm-plugins/main';
-import { mergeCells, deleteColumns, deleteRows } from './transforms';
-import { splitCell } from './commands/misc';
-import { SortOrder } from './types';
 
 const TABLE_BREAKOUT_NAME_MAPPING = {
   default: TABLE_BREAKOUT.NORMAL,

@@ -1,7 +1,8 @@
-import { Slice, Node, Schema } from 'prosemirror-model';
-import LinkifyIt from 'linkify-it';
-import { mapSlice } from '../../utils/slice';
 import { isSafeUrl } from '@atlaskit/adf-schema';
+import LinkifyIt from 'linkify-it';
+import { Slice, Node, Schema } from 'prosemirror-model';
+
+import { mapSlice } from '../../utils/slice';
 
 export const LINK_REGEXP = /(https?|ftp):\/\/[^\s]+/;
 

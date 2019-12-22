@@ -1,20 +1,22 @@
 // @flow
 
 import React, { PureComponent, type Node } from 'react';
-import Blanket from '@atlaskit/blanket';
-import { withAnalytics } from '@atlaskit/analytics';
 import ScrollLock from 'react-scrolllock';
-import DrawerTrigger from './DrawerTrigger';
-import DrawerBackIcon from './DrawerBackIcon';
-import ContainerHeader from './ContainerHeader';
-import DrawerSide from '../styled/DrawerSide';
-import DrawerInner from '../styled/DrawerInner';
-import DrawerPrimaryIcon from '../styled/DrawerPrimaryIcon';
-import DrawerMain from '../styled/DrawerMain';
-import DrawerContent from '../styled/DrawerContent';
-import DrawerBackIconWrapper from '../styled/DrawerBackIconWrapper';
-import { WithRootTheme } from '../../theme/util';
+import { withAnalytics } from '@atlaskit/analytics';
+import Blanket from '@atlaskit/blanket';
+
 import { container } from '../../theme/presets';
+import { WithRootTheme } from '../../theme/util';
+import DrawerBackIconWrapper from '../styled/DrawerBackIconWrapper';
+import DrawerContent from '../styled/DrawerContent';
+import DrawerInner from '../styled/DrawerInner';
+import DrawerMain from '../styled/DrawerMain';
+import DrawerPrimaryIcon from '../styled/DrawerPrimaryIcon';
+import DrawerSide from '../styled/DrawerSide';
+
+import ContainerHeader from './ContainerHeader';
+import DrawerBackIcon from './DrawerBackIcon';
+import DrawerTrigger from './DrawerTrigger';
 
 const escKeyCode = 27;
 export const analyticsNamespace = 'atlaskit.navigation.drawer';

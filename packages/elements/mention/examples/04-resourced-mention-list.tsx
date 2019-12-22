@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { onSelection, resourceProvider } from '../example-helpers';
 import SearchTextInput from '../example-helpers/demo-search-text-input';
 import ResourcedMentionList from '../src/components/ResourcedMentionList';

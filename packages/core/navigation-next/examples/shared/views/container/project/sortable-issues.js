@@ -8,7 +8,6 @@ import {
   ViewController,
   ViewControllerSubscriber,
 } from '../../../../../src';
-
 import { LinkItem } from '../../../components';
 import SortableItemState from '../../../providers/sortable-item-state';
 import type { ItemsByGroup } from '../../../providers/sortable-item-state/types';

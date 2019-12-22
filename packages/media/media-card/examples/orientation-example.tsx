@@ -1,12 +1,12 @@
 import * as React from 'react';
-
-import { Card } from '../src';
-import uuid from 'uuid/v4';
+import { FileIdentifier, MediaClient } from '@atlaskit/media-client';
 import {
   mediaPickerAuthProvider,
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
-import { FileIdentifier, MediaClient } from '@atlaskit/media-client';
+import uuid from 'uuid/v4';
+
+import { Card } from '../src';
 
 const mediaClientConfig = {
   authProvider: mediaPickerAuthProvider('asap'),

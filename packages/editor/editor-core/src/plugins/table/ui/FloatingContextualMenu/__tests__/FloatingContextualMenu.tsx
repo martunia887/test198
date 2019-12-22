@@ -1,5 +1,6 @@
 import React from 'react';
 import createEditorFactory from '@atlaskit/editor-test-helpers/create-editor';
+import { shallowWithIntl } from '@atlaskit/editor-test-helpers/enzyme';
 import {
   doc,
   tdEmpty,
@@ -9,10 +10,10 @@ import {
   table,
   p,
 } from '@atlaskit/editor-test-helpers/schema-builder';
-import { shallowWithIntl } from '@atlaskit/editor-test-helpers/enzyme';
 import { EditorView } from 'prosemirror-view';
-import FloatingContextualMenu from '../index';
+
 import { getPluginState } from '../../../pm-plugins/main';
+import FloatingContextualMenu from '../index';
 
 describe('FloatingContextualMenu', () => {
   const createEditor = createEditorFactory();

@@ -1,13 +1,14 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
 import {
   getComponentClassWithStore,
   mockState,
   mockStore,
 } from '@atlaskit/media-test-helpers';
+
+import SidebarItem from '../../item/sidebarItem';
 import { StatelessSidebar, default as ConnectedSidebar } from '../../sidebar';
 import { ServiceList, Separator } from '../../styled';
-import SidebarItem from '../../item/sidebarItem';
 
 const ConnectedSidebarWithStore = getComponentClassWithStore(ConnectedSidebar);
 

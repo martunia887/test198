@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   code,
   Example,
@@ -6,8 +7,6 @@ import {
   AtlassianInternalWarning,
   DevPreviewWarning,
 } from '@atlaskit/docs';
-
-import * as React from 'react';
 
 export default md`
   ${(

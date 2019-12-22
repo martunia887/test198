@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { connect } from 'react-redux';
 import DropdownMenu, {
   DropdownItemGroup,
@@ -7,12 +8,12 @@ import DropdownMenu, {
 } from '@atlaskit/dropdown-menu';
 import RefreshIcon from '@atlaskit/icon/glyph/refresh';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
-import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
+
+import { changeAccount } from '../../actions/changeAccount';
+import { changeCloudAccountFolder } from '../../actions/changeCloudAccountFolder';
 import { startAuth } from '../../actions/startAuth';
 import { requestUnlinkCloudAccount } from '../../actions/unlinkCloudAccount';
-import { changeCloudAccountFolder } from '../../actions/changeCloudAccountFolder';
-import { changeAccount } from '../../actions/changeAccount';
 import {
   State,
   Path,
@@ -20,6 +21,7 @@ import {
   ServiceAccountWithType,
   ServiceAccountLink,
 } from '../../domain';
+
 import {
   FolderViewerNavigation,
   ControlsWrapper,

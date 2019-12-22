@@ -6,7 +6,6 @@ import {
   Props,
   AtlassianInternalWarning,
 } from '@atlaskit/docs';
-
 import { Hr } from './shared';
 
 export default md`

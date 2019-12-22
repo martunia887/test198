@@ -3,6 +3,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Item from '@atlaskit/item';
+
 import { DropdownItem } from '../../..';
 
 describe('dropdown menu - DropdownItem', () => {

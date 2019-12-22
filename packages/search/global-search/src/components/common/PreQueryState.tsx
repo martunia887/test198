@@ -1,13 +1,15 @@
 import * as React from 'react';
+
+import { ResultsGroup } from '../../model/Result';
 import { ScreenCounter } from '../../util/ScreenCounter';
-import { isEmpty } from '../SearchResultsUtil';
+import { ReferralContextIdentifiers } from '../GlobalQuickSearchWrapper';
 import NoRecentActivity from '../NoRecentActivity';
+import { isEmpty } from '../SearchResultsUtil';
+
 import ResultGroupsComponent, {
   ResultGroupType,
 } from './ResultGroupsComponent';
-import { ResultsGroup } from '../../model/Result';
 import { PreQueryAnalyticsComponent } from './ScreenAnalyticsHelper';
-import { ReferralContextIdentifiers } from '../GlobalQuickSearchWrapper';
 
 export interface Props {
   resultsGroups: ResultsGroup[];

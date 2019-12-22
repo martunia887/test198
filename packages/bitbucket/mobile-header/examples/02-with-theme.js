@@ -1,11 +1,12 @@
 // @flow
 
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import Navigation from '@atlaskit/navigation';
 import RoomMenuIcon from '@atlaskit/icon/glyph/room-menu';
+import Navigation from '@atlaskit/navigation';
+import { AtlaskitThemeProvider } from '@atlaskit/theme';
+
 import MobileHeader from '../src';
 
 const FakeSideBar = styled.div`

@@ -1,7 +1,6 @@
 // @flow
-import { themed } from '@atlaskit/theme/components';
-
 import * as colors from '@atlaskit/theme/colors';
+import { themed } from '@atlaskit/theme/components';
 
 // The following are the name for color mappings in @atlaskit/themes
 // The exports are the functions, not the objects, so could not be used here

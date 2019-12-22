@@ -1,6 +1,7 @@
 //@flow
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import { Header, Description } from '../../common';
 import Thankyou from '../../Thankyou';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 
 import Select from './Select';
-import { SelectProps, OptionType, SelectComponentsConfig } from './types';
 import { CheckboxOption } from './components/input-options';
+import { SelectProps, OptionType, SelectComponentsConfig } from './types';
 
 const CheckboxSelect = ({ components, ...props }: SelectProps<OptionType>) => {
   const temp: SelectComponentsConfig<OptionType> = {

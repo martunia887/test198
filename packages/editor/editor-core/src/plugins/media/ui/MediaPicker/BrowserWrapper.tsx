@@ -1,7 +1,9 @@
 import * as React from 'react';
-import PickerFacadeProvider from './PickerFacadeProvider';
-import { MediaPluginState } from '../../pm-plugins/main';
 import { Browser } from '@atlaskit/media-picker';
+
+import { MediaPluginState } from '../../pm-plugins/main';
+
+import PickerFacadeProvider from './PickerFacadeProvider';
 
 type Props = {
   mediaState: MediaPluginState;

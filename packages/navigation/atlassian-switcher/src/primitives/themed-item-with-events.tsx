@@ -1,11 +1,10 @@
-import ThemedItem from './themed-item';
-
 import {
   createAndFireNavigationEvent,
   withAnalyticsEvents,
   UI_EVENT_TYPE,
   SWITCHER_ITEM_SUBJECT,
 } from '../utils/analytics';
+import ThemedItem from './themed-item';
 
 const SwitcherItemWithEvents = withAnalyticsEvents({
   onClick: createAndFireNavigationEvent({

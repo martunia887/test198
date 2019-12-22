@@ -1,9 +1,10 @@
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { Comment as CommentType, User } from '../model';
-import { Editor as AkEditor, EditorProps } from '@atlaskit/editor-core';
 import { CommentAction as AkCommentAction } from '@atlaskit/comment';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { Editor as AkEditor, EditorProps } from '@atlaskit/editor-core';
+
 import { SuccessHandler } from '../internal/actions';
 import { EventData } from '../internal/analytics';
+import { Comment as CommentType, User } from '../model';
 
 export type SendAnalyticsEvent = (eventData: EventData) => void;
 

@@ -1,8 +1,9 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Fragment } from 'react';
+import { jsx } from '@emotion/core';
 
 import { PrimaryButtonSkeleton } from '../PrimaryButton/skeleton';
+
 import { primaryButtonSkeletonCSS } from './styles';
 import { PrimaryItemsContainerSkeletonProps } from './types';
 

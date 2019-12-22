@@ -1,4 +1,4 @@
-import { setCellAttrs, findCellClosestToPos } from 'prosemirror-utils';
+import { tableBackgroundColorNames, rgbToHex } from '@atlaskit/adf-schema';
 import {
   doc,
   p,
@@ -8,9 +8,10 @@ import {
   td,
   tdEmpty,
 } from '@atlaskit/editor-test-helpers';
-import { tableBackgroundColorNames, rgbToHex } from '@atlaskit/adf-schema';
-import { TablePluginState } from '../../../../../plugins/table/types';
+import { setCellAttrs, findCellClosestToPos } from 'prosemirror-utils';
+
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
+import { TablePluginState } from '../../../../../plugins/table/types';
 
 describe('table -> nodeviews -> cell.tsx', () => {
   const createEditor = createEditorFactory<TablePluginState>();

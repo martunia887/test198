@@ -1,3 +1,4 @@
+import { resolveAction } from './manifest-helpers';
 import {
   ExtensionManifest,
   MenuItem,
@@ -5,7 +6,6 @@ import {
   ExtensionModuleType,
   MenuItemMap,
 } from './types';
-import { resolveAction } from './manifest-helpers';
 
 export const groupBy = <T>(
   arr: T[],

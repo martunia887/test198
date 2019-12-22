@@ -1,12 +1,19 @@
 import * as React from 'react';
 import { Messages } from 'react-intl';
+
 import Switcher from '../primitives/themed-switcher';
+import { ProviderResult } from '../providers/as-data-provider';
+import CommonDataProvider from '../providers/common-data-provider';
 import {
   CustomLinksProvider,
   MANAGE_HREF,
 } from '../providers/jira-data-providers';
-import CommonDataProvider from '../providers/common-data-provider';
-import { mapResultsToSwitcherProps } from '../utils/map-results-to-switcher-props';
+import {
+  JoinableSitesProvider,
+  JoinableSitesDataProvider,
+} from '../providers/joinable-sites-data-provider';
+import { AvailableProductsProvider } from '../providers/products-data-provider';
+import { WithTheme } from '../theme/types';
 import {
   FeatureMap,
   AvailableProductsResponse,
@@ -15,13 +22,7 @@ import {
   Product,
   WithRecommendationsFeatureFlags,
 } from '../types';
-import { ProviderResult } from '../providers/as-data-provider';
-import {
-  JoinableSitesProvider,
-  JoinableSitesDataProvider,
-} from '../providers/joinable-sites-data-provider';
-import { AvailableProductsProvider } from '../providers/products-data-provider';
-import { WithTheme } from '../theme/types';
+import { mapResultsToSwitcherProps } from '../utils/map-results-to-switcher-props';
 
 type JiraSwitcherProps = WithTheme &
   Partial<WithRecommendationsFeatureFlags> & {

@@ -1,18 +1,20 @@
 import * as React from 'react';
+import { ProviderFactory, ErrorReporter } from '@atlaskit/editor-common';
 import { Schema } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { ProviderFactory, ErrorReporter } from '@atlaskit/editor-common';
-import { Dispatch, EventDispatcher } from '../event-dispatcher';
+
 import EditorActions from '../actions';
-import { ToolbarSize } from '../ui/Toolbar';
+import { Dispatch, EventDispatcher } from '../event-dispatcher';
+import { DispatchAnalyticsEvent } from '../plugins/analytics';
+import { FloatingToolbarHandler } from '../plugins/floating-toolbar/types';
 import { QuickInsertHandler } from '../plugins/quick-insert/types';
 import { TypeAheadHandler } from '../plugins/type-ahead/types';
-import { FloatingToolbarHandler } from '../plugins/floating-toolbar/types';
 import { PortalProviderAPI } from '../ui/PortalProvider';
+import { ToolbarSize } from '../ui/Toolbar';
+
 import { NodeConfig, MarkConfig, EditorConfig } from './editor-config';
 import { EditorAppearance } from './editor-props';
-import { DispatchAnalyticsEvent } from '../plugins/analytics';
 
 export type PMPluginFactoryParams = {
   schema: Schema;

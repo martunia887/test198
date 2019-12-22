@@ -1,4 +1,3 @@
-import { mapResultsToSwitcherProps } from '../../utils/map-results-to-switcher-props';
 import {
   ResultLoading,
   Status,
@@ -16,6 +15,7 @@ import {
   RecommendationsEngineResponse,
   JoinableSitesResponse,
 } from '../../types';
+import { mapResultsToSwitcherProps } from '../../utils/map-results-to-switcher-props';
 
 describe('map-results-to-switcher-props', () => {
   describe('hasLoaded flags', () => {

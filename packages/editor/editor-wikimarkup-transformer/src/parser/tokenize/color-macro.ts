@@ -1,11 +1,13 @@
-import { Schema } from 'prosemirror-model';
 import { Token, TokenType, TokenParser } from '.';
+import { Schema } from 'prosemirror-model';
+
 import { Context } from '../../interfaces';
-import { commonMacro } from './common-macro';
-import { parseAttrs } from '../utils/attrs';
-import { parseString } from '../text';
 import { getEditorColor } from '../color';
+import { parseString } from '../text';
+import { parseAttrs } from '../utils/attrs';
 import { hasAnyOfMarks } from '../utils/text';
+
+import { commonMacro } from './common-macro';
 
 export const colorMacro: TokenParser = ({
   input,

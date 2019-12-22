@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
-import { Node as PMNode } from 'prosemirror-model';
-import { EditorView, NodeView } from 'prosemirror-view';
 import { Color, Status, StatusStyle } from '@atlaskit/status/element';
 import { borderRadius, colors } from '@atlaskit/theme';
+import { Node as PMNode } from 'prosemirror-model';
+import { EditorView, NodeView } from 'prosemirror-view';
+
+import { EventDispatcher } from '../../../event-dispatcher';
 import { ReactNodeView, getPosHandler } from '../../../nodeviews';
 import InlineNodeWrapper, {
   createMobileInlineDomRef,
 } from '../../../ui/InlineNodeWrapper';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { ZeroWidthSpace } from '../../../utils';
-import { EventDispatcher } from '../../../event-dispatcher';
 import { StatusPluginOptions } from '../index';
 
 export const messages = defineMessages({

@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { InjectedIntl } from 'react-intl';
 import { heading, blockquote, hardBreak } from '@atlaskit/adf-schema';
+import { NodeSpec } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+
+import * as keymaps from '../../keymaps';
 import { EditorPlugin, AllowedBlockTypes } from '../../types';
 import { ToolbarSize } from '../../ui/Toolbar';
-import { createPlugin, pluginKey } from './pm-plugins/main';
-import keymapPlugin from './pm-plugins/keymap';
-import inputRulePlugin from './pm-plugins/input-rule';
-import ToolbarBlockType from './ui/ToolbarBlockType';
 import WithPluginState from '../../ui/WithPluginState';
-import { setBlockTypeWithAnalytics } from './commands';
-import { messages, HeadingLevels } from './types';
-import { NodeSpec } from 'prosemirror-model';
 import {
   addAnalytics,
   INPUT_METHOD,
@@ -19,13 +16,18 @@ import {
   ACTION_SUBJECT,
   ACTION,
 } from '../analytics';
-import * as keymaps from '../../keymaps';
 import { IconQuote, IconHeading } from '../quick-insert/assets';
 import {
   QuickInsertItem,
   QuickInsertActionInsert,
 } from '../quick-insert/types';
-import { EditorState } from 'prosemirror-state';
+
+import { setBlockTypeWithAnalytics } from './commands';
+import inputRulePlugin from './pm-plugins/input-rule';
+import keymapPlugin from './pm-plugins/keymap';
+import { createPlugin, pluginKey } from './pm-plugins/main';
+import { messages, HeadingLevels } from './types';
+import ToolbarBlockType from './ui/ToolbarBlockType';
 
 interface BlockTypeNode {
   name: AllowedBlockTypes;

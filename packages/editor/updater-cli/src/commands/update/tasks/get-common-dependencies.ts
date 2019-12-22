@@ -1,5 +1,5 @@
-import { UpdateTask } from '../types';
 import { createPackageJsonPatch } from '../../../utils/package-json';
+import { UpdateTask } from '../types';
 
 export const getCommonDependenciesTask: UpdateTask = {
   title: 'Calculating dependencies that should be updated',

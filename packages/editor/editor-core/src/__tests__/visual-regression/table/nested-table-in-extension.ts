@@ -1,8 +1,9 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import tableInExtAdf from './__fixtures__/nested-table-inside-bodied-ext.adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
 import { clickFirstCell } from '../../../__tests__/__helpers/page-objects/_table';
 import messages from '../../../messages';
+import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import tableInExtAdf from './__fixtures__/nested-table-inside-bodied-ext.adf.json';
 // TODO: https://product-fabric.atlassian.net/browse/ED-7721
 describe.skip('Snapshot Test: Nested table inside bodied extension', () => {
   let page: Page;

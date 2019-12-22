@@ -1,6 +1,7 @@
 import React from 'react';
 import EditorFeedbackIcon from '@atlaskit/icon/glyph/editor/feedback';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+
 import Panel from '../src';
 
 const Header = (

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { EditorView } from 'prosemirror-view';
 import MentionIcon from '@atlaskit/icon/glyph/editor/mention';
+import { EditorView } from 'prosemirror-view';
+
 import { withAnalytics } from '../../../../analytics';
 import ToolbarButton from '../../../../ui/ToolbarButton';
-import { insertMentionQuery } from '../../commands/insert-mention-query';
 import { INPUT_METHOD } from '../../../analytics';
+import { insertMentionQuery } from '../../commands/insert-mention-query';
 
 export interface Props {
   editorView?: EditorView;

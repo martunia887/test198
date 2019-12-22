@@ -1,11 +1,13 @@
-import AkFieldBase from '@atlaskit/field-base';
 import * as React from 'react';
 import { ChangeEvent, ChangeEventHandler, PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
+import AkFieldBase from '@atlaskit/field-base';
+
 import { EmojiUpload, Message } from '../../types';
 import * as ImageUtil from '../../util/image';
 import debug from '../../util/logger';
 import { messages } from '../i18n';
+
 import EmojiErrorMessage from './EmojiErrorMessage';
 import EmojiUploadPreview from './EmojiUploadPreview';
 import FileChooser from './FileChooser';

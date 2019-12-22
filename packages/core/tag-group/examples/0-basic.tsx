@@ -1,6 +1,5 @@
 import React from 'react';
 import Tag from '@atlaskit/tag';
-
 import TagGroup from '../src';
 
 export default () => (

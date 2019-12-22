@@ -5,11 +5,12 @@ jest.mock('../../../components/styles', () => ({
 import * as React from 'react';
 import { PopupSelect } from '@atlaskit/select';
 import { shallowWithIntl } from 'enzyme-react-intl';
-import { getPopupStyles } from '../../../components/styles';
-import { PopupUserPicker } from '../../../components/PopupUserPicker';
-import { PopupUserPickerProps } from '../../../types';
-import { getPopupProps } from '../../../components/popup';
+
 import { PopupControl } from '../../../components/PopupControl';
+import { PopupUserPicker } from '../../../components/PopupUserPicker';
+import { getPopupProps } from '../../../components/popup';
+import { getPopupStyles } from '../../../components/styles';
+import { PopupUserPickerProps } from '../../../types';
 
 describe('PopupUserPicker', () => {
   const shallowPopupUserPicker = (props: Partial<PopupUserPickerProps> = {}) =>

@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { gridSize } from '@atlaskit/theme';
 import { MenuListComponentProps, OptionProps } from '@atlaskit/select';
-import { Color } from '../types';
-import ColorCard from './ColorCard';
+import { gridSize } from '@atlaskit/theme';
+
 import { COLOR_CARD_SIZE } from '../constants';
 import {
   ColorPaletteContainer,
   ColorCardWrapper,
 } from '../styled/ColorPalette';
+import { Color } from '../types';
+
+import ColorCard from './ColorCard';
 
 export const MenuList = (props: MenuListComponentProps<Color>) => {
   const {

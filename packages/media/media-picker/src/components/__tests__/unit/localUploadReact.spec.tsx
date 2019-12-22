@@ -1,9 +1,7 @@
-import {
-  LocalUploadComponentReact,
-  LocalUploadComponentBaseProps,
-} from '../../localUploadReact';
-import { ReactWrapper, mount } from 'enzyme';
 import React from 'react';
+import { ReactWrapper, mount } from 'enzyme';
+import { fakeMediaClient } from '@atlaskit/media-test-helpers';
+
 import {
   MediaFile,
   UploadEventPayloadMap,
@@ -14,13 +12,12 @@ import {
   UploadPreviewUpdateEventPayload,
   UploadsStartEventPayload,
 } from '../../../types';
-
-jest.mock('../../../service/uploadServiceImpl');
-jest.mock('../../component');
-
 import { SCALE_FACTOR_DEFAULT } from '../../../util/getPreviewFromImage';
 import { UploadComponent } from '../../component';
-import { fakeMediaClient } from '@atlaskit/media-test-helpers';
+import {
+  LocalUploadComponentReact,
+  LocalUploadComponentBaseProps,
+} from '../../localUploadReact';
 
 const imageFile: MediaFile = {
   id: 'some-id',

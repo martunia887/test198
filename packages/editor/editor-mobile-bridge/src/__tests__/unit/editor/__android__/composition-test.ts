@@ -1,12 +1,10 @@
 import { doc, createEditorFactory, p } from '@atlaskit/editor-test-helpers';
-
+import { EditorViewWithComposition } from '../../../../types';
 import {
   androidComposeStart,
   androidComposeContinue,
   androidComposeEnd,
 } from '../../_utils';
-
-import { EditorViewWithComposition } from '../../../../types';
 
 describe('composition events on mobile', () => {
   const createEditor = createEditorFactory();

@@ -1,15 +1,16 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-import { ServiceIcon, Wrapper, ServiceName } from '../../styled';
-import { changeService } from '../../../../../actions';
+import { shallow } from 'enzyme';
 import {
   mockStore,
   getComponentClassWithStore,
 } from '@atlaskit/media-test-helpers';
+
+import { changeService } from '../../../../../actions';
 import {
   StatelessSidebarItem,
   default as ConnectedSidebarItem,
 } from '../../sidebarItem';
+import { ServiceIcon, Wrapper, ServiceName } from '../../styled';
 
 const ConnectedSidebarItemStoreWithStore = getComponentClassWithStore(
   ConnectedSidebarItem,

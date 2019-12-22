@@ -1,32 +1,19 @@
 import * as React from 'react';
-import { waitUntil } from '@atlaskit/util-common-test';
+import { ReactWrapper } from 'enzyme';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
+import AkFieldBase from '@atlaskit/field-base';
+import { waitUntil } from '@atlaskit/util-common-test';
 import { MockEmojiResource } from '@atlaskit/util-data-test';
 
-import { AnalyticsListener } from '@atlaskit/analytics-next';
-
-import * as ImageUtil from '../../../../util/image';
-
-import * as helper from '../picker/_emoji-picker-test-helpers';
-
-import {
-  getEmojiResourcePromise,
-  createPngFile,
-  pngDataURL,
-  pngFileUploadData,
-} from '../../_test-data';
-
-import FileChooser from '../../../../components/common/FileChooser';
-import AkFieldBase from '@atlaskit/field-base';
-
 import Emoji from '../../../../components/common/Emoji';
+import EmojiUploadPreview from '../../../../components/common/EmojiUploadPreview';
+import FileChooser from '../../../../components/common/FileChooser';
+import { messages } from '../../../../components/i18n';
+import EmojiUploadComponent from '../../../../components/uploader/EmojiUploadComponent';
 import EmojiUploader, {
   Props,
 } from '../../../../components/uploader/EmojiUploader';
-import EmojiUploadComponent from '../../../../components/uploader/EmojiUploadComponent';
-import EmojiUploadPreview from '../../../../components/common/EmojiUploadPreview';
-
-import { ReactWrapper } from 'enzyme';
 import {
   selectedFileEvent,
   uploadCancelButton,
@@ -34,7 +21,14 @@ import {
   uploadFailedEvent,
   uploadSucceededEvent,
 } from '../../../../util/analytics';
-import { messages } from '../../../../components/i18n';
+import * as ImageUtil from '../../../../util/image';
+import {
+  getEmojiResourcePromise,
+  createPngFile,
+  pngDataURL,
+  pngFileUploadData,
+} from '../../_test-data';
+import * as helper from '../picker/_emoji-picker-test-helpers';
 
 const sampleEmoji = {
   name: 'Sample',

@@ -1,14 +1,15 @@
 // @flow
 import React, { Component, type ElementType, type Node } from 'react';
 import PropTypes from 'prop-types';
-import { TableTreeContainer } from '../styled';
-import Rows from './Rows';
-import Row from './Row';
-import Headers from './Headers';
-import Header from './Header';
-import Cell from './Cell';
 
+import { TableTreeContainer } from '../styled';
 import type { LoadableItems, CSSWidth } from '../types';
+
+import Cell from './Cell';
+import Header from './Header';
+import Headers from './Headers';
+import Row from './Row';
+import Rows from './Rows';
 
 type Props = {
   /** An array of React component constructors. Each component will be used to render a cell in a tree row.  */

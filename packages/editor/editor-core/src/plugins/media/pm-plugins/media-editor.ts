@@ -1,11 +1,10 @@
-import { Plugin, PluginKey, PluginSpec } from 'prosemirror-state';
 import { ProviderFactory, MediaProvider } from '@atlaskit/editor-common';
+import { Plugin, PluginKey, PluginSpec } from 'prosemirror-state';
 
 import { PMPluginFactoryParams } from '../../../types';
-
 import { pluginFactory } from '../../../utils/plugin-state-factory';
-import { MediaEditorState, MediaEditorAction } from '../types';
 import { setMediaClientConfig } from '../commands/media-editor';
+import { MediaEditorState, MediaEditorAction } from '../types';
 
 export const pluginKey = new PluginKey('mediaEditorPlugin');
 

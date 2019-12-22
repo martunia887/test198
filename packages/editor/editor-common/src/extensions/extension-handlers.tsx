@@ -1,13 +1,13 @@
 import React from 'react';
 import Loadable, { LoadingComponentProps } from 'react-loadable';
 
+import { getExtensionKeyAndNodeKey, resolveImport } from './manifest-helpers';
 import {
   ExtensionProvider,
   ExtensionType,
   ExtensionKey,
   ExtensionParams,
 } from './types';
-import { getExtensionKeyAndNodeKey, resolveImport } from './manifest-helpers';
 
 export async function getExtensionModuleNode(
   extensionProvider: ExtensionProvider,

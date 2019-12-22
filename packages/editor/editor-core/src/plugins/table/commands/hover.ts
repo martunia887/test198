@@ -1,7 +1,9 @@
 // #region Imports
 import { TableMap } from 'prosemirror-tables';
 import { findTable, getCellsInColumn, getCellsInRow } from 'prosemirror-utils';
+
 import { createCommand } from '../pm-plugins/main';
+import { TableDecorations, Cell, CellColumnPositioning } from '../types';
 import {
   updatePluginStateDecorations,
   createCellHoverDecoration,
@@ -9,7 +11,6 @@ import {
   createColumnLineResize,
   getMergedCellsPositions,
 } from '../utils';
-import { TableDecorations, Cell, CellColumnPositioning } from '../types';
 // #endregion
 
 // #region Utils

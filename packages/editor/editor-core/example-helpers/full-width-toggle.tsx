@@ -2,12 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 import EditorCollapseIcon from '@atlaskit/icon/glyph/editor/collapse';
 import EditorExpandIcon from '@atlaskit/icon/glyph/editor/expand';
+
+import { EditorAppearance } from '../src/types';
+
 import {
   LOCALSTORAGE_defaultMode,
   FULL_WIDTH_MODE,
   DEFAULT_MODE,
 } from './example-constants';
-import { EditorAppearance } from '../src/types';
 
 const ToggleWrapper = styled.button`
   cursor: pointer;

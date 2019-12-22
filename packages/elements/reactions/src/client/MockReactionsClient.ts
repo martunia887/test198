@@ -1,7 +1,9 @@
 import { EmojiId } from '@atlaskit/emoji/types';
+
 import { defaultReactionsByShortName } from '../components/Selector';
-import { Reactions } from '../types/Reactions';
 import { ReactionSummary } from '../types/ReactionSummary';
+import { Reactions } from '../types/Reactions';
+
 import { ReactionClient } from './ReactionClient';
 
 export const containerAri: string = 'ari:cloud:owner:demo-cloud-id:container/1';

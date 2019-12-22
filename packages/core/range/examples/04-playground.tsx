@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
 import { colors } from '@atlaskit/theme';
+
 import Range from '../src';
 
 interface State {

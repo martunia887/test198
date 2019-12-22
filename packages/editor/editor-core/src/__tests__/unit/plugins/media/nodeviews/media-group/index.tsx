@@ -3,22 +3,23 @@ jest.mock('../../../../../../plugins/media/nodeviews/mediaNodeUpdater');
 
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { EditorView } from 'prosemirror-view';
+import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   mediaGroup,
   media,
   fakeMediaProvider,
 } from '@atlaskit/editor-test-helpers';
 import { nextTick } from '@atlaskit/media-test-helpers';
-import { defaultSchema } from '@atlaskit/adf-schema';
+import { EditorView } from 'prosemirror-view';
+
+import MediaGroup from '../../../../../../plugins/media/nodeviews/mediaGroup';
+import { MediaNodeUpdater } from '../../../../../../plugins/media/nodeviews/mediaNodeUpdater';
 import {
   MediaPluginState,
   stateKey as mediaStateKey,
   MediaProvider,
 } from '../../../../../../plugins/media/pm-plugins/main';
-import MediaGroup from '../../../../../../plugins/media/nodeviews/mediaGroup';
 import { EditorAppearance } from '../../../../../../types';
-import { MediaNodeUpdater } from '../../../../../../plugins/media/nodeviews/mediaNodeUpdater';
 const MockMediaNodeUpdater = MediaNodeUpdater as jest.Mock<MediaNodeUpdater>;
 
 describe('nodeviews/mediaGroup', () => {

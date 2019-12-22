@@ -1,29 +1,30 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
-import { FileDetails, ImageResizeMode } from '@atlaskit/media-client';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
+import { FileDetails, ImageResizeMode } from '@atlaskit/media-client';
 
+import { FileCard } from '../files';
+import { createAndFireMediaEvent } from '../utils/analytics';
+import { breakpointSize } from '../utils/breakpoint';
+import {
+  defaultImageCardDimensions,
+  getDefaultCardDimensions,
+} from '../utils/cardDimensions';
+import { getCSSUnitValue } from '../utils/getCSSUnitValue';
+import { getElementDimension } from '../utils/getElementDimension';
+import { isValidPercentageUnit } from '../utils/isValidPercentageUnit';
 import {
   SharedCardProps,
   CardStatus,
   OnSelectChangeFuncResult,
   CardDimensionValue,
 } from '../index';
-import { FileCard } from '../files';
-import { breakpointSize } from '../utils/breakpoint';
-import {
-  defaultImageCardDimensions,
-  getDefaultCardDimensions,
-} from '../utils/cardDimensions';
-import { isValidPercentageUnit } from '../utils/isValidPercentageUnit';
-import { getCSSUnitValue } from '../utils/getCSSUnitValue';
-import { getElementDimension } from '../utils/getElementDimension';
+
 import { Wrapper } from './styled';
-import { createAndFireMediaEvent } from '../utils/analytics';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;

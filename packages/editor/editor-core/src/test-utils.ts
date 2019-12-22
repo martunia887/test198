@@ -1,6 +1,6 @@
 import { Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { sortByOrder } from './create-editor/sort-by-order';
+
 import {
   getPlugin,
   LightEditorPlugin,
@@ -8,6 +8,7 @@ import {
   LightPMPluginFactoryParams,
   Plugins,
 } from './create-editor/get-plugins';
+import { sortByOrder } from './create-editor/sort-by-order';
 
 export type ArrayConfig = [Plugins, any];
 export type PluginConfig = Plugins | ArrayConfig;

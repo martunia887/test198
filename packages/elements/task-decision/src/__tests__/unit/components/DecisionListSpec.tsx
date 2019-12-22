@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import DecisionList from '../../../components/DecisionList';
+
 import DecisionItem from '../../../components/DecisionItem';
+import DecisionList from '../../../components/DecisionList';
 
 describe('<DecisionList/>', () => {
   it('should render all DecisionItems', () => {

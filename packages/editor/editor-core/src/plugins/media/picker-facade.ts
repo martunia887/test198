@@ -1,3 +1,5 @@
+import { ErrorReportingHandler } from '@atlaskit/editor-common';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { MediaPicker, isImagePreview } from '@atlaskit/media-picker';
 import {
   Popup,
@@ -8,9 +10,6 @@ import {
   UploadErrorEventPayload,
   UploadProcessingEventPayload,
 } from '@atlaskit/media-picker/types';
-import { MediaClientConfig } from '@atlaskit/media-core';
-
-import { ErrorReportingHandler } from '@atlaskit/editor-common';
 
 import {
   MediaState,

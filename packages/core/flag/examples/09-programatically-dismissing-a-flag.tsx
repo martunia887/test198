@@ -2,6 +2,7 @@ import React, { Component, ReactNode } from 'react';
 import Button from '@atlaskit/button';
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import { gridSize } from '@atlaskit/theme';
+
 import Flag, { FlagGroup } from '../src';
 
 type State = {

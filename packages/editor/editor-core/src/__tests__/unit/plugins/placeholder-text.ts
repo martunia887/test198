@@ -1,13 +1,3 @@
-import { name } from '../../../version.json';
-import placeholderTextPlugin, {
-  pluginKey,
-} from '../../../plugins/placeholder-text';
-import {
-  insertPlaceholderTextAtSelection,
-  showPlaceholderFloatingToolbar,
-  hidePlaceholderFloatingToolbar,
-} from '../../../plugins/placeholder-text/actions';
-import { FakeTextCursorSelection } from '../../../plugins/fake-text-cursor/cursor';
 import {
   createEditorFactory,
   doc,
@@ -16,6 +6,17 @@ import {
   insertText,
 } from '@atlaskit/editor-test-helpers';
 import { Selection } from 'prosemirror-state';
+
+import { FakeTextCursorSelection } from '../../../plugins/fake-text-cursor/cursor';
+import placeholderTextPlugin, {
+  pluginKey,
+} from '../../../plugins/placeholder-text';
+import {
+  insertPlaceholderTextAtSelection,
+  showPlaceholderFloatingToolbar,
+  hidePlaceholderFloatingToolbar,
+} from '../../../plugins/placeholder-text/actions';
+import { name } from '../../../version.json';
 
 describe(name, () => {
   const createEditor = createEditorFactory();

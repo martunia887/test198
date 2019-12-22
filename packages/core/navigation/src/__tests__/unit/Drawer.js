@@ -1,18 +1,19 @@
 // @flow
-import { mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
+import { mount, configure } from 'enzyme';
 import PropTypes from 'prop-types';
 import Blanket from '@atlaskit/blanket';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
-import Drawer, { analyticsNamespace } from '../../components/js/Drawer';
+import Adapter from 'enzyme-adapter-react-16';
+
 import ContainerHeader from '../../components/js/ContainerHeader';
+import Drawer, { analyticsNamespace } from '../../components/js/Drawer';
 import DrawerBackIcon from '../../components/js/DrawerBackIcon';
-import DrawerSide from '../../components/styled/DrawerSide';
-import DrawerPrimaryIcon from '../../components/styled/DrawerPrimaryIcon';
-import GlobalItem from '../../components/js/GlobalItem';
 import DrawerTrigger from '../../components/js/DrawerTrigger';
+import GlobalItem from '../../components/js/GlobalItem';
 import DrawerBackIconWrapper from '../../components/styled/DrawerBackIconWrapper';
+import DrawerPrimaryIcon from '../../components/styled/DrawerPrimaryIcon';
+import DrawerSide from '../../components/styled/DrawerSide';
 
 configure({ adapter: new Adapter() });
 describe('<Drawer />', () => {

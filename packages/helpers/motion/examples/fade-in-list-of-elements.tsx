@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import {
   BitbucketIcon,
   ConfluenceIcon,
@@ -8,8 +7,10 @@ import {
   OpsGenieIcon,
   StatuspageIcon,
 } from '@atlaskit/logo';
-import { FadeIn, StaggeredEntrance } from '../src';
+import { jsx } from '@emotion/core';
+
 import { Block, RetryContainer } from '../examples-utils';
+import { FadeIn, StaggeredEntrance } from '../src';
 
 const logos = [
   [<BitbucketIcon size="small" />, 'Bitbucket'],

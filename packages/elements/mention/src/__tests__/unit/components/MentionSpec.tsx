@@ -1,14 +1,15 @@
+import * as React from 'react';
 import { AnalyticsListener as AnalyticsListenerNext } from '@atlaskit/analytics-next';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import Tooltip from '@atlaskit/tooltip';
-import * as React from 'react';
+
+import { ELEMENTS_CHANNEL } from '../../../_constants';
+import { MentionNameResolver } from '../../../api/MentionNameResolver';
+import MentionResource, { MentionProvider } from '../../../api/MentionResource';
 import Mention, { ANALYTICS_HOVER_DELAY } from '../../../components/Mention';
 import ResourcedMention from '../../../components/Mention/ResourcedMention';
 import { MentionStyle } from '../../../components/Mention/styles';
-import { ELEMENTS_CHANNEL } from '../../../_constants';
 import { MentionType, MentionNameStatus } from '../../../types';
-import MentionResource, { MentionProvider } from '../../../api/MentionResource';
-import { MentionNameResolver } from '../../../api/MentionNameResolver';
 import {
   mockMentionData as mentionData,
   mockMentionProvider as mentionProvider,

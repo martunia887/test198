@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ComponentClass } from 'react';
+
 import { EmojiProvider } from '../../api/EmojiResource';
 import { RelativePosition } from '../../types';
 import debug from '../../util/logger';
@@ -8,6 +9,7 @@ import LoadingEmojiComponent, {
   State as LoadingState,
 } from '../common/LoadingEmojiComponent';
 import Popup from '../common/Popup';
+
 import EmojiTypeAheadComponent, {
   EmojiTypeAheadBaseProps,
   Props as ComponentProps,

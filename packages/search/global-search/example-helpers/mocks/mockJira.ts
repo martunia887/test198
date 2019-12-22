@@ -1,11 +1,11 @@
+import uuid from 'uuid/v4';
+import { JiraItem } from '../../src/api/types';
 import {
   pickRandom,
   getMockCatchPhrase,
   getMockAbbreviation,
   getMockLastName,
 } from './mockData';
-import { JiraItem } from '../../src/api/types';
-import uuid from 'uuid/v4';
 
 const issueTypeMap = {
   task: 10001,

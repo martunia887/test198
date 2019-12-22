@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import {
   MediaStore,
   MediaStoreGetCollectionItemsParams,
@@ -12,6 +10,8 @@ import {
   FileDetails,
   getFileStreamsCache,
 } from '..';
+import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 export interface MediaCollectionFileItemDetails extends FileDetails {
   occurrenceKey: string;

@@ -1,16 +1,14 @@
 import { defineMessages, InjectedIntl } from 'react-intl';
-import { EditorState } from 'prosemirror-state';
-import { findDomRefAtPos } from 'prosemirror-utils';
-import LayoutTwoEqualIcon from '@atlaskit/icon/glyph/editor/layout-two-equal';
 import LayoutThreeEqualIcon from '@atlaskit/icon/glyph/editor/layout-three-equal';
+import LayoutThreeWithSidebarsIcon from '@atlaskit/icon/glyph/editor/layout-three-with-sidebars';
+import LayoutTwoEqualIcon from '@atlaskit/icon/glyph/editor/layout-two-equal';
 import LayoutTwoLeftSidebarIcon from '@atlaskit/icon/glyph/editor/layout-two-left-sidebar';
 import LayoutTwoRightSidebarIcon from '@atlaskit/icon/glyph/editor/layout-two-right-sidebar';
-import LayoutThreeWithSidebarsIcon from '@atlaskit/icon/glyph/editor/layout-three-with-sidebars';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
+import { EditorState } from 'prosemirror-state';
+import { findDomRefAtPos } from 'prosemirror-utils';
 
 import commonMessages from '../../messages';
-import { MessageDescriptor } from '../../types/i18n';
-import { Command } from '../../types';
 import {
   FloatingToolbarConfig,
   FloatingToolbarItem,
@@ -18,13 +16,16 @@ import {
   FloatingToolbarButton,
   Icon,
 } from '../../plugins/floating-toolbar/types';
+import { Command } from '../../types';
+import { MessageDescriptor } from '../../types/i18n';
+import { hoverDecoration } from '../base/pm-plugins/decoration';
+
 import {
   setPresetLayout,
   deleteActiveLayoutNode,
   getPresetLayout,
   PresetLayout,
 } from './actions';
-import { hoverDecoration } from '../base/pm-plugins/decoration';
 
 export const messages = defineMessages({
   twoColumns: {

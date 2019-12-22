@@ -1,6 +1,6 @@
 import React from 'react';
-import { Status } from '../src';
 import { Block, ShrinkWrap } from '../examples-util/helpers';
+import { Status } from '../src';
 
 export default () => (
   <Block>

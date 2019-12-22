@@ -1,4 +1,5 @@
-import { EditorView } from 'prosemirror-view';
+import { Selection } from 'prosemirror-state';
+import { TableMap, CellSelection } from 'prosemirror-tables';
 import {
   findTable,
   getCellsInColumn,
@@ -7,10 +8,10 @@ import {
   isColumnSelected,
   isTableSelected,
 } from 'prosemirror-utils';
-import { Selection } from 'prosemirror-state';
-import { TableMap, CellSelection } from 'prosemirror-tables';
-import { tableDeleteButtonSize } from '../ui/styles';
+import { EditorView } from 'prosemirror-view';
+
 import { TableCssClassName as ClassName } from '../types';
+import { tableDeleteButtonSize } from '../ui/styles';
 
 export const getColumnsWidths = (
   view: EditorView,

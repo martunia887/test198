@@ -6,10 +6,7 @@ import {
   insertText,
 } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
-import {
-  setHeadingWithAnalytics,
-  setHeading,
-} from '../../../../plugins/block-type/commands';
+
 import {
   INPUT_METHOD,
   ACTION,
@@ -18,6 +15,10 @@ import {
   ACTION_SUBJECT,
   withAnalytics,
 } from '../../../../plugins/analytics';
+import {
+  setHeadingWithAnalytics,
+  setHeading,
+} from '../../../../plugins/block-type/commands';
 import { createTable } from '../../../../plugins/table/commands';
 
 describe('Analytics Plugin: History Events', () => {

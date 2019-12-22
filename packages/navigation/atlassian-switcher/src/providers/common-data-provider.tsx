@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { ProviderResult } from './as-data-provider';
 
 import { RecentContainersResponse } from '../types';
+import {
+  Permissions,
+  RecommendationsEngineResponse,
+  RecommendationsFeatureFlags,
+} from '../types';
 
+import { ProviderResult } from './as-data-provider';
 import {
   RecentContainersProvider,
   UserPermissionProvider,
   XFlowSettingsProvider,
 } from './instance-data-providers';
 import { RecommendationsEngineProvider } from './recommendations-provider';
-import {
-  Permissions,
-  RecommendationsEngineResponse,
-  RecommendationsFeatureFlags,
-} from '../types';
 
 interface CommonDataProviderProps {
   cloudId?: string;

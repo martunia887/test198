@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Navigation, { AkSearchDrawer } from '@atlaskit/navigation';
-import { randomJiraIconUrl, randomConfluenceIconUrl } from './utils/mockData';
+
 import { QuickSearch, ResultItemGroup, ObjectResult } from '../src';
+
+import { randomJiraIconUrl, randomConfluenceIconUrl } from './utils/mockData';
 
 const ResultWrapperStateless = () => (
   <ObjectResult

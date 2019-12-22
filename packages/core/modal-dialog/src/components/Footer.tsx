@@ -1,8 +1,8 @@
 import React from 'react';
 import Button from '@atlaskit/button';
 
-import { AppearanceType, ActionProps, KeyboardOrMouseEvent } from '../types';
 import { Actions, ActionItem, Footer } from '../styled/Content';
+import { AppearanceType, ActionProps, KeyboardOrMouseEvent } from '../types';
 
 const JustifyShim = (props: any) => <span {...props} />;
 

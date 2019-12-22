@@ -9,11 +9,11 @@ import {
   strong,
   panel,
 } from '@atlaskit/editor-test-helpers';
+import { changeColor } from '../../../../plugins/text-color/commands/change-color';
 import {
   TextColorPluginState,
   pluginKey as textColorPluginKey,
 } from '../../../../plugins/text-color/pm-plugins/main';
-import { changeColor } from '../../../../plugins/text-color/commands/change-color';
 
 describe('text-color', () => {
   const createEditor = createEditorFactory<TextColorPluginState>();

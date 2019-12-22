@@ -1,5 +1,5 @@
-import createStub from 'raf-stub';
 import { code_block, defaultSchema } from '@atlaskit/editor-test-helpers';
+import createStub from 'raf-stub';
 import codeBlockNodeView from '../../../../../plugins/code-block/nodeviews/code-block';
 
 const codeBlock = (attrs?: {}) => (...args: any) =>

@@ -1,5 +1,5 @@
-import { Protocol, ProtocolConfig } from '../types';
 import { OnEvent } from '../apiTypes';
+import { Protocol, ProtocolConfig } from '../types';
 import { EventType } from '../types';
 
 export default class NoopProtocol implements Protocol {

@@ -4,11 +4,11 @@ import {
   WsRemoteUploadProgressData,
   WsRemoteUploadStartData,
 } from '../../../wsMessageData';
-import { WsUploadEvents } from '../../wsUploadEvents';
 import {
   DispatchUploadEvent,
   RemoteUploadActivity,
 } from '../../remoteUploadActivity';
+import { WsUploadEvents } from '../../wsUploadEvents';
 
 type CallbackFunction = (activity: RemoteUploadActivity) => void;
 

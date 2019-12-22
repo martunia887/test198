@@ -1,6 +1,7 @@
 import * as React from 'react';
-import Tooltip from '@atlaskit/tooltip';
 import Button from '@atlaskit/button';
+import Tooltip from '@atlaskit/tooltip';
+
 import { getButtonStyles, baseStyles } from './styles';
 
 export type ButtonAppearance = 'subtle' | 'danger';

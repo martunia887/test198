@@ -1,8 +1,8 @@
+import * as React from 'react';
+import { PureComponent } from 'react';
 import Button from '@atlaskit/button';
 import EmojiAddIcon from '@atlaskit/icon/glyph/emoji-add';
 import cx from 'classnames';
-import * as React from 'react';
-import { PureComponent } from 'react';
 import { style } from 'typestyle';
 
 export interface Props {

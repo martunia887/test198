@@ -1,6 +1,7 @@
 import { css } from 'styled-components';
-import { gridSize, borderRadius, colors, themed } from '@atlaskit/theme';
 import { PanelType, hexToRgba } from '@atlaskit/adf-schema';
+import { gridSize, borderRadius, colors, themed } from '@atlaskit/theme';
+
 import {
   akEditorTableCellMinWidth,
   akEditorDeleteBackground,

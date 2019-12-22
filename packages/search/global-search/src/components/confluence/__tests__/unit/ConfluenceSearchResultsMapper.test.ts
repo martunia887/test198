@@ -3,6 +3,8 @@ import {
   makePersonResult,
   makeConfluenceContainerResult,
 } from '../../../../__tests__/unit/_test-util';
+import { ConfluenceResultsMap, ResultsGroup } from '../../../../model/Result';
+import { ConfluenceFeatures } from '../../../../util/features';
 import {
   DEFAULT_MAX_OBJECTS,
   MAX_PEOPLE,
@@ -10,8 +12,6 @@ import {
   mapRecentResultsToUIGroups,
   mapSearchResultsToUIGroups,
 } from '../../ConfluenceSearchResultsMapper';
-import { ConfluenceResultsMap, ResultsGroup } from '../../../../model/Result';
-import { ConfluenceFeatures } from '../../../../util/features';
 
 type TestParam = {
   desc: string;

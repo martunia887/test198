@@ -1,12 +1,34 @@
 import * as React from 'react';
-import { mount, ReactWrapper } from 'enzyme';
 import * as sinon from 'sinon';
-import { waitUntil } from '@atlaskit/util-common-test';
+import { mount, ReactWrapper } from 'enzyme';
 import {
   AnalyticsEventPayload,
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
+import { waitUntil } from '@atlaskit/util-common-test';
 
+import EmojiTypeAhead, {
+  Props,
+} from '../../../../components/typeahead/EmojiTypeAhead';
+import { Props as TypeAheadProps } from '../../../../components/typeahead/EmojiTypeAhead';
+import EmojiTypeAheadComponent from '../../../../components/typeahead/EmojiTypeAheadComponent';
+import { OnLifecycle } from '../../../../components/typeahead/EmojiTypeAheadComponent';
+import { State as TypeAheadState } from '../../../../components/typeahead/EmojiTypeAheadComponent';
+import EmojiTypeAheadItem from '../../../../components/typeahead/EmojiTypeAheadItem';
+import { OptionalEmojiDescription, OnEmojiEvent } from '../../../../types';
+import {
+  typeaheadCancelledEvent,
+  typeaheadRenderedEvent,
+  typeaheadSelectedEvent,
+} from '../../../../util/analytics';
+import { defaultListLimit } from '../../../../util/constants';
+import { toEmojiId } from '../../../../util/type-helpers';
+import {
+  hasSelector,
+  getEmojiTypeAheadItemById,
+  getSelectedEmojiTypeAheadItem,
+  isEmojiTypeAheadItemSelected,
+} from '../../_emoji-selectors';
 import {
   atlassianBoomEmoji,
   blackFlagEmoji,
@@ -16,29 +38,6 @@ import {
   openMouthEmoji,
   standardBoomEmoji,
 } from '../../_test-data';
-import {
-  hasSelector,
-  getEmojiTypeAheadItemById,
-  getSelectedEmojiTypeAheadItem,
-  isEmojiTypeAheadItemSelected,
-} from '../../_emoji-selectors';
-
-import { defaultListLimit } from '../../../../util/constants';
-import EmojiTypeAhead, {
-  Props,
-} from '../../../../components/typeahead/EmojiTypeAhead';
-import EmojiTypeAheadComponent from '../../../../components/typeahead/EmojiTypeAheadComponent';
-import { OnLifecycle } from '../../../../components/typeahead/EmojiTypeAheadComponent';
-import EmojiTypeAheadItem from '../../../../components/typeahead/EmojiTypeAheadItem';
-import { OptionalEmojiDescription, OnEmojiEvent } from '../../../../types';
-import { toEmojiId } from '../../../../util/type-helpers';
-import { Props as TypeAheadProps } from '../../../../components/typeahead/EmojiTypeAhead';
-import { State as TypeAheadState } from '../../../../components/typeahead/EmojiTypeAheadComponent';
-import {
-  typeaheadCancelledEvent,
-  typeaheadRenderedEvent,
-  typeaheadSelectedEvent,
-} from '../../../../util/analytics';
 
 function setupTypeAhead(props?: Props): Promise<ReactWrapper<any, any>> {
   const component = mount(

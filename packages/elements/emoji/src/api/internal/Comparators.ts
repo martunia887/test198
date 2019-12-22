@@ -1,6 +1,6 @@
+import { EmojiDescription } from '../../types';
 import { MAX_ORDINAL } from '../../util/constants';
 import { isEmojiVariationDescription } from '../../util/type-helpers';
-import { EmojiDescription } from '../../types';
 
 /**
  * Create the default sort comparator to be used for the user queries against emoji

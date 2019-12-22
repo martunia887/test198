@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import { Provider, Card, Client, ResolveResponse } from '../src';
+
 import '../examples-helpers';
+import { Provider, Card, Client, ResolveResponse } from '../src';
 
 class CustomClient extends Client {
   fetchData(url: string) {

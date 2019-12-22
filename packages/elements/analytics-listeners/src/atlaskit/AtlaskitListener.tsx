@@ -6,6 +6,7 @@ import {
 
 import { sendEvent } from '../analytics-web-client-wrapper';
 import { ListenerProps, FabricChannel } from '../types';
+
 import processEvent from './process-event';
 
 export default class AtlaskitListener extends React.Component<ListenerProps> {

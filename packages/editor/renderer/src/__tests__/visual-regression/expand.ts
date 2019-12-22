@@ -1,7 +1,9 @@
 import { Page } from 'puppeteer';
-import { snapshot, initRendererWithADF, Device } from './_utils';
-import { selectors } from '../__helpers/page-objects/_expand';
+
 import { expandADF } from '../__fixtures__/expand-adf';
+import { selectors } from '../__helpers/page-objects/_expand';
+
+import { snapshot, initRendererWithADF, Device } from './_utils';
 
 const initRenderer = async (page: Page, adf: any) => {
   await initRendererWithADF(page, {

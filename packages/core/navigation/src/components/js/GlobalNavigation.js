@@ -1,14 +1,16 @@
 // @flow
 import React, { PureComponent, type Element, type ComponentType } from 'react';
+
+import { global } from '../../theme/presets';
+import type { Provided } from '../../theme/types';
 import { WithRootTheme } from '../../theme/util';
-import GlobalPrimaryActions from './GlobalPrimaryActions';
-import GlobalSecondaryActions from './GlobalSecondaryActions';
+import type { IconAppearance } from '../../types';
 import GlobalNavigationInner from '../styled/GlobalNavigationInner';
 import GlobalNavigationPrimaryContainer from '../styled/GlobalNavigationPrimaryContainer';
 import GlobalNavigationSecondaryContainer from '../styled/GlobalNavigationSecondaryContainer';
-import { global } from '../../theme/presets';
-import type { IconAppearance } from '../../types';
-import type { Provided } from '../../theme/types';
+
+import GlobalPrimaryActions from './GlobalPrimaryActions';
+import GlobalSecondaryActions from './GlobalSecondaryActions';
 
 type Props = {
   /** The icon to be used for the create button */

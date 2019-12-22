@@ -1,8 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
+import { N70, DN90, N100 } from '@atlaskit/theme/colors';
 import { themed } from '@atlaskit/theme/components';
 import { codeFontFamily, fontSize } from '@atlaskit/theme/constants';
-import { N70, DN90, N100 } from '@atlaskit/theme/colors';
 
 const getPlaceholderColor = ({ disabled }) => {
   if (disabled) {

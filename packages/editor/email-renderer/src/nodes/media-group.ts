@@ -1,5 +1,5 @@
-import { NodeSerializerOpts } from '../interfaces';
 import { createTag } from '../create-tag';
+import { NodeSerializerOpts } from '../interfaces';
 import { serializeStyle } from '../serialize-style';
 
 export default function mediaGroup({ text }: NodeSerializerOpts) {

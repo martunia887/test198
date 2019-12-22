@@ -1,25 +1,26 @@
-import { MediaClient } from '@atlaskit/media-client';
-import { Store } from 'redux';
 import * as React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { MediaClient } from '@atlaskit/media-client';
+import { Store } from 'redux';
 import * as exenv from 'exenv';
-import App, { AppProxyReactContext } from '../popup/components/app';
-import { cancelUpload } from '../popup/actions/cancelUpload';
-import { showPopup } from '../popup/actions/showPopup';
-import { getFilesInRecents } from '../popup/actions/getFilesInRecents';
-import { State } from '../popup/domain';
-import { hidePopup } from '../popup/actions/hidePopup';
-import { failureErrorLogger } from '../popup/actions/failureErrorLogger';
-import { createStore } from '../store';
-import { UploadComponent } from './component';
 
 import { defaultUploadParams } from '../domain/uploadParams';
+import { cancelUpload } from '../popup/actions/cancelUpload';
+import { failureErrorLogger } from '../popup/actions/failureErrorLogger';
+import { getFilesInRecents } from '../popup/actions/getFilesInRecents';
+import { hidePopup } from '../popup/actions/hidePopup';
+import { showPopup } from '../popup/actions/showPopup';
+import App, { AppProxyReactContext } from '../popup/components/app';
+import { State } from '../popup/domain';
+import { createStore } from '../store';
 import {
   UploadParams,
   PopupUploadEventPayloadMap,
   Popup,
   PopupConfig,
 } from '../types';
+
+import { UploadComponent } from './component';
 import { PopupUploadEventEmitter } from './types';
 
 export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>

@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Dropdown } from './styles';
-import { RenderOnClickHandler } from '../../Addon';
+
 import EditorActions from '../../../actions';
+import { RenderOnClickHandler } from '../../Addon';
 import { AddonActions } from '../types';
+
+import { Dropdown } from './styles';
 
 export interface Props {
   onClick: (

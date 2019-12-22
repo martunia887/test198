@@ -3,11 +3,12 @@ import { Component } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import Button from '@atlaskit/button';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
-import Tooltip from '@atlaskit/tooltip';
 import { messages } from '@atlaskit/media-ui';
 import { N0 } from '@atlaskit/theme/colors';
-import { DropdownRightIconWrapper, DropdownLeftIconWrapper } from './styles';
+import Tooltip from '@atlaskit/tooltip';
+
 import { LineWidthIcon } from './lineWidthIcon';
+import { DropdownRightIconWrapper, DropdownLeftIconWrapper } from './styles';
 
 export interface LineWidthButtonProps {
   readonly lineWidth: number;

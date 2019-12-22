@@ -1,6 +1,6 @@
 import { MarkSpec, Mark } from 'prosemirror-model';
-import { LINK, COLOR } from '../groups';
 import { isSafeUrl, normalizeUrl } from '../../utils/url';
+import { LINK, COLOR } from '../groups';
 
 export interface ConfluenceLinkMetadata {
   linkType: string;

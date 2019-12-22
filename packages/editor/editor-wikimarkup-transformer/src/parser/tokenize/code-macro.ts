@@ -1,8 +1,10 @@
-import { Node as PMNode, Schema } from 'prosemirror-model';
 import { Token, TokenParser } from '.';
-import { commonMacro } from './common-macro';
+import { Node as PMNode, Schema } from 'prosemirror-model';
+
 import { parseAttrs } from '../utils/attrs';
 import { title } from '../utils/title';
+
+import { commonMacro } from './common-macro';
 
 const SUPPORTED_CODEBOCK_LANGUAGES = [
   'abap',

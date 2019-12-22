@@ -1,7 +1,6 @@
 import { Action } from 'redux';
-
-import { State } from '../domain';
 import { isUpdatePopupUrlsAction } from '../actions/updatePopupUrls';
+import { State } from '../domain';
 
 export default function updatePopupUrls(state: State, action: Action): State {
   if (isUpdatePopupUrlsAction(action)) {

@@ -1,4 +1,3 @@
-import { Fragment, Node, Slice } from 'prosemirror-model';
 import {
   p,
   defaultSchema,
@@ -7,6 +6,7 @@ import {
   layoutSection,
   layoutColumn,
 } from '@atlaskit/editor-test-helpers';
+import { Fragment, Node, Slice } from 'prosemirror-model';
 import { transformSliceToJoinAdjacentCodeBlocks } from '../../../../plugins/code-block/utils';
 
 const fragment = (...args: any) =>

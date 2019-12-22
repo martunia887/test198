@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-
 import {
   createAndFireEvent,
   withAnalyticsContext,
   withAnalyticsEvents,
 } from '@atlaskit/analytics-next';
 
-import { name as packageName, version as packageVersion } from './version.json';
-
 import RadioIcon from './RadioIcon';
-import { RadioInputWrapper, HiddenInput } from './styled/RadioInput';
 import { Label, LabelText } from './styled/Radio';
+import { RadioInputWrapper, HiddenInput } from './styled/RadioInput';
 import { RadioProps } from './types';
+import { name as packageName, version as packageVersion } from './version.json';
 
 interface State {
   isHovered: boolean;

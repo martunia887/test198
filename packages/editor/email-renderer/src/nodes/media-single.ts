@@ -1,5 +1,5 @@
-import { NodeSerializerOpts } from '../interfaces';
 import { createTag } from '../create-tag';
+import { NodeSerializerOpts } from '../interfaces';
 import { serializeStyle } from '../serialize-style';
 import { createClassName } from '../styles/util';
 

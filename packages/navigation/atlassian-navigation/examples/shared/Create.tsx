@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Create } from '../../src';
 
 const onClick = (...args: any[]) => {

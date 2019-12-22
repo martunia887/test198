@@ -1,10 +1,11 @@
 /** @jsx jsx */
 import React, { useState, useCallback } from 'react';
-import { jsx, css } from '@emotion/core';
 import Button from '@atlaskit/button';
 import { Checkbox } from '@atlaskit/checkbox';
-import { ContextualSurvey, SurveyMarshal, OnDismissArgs } from '../src';
 import { gridSize } from '@atlaskit/theme/constants';
+import { jsx, css } from '@emotion/core';
+
+import { ContextualSurvey, SurveyMarshal, OnDismissArgs } from '../src';
 
 export default function BasicUsage() {
   const [showSurvey, setShowSurvey] = useState(false);

@@ -5,7 +5,6 @@ import Chrome from '../../../Chrome';
 import Content from '../../../Content';
 import Remove from '../../../RemoveButton';
 import TagWithAnalytics, { TagWithoutAnalytics as Tag } from '../..';
-
 import Before from '../../styledBefore';
 import Container from '../../styledContainer';
 

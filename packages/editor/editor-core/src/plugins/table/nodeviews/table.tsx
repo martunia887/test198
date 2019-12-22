@@ -5,24 +5,25 @@ import {
   DOMSerializer,
 } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
+
 import ReactNodeView, {
   ForwardRef,
   getPosHandler,
   getPosHandlerNode,
 } from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import { generateColgroup } from '../pm-plugins/table-resizing/utils';
-import TableComponent from './TableComponent';
-
 import WithPluginState from '../../../ui/WithPluginState';
+import { closestElement, containsClassName } from '../../../utils';
 import { pluginKey as widthPluginKey } from '../../width';
 import { pluginKey, getPluginState } from '../pm-plugins/main';
-import { pluginKey as tableResizingPluginKey } from '../pm-plugins/table-resizing/index';
-import { contentWidth } from '../pm-plugins/table-resizing/utils';
 import { handleBreakoutContent } from '../pm-plugins/table-resizing/commands';
-import { pluginConfig as getPluginConfig } from '../index';
+import { generateColgroup } from '../pm-plugins/table-resizing/utils';
+import { contentWidth } from '../pm-plugins/table-resizing/utils';
+import { pluginKey as tableResizingPluginKey } from '../pm-plugins/table-resizing/index';
 import { TableCssClassName as ClassName } from '../types';
-import { closestElement, containsClassName } from '../../../utils';
+import { pluginConfig as getPluginConfig } from '../index';
+
+import TableComponent from './TableComponent';
 
 export type TableOptions = {
   dynamicTextSizing?: boolean;

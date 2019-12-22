@@ -1,18 +1,20 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { EditorView } from 'prosemirror-view';
-import { Node as PMNode } from 'prosemirror-model';
-import {
-  selectParentNodeOfType,
-  findSelectedNodeOfType,
-} from 'prosemirror-utils';
 import {
   ExtensionHandlers,
   getExtensionRenderer,
   getNodeRenderer,
   ExtensionProvider,
 } from '@atlaskit/editor-common';
+import { Node as PMNode } from 'prosemirror-model';
+import {
+  selectParentNodeOfType,
+  findSelectedNodeOfType,
+} from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
 import { setNodeSelection } from '../../../../utils';
+
 import Extension from './Extension';
 import InlineExtension from './InlineExtension';
 

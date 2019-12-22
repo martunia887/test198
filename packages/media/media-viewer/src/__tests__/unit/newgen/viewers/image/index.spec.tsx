@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { ProcessedFileState } from '@atlaskit/media-client';
 import {
   awaitError,
@@ -7,12 +6,12 @@ import {
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
 
+import { Content } from '../../../../../newgen/content';
+import { BaseState } from '../../../../../newgen/viewers/base-viewer';
 import {
   ImageViewer,
   ImageViewerProps,
 } from '../../../../../newgen/viewers/image';
-import { BaseState } from '../../../../../newgen/viewers/base-viewer';
-import { Content } from '../../../../../newgen/content';
 
 const collectionName = 'some-collection';
 const imageItem: ProcessedFileState = {

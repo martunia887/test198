@@ -1,4 +1,3 @@
-import { TextSelection } from 'prosemirror-state';
 import {
   doc,
   createEditorFactory,
@@ -7,10 +6,12 @@ import {
   tdEmpty,
   tdCursor,
 } from '@atlaskit/editor-test-helpers';
+import { TextSelection } from 'prosemirror-state';
+
+import { showInsertColumnButton } from '../../../../plugins/table/commands';
+import { handleMouseOver } from '../../../../plugins/table/event-handlers';
 import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
 import { TablePluginState } from '../../../../plugins/table/types';
-import { handleMouseOver } from '../../../../plugins/table/event-handlers';
-import { showInsertColumnButton } from '../../../../plugins/table/commands';
 
 describe('table event handlers', () => {
   let editor: any;

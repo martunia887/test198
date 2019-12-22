@@ -1,6 +1,6 @@
 import * as React from 'react';
-import IconError from '@atlaskit/icon/glyph/cross-circle';
 import AkButton from '@atlaskit/button';
+import IconError from '@atlaskit/icon/glyph/cross-circle';
 
 import { ErrorWrapper, ErrorTitle, ErrorText } from '../styled/Error';
 import { ProfileCardErrorType } from '../types';

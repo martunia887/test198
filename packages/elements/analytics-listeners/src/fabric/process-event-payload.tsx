@@ -9,8 +9,9 @@ import {
 } from '@atlaskit/analytics-namespaced-context';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import merge from 'lodash.merge';
-import { ELEMENTS_TAG } from './FabricElementsListener';
+
 import { EDITOR_TAG } from './FabricEditorListener';
+import { ELEMENTS_TAG } from './FabricElementsListener';
 
 const extractFieldsFromContext = (fieldsToPick: string[]) => (
   contexts: Record<string, any>[],

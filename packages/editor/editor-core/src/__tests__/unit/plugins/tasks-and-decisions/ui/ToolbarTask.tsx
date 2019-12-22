@@ -1,13 +1,14 @@
 import * as React from 'react';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
   p,
   createEditorFactory,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import ToolbarButton from '../../../../../ui/ToolbarButton';
+
 import ToolbarTask from '../../../../../plugins/tasks-and-decisions/ui/ToolbarTask';
+import ToolbarButton from '../../../../../ui/ToolbarButton';
 
 describe('@atlaskit/editor-core/ui/ToolbarTask', () => {
   const createEditor = createEditorFactory();

@@ -2,19 +2,18 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import { sizeOpts } from '../src/types';
-
 import ActivityIcon from '../glyph/activity';
+import AddIcon from '../glyph/add';
 import AddCircleIcon from '../glyph/add-circle';
 import AddItemIcon from '../glyph/add-item';
-import AddIcon from '../glyph/add';
 import AddonIcon from '../glyph/addon';
-import AppSwitcherIcon from '../glyph/menu';
 import ArrowDownIcon from '../glyph/arrow-down';
-import ArrowLeftCircleIcon from '../glyph/arrow-left-circle';
 import ArrowLeftIcon from '../glyph/arrow-left';
+import ArrowLeftCircleIcon from '../glyph/arrow-left-circle';
 import ArrowRightIcon from '../glyph/arrow-right';
 import ArrowUpIcon from '../glyph/arrow-up';
+import AppSwitcherIcon from '../glyph/menu';
+import { sizeOpts } from '../src/types';
 
 const IconRow = styled.div`
   display: flex;

@@ -1,8 +1,7 @@
+import { sendKeyToPm, insertText } from '@atlaskit/editor-test-helpers';
+import { createEditorFactory } from '@atlaskit/editor-test-helpers';
 import { expect } from 'chai';
 import { EditorView } from 'prosemirror-view';
-import { sendKeyToPm, insertText } from '@atlaskit/editor-test-helpers';
-
-import { createEditorFactory } from '@atlaskit/editor-test-helpers';
 
 /**
  * We need to simulate a backspace here as sendKeyToPm(view, 'Backspace') throws an error

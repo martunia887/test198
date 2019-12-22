@@ -1,5 +1,5 @@
-import { ProviderFactory } from '@atlaskit/editor-common';
 import { IntlProvider } from 'react-intl';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   createEditorFactory,
   doc,
@@ -7,15 +7,13 @@ import {
   inlineCard,
   blockCard,
 } from '@atlaskit/editor-test-helpers';
-import { floatingToolbar } from '../../../../plugins/card/toolbar';
-import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
+import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
+import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
+import OpenIcon from '@atlaskit/icon/glyph/shortcut';
 
 import commonMessages, { linkToolbarMessages } from '../../../../messages';
-
-import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
-import OpenIcon from '@atlaskit/icon/glyph/shortcut';
-import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
-
+import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
+import { floatingToolbar } from '../../../../plugins/card/toolbar';
 import { FloatingToolbarButton } from '../../../../plugins/floating-toolbar/types';
 import { Command } from '../../../../types';
 import { getToolbarItems } from '../floating-toolbar/_helpers';

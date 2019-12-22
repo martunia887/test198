@@ -2,7 +2,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { RouterSubscriber } from '../../../../../controllers/router-store';
-
 import { RouterSubscriber as MainRouterSubscriber } from '../../../../../controllers/subscribers/route';
 
 jest.mock('../../../../../controllers/router-store');

@@ -3,6 +3,11 @@ import {
   confluenceSchema,
   createJIRASchema,
 } from '@atlaskit/adf-schema';
+import { BitbucketTransformer } from '@atlaskit/editor-bitbucket-transformer';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { ConfluenceTransformer } from '@atlaskit/editor-confluence-transformer';
+import { JIRATransformer } from '@atlaskit/editor-jira-transformer';
+import { MarkdownTransformer } from '@atlaskit/editor-markdown-transformer';
 import {
   createEditorFactory,
   doc,
@@ -43,11 +48,6 @@ import {
   textColor,
   underline,
 } from '@atlaskit/editor-test-helpers';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { BitbucketTransformer } from '@atlaskit/editor-bitbucket-transformer';
-import { ConfluenceTransformer } from '@atlaskit/editor-confluence-transformer';
-import { JIRATransformer } from '@atlaskit/editor-jira-transformer';
-import { MarkdownTransformer } from '@atlaskit/editor-markdown-transformer';
 import { WikiMarkupTransformer } from '@atlaskit/editor-wikimarkup-transformer';
 import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { Node as PMNode } from 'prosemirror-model';

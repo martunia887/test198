@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { ComponentClass, HTMLAttributes, ImgHTMLAttributes } from 'react';
+import styled from 'styled-components';
 
 // TODO: Figure out a more scalable/responsive solution
 // for vertical alignment.

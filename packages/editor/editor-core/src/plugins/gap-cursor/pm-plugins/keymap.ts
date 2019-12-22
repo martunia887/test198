@@ -1,5 +1,6 @@
 import { keymap } from 'prosemirror-keymap';
 import { Plugin } from 'prosemirror-state';
+
 import * as keymaps from '../../../keymaps';
 import { arrow, deleteNode } from '../actions';
 import { Direction } from '../direction';

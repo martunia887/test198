@@ -1,9 +1,10 @@
-import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
-import { CellSelection } from 'prosemirror-tables';
 import { ResolvedPos, MarkType, Mark, Node as PmNode } from 'prosemirror-model';
-import { transformSmartCharsMentionsAndEmojis } from '../plugins/text-formatting/commands/transform-to-code';
+import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
+import { EditorView } from 'prosemirror-view';
+
 import { GapCursorSelection } from '../plugins/gap-cursor';
+import { transformSmartCharsMentionsAndEmojis } from '../plugins/text-formatting/commands/transform-to-code';
 import { Command } from '../types';
 
 type Predicate = (state: EditorState, view?: EditorView) => boolean;

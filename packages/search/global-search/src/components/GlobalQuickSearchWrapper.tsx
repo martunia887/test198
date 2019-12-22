@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { CancelableEvent } from '@atlaskit/quick-search';
-import ConfluenceQuickSearchContainer from './confluence/ConfluenceQuickSearchContainer';
-import JiraQuickSearchContainer from './jira/JiraQuickSearchContainer';
+
+import { ABTest } from '../api/CrossProductSearchClient';
 import configureSearchClients, {
   Config,
   SearchClients,
 } from '../api/configureSearchClients';
-import MessagesIntlProvider from './MessagesIntlProvider';
-import { GlobalSearchPreFetchContext } from './PrefetchedResultsProvider';
 import {
   QuickSearchContext,
   ConfluenceModelContext,
@@ -18,13 +16,17 @@ import {
   JiraFeatures,
   ConfluenceFeatures,
 } from '../util/features';
-import { ABTest } from '../api/CrossProductSearchClient';
+
 import { ABTestProvider } from './AbTestProvider';
+import FeaturesProvider from './FeaturesProvider';
+import MessagesIntlProvider from './MessagesIntlProvider';
+import { GlobalSearchPreFetchContext } from './PrefetchedResultsProvider';
+import ConfluenceQuickSearchContainer from './confluence/ConfluenceQuickSearchContainer';
 import {
   withFeedbackButton,
   FeedbackCollectorProps,
 } from './feedback/withFeedbackButton';
-import FeaturesProvider from './FeaturesProvider';
+import JiraQuickSearchContainer from './jira/JiraQuickSearchContainer';
 
 const DEFAULT_NOOP_LOGGER: Logger = {
   safeInfo() {},

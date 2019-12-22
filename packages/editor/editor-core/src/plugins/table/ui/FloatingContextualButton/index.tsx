@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
-import { Popup } from '@atlaskit/editor-common';
-import { TableLayout } from '@atlaskit/adf-schema';
-import { findDomRefAtPos } from 'prosemirror-utils';
-import styled from 'styled-components';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import styled from 'styled-components';
+import { TableLayout } from '@atlaskit/adf-schema';
+import { Popup } from '@atlaskit/editor-common';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
-import { tableFloatingCellButtonStyles } from '../styles';
+import { findDomRefAtPos } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
 import ToolbarButton from '../../../../ui/ToolbarButton';
+import { closestElement } from '../../../../utils';
+import { toggleContextualMenu } from '../../commands';
 import { TableCssClassName as ClassName } from '../../types';
 import messages from '../../ui/messages';
-import { toggleContextualMenu } from '../../commands';
-import { closestElement } from '../../../../utils';
+import { tableFloatingCellButtonStyles } from '../styles';
 
 export interface Props {
   editorView: EditorView;

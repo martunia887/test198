@@ -1,10 +1,10 @@
+import * as sinon from 'sinon';
 import { FileState } from '@atlaskit/media-client';
 import * as MediaClientModule from '@atlaskit/media-client';
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-
-import fetchMock from 'fetch-mock/src/client';
-import * as sinon from 'sinon';
 import { waitUntil } from '@atlaskit/util-common-test';
+import 'es6-promise/auto';
+import fetchMock from 'fetch-mock/src/client';
+import { Observable } from 'rxjs/Observable';
 
 import SiteEmojiResource, {
   EmojiProgress,
@@ -20,7 +20,6 @@ import {
   ImageRepresentation,
 } from '../../../../types';
 import { toEmojiId } from '../../../../util/type-helpers';
-
 import {
   atlassianServiceEmojis,
   defaultMediaApiToken,
@@ -30,7 +29,6 @@ import {
   siteServiceConfig,
   loadedMediaEmoji,
 } from '../../_test-data';
-import { Observable } from 'rxjs/Observable';
 
 class TestSiteEmojiResource extends SiteEmojiResource {
   constructor(tokenManager: TokenManager) {

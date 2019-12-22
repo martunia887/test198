@@ -1,28 +1,29 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { determineMode } from './bridge-utils';
+import FabricAnalyticsListeners, {
+  AnalyticsWebClient,
+} from '@atlaskit/analytics-listeners';
+import { ProviderFactoryProvider } from '@atlaskit/editor-common/provider-factory';
 import { EditorActions, EditorContext } from '@atlaskit/editor-core';
 import {
   EditorPresetMobile,
   Mobile as MobileEditor,
 } from '@atlaskit/editor-core/labs-next';
-import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
+
 import { analyticsBridgeClient } from './analytics-client';
-import FabricAnalyticsListeners, {
-  AnalyticsWebClient,
-} from '@atlaskit/analytics-listeners';
-import { toNativeBridge } from './editor/web-to-native';
+import { determineMode } from './bridge-utils';
+import MobilePicker from './editor/MobileMediaPicker';
 import WebBridgeImpl from './editor/native-to-web';
-import { cardClient } from './providers/cardProvider';
-import { EditorViewWithComposition } from './types';
 import {
   initPluginListeners,
   destroyPluginListeners,
 } from './editor/plugin-subscription';
+import { toNativeBridge } from './editor/web-to-native';
 import { providerFactory } from './providers';
-import MobilePicker from './editor/MobileMediaPicker';
-import { ProviderFactoryProvider } from '@atlaskit/editor-common/provider-factory';
+import { cardClient } from './providers/cardProvider';
+import { EditorViewWithComposition } from './types';
 
 // Expose WebBridge instance for use by native side
 const bridge = new WebBridgeImpl();

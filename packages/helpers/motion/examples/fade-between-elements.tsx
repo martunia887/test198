@@ -1,11 +1,12 @@
 /** @jsx jsx */
 import { ReactNode } from 'react';
-import { jsx } from '@emotion/core';
 import { useState } from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { ConfluenceIcon, JiraServiceDeskIcon } from '@atlaskit/logo';
-import { FadeIn, ExitingPersistence } from '../src';
+import { jsx } from '@emotion/core';
+
 import { Block, Centered, RetryContainer } from '../examples-utils';
+import { FadeIn, ExitingPersistence } from '../src';
 
 const EnteringBlock = ({
   children,

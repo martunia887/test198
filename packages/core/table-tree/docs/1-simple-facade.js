@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { md, Example, Props } from '@atlaskit/docs';
-
 import SimpleFacadeExample from '../examples/single-component';
 
 export default md`

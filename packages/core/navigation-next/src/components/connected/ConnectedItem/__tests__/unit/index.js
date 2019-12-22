@@ -3,8 +3,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import GoToItem from '../../../GoToItem';
 import Item from '../../../../presentational/Item';
+import GoToItem from '../../../GoToItem';
 import ConnectedItem from '../../index';
 
 describe('ConnectedItem', () => {

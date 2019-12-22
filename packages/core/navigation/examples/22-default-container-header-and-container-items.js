@@ -1,19 +1,18 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
+import Lorem from 'react-lorem-component';
+import Button from '@atlaskit/button';
 import AddIcon from '@atlaskit/icon/glyph/add';
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
-import Button from '@atlaskit/button';
-import { ConfluenceIcon, JiraIcon } from '@atlaskit/logo';
 import EditorAlignLeftIcon from '@atlaskit/icon/glyph/editor/align-left';
-import Lorem from 'react-lorem-component';
-import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SearchIcon from '@atlaskit/icon/glyph/search';
-import Tooltip from '@atlaskit/tooltip';
+import { ConfluenceIcon, JiraIcon } from '@atlaskit/logo';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
 // $FlowFixMe: cannot resolve TS module
 import { AkSearch } from '@atlaskit/quick-search';
+import Tooltip from '@atlaskit/tooltip';
 
-import SecondaryActions from './utils/confluence-example/SecondaryActions';
 import Navigation, {
   AkContainerNavigationNested,
   AkCreateDrawer,
@@ -24,6 +23,8 @@ import Navigation, {
   SkeletonDefaultContainerHeader,
   SkeletonContainerItems,
 } from '../src';
+
+import SecondaryActions from './utils/confluence-example/SecondaryActions';
 
 const BackIcon = (
   <Tooltip position="right" content="Back">

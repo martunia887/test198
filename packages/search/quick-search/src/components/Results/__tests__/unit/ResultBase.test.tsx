@@ -1,8 +1,9 @@
-import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import ResultBase from '../../ResultBase';
+import { mount, ReactWrapper } from 'enzyme';
+
 import ResultItem from '../../../ResultItem/ResultItem';
 import { ResultContextType } from '../../../context';
+import ResultBase from '../../ResultBase';
 
 describe('Result Base', () => {
   let resultWrapper: ReactWrapper;

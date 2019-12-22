@@ -1,8 +1,10 @@
-import '@babel/polyfill';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import MobileEditor from './mobile-editor-element';
+import '@babel/polyfill';
+
 import { determineMode } from '../bridge-utils';
+
+import MobileEditor from './mobile-editor-element';
 
 const params = new URLSearchParams(window.location.search);
 const mode = determineMode(params.get('mode'));

@@ -1,25 +1,10 @@
 import { MediaClient, MediaCollectionItem } from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
-import { LocalUploads } from './local-upload';
 
-export { AuthHeaders } from './auth';
-export {
-  SourceFile,
-  SourceFileOwner,
-  ClientBasedSourceFileOwner,
-  AsapBasedSourceFileOwner,
-} from './source-file';
-
-export {
-  LocalUpload,
-  LocalUploads,
-  LocalUploadFile,
-  LocalUploadFileMetadata,
-  hasLocalUploadStartedProcessing,
-} from './local-upload';
-
-import { ImageCardModel } from '../tools/fetcher/fetcher';
 import { PopupConfig } from '../../types';
+import { ImageCardModel } from '../tools/fetcher/fetcher';
+
+import { LocalUploads } from './local-upload';
 
 export interface State {
   readonly redirectUrl: string;

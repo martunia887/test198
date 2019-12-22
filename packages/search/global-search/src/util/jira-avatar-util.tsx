@@ -1,9 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import BoardIcon from '@atlaskit/icon/glyph/board';
-import IssueIcon from '@atlaskit/icon/glyph/issue';
 import FilterIcon from '@atlaskit/icon/glyph/filter';
+import IssueIcon from '@atlaskit/icon/glyph/issue';
 import { gridSize } from '@atlaskit/theme';
+
 import { ContentType } from '../model/Result';
 
 const IconWrapper = styled.div`

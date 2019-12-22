@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import styled from 'styled-components';
-
 import { taskDecision } from '@atlaskit/util-data-test';
 
 export const { getMockTaskDecisionResource, document } = taskDecision;

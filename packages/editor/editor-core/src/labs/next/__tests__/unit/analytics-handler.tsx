@@ -1,7 +1,9 @@
 import { act } from 'react-test-renderer';
-import { createEditorFactory } from './__create-editor-helper';
+
 import { createDispatch } from '../../../../event-dispatcher';
 import { analyticsEventKey } from '../../../../plugins/analytics';
+
+import { createEditorFactory } from './__create-editor-helper';
 
 describe('next/Editor – Analytics', () => {
   const createEditor = createEditorFactory();

@@ -1,23 +1,25 @@
-import { EditorView } from 'prosemirror-view';
 import * as React from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
-import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import { akEditorMenuZIndex } from '@atlaskit/editor-common';
+import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import { borderRadius, colors } from '@atlaskit/theme';
+import { EditorView } from 'prosemirror-view';
+
 import { withAnalytics } from '../../../../analytics';
-import ToolbarButton from '../../../../ui/ToolbarButton';
 import ColorPalette from '../../../../ui/ColorPalette';
 import Dropdown from '../../../../ui/Dropdown';
-import { TextColorPluginState } from '../../pm-plugins/main';
-import * as commands from '../../commands/change-color';
-import { EditorTextColorIcon } from './icon';
+import ToolbarButton from '../../../../ui/ToolbarButton';
 import {
   Separator,
   TriggerWrapper,
   MenuWrapper,
   ExpandIconWrapper,
 } from '../../../../ui/styles';
+import * as commands from '../../commands/change-color';
+import { TextColorPluginState } from '../../pm-plugins/main';
+
+import { EditorTextColorIcon } from './icon';
 
 export const messages = defineMessages({
   textColor: {

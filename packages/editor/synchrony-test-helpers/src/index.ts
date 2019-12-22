@@ -1,6 +1,6 @@
 import { CollabEditProvider } from '@atlaskit/editor-common';
-import createSynchronyProvider from './synchrony-provider';
 import { createMockCollabEditProvider } from './mock-collab-provider';
+import createSynchronyProvider from './synchrony-provider';
 
 export { createMockCollabEditProvider };
 

@@ -1,15 +1,16 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+
+import { messages as insertBlockMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 import {
   editable,
   getDocFromElement,
   insertMedia,
   fullpage,
 } from '../_helpers';
-import { messages as insertBlockMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
 
 // FIXME: not entirely sure why firefox is flakey on browserstack
 BrowserTestCase(

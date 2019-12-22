@@ -15,13 +15,14 @@ import {
   layoutColumn,
   layoutSection,
 } from '@atlaskit/editor-test-helpers';
+
+import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { GapCursorSelection } from '../../../../plugins/gap-cursor';
 import {
   enterKeyCommand,
   backspaceKeyCommand,
   toggleList,
 } from '../../../../plugins/lists/commands';
-import { GapCursorSelection } from '../../../../plugins/gap-cursor';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('lists plugin -> commands', () => {
   const createEditor = createEditorFactory();

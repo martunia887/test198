@@ -1,8 +1,8 @@
 import React from 'react';
-
 import { Omit } from '@atlaskit/type-helpers';
-import { CreateUIAnalyticsEvent, CreateEventMap } from './types';
+
 import AnalyticsContextConsumer from './AnalyticsContextConsumer';
+import { CreateUIAnalyticsEvent, CreateEventMap } from './types';
 
 export interface WithAnalyticsEventsProps {
   /**

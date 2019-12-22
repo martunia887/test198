@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { isFileUploadsStartAction } from '../actions/fileUploadsStart';
 import { LocalUpload, State, SelectedItem } from '../domain';
 

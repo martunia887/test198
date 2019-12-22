@@ -1,16 +1,15 @@
 import React, { FC } from 'react';
-import styled from '@emotion/styled';
 import Lorem from 'react-lorem-component';
-
 import Avatar from '@atlaskit/avatar';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { colors } from '@atlaskit/theme';
+import styled from '@emotion/styled';
 
 import ModalDialog, { ModalFooter, ModalTransition } from '../src';
-import { HeaderComponentProps } from '../src/components/Header';
 import { FooterComponentProps } from '../src/components/Footer';
+import { HeaderComponentProps } from '../src/components/Header';
 
 const defaults = ['header', 'footer', 'both', 'neither'];
 const custom = ['custom header', 'custom body', 'custom footer'];

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { mount } from 'enzyme';
 import * as sinon from 'sinon';
-
-import documentWithLink from '../../__fixtures__/document-with-link';
-import documentWithTask from '../../__fixtures__/document-with-task';
+import { mount } from 'enzyme';
+import { expect } from 'chai';
 
 import MobileRenderer from '../../../src/renderer/mobile-renderer-element';
+import documentWithLink from '../../__fixtures__/document-with-link';
+import documentWithTask from '../../__fixtures__/document-with-task';
 
 declare var rendererBridge: any;
 

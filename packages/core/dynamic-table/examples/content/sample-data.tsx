@@ -1,12 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 import Avatar from '@atlaskit/avatar';
 import DropdownMenu, {
   DropdownItemGroup,
   DropdownItem,
 } from '@atlaskit/dropdown-menu';
-import styled from 'styled-components';
-import { presidents } from './presidents';
+
 import { lorem } from './lorem';
+import { presidents } from './presidents';
 
 interface President {
   id: number;

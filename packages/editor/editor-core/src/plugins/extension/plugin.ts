@@ -1,5 +1,3 @@
-import { EditorView } from 'prosemirror-view';
-import { Plugin, PluginKey } from 'prosemirror-state';
 import {
   ProviderFactory,
   ExtensionHandlers,
@@ -7,13 +5,16 @@ import {
   getExtensionModuleNode,
   UpdateExtension,
 } from '@atlaskit/editor-common';
+import { Plugin, PluginKey } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 
 import { Dispatch } from '../../event-dispatcher';
 import { PortalProviderAPI } from '../../ui/PortalProvider';
-import ExtensionNodeView from './nodeviews/extension';
 import { pluginFactory } from '../../utils/plugin-state-factory';
-import reducer from './reducer';
+
 import { updateState } from './commands';
+import ExtensionNodeView from './nodeviews/extension';
+import reducer from './reducer';
 import {
   getSelectedExtension,
   getSelectedDomElement,

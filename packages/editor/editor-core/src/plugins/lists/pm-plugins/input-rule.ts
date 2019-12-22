@@ -5,6 +5,7 @@ import {
 } from 'prosemirror-inputrules';
 import { NodeType, Schema, NodeRange, Node as PMNode } from 'prosemirror-model';
 import { Plugin, EditorState } from 'prosemirror-state';
+
 import { analyticsService, trackAndInvoke } from '../../../analytics';
 import {
   createInputRule as defaultCreateInputRule,

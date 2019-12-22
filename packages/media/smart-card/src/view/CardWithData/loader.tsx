@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { CardProps } from '../Card/types';
 import { CardWithDataContent as CardWithDataContentType } from './component';
 

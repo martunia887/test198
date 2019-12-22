@@ -1,8 +1,9 @@
-import { EditorState, NodeSelection } from 'prosemirror-state';
 import { NodeType, Node } from 'prosemirror-model';
+import { EditorState, NodeSelection } from 'prosemirror-state';
+
+import { pluginKey } from './pm-plugins/main';
 import { CardAppearance, CardInfo } from './types';
 import { CardPluginState } from './types';
-import { pluginKey } from './pm-plugins/main';
 
 export const appearanceForNodeType = (
   spec: NodeType,

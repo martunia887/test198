@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import styled from '@emotion/styled';
 import { gridSize } from '@atlaskit/theme/constants';
+import styled from '@emotion/styled';
 
 export const SearchContainer = styled.div`
   padding-bottom: ${gridSize() * 3}px;

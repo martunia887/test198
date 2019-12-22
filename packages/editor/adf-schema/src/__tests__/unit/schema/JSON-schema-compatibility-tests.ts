@@ -1,13 +1,14 @@
+import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import {
   pmNodeFactory as factory,
   pmNodeBuilder as builder,
   pmMarkBuilder as markBuilder,
 } from '@atlaskit/editor-test-helpers';
-import { defaultSchema } from '../../../schema';
-import * as v1schema from '../../../../json-schema/v1/full.json';
 import Ajv from 'ajv';
 import { NodeType, MarkType, Node } from 'prosemirror-model';
-import { JSONTransformer } from '@atlaskit/editor-json-transformer';
+
+import * as v1schema from '../../../../json-schema/v1/full.json';
+import { defaultSchema } from '../../../schema';
 
 /**
  * Check if JSON is valid according to JSON schema.

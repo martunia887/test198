@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Spinner from '@atlaskit/spinner';
+
 import { SpinnerProps } from '../types';
 
 const Container = styled.div`

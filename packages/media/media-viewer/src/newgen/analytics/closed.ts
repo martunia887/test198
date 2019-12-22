@@ -1,6 +1,6 @@
 import { GasPayload } from '@atlaskit/analytics-gas-types';
-import { packageAttributes, PackageAttributes } from './index';
 import { end } from 'perf-marks';
+import { packageAttributes, PackageAttributes } from './index';
 
 export type ClosedInputType = 'button' | 'blanket' | 'escKey';
 export interface CloseGasPayload extends GasPayload {

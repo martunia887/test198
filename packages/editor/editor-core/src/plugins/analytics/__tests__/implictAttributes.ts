@@ -8,12 +8,12 @@ import {
   tr,
   td,
 } from '@atlaskit/editor-test-helpers';
+import { temporaryMedia } from '../../../__tests__/unit/plugins/media/_utils';
 import {
   analyticsPluginKey,
   findInsertLocation,
   getSelectionType,
 } from '../index';
-import { temporaryMedia } from '../../../__tests__/unit/plugins/media/_utils';
 
 describe('analytics implicitAttributes', () => {
   const createEditor = createEditorFactory();

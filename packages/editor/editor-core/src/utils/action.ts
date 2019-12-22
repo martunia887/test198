@@ -6,7 +6,6 @@ import {
   stateKey as mediaStateKey,
   MediaPluginState,
 } from '../plugins/media/pm-plugins/main';
-
 import { Command, CommandDispatch } from '../types';
 
 export async function getEditorValueWithMedia(

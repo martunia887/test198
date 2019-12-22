@@ -1,7 +1,6 @@
 // @flow
 
 import { css, keyframes } from '@emotion/core';
-
 import {
   transitionDuration,
   transitionTimingFunction,

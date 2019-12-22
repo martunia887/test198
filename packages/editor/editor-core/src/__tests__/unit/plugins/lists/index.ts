@@ -1,4 +1,5 @@
-import { pluginKey } from '../../../../plugins/lists/pm-plugins/main';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   sendKeyToPm,
@@ -22,17 +23,17 @@ import {
   layoutColumn,
   breakout,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { EditorView } from 'prosemirror-view';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+
+import { AnalyticsHandler } from '../../../../analytics';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { GapCursorSelection } from '../../../../plugins/gap-cursor';
 import {
   toggleOrderedList,
   toggleBulletList,
 } from '../../../../plugins/lists/commands';
+import { pluginKey } from '../../../../plugins/lists/pm-plugins/main';
 import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-single';
-import { GapCursorSelection } from '../../../../plugins/gap-cursor';
-import { AnalyticsHandler } from '../../../../analytics';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('lists', () => {
   const createEditor = createEditorFactory();

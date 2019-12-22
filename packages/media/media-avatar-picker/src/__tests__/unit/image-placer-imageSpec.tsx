@@ -1,18 +1,14 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { ImageWrapper } from '../../image-placer/styled';
+import { asMock } from '@atlaskit/media-test-helpers';
 
-jest.mock('../../image-cropper/isImageRemote');
-
-// ...before importing Image
+import { isImageRemote } from '../../image-cropper/isImageRemote';
 import {
   ImagePlacerImage,
   ImagePlacerImageProps,
   IMAGE_ERRORS,
 } from '../../image-placer/image';
-
-import { isImageRemote } from '../../image-cropper/isImageRemote';
-import { asMock } from '@atlaskit/media-test-helpers';
+import { ImageWrapper } from '../../image-placer/styled';
 
 interface SetupInfo {
   wrapper: ShallowWrapper;

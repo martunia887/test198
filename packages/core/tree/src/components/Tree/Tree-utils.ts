@@ -1,6 +1,3 @@
-import { DragState } from './Tree-types';
-import { getTreePosition } from '../../utils/tree';
-import { getDestinationPath, getSourcePath } from '../../utils/flat-tree';
 import {
   Path,
   TreeSourcePosition,
@@ -8,6 +5,10 @@ import {
   TreeData,
   FlattenedTree,
 } from '../../types';
+import { getDestinationPath, getSourcePath } from '../../utils/flat-tree';
+import { getTreePosition } from '../../utils/tree';
+
+import { DragState } from './Tree-types';
 
 /*
     Translates a drag&drop movement from an index based position to a relative (parent, index) position

@@ -3,9 +3,8 @@ import {
   mockEndpoints,
   REQUEST_FAST,
 } from '@atlaskit/atlassian-switcher-test-utils';
-import { initSwitcher } from './vanilla-page/scripts';
 
-// @ts-ignore
+import { initSwitcher } from './vanilla-page/scripts';
 import styles from './vanilla-page/styles.css';
 
 /**

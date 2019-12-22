@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Card } from '../src';
 import {
   createStorybookMediaClientConfig,
   imageFileId,
@@ -9,10 +8,12 @@ import {
   largeImageFileId,
 } from '@atlaskit/media-test-helpers';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
+
 import {
   MediaViewerExampleWrapper,
   MediaViewerExampleColumn,
 } from '../example-helpers/styled';
+import { Card } from '../src';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const mediaViewerDataSource: MediaViewerDataSource = {

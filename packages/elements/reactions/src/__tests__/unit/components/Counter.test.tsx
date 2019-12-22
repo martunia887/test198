@@ -1,6 +1,7 @@
-import { mount } from 'enzyme';
 import * as React from 'react';
+import { mount } from 'enzyme';
 import { CSSTransition } from 'react-transition-group';
+
 import {
   containerStyle,
   Counter,

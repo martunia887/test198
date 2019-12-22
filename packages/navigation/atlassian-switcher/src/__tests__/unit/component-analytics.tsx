@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import Switcher from '../../components/switcher';
-import { MANAGE_HREF } from '../../providers/jira-data-providers';
-import Item from '@atlaskit/item';
-import ManageButton from '../../primitives/manage-button';
-import messages from '../../utils/messages';
 import { IntlProvider } from 'react-intl';
-import createStream, { Stream } from '../../../test-helpers/stream';
 import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import Item from '@atlaskit/item';
+
+import createStream, { Stream } from '../../../test-helpers/stream';
+import Switcher from '../../components/switcher';
+import ManageButton from '../../primitives/manage-button';
+import { MANAGE_HREF } from '../../providers/jira-data-providers';
 import { WorklensProductType } from '../../types';
+import messages from '../../utils/messages';
 
 const DefaultAtlassianSwitcher = (props: any = {}) => {
   const stubIcon = () => <span />;

@@ -11,15 +11,17 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
+
+import { TreeRowContainer } from '../styled';
+import type { RowData, LoadableItems } from '../types';
+import toItemId from '../utils/toItemId';
 import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-import { TreeRowContainer } from '../styled';
-import Chevron from './Chevron';
+
 import Cell from './Cell';
-import toItemId from '../utils/toItemId';
-import type { RowData, LoadableItems } from '../types';
+import Chevron from './Chevron';
 
 type Props = {
   /** Whether this row has any child rows. */

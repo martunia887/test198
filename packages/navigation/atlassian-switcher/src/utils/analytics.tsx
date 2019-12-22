@@ -1,4 +1,8 @@
 import * as React from 'react';
+import {
+  UI_EVENT_TYPE,
+  OPERATIONAL_EVENT_TYPE,
+} from '@atlaskit/analytics-gas-types';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import {
   createAndFireEvent,
@@ -6,10 +10,6 @@ import {
   WithAnalyticsEventsProps,
   CreateUIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import {
-  UI_EVENT_TYPE,
-  OPERATIONAL_EVENT_TYPE,
-} from '@atlaskit/analytics-gas-types';
 
 type PropsToContextMapper<P, C> = (props: P) => C;
 

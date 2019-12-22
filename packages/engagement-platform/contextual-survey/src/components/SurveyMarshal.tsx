@@ -1,8 +1,9 @@
 /** @jsx jsx */
 import { ReactNode } from 'react';
-import { jsx, css } from '@emotion/core';
 import { Transition } from 'react-transition-group';
 import { layers } from '@atlaskit/theme';
+import { jsx, css } from '@emotion/core';
+
 import { surveyInnerWidth, surveyOffset } from '../constants';
 
 type TransitionState = 'entering' | 'entered' | 'exiting' | 'exited';

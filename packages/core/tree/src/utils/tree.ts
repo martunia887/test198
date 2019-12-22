@@ -8,7 +8,6 @@ import {
   TreeSourcePosition,
   TreeDestinationPosition,
 } from '../types';
-
 import { getParentPath, getIndexAmongSiblings } from './path';
 
 export type TreeItemMutation = {

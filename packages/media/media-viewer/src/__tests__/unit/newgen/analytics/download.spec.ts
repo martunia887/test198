@@ -1,4 +1,8 @@
+import { ProcessedFileState } from '@atlaskit/media-client';
+
 import { downloadButtonEvent } from '../../../../newgen/analytics/download';
+import { version as packageVersion } from '../../../../version.json';
+
 import {
   processedFile,
   processingFile,
@@ -6,8 +10,6 @@ import {
   processingError,
   fileWithError,
 } from './index.spec';
-import { version as packageVersion } from '../../../../version.json';
-import { ProcessedFileState } from '@atlaskit/media-client';
 
 const unsupportedFile: ProcessedFileState = {
   ...processedFile,

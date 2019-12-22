@@ -6,7 +6,6 @@ import {
   code,
   AtlassianInternalWarning,
 } from '@atlaskit/docs';
-
 import SimpleMentionExample from '../examples/00-simple-mention-item';
 const SimpleMentionSource = require('!!raw-loader!../examples/00-simple-mention-item');
 

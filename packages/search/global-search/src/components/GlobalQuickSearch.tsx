@@ -1,15 +1,10 @@
 import * as React from 'react';
-
-import debounce from 'lodash.debounce';
-import { QuickSearch } from '@atlaskit/quick-search';
-import {
-  LinkComponent,
-  ReferralContextIdentifiers,
-} from './GlobalQuickSearchWrapper';
 import {
   withAnalyticsEvents,
   AnalyticsContext,
 } from '@atlaskit/analytics-next';
+import { QuickSearch } from '@atlaskit/quick-search';
+import debounce from 'lodash.debounce';
 
 import {
   fireSelectedSearchResult,
@@ -23,11 +18,15 @@ import {
   fireAutocompleteRenderedEvent,
   fireAutocompleteCompletedEvent,
 } from '../util/analytics-event-helper';
-
-import { CreateAnalyticsEventFn } from './analytics/types';
-import { isAdvancedSearchResult } from './SearchResultsUtil';
 import { getAutocompleteText } from '../util/autocomplete';
+
 import { FilterWithMetadata } from './../api/CrossProductSearchClient';
+import {
+  LinkComponent,
+  ReferralContextIdentifiers,
+} from './GlobalQuickSearchWrapper';
+import { isAdvancedSearchResult } from './SearchResultsUtil';
+import { CreateAnalyticsEventFn } from './analytics/types';
 
 const ATLASKIT_QUICKSEARCH_NS = 'atlaskit.navigation.quick-search';
 const QS_ANALYTICS_EV_KB_CTRLS_USED = `${ATLASKIT_QUICKSEARCH_NS}.keyboard-controls-used`;

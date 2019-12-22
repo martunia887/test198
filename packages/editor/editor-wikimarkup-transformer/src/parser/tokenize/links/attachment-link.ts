@@ -1,7 +1,9 @@
-import { ContentLink } from './link-parser';
-import getMediaGroupNodeView from '../../nodes/mediaGroup';
 import { Schema, Node as PMNode } from 'prosemirror-model';
+
 import { Context } from '../../../interfaces';
+import getMediaGroupNodeView from '../../nodes/mediaGroup';
+
+import { ContentLink } from './link-parser';
 
 export function attachmentLinkResolver(
   link: ContentLink,

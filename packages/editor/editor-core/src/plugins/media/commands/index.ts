@@ -1,11 +1,12 @@
 import { Command } from '../../../types';
+import { SetAttrsStep } from '../../../utils';
 import {
   stateKey as mediaPluginKey,
   MediaPluginState,
   MediaNodeWithPosHandler,
 } from '../pm-plugins/main';
+
 import { findMediaNode, findAllMediaSingleNodes } from './helpers';
-import { SetAttrsStep } from '../../../utils';
 
 export const updateAllMediaNodesAttrs = (
   id: string,

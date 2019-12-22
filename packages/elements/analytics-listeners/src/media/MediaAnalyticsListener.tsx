@@ -1,14 +1,16 @@
 import * as React from 'react';
+import { DEFAULT_SOURCE, GasPayload } from '@atlaskit/analytics-gas-types';
 import {
   AnalyticsListener,
   UIAnalyticsEventHandler,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import { DEFAULT_SOURCE, GasPayload } from '@atlaskit/analytics-gas-types';
+
 import { sendEvent } from '../analytics-web-client-wrapper';
-import { ListenerProps, FabricChannel } from '../types';
-import { mergeEventData } from './mergeData';
 import { getPackageHierarchy } from '../atlaskit/extract-data-from-event';
+import { ListenerProps, FabricChannel } from '../types';
+
+import { mergeEventData } from './mergeData';
 
 // This function will attach a packageHierarchy value inside of 'attributes' attribute payload.
 // It won't attach it if getPackageHierarchy returns undefined (that's in the case when no context data provided a package name/version)

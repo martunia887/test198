@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { AnalyticsDecorator } from '@atlaskit/analytics';
-import isReactElement from './isReactElement';
-import { QS_ANALYTICS_EV_SUBMIT } from './constants';
+
 import { Props } from './QuickSearch';
+import { QS_ANALYTICS_EV_SUBMIT } from './constants';
+import isReactElement from './isReactElement';
 
 export default function decorateWithAnalyticsData(
   WrappedQuickSearch: React.ComponentClass<Props>,

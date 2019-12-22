@@ -1,7 +1,9 @@
 // @flow
 import React, { cloneElement, type Node } from 'react';
 import PropTypes from 'prop-types';
+
 import withContextFromProps from '../../withContextFromProps';
+
 import type GatewayDest from './GatewayDest';
 
 type Child = Node;

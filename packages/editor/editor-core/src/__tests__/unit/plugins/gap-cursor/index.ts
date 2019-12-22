@@ -1,4 +1,3 @@
-import { TextSelection } from 'prosemirror-state';
 import {
   doc,
   createEditorFactory,
@@ -11,11 +10,12 @@ import {
   sendKeyToPm,
   h1,
 } from '@atlaskit/editor-test-helpers';
+import { TextSelection } from 'prosemirror-state';
 
-import { setTextSelection } from '../../../../index';
-import { setGapCursorSelection } from '../../../../utils';
 import { GapCursorSelection, Side } from '../../../../plugins/gap-cursor';
 import { pluginKey } from '../../../../plugins/gap-cursor/pm-plugins/main';
+import { setGapCursorSelection } from '../../../../utils';
+import { setTextSelection } from '../../../../index';
 
 import {
   blockNodes,

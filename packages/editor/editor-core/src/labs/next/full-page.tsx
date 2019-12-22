@@ -1,22 +1,24 @@
-import rafSchedule from 'raf-schd';
 import * as React from 'react';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 import { BaseTheme, akEditorMenuZIndex } from '@atlaskit/editor-common';
-import ContentStyles from '../../ui/ContentStyles';
-import WidthEmitter from '../../ui/WidthEmitter';
+import { colors } from '@atlaskit/theme';
+import rafSchedule from 'raf-schd';
 
-import { ClickAreaBlock } from '../../ui/Addon';
-import { scrollbarStyles } from '../../ui/styles';
-import { tableFullPageEditorStyles } from '../../plugins/table/ui/styles';
+import EditorActions from '../../actions';
 import Avatars from '../../plugins/collab-edit/ui/avatars';
+import { tableFullPageEditorStyles } from '../../plugins/table/ui/styles';
 import { akEditorToolbarKeylineHeight } from '../../styles';
 import { EditorProps } from '../../types';
-import EditorActions from '../../actions';
+import { ClickAreaBlock } from '../../ui/Addon';
+import ContentStyles from '../../ui/ContentStyles';
+import WidthEmitter from '../../ui/WidthEmitter';
+import { scrollbarStyles } from '../../ui/styles';
+
+import { ContentComponents } from './ContentComponents';
 import {
   Editor,
   EditorContent,
@@ -24,7 +26,6 @@ import {
   useEditorSharedConfig,
 } from './Editor';
 import { Toolbar } from './Toolbar';
-import { ContentComponents } from './ContentComponents';
 import { useCreateAnalyticsHandler } from './internal/hooks/use-analytics';
 
 const FullPageEditorWrapper = styled.div`

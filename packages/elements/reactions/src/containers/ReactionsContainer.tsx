@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { FabricElementsAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
-import * as React from 'react';
+
 import { Reactions } from '../components/Reactions';
 import {
   Actions,

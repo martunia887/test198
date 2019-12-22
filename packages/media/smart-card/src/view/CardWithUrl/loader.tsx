@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { CardLinkView } from '@atlaskit/media-ui';
 
-import { CardProps } from '../Card/types';
-import { LazyCardWithUrlContent as CardWithUrlContentType } from './component';
 import { fireSmartLinkEvent } from '../../utils/analytics';
 import { AnalyticsHandler } from '../../utils/types';
+import { CardProps } from '../Card/types';
+
+import { LazyCardWithUrlContent as CardWithUrlContentType } from './component';
 
 export class CardWithURLRenderer extends React.PureComponent<CardProps> {
   static CardContent: typeof CardWithUrlContentType | null = null;

@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-
 import TableTree from '../src';
 
 const staticData = {

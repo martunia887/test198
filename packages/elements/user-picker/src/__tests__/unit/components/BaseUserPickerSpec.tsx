@@ -1,12 +1,13 @@
+import * as React from 'react';
+import { ReactWrapper } from 'enzyme';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import Select from '@atlaskit/select';
-import { ReactWrapper } from 'enzyme';
-import { mountWithIntl, shallowWithIntl } from 'enzyme-react-intl';
 import * as debounce from 'lodash.debounce';
-import * as React from 'react';
+import { mountWithIntl, shallowWithIntl } from 'enzyme-react-intl';
+
+import * as analytics from '../../../analytics';
 import { BaseUserPicker } from '../../../components/BaseUserPicker';
 import { getComponents } from '../../../components/components';
-import * as analytics from '../../../analytics';
 import {
   optionToSelectableOption,
   optionToSelectableOptions,

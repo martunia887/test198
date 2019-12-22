@@ -1,7 +1,8 @@
-import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 import React from 'react';
+import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 
 import { IconButton } from '../IconButton';
+
 import { SignInProps } from './types';
 
 export const SignIn = (props: SignInProps) => {

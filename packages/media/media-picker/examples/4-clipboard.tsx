@@ -1,22 +1,16 @@
 // eslint-disable-line no-console
 import * as React from 'react';
 import { Component } from 'react';
+import Button from '@atlaskit/button';
 import {
   userAuthProvider,
   defaultMediaPickerAuthProvider,
   defaultMediaPickerCollectionName,
 } from '@atlaskit/media-test-helpers';
-import Button from '@atlaskit/button';
-import Toggle from '@atlaskit/toggle';
+import { fileToDataURI } from '@atlaskit/media-ui';
 import Spinner from '@atlaskit/spinner';
-import { Clipboard } from '../src';
-import {
-  ImagePreview,
-  UploadPreviewUpdateEventPayload,
-  UploadEndEventPayload,
-  UploadsStartEventPayload,
-  UploadErrorEventPayload,
-} from '../src/types';
+import Toggle from '@atlaskit/toggle';
+
 import {
   PopupHeader,
   PopupContainer,
@@ -26,7 +20,14 @@ import {
   InfoContainer,
   PastedImage,
 } from '../example-helpers/styled';
-import { fileToDataURI } from '@atlaskit/media-ui';
+import { Clipboard } from '../src';
+import {
+  ImagePreview,
+  UploadPreviewUpdateEventPayload,
+  UploadEndEventPayload,
+  UploadsStartEventPayload,
+  UploadErrorEventPayload,
+} from '../src/types';
 
 export interface ClipboardWrapperState {
   isConnectedToUsersCollection: boolean;

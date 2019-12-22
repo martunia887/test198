@@ -1,10 +1,12 @@
 import { Plugin, PluginKey, PluginSpec } from 'prosemirror-state';
-import { pluginFactory } from '../../utils/plugin-state-factory';
+
 import { Dispatch } from '../../event-dispatcher';
 import { EditorPlugin } from '../../types';
-import reducer from './reducer';
+import { pluginFactory } from '../../utils/plugin-state-factory';
+
 import { MobileScrollAction, MobileScrollActionTypes } from './actions';
 import { setHeightDiff, setWindowHeight } from './commands';
+import reducer from './reducer';
 
 /**
  * Plugin to help fix behaviour of scrolling on mobile devices:

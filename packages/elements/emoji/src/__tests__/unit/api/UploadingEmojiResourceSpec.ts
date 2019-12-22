@@ -1,13 +1,13 @@
+import * as sinon from 'sinon';
 import { waitUntil } from '@atlaskit/util-common-test';
 import {
   OnProviderChange,
   SecurityOptions,
   ServiceConfig,
 } from '@atlaskit/util-service-support';
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-
+import 'es6-promise/auto';
 import fetchMock from 'fetch-mock/src/client';
-import * as sinon from 'sinon';
+
 import EmojiResource, {
   EmojiProvider,
   EmojiResourceConfig,
@@ -15,7 +15,6 @@ import EmojiResource, {
   UploadingEmojiProvider,
 } from '../../../api/EmojiResource';
 import SiteEmojiResource from '../../../api/media/SiteEmojiResource';
-import { selectedToneStorageKey } from '../../../util/constants';
 import {
   EmojiDescription,
   EmojiId,
@@ -24,6 +23,7 @@ import {
   SearchOptions,
   ToneSelection,
 } from '../../../types';
+import { selectedToneStorageKey } from '../../../util/constants';
 import {
   evilburnsEmoji,
   grinEmoji,

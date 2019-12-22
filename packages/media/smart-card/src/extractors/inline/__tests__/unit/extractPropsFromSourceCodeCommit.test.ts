@@ -1,6 +1,6 @@
-import { extractInlineViewPropsFromSourceCodeCommit } from '../../extractPropsFromSourceCodeCommit';
 import { ReactElement } from 'react';
 import { shallow } from 'enzyme';
+import { extractInlineViewPropsFromSourceCodeCommit } from '../../extractPropsFromSourceCodeCommit';
 
 describe('extractInlineViewPropsFromSourceCodeCommit', () => {
   it('should set the name with both repo name and internal id', () => {

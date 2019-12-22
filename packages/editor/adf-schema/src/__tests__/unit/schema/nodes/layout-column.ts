@@ -1,12 +1,13 @@
-import { name } from '../../../../version.json';
-import { createSchema } from '../../../../schema/create-schema';
-import { fromHTML, toHTML, toContext } from '../../../../../test-helpers';
 import {
   layoutSection,
   layoutColumn,
   doc,
   p,
 } from '@atlaskit/editor-test-helpers';
+
+import { fromHTML, toHTML, toContext } from '../../../../../test-helpers';
+import { createSchema } from '../../../../schema/create-schema';
+import { name } from '../../../../version.json';
 
 const schema = makeSchema();
 

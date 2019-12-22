@@ -1,12 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-
 import { Skeleton as SkeletonIcon } from '@atlaskit/icon';
 
 import { HiddenWhenCollapsed } from './ToggleWhenCollapsed';
-
-import SkeletonContainerItemWrapper from './styled/SkeletonContainerItemWrapper';
 import SkeletonContainerItemText from './styled/SkeletonContainerItemText';
+import SkeletonContainerItemWrapper from './styled/SkeletonContainerItemWrapper';
 import SkeletonIconWrapper from './styled/SkeletonIconWrapper';
 
 type Props = {

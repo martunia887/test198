@@ -1,19 +1,21 @@
 import * as React from 'react';
-import memoizeOne from 'memoize-one';
-import { PopupSelect, ValueType } from '@atlaskit/select';
-import Trigger from './Trigger';
-import { Palette, Color } from '../types';
-import * as components from './components';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
+import { PopupSelect, ValueType } from '@atlaskit/select';
+import memoizeOne from 'memoize-one';
+
 import { ColorCardWrapper } from '../styled/ColorPicker';
+import { Palette, Color } from '../types';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
+
+import Trigger from './Trigger';
+import * as components from './components';
 
 export interface Props {
   /** color picker button label */

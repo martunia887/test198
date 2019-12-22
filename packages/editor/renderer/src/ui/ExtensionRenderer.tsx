@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { RendererContext } from '../react';
-import { Serializer } from '../index';
 import { ExtensionLayout } from '@atlaskit/adf-schema';
-
 import {
   ADNode,
   ExtensionHandlers,
@@ -12,6 +9,9 @@ import {
   ProviderFactory,
   getNodeRenderer,
 } from '@atlaskit/editor-common';
+
+import { RendererContext } from '../react';
+import { Serializer } from '../index';
 
 export interface Props {
   type: 'extension' | 'inlineExtension' | 'bodiedExtension';

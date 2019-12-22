@@ -1,24 +1,25 @@
 import * as React from 'react';
 import { Component } from 'react';
 import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   MediaClient,
   FileIdentifier,
   FileState,
   MediaFileArtifacts,
   globalMediaEventEmitter,
 } from '@atlaskit/media-client';
-import { Subscription } from 'rxjs/Subscription';
 import { CustomMediaPlayer, InactivityDetector } from '@atlaskit/media-ui';
-import { InlinePlayerWrapper } from './styled';
 import { CardDimensions, defaultImageCardDimensions } from '..';
+import { Subscription } from 'rxjs/Subscription';
+
+import { createAndFireMediaEvent } from '../utils/analytics';
 import { CardLoading } from '../utils/lightCards/cardLoading';
 
-import {
-  withAnalyticsEvents,
-  WithAnalyticsEventsProps,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
-import { createAndFireMediaEvent } from '../utils/analytics';
+import { InlinePlayerWrapper } from './styled';
 
 export interface InlinePlayerOwnProps {
   identifier: FileIdentifier;

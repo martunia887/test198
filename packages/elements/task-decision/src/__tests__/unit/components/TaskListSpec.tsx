@@ -3,8 +3,9 @@ import { mount } from 'enzyme';
 import FabricAnalyticsListener, {
   AnalyticsWebClient,
 } from '@atlaskit/analytics-listeners';
-import TaskList from '../../../components/TaskList';
+
 import TaskItem from '../../../components/TaskItem';
+import TaskList from '../../../components/TaskList';
 
 describe('<TaskList/>', () => {
   let analyticsWebClientMock: AnalyticsWebClient;

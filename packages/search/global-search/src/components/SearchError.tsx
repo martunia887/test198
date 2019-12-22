@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import { gridSize, math } from '@atlaskit/theme';
-import styled from 'styled-components';
-import { messages } from '../messages';
+
 import ErrorImage from '../assets/ErrorImage';
+import { messages } from '../messages';
 
 const ErrorWrapper = styled.div`
   text-align: center;

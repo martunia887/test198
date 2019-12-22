@@ -1,11 +1,12 @@
+import { ReactNode, ComponentType } from 'react';
 import {
   AnalyticsEvent,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 import { ThemeProp } from '@atlaskit/theme/components';
-import { ReactNode, ComponentType } from 'react';
-import { ThemeProps, ThemeTokens } from './theme';
+
 import { WithPseudoStateProps } from './hoc/withPseudoState';
+import { ThemeProps, ThemeTokens } from './theme';
 
 export type AppearanceType = 'circle' | 'square';
 export type PresenceType =

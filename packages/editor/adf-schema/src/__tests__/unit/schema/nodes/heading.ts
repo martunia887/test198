@@ -1,6 +1,3 @@
-import { name } from '../../../../version.json';
-import { createSchema } from '../../../../schema/create-schema';
-import { fromHTML, toHTML } from '../../../../../test-helpers';
 import {
   strong,
   doc as editorDoc,
@@ -8,6 +5,10 @@ import {
   a as link,
   em,
 } from '@atlaskit/editor-test-helpers';
+
+import { fromHTML, toHTML } from '../../../../../test-helpers';
+import { createSchema } from '../../../../schema/create-schema';
+import { name } from '../../../../version.json';
 
 const schema = makeSchema();
 

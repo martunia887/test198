@@ -3,8 +3,8 @@ import { mount, shallow } from 'enzyme';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 
 import DrawerPrimitive from '../../primitives';
-import { DrawerWidth } from '../../types';
 import { Slide } from '../../transitions';
+import { DrawerWidth } from '../../types';
 
 const DrawerContent = () => <code>Drawer contents</code>;
 

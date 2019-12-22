@@ -1,23 +1,21 @@
 import React from 'react';
-import * as H from 'history';
+import { Helmet } from 'react-helmet';
+import Loadable from 'react-loadable';
 import { match } from 'react-router';
 import styled from 'styled-components';
-import Loadable from 'react-loadable';
-import { Helmet } from 'react-helmet';
-
-import CloseIcon from '@atlaskit/icon/glyph/cross';
-
 import Button from '@atlaskit/button';
-import { gridSize, math } from '@atlaskit/theme';
 import { FieldTextStateless as Input } from '@atlaskit/field-text';
+import CloseIcon from '@atlaskit/icon/glyph/cross';
 import Modal, { ModalHeader as OgModalHeader } from '@atlaskit/modal-dialog';
+import { gridSize, math } from '@atlaskit/theme';
+import * as H from 'history';
 
-import * as fs from '../../utils/fs';
-import { File } from '../../types';
-import Loading from '../../components/Loading';
 import Changelog, { NoMatch } from '../../components/ChangeLog';
+import Loading from '../../components/Loading';
 import { packages } from '../../site';
+import { File } from '../../types';
 import { divvyChangelog } from '../../utils/changelog';
+import * as fs from '../../utils/fs';
 
 // ==============================
 // STYLES

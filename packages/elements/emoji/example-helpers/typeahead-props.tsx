@@ -1,5 +1,5 @@
-import { OnEmojiEvent, RelativePosition } from '../src/types';
 import { EmojiProvider } from '../src/resource';
+import { OnEmojiEvent, RelativePosition } from '../src/types';
 
 export interface TypeaheadProps {
   label: string;

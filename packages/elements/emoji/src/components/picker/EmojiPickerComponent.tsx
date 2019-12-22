@@ -1,20 +1,19 @@
-import classNames from 'classnames';
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { PureComponent, SyntheticEvent } from 'react';
+import * as PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import {
+  AnalyticsEventPayload,
+  CreateUIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import classNames from 'classnames';
+
 import { getEmojiVariation } from '../../api/EmojiRepository';
 import {
   EmojiProvider,
   OnEmojiProviderChange,
   supportsUploadFeature,
 } from '../../api/EmojiResource';
-import { customCategory, frequentCategory } from '../../util/constants';
-import {
-  containsEmojiId,
-  isPromise /*, isEmojiIdEqual, isEmojiLoaded*/,
-  isEmojiDescription,
-} from '../../util/type-helpers';
 import {
   EmojiDescription,
   EmojiId,
@@ -27,19 +26,6 @@ import {
   SearchSort,
   ToneSelection,
 } from '../../types';
-import { getToneEmoji } from '../../util/filters';
-import { EmojiContext } from '../common/internal-types';
-import { uploadEmoji } from '../common/UploadEmoji';
-import { createRecordSelectionDefault } from '../common/RecordSelectionDefault';
-import { CategoryId } from './categories';
-import CategorySelector from './CategorySelector';
-import EmojiPickerFooter from './EmojiPickerFooter';
-import EmojiPickerList from './EmojiPickerList';
-import * as styles from './styles';
-import {
-  AnalyticsEventPayload,
-  CreateUIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 import {
   createAndFireEventInElementsChannel,
   categoryClickedEvent,
@@ -56,6 +42,22 @@ import {
   uploadConfirmButton,
   toneSelectorClosedEvent,
 } from '../../util/analytics';
+import { customCategory, frequentCategory } from '../../util/constants';
+import { getToneEmoji } from '../../util/filters';
+import {
+  containsEmojiId,
+  isPromise /*, isEmojiIdEqual, isEmojiLoaded*/,
+  isEmojiDescription,
+} from '../../util/type-helpers';
+import { createRecordSelectionDefault } from '../common/RecordSelectionDefault';
+import { uploadEmoji } from '../common/UploadEmoji';
+import { EmojiContext } from '../common/internal-types';
+
+import CategorySelector from './CategorySelector';
+import EmojiPickerFooter from './EmojiPickerFooter';
+import EmojiPickerList from './EmojiPickerList';
+import { CategoryId } from './categories';
+import * as styles from './styles';
 
 const FREQUENTLY_USED_MAX = 16;
 

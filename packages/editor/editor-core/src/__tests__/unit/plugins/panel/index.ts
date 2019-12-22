@@ -1,7 +1,7 @@
 import {
-  PanelState,
-  pluginKey as panelPluginKey,
-} from '../../../../plugins/panel/pm-plugins/main';
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   doc,
   panel,
@@ -17,14 +17,15 @@ import {
   li,
   insertText,
 } from '@atlaskit/editor-test-helpers';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+
 import {
   removePanel,
   changePanelType,
 } from '../../../../plugins/panel/actions';
+import {
+  PanelState,
+  pluginKey as panelPluginKey,
+} from '../../../../plugins/panel/pm-plugins/main';
 
 describe('@atlaskit/editor-core ui/PanelPlugin', () => {
   const createEditor = createEditorFactory<PanelState>();

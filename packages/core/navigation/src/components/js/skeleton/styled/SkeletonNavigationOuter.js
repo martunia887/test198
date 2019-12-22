@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components';
-
 import {
   standardOpenWidth,
   containerClosedWidth,

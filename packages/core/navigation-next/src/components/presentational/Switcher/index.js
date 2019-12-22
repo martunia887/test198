@@ -1,12 +1,16 @@
 // @flow
 import React, { PureComponent, cloneElement, type ElementRef } from 'react';
 import NodeResolver from 'react-node-resolver';
-import shallowEqualObjects from 'shallow-equal/objects';
-import { components, PopupSelect, mergeStyles } from '@atlaskit/select';
-import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
-import { N30, B50, N40A, N200, B300 } from '@atlaskit/theme/colors';
 import AddIcon from '@atlaskit/icon/glyph/add';
+import { components, PopupSelect, mergeStyles } from '@atlaskit/select';
+import { N30, B50, N40A, N200, B300 } from '@atlaskit/theme/colors';
+import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
+import shallowEqualObjects from 'shallow-equal/objects';
 
+import { CONTENT_NAV_WIDTH } from '../../../common/constants';
+import { UIControllerSubscriber } from '../../../ui-controller';
+
+import Option from './Option';
 import {
   type SwitcherState,
   type SwitcherProps,
@@ -14,9 +18,6 @@ import {
   type SelectStyles,
   type OptionType,
 } from './types';
-import Option from './Option';
-import { UIControllerSubscriber } from '../../../ui-controller';
-import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 const gridSize = gridSizeFn();
 

@@ -1,9 +1,9 @@
-import hidePopupMiddleware from '../../hidePopup';
 import {
   mockPopupUploadEventEmitter,
   mockStore,
 } from '@atlaskit/media-test-helpers';
 import { hidePopup, HIDE_POPUP } from '../../../actions/hidePopup';
+import hidePopupMiddleware from '../../hidePopup';
 
 describe('hidePopupMiddleware', () => {
   const setup = () => ({

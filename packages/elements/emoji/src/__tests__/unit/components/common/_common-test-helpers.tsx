@@ -1,5 +1,6 @@
-import Button from '@atlaskit/button';
 import { ReactWrapper } from 'enzyme';
+import Button from '@atlaskit/button';
+
 import EmojiPreview from '../../../../components/common/EmojiPreview';
 import * as commonStyles from '../../../../components/common/styles';
 

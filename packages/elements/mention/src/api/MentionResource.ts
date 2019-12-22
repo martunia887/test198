@@ -2,7 +2,6 @@ import {
   KeyValues,
   utils as serviceUtils,
 } from '@atlaskit/util-service-support';
-
 import {
   ErrorCallback,
   InfoCallback,

@@ -1,6 +1,6 @@
 import { Action } from 'redux';
-import { isEditRemoteImageAction } from '../../actions/editRemoteImage';
 import { buttonClickPayload, HandlerResult } from '.';
+import { isEditRemoteImageAction } from '../../actions/editRemoteImage';
 
 export default (action: Action): HandlerResult => {
   if (isEditRemoteImageAction(action)) {

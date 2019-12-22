@@ -1,13 +1,15 @@
 import * as React from 'react';
 import styled from 'styled-components';
+
+import { DevTools } from '../example-helpers/DevTools';
+import { EditorActions } from '../src';
+import EditorContext from '../src/ui/EditorContext';
+import WithEditorActions from '../src/ui/WithEditorActions';
+
 import {
   ExampleEditor as FullPageEditor,
   LOCALSTORAGE_defaultDocKey,
 } from './5-full-page';
-import EditorContext from '../src/ui/EditorContext';
-import { DevTools } from '../example-helpers/DevTools';
-import WithEditorActions from '../src/ui/WithEditorActions';
-import { EditorActions } from '../src';
 
 export const Textarea = styled.textarea`
   box-sizing: border-box;

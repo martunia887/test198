@@ -2,8 +2,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { render } from '@testing-library/react';
 
-import Tooltip from '../../Tooltip';
 import { Tooltip as StyledTooltip } from '../../../styled';
+import Tooltip from '../../Tooltip';
 
 // Tooltip makes fairly heavy use of timers so we have to runAllTimers after
 // simulating events. Unfortuantely, these timers cause enzyme's understanding of

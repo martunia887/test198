@@ -10,7 +10,6 @@ import React, {
   type Node,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { applyRefs } from 'apply-ref';
 import {
   Manager,
   Reference,
@@ -20,8 +19,10 @@ import {
 } from 'react-popper';
 import { colors, gridSize, layers } from '@atlaskit/theme';
 import { jsx } from '@emotion/core';
+import { applyRefs } from 'apply-ref';
 
 import { isEmptyObj } from '../utils';
+
 import FocusTrap from './FocusTrap';
 
 // ==============================

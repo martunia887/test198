@@ -1,14 +1,16 @@
 import React, { PureComponent } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import * as colors from '@atlaskit/theme/colors';
 import { GridColumn } from '@atlaskit/page';
+import * as colors from '@atlaskit/theme/colors';
+
+import { Stage, StatusType, ProgressTrackerStageRenderProp } from '../types';
+
 import {
   ProgressTrackerStageContainer,
   ProgressTrackerStageMarker,
   ProgressTrackerStageBar,
   ProgressTrackerStageTitle,
 } from './styled';
-import { Stage, StatusType, ProgressTrackerStageRenderProp } from '../types';
 
 const semibold = '600';
 const regular = '400';

@@ -5,8 +5,8 @@ import { shallow, mount } from 'enzyme';
 import { toClass } from 'recompose';
 
 import Item, { itemThemeNamespace } from '../../..';
-import { name } from '../../../version.json';
 import { After, Before, Content, Description } from '../../../styled/ItemParts';
+import { name } from '../../../version.json';
 
 describe(`${name} - Item`, () => {
   describe('root element type', () => {

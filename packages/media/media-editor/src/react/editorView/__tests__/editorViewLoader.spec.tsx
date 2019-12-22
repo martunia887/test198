@@ -1,8 +1,7 @@
 import * as React from 'react';
-// import { mountWithIntlContext } from 'enzyme';
 import { nextTick, mountWithIntlContext } from '@atlaskit/media-test-helpers';
-
 import { ModalSpinner } from '@atlaskit/media-ui';
+
 import AsyncEditorView, { AsyncEditorViewState } from '../editorViewLoader';
 
 const props = {

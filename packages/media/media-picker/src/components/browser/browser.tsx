@@ -4,15 +4,16 @@ import {
   withAnalyticsEvents,
   withAnalyticsContext,
 } from '@atlaskit/analytics-next';
+
 import { BrowserConfig } from '../../types';
-import {
-  LocalUploadComponentReact,
-  LocalUploadComponentBaseProps,
-} from '../localUploadReact';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version.json';
+import {
+  LocalUploadComponentReact,
+  LocalUploadComponentBaseProps,
+} from '../localUploadReact';
 
 export type RenderBrowserFunc = () => ReactNode;
 export interface BrowserOwnProps {

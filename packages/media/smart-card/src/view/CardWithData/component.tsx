@@ -3,9 +3,11 @@ import {
   BlockCardResolvedView,
   InlineCardResolvedView,
 } from '@atlaskit/media-ui';
-import { CardWithDataContentProps as Props } from './types';
-import { extractInlinePropsFromJSONLD } from '../../extractors/inline';
+
 import { extractBlockPropsFromJSONLD } from '../../extractors/block';
+import { extractInlinePropsFromJSONLD } from '../../extractors/inline';
+
+import { CardWithDataContentProps as Props } from './types';
 
 export class CardWithDataContent extends React.Component<Props> {
   render() {

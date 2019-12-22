@@ -1,9 +1,11 @@
-import { JsonLd } from '../../client/types';
-import { CardBaseActionCreator, ServerErrors } from './types';
-import { CardStore } from '../types';
-import { CardType } from '../store/types';
 import { Store } from 'redux';
+
+import { JsonLd } from '../../client/types';
 import { ServerError, isServerError } from '../../client/types';
+import { CardType } from '../store/types';
+import { CardStore } from '../types';
+
+import { CardBaseActionCreator, ServerErrors } from './types';
 
 export const cardAction: CardBaseActionCreator<JsonLd> = (
   type,

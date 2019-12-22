@@ -2,10 +2,11 @@
 
 import React, { Fragment, Component } from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
-import TextArea from '@atlaskit/textarea';
 import Form, { Field } from '@atlaskit/form';
 import Modal from '@atlaskit/modal-dialog';
 import Select from '@atlaskit/select';
+import TextArea from '@atlaskit/textarea';
+
 import type { FormFields, SelectValue } from '../types';
 
 type Props = {|

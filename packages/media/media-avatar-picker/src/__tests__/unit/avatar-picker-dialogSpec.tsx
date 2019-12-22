@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import ModalDialog, { ModalFooter } from '@atlaskit/modal-dialog';
 import Button from '@atlaskit/button';
 import {
   smallImage,
@@ -8,20 +7,22 @@ import {
   asMock,
 } from '@atlaskit/media-test-helpers';
 import * as MediaUI from '@atlaskit/media-ui';
+import ModalDialog, { ModalFooter } from '@atlaskit/modal-dialog';
+
 import { Avatar } from '../../avatar-list';
-import { ImageNavigator } from '../../image-navigator';
-import { PredefinedAvatarList } from '../../predefined-avatar-list';
 import { AvatarPickerDialog, fixedCrop } from '../../avatar-picker-dialog';
 import {
   DEFAULT_VISIBLE_PREDEFINED_AVATARS,
   CONTAINER_SIZE,
 } from '../../avatar-picker-dialog/layout-const';
-import { PredefinedAvatarView } from '../../predefined-avatar-view';
 import {
   Mode,
   AvatarPickerDialogProps,
   AvatarPickerDialogState,
 } from '../../avatar-picker-dialog/types';
+import { ImageNavigator } from '../../image-navigator';
+import { PredefinedAvatarList } from '../../predefined-avatar-list';
+import { PredefinedAvatarView } from '../../predefined-avatar-view';
 
 describe('Avatar Picker Dialog', () => {
   let dataURItoFile: typeof MediaUI.dataURItoFile;

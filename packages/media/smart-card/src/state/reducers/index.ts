@@ -1,10 +1,11 @@
 import clone from 'lodash.clonedeep';
 
-import * as actions from '../actions/constants';
-import { CardReducerMap, CardReducer } from './types';
 import { JsonLd } from '../../client/types';
-import { CardStore, CardState } from '../types';
+import * as actions from '../actions/constants';
 import { getStatus } from '../actions/helpers';
+import { CardStore, CardState } from '../types';
+
+import { CardReducerMap, CardReducer } from './types';
 
 const cardReducerMap: CardReducerMap<CardState, JsonLd> = {
   [actions.ACTION_PENDING]: (_state, { type }) => {

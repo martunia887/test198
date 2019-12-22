@@ -4,17 +4,19 @@ import Droplist, { Item, Group } from '@atlaskit/droplist';
 import FieldBase, { Label } from '@atlaskit/field-base';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import Spinner from '@atlaskit/spinner';
-import { mapAppearanceToFieldBase } from './appearances';
+
 import { AutocompleteWrapper, AutocompleteInput } from '../styled/Autocomplete';
 import Content from '../styled/Content';
 import ElemBefore from '../styled/ElemBefore';
 import Expand from '../styled/Expand';
-import InitialLoading from './InitialLoading';
-import NothingWasFound from './NothingWasFound';
 import Placeholder from '../styled/Placeholder';
 import StatelessSelectWrapper from '../styled/StatelessSelectWrapper';
 import Trigger from '../styled/Trigger';
 import type { GroupType, ItemType } from '../types';
+
+import InitialLoading from './InitialLoading';
+import NothingWasFound from './NothingWasFound';
+import { mapAppearanceToFieldBase } from './appearances';
 
 // =============================================================
 // NOTE: Duplicated in ./internal/appearances until docgen can follow imports.

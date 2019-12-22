@@ -1,12 +1,14 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import {
   mockEndpoints,
   REQUEST_FAST,
 } from '@atlaskit/atlassian-switcher-test-utils';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
-import AtlassianSwitcher from '../src';
-import styled from 'styled-components';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+
+import AtlassianSwitcher from '../src';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 import ColorScheme from './helpers/ColorScheme';
 
 const Container = styled.div`

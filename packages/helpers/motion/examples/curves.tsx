@@ -1,7 +1,8 @@
 import React from 'react';
 import { md, code } from '@atlaskit/docs';
-import { easeIn, easeInOut, easeOut } from '../src';
+
 import { MovesRightBlock } from '../examples-utils/blocks';
+import { easeIn, easeInOut, easeOut } from '../src';
 
 export default () => md`
   ${code`

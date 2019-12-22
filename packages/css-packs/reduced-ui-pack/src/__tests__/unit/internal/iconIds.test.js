@@ -1,7 +1,8 @@
 // @flow
+import cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
-import cheerio from 'cheerio'; // eslint-disable-line import/no-extraneous-dependencies
+
 import { name } from '../../../../package.json';
 import expectedSvgIds from '../../../internal/iconIds';
 

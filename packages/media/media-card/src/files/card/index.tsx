@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { messages } from '@atlaskit/media-ui';
 import { FormattedMessage } from 'react-intl';
 import { FileDetails, ImageResizeMode } from '@atlaskit/media-client';
+import { messages } from '@atlaskit/media-ui';
+
 import { SharedCardProps, CardStatus } from '../..';
 import { CardAction } from '../../actions';
-import { FileCardImageView } from '../cardImageView';
 import { toHumanReadableMediaSize } from '../../utils';
+import { FileCardImageView } from '../cardImageView';
 
 export interface FileCardProps extends SharedCardProps {
   readonly status: CardStatus;

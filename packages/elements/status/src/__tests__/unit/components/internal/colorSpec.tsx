@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
-import * as React from 'react';
+
 import { ANALYTICS_HOVER_DELAY } from '../../../../components/constants';
 import Color from '../../../../components/internal/color';
 

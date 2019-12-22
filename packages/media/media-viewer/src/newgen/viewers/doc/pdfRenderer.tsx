@@ -1,14 +1,15 @@
 import * as React from 'react';
-import * as PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
-import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import { injectGlobal } from 'styled-components';
-import { ZoomControls } from '../../zoomControls';
+import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+import * as PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
+
+import { Outcome } from '../../domain';
+import { ZoomLevel } from '../../domain/zoomLevel';
+import ErrorMessage, { createError, MediaViewerError } from '../../error';
+import { Spinner } from '../../loading';
 import { PDFWrapper } from '../../styled';
 import { closeOnDirectClick } from '../../utils/closeOnDirectClick';
-import { Outcome } from '../../domain';
-import { Spinner } from '../../loading';
-import ErrorMessage, { createError, MediaViewerError } from '../../error';
-import { ZoomLevel } from '../../domain/zoomLevel';
+import { ZoomControls } from '../../zoomControls';
 
 export const pdfViewerClassName = 'pdfViewer';
 

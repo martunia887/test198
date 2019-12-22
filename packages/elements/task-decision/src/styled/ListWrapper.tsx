@@ -1,7 +1,5 @@
-import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
 import { HTMLAttributes, ClassAttributes, OlHTMLAttributes, ComponentClass, BaseHTMLAttributes } from 'react';
+import styled from 'styled-components';
 
 const WrapperStyles = `
   /*

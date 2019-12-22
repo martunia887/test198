@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { EditorView } from 'prosemirror-view';
 import { Transformer } from '@atlaskit/editor-common';
+import { EditorView } from 'prosemirror-view';
+
 import { EventDispatcher, Dispatch } from '../../../../event-dispatcher';
 import { EditorAppearanceComponentProps } from '../../../../types';
 import { EditorProps, AnalyticsEventHandler } from '../editor-props-type';

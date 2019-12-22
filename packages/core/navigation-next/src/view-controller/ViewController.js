@@ -1,7 +1,6 @@
 // @flow
 
 import { Container } from 'unstated';
-
 import type {
   Reducer,
   View,

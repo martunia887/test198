@@ -3,23 +3,21 @@ import {
   withAnalyticsContext,
 } from '@atlaskit/analytics-next';
 
+import { DropzoneConfig } from '../../types';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../../version.json';
 import {
   LocalUploadComponentReact,
   LocalUploadComponentBaseProps,
 } from '../localUploadReact';
-
-import { DropzoneConfig } from '../../types';
+import { ANALYTICS_MEDIA_CHANNEL } from '../media-picker-analytics-error-boundary';
 import {
   DropzoneDragEnterEventPayload,
   DropzoneDragLeaveEventPayload,
   DropzoneUploadEventPayloadMap,
 } from '../types';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../../version.json';
-
-import { ANALYTICS_MEDIA_CHANNEL } from '../media-picker-analytics-error-boundary';
 
 export type DropzoneProps = LocalUploadComponentBaseProps & {
   config: DropzoneConfig;

@@ -4,13 +4,19 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import CrossIcon from '@atlaskit/icon/glyph/cross';
-import ChevronUpIcon from '@atlaskit/icon/glyph/chevron-up';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
+import ChevronUpIcon from '@atlaskit/icon/glyph/chevron-up';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
+
+import { flagFocusRingColor } from '../../theme';
+import { FlagProps, AppearanceTypes } from '../../types';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version.json';
+import Expander from '../Expander';
+import Actions from '../FlagActions';
+
 import Container, {
   Description,
   DismissButton,
@@ -19,10 +25,6 @@ import Container, {
   Title,
   Header,
 } from './styledFlag';
-import Expander from '../Expander';
-import Actions from '../FlagActions';
-import { flagFocusRingColor } from '../../theme';
-import { FlagProps, AppearanceTypes } from '../../types';
 
 export const DEFAULT_APPEARANCE: AppearanceTypes = 'normal';
 

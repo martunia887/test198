@@ -1,18 +1,17 @@
 // @flow
 import React, { Component, type ComponentType } from 'react';
 
-import SkeletonNavigationOuter from './styled/SkeletonNavigationOuter';
-import SkeletonNavigationInner from './styled/SkeletonNavigationInner';
+import type { Provided } from '../../../theme/types';
+import { defaultContainerTheme, defaultGlobalTheme } from '../../../theme/util';
 
-import SkeletonGlobalNavigation from './SkeletonGlobalNavigation';
 import SkeletonContainerNavigation from './SkeletonContainerNavigation';
 import SkeletonDefaultContainerHeader, {
   type SkeletonContainerHeaderProps,
 } from './SkeletonDefaultContainerHeader';
+import SkeletonGlobalNavigation from './SkeletonGlobalNavigation';
 import { HiddenWhenCollapsed } from './ToggleWhenCollapsed';
-
-import type { Provided } from '../../../theme/types';
-import { defaultContainerTheme, defaultGlobalTheme } from '../../../theme/util';
+import SkeletonNavigationInner from './styled/SkeletonNavigationInner';
+import SkeletonNavigationOuter from './styled/SkeletonNavigationOuter';
 
 export type Props = {
   isCollapsed?: boolean,

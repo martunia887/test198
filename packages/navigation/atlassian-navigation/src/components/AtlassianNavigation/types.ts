@@ -1,5 +1,4 @@
 import React, { ReactNodeArray, ReactNode } from 'react';
-
 import { NavigationTheme } from '../../theme';
 
 export type AtlassianNavigationProps = {

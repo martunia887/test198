@@ -1,6 +1,8 @@
 import React from 'react';
 import Button from '@atlaskit/button';
+
 import { DynamicTableStateless } from '../src';
+
 import { head } from './content/sample-data';
 
 interface State {

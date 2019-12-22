@@ -1,22 +1,35 @@
 import * as React from 'react';
 import { Component } from 'react';
-import PlayIcon from '@atlaskit/icon/glyph/vid-play';
-import PauseIcon from '@atlaskit/icon/glyph/vid-pause';
-import FullScreenIconOn from '@atlaskit/icon/glyph/vid-full-screen-on';
-import FullScreenIconOff from '@atlaskit/icon/glyph/vid-full-screen-off';
-import SoundIcon from '@atlaskit/icon/glyph/hipchat/outgoing-sound';
-import HDIcon from '@atlaskit/icon/glyph/vid-hd-circle';
-import DownloadIcon from '@atlaskit/icon/glyph/download';
-import MediaButton from '../MediaButton';
-import Spinner from '@atlaskit/spinner';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 import MediaPlayer, {
   SetVolumeFunction,
   NavigateFunction,
   VideoState,
   VideoActions,
 } from 'react-video-renderer';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
+import SoundIcon from '@atlaskit/icon/glyph/hipchat/outgoing-sound';
+import FullScreenIconOff from '@atlaskit/icon/glyph/vid-full-screen-off';
+import FullScreenIconOn from '@atlaskit/icon/glyph/vid-full-screen-on';
+import HDIcon from '@atlaskit/icon/glyph/vid-hd-circle';
+import PauseIcon from '@atlaskit/icon/glyph/vid-pause';
+import PlayIcon from '@atlaskit/icon/glyph/vid-play';
+import Spinner from '@atlaskit/spinner';
 import { B200, DN400, N0, DN60 } from '@atlaskit/theme/colors';
-import { TimeRange } from './timeRange';
+
+import MediaButton from '../MediaButton';
+import { hideControlsClassName } from '../classNames';
+import { formatDuration } from '../formatDuration';
+import { messages } from '../messages';
+import { Shortcut, keyCodes } from '../shortcut';
+import { WithShowControlMethodProp } from '../types';
+
+import {
+  toggleFullscreen,
+  getFullscreenElement,
+  vendorify,
+} from './fullscreen';
+import simultaneousPlayManager from './simultaneousPlayManager';
 import {
   CurrentTime,
   VideoWrapper,
@@ -32,18 +45,7 @@ import {
   SpinnerWrapper,
   VolumeTimeRangeWrapper,
 } from './styled';
-import { formatDuration } from '../formatDuration';
-import { hideControlsClassName } from '../classNames';
-import { Shortcut, keyCodes } from '../shortcut';
-import {
-  toggleFullscreen,
-  getFullscreenElement,
-  vendorify,
-} from './fullscreen';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { messages } from '../messages';
-import simultaneousPlayManager from './simultaneousPlayManager';
-import { WithShowControlMethodProp } from '../types';
+import { TimeRange } from './timeRange';
 
 export interface CustomMediaPlayerProps extends WithShowControlMethodProp {
   readonly type: 'audio' | 'video';

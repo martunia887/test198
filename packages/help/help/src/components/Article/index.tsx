@@ -4,12 +4,12 @@ import { Transition } from 'react-transition-group';
 
 import { REQUEST_STATE } from '../../model/Requests';
 import { withHelp, HelpContextInterface } from '../HelpContext';
+import { TRANSITION_DURATION_MS, TRANSITION_STATUS } from '../constants';
 
 import ArticleContent from './ArticleContent';
 import ArticleWasHelpfulForm from './ArticleWasHelpfulForm';
 import LoadingError from './LoadingError';
 import { ArticleContainer } from './styled';
-import { TRANSITION_DURATION_MS, TRANSITION_STATUS } from '../constants';
 
 const defaultStyle = {
   transition: `left ${TRANSITION_DURATION_MS}ms`,

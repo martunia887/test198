@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Node, DOMSerializer, DOMOutputSpec } from 'prosemirror-model';
-import { NodeView } from 'prosemirror-view';
-import InfoIcon from '@atlaskit/icon/glyph/editor/info';
-import SuccessIcon from '@atlaskit/icon/glyph/editor/success';
-import NoteIcon from '@atlaskit/icon/glyph/editor/note';
-import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
+import { PanelType } from '@atlaskit/adf-schema';
 import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
 import TipIcon from '@atlaskit/icon/glyph/editor/hint';
-import { PanelType } from '@atlaskit/adf-schema';
+import InfoIcon from '@atlaskit/icon/glyph/editor/info';
+import NoteIcon from '@atlaskit/icon/glyph/editor/note';
+import SuccessIcon from '@atlaskit/icon/glyph/editor/success';
+import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
+import { Node, DOMSerializer, DOMOutputSpec } from 'prosemirror-model';
+import { NodeView } from 'prosemirror-view';
 
 const panelIcons = {
   info: InfoIcon,

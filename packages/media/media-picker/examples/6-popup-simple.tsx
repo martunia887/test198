@@ -1,18 +1,18 @@
+import * as React from 'react';
+import { Component } from 'react';
+import * as PropTypes from 'prop-types';
+import Button from '@atlaskit/button';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   defaultCollectionName,
   defaultMediaPickerAuthProvider,
   userAuthProvider,
   mediaMock,
 } from '@atlaskit/media-test-helpers';
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
-import { Component } from 'react';
-import Button from '@atlaskit/button';
+import { MediaMockConfig } from '@atlaskit/media-test-helpers';
 
 import { MediaPicker } from '../src';
 import { Popup } from '../src/types';
-import { MediaClientConfig } from '@atlaskit/media-core';
-import { MediaMockConfig } from '@atlaskit/media-test-helpers';
 
 mediaMock.enable();
 

@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Identifier, FileIdentifier } from '@atlaskit/media-client';
-import { Observable } from 'rxjs';
-import { List, Props, State } from '../../../newgen/list';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
-import { ItemViewer } from '../../../newgen/item-viewer';
+import { Identifier, FileIdentifier } from '@atlaskit/media-client';
 import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
+import { Observable } from 'rxjs';
+
+import { ItemViewer } from '../../../newgen/item-viewer';
+import { List, Props, State } from '../../../newgen/list';
 
 function createFixture(props: Partial<Props>) {
   const items: FileIdentifier[] = [];

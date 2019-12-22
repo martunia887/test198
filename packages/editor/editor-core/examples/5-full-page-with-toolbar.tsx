@@ -1,22 +1,22 @@
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
-
-import Editor from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
 import { macroProvider, cardProvider } from '@atlaskit/editor-test-helpers';
-import ToolsDrawer from '../example-helpers/ToolsDrawer';
-
 import {
   customInsertMenuItems,
   extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
+
+import { DevTools } from '../example-helpers/DevTools';
+import ToolsDrawer from '../example-helpers/ToolsDrawer';
 import { exampleDocument } from '../example-helpers/example-document';
 import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
-import { DevTools } from '../example-helpers/DevTools';
-import { Wrapper, Content } from './5-full-page';
 import withSentry from '../example-helpers/withSentry';
 import { EditorActions } from '../src';
+
+import Editor from './../src/editor';
+import EditorContext from './../src/ui/EditorContext';
+import WithEditorActions from './../src/ui/WithEditorActions';
+import { Wrapper, Content } from './5-full-page';
 
 // eslint-disable-next-line no-console
 const analyticsHandler = (actionName: string, props?: {}) =>

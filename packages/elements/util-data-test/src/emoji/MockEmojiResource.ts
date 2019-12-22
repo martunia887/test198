@@ -1,12 +1,8 @@
-import uuid from 'uuid/v1';
-import { AbstractResource } from '@atlaskit/util-service-support';
-
 import {
   EmojiProvider,
   UploadingEmojiProvider,
   EmojiRepository,
 } from '@atlaskit/emoji/resource';
-
 import {
   EmojiDescription,
   EmojiId,
@@ -19,7 +15,10 @@ import {
   OptionalUser,
   CategoryId,
 } from '@atlaskit/emoji/types';
+import { AbstractResource } from '@atlaskit/util-service-support';
+import uuid from 'uuid/v1';
 
+import { loggedUser } from './story-data';
 import {
   PromiseBuilder,
   customCategory,
@@ -27,7 +26,6 @@ import {
   selectedToneStorageKey,
   UploadDetail,
 } from './utils';
-import { loggedUser } from './story-data';
 
 const emojiFromUpload = (upload: EmojiUpload) => {
   const { shortName, name, dataURL, height, width } = upload;

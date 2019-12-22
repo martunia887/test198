@@ -1,6 +1,6 @@
 import { computeIndex, reorderRows } from '../../../internal/helpers';
-import { rowsWithKeys } from './_data';
 import { RankEnd, RowType } from '../../../types';
+import { rowsWithKeys } from './_data';
 
 const getKey = (rowIndex: number) => rowsWithKeys[rowIndex].key || '';
 

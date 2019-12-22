@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { IconAndTitleLayout } from '../../index';
+
 import { Icon } from '../../../Icon';
+import { IconAndTitleLayout } from '../../index';
 
 describe('IconAndTitleLayout', () => {
   it('should render the text', () => {

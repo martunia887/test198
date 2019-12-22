@@ -1,7 +1,8 @@
-import { createTag } from '../create-tag';
-import { createClassName } from '../styles/util';
-import { NodeSerializerOpts } from '../interfaces';
 import { N500 } from '@atlaskit/adf-schema';
+
+import { createTag } from '../create-tag';
+import { NodeSerializerOpts } from '../interfaces';
+import { createClassName } from '../styles/util';
 
 export const styles = `
 .${createClassName('mention')} {

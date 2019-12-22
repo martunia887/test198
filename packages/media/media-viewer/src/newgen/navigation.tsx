@@ -1,22 +1,23 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Identifier } from '@atlaskit/media-client';
-import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/chevron-left-circle';
-import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
-import { N800 } from '@atlaskit/theme/colors';
-import { hideControlsClassName, MediaButton } from '@atlaskit/media-ui';
-import { Shortcut } from '@atlaskit/media-ui';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import { ArrowsWrapper, RightWrapper, LeftWrapper, Arrow } from './styled';
-import { getSelectedIndex } from './utils';
+import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/chevron-left-circle';
+import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
+import { Identifier } from '@atlaskit/media-client';
+import { hideControlsClassName, MediaButton } from '@atlaskit/media-ui';
+import { Shortcut } from '@atlaskit/media-ui';
+import { N800 } from '@atlaskit/theme/colors';
+
 import { channel } from './analytics';
 import {
   createNavigationEvent,
   NavigationGasPayload,
 } from './analytics/navigation';
+import { ArrowsWrapper, RightWrapper, LeftWrapper, Arrow } from './styled';
+import { getSelectedIndex } from './utils';
 
 export type NavigationDirection = 'prev' | 'next';
 

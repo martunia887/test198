@@ -1,9 +1,9 @@
+import { createProsemirrorEditorFactory } from '@atlaskit/editor-test-helpers/create-prosemirror-editor';
 import {
   alignment as alignmentMark,
   doc,
   p,
 } from '@atlaskit/editor-test-helpers/schema-builder';
-import { createProsemirrorEditorFactory } from '@atlaskit/editor-test-helpers/create-prosemirror-editor';
 import { removeBlockMarks } from '../../../../utils/mark';
 
 describe('alignment utils', () => {

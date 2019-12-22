@@ -1,9 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import LockFilledIcon from '@atlaskit/icon/glyph/lock-filled';
 import LabelIcon from '@atlaskit/icon/glyph/label';
-import FullWidthToggle from './full-width-toggle';
+import LockFilledIcon from '@atlaskit/icon/glyph/lock-filled';
+
 import { EditorAppearance } from '../src/types';
+
+import FullWidthToggle from './full-width-toggle';
 
 const BreadcrumbWrapper = styled.div`
   flex: 1 1 80%;

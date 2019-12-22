@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
+
 import { DeleteUserOverviewScreen } from '../../components/DeleteUserOverviewScreen';
-import { catherineHirons } from '../../mocks/users';
-import accessibleSites from '../../mocks/accessibleSites';
 import { DeleteUserOverviewScreenProps } from '../../components/DeleteUserOverviewScreen/types';
+import accessibleSites from '../../mocks/accessibleSites';
+import { catherineHirons } from '../../mocks/users';
 
 const defaultProps: Partial<DeleteUserOverviewScreenProps> = {
   accessibleSites,

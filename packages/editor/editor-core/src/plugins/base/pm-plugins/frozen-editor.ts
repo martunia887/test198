@@ -1,15 +1,16 @@
+import {
+  isPerformanceObserverAvailable,
+  isPerformanceAPIAvailable,
+} from '@atlaskit/editor-common';
 import { Plugin } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
 import {
   ACTION,
   ACTION_SUBJECT,
   EVENT_TYPE,
   DispatchAnalyticsEvent,
 } from '../../analytics';
-import { EditorView } from 'prosemirror-view';
-import {
-  isPerformanceObserverAvailable,
-  isPerformanceAPIAvailable,
-} from '@atlaskit/editor-common';
 
 const FREEZE_CHECK_TIME = 600;
 const SLOW_INPUT_TIME = 300;

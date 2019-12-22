@@ -1,9 +1,10 @@
 import * as React from 'react';
+import CommitIcon from '@atlaskit/icon-object/glyph/commit/16';
 import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
+
 import { extractInlineViewPropsFromObject } from './extractPropsFromObject';
 import { buildName } from './extractPropsFromSourceCodeCommon';
 import { BuildInlineProps } from './types';
-import CommitIcon from '@atlaskit/icon-object/glyph/commit/16';
 
 type BuildInlinePropsSourceCodeCommit = BuildInlineProps<
   InlineCardResolvedViewProps

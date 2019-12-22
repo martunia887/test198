@@ -1,5 +1,4 @@
 // @flow
-import '@atlaskit/polyfills/object-assign';
 import React, {
   PureComponent,
   type Node,
@@ -7,29 +6,14 @@ import React, {
   type Element,
   type ElementRef,
 } from 'react';
-import { getTheme } from '@atlaskit/theme/components';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../../version.json';
-import {
-  navigationExpandedCollapsed,
-  type CollapseExpandTrigger,
-} from '../../utils/analytics';
-import GlobalNavigation from './GlobalNavigation';
-import ContainerNavigation from './ContainerNavigation';
-import NavigationFixedContainer from '../styled/NavigationFixedContainer';
-import NavigationGlobalNavigationWrapper from '../styled/NavigationGlobalNavigationWrapper';
-import NavigationContainerNavigationWrapper from '../styled/NavigationContainerNavigationWrapper';
-import Resizer from './Resizer';
-import type { IconAppearance } from '../../types';
-import type { Provided } from '../../theme/types';
-import Spacer from './Spacer';
+import '@atlaskit/polyfills/object-assign';
+import { getTheme } from '@atlaskit/theme/components';
+
 import {
   containerClosedWidth,
   containerOpenWidth,
@@ -37,8 +21,26 @@ import {
   resizeClosedBreakpoint,
   standardOpenWidth,
 } from '../../shared-variables';
+import type { Provided } from '../../theme/types';
 import { defaultContainerTheme, defaultGlobalTheme } from '../../theme/util';
 import WithElectronTheme from '../../theme/with-electron-theme';
+import type { IconAppearance } from '../../types';
+import {
+  navigationExpandedCollapsed,
+  type CollapseExpandTrigger,
+} from '../../utils/analytics';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../../version.json';
+import NavigationContainerNavigationWrapper from '../styled/NavigationContainerNavigationWrapper';
+import NavigationFixedContainer from '../styled/NavigationFixedContainer';
+import NavigationGlobalNavigationWrapper from '../styled/NavigationGlobalNavigationWrapper';
+
+import ContainerNavigation from './ContainerNavigation';
+import GlobalNavigation from './GlobalNavigation';
+import Resizer from './Resizer';
+import Spacer from './Spacer';
 
 const warnIfCollapsedPropsAreInvalid = ({ isCollapsible, isOpen }) => {
   if (!isCollapsible && !isOpen) {

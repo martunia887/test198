@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { EditorView } from 'prosemirror-view';
-
 import { FileIdentifier } from '@atlaskit/media-client';
 import { Dimensions, SmartMediaEditor } from '@atlaskit/media-editor';
+import { EditorView } from 'prosemirror-view';
 
-import { MediaEditorState } from '../types';
 import { uploadAnnotation, closeMediaEditor } from '../commands/media-editor';
+import { MediaEditorState } from '../types';
 
 type Props = {
   mediaEditorState: MediaEditorState;

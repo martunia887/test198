@@ -1,15 +1,17 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
 import { ThemeProvider, withTheme } from 'styled-components';
-import { itemThemeNamespace } from '@atlaskit/item';
 import AkDropdownMenu from '@atlaskit/dropdown-menu';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
+import { itemThemeNamespace } from '@atlaskit/item';
 import memoizeOne from 'memoize-one';
-import AkNavigationItem from './NavigationItem';
+
+import overrideItemTheme from '../../theme/create-container-title-item-theme';
+import { rootKey } from '../../theme/util';
 import ContainerTitleIcon from '../styled/ContainerTitleIcon';
 import ContainerTitleText from '../styled/ContainerTitleText';
-import { rootKey } from '../../theme/util';
-import overrideItemTheme from '../../theme/create-container-title-item-theme';
+
+import AkNavigationItem from './NavigationItem';
 
 type Props = {
   /** Content that will be rendered inside the layer element. Should typically be

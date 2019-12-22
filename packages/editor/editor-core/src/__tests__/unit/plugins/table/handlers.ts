@@ -1,6 +1,3 @@
-import { DecorationSet } from 'prosemirror-view';
-import { TextSelection } from 'prosemirror-state';
-import { addColumnAt } from 'prosemirror-utils';
 import {
   doc,
   createEditorFactory,
@@ -9,6 +6,11 @@ import {
   tdEmpty,
   tdCursor,
 } from '@atlaskit/editor-test-helpers';
+import { TextSelection } from 'prosemirror-state';
+import { addColumnAt } from 'prosemirror-utils';
+import { DecorationSet } from 'prosemirror-view';
+
+import { handleDocOrSelectionChanged } from '../../../../plugins/table/handlers';
 import {
   pluginKey,
   defaultTableSelection,
@@ -17,7 +19,6 @@ import {
   TablePluginState,
   TableDecorations,
 } from '../../../../plugins/table/types';
-import { handleDocOrSelectionChanged } from '../../../../plugins/table/handlers';
 
 describe('table action handlers', () => {
   let editor: any;

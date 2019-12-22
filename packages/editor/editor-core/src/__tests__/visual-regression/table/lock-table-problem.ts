@@ -1,17 +1,18 @@
+import { EditorProps } from '../../../types';
+import { animationFrame } from '../../__helpers/page-objects/_editor';
+import {
+  clickFirstCell,
+  grabAndMoveColumnResing,
+  tableSelectors,
+} from '../../__helpers/page-objects/_table';
 import {
   initEditorWithAdf,
   Appearance,
   snapshot,
   applyRemoteStep,
 } from '../_utils';
-import {
-  clickFirstCell,
-  grabAndMoveColumnResing,
-  tableSelectors,
-} from '../../__helpers/page-objects/_table';
-import { EditorProps } from '../../../types';
+
 import adf from './__fixtures__/default-table.adf.json';
-import { animationFrame } from '../../__helpers/page-objects/_editor';
 
 describe('Table lock problems', () => {
   let page: any;

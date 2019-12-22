@@ -4,8 +4,9 @@ import { AnalyticsListener } from '@atlaskit/analytics-next';
 import Portal from '@atlaskit/portal';
 import { layers } from '@atlaskit/theme/constants';
 import { render, fireEvent } from '@testing-library/react';
-import Tooltip from '../../Tooltip';
+
 import { Tooltip as StyledTooltip } from '../../../styled';
+import Tooltip from '../../Tooltip';
 import { hoveredPayload } from '../../utils/analytics-payloads';
 
 declare var global: any;

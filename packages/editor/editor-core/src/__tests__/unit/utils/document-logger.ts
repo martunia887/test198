@@ -12,8 +12,8 @@ import {
   underline,
   strong,
 } from '@atlaskit/editor-test-helpers';
-import { getDocStructure } from '../../../utils/document-logger';
 import schema from '../../../../../editor-test-helpers/src/schema';
+import { getDocStructure } from '../../../utils/document-logger';
 
 const checkDocument = (doc: any, expected: any) => {
   const document = doc(schema);

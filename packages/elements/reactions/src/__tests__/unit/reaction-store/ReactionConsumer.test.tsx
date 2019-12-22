@@ -1,5 +1,6 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { shallow } from 'enzyme';
+
 import { ReactionConsumer } from '../../../reaction-store/ReactionConsumer';
 import { ReactionStatus } from '../../../types/ReactionStatus';
 

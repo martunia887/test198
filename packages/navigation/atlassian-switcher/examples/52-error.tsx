@@ -1,14 +1,16 @@
 import * as React from 'react';
-import Drawer from '@atlaskit/drawer';
-import Button from '@atlaskit/button';
-import { withAnalyticsLogger, withIntlProvider } from './helpers';
 import {
   mockEndpoints,
   REQUEST_FAST,
 } from '@atlaskit/atlassian-switcher-test-utils';
-import { enrichFetchError } from '../src/utils/fetch';
+import Button from '@atlaskit/button';
+import Drawer from '@atlaskit/drawer';
+
 import AtlassianSwitcher from '../src';
 import { Appearance } from '../src/theme/types';
+import { enrichFetchError } from '../src/utils/fetch';
+
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
 
 class ErrorExample extends React.Component {
   state = {

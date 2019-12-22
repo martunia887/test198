@@ -1,6 +1,5 @@
-import styled, { ThemedOuterStyledProps } from 'styled-components';
-
 import { HTMLAttributes, ComponentClass, LiHTMLAttributes } from 'react';
+import styled, { ThemedOuterStyledProps } from 'styled-components';
 import { N20, N40, B400, B50 } from '@atlaskit/theme/colors';
 
 export const FilmStripViewWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`

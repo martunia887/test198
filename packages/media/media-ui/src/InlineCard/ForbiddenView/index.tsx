@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { B400, N500 } from '@atlaskit/theme/colors';
-import LockIcon from '@atlaskit/icon/glyph/lock-filled';
-import Button from '@atlaskit/button';
-import { Frame } from '../Frame';
-import { IconAndTitleLayout } from '../IconAndTitleLayout';
-import { AKIconWrapper } from '../Icon';
-import { messages } from '../../messages';
 import { FormattedMessage } from 'react-intl';
+import Button from '@atlaskit/button';
+import LockIcon from '@atlaskit/icon/glyph/lock-filled';
+import { B400, N500 } from '@atlaskit/theme/colors';
+
+import { messages } from '../../messages';
+import { Frame } from '../Frame';
+import { AKIconWrapper } from '../Icon';
+import { IconAndTitleLayout } from '../IconAndTitleLayout';
+
 import { ForbiddenWrapper } from './styled';
 
 export interface InlineCardForbiddenViewProps {

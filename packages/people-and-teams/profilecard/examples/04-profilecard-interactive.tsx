@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import ProfilecardInteractive from './helper/profile-interactive';
 import LocaleIntlProvider from './helper/locale-intl-provider';
+import ProfilecardInteractive from './helper/profile-interactive';
 
 export const MainStage = styled.div`
   margin: 16px;

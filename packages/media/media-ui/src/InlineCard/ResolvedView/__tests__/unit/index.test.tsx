@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import Lozenge from '@atlaskit/lozenge';
-import { InlineCardResolvedView } from '../../index';
+
 import { Icon } from '../../../../InlineCard/Icon';
+import { InlineCardResolvedView } from '../../index';
 
 describe('ResolvedView', () => {
   it('should render the title', () => {

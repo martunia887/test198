@@ -1,13 +1,14 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import { findDomRefAtPos } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+
 import { Dispatch } from '../../../event-dispatcher';
 import { pluginFactory } from '../../../utils/plugin-state-factory';
-import ExpandNodeView from '../nodeviews';
 import { setExpandRef } from '../commands';
+import ExpandNodeView from '../nodeviews';
 import reducer from '../reducer';
-import { findExpand } from '../utils';
 import { expandClassNames } from '../ui/class-names';
+import { findExpand } from '../utils';
 
 export const pluginKey = new PluginKey('expandPlugin');
 

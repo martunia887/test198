@@ -3,13 +3,14 @@ import { shallow, mount, ReactWrapper, ShallowWrapper } from 'enzyme';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import ChevronUpIcon from '@atlaskit/icon/glyph/chevron-up';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
+
+import { FlagProps } from '../../../types';
 import { FlagWithoutAnalytics as Flag } from '../../Flag';
 import Container, {
   Description,
   DismissButton,
   Title,
 } from '../../Flag/styledFlag';
-import { FlagProps } from '../../../types';
 
 describe('Flag', () => {
   const generateFlag = (extraProps?: Partial<FlagProps>) => (

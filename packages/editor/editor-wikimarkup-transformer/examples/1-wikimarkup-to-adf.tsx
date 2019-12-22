@@ -3,19 +3,20 @@ import styled from 'styled-components';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
-import { WikiMarkupTransformer } from '../src';
-import { ReactRenderer } from '@atlaskit/renderer';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
+import { MentionProvider } from '@atlaskit/mention/types';
+import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
+import { ReactRenderer } from '@atlaskit/renderer';
 import {
   profilecard as profilecardUtils,
   emoji,
   taskDecision,
 } from '@atlaskit/util-data-test';
-import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
-import { MentionProvider } from '@atlaskit/mention/types';
+
+import { WikiMarkupTransformer } from '../src';
 import { Context } from '../src/interfaces';
 
 const Container = styled.div`

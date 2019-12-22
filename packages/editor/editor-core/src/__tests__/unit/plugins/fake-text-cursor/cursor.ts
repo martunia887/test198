@@ -1,11 +1,12 @@
-import { TextSelection, Selection } from 'prosemirror-state';
-import { DecorationSet } from 'prosemirror-view';
-import { Slice } from 'prosemirror-model';
 import {
   doc,
   createEditorFactory,
   p as paragraph,
 } from '@atlaskit/editor-test-helpers';
+import { Slice } from 'prosemirror-model';
+import { TextSelection, Selection } from 'prosemirror-state';
+import { DecorationSet } from 'prosemirror-view';
+
 import {
   addFakeTextCursor,
   removeFakeTextCursor,

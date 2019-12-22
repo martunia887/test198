@@ -1,16 +1,15 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import CopyIcon from '@atlaskit/icon/glyph/copy';
-import TextArea from '@atlaskit/textarea';
-import { colors } from '@atlaskit/theme';
-import { disableZooming } from './utils/viewport';
-
 import {
   cardProvider,
   storyMediaProviderFactory,
 } from '@atlaskit/editor-test-helpers';
+import CopyIcon from '@atlaskit/icon/glyph/copy';
+import TextArea from '@atlaskit/textarea';
+import { colors } from '@atlaskit/theme';
 
 import Editor from './../src/editor/mobile-editor-element';
+import { disableZooming } from './utils/viewport';
 
 export const Wrapper: any = styled.div`
   position: absolute;

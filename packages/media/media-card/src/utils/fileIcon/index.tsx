@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
+
 import { MediaTypeIcon } from '../mediaTypeIcon';
+
 import { FileTypeIcon } from './styled';
 
 export interface FileIconProps {

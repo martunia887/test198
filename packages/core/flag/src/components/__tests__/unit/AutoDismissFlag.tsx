@@ -1,8 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { AUTO_DISMISS_SECONDS } from '../../AutoDismissFlag';
+
 import Flag, { AutoDismissFlag } from '../../..';
 import { AutoDismissFlagProps } from '../../../types';
+import { AUTO_DISMISS_SECONDS } from '../../AutoDismissFlag';
 
 describe('Auto dismiss flag', () => {
   // Helper function to generate <Flag /> with base required props

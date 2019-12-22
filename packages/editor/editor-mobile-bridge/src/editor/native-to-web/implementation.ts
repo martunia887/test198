@@ -41,20 +41,21 @@ import {
   ListInputMethod,
   TextFormattingInputMethodBasic,
 } from '@atlaskit/editor-core';
-import { EditorView } from 'prosemirror-view';
-import { EditorViewWithComposition } from '../../types';
-import { EditorState } from 'prosemirror-state';
+import { JSONTransformer } from '@atlaskit/editor-json-transformer';
+import { Color as StatusColor } from '@atlaskit/status/element';
 import {
   undo as pmHistoryUndo,
   redo as pmHistoryRedo,
 } from 'prosemirror-history';
-import { JSONTransformer } from '@atlaskit/editor-json-transformer';
-import { Color as StatusColor } from '@atlaskit/status/element';
+import { EditorState } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+
+import { rejectPromise, resolvePromise } from '../../cross-platform-promise';
+import { EditorViewWithComposition } from '../../types';
+import { hasValue } from '../../utils';
+import WebBridge from '../../web-bridge';
 
 import NativeToWebBridge from './bridge';
-import WebBridge from '../../web-bridge';
-import { hasValue } from '../../utils';
-import { rejectPromise, resolvePromise } from '../../cross-platform-promise';
 
 export default class WebBridgeImpl extends WebBridge
   implements NativeToWebBridge {

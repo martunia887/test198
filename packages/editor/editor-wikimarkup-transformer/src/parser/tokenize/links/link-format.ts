@@ -1,6 +1,6 @@
 import { Token, TokenParser } from '../index';
-import { resolveLink } from './link-resolver';
 import { parseContentLink } from './link-parser';
+import { resolveLink } from './link-resolver';
 
 // [http://www.example.com] and [Example|http://www.example.com]
 const LINK_FORMAT_REGEXP = /^\[([^\[\]\n]+)]/;

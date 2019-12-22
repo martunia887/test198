@@ -1,7 +1,8 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
+import { jsx } from '@emotion/core';
+
 import Button, { ButtonAppearances } from '../src';
 
 const appearances: ButtonAppearances[] = [

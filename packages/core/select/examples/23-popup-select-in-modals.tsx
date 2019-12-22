@@ -1,7 +1,8 @@
 import React from 'react';
-import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
-import Drawer from '@atlaskit/drawer';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import Drawer from '@atlaskit/drawer';
+import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
+
 import { PopupSelect } from '../src';
 
 const options = [

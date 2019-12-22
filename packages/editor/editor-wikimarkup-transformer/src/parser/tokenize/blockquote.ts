@@ -1,5 +1,5 @@
-import { rawContentProcessor } from './quote-macro';
 import { Token, TokenParser } from './';
+import { rawContentProcessor } from './quote-macro';
 
 // bq. foobarbaz
 const BLOCKQUOTE_REGEXP = /^bq\.(.*)/;

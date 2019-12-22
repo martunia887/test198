@@ -1,6 +1,7 @@
-import { State } from '@atlaskit/media-picker/src/popup/domain';
 import { Store } from 'react-redux';
+import { State } from '@atlaskit/media-picker/src/popup/domain';
 import { Observable } from 'rxjs/Observable';
+
 import { fakeMediaClient } from './fakeMediaClient';
 
 export const mockState: State = {

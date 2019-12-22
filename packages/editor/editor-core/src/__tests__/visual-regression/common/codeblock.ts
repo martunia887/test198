@@ -1,7 +1,8 @@
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import adf from './__fixtures__/code-block-adf.json';
 import { selectors } from '../../__helpers/page-objects/_editor';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adf from './__fixtures__/code-block-adf.json';
 
 describe('Code breakout:', () => {
   it('looks correct', async () => {

@@ -1,6 +1,8 @@
 import * as React from 'react';
-import Page, { Grid, GridColumn } from '@atlaskit/page';
+import { IntlProvider } from 'react-intl';
 import Button from '@atlaskit/button';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
+
 import {
   InlineCardResolvedView,
   InlineCardResolvingView,
@@ -8,7 +10,6 @@ import {
   InlineCardForbiddenView,
   InlineCardUnauthorizedView,
 } from '../src/InlineCard';
-import { IntlProvider } from 'react-intl';
 
 interface Lozenge {
   text: string;

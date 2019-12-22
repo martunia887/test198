@@ -1,8 +1,9 @@
-import { LocalUploads } from '../../../domain';
-import cancelUploadMiddleware from '../../cancelUpload';
+import { mockStore } from '@atlaskit/media-test-helpers';
+
 import { cancelUpload } from '../../../actions/cancelUpload';
 import { removeEventProxy } from '../../../actions/removeEventProxy';
-import { mockStore } from '@atlaskit/media-test-helpers';
+import { LocalUploads } from '../../../domain';
+import cancelUploadMiddleware from '../../cancelUpload';
 
 describe('cancelUpload', () => {
   const uploadId = 'some-upload-id';

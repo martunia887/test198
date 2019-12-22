@@ -5,7 +5,10 @@ import {
   DropResult,
   DragStart,
 } from 'react-beautiful-dnd';
-import TableRow from './TableRow';
+
+import withSortedPageRows, {
+  WithSortedPageRowsProps,
+} from '../../hoc/withSortedPageRows';
 import {
   HeadType,
   RowType,
@@ -13,9 +16,8 @@ import {
   RankEnd,
   RankEndLocation,
 } from '../../types';
-import withSortedPageRows, {
-  WithSortedPageRowsProps,
-} from '../../hoc/withSortedPageRows';
+
+import TableRow from './TableRow';
 
 export interface Props extends WithSortedPageRowsProps {
   highlightedRowIndex?: number;

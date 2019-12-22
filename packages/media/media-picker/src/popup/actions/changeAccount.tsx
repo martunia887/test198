@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-
 import { ServiceName } from '../domain';
 export const CHANGE_ACCOUNT = 'CHANGE_ACCOUNT';
 

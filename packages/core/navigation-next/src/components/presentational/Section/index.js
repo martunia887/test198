@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 
 import { styleReducerNoOp, withContentTheme } from '../../../theme';
+
 import SectionBase from './Section';
 import type { ConnectedSectionProps } from './types';
 

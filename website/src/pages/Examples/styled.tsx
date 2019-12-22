@@ -1,8 +1,9 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { Link } from '../../components/WrappedLink';
 import { Transition } from 'react-transition-group';
+import styled, { css } from 'styled-components';
 import { colors } from '@atlaskit/theme';
+
+import { Link } from '../../components/WrappedLink';
 
 const NAVBAR_HEIGHT = '48px';
 

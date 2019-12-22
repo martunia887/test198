@@ -1,11 +1,13 @@
+import { EventEmitter2 } from 'eventemitter2';
 import PubNub from 'pubnub';
 import { MessageEvent, StatusEvent, SubscribeParameters } from 'pubnub';
+
 import { OnEvent } from '../../apiTypes';
-import { Protocol, EventType } from '../../types';
-import { ConnectionState, PubNubPayload, PubNubProtocolConfig } from '../types';
-import { logDebug } from '../../util/logger';
-import { EventEmitter2 } from 'eventemitter2';
 import { FeatureFlags } from '../../featureFlags';
+import { Protocol, EventType } from '../../types';
+import { logDebug } from '../../util/logger';
+import { ConnectionState, PubNubPayload, PubNubProtocolConfig } from '../types';
+
 import HistoryFetcher from './pubNubHistoryFetcher';
 
 const REQUEST_MESSAGE_COUNT_THRESHOLD = 100;

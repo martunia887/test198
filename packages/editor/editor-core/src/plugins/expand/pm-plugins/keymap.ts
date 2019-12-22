@@ -5,14 +5,15 @@ import {
   TextSelection,
   NodeSelection,
 } from 'prosemirror-state';
-import * as keymaps from '../../../keymaps';
-import { GapCursorSelection, Side } from '../../gap-cursor';
-import { findExpand } from '../utils';
 import { EditorView } from 'prosemirror-view';
-import { findTypeAheadQuery } from '../../type-ahead/utils/find-query-mark';
+
+import * as keymaps from '../../../keymaps';
 import { isEmptyNode } from '../../../utils';
-import { expandClassNames } from '../ui/class-names';
+import { GapCursorSelection, Side } from '../../gap-cursor';
+import { findTypeAheadQuery } from '../../type-ahead/utils/find-query-mark';
 import { deleteExpand } from '../commands';
+import { expandClassNames } from '../ui/class-names';
+import { findExpand } from '../utils';
 
 const focusTitle = (view: EditorView, pos: number) => {
   const dom = view.domAtPos(pos);

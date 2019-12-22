@@ -1,6 +1,6 @@
+import { Page } from '../../__helpers/page-objects/_types';
 import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 import adf from './__fixtures__/date-adf.json';
-import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Date:', () => {
   let page: Page;

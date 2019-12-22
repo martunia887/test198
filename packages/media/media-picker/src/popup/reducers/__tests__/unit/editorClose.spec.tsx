@@ -1,5 +1,5 @@
-import editorClose from '../../editorClose';
 import { EDITOR_CLOSE } from '../../../actions/editorClose';
+import editorClose from '../../editorClose';
 
 describe('editorClose() reducer', () => {
   const stateBase: any = {

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
 import ProjectDefaultIcon from '@atlaskit/icon/glyph/people-group';
+import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
 
-import { BuildInlineProps } from './types';
 import { extractInlineViewPropsFromDocument } from './extractPropsFromDocument';
+import { BuildInlineProps } from './types';
 
 export const buildProjectIcon: BuildInlineProps<InlineCardResolvedViewProps> = json => {
   if (json.icon && json.icon.url) {

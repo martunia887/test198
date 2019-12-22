@@ -1,8 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import Items from './Items';
-
 import { type RenderFunction, type LoadableItems } from '../types';
+import Items from './Items';
 
 type Props = {
   /** An array of root items in the table */

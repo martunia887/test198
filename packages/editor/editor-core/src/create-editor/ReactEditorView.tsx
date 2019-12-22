@@ -1,8 +1,5 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { EditorState, Selection, Transaction } from 'prosemirror-state';
-import { DirectEditorProps, EditorView } from 'prosemirror-view';
-import { Node as PMNode } from 'prosemirror-model';
 import { intlShape } from 'react-intl';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
@@ -13,15 +10,12 @@ import {
   ProviderFactory,
   Transformer,
 } from '@atlaskit/editor-common';
+import { Node as PMNode } from 'prosemirror-model';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
+import { DirectEditorProps, EditorView } from 'prosemirror-view';
 
+import { analyticsService } from '../analytics';
 import { createDispatch, Dispatch, EventDispatcher } from '../event-dispatcher';
-import { processRawValue } from '../utils';
-import {
-  findChangedNodesFromTransaction,
-  validateNodes,
-  validNode,
-} from '../utils/nodes';
-import createPluginList from './create-plugins-list';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -42,7 +36,17 @@ import {
   EditorProps,
 } from '../types';
 import { PortalProviderAPI } from '../ui/PortalProvider';
-import { analyticsService } from '../analytics';
+import { processRawValue } from '../utils';
+import { getNodesCount } from '../utils/document';
+import { getDocStructure, SimplifiedNode } from '../utils/document-logger';
+import { isFullPage } from '../utils/is-full-page';
+import {
+  findChangedNodesFromTransaction,
+  validateNodes,
+  validNode,
+} from '../utils/nodes';
+import measurements from '../utils/performance/measure-enum';
+
 import {
   createErrorReporter,
   createPMPlugins,
@@ -50,10 +54,7 @@ import {
   initAnalytics,
   processPluginsList,
 } from './create-editor';
-import { getDocStructure, SimplifiedNode } from '../utils/document-logger';
-import { isFullPage } from '../utils/is-full-page';
-import measurements from '../utils/performance/measure-enum';
-import { getNodesCount } from '../utils/document';
+import createPluginList from './create-plugins-list';
 
 export interface EditorViewProps {
   editorProps: EditorProps;

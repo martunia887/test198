@@ -1,7 +1,5 @@
-import { shallow, mount } from 'enzyme';
 import * as React from 'react';
-import { DecorationSet } from 'prosemirror-view';
-
+import { shallow, mount } from 'enzyme';
 import {
   doc,
   p,
@@ -11,13 +9,14 @@ import {
   tdEmpty,
   tdCursor,
 } from '@atlaskit/editor-test-helpers';
+import { DecorationSet } from 'prosemirror-view';
 
+import { hoverTable } from '../../../../../plugins/table/commands';
 import {
   pluginKey,
   getPluginState,
 } from '../../../../../plugins/table/pm-plugins/main';
 import { TablePluginState } from '../../../../../plugins/table/types';
-import { hoverTable } from '../../../../../plugins/table/commands';
 import TableFloatingControls from '../../../../../plugins/table/ui/TableFloatingControls';
 import CornerControls from '../../../../../plugins/table/ui/TableFloatingControls/CornerControls';
 import RowControls from '../../../../../plugins/table/ui/TableFloatingControls/RowControls';

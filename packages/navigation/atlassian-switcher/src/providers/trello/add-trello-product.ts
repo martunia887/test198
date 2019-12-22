@@ -1,9 +1,9 @@
+import { AvailableProductsResponse, AvailableSite } from '../../types';
 import {
   createResultComplete,
   isComplete,
   ProviderResult,
 } from '../as-data-provider';
-import { AvailableProductsResponse, AvailableSite } from '../../types';
 
 export const addTrelloProduct = (
   availableProducts: ProviderResult<AvailableProductsResponse>,

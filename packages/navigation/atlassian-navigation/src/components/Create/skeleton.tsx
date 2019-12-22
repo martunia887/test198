@@ -1,10 +1,11 @@
 /** @jsx jsx */
+import { Fragment } from 'react';
 import { gridSize } from '@atlaskit/theme/constants';
 import { jsx } from '@emotion/core';
-import { Fragment } from 'react';
 
 import { useTheme } from '../../theme';
 import { IconButtonSkeleton } from '../IconButton/skeleton';
+
 import { createButtonSkeletonCSS, createIconSkeletonCSS } from './styles';
 
 export const CreateSkeleton = () => {

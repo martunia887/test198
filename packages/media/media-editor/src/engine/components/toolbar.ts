@@ -1,6 +1,6 @@
-import { Component } from './component';
 import { ShapeParameters, Tool } from '../../common';
 import { Signal } from '../signal';
+import { Component } from './component';
 
 export interface Toolbar extends Component {
   // This function is called by the core to inform about changing of shape parameters

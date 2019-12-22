@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { Observable } from 'rxjs';
-import {
-  nextTick,
-  asMock,
-  asMockReturnValue,
-  fakeMediaClient,
-} from '@atlaskit/media-test-helpers';
 import {
   ErrorFileState,
   FileState,
   ProcessedFileState,
   UploadingFileState,
 } from '@atlaskit/media-client';
-import { MediaImageInternal, MediaImageInternalProps } from '../../mediaImage';
-
+import {
+  nextTick,
+  asMock,
+  asMockReturnValue,
+  fakeMediaClient,
+} from '@atlaskit/media-test-helpers';
 import { imageFileId } from '@atlaskit/media-test-helpers';
+import { Observable } from 'rxjs';
+
+import { MediaImageInternal, MediaImageInternalProps } from '../../mediaImage';
 
 describe('<MediaImage />', () => {
   let defaultProps: Pick<

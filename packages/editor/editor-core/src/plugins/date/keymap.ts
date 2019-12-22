@@ -1,7 +1,9 @@
 import { keymap } from 'prosemirror-keymap';
 import { Plugin, NodeSelection } from 'prosemirror-state';
-import { closeDatePicker, openDatePicker } from './actions';
+
 import * as keymaps from '../../keymaps';
+
+import { closeDatePicker, openDatePicker } from './actions';
 import { pluginKey, DateState } from './plugin';
 
 export function keymapPlugin(): Plugin {

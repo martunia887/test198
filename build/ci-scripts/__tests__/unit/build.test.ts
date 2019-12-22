@@ -1,17 +1,17 @@
 jest.enableAutomock();
-import * as bolt from 'bolt';
-import * as yalc from 'yalc';
-import runCommands from '@atlaskit/build-utils/runCommands';
 import { prefixConsoleLog } from '@atlaskit/build-utils/logging';
+import runCommands from '@atlaskit/build-utils/runCommands';
 import {
   getPackagesInfo,
   TOOL_NAME_TO_FILTERS,
 } from '@atlaskit/build-utils/tools';
-import createEntryPointsDirectories from '../../create.entry.points.directories';
-import copyVersion from '../../copy.version';
-import validateDists from '../../validate.dists';
+import * as bolt from 'bolt';
+import * as yalc from 'yalc';
 
 import build from '../../build';
+import copyVersion from '../../copy.version';
+import createEntryPointsDirectories from '../../create.entry.points.directories';
+import validateDists from '../../validate.dists';
 
 jest.unmock('../../build');
 jest.unmock('@atlaskit/build-utils/guards');

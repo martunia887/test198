@@ -6,7 +6,6 @@ import {
   extension,
   mountWithIntl,
 } from '@atlaskit/editor-test-helpers';
-
 import FullPage from '../../../ui/Appearance/FullPage';
 
 describe('full page editor', () => {

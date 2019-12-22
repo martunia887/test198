@@ -1,11 +1,12 @@
 import React from 'react';
-import Table from '@atlaskit/dynamic-table';
-import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
+import styled from 'styled-components';
+import Table from '@atlaskit/dynamic-table';
 import { gridSize } from '@atlaskit/theme';
-import * as fs from '../utils/fs';
+
 import Page, { Title, Section } from '../components/Page';
 import { externalPackages as packages, getConfig } from '../site';
+import * as fs from '../utils/fs';
 
 export type Head = {
   cells: Array<{

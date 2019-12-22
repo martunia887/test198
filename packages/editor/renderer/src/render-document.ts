@@ -1,4 +1,3 @@
-import { Serializer } from './serializer';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   getValidDocument,
@@ -7,6 +6,8 @@ import {
   ADFStage,
 } from '@atlaskit/editor-common/validator';
 import { Node as PMNode, Schema, Fragment } from 'prosemirror-model';
+
+import { Serializer } from './serializer';
 
 export interface RenderOutput<T> {
   result: T;

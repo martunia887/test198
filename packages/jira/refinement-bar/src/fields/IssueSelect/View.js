@@ -1,9 +1,6 @@
 // @flow
 /** @jsx jsx */
 
-import { jsx } from '@emotion/core';
-import { gridSize } from '@atlaskit/theme';
-
 import Blog16Icon from '@atlaskit/icon-object/glyph/blog/16';
 import Branch16Icon from '@atlaskit/icon-object/glyph/branch/16';
 import Bug16Icon from '@atlaskit/icon-object/glyph/bug/16';
@@ -23,6 +20,8 @@ import Question16Icon from '@atlaskit/icon-object/glyph/question/16';
 import Story16Icon from '@atlaskit/icon-object/glyph/story/16';
 import Subtask16Icon from '@atlaskit/icon-object/glyph/subtask/16';
 import Task16Icon from '@atlaskit/icon-object/glyph/task/16';
+import { gridSize } from '@atlaskit/theme';
+import { jsx } from '@emotion/core';
 
 import Select from '../Select/View';
 

@@ -1,9 +1,10 @@
 // @flow
 
 import type { ComponentType, ElementConfig } from 'react';
+
+import Item from '../../presentational/Item';
 import type { ItemPresentationProps } from '../../presentational/Item/types';
 import type { AfterComponentProps } from '../GoToItem/types';
-import Item from '../../presentational/Item';
 
 type ItemWithoutAfter = $Diff<
   ElementConfig<$Supertype<typeof Item>>,

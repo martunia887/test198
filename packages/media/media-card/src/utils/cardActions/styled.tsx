@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-
 import { HTMLAttributes, ComponentClass } from 'react';
-import { N500 } from '@atlaskit/theme/colors';
+import styled from 'styled-components';
 import { borderRadius, size, center } from '@atlaskit/media-ui';
+import { N500 } from '@atlaskit/theme/colors';
+
 import { Root } from '../../styles';
 
 export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled(Root)`

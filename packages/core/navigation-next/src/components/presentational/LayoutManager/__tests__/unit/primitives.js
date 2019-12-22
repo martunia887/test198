@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { mount } from 'enzyme';
-
 import { HorizontalNavigationContainer } from '../../primitives';
 
 describe('HorizontalNavigationContainer', () => {

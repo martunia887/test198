@@ -1,11 +1,6 @@
 import * as React from 'react';
 import Navigation, { AkSearchDrawer } from '@atlaskit/navigation';
-import {
-  randomJiraIconUrl,
-  randomConfluenceIconUrl,
-  getContainerAvatarUrl,
-  getPersonAvatarUrl,
-} from './utils/mockData';
+
 import {
   QuickSearch,
   ObjectResult,
@@ -13,6 +8,13 @@ import {
   PersonResult,
   ResultItemGroup,
 } from '../src';
+
+import {
+  randomJiraIconUrl,
+  randomConfluenceIconUrl,
+  getContainerAvatarUrl,
+  getPersonAvatarUrl,
+} from './utils/mockData';
 
 export default class extends React.Component {
   render() {

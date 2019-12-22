@@ -9,9 +9,9 @@ import { GroupHeading } from '../../..';
 import BackItemComponent from '../../../components/connected/BackItem';
 import ConnectedItemComponent from '../../../components/connected/ConnectedItem';
 import GoToItemComponent from '../../../components/connected/GoToItem';
+import SortableContextComponent from '../../../components/connected/SortableContext';
 import HeaderSectionComponent from '../../../components/presentational/HeaderSection';
 import MenuSectionComponent from '../../../components/presentational/MenuSection';
-import SortableContextComponent from '../../../components/connected/SortableContext';
 import ItemsRenderer, { components, LazySortableItem } from '../../components';
 
 const {

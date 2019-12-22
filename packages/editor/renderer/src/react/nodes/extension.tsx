@@ -1,9 +1,5 @@
 import * as React from 'react';
-import { RendererContext } from '..';
-import { renderNodes, Serializer } from '../..';
 import { ExtensionLayout } from '@atlaskit/adf-schema';
-import ExtensionRenderer from '../../ui/ExtensionRenderer';
-
 import {
   ADNode,
   calcBreakoutWidth,
@@ -13,7 +9,11 @@ import {
   WidthConsumer,
   ProviderFactory,
 } from '@atlaskit/editor-common';
+import { RendererContext } from '..';
+
+import { renderNodes, Serializer } from '../..';
 import { RendererCssClassName } from '../../consts';
+import ExtensionRenderer from '../../ui/ExtensionRenderer';
 
 export interface Props {
   serializer: Serializer<any>;

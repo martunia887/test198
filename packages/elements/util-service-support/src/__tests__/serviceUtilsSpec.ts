@@ -1,5 +1,4 @@
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-
+import 'es6-promise/auto';
 import fetchMock from 'fetch-mock/src/client';
 
 import { requestService } from '../serviceUtils';

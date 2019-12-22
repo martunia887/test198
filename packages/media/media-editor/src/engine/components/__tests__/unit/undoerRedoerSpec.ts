@@ -1,7 +1,7 @@
 jest.mock('../../platformDetector');
-import { DefaultUndoerRedoer, UndoerRedoer } from '../../undoerRedoer';
-import { isMac, isWindows } from '../../platformDetector';
 import { asMock } from '@atlaskit/media-test-helpers';
+import { isMac, isWindows } from '../../platformDetector';
+import { DefaultUndoerRedoer, UndoerRedoer } from '../../undoerRedoer';
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 

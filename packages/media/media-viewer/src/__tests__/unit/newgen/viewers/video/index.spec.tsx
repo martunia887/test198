@@ -5,16 +5,17 @@ import {
   MediaViewedEventPayload,
   ProcessedFileState,
 } from '@atlaskit/media-client';
-import Spinner from '@atlaskit/spinner';
+import { Auth } from '@atlaskit/media-core';
 import {
   mountWithIntlContext,
   fakeMediaClient,
   expectFunctionToHaveBeenCalledWith,
 } from '@atlaskit/media-test-helpers';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
-import { VideoViewer, Props } from '../../../../../newgen/viewers/video';
+import Spinner from '@atlaskit/spinner';
+
 import { ErrorMessage } from '../../../../../newgen/error';
-import { Auth } from '@atlaskit/media-core';
+import { VideoViewer, Props } from '../../../../../newgen/viewers/video';
 
 const token = 'some-token';
 const clientId = 'some-client-id';

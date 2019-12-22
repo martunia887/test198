@@ -1,8 +1,8 @@
-import { SecurityOptions } from '@atlaskit/util-service-support';
-import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-
-import fetchMock from 'fetch-mock/src/client';
 import * as sinon from 'sinon';
+import { SecurityOptions } from '@atlaskit/util-service-support';
+import 'es6-promise/auto';
+import fetchMock from 'fetch-mock/src/client';
+
 import EmojiLoader from '../../../api/EmojiLoader';
 import { EmojiLoaderConfig } from '../../../api/EmojiUtils';
 

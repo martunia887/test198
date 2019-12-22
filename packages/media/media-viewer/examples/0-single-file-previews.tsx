@@ -1,12 +1,14 @@
 import * as React from 'react';
+import { Card } from '@atlaskit/media-card';
+import { Identifier } from '@atlaskit/media-client';
 import {
   externalImageIdentifier,
   defaultCollectionName,
   createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import { Card } from '@atlaskit/media-card';
-import { Identifier } from '@atlaskit/media-client';
-import { ButtonList, Container, Group } from '../example-helpers/styled';
+import { I18NWrapper } from '@atlaskit/media-test-helpers';
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
+
 import {
   archiveItem,
   audioItem,
@@ -25,9 +27,8 @@ import {
   verticalImageItem,
   videoSquareFileIdItem,
 } from '../example-helpers';
+import { ButtonList, Container, Group } from '../example-helpers/styled';
 import { MediaViewer } from '../src';
-import { I18NWrapper } from '@atlaskit/media-test-helpers';
-import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 addGlobalEventEmitterListeners();
 
 const mediaClientConfig = createStorybookMediaClientConfig();

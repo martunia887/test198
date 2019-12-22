@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import * as RootModule from '../..';
-import { MediaImage, MediaImageProps, MediaImageState } from '../../mediaImage';
-import { ImageComponent } from '../../mediaImage/styled';
 import {
   asMock,
   expectFunctionToHaveBeenCalledWith,
   expectToEqual,
 } from '@atlaskit/media-test-helpers';
+
+import * as RootModule from '../..';
+import { MediaImage, MediaImageProps, MediaImageState } from '../../mediaImage';
+import { ImageComponent } from '../../mediaImage/styled';
 
 interface SetupParams {
   isCoverStrategy: boolean;

@@ -1,16 +1,16 @@
 // @flow
 
 import React, { Fragment, Component } from 'react';
+import Lorem from 'react-lorem-component';
 import Button from '@atlaskit/button';
+import { Checkbox } from '@atlaskit/checkbox';
+import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { AkFieldRadioGroup as StatelessRadioGroup } from '@atlaskit/field-radio-group';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
 import { AtlassianIcon } from '@atlaskit/logo';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
-import CrossIcon from '@atlaskit/icon/glyph/cross';
-import { Checkbox } from '@atlaskit/checkbox';
 import { LayoutManager, NavigationProvider } from '@atlaskit/navigation-next';
-import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { ToggleStateless } from '@atlaskit/toggle';
-import Lorem from 'react-lorem-component';
 
 import GlobalNavigation from '../src';
 

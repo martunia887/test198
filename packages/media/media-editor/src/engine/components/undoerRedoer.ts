@@ -1,5 +1,5 @@
-import { Component } from './component';
 import { Signal } from '../signal';
+import { Component } from './component';
 import { isMac, isWindows } from './platformDetector';
 
 export interface UndoerRedoer extends Component {

@@ -1,16 +1,9 @@
 import * as React from 'react';
-import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
-import { MediaClientConfig } from '@atlaskit/media-core';
-import { getMediaClient } from '@atlaskit/media-client';
-import { EditorView } from 'prosemirror-view';
 import { defineMessages, InjectedIntl } from 'react-intl';
-
-import { Command } from '../../../types';
-import Button from '../../floating-toolbar/ui/Button';
-import Separator from '../../floating-toolbar/ui/Separator';
-
-import { MediaPluginState, stateKey } from '../pm-plugins/main';
-import { openMediaEditor } from '../commands/media-editor';
+import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
+import { getMediaClient } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
+import { EditorView } from 'prosemirror-view';
 
 import {
   withAnalytics,
@@ -19,6 +12,11 @@ import {
   ACTION,
   EVENT_TYPE,
 } from '../../../plugins/analytics';
+import { Command } from '../../../types';
+import Button from '../../floating-toolbar/ui/Button';
+import Separator from '../../floating-toolbar/ui/Separator';
+import { openMediaEditor } from '../commands/media-editor';
+import { MediaPluginState, stateKey } from '../pm-plugins/main';
 
 const annotate: Command = (state, dispatch) => {
   const pluginState: MediaPluginState | undefined = stateKey.getState(state);

@@ -6,7 +6,6 @@ import {
   code,
   AtlassianInternalWarning,
 } from '@atlaskit/docs';
-
 import TaskDecisionExample from '../examples/00-decision-item';
 const TaskDecisionSource = require('!!raw-loader!../examples/00-decision-item');
 

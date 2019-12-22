@@ -1,12 +1,13 @@
 import * as sinon from 'sinon';
+import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { Fragment } from 'prosemirror-model';
+
 import {
   mergeTextNodes,
   isText,
   isTextWrapper,
   isEmojiDoc,
 } from '../../../../react/nodes';
-import { emoji as emojiData } from '@atlaskit/util-data-test';
 
 const { testData } = emojiData;
 

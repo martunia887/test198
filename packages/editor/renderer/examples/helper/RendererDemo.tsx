@@ -1,12 +1,8 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import {
-  profilecard as profilecardUtils,
-  emoji,
-  taskDecision,
-} from '@atlaskit/util-data-test';
-import { CardEvent } from '@atlaskit/media-card';
+import * as Clock from 'react-live-clock';
 import { defaultSchema } from '@atlaskit/adf-schema';
+import Button from '@atlaskit/button';
 import {
   CardSurroundings,
   ProviderFactory,
@@ -14,26 +10,28 @@ import {
   EventHandlers,
   IframeWidthObserverFallbackWrapper,
 } from '@atlaskit/editor-common';
-import Button from '@atlaskit/button';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
-import * as Clock from 'react-live-clock';
+import { CardEvent } from '@atlaskit/media-card';
+import { MentionProvider } from '@atlaskit/mention/types';
+import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
+import {
+  profilecard as profilecardUtils,
+  emoji,
+  taskDecision,
+} from '@atlaskit/util-data-test';
 
-import { document as storyDataDocument } from './story-data';
+import { renderDocument, TextSerializer } from '../../src';
 import {
   default as Renderer,
   Props as RendererProps,
 } from '../../src/ui/Renderer';
-
-import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
-
-import { renderDocument, TextSerializer } from '../../src';
+import { RendererAppearance } from '../../src/ui/Renderer/types';
 
 import Sidebar, { getDefaultShowSidebarState } from './NavigationNext';
-import { RendererAppearance } from '../../src/ui/Renderer/types';
-import { MentionProvider } from '@atlaskit/mention/types';
+import { document as storyDataDocument } from './story-data';
 
 const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;
 const MockProfileClient = getMockProfileClientUtil(

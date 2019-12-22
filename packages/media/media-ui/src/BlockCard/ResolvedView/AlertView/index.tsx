@@ -1,7 +1,9 @@
 import * as React from 'react';
-import debounce from 'lodash.debounce';
 import Button from '@atlaskit/button';
+import debounce from 'lodash.debounce';
+
 import { Ellipsify } from '../../../ellipsify';
+
 import { Wrapper } from './styled';
 
 const contentWidthWhenCardIs400px = 384;

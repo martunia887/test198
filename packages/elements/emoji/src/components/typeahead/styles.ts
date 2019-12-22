@@ -1,5 +1,4 @@
 import { style } from 'typestyle';
-
 import {
   emojiPreviewSelectedColor,
   emojiTypeAheadMaxHeight,

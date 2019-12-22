@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { CardAppearance } from './types';
-import { CardProps } from './types';
+
+import { isCardWithData } from '../../utils';
 import { CardWithDataRenderer } from '../CardWithData/loader';
 import { CardWithURLRenderer } from '../CardWithUrl/loader';
-import { isCardWithData } from '../../utils';
+
+import { CardAppearance } from './types';
+import { CardProps } from './types';
 
 class PlainCard extends React.PureComponent<CardProps> {
   render() {

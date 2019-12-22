@@ -3,8 +3,8 @@
  * This way, you can still move the image without clicking directly on it.
  */
 import * as React from 'react';
-import { ContainerWrapper } from './styled';
 import { Vector2 } from '@atlaskit/media-ui';
+import { ContainerWrapper } from './styled';
 
 export interface ImagePlacerContainerProps {
   width: number;

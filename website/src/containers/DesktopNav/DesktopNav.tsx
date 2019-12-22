@@ -1,22 +1,23 @@
 import React from 'react';
-import { toClass } from 'recompose';
 import { RouteComponentProps } from 'react-router-dom';
-import Tooltip from '@atlaskit/tooltip';
-import SearchIcon from '@atlaskit/icon/glyph/search';
 import MenuIcon from '@atlaskit/icon/glyph/menu';
+import SearchIcon from '@atlaskit/icon/glyph/search';
 import Navigation, {
   AkContainerTitle,
   presetThemes,
 } from '@atlaskit/navigation';
+import Tooltip from '@atlaskit/tooltip';
+import { toClass } from 'recompose';
 
-import Groups from './Groups';
-import GroupDrawer from './GroupDrawer';
-import { Link } from '../../components/WrappedLink';
-import HeaderIcon from '../../components/HeaderIcon';
-import { CONTAINER_HEADERS_CONFIG } from './constants';
 import { AtlaskitIcon } from '../../components/AtlaskitIcon';
-import SearchDrawer, { LinkComponentProps } from './SearchDrawer';
+import HeaderIcon from '../../components/HeaderIcon';
+import { Link } from '../../components/WrappedLink';
 import { externalPackages as packages, docs, patterns } from '../../site';
+
+import GroupDrawer from './GroupDrawer';
+import Groups from './Groups';
+import SearchDrawer, { LinkComponentProps } from './SearchDrawer';
+import { CONTAINER_HEADERS_CONFIG } from './constants';
 
 export default function Nav({ location }: RouteComponentProps) {
   const [groupDrawerOpen, setGroupDrawerOpen] = React.useState<boolean>(false);

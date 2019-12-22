@@ -1,20 +1,8 @@
+import { isSafeUrl } from '@atlaskit/adf-schema';
+import { closeHistory } from 'prosemirror-history';
+import { Fragment, Node, Schema, Slice } from 'prosemirror-model';
 import { EditorState, NodeSelection, Transaction } from 'prosemirror-state';
 
-import { pluginKey } from './main';
-import {
-  CardAppearance,
-  CardPluginState,
-  CardReplacementInputMethod,
-  Request,
-} from '../types';
-import { queueCards, resolveCard } from './actions';
-import { appearanceForNodeType } from '../utils';
-
-import { Command } from '../../../types';
-import { nodesBetweenChanged, processRawValue } from '../../../utils';
-import { Fragment, Node, Schema, Slice } from 'prosemirror-model';
-import { md } from '../../paste/pm-plugins/main';
-import { closeHistory } from 'prosemirror-history';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -22,8 +10,20 @@ import {
   addAnalytics,
   EVENT_TYPE,
 } from '../../../plugins/analytics';
+import { Command } from '../../../types';
+import { nodesBetweenChanged, processRawValue } from '../../../utils';
 import { SmartLinkNodeContext } from '../../analytics/types/smart-links';
-import { isSafeUrl } from '@atlaskit/adf-schema';
+import { md } from '../../paste/pm-plugins/main';
+import {
+  CardAppearance,
+  CardPluginState,
+  CardReplacementInputMethod,
+  Request,
+} from '../types';
+import { appearanceForNodeType } from '../utils';
+
+import { queueCards, resolveCard } from './actions';
+import { pluginKey } from './main';
 
 export function shouldReplace(
   node: Node,

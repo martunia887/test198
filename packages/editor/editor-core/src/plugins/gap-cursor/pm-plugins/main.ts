@@ -1,12 +1,13 @@
-import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
-import { EditorView, Decoration, DecorationSet } from 'prosemirror-view';
 import { ResolvedPos } from 'prosemirror-model';
-import { findPositionOfNodeBefore } from 'prosemirror-utils';
+import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
 import { CellSelection } from 'prosemirror-tables';
-import { GapCursorSelection, JSON_ID, Side } from '../selection';
-import { fixCursorAlignment, isIgnoredClick } from '../utils';
+import { findPositionOfNodeBefore } from 'prosemirror-utils';
+import { EditorView, Decoration, DecorationSet } from 'prosemirror-view';
+
 import { setGapCursorAtPos, deleteNode } from '../actions';
 import { Direction } from '../direction';
+import { GapCursorSelection, JSON_ID, Side } from '../selection';
+import { fixCursorAlignment, isIgnoredClick } from '../utils';
 
 export const pluginKey = new PluginKey('gapCursorPlugin');
 

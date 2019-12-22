@@ -1,6 +1,7 @@
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { AtlassianSwitcherProps } from '@atlaskit/atlassian-switcher/types';
 import { prefetch } from '@atlaskit/atlassian-switcher/prefetch';
+import { AtlassianSwitcherProps } from '@atlaskit/atlassian-switcher/types';
+
 import { render, InstanceHandlers } from './render';
 
 type SwitcherWrapperMethods = {

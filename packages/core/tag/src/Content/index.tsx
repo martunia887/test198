@@ -1,7 +1,9 @@
 import React, { Component, ReactNode, ComponentType } from 'react';
 import styled from 'styled-components';
-import { Link, Text, linkStyles } from './styled';
+
 import { TagColor } from '../types';
+
+import { Link, Text, linkStyles } from './styled';
 
 export interface Props {
   children: ReactNode;

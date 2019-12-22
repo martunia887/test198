@@ -1,9 +1,11 @@
 import * as React from 'react';
-import FormattedMessage from './formatted-message';
-import messages from '../utils/messages';
-import Button from '@atlaskit/button';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import Button from '@atlaskit/button';
+
 import { NAVIGATION_CHANNEL, UI_EVENT_TYPE } from '../utils/analytics';
+import messages from '../utils/messages';
+
+import FormattedMessage from './formatted-message';
 
 type ManageButtonProps = {
   href: string;

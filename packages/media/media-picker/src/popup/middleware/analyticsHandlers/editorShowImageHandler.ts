@@ -1,7 +1,8 @@
-import { Action } from 'redux';
 import { SCREEN_EVENT_TYPE } from '@atlaskit/analytics-gas-types';
-import { isEditorShowImageAction } from '../../actions/editorShowImage';
+import { Action } from 'redux';
 import { HandlerResult } from '.';
+
+import { isEditorShowImageAction } from '../../actions/editorShowImage';
 
 export default (action: Action): HandlerResult => {
   if (isEditorShowImageAction(action)) {

@@ -1,11 +1,12 @@
 jest.mock('../../wsConnection');
 
 import { Auth } from '@atlaskit/media-core';
-import { WsConnectionHolder } from '../../wsConnectionHolder';
-import { WsConnection } from '../../wsConnection';
+
 import { ConnectionLostHandler, WebsocketDataReceivedHandler } from '../../ws';
-import { WsMessageData } from '../../wsMessageData';
 import { WsActivityEvents } from '../../wsActivity';
+import { WsConnection } from '../../wsConnection';
+import { WsConnectionHolder } from '../../wsConnectionHolder';
+import { WsMessageData } from '../../wsMessageData';
 
 type TeardownFunction = () => void;
 type SendFunction = (data: any) => void;

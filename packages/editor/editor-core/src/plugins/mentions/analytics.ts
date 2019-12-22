@@ -8,11 +8,13 @@ import {
   isSpecialMention,
   MentionDescription,
 } from '@atlaskit/mention/resource';
+
 import {
   name as packageName,
   version as packageVersion,
 } from '../../version.json';
 import { SelectItemMode } from '../type-ahead/commands/select-item';
+
 import { isTeamType } from './utils';
 import { TeamInfoAttrAnalytics } from './index';
 

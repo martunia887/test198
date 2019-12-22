@@ -1,5 +1,6 @@
 import React from 'react';
 import Loadable from 'react-loadable';
+
 import { HeadingLevels } from '../../block-type/types';
 import { IconProps } from '../types';
 

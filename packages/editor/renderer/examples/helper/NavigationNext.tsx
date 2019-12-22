@@ -1,4 +1,12 @@
 import * as React from 'react';
+import Avatar from '@atlaskit/avatar';
+import AddIcon from '@atlaskit/icon/glyph/add';
+import BacklogIcon from '@atlaskit/icon/glyph/backlog';
+import BoardIcon from '@atlaskit/icon/glyph/board';
+import GraphLineIcon from '@atlaskit/icon/glyph/graph-line';
+import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
+import SearchIcon from '@atlaskit/icon/glyph/search';
+import { JiraIcon, JiraWordmark } from '@atlaskit/logo';
 import {
   NavigationProvider,
   LayoutManager,
@@ -11,14 +19,6 @@ import {
   Separator,
   Wordmark,
 } from '@atlaskit/navigation-next';
-import { JiraIcon, JiraWordmark } from '@atlaskit/logo';
-import BacklogIcon from '@atlaskit/icon/glyph/backlog';
-import BoardIcon from '@atlaskit/icon/glyph/board';
-import GraphLineIcon from '@atlaskit/icon/glyph/graph-line';
-import Avatar from '@atlaskit/avatar';
-import AddIcon from '@atlaskit/icon/glyph/add';
-import SearchIcon from '@atlaskit/icon/glyph/search';
-import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 
 type ClassNameProps = { className: string };
 

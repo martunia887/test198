@@ -3,9 +3,9 @@
 import React, { Component } from 'react';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import es from 'react-intl/locale-data/es';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 import EmojiAtlassianIcon from '@atlaskit/icon/glyph/emoji/atlassian';
 import { LayoutManager, NavigationProvider } from '@atlaskit/navigation-next';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
 
 import GlobalNavigation from '../src';
 

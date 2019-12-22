@@ -1,4 +1,4 @@
-import { findTable } from 'prosemirror-utils';
+import { TableLayout } from '@atlaskit/adf-schema';
 import {
   createEditorFactory,
   doc,
@@ -14,7 +14,9 @@ import {
   layoutSection,
   layoutColumn,
 } from '@atlaskit/editor-test-helpers';
-import { TableLayout } from '@atlaskit/adf-schema';
+import { findTable } from 'prosemirror-utils';
+
+import { toggleTableLayout } from '../../../../plugins/table/commands';
 import {
   pluginKey as tablePluginKey,
   getPluginState,
@@ -23,7 +25,6 @@ import {
   PermittedLayoutsDescriptor,
   TablePluginState,
 } from '../../../../plugins/table/types';
-import { toggleTableLayout } from '../../../../plugins/table/commands';
 import { isLayoutSupported } from '../../../../plugins/table/utils';
 
 describe('table toolbar', () => {

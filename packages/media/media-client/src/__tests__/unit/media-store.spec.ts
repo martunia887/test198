@@ -1,8 +1,9 @@
 jest.mock('../../utils/checkWebpSupport');
 
+import { Auth, AuthProvider, AuthContext } from '@atlaskit/media-core';
 import fetchMock from 'fetch-mock';
 import { stringify } from 'query-string';
-import { Auth, AuthProvider, AuthContext } from '@atlaskit/media-core';
+
 import {
   CreatedTouchedFile,
   MediaStore,

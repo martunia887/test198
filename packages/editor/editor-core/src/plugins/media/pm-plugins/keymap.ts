@@ -2,8 +2,8 @@ import { keymap } from 'prosemirror-keymap';
 import { Plugin } from 'prosemirror-state';
 
 import * as keymaps from '../../../keymaps';
-import { MediaPluginState, stateKey } from '../pm-plugins/main';
 import { Command } from '../../../types';
+import { MediaPluginState, stateKey } from '../pm-plugins/main';
 
 export function keymapPlugin(): Plugin {
   const list = {};

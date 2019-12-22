@@ -1,12 +1,14 @@
 import { waitForTooltip } from '@atlaskit/visual-regression/helper';
-import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
-import adf from './__fixtures__/full-width-table.adf.json';
-import tableWithFirstColumnMerged from './__fixtures__/table-3x3-with-two-cells-merged-on-first-row.adf.json';
+
 import {
   tableSelectors,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
 import { Page } from '../../__helpers/page-objects/_types';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+
+import adf from './__fixtures__/full-width-table.adf.json';
+import tableWithFirstColumnMerged from './__fixtures__/table-3x3-with-two-cells-merged-on-first-row.adf.json';
 
 describe('Delete in table:', () => {
   let page: Page;

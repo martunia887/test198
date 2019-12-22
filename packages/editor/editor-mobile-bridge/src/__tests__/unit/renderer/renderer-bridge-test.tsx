@@ -1,5 +1,6 @@
-import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { mount, ReactWrapper } from 'enzyme';
+
 import MobileRenderer from '../../../renderer/mobile-renderer-element';
 import WebBridgeImpl from '../../../renderer/native-to-web/implementation';
 

@@ -1,10 +1,11 @@
+import * as React from 'react';
+import { shallow, ShallowWrapper } from 'enzyme';
+import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import { shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import ShareIcon from '@atlaskit/icon/glyph/share';
 import InlineDialog from '@atlaskit/inline-dialog';
 import Aktooltip from '@atlaskit/tooltip';
-import { shallow, ShallowWrapper } from 'enzyme';
-import * as React from 'react';
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
+
 import { ConfigResponse } from '../../../clients/ShareServiceClient';
 import ShareButton, {
   Props as ShareButtonProps,
@@ -24,8 +25,8 @@ import {
   RenderCustomTriggerButton,
   TooltipPosition,
 } from '../../../types';
-import { Omit, PropsOf } from '../_testUtils';
 import mockPopper from '../_mockPopper';
+import { Omit, PropsOf } from '../_testUtils';
 mockPopper();
 
 describe('ShareDialogWithTrigger', () => {

@@ -1,4 +1,3 @@
-import { EditorView } from 'prosemirror-view';
 import {
   createEditorFactory,
   doc,
@@ -8,18 +7,18 @@ import {
   p,
   Refs,
 } from '@atlaskit/editor-test-helpers';
+import { EditorView } from 'prosemirror-view';
 
-import { getFreshMediaProvider } from '../media/_utils';
-import { pluginKey as mediaEditorPluginKey } from '../../../../plugins/media/pm-plugins/media-editor';
-
-import { MediaEditorState } from '../../../../plugins/media/types';
+import { Side } from '../../../../plugins/gap-cursor';
+import { getPluginState } from '../../../../plugins/media/pm-plugins/alt-text';
 import {
   openMediaAltTextMenu,
   closeMediaAltTextMenu,
 } from '../../../../plugins/media/pm-plugins/alt-text/commands';
-import { getPluginState } from '../../../../plugins/media/pm-plugins/alt-text';
+import { pluginKey as mediaEditorPluginKey } from '../../../../plugins/media/pm-plugins/media-editor';
+import { MediaEditorState } from '../../../../plugins/media/types';
 import { setGapCursorSelection } from '../../../../utils';
-import { Side } from '../../../../plugins/gap-cursor';
+import { getFreshMediaProvider } from '../media/_utils';
 
 describe('media alt text', () => {
   const createEditor = createEditorFactory<MediaEditorState>();

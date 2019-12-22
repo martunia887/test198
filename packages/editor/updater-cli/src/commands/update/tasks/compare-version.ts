@@ -1,9 +1,10 @@
-import { coerce, eq, diff } from 'semver';
 import chalk from 'chalk';
-import { UpdateTask } from '../types';
-import { PackageJsonPatchGroup } from '../../../utils/package-json';
+import { coerce, eq, diff } from 'semver';
+
 import { PrintableOutput } from '../../../runner';
 import { badgeRed } from '../../../utils/console';
+import { PackageJsonPatchGroup } from '../../../utils/package-json';
+import { UpdateTask } from '../types';
 
 export const compareVersionsTask: UpdateTask = {
   title: ctx =>

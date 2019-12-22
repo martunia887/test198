@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from './WrappedLink';
 import Button from '@atlaskit/button';
+import { Link } from './WrappedLink';
 
 export type LinkButtonProps = {
   [index: string]: any;

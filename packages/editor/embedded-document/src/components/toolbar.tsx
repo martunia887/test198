@@ -1,6 +1,7 @@
 import * as React from 'react';
-import Button, { ButtonGroup } from '@atlaskit/button';
 import styled from 'styled-components';
+import Button, { ButtonGroup } from '@atlaskit/button';
+
 import WithDocumentActions from '../consumers/with-document-actions';
 import { Mode } from '../context/context';
 

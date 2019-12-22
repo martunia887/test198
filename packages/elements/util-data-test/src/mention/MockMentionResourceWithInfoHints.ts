@@ -1,13 +1,14 @@
-import { Search } from 'js-search';
-
 import {
   MentionDescription,
   MentionsResult,
   AbstractMentionResource,
 } from '@atlaskit/mention/resource';
+import { Search } from 'js-search';
+
 import debug from '../logger';
-import { mentionResult } from './mention-data';
+
 import { MockMentionConfig } from './MockMentionResource';
+import { mentionResult } from './mention-data';
 
 const search = new Search('id');
 search.addIndex('name');

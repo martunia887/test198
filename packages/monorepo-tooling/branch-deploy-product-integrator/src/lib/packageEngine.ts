@@ -1,5 +1,5 @@
-import path from 'path';
 import * as bolt from 'bolt';
+import path from 'path';
 
 export async function getWorkspaceDirs(packageEngine: string, cwd: string) {
   if (packageEngine === 'bolt') {

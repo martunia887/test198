@@ -8,10 +8,12 @@ import {
 } from 'prosemirror-model';
 import { EditorState, NodeSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+
 import {
   createParagraphNear,
   createNewParagraphBelow,
 } from '../../../commands';
+import { ProsemirrorGetPosHandler } from '../../../nodeviews';
 import {
   moveLeft,
   atTheBeginningOfDoc,
@@ -22,14 +24,13 @@ import {
   startPositionOfParent,
   isImage,
 } from '../../../utils';
-import { ProsemirrorGetPosHandler } from '../../../nodeviews';
-import { MediaState } from '../types';
-import { mapSlice } from '../../../utils/slice';
 import {
   walkUpTreeUntil,
   removeNestedEmptyEls,
   unwrap,
 } from '../../../utils/dom';
+import { mapSlice } from '../../../utils/slice';
+import { MediaState } from '../types';
 
 export const posOfMediaGroupNearby = (
   state: EditorState,

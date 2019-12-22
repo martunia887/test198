@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { Component, FormEvent } from 'react';
-import { connect } from 'react-redux';
-import debounce from 'lodash.debounce';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
-import { messages } from '@atlaskit/media-ui';
-import FieldText from '@atlaskit/field-text';
+import { connect } from 'react-redux';
 import Button from '@atlaskit/button';
-import Spinner from '@atlaskit/spinner';
+import FieldText from '@atlaskit/field-text';
 import { Card } from '@atlaskit/media-card';
 import { ExternalImageIdentifier } from '@atlaskit/media-client';
-import { BricksLayout } from './bricksGrid';
+import { messages } from '@atlaskit/media-ui';
+import Spinner from '@atlaskit/spinner';
+import debounce from 'lodash.debounce';
+
+import { errorIcon } from '../../../../icons';
 import { fileClick } from '../../../actions/fileClick';
+import { searchGiphy } from '../../../actions/searchGiphy';
+import { State, SelectedItem } from '../../../domain';
 import { ImageCardModel } from '../../../tools/fetcher/fetcher';
 import gridCellScaler from '../../../tools/gridCellScaler';
-import { State, SelectedItem } from '../../../domain';
-import { searchGiphy } from '../../../actions/searchGiphy';
 
+import { BricksLayout } from './bricksGrid';
 import {
   Container,
   Title,
@@ -27,8 +29,6 @@ import {
   WarningHeading,
   WarningSuggestion,
 } from './styles';
-
-import { errorIcon } from '../../../../icons';
 
 const NUMBER_OF_COLUMNS = 4;
 const GAP_SIZE = 5;

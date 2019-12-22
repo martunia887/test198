@@ -1,7 +1,7 @@
 import React, { Component, MouseEvent } from 'react';
 import { mount } from 'enzyme';
-import { UIAnalyticsEvent, AnalyticsListener, AnalyticsContext } from '../..';
 
+import { UIAnalyticsEvent, AnalyticsListener, AnalyticsContext } from '../..';
 import {
   default as withAnalyticsHook,
   WithAnalyticsHookProps,

@@ -1,8 +1,9 @@
-import assert from 'assert';
 import * as sinon from 'sinon';
-import { renderDocument, Serializer } from '../../index';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import * as common from '@atlaskit/editor-common/validator';
+import assert from 'assert';
+
+import { renderDocument, Serializer } from '../../index';
 
 const doc = {
   version: 1,

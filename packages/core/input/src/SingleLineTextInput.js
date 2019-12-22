@@ -1,8 +1,8 @@
 // @flow
 import React, { Component } from 'react';
-import keyCode from 'keycode';
-import { fontSize } from '@atlaskit/theme/constants';
 import styled from 'styled-components';
+import { fontSize } from '@atlaskit/theme/constants';
+import keyCode from 'keycode';
 
 const common = `
   appearance: none;

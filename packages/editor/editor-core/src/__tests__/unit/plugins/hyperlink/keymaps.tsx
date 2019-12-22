@@ -1,3 +1,4 @@
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
@@ -14,7 +15,6 @@ import {
   InsertStatus,
   stateKey,
 } from '../../../../plugins/hyperlink/pm-plugins/main';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 describe('hyperlink - keymap', () => {
   const createEditor = createEditorFactory();

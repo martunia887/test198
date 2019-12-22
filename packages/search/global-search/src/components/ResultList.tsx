@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import {
   ObjectResult as ObjectResultComponent,
@@ -8,7 +8,10 @@ import {
   ContainerResult as ContainerResultComponent,
   ResultBase,
 } from '@atlaskit/quick-search';
-import { FormattedMessage } from 'react-intl';
+import { colors } from '@atlaskit/theme';
+
+import DarkReturn from '../assets/DarkReturn';
+import Return from '../assets/Return';
 import { messages } from '../messages';
 import {
   Result,
@@ -21,13 +24,12 @@ import {
   ContentType,
   AnalyticsType,
 } from '../model/Result';
-import { SelectedIcon } from './styled';
 import { getAvatarForConfluenceObjectResult } from '../util/confluence-avatar-util';
-import { getDefaultAvatar } from '../util/jira-avatar-util';
-import DarkReturn from '../assets/DarkReturn';
-import Return from '../assets/Return';
-import { injectFeatures } from './FeaturesProvider';
 import { ConfluenceFeatures, JiraFeatures } from '../util/features';
+import { getDefaultAvatar } from '../util/jira-avatar-util';
+
+import { injectFeatures } from './FeaturesProvider';
+import { SelectedIcon } from './styled';
 
 export interface Props {
   results: Result[];

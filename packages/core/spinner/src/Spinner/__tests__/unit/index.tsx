@@ -1,8 +1,8 @@
 import React from 'react';
+import sinon from 'sinon';
 import { mount } from 'enzyme';
 import * as colors from '@atlaskit/theme/colors';
 
-import sinon from 'sinon';
 import Spinner from '../..';
 import Container, { getContainerAnimation } from '../../styledContainer';
 import Svg, { svgStyles, getStrokeColor } from '../../styledSvg';

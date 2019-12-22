@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { EditorSharedConfig } from '../../../internal/context/shared-config';
+
 import {
   analyticsEventKey,
   AnalyticsEventPayload,
 } from '../../../../../plugins/analytics';
+import { EditorSharedConfig } from '../../../internal/context/shared-config';
 
 /**
  * Subscribes to analytics events fired from editor components

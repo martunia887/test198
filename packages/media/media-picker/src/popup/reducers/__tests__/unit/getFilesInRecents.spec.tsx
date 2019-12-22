@@ -1,10 +1,10 @@
+import { GetFilesInRecentsAction } from '../../../actions/getFilesInRecents';
+import { State } from '../../../domain';
 import {
   getRecentFilesStarted,
   getRecentFilesFullfilled,
   getRecentFilesFailed,
 } from '../../getFilesInRecents';
-import { State } from '../../../domain';
-import { GetFilesInRecentsAction } from '../../../actions/getFilesInRecents';
 
 describe('getFilesInRecents', () => {
   it('should preserve existing items', () => {

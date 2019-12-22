@@ -12,11 +12,12 @@ import {
   ul,
   li,
 } from '@atlaskit/editor-test-helpers';
+
+import { changeAlignment } from '../../../../plugins/alignment/commands/index';
 import {
   AlignmentPluginState,
   pluginKey as alignmentPluginKey,
 } from '../../../../plugins/alignment/pm-plugins/main';
-import { changeAlignment } from '../../../../plugins/alignment/commands/index';
 import { insertBlockType } from '../../../../plugins/block-type/commands';
 import { toggleBulletList } from '../../../../plugins/lists/commands';
 

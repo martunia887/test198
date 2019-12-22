@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Select, { ValueType } from '@atlaskit/select';
-import Group from '@atlaskit/tag-group';
 import Tag from '@atlaskit/tag';
+import Group from '@atlaskit/tag-group';
 import { gridSize, fontSize } from '@atlaskit/theme';
 
 import InlineEdit from '../src';

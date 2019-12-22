@@ -1,7 +1,8 @@
 import { browser } from '@atlaskit/editor-common';
 import { EditorView } from 'prosemirror-view';
-import { TestingEditorView } from './types/prosemirror';
+
 import createEvent from './create-event';
+import { TestingEditorView } from './types/prosemirror';
 
 export interface PasteContent {
   plain?: string;

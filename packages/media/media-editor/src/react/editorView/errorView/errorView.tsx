@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { messages } from '@atlaskit/media-ui';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { messages } from '@atlaskit/media-ui';
 
+import { EditorContainer } from '../styles';
+
+import { errorIcon } from './icons';
 import {
   ErrorPopup,
   ErrorIconWrapper,
@@ -10,9 +13,6 @@ import {
   ErrorHint,
   ErrorButton,
 } from './styles';
-
-import { errorIcon } from './icons';
-import { EditorContainer } from '../styles';
 
 export interface ErrorViewProps {
   readonly message: string;

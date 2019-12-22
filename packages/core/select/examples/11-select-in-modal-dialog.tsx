@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
 import Button from '@atlaskit/button';
+import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
+
 import Select from '../src';
 
 interface State {

@@ -1,12 +1,13 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, getDocFromElement, fullpage } from '../_helpers';
 
 import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
-import emptyExpandAdf from './__fixtures__/empty-expand.json';
+import { editable, getDocFromElement, fullpage } from '../_helpers';
+
 import closedExpandAdf from './__fixtures__/closed-expand.json';
+import emptyExpandAdf from './__fixtures__/empty-expand.json';
 
 const startEditor = async (client: any, closedExpand?: boolean) => {
   const page = await goToEditorTestingExample(client);

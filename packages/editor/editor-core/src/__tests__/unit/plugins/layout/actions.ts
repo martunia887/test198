@@ -1,15 +1,17 @@
 import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import {
   layoutSection,
   layoutColumn,
   doc,
   p,
   createEditorFactory,
 } from '@atlaskit/editor-test-helpers';
-import {
-  CreateUIAnalyticsEvent,
-  UIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
 import { EditorView } from 'prosemirror-view';
+
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 import {
   deleteActiveLayoutNode,
   setPresetLayout,
@@ -17,8 +19,8 @@ import {
   PresetLayout,
   insertLayoutColumnsWithAnalytics,
 } from '../../../../plugins/layout/actions';
+
 import { layouts, buildLayoutForWidths } from './_utils';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('layout actions', () => {
   const createEditor = createEditorFactory();

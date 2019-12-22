@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-
 import { TimePickerWithoutAnalytics as TimePicker } from '../../../components/TimePicker';
 
 describe('TimePicker', () => {

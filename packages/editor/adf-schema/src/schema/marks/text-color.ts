@@ -1,5 +1,4 @@
 import { Mark, MarkSpec } from 'prosemirror-model';
-import { COLOR } from '../groups';
 import {
   rgbToHex,
   N90,
@@ -15,6 +14,7 @@ import {
   P300,
   G300,
 } from '../../utils/colors';
+import { COLOR } from '../groups';
 
 export interface TextColorAttributes {
   /**

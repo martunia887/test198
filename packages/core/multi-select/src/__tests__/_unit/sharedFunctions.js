@@ -1,11 +1,11 @@
 // @flow
-import { name } from '../../version.json';
 import {
   getNextFocusable,
   getPrevFocusable,
   filterItems,
 } from '../../internal/sharedFunctions';
 import type { ItemType } from '../../types';
+import { name } from '../../version.json';
 
 describe(`${name} - shared functions`, () => {
   describe('filterItems', () => {

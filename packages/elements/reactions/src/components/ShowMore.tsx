@@ -1,11 +1,12 @@
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import EditorMoreIcon from '@atlaskit/icon/glyph/editor/more';
 import { borderRadius, colors } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
 import cx from 'classnames';
-import * as React from 'react';
 import { style } from 'typestyle';
+
 import { messages } from './i18n';
-import { FormattedMessage } from 'react-intl';
 
 const moreEmojiContainerStyle = style({ display: 'flex' });
 

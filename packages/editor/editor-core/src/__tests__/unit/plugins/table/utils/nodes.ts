@@ -1,4 +1,3 @@
-import { findTable } from 'prosemirror-utils';
 import {
   doc,
   p,
@@ -10,8 +9,10 @@ import {
   tdCursor,
   thEmpty,
 } from '@atlaskit/editor-test-helpers';
-import { TablePluginState } from '../../../../../plugins/table/types';
+import { findTable } from 'prosemirror-utils';
+
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
+import { TablePluginState } from '../../../../../plugins/table/types';
 import { containsHeaderColumn } from '../../../../../plugins/table/utils/nodes';
 
 describe('table merging logic', () => {

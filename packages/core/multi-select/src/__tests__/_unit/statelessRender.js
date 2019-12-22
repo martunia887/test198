@@ -1,24 +1,23 @@
 // @flow
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import { Label, FieldBaseStateless as FieldBase } from '@atlaskit/field-base';
 import Avatar from '@atlaskit/avatar';
 import Droplist, { Group, Item } from '@atlaskit/droplist';
+import { Label, FieldBaseStateless as FieldBase } from '@atlaskit/field-base';
+import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
+import SearchIcon from '@atlaskit/icon/glyph/search';
+import Spinner from '@atlaskit/spinner';
 import Tag from '@atlaskit/tag';
 import TagGroup from '@atlaskit/tag-group';
-import SearchIcon from '@atlaskit/icon/glyph/search';
-import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
-import Spinner from '@atlaskit/spinner';
 
 import { MultiSelectStateless } from '../..';
-import { SelectWrapper } from '../../styled/Stateless';
-import InitialLoading from '../../styled/InitialLoading';
-import NoMatches from '../../styled/NoMatch';
-import { TriggerDiv } from '../../styled/Trigger';
 import Footer from '../../components/Footer';
 import FooterDiv from '../../styled/Footer';
+import InitialLoading from '../../styled/InitialLoading';
+import NoMatches from '../../styled/NoMatch';
+import { SelectWrapper } from '../../styled/Stateless';
+import { TriggerDiv } from '../../styled/Trigger';
 import type { GroupType } from '../../types';
-
 import { name } from '../../version.json';
 
 describe(`${name} - stateless`, () => {

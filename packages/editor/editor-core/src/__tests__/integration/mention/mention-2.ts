@@ -1,5 +1,9 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
+import {
   typeAheadPicker,
   insertMention,
   lozenge,
@@ -7,10 +11,6 @@ import {
   editable,
   fullpage,
 } from '../_helpers';
-import {
-  goToEditorTestingExample,
-  mountEditor,
-} from '../../__helpers/testing-example-helpers';
 
 /*
  * Safari does not understand webdriver keyboard actions so a

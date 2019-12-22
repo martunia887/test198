@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import { create, act, ReactTestRenderer } from 'react-test-renderer';
+
 import { useProvider, ProviderFactoryProvider } from '../../context';
-import ProviderFactory from '../../provider-factory';
 import { MediaProvider } from '../../media-provider';
+import ProviderFactory from '../../provider-factory';
 
 const Child: FunctionComponent<{
   mediaProvider: Promise<MediaProvider> | undefined;

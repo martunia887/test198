@@ -1,10 +1,3 @@
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { publishReplay } from 'rxjs/operators/publishReplay';
-import uuid from 'uuid/v4';
-import Dataloader from 'dataloader';
-import { ProcessingFileState } from '../models/file-state';
 import { AuthProvider, authToOwner } from '@atlaskit/media-core';
 import {
   MediaStore,
@@ -29,15 +22,23 @@ import {
   globalMediaEventEmitter,
   RECENTS_COLLECTION,
 } from '..';
+import Dataloader from 'dataloader';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { publishReplay } from 'rxjs/operators/publishReplay';
 import isValidId from 'uuid-validate';
-import { getMediaTypeFromUploadableFile } from '../utils/getMediaTypeFromUploadableFile';
+import uuid from 'uuid/v4';
+
+import { ProcessingFileState } from '../models/file-state';
 import { convertBase64ToBlob } from '../utils/convertBase64ToBlob';
-import { observableToPromise } from '../utils/observableToPromise';
 import {
   getDimensionsFromBlob,
   Dimensions,
 } from '../utils/getDimensionsFromBlob';
 import { getMediaTypeFromMimeType } from '../utils/getMediaTypeFromMimeType';
+import { getMediaTypeFromUploadableFile } from '../utils/getMediaTypeFromUploadableFile';
+import { observableToPromise } from '../utils/observableToPromise';
 
 const POLLING_INTERVAL = 1000;
 const maxNumberOfItemsPerCall = 100;

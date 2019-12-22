@@ -1,6 +1,7 @@
 import * as React from 'react';
+import Lozenge from '@atlaskit/lozenge';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import { getOrientation, getFileInfo } from '../src';
+
 import {
   InputWrapper,
   PreviewList,
@@ -10,7 +11,7 @@ import {
   OrientationSelectWrapper,
   PreviewImageContainer,
 } from '../example-helpers/styled';
-import Lozenge from '@atlaskit/lozenge';
+import { getOrientation, getFileInfo } from '../src';
 
 const ORIENT_TRANSFORMS: { [key: number]: string } = {
   1: 'none',

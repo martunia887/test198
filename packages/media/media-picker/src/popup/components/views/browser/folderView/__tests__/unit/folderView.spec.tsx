@@ -1,9 +1,9 @@
-import AkButton from '@atlaskit/button';
-import { ShallowWrapper, shallow } from 'enzyme';
 import * as React from 'react';
+import { ShallowWrapper, shallow } from 'enzyme';
+import AkButton from '@atlaskit/button';
 
-import { FolderViewer, FolderViewerProps } from '../../folderView';
 import { ServiceFile } from '../../../../../../domain';
+import { FolderViewer, FolderViewerProps } from '../../folderView';
 import { FileCreateDate, FileSize } from '../../styled';
 
 describe('<FolderViewer />', () => {

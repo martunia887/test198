@@ -1,7 +1,8 @@
-import { colors } from '@atlaskit/theme';
-import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
+import styled from 'styled-components';
 import { headingsSharedStyles } from '@atlaskit/editor-common';
+import { colors } from '@atlaskit/theme';
+
 import { Shortcut } from '../../../../ui/styles';
 
 export const BlockTypeMenuItem = styled.div<{

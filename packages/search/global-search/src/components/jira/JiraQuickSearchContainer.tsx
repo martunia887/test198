@@ -5,42 +5,21 @@ import {
   FormattedHTMLMessage,
 } from 'react-intl';
 import styled from 'styled-components';
-import { gridSize } from '@atlaskit/theme';
 import { withAnalytics } from '@atlaskit/analytics';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 import { CancelableEvent } from '@atlaskit/quick-search';
-import StickyFooter from '../common/StickyFooter';
-import { CreateAnalyticsEventFn } from '../analytics/types';
-import { SearchScreenCounter } from '../../util/ScreenCounter';
+import { gridSize } from '@atlaskit/theme';
+
+import {
+  CrossProductSearchClient,
+  CrossProductSearchResults,
+  SearchItem,
+} from '../../api/CrossProductSearchClient';
 import { JiraClient } from '../../api/JiraClient';
+import { mapJiraItemToResult } from '../../api/JiraItemMapper';
 import { PeopleSearchClient } from '../../api/PeopleSearchClient';
 import { Scope, JiraItem } from '../../api/types';
-import {
-  LinkComponent,
-  ReferralContextIdentifiers,
-  Logger,
-  JiraApplicationPermission,
-} from '../GlobalQuickSearchWrapper';
-import {
-  BaseJiraQuickSearchContainerJira,
-  SearchResultProps,
-  PartiallyLoadedRecentItems,
-} from '../common/QuickSearchContainer';
 import { messages } from '../../messages';
-import SearchResultsComponent from '../common/SearchResults';
-import NoResultsState from './NoResultsState';
-import JiraAdvancedSearch from './JiraAdvancedSearch';
-import {
-  mapRecentResultsToUIGroups,
-  mapSearchResultsToUIGroups,
-  MAX_RECENT_RESULTS_TO_SHOW,
-} from './JiraSearchResultsMapper';
-import {
-  handlePromiseError,
-  JiraEntityTypes,
-  redirectToJiraAdvancedSearch,
-  ADVANCED_JIRA_SEARCH_RESULT_ID,
-} from '../SearchResultsUtil';
 import {
   JiraResult,
   Result,
@@ -48,24 +27,47 @@ import {
   JiraResultsMap,
   AnalyticsType,
 } from '../../model/Result';
-import { getUniqueResultId } from '../ResultList';
-import {
-  CrossProductSearchClient,
-  CrossProductSearchResults,
-  SearchItem,
-} from '../../api/CrossProductSearchClient';
-import performanceNow from '../../util/performance-now';
+import { SearchScreenCounter } from '../../util/ScreenCounter';
 import {
   fireSelectedAdvancedSearch,
   AdvancedSearchSelectedEvent,
 } from '../../util/analytics-event-helper';
-import AdvancedIssueSearchLink from './AdvancedIssueSearchLink';
 import { getJiraMaxObjects } from '../../util/experiment-utils';
-import { buildJiraModelParams } from '../../util/model-parameters';
 import { JiraFeatures } from '../../util/features';
-import { injectFeatures } from '../FeaturesProvider';
-import { mapJiraItemToResult } from '../../api/JiraItemMapper';
+import { buildJiraModelParams } from '../../util/model-parameters';
+import performanceNow from '../../util/performance-now';
 import { appendListWithoutDuplication } from '../../util/search-results-utils';
+import {
+  BaseJiraQuickSearchContainerJira,
+  SearchResultProps,
+  PartiallyLoadedRecentItems,
+} from '../common/QuickSearchContainer';
+import SearchResultsComponent from '../common/SearchResults';
+import StickyFooter from '../common/StickyFooter';
+import { injectFeatures } from '../FeaturesProvider';
+import {
+  LinkComponent,
+  ReferralContextIdentifiers,
+  Logger,
+  JiraApplicationPermission,
+} from '../GlobalQuickSearchWrapper';
+import { getUniqueResultId } from '../ResultList';
+import {
+  handlePromiseError,
+  JiraEntityTypes,
+  redirectToJiraAdvancedSearch,
+  ADVANCED_JIRA_SEARCH_RESULT_ID,
+} from '../SearchResultsUtil';
+import { CreateAnalyticsEventFn } from '../analytics/types';
+
+import AdvancedIssueSearchLink from './AdvancedIssueSearchLink';
+import JiraAdvancedSearch from './JiraAdvancedSearch';
+import {
+  mapRecentResultsToUIGroups,
+  mapSearchResultsToUIGroups,
+  MAX_RECENT_RESULTS_TO_SHOW,
+} from './JiraSearchResultsMapper';
+import NoResultsState from './NoResultsState';
 
 const JIRA_RESULT_LIMIT = 6;
 const JIRA_PREQUERY_RESULT_LIMIT = 10;

@@ -2,7 +2,6 @@
 
 import { viewReducerUtils } from '../../../../src';
 import type { ViewData } from '../../../../src/view-controller/types';
-
 import { LinkItem } from '../../components';
 
 export default (items: ViewData) => {

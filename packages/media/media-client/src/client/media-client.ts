@@ -1,13 +1,14 @@
-import { EventEmitter2 } from 'eventemitter2';
 import { MediaClientConfig } from '@atlaskit/media-core';
+import { EventEmitter2 } from 'eventemitter2';
+
+import { CollectionFetcher } from './collection-fetcher';
+import { UploadEventPayloadMap, EventPayloadListener } from './events';
+import { FileFetcherImpl, FileFetcher } from './file-fetcher';
 import {
   MediaStore,
   MediaStoreGetFileImageParams,
   ImageMetadata,
 } from './media-store';
-import { CollectionFetcher } from './collection-fetcher';
-import { FileFetcherImpl, FileFetcher } from './file-fetcher';
-import { UploadEventPayloadMap, EventPayloadListener } from './events';
 
 export class MediaClient {
   public readonly mediaStore: MediaStore;

@@ -1,22 +1,23 @@
 import * as React from 'react';
 import { CSSProperties } from 'react';
 import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import {
   Rectangle,
   Camera,
   Vector2,
   getCssFromImageOrientation,
 } from '@atlaskit/media-ui';
-import {
-  withAnalyticsEvents,
-  WithAnalyticsEventsProps,
-} from '@atlaskit/analytics-next';
-import { BaselineExtend, ImageWrapper, Img } from '../../styled';
+
+import { channel } from '../../analytics';
+import { closedEvent } from '../../analytics/closed';
+import { Outcome } from '../../domain';
 import { ZoomLevel } from '../../domain/zoomLevel';
+import { BaselineExtend, ImageWrapper, Img } from '../../styled';
 import { closeOnDirectClick } from '../../utils/closeOnDirectClick';
 import { ZoomControls } from '../../zoomControls';
-import { Outcome } from '../../domain';
-import { closedEvent } from '../../analytics/closed';
-import { channel } from '../../analytics';
 
 export function zoomLevelAfterResize(
   newCamera: Camera,

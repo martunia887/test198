@@ -1,6 +1,5 @@
-import { State } from '../domain';
-
 import { EDITOR_SHOW_LOADING } from '../actions/editorShowLoading';
+import { State } from '../domain';
 
 export default function editorShowLoading(state: State, action: any): State {
   if (action.type === EDITOR_SHOW_LOADING) {

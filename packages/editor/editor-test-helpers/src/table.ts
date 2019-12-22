@@ -1,7 +1,7 @@
-import { getCellsInColumn, getCellsInRow } from 'prosemirror-utils';
-import { CellSelection } from 'prosemirror-tables';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
+import { getCellsInColumn, getCellsInRow } from 'prosemirror-utils';
 
 type Cell = { pos: number; start: number; node: PMNode };
 

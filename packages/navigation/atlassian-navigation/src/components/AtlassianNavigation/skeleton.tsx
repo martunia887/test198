@@ -3,7 +3,6 @@ import { gridSize } from '@atlaskit/theme/constants';
 import { jsx } from '@emotion/core';
 
 import { ThemeProvider, defaultTheme } from '../../theme';
-
 import { IconButtonSkeleton } from '../IconButton/skeleton';
 import { PrimaryItemsContainerSkeleton } from '../PrimaryItemsContainer/skeleton';
 import { ProductHomeSkeleton } from '../ProductHome/skeleton';

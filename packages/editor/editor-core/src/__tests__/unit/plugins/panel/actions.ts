@@ -1,15 +1,16 @@
+import { PanelType } from '@atlaskit/adf-schema';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   createEditorFactory,
   doc,
   panel,
   p,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+
 import {
   removePanel,
   changePanelType,
 } from '../../../../plugins/panel/actions';
-import { PanelType } from '@atlaskit/adf-schema';
 
 describe('panel actions', () => {
   const createEditor = createEditorFactory();

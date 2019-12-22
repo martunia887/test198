@@ -1,16 +1,16 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 
+import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
+import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
 import {
   getDocFromElement,
   fullpage,
   editable,
   quickInsert,
 } from '../_helpers';
-import {
-  mountEditor,
-  goToEditorTestingExample,
-} from '../../__helpers/testing-example-helpers';
 
 BrowserTestCase(
   `quick-insert.ts: Extension: Quick Insert`,

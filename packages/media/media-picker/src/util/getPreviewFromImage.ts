@@ -1,5 +1,5 @@
-import { Preview, ImagePreview } from '../types';
 import { getImageInfo, getFileInfo } from '@atlaskit/media-ui';
+import { Preview, ImagePreview } from '../types';
 
 export async function getPreviewFromImage(
   file: File,

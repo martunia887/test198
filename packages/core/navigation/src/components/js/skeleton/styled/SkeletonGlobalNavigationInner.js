@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components';
-
 import { containerClosedWidth } from '../../../../shared-variables';
 import { getProvided } from '../../../../theme/util';
 

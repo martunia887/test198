@@ -1,6 +1,7 @@
 import * as React from 'react';
-import Spinner from '@atlaskit/spinner';
 import styled from 'styled-components';
+import Spinner from '@atlaskit/spinner';
+
 import {
   SearchBox,
   SearchFieldBaseInner,

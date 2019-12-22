@@ -3,8 +3,8 @@ import { mount } from 'enzyme';
 import Blanket from '@atlaskit/blanket';
 import EmojiIcon from '@atlaskit/icon/glyph/emoji';
 
-import Drawer from '../../index';
 import DrawerPrimitive from '../../primitives';
+import Drawer from '../../index';
 
 declare var global: any;
 

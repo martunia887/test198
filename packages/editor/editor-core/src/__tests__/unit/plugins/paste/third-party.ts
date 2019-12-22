@@ -1,3 +1,14 @@
+import {
+  createEditorFactory,
+  doc,
+  p,
+  dispatchPasteEvent,
+} from '@atlaskit/editor-test-helpers';
+import { smallImage } from '@atlaskit/media-test-helpers';
+
+import { dataURItoBlob } from '../../../../../../../media/media-test-helpers/src/mockData/utils';
+import { toJSON } from '../../../../utils';
+
 import appleTextHTML from './__third-party__/apple-pages/text/html';
 import appleTextPlain from './__third-party__/apple-pages/text/plain';
 import confluenceTextHTML from './__third-party__/atlassian-confluence/text/html';
@@ -11,16 +22,6 @@ import msWordTextPlain from './__third-party__/microsoft-word/text/plain';
 import reactSyntaxHighlighterHTML from './__third-party__/react-syntax-highlighter/text/html';
 import vsCodeMultiLine from './__third-party__/vs-code/multi-line/html';
 import vsCodeSingleLine from './__third-party__/vs-code/single-line/html';
-
-import { toJSON } from '../../../../utils';
-import {
-  createEditorFactory,
-  doc,
-  p,
-  dispatchPasteEvent,
-} from '@atlaskit/editor-test-helpers';
-import { smallImage } from '@atlaskit/media-test-helpers';
-import { dataURItoBlob } from '../../../../../../../media/media-test-helpers/src/mockData/utils';
 
 describe('paste plugin: third-party', () => {
   const createEditor = createEditorFactory();

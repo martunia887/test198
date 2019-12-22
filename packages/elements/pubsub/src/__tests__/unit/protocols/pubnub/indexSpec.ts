@@ -1,11 +1,12 @@
 jest.mock('pubnub');
 jest.mock('../../../../protocols/pubnub/pubNubHistoryFetcher');
 import Pubnub from 'pubnub';
-import PubNubProtocol from '../../../../protocols/pubnub/index';
-import HistoryFetcher from '../../../../protocols/pubnub/pubNubHistoryFetcher';
-import { EventType } from '../../../../types';
+
 import { FeatureFlags } from '../../../../featureFlags';
+import HistoryFetcher from '../../../../protocols/pubnub/pubNubHistoryFetcher';
+import PubNubProtocol from '../../../../protocols/pubnub/index';
 import { ConnectionState } from '../../../../protocols/types';
+import { EventType } from '../../../../types';
 
 const mockPubNub = {
   addListener: jest.fn(),

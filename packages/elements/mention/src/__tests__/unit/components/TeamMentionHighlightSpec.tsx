@@ -1,7 +1,8 @@
 import * as React from 'react';
+import Button from '@atlaskit/button';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { noop } from '@babel/types';
-import Button from '@atlaskit/button';
+
 import TeamMentionHighlight, {
   Props,
 } from '../../../components/TeamMentionHighlight';

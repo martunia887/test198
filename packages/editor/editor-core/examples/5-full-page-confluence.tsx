@@ -1,15 +1,17 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Spinner from '@atlaskit/spinner';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
+
+import SidebarContainer from '../example-helpers/SidebarContainer';
+
 import { EditorProps, EditorAppearance } from './../src/editor';
+import { InviteToEditButton } from './3-collab';
 import FullPageExample, {
   ExampleProps,
   getAppearance,
   LOCALSTORAGE_defaultDocKey,
 } from './5-full-page';
-import { InviteToEditButton } from './3-collab';
-import SidebarContainer from '../example-helpers/SidebarContainer';
-import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
 
 const DisabledBlanket = styled.div`
   position: absolute;

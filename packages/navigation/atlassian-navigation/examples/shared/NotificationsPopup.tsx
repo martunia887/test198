@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { useState } from 'react';
-import Popup from '@atlaskit/popup';
+import { Notifications as NotificationsIframe } from '@atlaskit/atlassian-notifications';
 import { NotificationIndicator } from '@atlaskit/notification-indicator';
 import { NotificationLogClient } from '@atlaskit/notification-log-client';
-import { Notifications as NotificationsIframe } from '@atlaskit/atlassian-notifications';
+import Popup from '@atlaskit/popup';
+import { jsx } from '@emotion/core';
 
 import { Notifications } from '../../src';
 

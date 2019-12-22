@@ -1,7 +1,8 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React, { useState } from 'react';
 import Button from '@atlaskit/button';
+import { jsx } from '@emotion/core';
+
 import { Block, RetryContainer, Centered } from '../examples-utils';
 import { ZoomIn, StaggeredEntrance, ExitingPersistence } from '../src';
 

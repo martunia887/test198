@@ -1,6 +1,6 @@
 import * as React from 'react';
-import cx from 'classnames';
 import { Component } from 'react';
+import cx from 'classnames';
 
 import { A } from './styled';
 

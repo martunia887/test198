@@ -1,5 +1,5 @@
-import { CardAction, CardActionType } from '../actions/types';
 import { Reducer } from 'react';
+import { CardAction, CardActionType } from '../actions/types';
 
 export type CardReducerMap<StateType, ActionType> = Record<
   CardActionType,

@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import SectionMessage from '@atlaskit/section-message';
 import {
   Provider as SmartCardProvider,
@@ -8,7 +7,6 @@ import {
   CardAppearance,
   EditorCardProvider,
 } from '@atlaskit/smart-card';
-
 import { ToggleStateless } from '@atlaskit/toggle';
 
 import { default as FullPageExample } from './5-full-page';

@@ -1,7 +1,6 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
-import { adf2wiki, wiki2adf } from '../_test-helpers';
-
 import { code_block, doc } from '@atlaskit/editor-test-helpers';
+import { adf2wiki, wiki2adf } from '../_test-helpers';
 
 describe('ADF => WikiMarkup => ADF - Macros', () => {
   test('should convert code block node with no language attr into noformat macro', () => {

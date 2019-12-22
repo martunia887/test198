@@ -10,6 +10,7 @@ import {
   UI_EVENT_TYPE,
   SWITCHER_ITEM_SUBJECT,
 } from '../utils/analytics';
+
 import { FadeIn } from './fade-in';
 import ThemedItem from './themed-item';
 

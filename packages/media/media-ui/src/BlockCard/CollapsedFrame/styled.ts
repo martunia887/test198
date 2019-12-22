@@ -1,7 +1,8 @@
 import { HTMLAttributes } from 'react';
 import styled from 'styled-components';
-import { fontFamily } from '@atlaskit/theme/constants';
 import { B50, B100, N300, N20A } from '@atlaskit/theme/colors';
+import { fontFamily } from '@atlaskit/theme/constants';
+
 import { borderRadius } from '../../mixins';
 
 export interface FrameProps {

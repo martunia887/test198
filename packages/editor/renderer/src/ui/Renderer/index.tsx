@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Schema } from 'prosemirror-model';
 import { getSchemaBasedOnStage } from '@atlaskit/adf-schema';
 import { reduce } from '@atlaskit/adf-utils';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { FabricEditorAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import {
   ADFStage,
   UnsupportedBlock,
@@ -20,20 +22,20 @@ import {
   IframeWidthObserverFallbackWrapper,
   IframeWrapperConsumer,
 } from '@atlaskit/editor-common';
-import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { FabricChannel } from '@atlaskit/analytics-listeners';
-import { FabricEditorAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import { Schema } from 'prosemirror-model';
+
 import { ReactSerializer, renderDocument, RendererContext } from '../../';
+import AnalyticsContext from '../../analytics/analyticsContext';
+import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../../analytics/enums';
+import { AnalyticsEventPayload, PLATFORM, MODE } from '../../analytics/events';
+import { CopyTextProvider } from '../../react/nodes/copy-text-provider';
 import { RenderOutputStat } from '../../render-document';
+import { name, version } from '../../version.json';
+import { Provider as SmartCardStorageProvider } from '../SmartCardStorage';
+
 import { Wrapper } from './style';
 import { TruncatedWrapper } from './truncated-wrapper';
 import { RendererAppearance } from './types';
-import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../../analytics/enums';
-import { AnalyticsEventPayload, PLATFORM, MODE } from '../../analytics/events';
-import AnalyticsContext from '../../analytics/analyticsContext';
-import { CopyTextProvider } from '../../react/nodes/copy-text-provider';
-import { Provider as SmartCardStorageProvider } from '../SmartCardStorage';
-import { name, version } from '../../version.json';
 
 export interface Extension<T> {
   extensionKey: string;

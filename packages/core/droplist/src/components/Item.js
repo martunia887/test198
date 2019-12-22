@@ -6,14 +6,9 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import Radio from '@atlaskit/icon/glyph/radio';
 import Checkbox from '@atlaskit/icon/glyph/checkbox';
+import Radio from '@atlaskit/icon/glyph/radio';
 import Tooltip from '@atlaskit/tooltip';
-
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../version.json';
 
 import {
   After,
@@ -24,6 +19,10 @@ import {
   InputWrapper,
 } from '../styled/Item';
 import { getInputBackground, getInputFill } from '../utils';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 
 import Element from './Element';
 

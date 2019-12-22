@@ -1,11 +1,7 @@
 import * as React from 'react';
+import Lozenge from '@atlaskit/lozenge';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import {
-  readImageMetaData,
-  getFileInfo,
-  ImageMetaData,
-  getScaleFactor,
-} from '../src';
+
 import {
   InputWrapper,
   PreviewList,
@@ -15,7 +11,12 @@ import {
   Code,
   CloseButton,
 } from '../example-helpers/styled';
-import Lozenge from '@atlaskit/lozenge';
+import {
+  readImageMetaData,
+  getFileInfo,
+  ImageMetaData,
+  getScaleFactor,
+} from '../src';
 
 interface ExamplePreview {
   filename: string;

@@ -1,10 +1,10 @@
 import fetchMock from 'fetch-mock/src/client';
-import { version as npmPackageVersion } from '../../version.json';
 import {
   NotificationLogClient,
   NotificationCountResponse,
   DEFAULT_SOURCE,
 } from '../..';
+import { version as npmPackageVersion } from '../../version.json';
 
 const notificationLogUrl = 'http://notification-log';
 

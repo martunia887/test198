@@ -1,9 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { components, ValueContainerProps } from '@atlaskit/select';
+
+import { User, Option } from '../types';
+
 import { SizeableAvatar } from './SizeableAvatar';
 import { BORDER_PADDING } from './styles';
-import { User, Option } from '../types';
 
 const PlaceholderIconContainer = styled.div`
   padding-left: ${BORDER_PADDING}px;

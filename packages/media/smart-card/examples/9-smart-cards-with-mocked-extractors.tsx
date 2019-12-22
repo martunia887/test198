@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { IntlProvider } from 'react-intl';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import { Card, Client, Provider, ResolveResponse } from '../src';
+
 import {
   GithubRepository,
   BitbucketRepository,
@@ -15,11 +16,11 @@ import {
   GithubSourceCodeReference,
   GithubFile,
 } from '../examples-helpers/_jsonLDExamples';
-import { IntlProvider } from 'react-intl';
 import {
   JiraTasks,
   GitHubIssue,
 } from '../examples-helpers/_jsonLDExamples/atlassian.task';
+import { Card, Client, Provider, ResolveResponse } from '../src';
 import { EnvironmentsKeys } from '../src/client/types';
 
 const metaMock = {

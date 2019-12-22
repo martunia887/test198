@@ -1,7 +1,6 @@
 // @flow
 import React, { Component, type Node } from 'react';
 import textContent from 'react-addons-text-content';
-
 import {
   GroupTitle,
   GroupTitleText,

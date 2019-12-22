@@ -1,7 +1,7 @@
-import { ConfluenceClient } from '../../../api/ConfluenceClient';
 import { AutocompleteClient } from '../../../api/AutocompleteClient';
-import { makeConfluenceObjectResult } from '../_test-util';
+import { ConfluenceClient } from '../../../api/ConfluenceClient';
 import { Result } from '../../../model/Result';
+import { makeConfluenceObjectResult } from '../_test-util';
 
 const EMPTY_PROMISE = () => Promise.resolve([]);
 

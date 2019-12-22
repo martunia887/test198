@@ -1,10 +1,11 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { MemoryRouter, Switch, Route } from 'react-router-dom';
 import Button from '@atlaskit/button';
 import { ConfluenceIcon, JiraServiceDeskIcon } from '@atlaskit/logo';
-import { MemoryRouter, Switch, Route } from 'react-router-dom';
-import { FadeIn, ExitingPersistence } from '../src';
+import { jsx } from '@emotion/core';
+
 import { Block, Centered, RetryContainer } from '../examples-utils';
+import { FadeIn, ExitingPersistence } from '../src';
 
 const EnteringBlock = ({ children }: any) => (
   <FadeIn>

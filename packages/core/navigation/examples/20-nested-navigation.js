@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from 'react';
-
 import Navigation, {
   AkNavigationItem,
   AkContainerNavigationNested,

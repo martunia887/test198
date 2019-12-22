@@ -1,12 +1,13 @@
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import Tooltip from '@atlaskit/tooltip';
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { style } from 'typestyle';
+
 import {
   createAndFireSafe,
   createPickerButtonClickedEvent,
@@ -18,9 +19,10 @@ import {
 import { OnEmoji, OnReaction, ReactionSource } from '../types';
 import { ReactionStatus } from '../types/ReactionStatus';
 import { ReactionSummary } from '../types/ReactionSummary';
-import { messages } from './i18n';
+
 import { Reaction } from './Reaction';
 import { ReactionPicker } from './ReactionPicker';
+import { messages } from './i18n';
 
 const reactionStyle = style({
   display: 'inline-block',

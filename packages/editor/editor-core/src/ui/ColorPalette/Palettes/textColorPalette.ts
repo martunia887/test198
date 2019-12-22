@@ -1,7 +1,8 @@
 import { colorPalette, borderColorPalette } from '@atlaskit/adf-schema';
-import { PaletteColor } from './type';
+
 import getColorMessage from './getColorMessage';
 import paletteMessages from './paletteMessages';
+import { PaletteColor } from './type';
 
 const textColorPalette: Array<PaletteColor> = [];
 

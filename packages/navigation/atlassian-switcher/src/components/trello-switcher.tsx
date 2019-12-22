@@ -1,6 +1,17 @@
 import React from 'react';
 import { Messages } from 'react-intl';
+
 import Switcher from '../primitives/themed-switcher';
+import { createResultComplete } from '../providers/as-data-provider';
+import { emptyRecentContainers } from '../providers/instance-data-providers';
+import {
+  JoinableSitesProvider,
+  JoinableSitesDataProvider,
+} from '../providers/joinable-sites-data-provider';
+import { RecommendationsEngineProvider } from '../providers/recommendations-provider';
+import { addTrelloProduct } from '../providers/trello/add-trello-product';
+import { TrelloAvailableProductsProvider } from '../providers/trello/products-provider';
+import { WithTheme } from '../theme/types';
 import {
   Product,
   FeatureMap,
@@ -9,16 +20,6 @@ import {
   WithRecommendationsFeatureFlags,
 } from '../types';
 import { mapResultsToSwitcherProps } from '../utils/map-results-to-switcher-props';
-import {
-  JoinableSitesProvider,
-  JoinableSitesDataProvider,
-} from '../providers/joinable-sites-data-provider';
-import { RecommendationsEngineProvider } from '../providers/recommendations-provider';
-import { WithTheme } from '../theme/types';
-import { createResultComplete } from '../providers/as-data-provider';
-import { emptyRecentContainers } from '../providers/instance-data-providers';
-import { TrelloAvailableProductsProvider } from '../providers/trello/products-provider';
-import { addTrelloProduct } from '../providers/trello/add-trello-product';
 
 export type TrelloSwitcherProps = WithTheme &
   Partial<WithRecommendationsFeatureFlags> & {

@@ -5,6 +5,7 @@ import {
   mediaSingle,
   testMediaFileId,
 } from '@atlaskit/editor-test-helpers';
+
 import {
   findMediaNode,
   findAllMediaSingleNodes,

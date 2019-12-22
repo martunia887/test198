@@ -1,8 +1,9 @@
 import * as React from 'react';
-import AnalyticsEventFiredOnMount from '../analytics/AnalyticsEventFiredOnMount';
-import { buildScreenEvent, Screen } from '../../util/analytics-util';
+
 import { ScreenCounter } from '../../util/ScreenCounter';
+import { buildScreenEvent, Screen } from '../../util/analytics-util';
 import { ReferralContextIdentifiers } from '../GlobalQuickSearchWrapper';
+import AnalyticsEventFiredOnMount from '../analytics/AnalyticsEventFiredOnMount';
 
 const getAnalyticsComponent = (
   subscreen: Screen,

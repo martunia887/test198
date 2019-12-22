@@ -2,8 +2,9 @@ import React from 'react';
 import { createMemoryHistory, MemoryHistoryBuildOptions } from 'history';
 
 import { Router } from '../router';
-import { MemoryRouterProps } from './types';
 import { RouterProps } from '../router/types';
+
+import { MemoryRouterProps } from './types';
 
 const getRouterProps = (memoryRouterProps: MemoryRouterProps) => {
   const {

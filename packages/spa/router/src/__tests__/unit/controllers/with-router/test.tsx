@@ -3,10 +3,9 @@ import { mount } from 'enzyme';
 import { defaultRegistry } from 'react-sweet-state';
 import { createMemoryHistory } from 'history';
 
-import { Router } from '../../../../controllers/router';
-
-import { withRouter } from '../../../../controllers/with-router';
 import { DEFAULT_ACTION, DEFAULT_ROUTE } from '../../../../common/constants';
+import { Router } from '../../../../controllers/router';
+import { withRouter } from '../../../../controllers/with-router';
 
 const waitALilBit = () => new Promise(resolve => setTimeout(resolve));
 
