@@ -7,6 +7,7 @@ import {
   akEditorDeleteBorder,
   akEditorSelectedBorderSize,
   akLayoutGutterOffset,
+  akEditorSwoopCubicBezier,
 } from '@atlaskit/editor-common';
 import { TableCssClassName } from '../table/types';
 import { tableMarginFullWidthMode } from '../table/ui/styles';
@@ -19,6 +20,7 @@ export const layoutStyles = css`
     ${columnLayoutSharedStyle} [data-layout-section] {
       position: relative;
       margin: ${gridSize() - 1}px -${akLayoutGutterOffset}px 0;
+      transition: border-color 0.3s ${akEditorSwoopCubicBezier};
 
       /* Inner cursor located 26px from left */
       & > * {
