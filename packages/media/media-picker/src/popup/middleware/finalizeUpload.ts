@@ -154,6 +154,7 @@ async function copyFile({
       mediaType: 'image',
       mimeType: file.type,
     };
+    tenantMediaClient.emit('file-added', fileState);
     globalMediaEventEmitter.emit('file-added', fileState);
 
     emitProcessedState(destinationFile.data, store);

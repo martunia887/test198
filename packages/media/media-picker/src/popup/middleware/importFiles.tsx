@@ -224,7 +224,6 @@ const distributeTenantFileState = async (
   tenantFileState: FileState,
   userSelectedFileId: string,
 ) => {
-  const { tenantMediaClient } = store.getState();
   const tenantFileSubject = new ReplaySubject<FileState>(1);
   const userFileObservable = getFileStreamsCache().get(userSelectedFileId);
 
