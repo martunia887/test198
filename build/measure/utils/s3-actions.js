@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 // const npmRun = require('npm-run');
-const s3 = require('auth0/s3');
+const s3 = require('@auth0/s3');
 const chalk = require('chalk');
 const axios = require('axios');
 
