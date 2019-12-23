@@ -77,6 +77,8 @@ const params = {
   },
 };
 
+console.log('client:', client, 'params:', params);
+
 const uploader = client.uploadFile(params);
 
 uploader.on('error', err => {

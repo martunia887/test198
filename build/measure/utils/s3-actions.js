@@ -68,7 +68,7 @@ async function downloadFromS3ForLocal(
 ) {
   const ratchetFile = `${packageName}-bundle-size-ratchet.json`;
   const output = `${downloadToFolder}/${ratchetFile}`;
-  const rachetFileUrl = `http://s3-${BUCKET_REGION}.amazonaws.com/${BUCKET_NAME}/${branch}/bundleSize/${ratchetFile}`;
+  const rachetFileUrl = `https://s3-${BUCKET_REGION}.amazonaws.com/${BUCKET_NAME}/${branch}/bundleSize/${ratchetFile}`;
   try {
     const response = await axios({
       url: rachetFileUrl,
