@@ -7,7 +7,7 @@
   "types": "dist/cjs/types.d.ts",
   "atlaskit:src": "src/index.ts",
   "atlaskit": {
-    "internal": true,
+    "internal": false,
     "name": "Color Picker",
     "team": "jira"
   },
