@@ -99,8 +99,7 @@ function downloadFromS3(
   }
 
   const ratchetFile = `${packageName}-bundle-size-ratchet.json`;
-  // const bucketPath = `s3://${BUCKET_NAME}/${branch}/bundleSize/${ratchetFile}`;
-  const bucketPath = `${BUCKET_NAME}/${branch}/bundleSize/${ratchetFile}`;
+  const bucketPath = `${branch}/bundleSize/${ratchetFile}`;
 
   console.log('bucket', bucketPath);
   try {
@@ -129,9 +128,6 @@ function downloadFromS3(
     downloader.on('end', () => {
       console.log('done downloading');
     });
-    // npmRun.sync(
-    //   `s3-cli --region="${BUCKET_REGION}" get ${bucketPath} ${downloadToFolder}/${ratchetFile}`,
-    // );
   } catch (err) {
     if (err.status === 1) {
       console.warn(
@@ -170,10 +166,6 @@ function uploadToS3(pathToFile /*: string */, branch /*: string */) {
       Key: bucketPath,
     },
   };
-
-  // npmRun.sync(
-  //   `s3-cli --region="${BUCKET_REGION}" put ${pathToFile} ${bucketPath}`,
-  // );
 
   const uploader = client.uploadFile(params);
 

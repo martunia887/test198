@@ -36,8 +36,7 @@ const client = s3.createClient({
 
 const commitHash = BITBUCKET_COMMIT ? BITBUCKET_COMMIT.substring(0, 12) : '';
 const filePath = process.argv[2];
-// const remotePathToFile = `s3://${BUCKET_NAME}/${commitHash}/${filePath}`;
-const remotePathToFile = `${BUCKET_NAME}/${commitHash}/${filePath}`;
+const remotePathToFile = `${commitHash}/${filePath}`;
 const localFileName = path.basename(filePath);
 
 const params = {
@@ -48,10 +47,6 @@ const params = {
     Key: remotePathToFile,
   },
 };
-
-// npmRun.sync(
-//   `s3-cli --region="${BUCKET_REGION}" get ${remotePathToFile} ${localFileName}`,
-// );
 
 const downloader = client.downloadFile(params);
 
