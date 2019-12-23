@@ -26,6 +26,8 @@ import {
 } from '../../../../analytics';
 
 export const CONTAINER_WIDTH_IN_PX = 350;
+export const MAX_ALT_TEXT_LENGTH = 510; // double tweet length
+
 const SupportText = styled.p`
   color: ${colors.N100};
   font-size: 12px;
@@ -141,7 +143,9 @@ export class AltTextEditComponent extends React.Component<
             defaultValue={value ? value : ''}
             onCancel={this.dispatchCancelEvent}
             onChange={this.handleOnChange}
+            onBlur={this.handleOnBlur}
             onSubmit={this.closeMediaAltTextMenu}
+            maxLength={MAX_ALT_TEXT_LENGTH}
             autoFocus
           />
           {showClearTextButton && (
@@ -201,6 +205,15 @@ export class AltTextEditComponent extends React.Component<
       showClearTextButton: Boolean(newAltText),
     });
     this.updateAltText(newAltText);
+  };
+
+  private handleOnBlur = () => {
+    // Handling the trimming onBlur() because PanelTextInput doesn't sync
+    // defaultValue properly during unmount
+    const { value } = this.props;
+    const newAltText = (value || '').trim();
+
+    this.handleOnChange(newAltText);
   };
 
   private handleClearText = () => {
