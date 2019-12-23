@@ -3,8 +3,7 @@ import { insertText } from '@atlaskit/editor-test-helpers/transactions';
 import { doc, p } from '@atlaskit/editor-test-helpers/schema-builder';
 import { EditorView } from 'prosemirror-view';
 import { TextSelection } from 'prosemirror-state';
-import { messages } from '../index';
-import { placeHolderClassName } from '../styles';
+import { placeHolderClassName } from '../../styles';
 
 function expectNoPlaceholder(editorView: EditorView) {
   const placeholder = editorView.dom.querySelector(`.${placeHolderClassName}`);
@@ -20,6 +19,7 @@ function expectPlaceHolderWithText(editorView: EditorView, text: string) {
 }
 
 const defaultPlaceholder = 'defaultPlaceholder';
+const slackPlaceholder = "Type '/' to insert content.";
 
 describe('placeholder', () => {
   const createProsemirrorEditor = createProsemirrorEditorFactory();
@@ -51,16 +51,13 @@ describe('placeholder', () => {
     const hintPlaceholderEditor = (doc: any) =>
       createProsemirrorEditor({
         doc,
-        plugins: [['placeholder', { enablePlaceHolderHint: true }]],
+        plugins: [['placeholder', { placeholderHints: [slackPlaceholder] }]],
       });
 
     it('renders hint placeholder on a blank content', async () => {
       const { editorView } = await hintPlaceholderEditor(doc(p()));
 
-      expectPlaceHolderWithText(
-        editorView,
-        messages.slashCommand.defaultMessage,
-      );
+      expectPlaceHolderWithText(editorView, slackPlaceholder);
     });
 
     it('renders hint placeholder in a empty line', async () => {
@@ -68,10 +65,7 @@ describe('placeholder', () => {
         doc(p('Hello World'), p('{<>}')),
       );
 
-      expectPlaceHolderWithText(
-        editorView,
-        messages.slashCommand.defaultMessage,
-      );
+      expectPlaceHolderWithText(editorView, slackPlaceholder);
     });
 
     it('disappears after changing selection to a non empty line', async () => {
@@ -79,10 +73,7 @@ describe('placeholder', () => {
         doc(p('Hello World{noEmptyLine}'), p('{<>}')),
       );
 
-      expectPlaceHolderWithText(
-        editorView,
-        messages.slashCommand.defaultMessage,
-      );
+      expectPlaceHolderWithText(editorView, slackPlaceholder);
 
       editorView.dispatch(
         editorView.state.tr.setSelection(

@@ -1,7 +1,7 @@
 import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
 import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
-import { EditorPlugin, MessageDescriptor } from '../../types';
+import { EditorPlugin } from '../../types';
 import { isInEmptyLine, isEmptyDocument } from '../../utils/document';
 import { placeHolderClassName } from './styles';
 export const pluginKey = new PluginKey('placeholderPlugin');
@@ -78,16 +78,6 @@ interface PlaceHolderState {
   pos?: number;
 }
 
-type AvailableMessages = 'slashCommand';
-
-export const messages: Record<AvailableMessages, MessageDescriptor> = {
-  slashCommand: {
-    id: 'slash-placheholder',
-    defaultMessage: "Type '/' to insert content.",
-    description: 'Message to be shown when the user is in a new empty line.',
-  },
-};
-
 const EmptyPlaceholder: PlaceHolderState = { hasPlaceholder: false };
 
 function createPlaceHolderStateFrom(
@@ -118,6 +108,7 @@ function createGetPlaceholderHintMessage(
       return;
     }
 
+    // if length !== 0 placeholderHints always exist
     const placeholder = placeholderHints![index++];
     index = index % length;
 
