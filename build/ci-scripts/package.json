@@ -25,7 +25,6 @@
     "lodash.flattendeep": "^4.4.0",
     "meow": "^5.0.0",
     "node-fetch": "^2.2.0",
-    "npm-run": "^4.1.2",
     "outdent": "^0.5.0",
     "p-settle": "^3.1.0",
     "p-wait-for": "^3.1.0",
