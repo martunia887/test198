@@ -99,7 +99,8 @@ function downloadFromS3(
   }
 
   const ratchetFile = `${packageName}-bundle-size-ratchet.json`;
-  const bucketPath = `s3://${BUCKET_NAME}/${branch}/bundleSize/${ratchetFile}`;
+  // const bucketPath = `s3://${BUCKET_NAME}/${branch}/bundleSize/${ratchetFile}`;
+  const bucketPath = `${BUCKET_NAME}/${branch}/bundleSize/${ratchetFile}`;
 
   console.log('bucket', bucketPath);
   try {

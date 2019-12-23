@@ -47,7 +47,9 @@ if (!fs.existsSync(path.resolve(process.argv[2]))) {
 if (outputPath && !outputPath.endsWith('/')) {
   outputPath += '/';
 }
-const bucketPath = `s3://${BUCKET_NAME}/${commitHash}/${outputPath}${fileName}`;
+
+const bucketPath = `${BUCKET_NAME}/${commitHash}/${outputPath}${fileName}`;
+// const bucketPath = `s3://${BUCKET_NAME}/${commitHash}/${outputPath}${fileName}`;
 
 // npmRun.sync(
 //   `s3-cli --region="${BUCKET_REGION}" put ${pathToFile} ${bucketPath}`,

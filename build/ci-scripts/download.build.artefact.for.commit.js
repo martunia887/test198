@@ -36,7 +36,8 @@ const client = s3.createClient({
 
 const commitHash = BITBUCKET_COMMIT ? BITBUCKET_COMMIT.substring(0, 12) : '';
 const filePath = process.argv[2];
-const remotePathToFile = `s3://${BUCKET_NAME}/${commitHash}/${filePath}`;
+// const remotePathToFile = `s3://${BUCKET_NAME}/${commitHash}/${filePath}`;
+const remotePathToFile = `${BUCKET_NAME}/${commitHash}/${filePath}`;
 const localFileName = path.basename(filePath);
 
 const params = {
