@@ -205,31 +205,22 @@ export default class PickerFacade {
     subscribers.push(onStateChanged);
   };
 
-  public handleUploadError = ({ error }: UploadErrorEventPayload) => {
-    if (!error || !error.fileId) {
-      const err = new Error(
-        `Media: unknown upload-error received from Media Picker: ${error &&
-          error.name}`,
-      );
-      this.errorReporter.captureException(err);
-      return;
-    }
-
-    const listeners = this.eventListeners[error.fileId];
+  public handleUploadError = ({ error, file }: UploadErrorEventPayload) => {
+    const listeners = this.eventListeners[file.id];
     if (!listeners) {
       return;
     }
 
     listeners.forEach(cb =>
       cb({
-        id: error.fileId!,
+        id: file.id,
         status: 'error',
         error: error && { description: error.description, name: error.name },
       }),
     );
 
     // remove listeners
-    delete this.eventListeners[error.fileId];
+    delete this.eventListeners[file.id];
   };
 
   public handleMobileUploadEnd = (event: MobileUploadEndEventPayload) => {
