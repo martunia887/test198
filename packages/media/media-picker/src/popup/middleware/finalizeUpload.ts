@@ -88,7 +88,6 @@ const emitProcessedState = async (
       tenantSubject &&
       tenantSubject.next
     ) {
-      let alreadyEmitted = false;
       const subscription = tenantSubject.subscribe({
         next(currentState) {
           safeUnsubscribe(subscription);
@@ -114,11 +113,6 @@ const emitProcessedState = async (
               size,
               representations,
             };
-            if (!alreadyEmitted) {
-              alreadyEmitted = true;
-              console.log('FILE ADDED');
-              globalMediaEventEmitter.emit('file-added', fileState);
-            }
             tenantSubject.next(fileState);
             resolve();
           }, 0);
@@ -160,7 +154,6 @@ async function copyFile({
       mediaType: 'image',
       mimeType: file.type,
     };
-    console.log('FILE ADDED 2');
     globalMediaEventEmitter.emit('file-added', fileState);
 
     emitProcessedState(destinationFile.data, store);
