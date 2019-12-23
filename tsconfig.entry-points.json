@@ -1119,6 +1119,10 @@
         "../../editor/editor-common/src/",
         "./packages/editor/editor-common/src/"
       ],
+      "@atlaskit/editor-common/provider-factory": [
+        "../../editor/editor-common/src/provider-factory",
+        "./packages/editor/editor-common/src/provider-factory"
+      ],
       "@atlaskit/editor-common/validator": [
         "../../editor/editor-common/src/validator",
         "./packages/editor/editor-common/src/validator"
@@ -1170,6 +1174,10 @@
       "@atlaskit/editor-core": [
         "../../editor/editor-core/src/",
         "./packages/editor/editor-core/src/"
+      ],
+      "@atlaskit/editor-core/labs-next": [
+        "../../editor/editor-core/src/labs-next",
+        "./packages/editor/editor-core/src/labs-next"
       ],
       "@atlaskit/editor-core/messages": [
         "../../editor/editor-core/src/messages",

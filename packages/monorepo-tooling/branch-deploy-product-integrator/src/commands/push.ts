@@ -10,8 +10,14 @@ import installFromCommit from '@atlaskit/branch-installer';
 
 import fetch from 'node-fetch';
 import { triggerProductBuild } from '../lib/ci';
-import { commitAndPush, checkoutOrCreate, isInsideRepo } from '../lib/git';
+import {
+  commitAndPush,
+  checkoutOrCreate,
+  isInsideRepo,
+  mergeAndReApply,
+} from '../lib/git';
 import { ValidationError, ErrorType } from '../types';
+import { getWorkspaceDirs } from '../lib/packageEngine';
 
 const exec = util.promisify(childProcess.exec);
 const writeFile = util.promisify(fs.writeFile);
@@ -66,7 +72,6 @@ export const HELP_MSG = `
 
   ${chalk.green('Examples')}
     ${chalk.yellow('branch-deploy-product-integrator foo abcdef123456 --productCiPlanUrl https://bamboo.atlassian.com/rest/api/latest/plan/ABC-DEF')}
-
 `;
 
 function createBranchName(atlaskitBranchName: string, prefix: string) {
@@ -127,8 +132,9 @@ export async function push(
     dryRun,
     productCiPlanUrl,
   } = flags;
+  const cwd = process.cwd();
 
-  const git = dryRun ? (debugMock('git') as SimpleGit) : simpleGit('./');
+  const git = dryRun ? (debugMock('git') as SimpleGit) : simpleGit(cwd);
   const branchName = createBranchName(atlaskitBranchName, branchPrefix);
 
   const insideAtlaskit =
@@ -139,6 +145,18 @@ export async function push(
   }
 
   await checkoutOrCreate(git, branchName);
+  const workspacePkgJsons = (await getWorkspaceDirs(packageEngine, cwd)).map(
+    dir => `${dir}/package.json`,
+  );
+  /* We merge master so that the branch remains relatively up to date.
+   * We also reset package.json/yarn.lock back to their state on master before running
+   * a branch install to prevent previous branch installs lingering in package.json.
+   */
+  await mergeAndReApply(git, 'origin/master', [
+    'package.json',
+    'yarn.lock',
+    ...workspacePkgJsons,
+  ]);
 
   console.log(`Installing packages branch deployed from ${atlaskitCommitHash}`);
   await installFromCommit(atlaskitCommitHash, {
@@ -183,38 +201,52 @@ This commit was auto-generated.
   );
 
   // Only run the following steps if we actually committed and pushed something
-  if (didCommit) {
-    if (dedupe) {
-      console.log(chalk.yellow('Running yarn-deduplicate'));
-      await exec('yarn yarn-deduplicate yarn.lock');
+  if (!didCommit) {
+    return;
+  }
 
-      console.log('Pushing deduped yarn.lock');
-      await commitAndPush(
-        git,
-        'Deduplicated yarn.lock file',
-        authorEmail,
-        branchName,
-      );
-    }
+  if (dedupe) {
+    console.log(chalk.yellow('Running yarn-deduplicate'));
+    await exec('yarn yarn-deduplicate yarn.lock');
 
-    if (productCiPlanUrl) {
-      const { PRODUCT_CI_USERNAME, PRODUCT_CI_PASSWORD } = process.env;
-      if (!PRODUCT_CI_USERNAME || !PRODUCT_CI_PASSWORD) {
-        throw Error(
-          'Missing $PRODUCT_CI_USERNAME and/or $PRODUCT_CI_PASSWORD environment variables',
-        );
-      }
+    console.log('Pushing deduped yarn.lock');
+    await commitAndPush(
+      git,
+      'Deduplicated yarn.lock file',
+      authorEmail,
+      branchName,
+    );
+  }
 
-      console.log(
-        `Triggering product build on ${productCiPlanUrl} for ${branchName}`,
-      );
-      if (!dryRun) {
-        await triggerProductBuild(productCiPlanUrl, branchName, {
-          username: PRODUCT_CI_USERNAME,
-          password: PRODUCT_CI_PASSWORD,
-        });
-      }
-    }
+  if (!productCiPlanUrl) {
+    return;
+  }
+
+  if (
+    typeof productCiPlanUrl !== 'string' ||
+    !productCiPlanUrl.match(/^https.*$/)
+  ) {
+    console.log(
+      `Not triggering product build - ${productCiPlanUrl} is not a valid URL`,
+    );
+    return;
+  }
+
+  const { PRODUCT_CI_USERNAME, PRODUCT_CI_PASSWORD } = process.env;
+  if (!PRODUCT_CI_USERNAME || !PRODUCT_CI_PASSWORD) {
+    throw Error(
+      'Missing $PRODUCT_CI_USERNAME and/or $PRODUCT_CI_PASSWORD environment variables',
+    );
+  }
+
+  console.log(
+    `Triggering product build on ${productCiPlanUrl} for ${branchName}`,
+  );
+  if (!dryRun) {
+    await triggerProductBuild(productCiPlanUrl, branchName, {
+      username: PRODUCT_CI_USERNAME,
+      password: PRODUCT_CI_PASSWORD,
+    });
   }
 
   console.log('Branch deploy product integrator success!');

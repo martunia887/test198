@@ -1,5 +1,5 @@
 # Note: This image can be found in build/pipelines/docker-image
-image: atlassianlabs/atlaskit-mk-2:1.0.17
+image: atlassianlabs/atlaskit-mk-2:1.0.18
 # This ensures we do a full clone on each build which prevents issues when cross referencing
 # changesets and releases
 clone:
@@ -74,7 +74,7 @@ pipelines:
               - node build/ci-scripts/run.tool.if.changed.js eslint -- yarn lint:eslint
               - node build/ci-scripts/run.tool.if.changed.js stylelint -- yarn lint:stylelint
               - node build/ci-scripts/run.tool.if.changed.js flow -- yarn typecheck:flow
-              - node build/ci-scripts/run.tool.if.changed.js typescript -- yarn typecheck:typescript
+              - node build/ci-scripts/run.tool.if.changed.js typecheck -- yarn typecheck:typescript
               # Get the commit that we diverged from master at.
               - export DIVERGED_AT=$(git merge-base master HEAD)
               # Get a comma separated list of changed files.
@@ -141,7 +141,7 @@ pipelines:
               - node
         - step:
             name: Visual Regression Tests
-            image: atlassianlabs/atlaskit-mk-2-vr:1.0.17
+            image: atlassianlabs/atlaskit-mk-2-vr:1.0.18
             script:
               - source ./build-setup.sh
               - git lfs pull
@@ -188,6 +188,19 @@ pipelines:
 
   # Pipelines that can be scheduled or triggered manually.
   custom:
+    # Currently this is being set up to be called manually for testing - schedule will change based on decisions in constellation
+    build-constellation-website:
+      - step:
+          script:
+            - source ./build-setup.sh
+            - bolt install --frozen-lockfile
+            - cd services/website-constellation
+            - yarn build
+            - yarn deploy:staging
+          after-script:
+            - yarn send:buildEvents
+          caches:
+            - node
     # This should only be called by a scheduled build to deploy production website from latest master.
     build-website-production:
       - step:
@@ -268,7 +281,7 @@ pipelines:
     # This will run the full suite of the visual regression tests using Docker.
     build-visual-regression:
       - step:
-          image: atlassianlabs/atlaskit-mk-2-vr:1.0.17
+          image: atlassianlabs/atlaskit-mk-2-vr:1.0.18
           script:
             - source ./build-setup.sh
             - git lfs pull
@@ -334,7 +347,7 @@ pipelines:
                 - yarn send:stepFailureEvents
           - step:
               name: Running All Visual Regression tests
-              image: atlassianlabs/atlaskit-mk-2-vr:1.0.17
+              image: atlassianlabs/atlaskit-mk-2-vr:1.0.18
               script:
                 - source ./build-setup.sh
                 - bolt install --frozen-lockfile
@@ -450,7 +463,7 @@ pipelines:
                 - yarn send:stepFailureEvents
           - step:
               name: Running Visual Regression tests
-              image: atlassianlabs/atlaskit-mk-2-vr:1.0.17
+              image: atlassianlabs/atlaskit-mk-2-vr:1.0.18
               script:
                 - source ./build-setup.sh
                 - export TARGET_BRANCH="$(node build/ci-scripts/get.target.branch.js)" && echo "$TARGET_BRANCH"
@@ -492,7 +505,7 @@ pipelines:
       - step:
           name: Clearing old cache
           script:
-            - ([[ "$BITBUCKET_BRANCH" == "master" ]]) || (echo "This build should only be run on master" && exit 1)
+            - ([ "$BITBUCKET_BRANCH" == "master" -o "$BITBUCKET_BRANCH" == "develop" ]) || (echo "This build should only be run on master or develop" && exit 1)
             - cd build/ci-scripts
             - bolt install --frozen-lockfile
             - node clear.pipelines.node.cache.js
@@ -509,13 +522,15 @@ pipelines:
 
     # This build allow to deploy branch dists to easily tests new version of components into consumers / products code base.
     branch-deploy:
+      - variables:
+          - name: Packages
       - step:
           name: Branch deploy
           script:
             - source ./build-setup.sh
             - bolt install --frozen-lockfile
             - yarn build
-            - export CHANGED_PACKAGES=$(node build/ci-scripts/get.changed.packages.since.master.js)
+            - export CHANGED_PACKAGES=$([[ -z "${Packages}" ]] && node build/ci-scripts/get.changed.packages.since.master.js || echo "${Packages}")
             # Change into a glob pattern (removing brackets, spaces and quotes).
             - export CHANGED_PACKAGES_GLOB=$(echo "$CHANGED_PACKAGES" | sed 's/[][" ]//g')
             - node build/ci-scripts/branch-deploys/update.changed.packages.deps.to.cdn.js
@@ -627,7 +642,7 @@ pipelines:
             # Validate packages will produce false positives and is for manual analysis so we always return true
             - yarn validate-packages || true
 
-# For branches like develop, we need to merge master daily.
+    # For branches like develop, we need to merge master daily.
     merge-master:
       - step:
           name: Merges master into the target branch

@@ -118,14 +118,14 @@ export default class MediaSingleNode extends Component<
       return;
     }
 
-    const contextId = mediaNodeUpdater.getCurrentContextId();
+    const contextId = mediaNodeUpdater.getNodeContextId();
     if (!contextId) {
       await mediaNodeUpdater.updateContextId();
     }
 
-    const isNodeFromDifferentCollection = await mediaNodeUpdater.isNodeFromDifferentCollection();
+    const hasDifferentContextId = await mediaNodeUpdater.hasDifferentContextId();
 
-    if (isNodeFromDifferentCollection) {
+    if (hasDifferentContextId) {
       mediaNodeUpdater.copyNode();
     }
   };
@@ -174,13 +174,13 @@ export default class MediaSingleNode extends Component<
     if (typeof pos === 'undefined') {
       return;
     }
-    return dispatch(
-      state.tr.setNodeMarkup(pos, undefined, {
-        ...this.props.node.attrs,
-        layout,
-        width,
-      }),
-    );
+    const tr = state.tr.setNodeMarkup(pos, undefined, {
+      ...this.props.node.attrs,
+      layout,
+      width,
+    });
+    tr.setMeta('scrollIntoView', false);
+    return dispatch(tr);
   };
 
   render() {

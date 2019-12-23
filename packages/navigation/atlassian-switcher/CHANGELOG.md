@@ -1,5 +1,46 @@
 # @atlaskit/atlassian-switcher
 
+## 4.10.1
+
+### Patch Changes
+
+- [patch][be97cdfc46](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/be97cdfc46):
+
+  updated the expected joinable site response type definition and replaced product landing url logic
+
+## 4.10.0
+
+### Minor Changes
+
+- [minor][4245cdfcc1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4245cdfcc1):
+
+  Update Switcher to include Trello specific design variation; Fix Switcher error screen to show up when critical requests are failed
+
+## 4.9.1
+
+### Patch Changes
+
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+  - @atlaskit/tooltip@15.2.0
+  - @atlaskit/analytics-next@6.3.3
+  - @atlaskit/form@7.0.0
+  - @atlaskit/field-text@9.0.14
+  - @atlaskit/textfield@3.1.4
+  - @atlaskit/avatar-group@5.0.2
+  - @atlaskit/drawer@5.2.0
+  - @atlaskit/item@10.2.0
+  - @atlaskit/navigation@35.3.0
+  - @atlaskit/inline-dialog@12.1.6
+
 ## 4.9.0
 
 ### Minor Changes

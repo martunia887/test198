@@ -87,7 +87,7 @@ export const ArticleBody = (props: Props) => {
       }
 
       ReactDOM.render(
-        <div style={divSyle}></div>,
+        <div style={divSyle} />,
         document.getElementById(IFRAME_CONTAINER_ID),
         () => {
           ReactDOM.render(
@@ -97,7 +97,7 @@ export const ArticleBody = (props: Props) => {
               onLoad={() => {
                 resizeIframe(props.onArticleRenderDone);
               }}
-              sandbox="allow-same-origin allow-popups"
+              sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
             />,
             document.getElementById(IFRAME_CONTAINER_ID),
             () => {

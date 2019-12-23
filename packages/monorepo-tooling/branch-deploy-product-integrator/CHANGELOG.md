@@ -1,5 +1,35 @@
 # @atlaskit/branch-deploy-product-integrator
 
+## 2.0.3
+
+### Patch Changes
+
+- [patch][917c865a2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/917c865a2a):
+
+  Meow is smarter than I thought and also converts "" to a boolean true, so had to add a typeof check
+
+## 2.0.2
+
+### Patch Changes
+
+- [patch][ef95dce44d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ef95dce44d):
+
+  Add some extra url checks- [patch][89cbaaf5a2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/89cbaaf5a2):
+
+  Add a length check to productCiPlanUrl
+
+## 2.0.1
+
+### Patch Changes
+
+- [patch][6195035473](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6195035473):
+
+  Update integrator to merge with master and reset package.json/yarn.lock with master.
+  This fixes two issues:
+
+  1. Branch becoming out of date with master
+  2. Stale branch deploys of packages lingering in package.json when those packages are not in the latest branch deploy
+
 ## 2.0.0
 
 ### Major Changes

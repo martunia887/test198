@@ -1,5 +1,35 @@
 # @atlaskit/onboarding
 
+## 9.0.7
+
+### Patch Changes
+
+- [patch][24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+  Fixes Action onClick return type to void- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+- Updated dependencies [24865cfaff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/24865cfaff):
+  - @atlaskit/analytics-next@6.3.3
+  - @atlaskit/modal-dialog@10.5.0
+  - @atlaskit/progress-indicator@7.0.12
+  - @atlaskit/popper@3.1.8
+
+## 9.0.6
+
+### Patch Changes
+
+- [patch][532f7c03fd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/532f7c03fd):
+
+  Fixes spotlight taking a while to animate into view.- [patch][864f4891dc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/864f4891dc):
+
+  Fixes spotlight target not updating its position when resizing the viewport.- Updated dependencies [768bac6d81](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/768bac6d81):
+
+  - @atlaskit/analytics-next@6.3.2
+
 ## 9.0.5
 
 ### Patch Changes
