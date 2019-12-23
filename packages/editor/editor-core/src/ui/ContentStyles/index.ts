@@ -35,6 +35,7 @@ import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
 import { extensionStyles } from '../../plugins/extension/ui/styles';
 import { expandStyles } from '../../plugins/expand/ui/styles';
+import { breakoutStyles } from '../../plugins/breakout/';
 
 const ContentStyles: ComponentClass<HTMLAttributes<{}> & {
   theme: any;
@@ -129,6 +130,7 @@ const ContentStyles: ComponentClass<HTMLAttributes<{}> & {
   ${dateSharedStyle}
   ${extensionStyles}
   ${expandStyles}
+  ${breakoutStyles}
 
   /** Global selector for extensions, as .danger tag is assigned to root level node which is unaccessible from triggered child node **/
   /* Danger when nested node */

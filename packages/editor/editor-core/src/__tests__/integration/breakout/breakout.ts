@@ -1,4 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
+import { extensionHandlers } from '@atlaskit/editor-test-helpers';
 import {
   goToEditorTestingExample,
   mountEditor,
@@ -7,10 +8,12 @@ import { getDocFromElement, editable } from '../_helpers';
 
 import { messages } from '../../../plugins/block-type/types';
 import commonMessages from '../../../messages';
+import adf from './__fixtures__/breakout-columns-with-iframe.adf.json';
 
 const wideBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutWide.defaultMessage}"]`;
 const fullWidthBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutFullWidth.defaultMessage}"]`;
 const centerBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutFixedWidth.defaultMessage}"]`;
+const wideBreakoutColumn = 'div[data-layout-column="true"]:first-child p';
 
 BrowserTestCase(
   'breakout: should be able to switch to wide mode',
@@ -104,6 +107,35 @@ BrowserTestCase(
     // Switch to wide breakout mode
     await page.waitForSelector(wideBreakoutButtonQuery);
     await page.click(wideBreakoutButtonQuery);
+
+    await page.type(editable, 'a');
+    await page.keys('Backspace');
+    expect(
+      await page.$eval(editable, getDocFromElement),
+    ).toMatchCustomDocSnapshot(testName);
+  },
+);
+
+// @see ED-8293
+BrowserTestCase(
+  'breakout: should be able to delete last character inside a "wide" layoutSection in Safari',
+  { skip: ['ie', 'firefox', 'chrome'] },
+  async (client: any, testName: string) => {
+    const page = await goToEditorTestingExample(client);
+
+    await mountEditor(page, {
+      appearance: 'full-page',
+      defaultValue: adf,
+      allowBreakout: true,
+      allowLayouts: true,
+      allowExtension: true,
+      extensionHandlers: extensionHandlers,
+    });
+
+    await page.waitForSelector(wideBreakoutColumn);
+    await page.click(wideBreakoutColumn);
+    // this is to deselect extension in Safari
+    await page.keys('ArrowUp');
 
     await page.type(editable, 'a');
     await page.keys('Backspace');
