@@ -7,6 +7,8 @@ import {
   FileState,
   MediaFile as MediaClientFile,
   safeUnsubscribe,
+  getFileStreamsCache,
+  ErrorFileState,
 } from '@atlaskit/media-client';
 import {
   FinalizeUploadAction,
@@ -134,9 +136,10 @@ async function copyFile({
   const body: MediaStoreCopyFileWithTokenBody = {
     sourceFile,
   };
+  const resolvedReplaceFileId = replaceFileId ? await replaceFileId : undefined;
   const params: MediaStoreCopyFileWithTokenParams = {
     collection,
-    replaceFileId: replaceFileId ? await replaceFileId : undefined,
+    replaceFileId: resolvedReplaceFileId,
     occurrenceKey: file.occurrenceKey,
   };
 
@@ -196,6 +199,21 @@ async function copyFile({
       },
     });
   } catch (error) {
+    const erroredFileId = resolvedReplaceFileId || file.id;
+    const fileCache = getFileStreamsCache().get(erroredFileId) as ReplaySubject<
+      FileState
+    >;
+    // We need this check since the return type of getFileStreamsCache().get might not be a ReplaySubject and won't have "next"
+    if (fileCache && fileCache.next) {
+      const errorState: ErrorFileState = {
+        id: erroredFileId,
+        status: 'error',
+      };
+      fileCache.next(errorState);
+      // This will cause media card to rerender with an error state
+      getFileStreamsCache().set(erroredFileId, fileCache);
+    }
+
     store.dispatch(
       sendUploadEvent({
         event: {

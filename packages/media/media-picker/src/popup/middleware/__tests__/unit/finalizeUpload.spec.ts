@@ -240,4 +240,25 @@ describe('finalizeUploadMiddleware', () => {
 
     expect(store.dispatch).toHaveBeenCalledWith(resetView());
   });
+
+  it('should populate cache with an error state when copy file with token request fails', async () => {
+    const { store, action } = setup();
+    const fileId = action.file.id;
+    const subject = new ReplaySubject<Partial<FileState>>(1);
+    const subjectNextSpy = jest.spyOn(subject, 'next');
+    getFileStreamsCache().set(fileId, subject as Observable<FileState>);
+    jest
+      .spyOn(MediaClientModule, 'MediaStore' as any)
+      .mockImplementation(() => ({
+        copyFileWithToken: () =>
+          Promise.reject('copy file with token server error'),
+      }));
+
+    await finalizeUpload(store, action);
+
+    expect(subjectNextSpy).toHaveBeenCalledWith({
+      id: fileId,
+      status: 'error',
+    });
+  });
 });
