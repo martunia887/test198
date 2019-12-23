@@ -1,7 +1,8 @@
 // @flow
 const fs = require('fs');
 const path = require('path');
-const s3 = require('@auth0/s3');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const s3 = require('s3');
 
 const { BITBUCKET_COMMIT } = process.env;
 const { AWS_ACCESS_KEY } = process.env;
