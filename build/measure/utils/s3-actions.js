@@ -160,7 +160,7 @@ function uploadToS3(pathToFile /*: string */, branch /*: string */) {
   }
 
   const fileName = path.basename(pathToFile);
-  const bucketPath = `s3://${BUCKET_NAME}/${branch}/bundleSize/${fileName}`;
+  const bucketPath = `${branch}/bundleSize/${fileName}`;
 
   const params = {
     localFile: pathToFile,

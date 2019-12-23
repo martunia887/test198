@@ -48,7 +48,7 @@ if (outputPath && !outputPath.endsWith('/')) {
   outputPath += '/';
 }
 
-const bucketPath = `${BUCKET_NAME}/${commitHash}/${outputPath}${fileName}`;
+const bucketPath = `${commitHash}/${outputPath}${fileName}`;
 // const bucketPath = `s3://${BUCKET_NAME}/${commitHash}/${outputPath}${fileName}`;
 
 // npmRun.sync(
