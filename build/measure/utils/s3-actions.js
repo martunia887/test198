@@ -2,8 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 // const npmRun = require('npm-run');
-// eslint-disable-next-line import/no-extraneous-dependencies
-const s3 = require('s3');
+const s3 = require('auth0/s3');
 const chalk = require('chalk');
 const axios = require('axios');
 
