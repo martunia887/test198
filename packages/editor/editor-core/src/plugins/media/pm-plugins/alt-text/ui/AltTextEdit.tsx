@@ -26,6 +26,8 @@ import {
 } from '../../../../analytics';
 
 export const CONTAINER_WIDTH_IN_PX = 350;
+export const MAX_ALT_TEXT_LENGTH = 510; // double tweet length
+
 const SupportText = styled.p`
   color: ${colors.N100};
   font-size: 12px;
@@ -143,6 +145,7 @@ export class AltTextEditComponent extends React.Component<
             onChange={this.handleOnChange}
             onBlur={this.handleOnBlur}
             onSubmit={this.closeMediaAltTextMenu}
+            maxLength={MAX_ALT_TEXT_LENGTH}
             autoFocus
           />
           {showClearTextButton && (
