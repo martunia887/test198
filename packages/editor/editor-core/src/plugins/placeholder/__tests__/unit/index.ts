@@ -19,7 +19,7 @@ function expectPlaceHolderWithText(editorView: EditorView, text: string) {
 }
 
 const defaultPlaceholder = 'defaultPlaceholder';
-const slackPlaceholder = "Type '/' to insert content.";
+const slashPlaceholder = "Type '/' to insert content.";
 
 describe('placeholder', () => {
   const createProsemirrorEditor = createProsemirrorEditorFactory();
@@ -51,13 +51,13 @@ describe('placeholder', () => {
     const hintPlaceholderEditor = (doc: any) =>
       createProsemirrorEditor({
         doc,
-        plugins: [['placeholder', { placeholderHints: [slackPlaceholder] }]],
+        plugins: [['placeholder', { placeholderHints: [slashPlaceholder] }]],
       });
 
     it('renders hint placeholder on a blank content', async () => {
       const { editorView } = await hintPlaceholderEditor(doc(p()));
 
-      expectPlaceHolderWithText(editorView, slackPlaceholder);
+      expectPlaceHolderWithText(editorView, slashPlaceholder);
     });
 
     it('renders hint placeholder in a empty line', async () => {
@@ -65,7 +65,7 @@ describe('placeholder', () => {
         doc(p('Hello World'), p('{<>}')),
       );
 
-      expectPlaceHolderWithText(editorView, slackPlaceholder);
+      expectPlaceHolderWithText(editorView, slashPlaceholder);
     });
 
     it('disappears after changing selection to a non empty line', async () => {
@@ -73,7 +73,7 @@ describe('placeholder', () => {
         doc(p('Hello World{noEmptyLine}'), p('{<>}')),
       );
 
-      expectPlaceHolderWithText(editorView, slackPlaceholder);
+      expectPlaceHolderWithText(editorView, slashPlaceholder);
 
       editorView.dispatch(
         editorView.state.tr.setSelection(
