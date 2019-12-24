@@ -78,7 +78,7 @@ interface PlaceHolderState {
   pos?: number;
 }
 
-const EmptyPlaceholder: PlaceHolderState = { hasPlaceholder: false };
+const emptyPlaceholder: PlaceHolderState = { hasPlaceholder: false };
 
 function createPlaceHolderStateFrom(
   editorState: EditorState,
@@ -95,7 +95,7 @@ function createPlaceHolderStateFrom(
     return setPlaceHolderState(placeholderHint, $from.pos);
   }
 
-  return EmptyPlaceholder;
+  return emptyPlaceholder;
 }
 
 function createGetPlaceholderHintMessage(
@@ -142,7 +142,7 @@ export function createPlugin(
 
         if (meta) {
           if (meta.removePlaceholder) {
-            return EmptyPlaceholder;
+            return emptyPlaceholder;
           }
 
           if (meta.applyPlaceholderIfEmpty) {
