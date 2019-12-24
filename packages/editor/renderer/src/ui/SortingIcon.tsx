@@ -55,11 +55,11 @@ type Props = {
 const getTooltipTitle = (status?: SortOrder): string => {
   switch (status) {
     case SortOrder.NO_ORDER:
-      return 'Sort column A → Z';
+      return 'Sort column A to Z';
     case SortOrder.ASC:
-      return 'Sort column A → Z';
+      return 'Sort column Z to A';
     case SortOrder.DESC:
-      return 'Sort column Z → A';
+      return 'Clear sorting';
   }
 
   return '';
