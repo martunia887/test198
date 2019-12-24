@@ -1543,14 +1543,14 @@ describe('paste plugins', () => {
         [
           'a mixed event with a link',
           'mixed',
-          "<meta charset='utf-8'><ul><li><a href='http://atlassian.com'>Hello World</a></li></ul><p>Hello World</p>",
+          "<meta charset='utf-8'><ul><li><a href='http://atlassian.com/foo'>Hello World</a></li></ul><p>Hello World</p>",
           'Hello World',
           ['atlassian.com'],
         ],
         [
           'a mixed event with multiple links',
           'mixed',
-          "<meta charset='utf-8'><ul><li><a href='http://atlassian.com'>Hello World</a></li><li><a href='http://foo.bar.net'>Hello World</a></li></ul><p>Hello World</p>",
+          "<meta charset='utf-8'><ul><li><a href='http://atlassian.com:443?foo'>Hello World</a></li><li><a href='http://foo.bar.net/bar/baz'>Hello World</a></li></ul><p>Hello World</p>",
           'Hello World',
           ['atlassian.com', 'foo.bar.net'],
         ],
