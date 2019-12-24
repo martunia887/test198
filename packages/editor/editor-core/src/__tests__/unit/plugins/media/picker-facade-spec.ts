@@ -4,7 +4,7 @@ import {
   userAuthProvider,
   asMock,
 } from '@atlaskit/media-test-helpers';
-import { Popup } from '@atlaskit/media-picker/types';
+import { MediaError, MediaFile, Popup } from '@atlaskit/media-picker/types';
 
 import PickerFacade from '../../../../plugins/media/picker-facade';
 import { ErrorReportingHandler } from '@atlaskit/editor-common';
@@ -23,6 +23,19 @@ describe('Media PickerFacade', () => {
   const pickerFacadeConfig = {
     mediaClientConfig,
     errorReporter,
+  };
+
+  const mediaFileMock: MediaFile = {
+    id: 'test-id',
+    name: 'filename',
+    size: 1024,
+    creationDate: Date.now(),
+    type: 'test',
+  };
+
+  const mediaErrorMock: MediaError = {
+    name: 'object_create_fail',
+    description: 'test description',
   };
 
   const popupMediaPickerMock: Popup = {
@@ -124,6 +137,27 @@ describe('Media PickerFacade', () => {
 
       expect(popupMediaPickerMock.on).toHaveBeenCalledTimes(1);
       expect(popupMediaPickerMock.on).toHaveBeenCalledWith('closed', closeCb);
+    });
+
+    it('should call listeners on upload error', () => {
+      const exampleCb = jest.fn();
+      facade['eventListeners'][mediaFileMock.id] = [exampleCb];
+      facade.handleUploadError({ error: mediaErrorMock, file: mediaFileMock });
+      expect(exampleCb).toHaveBeenCalledTimes(1);
+      expect(exampleCb).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: expect.any(String),
+          status: 'error',
+          error: expect.any(Object),
+        }),
+      );
+    });
+
+    it('should delete the listeners on upload error', () => {
+      const exampleCb = jest.fn();
+      facade['eventListeners'][mediaFileMock.id] = [exampleCb];
+      facade.handleUploadError({ error: mediaErrorMock, file: mediaFileMock });
+      expect(facade['eventListeners'][mediaFileMock.id]).toBe(undefined);
     });
   });
 });
