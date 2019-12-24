@@ -19,6 +19,7 @@ export const expandStyles = css`
     ${sharedExpandStyles.ContainerStyles}
     overflow: hidden;
     cursor: pointer;
+    box-sizing: border-box;
 
     td > & {
       margin-top: 0;
