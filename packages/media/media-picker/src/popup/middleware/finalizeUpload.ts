@@ -200,19 +200,22 @@ async function copyFile({
     });
   } catch (error) {
     const erroredFileId = resolvedReplaceFileId || file.id;
-    const fileCache = getFileStreamsCache().get(erroredFileId) as ReplaySubject<
-      FileState
-    >;
-    // We need this check since the return type of getFileStreamsCache().get might not be a ReplaySubject and won't have "next"
-    if (fileCache && fileCache.next) {
-      const errorState: ErrorFileState = {
-        id: erroredFileId,
-        status: 'error',
-        message: `error copying file to ${collection}`,
-      };
-      fileCache.next(errorState);
-      // This will cause media card to rerender with an error state
-      getFileStreamsCache().set(erroredFileId, fileCache);
+    const cache = getFileStreamsCache();
+    const fileCache = cache.get(erroredFileId) as
+      | ReplaySubject<FileState>
+      | undefined;
+    if (fileCache) {
+      cache.set(erroredFileId, fileCache);
+      // We need this check since the return type of getFileStreamsCache().get might not be a ReplaySubject and won't have "next"
+      if (fileCache.next) {
+        const errorState: ErrorFileState = {
+          id: erroredFileId,
+          status: 'error',
+          message: `error copying file to ${collection}`,
+        };
+        // This will cause media card to rerender with an error state
+        fileCache.next(errorState);
+      }
     }
 
     store.dispatch(

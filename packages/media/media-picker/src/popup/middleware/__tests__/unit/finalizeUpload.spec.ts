@@ -71,6 +71,11 @@ describe('finalizeUploadMiddleware', () => {
     };
   };
 
+  beforeEach(() => {
+    getFileStreamsCache().removeAll();
+    return jest.clearAllMocks();
+  });
+
   it('should do nothing given unknown action', () => {
     const { store, next } = setup();
     const action = {
@@ -241,14 +246,15 @@ describe('finalizeUploadMiddleware', () => {
     expect(store.dispatch).toHaveBeenCalledWith(resetView());
   });
 
-  it('should populate cache with an error state when copy file with token request fails', async () => {
+  it('should produce an error to cached file subject when copy file with token request fails', async () => {
+    const cache = getFileStreamsCache();
     const { store, action } = setup({
       config: { uploadParams: { collection: 'some-tenant-collection' } },
     });
     const fileId = action.file.id;
-    const subject = new ReplaySubject<Partial<FileState>>(1);
-    const subjectNextSpy = jest.spyOn(subject, 'next');
-    getFileStreamsCache().set(fileId, subject as Observable<FileState>);
+    const fileSubject = new ReplaySubject<Partial<FileState>>(1);
+    const subjectNextSpy = jest.spyOn(fileSubject, 'next');
+    cache.set(fileId, fileSubject as Observable<FileState>);
     jest
       .spyOn(MediaClientModule, 'MediaStore' as any)
       .mockImplementation(() => ({
@@ -258,10 +264,48 @@ describe('finalizeUploadMiddleware', () => {
 
     await finalizeUpload(store, action);
 
+    expect(subjectNextSpy).toHaveBeenCalledTimes(1);
     expect(subjectNextSpy).toHaveBeenCalledWith({
       id: fileId,
       status: 'error',
       message: `error copying file to some-tenant-collection`,
     });
+  });
+
+  it('should update file cache when copy file with token request fails', async () => {
+    const cache = getFileStreamsCache();
+    const { store, action } = setup();
+    const fileId = action.file.id;
+    const fileSubject = new ReplaySubject<Partial<FileState>>(1);
+    const cacheSetSpy = jest.spyOn(cache, 'set');
+    cache.set(fileId, fileSubject as Observable<FileState>);
+    jest
+      .spyOn(MediaClientModule, 'MediaStore' as any)
+      .mockImplementation(() => ({
+        copyFileWithToken: () =>
+          Promise.reject('copy file with token server error'),
+      }));
+
+    await finalizeUpload(store, action);
+
+    expect(cacheSetSpy).toHaveBeenCalledWith(fileId, fileSubject);
+  });
+
+  it('should not update file cache if it is empty when copy file with token request fails', async () => {
+    const cache = getFileStreamsCache();
+    const { store, action } = setup({
+      config: { uploadParams: { collection: 'some-tenant-collection' } },
+    });
+    const cacheSetSpy = jest.spyOn(cache, 'set');
+    jest
+      .spyOn(MediaClientModule, 'MediaStore' as any)
+      .mockImplementation(() => ({
+        copyFileWithToken: () =>
+          Promise.reject('copy file with token server error'),
+      }));
+
+    await finalizeUpload(store, action);
+
+    expect(cacheSetSpy).toHaveBeenCalledTimes(0);
   });
 });
