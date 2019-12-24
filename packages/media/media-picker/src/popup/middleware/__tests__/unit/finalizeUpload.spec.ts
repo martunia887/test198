@@ -5,6 +5,7 @@ import {
   ProcessedFileState,
   ProcessingFileState,
   FileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 import {
   mockStore,
@@ -20,7 +21,6 @@ import {
   FINALIZE_UPLOAD,
 } from '../../../actions/finalizeUpload';
 import { State } from '../../../domain';
-import { ReplaySubject, Observable } from 'rxjs';
 
 describe('finalizeUploadMiddleware', () => {
   const auth: Auth = {
@@ -97,8 +97,7 @@ describe('finalizeUploadMiddleware', () => {
       mimeType: 'image/png',
       status: 'processed',
     };
-    const fileStateObservable = new ReplaySubject(1);
-    fileStateObservable.next(processedFileState);
+    const fileStateObservable = createFileStateSubject(processedFileState);
     // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
     //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
     tenantMediaClient.file.getFileState = jest.fn(() => fileStateObservable);
@@ -126,8 +125,7 @@ describe('finalizeUploadMiddleware', () => {
       mimeType: 'image/png',
       status: 'processing',
     };
-    const fileStateObservable = new ReplaySubject(1);
-    fileStateObservable.next(processingFileState);
+    const fileStateObservable = createFileStateSubject(processingFileState);
     // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
     //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
     tenantMediaClient.file.getFileState = jest.fn(() => fileStateObservable);
@@ -218,12 +216,17 @@ describe('finalizeUploadMiddleware', () => {
 
   it('should populate cache with processed state', async () => {
     const { store, action } = setup();
-    const subject = new ReplaySubject<Partial<FileState>>(1);
-    const next = jest.fn();
-    subject.next({
+    const subject = createFileStateSubject({
       id: copiedFile.id,
+      artifacts: {},
+      mediaType: 'image',
+      mimeType: 'image/png',
+      status: 'processed',
+      name: 'a-name',
+      size: 100,
     });
-    getFileStreamsCache().set(copiedFile.id, subject as Observable<FileState>);
+    const next = jest.fn();
+    getFileStreamsCache().set(copiedFile.id, subject);
 
     await finalizeUpload(store, action);
 
@@ -235,6 +238,12 @@ describe('finalizeUploadMiddleware', () => {
 
     expect(next).toBeCalledWith({
       id: 'some-copied-file-id',
+      artifacts: {},
+      mediaType: 'image',
+      mimeType: 'image/png',
+      status: 'processed',
+      name: 'a-name',
+      size: 100,
     });
   });
 
@@ -252,9 +261,9 @@ describe('finalizeUploadMiddleware', () => {
       config: { uploadParams: { collection: 'some-tenant-collection' } },
     });
     const fileId = action.file.id;
-    const fileSubject = new ReplaySubject<Partial<FileState>>(1);
+    const fileSubject = createFileStateSubject();
     const subjectNextSpy = jest.spyOn(fileSubject, 'next');
-    cache.set(fileId, fileSubject as Observable<FileState>);
+    cache.set(fileId, fileSubject);
     jest
       .spyOn(MediaClientModule, 'MediaStore' as any)
       .mockImplementation(() => ({
@@ -272,13 +281,12 @@ describe('finalizeUploadMiddleware', () => {
     });
   });
 
-  it('should update file cache when copy file with token request fails', async () => {
-    const cache = getFileStreamsCache();
-    const { store, action } = setup();
+  it('should update cache with a new subject with error state when copy file with token request fails', async () => {
+    const { store, action } = setup({
+      config: { uploadParams: { collection: 'some-tenant-collection' } },
+    });
     const fileId = action.file.id;
-    const fileSubject = new ReplaySubject<Partial<FileState>>(1);
-    const cacheSetSpy = jest.spyOn(cache, 'set');
-    cache.set(fileId, fileSubject as Observable<FileState>);
+    const next = jest.fn();
     jest
       .spyOn(MediaClientModule, 'MediaStore' as any)
       .mockImplementation(() => ({
@@ -288,22 +296,13 @@ describe('finalizeUploadMiddleware', () => {
 
     await finalizeUpload(store, action);
 
-    expect(cacheSetSpy).toHaveBeenCalledWith(fileId, fileSubject);
-  });
-
-  it('should not update file cache if it is empty when copy file with token request fails', async () => {
-    const cache = getFileStreamsCache();
-    const { store, action } = setup();
-    const cacheSetSpy = jest.spyOn(cache, 'set');
-    jest
-      .spyOn(MediaClientModule, 'MediaStore' as any)
-      .mockImplementation(() => ({
-        copyFileWithToken: () =>
-          Promise.reject('copy file with token server error'),
-      }));
-
-    await finalizeUpload(store, action);
-
-    expect(cacheSetSpy).toHaveBeenCalledTimes(0);
+    getFileStreamsCache()
+      .get(fileId)!
+      .subscribe({ next });
+    expect(next).toHaveBeenCalledWith({
+      id: fileId,
+      status: 'error',
+      message: `error copying file to some-tenant-collection`,
+    });
   });
 });
