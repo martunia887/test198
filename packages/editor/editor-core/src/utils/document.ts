@@ -9,23 +9,15 @@ import { JSONDocNode } from '../utils';
 
 const FALSE_POSITIVE_MARKS = ['code', 'alignment', 'indentation'];
 
+/**
+ * Checks if node is an empty paragraph.
+ */
 export function isEmptyParagraph(node?: Node | null): boolean {
   return (
     node != null &&
     node.type.name === 'paragraph' &&
     !node.childCount &&
-    node.nodeSize === 2 &&
-    (!node.marks || node.marks.length === 0)
-  );
-}
-
-/**
- * Checks if node is an empty paragraph.
- */
-export function oldIsEmptyParagraph(node?: Node | null): boolean {
-  return (
-    !node ||
-    (node.type.name === 'paragraph' && !node.textContent && !node.childCount)
+    node.nodeSize === 2
   );
 }
 
@@ -129,8 +121,6 @@ export function isInEmptyLine(state: EditorState) {
 
   return isEmptyParagraph(node) && hasDocAsParent($anchor);
 }
-
-export function bracketTyped(state: EditorState) {}
 
 function wrapWithUnsupported(
   originalValue: ADFEntity,
