@@ -144,13 +144,14 @@ describe('Media PickerFacade', () => {
       facade['eventListeners'][mediaFileMock.id] = [exampleCb];
       facade.handleUploadError({ error: mediaErrorMock, file: mediaFileMock });
       expect(exampleCb).toHaveBeenCalledTimes(1);
-      expect(exampleCb).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: expect.any(String),
-          status: 'error',
-          error: expect.any(Object),
-        }),
-      );
+      expect(exampleCb).toHaveBeenCalledWith({
+        id: mediaFileMock.id,
+        status: 'error',
+        error: {
+          description: mediaErrorMock.description,
+          name: mediaErrorMock.name,
+        },
+      });
     });
 
     it('should delete the listeners on upload error', () => {
