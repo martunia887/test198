@@ -208,6 +208,7 @@ async function copyFile({
       const errorState: ErrorFileState = {
         id: erroredFileId,
         status: 'error',
+        message: `error copying file to ${collection}`,
       };
       fileCache.next(errorState);
       // This will cause media card to rerender with an error state

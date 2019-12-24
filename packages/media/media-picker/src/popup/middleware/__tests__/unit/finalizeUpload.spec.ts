@@ -242,7 +242,9 @@ describe('finalizeUploadMiddleware', () => {
   });
 
   it('should populate cache with an error state when copy file with token request fails', async () => {
-    const { store, action } = setup();
+    const { store, action } = setup({
+      config: { uploadParams: { collection: 'some-tenant-collection' } },
+    });
     const fileId = action.file.id;
     const subject = new ReplaySubject<Partial<FileState>>(1);
     const subjectNextSpy = jest.spyOn(subject, 'next');
@@ -259,6 +261,7 @@ describe('finalizeUploadMiddleware', () => {
     expect(subjectNextSpy).toHaveBeenCalledWith({
       id: fileId,
       status: 'error',
+      message: `error copying file to some-tenant-collection`,
     });
   });
 });
