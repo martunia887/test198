@@ -260,8 +260,8 @@ describe('finalizeUploadMiddleware', () => {
       status: 'processing',
     };
 
-    expect(globalEmitSpy).toBeCalledTimes(4);
-    expect(tenantMediaClient.emit).toBeCalledTimes(4);
+    expect(globalEmitSpy).toBeCalledTimes(5);
+    expect(tenantMediaClient.emit).toBeCalledTimes(5);
 
     const globalEmitSpyCall = globalEmitSpy.mock.calls.find(
       // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.

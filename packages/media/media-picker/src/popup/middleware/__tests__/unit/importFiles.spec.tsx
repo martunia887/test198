@@ -4,7 +4,6 @@ jest.mock('uuid/v4', () => ({
 }));
 
 import {
-  globalMediaEventEmitter,
   isErrorFileState,
   observableToPromise,
   getFileStreamsCache,
@@ -12,7 +11,6 @@ import {
 } from '@atlaskit/media-client';
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { ReplaySubject } from 'rxjs';
-const globalEmitSpy = jest.spyOn(globalMediaEventEmitter, 'emit');
 import uuidV4 from 'uuid/v4';
 import {
   mockStore,
