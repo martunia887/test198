@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export const headingAnchorLinkMessages = defineMessages({
   copyHeadingLinkToClipboard: {
     id: 'fabric.editor.headingLink.copyAnchorLink',
-    defaultMessage: 'Copy this anchor link',
+    defaultMessage: 'Copy link to heading',
     description: 'Copy heading link to clipboard',
   },
   copiedHeadingLinkToClipboard: {
