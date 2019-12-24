@@ -21,8 +21,12 @@ import {
 } from '../../../actions/finalizeUpload';
 import { State } from '../../../domain';
 import { ReplaySubject, Observable } from 'rxjs';
+import { globalMediaEventEmitter } from '@atlaskit/media-client';
+const globalEmitSpy = jest.spyOn(globalMediaEventEmitter, 'emit');
 
 describe('finalizeUploadMiddleware', () => {
+  const expectUUID = expect.stringMatching(/[a-f0-9\-]+/);
+
   const auth: Auth = {
     clientId: 'some-client-id',
     token: 'some-token',
@@ -239,5 +243,36 @@ describe('finalizeUploadMiddleware', () => {
     await finalizeUpload(store, action);
 
     expect(store.dispatch).toHaveBeenCalledWith(resetView());
+  });
+
+  it('should emit file-added in tenant mediaClient and globalMediaEventEmitter', async () => {
+    const { store } = setup();
+
+    const { tenantMediaClient } = store.getState();
+    const fileState = {
+      id: expectUUID,
+      mediaType: 'image',
+      mimeType: 'image/jpg',
+      name: 'picture5.jpg',
+      preview: undefined,
+      representations: {},
+      size: 47,
+      status: 'processing',
+    };
+
+    expect(globalEmitSpy).toBeCalledTimes(4);
+    expect(tenantMediaClient.emit).toBeCalledTimes(4);
+
+    const globalEmitSpyCall = globalEmitSpy.mock.calls.find(
+      // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+      //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
+      call => call[1].name === fileState.name,
+    );
+    expect(globalEmitSpyCall).toEqual(['file-added', fileState]);
+
+    const tenantMediaClientEmitCall = asMock(
+      tenantMediaClient.emit,
+    ).mock.calls.find(call => call[1].name === fileState.name);
+    expect(tenantMediaClientEmitCall).toEqual(['file-added', fileState]);
   });
 });

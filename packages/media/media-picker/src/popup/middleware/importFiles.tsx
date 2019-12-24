@@ -9,7 +9,6 @@ import {
   FilePreview,
   isPreviewableType,
   MediaType,
-  globalMediaEventEmitter,
   observableToPromise,
   isErrorFileState,
   safeUnsubscribe,

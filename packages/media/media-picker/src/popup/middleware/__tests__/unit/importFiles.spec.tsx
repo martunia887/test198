@@ -621,39 +621,6 @@ describe('importFiles middleware', () => {
       });
     });
 
-    it('should emit file-added in tenant mediaClient and globalMediaEventEmitter', async () => {
-      const setupResult = setup();
-      await importFilesMiddlewareAndAwait(setupResult);
-      const { store } = setupResult;
-
-      const { tenantMediaClient } = store.getState();
-      const fileState = {
-        id: expectUUID,
-        mediaType: 'image',
-        mimeType: 'image/jpg',
-        name: 'picture5.jpg',
-        preview: undefined,
-        representations: {},
-        size: 47,
-        status: 'processing',
-      };
-
-      expect(globalEmitSpy).toBeCalledTimes(4);
-      expect(tenantMediaClient.emit).toBeCalledTimes(4);
-
-      const globalEmitSpyCall = globalEmitSpy.mock.calls.find(
-        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
-        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
-        call => call[1].name === fileState.name,
-      );
-      expect(globalEmitSpyCall).toEqual(['file-added', fileState]);
-
-      const tenantMediaClientEmitCall = asMock(
-        tenantMediaClient.emit,
-      ).mock.calls.find(call => call[1].name === fileState.name);
-      expect(tenantMediaClientEmitCall).toEqual(['file-added', fileState]);
-    });
-
     it('should not modify client file state', async () => {
       const setupResult = setup();
       // We take client state from client observable, create new tenant state with all the client data,
