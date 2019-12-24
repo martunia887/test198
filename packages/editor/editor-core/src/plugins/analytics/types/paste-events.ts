@@ -110,12 +110,12 @@ export type PASTE_ACTION_SUBJECT_ID =
   | ACTION_SUBJECT_ID.PASTE_TABLE_ROW
   | ACTION_SUBJECT_ID.PASTE_TASK_LIST;
 
-type PasteBaseAEP<Action, Attributes> = TrackAEP<
+type PasteBaseAEP<Action, Attributes, NonPrivacySafeAttributes> = TrackAEP<
   Action,
   ACTION_SUBJECT.DOCUMENT,
   PASTE_ACTION_SUBJECT_ID,
   Attributes,
-  undefined
+  NonPrivacySafeAttributes
 >;
 
 type PasteAEP = PasteBaseAEP<
@@ -126,7 +126,11 @@ type PasteAEP = PasteBaseAEP<
     content: PasteContent;
     source?: PasteSource;
     pasteSize: number;
-  }
+  },
+  | {
+      linkDomain: string[];
+    }
+  | undefined
 >;
 
 type PasteAsPlainAEP = PasteBaseAEP<
@@ -134,7 +138,8 @@ type PasteAsPlainAEP = PasteBaseAEP<
   {
     inputMethod: string;
     pasteSize: number;
-  }
+  },
+  undefined
 >;
 
 export type PasteEventPayload = PasteAEP | PasteAsPlainAEP;

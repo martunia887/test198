@@ -1509,7 +1509,7 @@ describe('paste plugins', () => {
 
       /**
        * Table with the given format
-       * | description | contentType | html paste event | plain paste event
+       * | description | contentType | html paste event | plain paste event | link domain (if any) |
        */
       test.each([
         [
@@ -1517,82 +1517,109 @@ describe('paste plugins', () => {
           'text',
           "<meta charset='utf-8'><p data-pm-slice='1 1 []'>hello world</p>",
           'www.google.com',
+          [],
         ],
         [
           'an url',
           'url',
           "<meta charset='utf-8'><p data-pm-slice='1 1 []'><a href='http://www.google.com'>www.google.com</a></p>",
           'www.google.com',
+          ['google.com'],
         ],
         [
           'only an url',
           'url',
           "<meta charset='utf-8'><a href='http://www.google.com'>www.google.com</a>",
           'www.google.com',
+          ['google.com'],
         ],
         [
           'a mixed event',
           'mixed',
-          "<meta charset='utf-8'><ul><li>Hello World</li></ul><p>Hello World</p",
+          "<meta charset='utf-8'><ul><li>Hello World</li></ul><p>Hello World</p>",
           'Hello World',
+          [],
+        ],
+        [
+          'a mixed event with a link',
+          'mixed',
+          "<meta charset='utf-8'><ul><li><a href='http://atlassian.com'>Hello World</a></li></ul><p>Hello World</p>",
+          'Hello World',
+          ['atlassian.com'],
+        ],
+        [
+          'a mixed event with multiple links',
+          'mixed',
+          "<meta charset='utf-8'><ul><li><a href='http://atlassian.com'>Hello World</a></li><li><a href='http://foo.bar.net'>Hello World</a></li></ul><p>Hello World</p>",
+          'Hello World',
+          ['atlassian.com', 'foo.bar.net'],
         ],
         [
           'a bullet list',
           'bulletList',
           "<meta charset='utf-8'><ul><li>Hello World</li></ul>",
           'Hello World',
+          [],
         ],
         [
           'an ordered list',
           'orderedList',
           "<meta charset='utf-8'><ol><li>Hello World</li></ol>",
           'Hello World',
+          [],
         ],
         [
           'a heading',
           'heading',
           "<meta charset='utf-8'><h1>Hello World</h1>",
           '',
+          [],
         ],
         [
           'a blockquote',
           'blockquote',
           "<meta charset='utf-8'><blockquote><p>Hello World</p></blockquote>",
           'Hello World',
+          [],
         ],
         [
           'a code',
           'codeBlock',
           '<pre>code line 1\ncode line 2</pre>',
           'code line 1\ncode line 2',
+          [],
         ],
         [
           'a media single',
           'mediaSingle',
           `<meta charset='utf-8'><div data-node-type="mediaSingle" data-layout="center" data-width=""><div data-id="9b5c6412-6de0-42cb-837f-bc08c24b4383" data-node-type="media" data-type="file" data-collection="MediaServicesSample" data-width="490" data-height="288" title="Attachment" style="display: inline-block; border-radius: 3px; background: #EBECF0; box-shadow: 0 1px 1px rgba(9, 30, 66, 0.2), 0 0 1px 0 rgba(9, 30, 66, 0.24);" data-file-name="image-20190325-222039.png" data-file-size="29502" data-file-mime-type="image/png"></div></div>`,
           '',
+          [],
         ],
         [
           'a table',
           'table',
           `<meta charset='utf-8'><table><tbody><tr><td><p>foo</p></td></tr></tbody></table>`,
           'foo',
+          [],
         ],
         [
           'a decision list',
           'decisionList',
           `<meta charset='utf-8'><ol data-node-type="decisionList" data-decision-list-local-id="2b1a545e-a76d-4b9a-b0a8-c5996e51e32f" style="list-style: none; padding-left: 0"><li data-decision-local-id="f9ad0cf0-42e6-4c62-8076-7981b3fab3f7" data-decision-state="DECIDED">foo</li></ol>`,
           'foo',
+          [],
         ],
         [
           'a task item',
           'taskItem',
           `<meta charset='utf-8'><div data-node-type="actionList" data-task-list-local-id="c0060bd1-ee91-47e7-b55e-4f45bd2e0b0b" style="list-style: none; padding-left: 0"><div data-task-local-id="1803f18d-1fad-4998-81e4-644ed22f3929" data-task-state="TODO"> foo</div></div>`,
           'foo',
+          [],
         ],
       ])(
         'should create analytics event for paste %s',
-        (_, content, html, plain = '') => {
+        (_, content, html, plain = '', linkDomain = []) => {
           dispatchPasteEvent(editorView, { html, plain });
 
           expect(createAnalyticsEvent).toHaveBeenCalledWith({
@@ -1606,6 +1633,9 @@ describe('paste plugins', () => {
               source: 'uncategorized',
               type: 'richText',
             }),
+            ...(linkDomain && linkDomain.length > 0
+              ? { nonPrivacySafeAttributes: { linkDomain } }
+              : {}),
           });
         },
       );

@@ -31,6 +31,7 @@ import { Command } from '../../../types';
 import { pipe } from '../../../utils';
 import { EditorState } from 'prosemirror-state';
 import { findParentNode } from 'prosemirror-utils';
+import { mapSlice } from '../../../utils/slice';
 
 type PasteContext = {
   type: PasteType;
@@ -182,6 +183,7 @@ function createPasteAsPlainPayload(
 function createPastePayload(
   actionSubjectId: PASTE_ACTION_SUBJECT_ID,
   attributes: PastePayloadAttributes,
+  linkDomain?: string[],
 ): AnalyticsEventPayload {
   return {
     action: ACTION.PASTED,
@@ -192,6 +194,9 @@ function createPastePayload(
       inputMethod: INPUT_METHOD.KEYBOARD,
       ...attributes,
     },
+    ...(linkDomain && linkDomain.length > 0
+      ? { nonPrivacySafeAttributes: { linkDomain } }
+      : {}),
   };
 }
 
@@ -224,13 +229,39 @@ export function createPasteAnalyticsPayload(
 
   const pasteSize = slice.size;
   const content = getContent(view.state, slice);
+  const linkUrls: string[] = [];
 
-  return createPastePayload(actionSubjectId, {
-    type: pasteContext.type,
-    pasteSize,
-    content,
-    source,
+  // If we have a link among the pasted content, grab the
+  // domain and send it up with the analytics event
+  if (content === PasteContents.url || content === PasteContents.mixed) {
+    mapSlice(slice, node => {
+      const linkMark = node.marks.find(mark => mark.type.name === 'link');
+      if (linkMark) {
+        linkUrls.push(linkMark.attrs.href);
+      }
+      return node;
+    });
+  }
+
+  const linkDomains = linkUrls.map(url => {
+    // Remove protocol and www., if either exists
+    const withoutProtocol = url.toLowerCase().replace(/^(.*):\/\//, '');
+    const withoutWWW = withoutProtocol.replace(/^(www\.)/, '');
+
+    // Remove port, fragment, path, query string
+    return withoutWWW.replace(/[:\/?#](.*)$/, '');
   });
+
+  return createPastePayload(
+    actionSubjectId,
+    {
+      type: pasteContext.type,
+      pasteSize,
+      content,
+      source,
+    },
+    linkDomains,
+  );
 }
 
 // TODO: ED-6612 We should not dispatch only analytics, it's preferred to wrap each command with his own analytics.
