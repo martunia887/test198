@@ -4,7 +4,6 @@ import {
   getFileStreamsCache,
   ProcessedFileState,
   ProcessingFileState,
-  FileState,
   createFileStateSubject,
 } from '@atlaskit/media-client';
 import {
