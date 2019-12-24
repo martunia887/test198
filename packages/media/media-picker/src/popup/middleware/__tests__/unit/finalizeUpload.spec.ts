@@ -293,9 +293,7 @@ describe('finalizeUploadMiddleware', () => {
 
   it('should not update file cache if it is empty when copy file with token request fails', async () => {
     const cache = getFileStreamsCache();
-    const { store, action } = setup({
-      config: { uploadParams: { collection: 'some-tenant-collection' } },
-    });
+    const { store, action } = setup();
     const cacheSetSpy = jest.spyOn(cache, 'set');
     jest
       .spyOn(MediaClientModule, 'MediaStore' as any)
