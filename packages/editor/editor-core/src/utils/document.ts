@@ -13,12 +13,7 @@ const FALSE_POSITIVE_MARKS = ['code', 'alignment', 'indentation'];
  * Checks if node is an empty paragraph.
  */
 export function isEmptyParagraph(node?: Node | null): boolean {
-  return (
-    node != null &&
-    node.type.name === 'paragraph' &&
-    !node.childCount &&
-    node.nodeSize === 2
-  );
+  return Boolean(node) && node.type.name === 'paragraph' && !node.childCount;
 }
 
 /**
@@ -99,20 +94,18 @@ export function isEmptyDocument(node: Node): boolean {
 
 // Checks to see if the parent node is the document, ie not contained within another entity
 export function hasDocAsParent(anchor: ResolvedPos): boolean {
-  const parentNode = anchor.node(-1);
-
-  return parentNode.type.name === 'doc';
+  return anchor.depth === 1;
 }
 
 export function isInEmptyLine(state: EditorState) {
-  const { doc, selection } = state;
+  const { selection } = state;
   const { $cursor, $anchor } = selection as TextSelection;
 
   if (!$cursor) {
     return false;
   }
 
-  const node = doc.nodeAt($cursor.pos - 1);
+  const node = $cursor.node();
 
   if (!node) {
     return false;

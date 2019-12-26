@@ -103,14 +103,14 @@ function createGetPlaceholderHintMessage(
   placeholderHints?: string[],
 ): () => string | undefined {
   let index = 0;
-  const length = placeholderHints ? placeholderHints.length : 0;
+
   return () => {
+    const length = placeholderHints ? placeholderHints.length : 0;
     if (length === 0) {
       return;
     }
 
-    // if length !== 0 placeholderHints always exist
-    const placeholder = placeholderHints![index++];
+    const placeholder = placeholderHints[index++];
     index = index % length;
 
     return placeholder;
