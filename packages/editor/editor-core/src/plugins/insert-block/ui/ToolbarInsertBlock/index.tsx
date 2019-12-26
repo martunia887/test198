@@ -682,6 +682,8 @@ class ToolbarInsertBlock extends React.PureComponent<
         content: labelDate,
         value: { name: 'date' },
         elemBefore: <DateIcon label={labelDate} />,
+        elemAfter: <Shortcut>//</Shortcut>,
+        shortcut: '//',
       });
     }
 
