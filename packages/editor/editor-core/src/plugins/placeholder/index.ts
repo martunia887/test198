@@ -6,6 +6,16 @@ import { isInEmptyLine, isEmptyDocument } from '../../utils/document';
 import { placeHolderClassName } from './styles';
 export const pluginKey = new PluginKey('placeholderPlugin');
 
+interface PlaceHolderState {
+  hasPlaceholder: boolean;
+  placeholderText?: string;
+  pos?: number;
+}
+
+function getPlaceholderState(editorState: EditorState): PlaceHolderState {
+  return pluginKey.getState(editorState);
+}
+
 export function createPlaceholderDecoration(
   doc: Node,
   placeholderText: string,
@@ -22,10 +32,6 @@ export function createPlaceholderDecoration(
       key: 'placeholder',
     }),
   ]);
-}
-
-function getPlaceholderState(editorState: EditorState): PlaceHolderState {
-  return pluginKey.getState(editorState);
 }
 
 function removePlaceholderIfData(view: EditorView, event: Event) {
@@ -71,11 +77,6 @@ function setPlaceHolderState(
     placeholderText,
     pos: pos ? pos : 1,
   };
-}
-interface PlaceHolderState {
-  hasPlaceholder: boolean;
-  placeholderText?: string;
-  pos?: number;
 }
 
 const emptyPlaceholder: PlaceHolderState = { hasPlaceholder: false };
