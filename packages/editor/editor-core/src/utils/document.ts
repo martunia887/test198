@@ -101,8 +101,7 @@ export function isEmptyDocument(node: Node): boolean {
 export function hasDocAsParent(anchor: ResolvedPos): boolean {
   const parentNode = anchor.node(-1);
 
-  if (parentNode.type.name !== 'doc') return false;
-  return true;
+  return parentNode.type.name === 'doc';
 }
 
 export function isInEmptyLine(state: EditorState) {
