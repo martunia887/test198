@@ -244,7 +244,7 @@ export interface EditorProps {
   // Default placeholder text to be displayed if the content is empty. e.g. 'Add a comment...'
   placeholder?: string;
 
-  // Default placeholder text to be displayed if the content is empty. e.g. 'Type / to insert content'
+  // Default placeholder text to be displayed if line is empty but the content is not. e.g. 'Type / to insert content'
   placeholderHints?: string[];
 
   // Set the default editor content.

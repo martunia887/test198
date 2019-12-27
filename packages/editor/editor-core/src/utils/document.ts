@@ -93,8 +93,8 @@ export function isEmptyDocument(node: Node): boolean {
 }
 
 // Checks to see if the parent node is the document, ie not contained within another entity
-export function hasDocAsParent(anchor: ResolvedPos): boolean {
-  return anchor.depth === 1;
+export function hasDocAsParent($anchor: ResolvedPos): boolean {
+  return $anchor.depth === 1;
 }
 
 export function isInEmptyLine(state: EditorState) {
