@@ -433,6 +433,17 @@ class ToolbarInsertBlock extends React.PureComponent<
     }
   };
 
+  private getShortcutBlock = (blockType: BlockType) => {
+    switch (blockType.name) {
+      case 'blockquote':
+        return '>';
+      case 'codeblock':
+        return '```';
+      default:
+        return tooltip(findKeymapByDescription(blockType.title.defaultMessage));
+    }
+  };
+
   render() {
     const { isOpen } = this.state;
     const {
@@ -631,9 +642,7 @@ class ToolbarInsertBlock extends React.PureComponent<
         const BlockTypeIcon =
           blockTypeIcons[blockType.name as keyof typeof blockTypeIcons];
         const labelBlock = formatMessage(blockType.title);
-        const shortcutBlock = tooltip(
-          findKeymapByDescription(blockType.title.defaultMessage),
-        );
+        const shortcutBlock = this.getShortcutBlock(blockType);
         items.push({
           content: labelBlock,
           value: blockType,
@@ -682,6 +691,8 @@ class ToolbarInsertBlock extends React.PureComponent<
         content: labelDate,
         value: { name: 'date' },
         elemBefore: <DateIcon label={labelDate} />,
+        elemAfter: <Shortcut>//</Shortcut>,
+        shortcut: '//',
       });
     }
 
