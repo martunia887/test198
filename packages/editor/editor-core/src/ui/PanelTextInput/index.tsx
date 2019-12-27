@@ -114,23 +114,10 @@ export default class PanelTextInput extends PureComponent<Props, State> {
       onSubmit(this.input!.value);
     } else if (e.keyCode === 27 && onCancel) {
       onCancel(e);
-    } else if (
-      typeof onUndo === 'function' &&
-      e.key === 'z' &&
-      // cmd + z for mac
-      ((browserData.mac && e.metaKey && !e.shiftKey) ||
-        // ctrl + z for non-mac
-        (!browserData.mac && e.ctrlKey))
-    ) {
+    } else if (typeof onUndo === 'function' && this.isUndoEvent(e)) {
       e.preventDefault();
       onUndo();
-    } else if (
-      typeof onRedo === 'function' &&
-      // cmd + shift + z for mac
-      ((browserData.mac && e.metaKey && e.shiftKey && e.key === 'z') ||
-        // ctrl + y for non-mac
-        (!browserData.mac && e.ctrlKey && e.key === 'y'))
-    ) {
+    } else if (typeof onRedo === 'function' && this.isRedoEvent(e)) {
       e.preventDefault();
       onRedo();
     }
@@ -139,6 +126,27 @@ export default class PanelTextInput extends PureComponent<Props, State> {
       this.props.onKeyDown(e);
     }
   };
+
+  private isUndoEvent(event: KeyboardEvent<any>) {
+    return (
+      event.key === 'z' &&
+      // cmd + z for mac
+      ((browserData.mac && event.metaKey && !event.shiftKey) ||
+        // ctrl + z for non-mac
+        (!browserData.mac && event.ctrlKey))
+    );
+  }
+
+  private isRedoEvent(event: KeyboardEvent<any>) {
+    return (
+      (browserData.mac &&
+        event.metaKey &&
+        event.shiftKey &&
+        event.key === 'z') ||
+      // ctrl + y for non-mac
+      (!browserData.mac && event.ctrlKey && event.key === 'y')
+    );
+  }
 
   private handleRef = (input: HTMLInputElement | null) => {
     if (input instanceof HTMLInputElement) {

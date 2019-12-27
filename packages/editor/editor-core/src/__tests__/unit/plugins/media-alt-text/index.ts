@@ -137,7 +137,7 @@ describe('media alt text', () => {
       expect(getPluginState(view.state).isAltTextEditorOpen).toBeFalsy();
     });
 
-    describe('via prosemirror history trancation', () => {
+    describe('via prosemirror history transaction', () => {
       it('does not set isAltTextEditorOpen to false', () => {
         getPluginState(view.state).isAltTextEditorOpen = true;
         const historyKey = ({

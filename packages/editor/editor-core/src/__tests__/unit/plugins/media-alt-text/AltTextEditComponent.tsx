@@ -41,6 +41,15 @@ jest.mock('prosemirror-inputrules', () => ({
 describe('AltTextEditComponent', () => {
   let createAnalyticsEvent: CreateUIAnalyticsEvent;
   let wrapper: ReactWrapper<InjectedIntlProps, AltTextEditComponentState, any>;
+  const mockView = jest.fn(
+    () =>
+      (({
+        state: { plugins: [] },
+        dispatch: jest.fn(),
+        someProp: jest.fn(),
+      } as { state: {}; dispatch: Function }) as EditorView),
+  );
+  const view = new mockView();
   beforeEach(() => {
     jest.clearAllMocks();
     createAnalyticsEvent = jest.fn().mockReturnValue({ fire() {} });
@@ -52,16 +61,6 @@ describe('AltTextEditComponent', () => {
       wrapper.unmount();
     }
   });
-
-  const mockView = jest.fn(
-    () =>
-      (({
-        state: { plugins: [] },
-        dispatch: jest.fn(),
-        someProp: jest.fn(),
-      } as { state: {}; dispatch: Function }) as EditorView),
-  );
-  const view = new mockView();
 
   describe('fires respective alt text analytics events', () => {
     const defaultMediaEvent = {
@@ -311,15 +310,5 @@ describe('AltTextEditComponent', () => {
         view.dispatch,
       );
     });
-  });
-
-  it('does not close alt text editor on undo/redo', () => {
-    const panelTextInput = wrapper.find(PanelTextInput);
-    (panelTextInput.prop('onUndo') as Function)();
-    expect(mockPmHistory.undo).toHaveBeenCalledWith(
-      view.state,
-      view.dispatch,
-      undefined,
-    );
   });
 });
