@@ -11,6 +11,9 @@ import Button from '../../../../floating-toolbar/ui/Button';
 import PanelTextInput from '../../../../../ui/PanelTextInput';
 import * as keymaps from '../../../../../keymaps';
 import { closeMediaAltTextMenu, updateAltText } from '../commands';
+import { undo, redo } from 'prosemirror-history';
+import { undoInputRule } from 'prosemirror-inputrules';
+import { chainCommands } from 'prosemirror-commands';
 import {
   withAnalyticsEvents,
   WithAnalyticsEventsProps,
@@ -25,6 +28,8 @@ import {
   FireAnalyticsCallback,
 } from '../../../../analytics';
 import { RECENT_SEARCH_WIDTH_IN_PX } from '../../../../../ui/RecentSearch/ToolbarComponents';
+
+const tryUndoInputRuleElseUndoHistory = chainCommands(undoInputRule, undo);
 
 export const CONTAINER_WIDTH_IN_PX = RECENT_SEARCH_WIDTH_IN_PX;
 export const MAX_ALT_TEXT_LENGTH = 510; // double tweet length
@@ -135,6 +140,8 @@ export class AltTextEditComponent extends React.Component<
             />
           </ButtonWrapper>
           <PanelTextInput
+            onUndo={this.onUndo}
+            onRedo={this.onRedo}
             testId="alt-text-input"
             placeholder={formatMessage(messages.placeholder)}
             defaultValue={value ? value : ''}
@@ -168,6 +175,16 @@ export class AltTextEditComponent extends React.Component<
   private closeMediaAltTextMenu = () => {
     const { view } = this.props;
     closeMediaAltTextMenu(view.state, view.dispatch);
+  };
+
+  private onUndo = () => {
+    const { view } = this.props;
+    tryUndoInputRuleElseUndoHistory(view.state, view.dispatch);
+  };
+
+  private onRedo = () => {
+    const { view } = this.props;
+    redo(view.state, view.dispatch);
   };
 
   private fireAnalytics(actionType: MediaAltTextActionType) {

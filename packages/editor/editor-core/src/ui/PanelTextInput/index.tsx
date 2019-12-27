@@ -2,6 +2,7 @@ import * as React from 'react';
 import { KeyboardEvent, PureComponent } from 'react';
 import { Input } from './styles';
 import { FocusEvent } from 'react';
+import browserData from '@atlaskit/editor-common/src/utils/browser';
 
 export interface Props {
   autoFocus?: boolean | FocusOptions;
@@ -12,6 +13,10 @@ export interface Props {
   placeholder?: string;
   onMouseDown?: Function;
   onKeyDown?: (e: KeyboardEvent<any>) => void;
+  // overrides default browser undo behaviour (cmd/ctrl + z) with that function
+  onUndo?: Function;
+  // overrides default browser redo behaviour (cm + shift + z / ctrl + y) with that function
+  onRedo?: Function;
   onBlur?: Function;
   width?: number;
   maxLength?: number;
@@ -103,11 +108,31 @@ export default class PanelTextInput extends PureComponent<Props, State> {
   };
 
   private handleKeydown = (e: KeyboardEvent<any>) => {
-    if (e.keyCode === 13 && this.props.onSubmit) {
+    const { onUndo, onRedo, onSubmit, onCancel } = this.props;
+    if (e.keyCode === 13 && onSubmit) {
       e.preventDefault(); // Prevent from submitting if an editor is inside a form.
-      this.props.onSubmit(this.input!.value);
-    } else if (e.keyCode === 27 && this.props.onCancel) {
-      this.props.onCancel(e);
+      onSubmit(this.input!.value);
+    } else if (e.keyCode === 27 && onCancel) {
+      onCancel(e);
+    } else if (
+      typeof onUndo === 'function' &&
+      e.key === 'z' &&
+      // cmd + z for mac
+      ((browserData.mac && e.metaKey && !e.shiftKey) ||
+        // ctrl + z for non-mac
+        (!browserData.mac && e.ctrlKey))
+    ) {
+      e.preventDefault();
+      onUndo();
+    } else if (
+      typeof onRedo === 'function' &&
+      // cmd + shift + z for mac
+      ((browserData.mac && e.metaKey && e.shiftKey && e.key === 'z') ||
+        // ctrl + y for non-mac
+        (!browserData.mac && e.ctrlKey && e.key === 'y'))
+    ) {
+      e.preventDefault();
+      onRedo();
     }
 
     if (this.props.onKeyDown) {

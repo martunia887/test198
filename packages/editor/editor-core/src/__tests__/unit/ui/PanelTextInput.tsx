@@ -1,11 +1,23 @@
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-
+import browserData from '@atlaskit/editor-common/src/utils/browser';
 import PanelTextInput from '../../../ui/PanelTextInput';
 
 const noop = () => {};
 
 describe('@atlaskit/editor-core/ui/PanelTextInput', () => {
+  let panel: ReactWrapper;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    if (panel && panel.length) {
+      panel.unmount();
+    }
+  });
+
   beforeAll(() => {
     jest.useFakeTimers();
   });
@@ -16,63 +28,115 @@ describe('@atlaskit/editor-core/ui/PanelTextInput', () => {
 
   it('should call onSubmit when ENTER key is pressed', () => {
     const onSubmitHandler = jest.fn();
-    const panel = mount(<PanelTextInput onSubmit={onSubmitHandler} />);
+    panel = mount(<PanelTextInput onSubmit={onSubmitHandler} />);
 
     const input = panel.find('input');
     (input.getDOMNode() as any).value = 'http://atlassian.com';
     input.simulate('keydown', { which: 'enter', keyCode: 13 });
 
     expect(onSubmitHandler).toHaveBeenCalledWith('http://atlassian.com');
-    panel.unmount();
   });
 
   it('should prevent KeyDown event if ENTER key is pressed', () => {
     const onSubmitHandler = jest.fn();
     const preventDefault = jest.fn();
-    const panel = mount(<PanelTextInput onSubmit={onSubmitHandler} />);
+    panel = mount(<PanelTextInput onSubmit={onSubmitHandler} />);
 
     const input = panel.find('input');
     input.simulate('keydown', { which: 'enter', keyCode: 13, preventDefault });
 
     expect(preventDefault).toHaveBeenCalledTimes(1);
-    panel.unmount();
   });
 
   it('should not prevent KeyDown event if any other key is pressed', () => {
     const preventDefault = jest.fn();
-    const panel = mount(<PanelTextInput onSubmit={noop} />);
+    panel = mount(<PanelTextInput onSubmit={noop} />);
 
     const input = panel.find('input');
     input.simulate('keydown', { which: 'a', keyCode: 65, preventDefault });
 
     expect(preventDefault).not.toHaveBeenCalled();
-    panel.unmount();
   });
 
   it('should call onCancel when ESC key is pressed', () => {
     const onCancelHandler = jest.fn();
-    const panel = mount(<PanelTextInput onCancel={onCancelHandler} />);
+    panel = mount(<PanelTextInput onCancel={onCancelHandler} />);
 
     const input = panel.find('input');
     input.simulate('keydown', { which: 'esc', keyCode: 27 });
 
     expect(onCancelHandler).toHaveBeenCalled();
-    panel.unmount();
   });
 
   it('should call onKeyDown when a key is pressed', () => {
     const onKeyDownHandler = jest.fn();
-    const panel = mount(<PanelTextInput onKeyDown={onKeyDownHandler} />);
+    panel = mount(<PanelTextInput onKeyDown={onKeyDownHandler} />);
 
     const input = panel.find('input');
     input.simulate('keydown', { which: 'a', keyCode: 65 });
 
     expect(onKeyDownHandler).toHaveBeenCalled();
-    panel.unmount();
+  });
+
+  describe('given', () => {
+    let onUndoSpy: jest.Mock, onRedoSpy: jest.Mock;
+    beforeEach(() => {
+      onUndoSpy = jest.fn();
+      onRedoSpy = jest.fn();
+      panel = mount(<PanelTextInput onUndo={onUndoSpy} onRedo={onRedoSpy} />);
+    });
+
+    it('on ctrl+z calls onUndo handler', () => {
+      panel.find('input').simulate('keydown', {
+        key: 'z',
+        ctrlKey: true,
+      });
+      expect(onUndoSpy).toHaveBeenCalled();
+    });
+
+    it('on ctrl+y calls onRedo handler', () => {
+      panel.find('input').simulate('keydown', {
+        key: 'y',
+        ctrlKey: true,
+      });
+      expect(onRedoSpy).toHaveBeenCalled();
+    });
+
+    describe('on mac platform', () => {
+      beforeEach(() => {
+        browserData.mac = true;
+      });
+
+      it('on cmd+z calls onUndo handler', () => {
+        panel.find('input').simulate('keydown', {
+          key: 'z',
+          metaKey: true,
+        });
+        expect(onUndoSpy).toHaveBeenCalled();
+      });
+
+      it('on cmd+shift+z calls onRedo handler', () => {
+        panel.find('input').simulate('keydown', {
+          key: 'z',
+          shiftKey: true,
+          metaKey: true,
+        });
+        expect(onRedoSpy).toHaveBeenCalled();
+      });
+
+      it('should not undo if cmd+z is pressed with shift', () => {
+        panel.find('input').simulate('keydown', {
+          key: 'z',
+          shiftKey: true,
+          metaKey: true,
+        });
+        expect(onUndoSpy).not.toHaveBeenCalled();
+      });
+    });
   });
 
   it('should focus input if autoFocus prop set to true', () => {
-    const panel = mount(<PanelTextInput autoFocus />);
+    panel = mount(<PanelTextInput autoFocus />);
     const inputNode: any = panel.find('input').instance();
     jest.spyOn(inputNode, 'focus');
     jest.runAllTimers();
@@ -80,7 +144,7 @@ describe('@atlaskit/editor-core/ui/PanelTextInput', () => {
   });
 
   it('should focus input passing through focus options if autoFocus prop set to options', () => {
-    const panel = mount(<PanelTextInput autoFocus={{ preventScroll: true }} />);
+    panel = mount(<PanelTextInput autoFocus={{ preventScroll: true }} />);
     const inputNode: any = panel.find('input').instance();
     jest.spyOn(inputNode, 'focus');
     jest.runAllTimers();

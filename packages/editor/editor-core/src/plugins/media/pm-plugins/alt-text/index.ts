@@ -2,6 +2,7 @@ import { Plugin, PluginKey } from 'prosemirror-state';
 import { PMPluginFactoryParams } from '../../../../types';
 import { pluginFactory } from '../../../../utils/plugin-state-factory';
 import reducer from './reducer';
+import { pmHistoryPluginKey } from '../../../history/pm-history-types';
 
 export const pluginKey = new PluginKey('mediaAltTextPlugin');
 
@@ -9,7 +10,11 @@ const { createPluginState, createCommand, getPluginState } = pluginFactory(
   pluginKey,
   reducer,
   {
-    onSelectionChanged: () => {
+    onSelectionChanged: (tr, newState) => {
+      // dont close alt text for undo redo trancastions (if trancastion comes from prosemirror-history)
+      if (tr.getMeta(pmHistoryPluginKey)) {
+        return newState;
+      }
       return {
         isAltTextEditorOpen: false,
       };

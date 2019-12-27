@@ -19,7 +19,9 @@ import {
 } from '../../../../plugins/media/pm-plugins/alt-text/commands';
 import { getPluginState } from '../../../../plugins/media/pm-plugins/alt-text';
 import { setGapCursorSelection } from '../../../../utils';
-import { Side } from '../../../../plugins/gap-cursor';
+import { Side, GapCursorSelection } from '../../../../plugins/gap-cursor';
+import { pmHistoryPluginKey } from '../../../../plugins/history/pm-history-types';
+import { PluginKey } from 'prosemirror-state';
 
 describe('media alt text', () => {
   const createEditor = createEditorFactory<MediaEditorState>();
@@ -104,7 +106,7 @@ describe('media alt text', () => {
     });
   });
 
-  describe('when the selection change', () => {
+  describe('when the selection is changed', () => {
     let view: EditorView;
     let refs: Refs;
     const defaultDoc = doc(
@@ -133,6 +135,24 @@ describe('media alt text', () => {
       setGapCursorSelection(view, refs.nextPos, Side.RIGHT);
 
       expect(getPluginState(view.state).isAltTextEditorOpen).toBeFalsy();
+    });
+
+    describe('via prosemirror history trancation', () => {
+      it('does not set isAltTextEditorOpen to false', () => {
+        getPluginState(view.state).isAltTextEditorOpen = true;
+        const historyKey = ({
+          key: pmHistoryPluginKey,
+        } as unknown) as PluginKey;
+        const setSelectionTransaction = view.state.tr.setSelection(
+          new GapCursorSelection(
+            view.state.doc.resolve(refs.nextPos),
+            Side.RIGHT,
+          ),
+        );
+        setSelectionTransaction.setMeta(historyKey, {});
+        view.dispatch(setSelectionTransaction);
+        expect(getPluginState(view.state).isAltTextEditorOpen).toBe(true);
+      });
     });
 
     describe('to another media single', () => {
@@ -167,9 +187,7 @@ describe('media alt text', () => {
       });
       it('should set isAltTextEditorOpen to false', () => {
         getPluginState(view.state).isAltTextEditorOpen = true;
-
         setGapCursorSelection(view, refs.nextPos, Side.RIGHT);
-
         expect(getPluginState(view.state).isAltTextEditorOpen).toBeFalsy();
       });
     });
