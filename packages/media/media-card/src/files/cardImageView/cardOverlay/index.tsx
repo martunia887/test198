@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MouseEvent, Component, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
 import cx from 'classnames';

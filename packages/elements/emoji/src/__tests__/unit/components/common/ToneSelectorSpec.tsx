@@ -1,5 +1,5 @@
 import * as sinon from 'sinon';
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 
 import ToneSelector from '../../../../components/common/ToneSelector';

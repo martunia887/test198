@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Frame, FrameViewProps } from '../InlineCard/Frame';
 
 export class CardLinkView extends React.PureComponent<FrameViewProps> {

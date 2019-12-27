@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import styled from 'styled-components';
 import { mention, emoji } from '@atlaskit/util-data-test';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MouseEvent } from 'react';
 import { FileDetails, ImageResizeMode } from '@atlaskit/media-client';
 import {

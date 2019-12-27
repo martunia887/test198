@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Dropzone } from '@atlaskit/media-picker';
 import PickerFacadeProvider from './PickerFacadeProvider';
 import { MediaPluginState } from '../../pm-plugins/main';

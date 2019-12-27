@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IconAndTitleLayout } from '../IconAndTitleLayout';
 import Button from '@atlaskit/button';
 import { Frame } from '../Frame';

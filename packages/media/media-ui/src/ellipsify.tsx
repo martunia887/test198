@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled, { ThemedOuterStyledProps } from 'styled-components';
 import * as exenv from 'exenv';
 export interface WrapperProps {

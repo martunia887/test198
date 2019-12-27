@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component, SyntheticEvent, ReactElement } from 'react';
 import { InactivityDetectorWrapper } from './styled';
 import { findParentByClassname, hideControlsClassName } from '..';

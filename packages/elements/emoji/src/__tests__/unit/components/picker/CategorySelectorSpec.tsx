@@ -1,6 +1,6 @@
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { messages } from '../../../../components/i18n';
 import { CategoryDescriptionMap } from '../../../../components/picker/categories';
 import CategorySelector, {

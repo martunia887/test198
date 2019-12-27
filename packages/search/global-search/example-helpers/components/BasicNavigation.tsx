@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Navigation from '@atlaskit/global-navigation';
 import { AtlassianIcon } from '@atlaskit/logo';
 

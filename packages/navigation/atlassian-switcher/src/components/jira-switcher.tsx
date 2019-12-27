@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Messages } from 'react-intl';
 import Switcher from '../primitives/themed-switcher';
 import {

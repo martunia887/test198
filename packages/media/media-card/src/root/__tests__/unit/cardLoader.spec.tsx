@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { fakeMediaClient, nextTick } from '@atlaskit/media-test-helpers';
 import { FileIdentifier } from '@atlaskit/media-client';

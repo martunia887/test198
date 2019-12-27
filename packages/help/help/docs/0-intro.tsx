@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   md,
   code,
@@ -23,7 +23,7 @@ export default md`
   ## Usage
 
   ${code`
-  import * as React from 'react';
+  import React from 'react';
   import { AnalyticsListener } from '@atlaskit/analytics-next';
   import Page from '@atlaskit/page';
   

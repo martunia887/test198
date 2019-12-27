@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { GlobalQuickSearch, Props } from '../../src';
 import { randomSpaceIconUrl } from '../mocks/mockData';
 import { DEVELOPMENT_LOGGER } from './DevelopmentLogger';

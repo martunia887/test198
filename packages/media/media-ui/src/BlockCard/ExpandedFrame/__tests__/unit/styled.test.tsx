@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { shallow } from 'enzyme';
 import { N30 } from '@atlaskit/theme/colors';
 import { Wrapper, LinkWrapper, IconWrapper, TextWrapper } from '../../styled';

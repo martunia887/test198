@@ -7,7 +7,7 @@ import {
   DevPreviewWarning,
 } from '@atlaskit/docs';
 
-import * as React from 'react';
+import React from 'react';
 
 export default md`
   ${(

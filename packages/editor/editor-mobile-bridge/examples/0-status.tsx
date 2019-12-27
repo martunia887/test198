@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Color as StatusColor } from '@atlaskit/status/element';
 import Form, { Field, FormFooter } from '@atlaskit/form';

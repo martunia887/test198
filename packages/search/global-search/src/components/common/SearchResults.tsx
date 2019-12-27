@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import PreQueryState from './PreQueryState';
 import { isEmpty } from '../SearchResultsUtil';
 import { PostQueryAnalyticsComponent } from './ScreenAnalyticsHelper';

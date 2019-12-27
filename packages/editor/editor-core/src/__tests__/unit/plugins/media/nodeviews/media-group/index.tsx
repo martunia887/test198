@@ -1,7 +1,7 @@
 // NOTE: for the purposes of this test we are mocking MediaNodeUpdater using __mocks__ version
 jest.mock('../../../../../../plugins/media/nodeviews/mediaNodeUpdater');
 
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { EditorView } from 'prosemirror-view';
 import {

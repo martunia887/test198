@@ -1,5 +1,5 @@
 jest.mock('@atlaskit/media-client');
-import * as React from 'react';
+import React from 'react';
 import {
   ProviderFactory,
   ContextIdentifierProvider,

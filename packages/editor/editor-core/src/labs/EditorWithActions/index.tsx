@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
 import Editor, { EditorProps } from '../../editor';
 import EditorContext from '../../ui/EditorContext';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { UnwrappedAnalyticsEventFiredOnMount } from '../../AnalyticsEventFiredOnMount';
 import { GasPayload } from '@atlaskit/analytics-gas-types';
 import { mount } from 'enzyme';

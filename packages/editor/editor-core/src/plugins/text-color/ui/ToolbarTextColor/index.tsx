@@ -1,5 +1,5 @@
 import { EditorView } from 'prosemirror-view';
-import * as React from 'react';
+import React from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';

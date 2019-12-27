@@ -1,5 +1,5 @@
 import Tooltip from '@atlaskit/tooltip';
-import * as React from 'react';
+import React from 'react';
 import { NoAccessWarning } from '../util/i18n';
 
 type Props = {

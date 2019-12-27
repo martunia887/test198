@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { layers } from '@atlaskit/theme/constants';
 import Spinner from '@atlaskit/spinner';

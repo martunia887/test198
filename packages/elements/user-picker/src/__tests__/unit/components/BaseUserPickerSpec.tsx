@@ -3,7 +3,7 @@ import Select from '@atlaskit/select';
 import { ReactWrapper } from 'enzyme';
 import { mountWithIntl, shallowWithIntl } from 'enzyme-react-intl';
 import * as debounce from 'lodash.debounce';
-import * as React from 'react';
+import React from 'react';
 import { BaseUserPicker } from '../../../components/BaseUserPicker';
 import { getComponents } from '../../../components/components';
 import * as analytics from '../../../analytics';

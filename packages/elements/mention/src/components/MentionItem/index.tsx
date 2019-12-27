@@ -2,7 +2,7 @@ import Avatar from '@atlaskit/avatar';
 import LockCircleIcon from '@atlaskit/icon/glyph/lock-circle';
 import Lozenge from '@atlaskit/lozenge';
 import { colors } from '@atlaskit/theme';
-import * as React from 'react';
+import React from 'react';
 import {
   isRestricted,
   MentionDescription,

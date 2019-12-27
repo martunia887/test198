@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { md, Example, code, AtlassianInternalWarning } from '@atlaskit/docs';
 
 import PubSubExample from '../examples/00-client';

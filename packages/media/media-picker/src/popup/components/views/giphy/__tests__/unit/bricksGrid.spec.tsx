@@ -1,7 +1,7 @@
 jest.mock('bricks.js');
 
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import BricksStub from 'bricks.js';
 import { BricksLayout } from '../../bricksGrid';
 

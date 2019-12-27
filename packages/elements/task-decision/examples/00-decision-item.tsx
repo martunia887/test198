@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 
 import DecisionItem from '../src/components/DecisionItem';

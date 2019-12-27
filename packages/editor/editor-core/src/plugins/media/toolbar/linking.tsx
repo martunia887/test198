@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import LinkIcon from '@atlaskit/icon/glyph/editor/link';
 import OpenIcon from '@atlaskit/icon/glyph/shortcut';
 import { EditorState } from 'prosemirror-state';

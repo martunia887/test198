@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { create, act, ReactTestRenderer } from 'react-test-renderer';
 
 // Wrapper over mount use effect to assure the component is unmounted after each test

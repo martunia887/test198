@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import StorybookQuickSearch from '../example-helpers/StorybookQuickSearch';
 
 export default class extends React.Component {

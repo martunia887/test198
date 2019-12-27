@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mention, MockMentionResource } from '@atlaskit/util-data-test';
 import {
   MentionDescription,

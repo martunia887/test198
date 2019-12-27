@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
 
 import {

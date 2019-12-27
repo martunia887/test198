@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import * as React from 'react';
+import React from 'react';
 import Lozenge from '@atlaskit/lozenge';
 import ToolsDrawer from '../example-helpers/ToolsDrawer';
 import { Editor, EditorContext, mediaPluginKey } from '../src';

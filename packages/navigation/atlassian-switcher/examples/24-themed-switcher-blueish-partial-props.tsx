@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Drawer from '@atlaskit/drawer';
 import Button from '@atlaskit/button';
 import { mockEndpoints } from '@atlaskit/atlassian-switcher-test-utils';

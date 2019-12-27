@@ -1,5 +1,5 @@
 import { mount, ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { Props } from '../../../../../plugins/media/ui/MediaPicker/PickerFacadeProvider';
 import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';
 import { Clipboard as ClipboardComponent } from '@atlaskit/media-picker';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import DocumentFilledIcon from '@atlaskit/icon/glyph/document-filled';
 
 import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';

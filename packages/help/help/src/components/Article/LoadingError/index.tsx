@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@atlaskit/button';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { withHelp, HelpContextInterface } from '../../HelpContext';

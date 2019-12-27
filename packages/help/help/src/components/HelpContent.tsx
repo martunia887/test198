@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { withHelp, HelpContextInterface } from './HelpContext';
 import Header from './Header';
 

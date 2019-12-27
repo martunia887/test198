@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import CodeBlock from '../../../../react/nodes/codeBlock';
 import { AkCodeBlock } from '@atlaskit/code';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component, ReactNode, MouseEvent } from 'react';
 
 import { CardActionButton } from './styled';

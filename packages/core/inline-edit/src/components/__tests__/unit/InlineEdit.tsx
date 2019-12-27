@@ -1,5 +1,5 @@
 import React from 'react';
-import * as ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { render } from '@testing-library/react';
 import InlineEditableTextfield from '../../InlineEditableTextfield';

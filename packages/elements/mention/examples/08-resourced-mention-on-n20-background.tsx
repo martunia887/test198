@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { colors } from '@atlaskit/theme';
 import debug from '../src/util/logger';

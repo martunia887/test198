@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import * as colors from '@atlaskit/theme/colors';
 import {
   CreateUIAnalyticsEvent,

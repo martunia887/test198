@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MediaPluginState, MediaProvider } from '../../pm-plugins/main';
 import { MediaPicker } from '@atlaskit/media-picker';
 import {

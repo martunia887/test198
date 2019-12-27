@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import CommentContainer from '../containers/Comment';
 import Comment from '../components/Comment';
 import Editor from './Editor';

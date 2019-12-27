@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { EmojiProvider, ResourcedEmoji } from '@atlaskit/emoji';
 import { ProviderFactory } from '../../../provider-factory';

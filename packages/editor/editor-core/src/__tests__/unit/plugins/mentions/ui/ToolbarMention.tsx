@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { doc, p, createEditorFactory } from '@atlaskit/editor-test-helpers';
 import MentionIcon from '@atlaskit/icon/glyph/editor/mention';
 import { analyticsService } from '../../../../../analytics';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DataProviderProps, ResultComplete, Status } from './as-data-provider';
 
 type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U;

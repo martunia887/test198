@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ComponentType } from 'react';
 import { Fragment, Mark, MarkType, Node, Schema } from 'prosemirror-model';
 import { Serializer } from '../';

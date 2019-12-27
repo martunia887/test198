@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
 import EditorContext from '../../../ui/EditorContext';
 import EditorActions from '../../../actions';

@@ -1,6 +1,6 @@
 jest.mock('../../utils/getDataURIFromFileState');
 import { Observable, ReplaySubject } from 'rxjs';
-import * as React from 'react';
+import React from 'react';
 import { shallow, mount } from 'enzyme';
 
 import { FabricChannel } from '@atlaskit/analytics-listeners';

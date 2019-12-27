@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { CardLinkView } from '@atlaskit/media-ui';
 
 import { CardProps } from '../Card/types';

@@ -26,7 +26,7 @@ jest.doMock('../../client/errors', () => ({
   FetchError: mockFetchError,
 }));
 import CardClient from '../../client';
-import * as React from 'react';
+import React from 'react';
 import { Card } from '../Card';
 import { Provider } from '../..';
 import { fakeFactory, mocks } from '../../utils/mocks';

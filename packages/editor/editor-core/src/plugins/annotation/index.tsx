@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { annotation } from '@atlaskit/adf-schema';
 import { findDomRefAtPos } from 'prosemirror-utils';
 

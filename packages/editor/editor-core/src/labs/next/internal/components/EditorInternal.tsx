@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { intlShape } from 'react-intl';
 import * as PropTypes from 'prop-types';
 import { WidthProvider } from '@atlaskit/editor-common';

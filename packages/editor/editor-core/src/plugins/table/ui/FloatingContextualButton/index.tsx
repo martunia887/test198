@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { EditorView } from 'prosemirror-view';
 import { Popup } from '@atlaskit/editor-common';
 import { TableLayout } from '@atlaskit/adf-schema';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ConfluenceSpaceFilter as SpaceFilter } from '../../SpaceFilter';
 import { shallow } from 'enzyme';
 

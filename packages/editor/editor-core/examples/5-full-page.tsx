@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import * as React from 'react';
+import React from 'react';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import ExamplesErrorBoundary from '../example-helpers/ExamplesErrorBoundary';

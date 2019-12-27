@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { Date, Color } from '../src';

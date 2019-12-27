@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { waitUntil } from '@atlaskit/util-common-test';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { MockEmojiResource } from '@atlaskit/util-data-test';

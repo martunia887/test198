@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Status, Color } from '../src/element';
 import styled from 'styled-components';
 

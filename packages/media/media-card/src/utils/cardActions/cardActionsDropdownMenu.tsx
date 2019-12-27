@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component, HTMLAttributes } from 'react';
 
 import MoreIcon from '@atlaskit/icon/glyph/more';

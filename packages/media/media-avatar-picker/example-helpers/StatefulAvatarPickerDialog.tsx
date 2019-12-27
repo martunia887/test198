@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import { ModalTransition } from '@atlaskit/modal-dialog';

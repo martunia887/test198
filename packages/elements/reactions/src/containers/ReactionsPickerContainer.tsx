@@ -1,5 +1,5 @@
 import { EmojiProvider } from '@atlaskit/emoji/resource';
-import * as React from 'react';
+import React from 'react';
 import { ReactionPicker } from '../components/ReactionPicker';
 import {
   Actions,

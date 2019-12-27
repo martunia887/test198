@@ -12,7 +12,7 @@ import {
   tr,
 } from '@atlaskit/editor-test-helpers';
 import { getSelectionRect, selectRow } from 'prosemirror-utils';
-import * as React from 'react';
+import React from 'react';
 import { setTextSelection } from '../../../../../index';
 import { hoverRows } from '../../../../../plugins/table/commands';
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';

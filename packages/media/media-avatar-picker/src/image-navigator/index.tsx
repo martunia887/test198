@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import Button from '@atlaskit/button';

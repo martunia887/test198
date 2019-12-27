@@ -1,5 +1,5 @@
 import React from 'react';
-import * as ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import { getExamplesFor } from '@atlaskit/build-utils/getExamples';
 import waitForExpect from 'wait-for-expect';
 

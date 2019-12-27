@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ModalSpinner } from '@atlaskit/media-ui';
 import { WithMediaClientConfigProps } from '@atlaskit/media-client';
 import { N700A } from '@atlaskit/theme/colors';

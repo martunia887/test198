@@ -1,6 +1,6 @@
 import { waitUntil } from '@atlaskit/util-common-test';
 import { mount, ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { EmojiProvider } from '../../../../api/EmojiResource';
 import LoadingEmojiComponent, {

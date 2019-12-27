@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import * as PropTypes from 'prop-types';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import { List as VirtualList } from 'react-virtualized/dist/commonjs/List';
 import { customCategory, userCustomTitle } from '../../util/constants';

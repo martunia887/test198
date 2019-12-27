@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import DecisionList from '../../../components/DecisionList';
 import DecisionItem from '../../../components/DecisionItem';

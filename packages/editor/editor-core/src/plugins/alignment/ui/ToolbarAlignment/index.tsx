@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { defineMessages } from 'react-intl';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import ToolbarButton from '../../../../ui/ToolbarButton';

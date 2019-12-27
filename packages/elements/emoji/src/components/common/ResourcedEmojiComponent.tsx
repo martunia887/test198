@@ -1,5 +1,5 @@
 import * as PropTypes from 'prop-types';
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import EmojiProvider from '../../api/EmojiResource';
 import { defaultEmojiHeight } from '../../util/constants';

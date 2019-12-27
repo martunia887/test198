@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import Switcher from '../../components/switcher';
 import { MANAGE_HREF } from '../../providers/jira-data-providers';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Editor from './../src/labs/EditorWithActions';
 import { EditorContext } from '../src';
 

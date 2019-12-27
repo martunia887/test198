@@ -18,7 +18,7 @@ export default md`
   Example using the GasPayload type when firing an analytics-next event:
 
   ~~~js
-  import * as React from 'react';
+  import React from 'react';
   import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 
   import { GasPayload } from '@atlaskit/analytics-gas-types';

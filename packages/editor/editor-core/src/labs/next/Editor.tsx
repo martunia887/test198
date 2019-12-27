@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { PortalRenderer, PortalProvider } from '../../ui/PortalProvider';
 import { EditorInternal } from './internal/components/EditorInternal';

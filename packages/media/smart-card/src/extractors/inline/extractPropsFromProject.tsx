@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { InlineCardResolvedViewProps } from '@atlaskit/media-ui';
 import ProjectDefaultIcon from '@atlaskit/icon/glyph/people-group';
 

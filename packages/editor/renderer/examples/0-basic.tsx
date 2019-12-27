@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import RendererDemo from './helper/RendererDemo';
 import { Provider, Client } from '@atlaskit/smart-card';
 

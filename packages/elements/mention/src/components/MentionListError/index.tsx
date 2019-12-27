@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { HttpError } from '../../api/MentionResource';
 import {
   DefaultAdvisedAction,

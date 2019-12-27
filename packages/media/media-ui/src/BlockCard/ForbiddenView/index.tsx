@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@atlaskit/button';
 import { N0 } from '@atlaskit/theme/colors';
 import LockFilledIcon from '@atlaskit/icon/glyph/lock-filled';

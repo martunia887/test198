@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { EditorSharedConfig } from '../../../internal/context/shared-config';
 import {

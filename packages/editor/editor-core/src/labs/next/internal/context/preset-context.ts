@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { EditorPlugin } from '../../../../types';
 
 const PresetContext = React.createContext<Array<EditorPlugin>>([]);

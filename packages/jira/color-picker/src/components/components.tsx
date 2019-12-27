@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { gridSize } from '@atlaskit/theme';
 import { MenuListComponentProps, OptionProps } from '@atlaskit/select';
 import { Color } from '../types';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 jest.mock('../../../service/uploadServiceImpl');
 import { Dropzone, DropzoneBase } from '../../dropzone/dropzone';
 import { mount, ReactWrapper } from 'enzyme';

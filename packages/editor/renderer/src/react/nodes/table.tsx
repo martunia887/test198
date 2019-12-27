@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { TableLayout } from '@atlaskit/adf-schema';
 import {

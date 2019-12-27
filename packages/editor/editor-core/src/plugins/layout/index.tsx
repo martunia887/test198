@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { layoutSection, layoutColumn } from '@atlaskit/adf-schema';
 import { EditorPlugin } from '../../types';
 import { FloatingToolbarConfig } from '../floating-toolbar/types';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { CSSProperties } from 'react';
 import { CellAttributes } from '@atlaskit/adf-schema';
 import { SortOrder, compose } from '@atlaskit/editor-common';

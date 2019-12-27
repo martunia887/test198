@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useContext, useMemo } from 'react';
 import { createStore, Reducer } from 'redux';
 import { cardReducer } from '../reducers';

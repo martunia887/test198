@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Plugin, StateField, EditorState, PluginKey } from 'prosemirror-state';
 import { emoji } from '@atlaskit/adf-schema';
 import { ProviderFactory } from '@atlaskit/editor-common';

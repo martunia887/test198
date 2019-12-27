@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import dateformat from 'dateformat'; // ToDo: FIL-3207 | replace dateformat library with native solution

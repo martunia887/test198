@@ -13,7 +13,7 @@ import {
 import { ReactWrapper } from 'enzyme';
 import { selectTable } from 'prosemirror-utils';
 import { EditorView } from 'prosemirror-view';
-import * as React from 'react';
+import React from 'react';
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
 import {
   TablePluginState,

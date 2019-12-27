@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { create, ReactTestRenderer } from 'react-test-renderer';
 import { Editor, EditorContent, EditorProps } from '../../Editor';
 import { basePlugin } from '../../../../plugins';

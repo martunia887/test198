@@ -7,7 +7,7 @@ jest.mock('@atlaskit/editor-common', () => ({
   sharedExpandStyles: jest.fn(),
 }));
 
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { inlineCard, defaultSchema } from '@atlaskit/editor-test-helpers';
 import { Card } from '@atlaskit/smart-card';

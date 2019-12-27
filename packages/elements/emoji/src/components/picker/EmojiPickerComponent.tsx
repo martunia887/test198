@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import * as PropTypes from 'prop-types';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, SyntheticEvent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getEmojiVariation } from '../../api/EmojiRepository';

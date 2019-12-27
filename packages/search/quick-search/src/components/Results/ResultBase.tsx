@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { QS_ANALYTICS_EV_SUBMIT } from '../constants';
 import ResultItem from '../ResultItem/ResultItem';
 import { AnalyticsData, CommonResultProps } from './types';

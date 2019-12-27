@@ -16,7 +16,7 @@ jest.mock('pdfjs-dist/web/pdf_viewer', () => ({
   }),
 }));
 
-import * as React from 'react';
+import React from 'react';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import * as PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
 import Button from '@atlaskit/button';

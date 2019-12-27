@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { components, IndicatorProps } from '@atlaskit/select';
 import Tooltip from '@atlaskit/tooltip';
 

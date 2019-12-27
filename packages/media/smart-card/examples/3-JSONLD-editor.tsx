@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import InlineMessage from '@atlaskit/inline-message';
 import Button from '@atlaskit/button';
 import Page, { Grid, GridColumn } from '@atlaskit/page';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ImageLoader from 'react-render-image';
 import ImageIcon from '@atlaskit/icon/glyph/image';
 import NoImageIcon from './NoImageIcon';

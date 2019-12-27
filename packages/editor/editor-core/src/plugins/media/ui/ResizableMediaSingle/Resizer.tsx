@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { RefObject } from 'react';
 import classnames from 'classnames';
 import { Resizable, ResizeDirection } from 're-resizable';

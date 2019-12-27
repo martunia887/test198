@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { status } from '@atlaskit/adf-schema';
 import { findDomRefAtPos } from 'prosemirror-utils';
 import { EditorPlugin } from '../../types';

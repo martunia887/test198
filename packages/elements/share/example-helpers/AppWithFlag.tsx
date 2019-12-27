@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { colors } from '@atlaskit/theme';
 import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
 import { AutoDismissFlag, FlagGroup } from '@atlaskit/flag';

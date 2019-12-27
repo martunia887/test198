@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { JoinableSitesResponse } from '../types';
 import { ProviderResult } from './as-data-provider';

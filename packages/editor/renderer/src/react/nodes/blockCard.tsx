@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Card } from '@atlaskit/smart-card';
 import { EventHandlers, UnsupportedBlock } from '@atlaskit/editor-common';
 

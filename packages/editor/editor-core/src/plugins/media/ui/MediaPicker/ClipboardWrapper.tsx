@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import PickerFacadeProvider from './PickerFacadeProvider';
 import { MediaPluginState } from '../../pm-plugins/main';
 import { Clipboard } from '@atlaskit/media-picker';

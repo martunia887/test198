@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { codeBlock } from '@atlaskit/adf-schema';
 import { createPlugin } from './pm-plugins/main';
 import { getToolbarConfig } from './toolbar';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { InjectedIntlProps } from 'react-intl';
 import { ReactWrapper } from 'enzyme';
 import {

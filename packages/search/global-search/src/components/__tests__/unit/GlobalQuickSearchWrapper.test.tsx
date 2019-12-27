@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { mockConfluencePrefetchedData } from '../../../__tests__/unit/mocks/_mockPrefetchResults';
 import { DEFAULT_AB_TEST } from '../../../api/CrossProductSearchClient';

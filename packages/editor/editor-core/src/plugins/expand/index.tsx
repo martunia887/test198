@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { expand, nestedExpand } from '@atlaskit/adf-schema';
 import { EditorPlugin, EditorProps } from '../../types';
 import { createPlugin } from './pm-plugins/main';

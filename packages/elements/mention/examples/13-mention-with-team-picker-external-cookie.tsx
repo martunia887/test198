@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import MentionTextInput from '../example-helpers/demo-mention-text-input';
 import { onSelection } from '../example-helpers';

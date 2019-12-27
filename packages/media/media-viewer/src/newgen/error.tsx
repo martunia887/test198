@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ReactNode } from 'react';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { ErrorMessageWrapper, ErrorImage } from './styled';

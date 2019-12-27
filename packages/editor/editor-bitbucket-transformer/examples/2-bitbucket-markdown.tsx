@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import * as React from 'react';
+import React from 'react';
 
 import { Editor, EditorContext, CollapsedEditor } from '@atlaskit/editor-core';
 import { taskDecision } from '@atlaskit/util-data-test';

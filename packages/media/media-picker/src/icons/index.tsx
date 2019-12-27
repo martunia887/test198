@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { getAssetUrl } from '../util/getAssetUrl';
 
 export const borderIcon = getAssetUrl('border-icon.png');

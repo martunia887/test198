@@ -1,5 +1,5 @@
 import { colors } from '@atlaskit/theme';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Team } from '../types';
 import { AvatarItemOption, TextWrapper } from './AvatarItemOption';

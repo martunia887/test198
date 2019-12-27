@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { md, code, Example, AtlassianInternalWarning } from '@atlaskit/docs';
 
 import popup from './popup.png';

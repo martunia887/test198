@@ -8,7 +8,7 @@ import {
   AnalyticsEventPayload,
 } from '@atlaskit/analytics-next';
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { createButtonWithAnalytics } from '../../../../examples/helpers';
 import Logger from '../../../helpers/logger';
 import MediaAnalyticsListener from '../../../media/MediaAnalyticsListener';

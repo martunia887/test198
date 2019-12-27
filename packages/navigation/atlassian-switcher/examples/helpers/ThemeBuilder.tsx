@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import TextField from '@atlaskit/textfield';
 import { Field } from '@atlaskit/form';
 import Page, { Grid, GridColumn } from '@atlaskit/page';

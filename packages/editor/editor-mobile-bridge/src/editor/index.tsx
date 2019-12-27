@@ -1,6 +1,6 @@
 import '@babel/polyfill';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import MobileEditor from './mobile-editor-element';
 import { determineMode } from '../bridge-utils';
 

@@ -11,7 +11,7 @@ import {
   withAnalyticsContext,
 } from '@atlaskit/analytics-next';
 import Button from '@atlaskit/button';
-import * as React from 'react';
+import React from 'react';
 import { FabricChannel } from '../../src/types';
 
 export type OwnProps = {

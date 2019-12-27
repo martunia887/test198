@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import { AkCodeBlock } from '@atlaskit/code';
 import { overflowShadow, OverflowShadowProps } from '@atlaskit/editor-common';

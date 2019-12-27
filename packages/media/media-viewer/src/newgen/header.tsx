@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ReactNode, ReactChild } from 'react';
 import {
   MediaClient,

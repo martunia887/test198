@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { CancelableEvent } from '@atlaskit/quick-search';
 import ConfluenceQuickSearchContainer from './confluence/ConfluenceQuickSearchContainer';
 import JiraQuickSearchContainer from './jira/JiraQuickSearchContainer';

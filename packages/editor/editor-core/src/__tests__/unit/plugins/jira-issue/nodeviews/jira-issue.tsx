@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { JiraIcon } from '@atlaskit/logo';
 import ReactJIRAIssueNode from '../../../../../plugins/jira-issue/nodeviews/jira-issue';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import keycode from 'keycode';
 import { withAnalytics } from '@atlaskit/analytics';
 import { ResultData, SelectedResultId, ResultId } from './Results/types';

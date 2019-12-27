@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { ABTestProvider } from '../../AbTestProvider';
 import { QuickSearchContext } from '../../../api/types';
 import { ABTest, DEFAULT_AB_TEST } from '../../../api/CrossProductSearchClient';

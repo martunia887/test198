@@ -1,7 +1,7 @@
 import { RecentContainersProvider } from '../../instance-data-providers';
 
 declare var global: any;
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 
 describe('instance-data-providers', () => {

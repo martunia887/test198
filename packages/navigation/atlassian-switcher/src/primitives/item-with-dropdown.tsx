@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import ChevronUpIcon from '@atlaskit/icon/glyph/chevron-up';

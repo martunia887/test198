@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import BasicNavigation from './components/BasicNavigation';
 import LocaleIntlProvider from './components/LocaleIntlProvider';
 import { QuickSearchContext } from '../src/api/types';

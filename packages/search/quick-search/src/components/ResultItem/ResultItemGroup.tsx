@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ItemGroup } from '@atlaskit/item';
 import { ResultItemGroupTitle, ResultItemGroupHeader } from './styled';
 

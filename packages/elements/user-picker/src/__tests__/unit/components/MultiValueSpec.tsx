@@ -1,6 +1,6 @@
 import Tag from '@atlaskit/tag';
 import { shallow, ShallowWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { AddOptionAvatar } from '../../../components/AddOptionAvatar';
 import { MultiValue, scrollToValue } from '../../../components/MultiValue';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { EditorSharedConfigConsumer } from './Editor';
 import PluginSlot from '../../ui/PluginSlot';
 

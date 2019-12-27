@@ -1,5 +1,5 @@
 import { render } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import TeamMentionDescriptionByline from '../../../../components/MentionDescriptionByline';
 import { MentionDescription } from '../../../..//types';
 import { teamMention } from './_commonData';

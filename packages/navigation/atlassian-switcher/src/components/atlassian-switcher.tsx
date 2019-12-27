@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ErrorBoundary from './error-boundary';
 import { Product, AtlassianSwitcherProps } from '../types';
 import IntlProvider from './intl-provider';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DropdownItem } from './styles';
 import { AddonProps } from '../types';
 

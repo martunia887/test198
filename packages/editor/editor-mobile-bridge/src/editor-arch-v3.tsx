@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { determineMode } from './bridge-utils';
 import { EditorActions, EditorContext } from '@atlaskit/editor-core';
 import {

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { gridSize, fontSize, colors } from '@atlaskit/theme';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';

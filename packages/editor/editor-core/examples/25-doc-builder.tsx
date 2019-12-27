@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import prettier from 'prettier/standalone';
 import babylon from 'prettier/parser-babylon';
 

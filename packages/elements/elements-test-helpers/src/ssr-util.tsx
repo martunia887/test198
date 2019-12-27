@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { ssr } from '@atlaskit/ssr';
 // @ts-ignore FS-3905
 import * as path from 'path';

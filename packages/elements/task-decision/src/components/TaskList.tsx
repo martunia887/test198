@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, ReactNode } from 'react';
 import { TaskListWrapper } from '../styled/ListWrapper';
 import { FabricElementsAnalyticsContext } from '@atlaskit/analytics-namespaced-context';

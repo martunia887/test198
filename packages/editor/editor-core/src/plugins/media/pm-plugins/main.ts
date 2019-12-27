@@ -1,6 +1,6 @@
 import assert from 'assert';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Node as PMNode, Node, Schema } from 'prosemirror-model';
 import { insertPoint } from 'prosemirror-transform';
 import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';

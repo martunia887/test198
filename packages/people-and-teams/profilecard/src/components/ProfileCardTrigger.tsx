@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Popper } from '@atlaskit/popper';
 import Portal from '@atlaskit/portal';
 import { layers } from '@atlaskit/theme';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MediaClient, Identifier } from '@atlaskit/media-client';
 import {
   hideControlsClassName,

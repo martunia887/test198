@@ -9,7 +9,7 @@
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { emoji } from '@atlaskit/util-data-test';
 import Ajv from 'ajv';
-import * as React from 'react';
+import React from 'react';
 import { ChangeEvent, PureComponent } from 'react';
 
 import Renderer from '../src/ui/Renderer';

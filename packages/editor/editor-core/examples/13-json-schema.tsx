@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import v1schema from '@atlaskit/adf-schema/json-schema/v1/full.json';
 
 const jsonPretty = (obj: any) => JSON.stringify(obj, null, 2);

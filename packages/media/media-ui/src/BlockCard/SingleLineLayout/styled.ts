@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 export const Wrapper: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`

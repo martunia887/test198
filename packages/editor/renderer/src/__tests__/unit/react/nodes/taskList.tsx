@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { TaskList as AkTaskList } from '@atlaskit/task-decision';
 import FabricAnalyticsListener, {

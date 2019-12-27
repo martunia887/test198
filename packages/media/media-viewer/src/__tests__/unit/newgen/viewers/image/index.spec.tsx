@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { ProcessedFileState } from '@atlaskit/media-client';
 import {

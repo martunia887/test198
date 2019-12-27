@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { findDOMNode } from 'react-dom';
 import { PureComponent, ReactInstance, SyntheticEvent } from 'react';
 import { MentionUserType as UserType } from '@atlaskit/adf-schema';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { TopLevelItemWrapperTheme } from '../theme/default-theme';
 import { ThemeTokens } from '../theme/types';
 import styled from 'styled-components';

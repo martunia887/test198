@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { onSelection, randomMentions } from '../example-helpers';
 import MentionList from '../src/components/MentionList';
 import { MentionDescription } from '../src/types';

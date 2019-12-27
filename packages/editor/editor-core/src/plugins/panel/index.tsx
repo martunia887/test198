@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { panel, PanelType } from '@atlaskit/adf-schema';
 
 import { EditorPlugin } from '../../types';

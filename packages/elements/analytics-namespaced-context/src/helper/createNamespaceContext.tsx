@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { StatelessComponent, ReactNode } from 'react';
 import { AnalyticsContext } from '@atlaskit/analytics-next';
 

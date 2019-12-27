@@ -1,4 +1,4 @@
-import * as React from 'react'; // eslint-disable-line
+import React from 'react'; // eslint-disable-line
 import Button from '@atlaskit/button';
 import { messages } from '@atlaskit/media-ui';
 import {

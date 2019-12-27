@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { KeyboardEvent, PureComponent } from 'react';
 import { Input } from './styles';
 import { FocusEvent } from 'react';

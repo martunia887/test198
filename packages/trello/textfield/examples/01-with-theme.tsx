@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import TextField, { colors, TextFieldThemeProps } from '../src';
 
 export default function() {

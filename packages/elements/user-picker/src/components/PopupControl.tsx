@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Label } from '@atlaskit/field-base';
 import { components, ControlProps } from '@atlaskit/select';
 import styled from 'styled-components';

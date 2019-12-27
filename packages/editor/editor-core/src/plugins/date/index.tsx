@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { findDomRefAtPos } from 'prosemirror-utils';
 import Loadable from 'react-loadable';
 import { date } from '@atlaskit/adf-schema';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { exampleOptions } from '../example-helpers';
 import UserPicker from '../src';
 

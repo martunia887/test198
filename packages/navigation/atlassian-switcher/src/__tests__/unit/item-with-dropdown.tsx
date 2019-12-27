@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { BitbucketIcon, JiraSoftwareIcon, OpsGenieIcon } from '@atlaskit/logo';
 import { shallow } from 'enzyme';
 import { SwitcherItemWithDropdown } from '../../primitives';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Tooltip, { PositionType } from '@atlaskit/tooltip';
 import { ButtonProps } from '@atlaskit/button';
 import Button from './styles';

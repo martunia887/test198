@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { StatusPicker, ColorType } from '../src/picker';
 
 export interface Props {

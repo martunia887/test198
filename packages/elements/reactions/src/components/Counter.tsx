@@ -1,6 +1,6 @@
 import { colors } from '@atlaskit/theme';
 import cx from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { keyframes, style } from 'typestyle';
 

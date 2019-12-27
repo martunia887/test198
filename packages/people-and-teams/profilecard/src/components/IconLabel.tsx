@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import IconLocation from '@atlaskit/icon/glyph/location';
 import IconRecent from '@atlaskit/icon/glyph/recent';
 import IconEmail from '@atlaskit/icon/glyph/email';

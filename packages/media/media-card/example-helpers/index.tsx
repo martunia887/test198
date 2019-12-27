@@ -1,6 +1,6 @@
 // eslint-disable-line no-console
 
-import * as React from 'react';
+import React from 'react';
 import { FileItem, Identifier } from '@atlaskit/media-client';
 import { createStorybookMediaClientConfig } from '@atlaskit/media-test-helpers';
 import CrossIcon from '@atlaskit/icon/glyph/cross';

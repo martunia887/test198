@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   md,
   code,
@@ -19,7 +19,7 @@ export default md`
   ## Usage
 
   ${code`
-  import * as React from 'react';
+  import React from 'react';
 
   import HelpArticle from '../src';
 

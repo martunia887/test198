@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ActivityItem, ActivityProvider } from '@atlaskit/activity';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import EditorAlignLeftIcon from '@atlaskit/icon/glyph/editor/align-left';

@@ -6,7 +6,7 @@ import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { ResourcedEmoji } from '@atlaskit/emoji/element';
 import { borderRadius, colors } from '@atlaskit/theme';
 import cx from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, SyntheticEvent } from 'react';
 import { style } from 'typestyle';
 import {

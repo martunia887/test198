@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import FieldRange from '@atlaskit/range';
 import ScaleLargeIcon from '@atlaskit/icon/glyph/media-services/scale-large';

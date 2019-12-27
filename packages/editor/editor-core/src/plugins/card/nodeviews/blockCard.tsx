@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { Card as SmartCard } from '@atlaskit/smart-card';
 import * as PropTypes from 'prop-types';

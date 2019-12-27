@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 // import { mountWithIntlContext } from 'enzyme';
 import { nextTick, mountWithIntlContext } from '@atlaskit/media-test-helpers';
 

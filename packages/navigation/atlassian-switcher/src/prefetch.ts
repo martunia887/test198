@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { prefetchAll } from './providers/instance-data-providers';
 import {
   prefetchAvailableProducts,

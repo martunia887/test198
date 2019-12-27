@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FloatingToolbarHandler, AlignType } from '../floating-toolbar/types';
 import {
   stateKey,

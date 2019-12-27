@@ -1,5 +1,5 @@
 import { mount, shallow, ReactWrapper, ShallowWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import EditorErrorBoundary from '../../../create-editor/ErrorBoundary';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { storyContextIdentifierProviderFactory } from '@atlaskit/editor-test-helpers';

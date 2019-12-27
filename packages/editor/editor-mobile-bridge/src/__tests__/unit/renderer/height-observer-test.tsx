@@ -1,5 +1,5 @@
 import { mount, ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import RendererBridgeImpl from '../../../renderer/native-to-web/implementation';
 import HeightObserver from '../../../renderer/height-observer';
 

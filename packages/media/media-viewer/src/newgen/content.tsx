@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component, ReactElement } from 'react';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import {

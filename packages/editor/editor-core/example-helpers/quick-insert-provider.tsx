@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import DevIcon from '@atlaskit/icon/glyph/editor/code';
 import {
   QuickInsertItem,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MentionProvider } from '../src/api/MentionResource';
 import { PresenceProvider } from '../src/api/PresenceResource';
 import MentionPicker, { Position } from '../src/components/MentionPicker';

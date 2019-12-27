@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ReactWrapper } from 'enzyme';
 import { Observable } from 'rxjs';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';

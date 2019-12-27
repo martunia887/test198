@@ -1,7 +1,7 @@
 import Avatar, { AvatarItem } from '@atlaskit/avatar';
 import Button from '@atlaskit/button';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ExampleWrapper } from '../example-helpers/ExampleWrapper';
 import { OptionData, Value } from '../src';

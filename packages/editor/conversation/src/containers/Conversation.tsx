@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { Editor as AkEditor, EditorProps } from '@atlaskit/editor-core';
 import { CommentAction as AkCommentAction } from '@atlaskit/comment';

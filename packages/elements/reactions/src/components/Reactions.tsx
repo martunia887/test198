@@ -4,7 +4,7 @@ import {
 } from '@atlaskit/analytics-next';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import Tooltip from '@atlaskit/tooltip';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { style } from 'typestyle';
 import {

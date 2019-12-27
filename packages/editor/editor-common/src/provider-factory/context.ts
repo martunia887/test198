@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { ProviderHandler, Providers } from './types';
 import ProviderFactory from './provider-factory';

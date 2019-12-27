@@ -1,6 +1,6 @@
 // eslint-disable-line no-console
 
-import * as React from 'react';
+import React from 'react';
 import { HTMLAttributes, ComponentClass, LabelHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import { AkFieldRadioGroup as RadioGroup } from '@atlaskit/field-radio-group';

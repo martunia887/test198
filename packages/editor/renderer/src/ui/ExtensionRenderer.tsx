@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { RendererContext } from '../react';
 import { Serializer } from '../index';
 import { ExtensionLayout } from '@atlaskit/adf-schema';

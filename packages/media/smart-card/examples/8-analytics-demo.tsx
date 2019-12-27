@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { Card, Client, Provider, ResolveResponse } from '../src';

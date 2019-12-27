@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import AttachmentIcon from '@atlaskit/icon/glyph/editor/attachment';

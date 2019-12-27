@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ComponentType } from 'react';
 import { ResultData, ResultId, SelectedResultId } from './Results/types';
 import { ResultBase } from './Results/ResultBase';

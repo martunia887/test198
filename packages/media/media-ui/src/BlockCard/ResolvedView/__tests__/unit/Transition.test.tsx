@@ -17,7 +17,7 @@ jest.mock('react-transition-group/Transition', () => {
   return component;
 });
 
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import Transition from '../../Transition';
 import { __setStatus__ } from 'react-transition-group/Transition';

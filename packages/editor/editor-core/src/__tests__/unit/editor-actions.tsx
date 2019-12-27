@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { EditorView } from 'prosemirror-view';
 import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';

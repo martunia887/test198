@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@atlaskit/button';
 import { ShowMoreButton, ShowMoreButtonProps } from '../../ShowMoreButton';
 import { AnalyticsNextEvent } from '../../analytics/types';

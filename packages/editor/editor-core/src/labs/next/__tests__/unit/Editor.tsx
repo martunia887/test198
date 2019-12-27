@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { act, ReactTestRenderer } from 'react-test-renderer';
 import { doc, p } from '@atlaskit/editor-test-helpers';
 import { createEditorFactory, TestEditor } from './__create-editor-helper';

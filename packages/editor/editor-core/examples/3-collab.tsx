@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import styled from 'styled-components';
-import * as React from 'react';
+import React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { borderRadius } from '@atlaskit/theme';
 import { ShareDialogContainer } from '@atlaskit/share';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Button, { ButtonProps } from '@atlaskit/button';
 import { N0, N500, N900 } from '@atlaskit/theme/colors';

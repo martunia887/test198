@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Step } from 'prosemirror-transform';
 import { EditorView } from 'prosemirror-view';
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';

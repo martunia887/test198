@@ -1,5 +1,5 @@
 // #region Imports
-import * as React from 'react';
+import React from 'react';
 import { MentionProvider } from '@atlaskit/mention/resource';
 
 import {

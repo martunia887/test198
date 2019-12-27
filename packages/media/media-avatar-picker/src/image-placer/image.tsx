@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ImageWrapper } from './styled';
 import { isImageRemote } from '../image-cropper/isImageRemote';
 

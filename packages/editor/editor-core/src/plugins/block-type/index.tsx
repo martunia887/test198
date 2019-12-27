@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { InjectedIntl } from 'react-intl';
 import { heading, blockquote, hardBreak } from '@atlaskit/adf-schema';
 import { EditorPlugin, AllowedBlockTypes } from '../../types';

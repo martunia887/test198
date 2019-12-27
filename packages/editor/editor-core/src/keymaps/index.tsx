@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { browser } from '@atlaskit/editor-common';
 import { Command } from '../types';
 import styled from 'styled-components';

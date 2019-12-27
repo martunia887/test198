@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import InlineDialog from '@atlaskit/inline-dialog';
 import * as colors from '@atlaskit/theme/colors';

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { ComponentClass, StatelessComponent, PureComponent } from 'react';
-import * as ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 
 export type SimpleEventHandler = (event: Event) => void;
 

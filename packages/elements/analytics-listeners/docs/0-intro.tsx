@@ -28,7 +28,7 @@ ${code`
   Example firing an analytics-next event:
 
 ${code`
-  import * as React from 'react';
+  import React from 'react';
   import {
     withAnalyticsEvents,
     createAndFireEvent,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Textfield from '@atlaskit/textfield';
 import nachosTFTheme from '../theme';
 import { TextFieldProps } from '../types';

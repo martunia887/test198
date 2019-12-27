@@ -1,5 +1,5 @@
 import Button from '@atlaskit/button';
-import * as React from 'react';
+import React from 'react';
 import {
   createAnalyticsWebClientMock,
   createComponentWithAnalytics,

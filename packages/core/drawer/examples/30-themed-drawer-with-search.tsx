@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@atlaskit/button';
 import { ResultItemGroup, ObjectResult } from '@atlaskit/quick-search';
 import Drawer, { DrawerItemTheme } from '../src';

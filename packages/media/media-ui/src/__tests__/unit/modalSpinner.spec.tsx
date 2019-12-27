@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import Spinner from '@atlaskit/spinner';
-import * as React from 'react';
+import React from 'react';
 import { ModalSpinner } from '../../index';
 
 describe('Modal Spinner', () => {

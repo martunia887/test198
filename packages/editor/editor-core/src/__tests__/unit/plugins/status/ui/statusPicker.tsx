@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { StatusPickerWithoutAnalytcs as StatusPicker } from '../../../../../plugins/status/ui/statusPicker';
 import { FABRIC_CHANNEL } from '../../../../../plugins/status/analytics';

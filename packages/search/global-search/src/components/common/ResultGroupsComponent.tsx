@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ScreenCounter } from '../../util/ScreenCounter';
 import { FormattedMessage } from 'react-intl';
 import ResultGroup from '../ResultGroup';

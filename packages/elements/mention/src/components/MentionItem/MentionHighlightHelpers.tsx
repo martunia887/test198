@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { HighlightDetail } from '../../types';
 
 export type ReactComponentConstructor = new (props: any) => React.Component<

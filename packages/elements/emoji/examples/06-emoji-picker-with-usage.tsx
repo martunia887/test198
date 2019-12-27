@@ -1,5 +1,5 @@
 import Layer from '@atlaskit/layer';
-import * as React from 'react';
+import React from 'react';
 import { getUsageClearEmojiResource } from '../example-helpers';
 import {
   UsageShowAndClearComponent,

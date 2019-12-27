@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Frame } from '../Frame';
 import Lozenge from '@atlaskit/lozenge';
 import { LozengeViewModel } from '../../common';

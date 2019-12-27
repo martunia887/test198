@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import IconError from '@atlaskit/icon/glyph/cross-circle';
 import AkButton from '@atlaskit/button';
 

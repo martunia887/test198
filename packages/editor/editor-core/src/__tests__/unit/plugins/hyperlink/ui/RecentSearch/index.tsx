@@ -1,5 +1,5 @@
 import { ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import RecentSearch from '../../../../../../plugins/hyperlink/ui/HyperlinkAddToolbar/HyperlinkAddToolbar';
 import RecentItem from '../../../../../../ui/RecentSearch/RecentItem';
 import { activityProviderMock } from '../../utils';

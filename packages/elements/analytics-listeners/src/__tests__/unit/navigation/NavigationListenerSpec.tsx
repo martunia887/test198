@@ -6,7 +6,7 @@ import {
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { mount } from 'enzyme';
 import cases from 'jest-in-case';
-import * as React from 'react';
+import React from 'react';
 import { createButtonWithAnalytics } from '../../../../examples/helpers';
 import Logger from '../../../helpers/logger';
 import NavigationListener from '../../../navigation/NavigationListener';

@@ -4,7 +4,7 @@ import {
   defaultMediaPickerAuthProvider,
   userAuthProvider,
 } from '@atlaskit/media-test-helpers';
-import * as React from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
 import { Component } from 'react';
 import { MediaPicker } from '../src';

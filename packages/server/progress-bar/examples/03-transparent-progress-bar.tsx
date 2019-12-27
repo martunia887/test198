@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { TransparentProgressBar } from '../src';
 import { progress } from './00-basic';
 

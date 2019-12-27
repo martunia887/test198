@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { getEmojis } from '../example-helpers';
 import EmojiPickerList from '../src/components/picker/EmojiPickerList';

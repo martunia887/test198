@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Node, DOMSerializer, DOMOutputSpec } from 'prosemirror-model';
 import { NodeView } from 'prosemirror-view';
 import InfoIcon from '@atlaskit/icon/glyph/editor/info';

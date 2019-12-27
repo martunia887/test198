@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MentionUserType as UserType } from '@atlaskit/adf-schema';
 import { PureComponent } from 'react';
 import MentionWithProviders from './mention-with-providers';

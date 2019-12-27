@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import uuidV4 from 'uuid/v4';
 import { Subscription } from 'rxjs/Subscription';
 

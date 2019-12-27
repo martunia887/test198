@@ -1,5 +1,5 @@
 import { mount, ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
 import AkButton from '@atlaskit/button';
 import { Popup } from '@atlaskit/editor-common';

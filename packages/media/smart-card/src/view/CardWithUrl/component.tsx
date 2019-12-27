@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MouseEvent, KeyboardEvent } from 'react';
 import LazilyRender from 'react-lazily-render';
 import { CardLinkView } from '@atlaskit/media-ui';

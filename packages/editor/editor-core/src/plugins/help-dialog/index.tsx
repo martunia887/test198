@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { keymap } from 'prosemirror-keymap';
 import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
 import { EditorPlugin } from '../../types';

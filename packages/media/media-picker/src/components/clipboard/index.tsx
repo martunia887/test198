@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ClipboardProps } from './clipboard';
 import { ClipboardConfig } from '../../types';
 import { WithMediaClientConfigProps } from '@atlaskit/media-client';

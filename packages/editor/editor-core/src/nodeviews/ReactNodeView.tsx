@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { NodeView, EditorView, Decoration } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { PortalProviderAPI } from '../ui/PortalProvider';

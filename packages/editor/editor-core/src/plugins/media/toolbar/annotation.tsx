@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
 import { MediaClientConfig } from '@atlaskit/media-core';
 import { getMediaClient } from '@atlaskit/media-client';

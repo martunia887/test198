@@ -1,7 +1,7 @@
 import { OptionData } from '@atlaskit/user-picker';
 import { utils } from '@atlaskit/util-service-support';
 import { shallow, ShallowWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import {
   ShortenResponse,
   UrlShortenerClient,

@@ -1,6 +1,6 @@
 import { name } from '../../../version.json';
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import WithHelpTrigger from '../../../ui/WithHelpTrigger';
 import EditorContext from '../../../ui/EditorContext';
 import * as EventDispatcher from '../../../event-dispatcher';

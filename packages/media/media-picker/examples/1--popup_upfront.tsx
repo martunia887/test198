@@ -2,7 +2,7 @@
  * The purpose of this example is to demo the integration between MediaPicker + id upfront + <Card />
  */
 
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import Button from '@atlaskit/button';

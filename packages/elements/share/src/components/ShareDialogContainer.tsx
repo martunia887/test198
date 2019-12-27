@@ -6,7 +6,7 @@ import {
 import { ButtonAppearances } from '@atlaskit/button';
 import { LoadOptions } from '@atlaskit/user-picker';
 import memoizeOne from 'memoize-one';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import assert from 'tiny-invariant';
 import {

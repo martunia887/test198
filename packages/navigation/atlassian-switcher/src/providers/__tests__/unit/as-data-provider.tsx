@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import asDataProvider from '../../as-data-provider';
 import { AnalyticsListener } from '@atlaskit/analytics-next';

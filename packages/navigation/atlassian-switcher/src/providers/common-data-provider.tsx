@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ProviderResult } from './as-data-provider';
 
 import { RecentContainersResponse } from '../types';

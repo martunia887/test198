@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 
 const picker: any = {
   on: jest.fn(),

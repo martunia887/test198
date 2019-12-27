@@ -1,5 +1,5 @@
 declare var global: any;
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { CustomLinksProvider } from '../../providers/jira-data-providers';
 

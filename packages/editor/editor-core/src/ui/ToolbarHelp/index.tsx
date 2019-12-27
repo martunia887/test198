@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import QuestionIcon from '@atlaskit/icon/glyph/question';
 import ToolbarButton from '../ToolbarButton';
 import WithHelpTrigger from '../WithHelpTrigger';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
 import EditorUnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';

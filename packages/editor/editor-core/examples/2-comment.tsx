@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import * as React from 'react';
+import React from 'react';
 
 import Button, { ButtonGroup } from '@atlaskit/button';
 import LockCircleIcon from '@atlaskit/icon/glyph/lock-circle';

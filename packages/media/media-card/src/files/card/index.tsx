@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { messages } from '@atlaskit/media-ui';
 import { FormattedMessage } from 'react-intl';

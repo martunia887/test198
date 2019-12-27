@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MediaClient, FileState } from '@atlaskit/media-client';
 import { Outcome } from '../../domain';
 import { createError, MediaViewerError } from '../../error';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IntlProvider, injectIntl, InjectedIntlProps } from 'react-intl';
 import * as untypedI18n from '../i18n';
 

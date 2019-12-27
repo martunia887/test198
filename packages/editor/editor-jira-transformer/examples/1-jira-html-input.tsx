@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import * as React from 'react';
+import React from 'react';
 import { mention } from '@atlaskit/util-data-test';
 import { Editor, EditorContext, CollapsedEditor } from '@atlaskit/editor-core';
 import ToolsDrawer, { RenderEditorProps } from '../example-helpers/ToolsDrawer';

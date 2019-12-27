@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DirectEditorProps } from 'prosemirror-view';
 import { measureRender, getResponseEndTime } from '@atlaskit/editor-common';
 import EditorActions from '../../../../../actions';

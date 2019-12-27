@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, ReactElement } from 'react';
 import styled from 'styled-components';
 import DropList from '@atlaskit/droplist';

@@ -1,7 +1,7 @@
 import { table, tableCell, tableHeader, tableRow } from '@atlaskit/adf-schema';
 import { tableEditing } from 'prosemirror-tables';
 import { createTable } from 'prosemirror-utils';
-import * as React from 'react';
+import React from 'react';
 import { toggleTable, tooltip } from '../../keymaps';
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';

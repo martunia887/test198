@@ -1,6 +1,6 @@
 import InviteTeamIcon from '@atlaskit/icon/glyph/invite-team';
 import { colors } from '@atlaskit/theme';
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const AddOptionAvatarWrapper = styled.span`

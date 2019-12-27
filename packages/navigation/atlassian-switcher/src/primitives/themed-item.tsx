@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { itemThemeNamespace } from '@atlaskit/item';
 import Item, { SwitcherItemProps } from './item';

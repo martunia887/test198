@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Popup, akEditorFloatingDialogZIndex } from '@atlaskit/editor-common';
 import { colors, borderRadius, gridSize } from '@atlaskit/theme';

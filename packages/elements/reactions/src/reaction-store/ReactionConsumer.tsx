@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ReactionAction } from '../types';
 import { ReactionsStore, State } from './ReactionsStore';
 

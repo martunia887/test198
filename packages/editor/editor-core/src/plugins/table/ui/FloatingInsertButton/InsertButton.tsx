@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { SyntheticEvent } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { akEditorTableNumberColumnWidth } from '@atlaskit/editor-common';

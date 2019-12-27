@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ReactNode, WheelEvent, MouseEvent, ReactElement } from 'react';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 import ArrowRight from '@atlaskit/icon/glyph/arrow-right';

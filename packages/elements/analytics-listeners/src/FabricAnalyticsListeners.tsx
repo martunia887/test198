@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { AnalyticsWebClient, FabricChannel, ListenerProps } from './types';
 import FabricElementsListener from './fabric/FabricElementsListener';
