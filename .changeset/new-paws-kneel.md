@@ -1,6 +1,6 @@
 ---
-'@atlaskit/media-card': patch
-'@atlaskit/media-filmstrip': patch
+'@atlaskit/media-card': major
+'@atlaskit/media-filmstrip': major
 ---
 
 Remove onChangeSelected

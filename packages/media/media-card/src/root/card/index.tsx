@@ -180,18 +180,6 @@ export class CardBase extends Component<
     }
   };
 
-  private onLoadingChangeCallback = () => {
-    const { onLoadingChange } = this.props;
-    if (onLoadingChange) {
-      const { status, error, metadata } = this.state;
-      const state = {
-        type: status,
-        payload: error || metadata,
-      };
-      onLoadingChange(state);
-    }
-  };
-
   subscribe(identifier: Identifier, mediaClient: MediaClient) {
     const { isCardVisible } = this.state;
 
@@ -417,10 +405,7 @@ export class CardBase extends Component<
 
   notifyStateChange = (state: Partial<CardState>) => {
     if (this.hasBeenMounted) {
-      this.setState(
-        state as Pick<CardState, keyof CardState>,
-        this.onLoadingChangeCallback,
-      );
+      this.setState(state as Pick<CardState, keyof CardState>);
     }
   };
 

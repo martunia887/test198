@@ -41,15 +41,6 @@ export interface CardEvent {
   mediaItemDetails?: FileDetails;
 }
 
-export interface OnLoadingChangeState {
-  readonly type: CardStatus;
-  readonly payload?: Error | FileDetails;
-}
-
-export interface OnLoadingChangeFunc {
-  (state: OnLoadingChangeState): void;
-}
-
 export interface SharedCardProps {
   readonly appearance?: CardAppearance;
   readonly dimensions?: CardDimensions;
@@ -68,7 +59,6 @@ export interface CardOnClickCallback {
 export interface CardEventProps {
   readonly onClick?: CardOnClickCallback;
   readonly onMouseEnter?: (result: CardEvent) => void;
-  readonly onLoadingChange?: OnLoadingChangeFunc;
 }
 
 export interface CardProps extends SharedCardProps, CardEventProps {
