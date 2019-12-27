@@ -40,7 +40,7 @@ export class UploadComponent<M extends UploadEventPayloadMap>
   }
 
   emitUploadProcessing(file: MediaFile): void {
-    this.emit('upload-processing', { file });
+    // TODO: remove
   }
 
   emitUploadEnd(file: MediaFile): void {

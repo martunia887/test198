@@ -1,6 +1,5 @@
 import { Action } from 'redux';
 
-import { UploadProcessingEvent } from '../../domain/uploadEvent';
 import { MediaFile, UploadProcessingEventPayload } from '../../types';
 
 export const FILE_UPLOAD_PROCESSING_START = 'FILE_UPLOAD_PROCESSING_START';

@@ -149,19 +149,9 @@ async function copyFile({
     const subscription = tenantSubject.subscribe({
       next: fileState => {
         safeUnsubscribe(subscription);
+        // TODO: we need to ensure we don't emit same events twice
+        // seems like unsubscribing here is not enough...
         if (fileState.status === 'processing') {
-          store.dispatch(
-            sendUploadEvent({
-              event: {
-                name: 'upload-processing',
-                data: {
-                  file,
-                },
-              },
-              uploadId,
-            }),
-          );
-        } else if (fileState.status === 'processed') {
           store.dispatch(
             sendUploadEvent({
               event: {
@@ -169,7 +159,7 @@ async function copyFile({
                 data: {
                   file,
                 },
-              } as UploadEndEvent,
+              },
               uploadId,
             }),
           );

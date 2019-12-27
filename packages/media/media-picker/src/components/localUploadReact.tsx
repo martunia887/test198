@@ -32,7 +32,6 @@ export type LocalUploadComponentBaseProps = {
   onUploadsStart?: (payload: UploadsStartEventPayload) => void;
   onPreviewUpdate?: (payload: UploadPreviewUpdateEventPayload) => void;
   onStatusUpdate?: (payload: UploadStatusUpdateEventPayload) => void;
-  onProcessing?: (payload: UploadProcessingEventPayload) => void;
   onEnd?: (payload: UploadEndEventPayload) => void;
   onError?: (payload: UploadErrorEventPayload) => void;
 } & WithAnalyticsEventsProps;
@@ -100,7 +99,6 @@ export class LocalUploadComponentReact<
       onUploadsStart,
       onPreviewUpdate,
       onStatusUpdate,
-      onProcessing,
       onEnd,
       onError,
     } = this.props;
@@ -118,9 +116,6 @@ export class LocalUploadComponentReact<
     }
     if (onStatusUpdate) {
       this.uploadComponent.on('upload-status-update', onStatusUpdate!);
-    }
-    if (onProcessing) {
-      this.uploadComponent.on('upload-processing', onProcessing!);
     }
     if (onEnd) {
       this.uploadComponent.on('upload-end', onEnd!);
@@ -215,6 +210,7 @@ export class LocalUploadComponentReact<
     this.uploadComponent.emitUploadProgress(file, progress);
   };
 
+  // TODO: swap events
   private onFileConverting = ({ file }: UploadProcessingEventPayload): void => {
     this.uploadComponent.emitUploadProcessing(file);
   };

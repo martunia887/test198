@@ -29,5 +29,5 @@ export type LocalUploads = { [uploadId: string]: LocalUpload };
 export function hasLocalUploadStartedProcessing(
   localUpload: LocalUpload,
 ): boolean {
-  return localUpload.events.some(event => event.name === 'upload-processing');
+  return localUpload.events.some(event => event.name === 'upload-end');
 }
