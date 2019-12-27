@@ -599,7 +599,6 @@ export class CardBase extends Component<
       dimensions,
       selectable,
       selected,
-      onSelectChange,
       disableOverlay,
       alt,
       testId,
@@ -628,7 +627,6 @@ export class CardBase extends Component<
         selected={selected}
         onClick={onCardViewClick}
         onMouseEnter={onMouseEnter}
-        onSelectChange={onSelectChange}
         disableOverlay={disableOverlay}
         progress={progress}
         onRetry={onRetry}

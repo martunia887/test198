@@ -41,15 +41,6 @@ export interface CardEvent {
   mediaItemDetails?: FileDetails;
 }
 
-export interface OnSelectChangeFuncResult {
-  selected: boolean;
-  mediaItemDetails?: FileDetails;
-}
-
-export interface OnSelectChangeFunc {
-  (result: OnSelectChangeFuncResult): void;
-}
-
 export interface OnLoadingChangeState {
   readonly type: CardStatus;
   readonly payload?: Error | FileDetails;
@@ -77,7 +68,6 @@ export interface CardOnClickCallback {
 export interface CardEventProps {
   readonly onClick?: CardOnClickCallback;
   readonly onMouseEnter?: (result: CardEvent) => void;
-  readonly onSelectChange?: OnSelectChangeFunc;
   readonly onLoadingChange?: OnLoadingChangeFunc;
 }
 

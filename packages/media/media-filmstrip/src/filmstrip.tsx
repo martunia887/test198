@@ -5,7 +5,6 @@ import {
   CardAction,
   CardOnClickCallback,
   CardEvent,
-  OnSelectChangeFunc,
   OnLoadingChangeFunc,
   defaultImageCardDimensions,
   CardLoading,
@@ -22,7 +21,6 @@ export interface FilmstripItem {
   readonly selected?: boolean;
   readonly onClick?: CardOnClickCallback;
   readonly onMouseEnter?: (result: CardEvent) => void;
-  readonly onSelectChange?: OnSelectChangeFunc;
   readonly onLoadingChange?: OnLoadingChangeFunc;
 }
 
