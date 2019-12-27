@@ -62,7 +62,7 @@ class Example extends Component<ComponentProps, ComponentState> {
   };
 
   renderCards() {
-    const { fileIds, cardStates } = this.state;
+    const { fileIds } = this.state;
     const cards = fileIds.map(id => {
       const identifier: FileIdentifier = {
         id,
