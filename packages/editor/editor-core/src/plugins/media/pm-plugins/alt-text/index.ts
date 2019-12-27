@@ -11,7 +11,7 @@ const { createPluginState, createCommand, getPluginState } = pluginFactory(
   reducer,
   {
     onSelectionChanged: (tr, newState) => {
-      // dont close alt text for undo redo trancastions (if trancastion comes from prosemirror-history)
+      // dont close alt text for undo/redo transactions (if it comes from prosemirror-history)
       if (tr.getMeta(pmHistoryPluginKey)) {
         return newState;
       }
