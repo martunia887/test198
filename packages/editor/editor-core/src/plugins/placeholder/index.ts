@@ -105,10 +105,10 @@ function createGetPlaceholderHintMessage(
   let index = 0;
 
   return () => {
-    const length = placeholderHints ? placeholderHints.length : 0;
-    if (length === 0) {
+    if (!placeholderHints || placeholderHints.length === 0) {
       return;
     }
+    const { length } = placeholderHints;
 
     const placeholder = placeholderHints[index++];
     index = index % length;

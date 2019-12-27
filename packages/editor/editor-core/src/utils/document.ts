@@ -13,7 +13,7 @@ const FALSE_POSITIVE_MARKS = ['code', 'alignment', 'indentation'];
  * Checks if node is an empty paragraph.
  */
 export function isEmptyParagraph(node?: Node | null): boolean {
-  return Boolean(node) && node.type.name === 'paragraph' && !node.childCount;
+  return !!node && node.type.name === 'paragraph' && !node.childCount;
 }
 
 /**
