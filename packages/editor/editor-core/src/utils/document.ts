@@ -1,5 +1,5 @@
 import { Node, Schema, ResolvedPos } from 'prosemirror-model';
-import { Transaction, EditorState } from 'prosemirror-state';
+import { Transaction, EditorState, TextSelection } from 'prosemirror-state';
 import { validator, ADFEntity, ValidationError } from '@atlaskit/adf-utils';
 import { analyticsService } from '../analytics';
 import { ContentNodeWithPos } from 'prosemirror-utils';
@@ -13,10 +13,7 @@ const FALSE_POSITIVE_MARKS = ['code', 'alignment', 'indentation'];
  * Checks if node is an empty paragraph.
  */
 export function isEmptyParagraph(node?: Node | null): boolean {
-  return (
-    !node ||
-    (node.type.name === 'paragraph' && !node.textContent && !node.childCount)
-  );
+  return !!node && node.type.name === 'paragraph' && !node.childCount;
 }
 
 /**
@@ -89,16 +86,32 @@ export function isNodeEmpty(node?: Node): boolean {
  */
 export function isEmptyDocument(node: Node): boolean {
   const nodeChild = node.content.firstChild;
-
   if (node.childCount !== 1 || !nodeChild) {
     return false;
   }
-  return (
-    nodeChild.type.name === 'paragraph' &&
-    !nodeChild.childCount &&
-    nodeChild.nodeSize === 2 &&
-    (!nodeChild.marks || nodeChild.marks.length === 0)
-  );
+  return isEmptyParagraph(nodeChild);
+}
+
+// Checks to see if the parent node is the document, ie not contained within another entity
+export function hasDocAsParent($anchor: ResolvedPos): boolean {
+  return $anchor.depth === 1;
+}
+
+export function isInEmptyLine(state: EditorState) {
+  const { selection } = state;
+  const { $cursor, $anchor } = selection as TextSelection;
+
+  if (!$cursor) {
+    return false;
+  }
+
+  const node = $cursor.node();
+
+  if (!node) {
+    return false;
+  }
+
+  return isEmptyParagraph(node) && hasDocAsParent($anchor);
 }
 
 function wrapWithUnsupported(
