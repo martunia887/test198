@@ -10,7 +10,6 @@ import {
   UploadErrorEventPayload,
   UploadEndEventPayload,
   UploadProcessingEventPayload,
-  UploadStatusUpdateEventPayload,
   UploadPreviewUpdateEventPayload,
   UploadsStartEventPayload,
 } from '../../../types';
