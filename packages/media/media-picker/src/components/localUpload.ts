@@ -7,7 +7,6 @@ import {
   UploadPreviewUpdateEventPayload,
   UploadProcessingEventPayload,
   UploadsStartEventPayload,
-  UploadStatusUpdateEventPayload,
   UploadParams,
 } from '../types';
 import { UploadComponent } from './component';
@@ -37,7 +36,6 @@ export class LocalUploadComponent<
     this.config = config;
     this.uploadService.on('files-added', this.onFilesAdded);
     this.uploadService.on('file-preview-update', this.onFilePreviewUpdate);
-    this.uploadService.on('file-uploading', this.onFileUploading);
     this.uploadService.on('file-converting', this.onFileConverting);
     this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
@@ -62,13 +60,6 @@ export class LocalUploadComponent<
     preview,
   }: UploadPreviewUpdateEventPayload): void => {
     this.emitUploadPreviewUpdate(file, preview);
-  };
-
-  private onFileUploading = ({
-    file,
-    progress,
-  }: UploadStatusUpdateEventPayload): void => {
-    this.emitUploadProgress(file, progress);
   };
 
   private onFileConverting = ({ file }: UploadProcessingEventPayload): void => {

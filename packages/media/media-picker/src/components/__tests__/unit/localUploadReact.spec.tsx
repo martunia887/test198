@@ -103,25 +103,6 @@ describe('LocalUploadReact', () => {
     );
   });
 
-  it('should call uploadComponent.emitUploadProgress with proper arguments', () => {
-    const progress: UploadStatusUpdateEventPayload = {
-      file: imageFile,
-      progress: {
-        absolute: 1,
-        portion: 1,
-        max: 1,
-        overallTime: 1,
-        expectedFinishTime: 1,
-        timeLeft: 1,
-      },
-    };
-    (localUploadComponentInstance as any).onFileUploading(progress);
-    expect(uploadComponent.emitUploadProgress).toBeCalledWith(
-      progress.file,
-      progress.progress,
-    );
-  });
-
   it('should call uploadComponent.emitUploadProcessing with proper arguments', () => {
     const processing: UploadProcessingEventPayload = {
       file: imageFile,
