@@ -99,7 +99,6 @@ export class LocalUploadComponentReact<
       config,
       onUploadsStart,
       onPreviewUpdate,
-      onStatusUpdate,
       onProcessing,
       onEnd,
       onError,
@@ -115,9 +114,6 @@ export class LocalUploadComponentReact<
     }
     if (onPreviewUpdate) {
       this.uploadComponent.on('upload-preview-update', onPreviewUpdate!);
-    }
-    if (onStatusUpdate) {
-      this.uploadComponent.on('upload-status-update', onStatusUpdate!);
     }
     if (onProcessing) {
       this.uploadComponent.on('upload-processing', onProcessing!);
@@ -136,7 +132,6 @@ export class LocalUploadComponentReact<
     );
     this.uploadService.on('files-added', this.onFilesAdded);
     this.uploadService.on('file-preview-update', this.onFilePreviewUpdate);
-    this.uploadService.on('file-uploading', this.onFileUploading);
     this.uploadService.on('file-converting', this.onFileConverting);
     this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
@@ -206,13 +201,6 @@ export class LocalUploadComponentReact<
     preview,
   }: UploadPreviewUpdateEventPayload): void => {
     this.uploadComponent.emitUploadPreviewUpdate(file, preview);
-  };
-
-  private onFileUploading = ({
-    file,
-    progress,
-  }: UploadStatusUpdateEventPayload): void => {
-    this.uploadComponent.emitUploadProgress(file, progress);
   };
 
   private onFileConverting = ({ file }: UploadProcessingEventPayload): void => {

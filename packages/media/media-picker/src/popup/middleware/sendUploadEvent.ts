@@ -12,11 +12,6 @@ export default function(eventEmitter: PopupUploadEventEmitter): Middleware {
       const { event, uploadId } = action.payload;
 
       switch (event.name) {
-        case 'upload-status-update': {
-          const file = copyMediaFileForUpload(event.data.file, uploadId);
-          eventEmitter.emitUploadProgress(file, event.data.progress);
-          break;
-        }
         case 'upload-preview-update': {
           const { preview } = event.data;
           const file = copyMediaFileForUpload(event.data.file, uploadId);

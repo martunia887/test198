@@ -51,7 +51,7 @@ ${code`
   * **Browser** - provides the native file browser to allow the user to select a local file
   * **DropZone** - provides a drag &amp; drop area for the user to drag &amp; drop a local file
   * **Clipboard** - provides copy and paste support for the user
-  
+
   There is also a non-React-based component called **Popup** (aka. MediaPicker) which provides a custom picker UI which supports the following sources:
 
   * Local file via native files browser
@@ -68,9 +68,9 @@ ${code`
   <a name="media-client-config"></a>
   ### MediaClientConfig
 
-  No matter which component you use, you'll need to create a \`MediaClientConfig\` object and pass it to the component via the **mediaClientConfig** prop. This should be 
+  No matter which component you use, you'll need to create a \`MediaClientConfig\` object and pass it to the component via the **mediaClientConfig** prop. This should be
   done at/by the product level, so that a common config can be passed down to the components.
-  
+
   \`MediaClientConfig\` must contain a property **authProvider** of function type \`AuthProvider\` (explained in more detail below). This enables
   the component to communicate correctly with the Media Services backend API by passing tokens.
 
@@ -83,7 +83,7 @@ ${code`
   <a name="auth-provider"></a>
   ### AuthProvider
 
-  The **authProvider** value of the \`MediaClientConfig\` object is a function which returns a Promise which resolves to a type \`Auth\`. The function is passed a single argument of type \`AuthContext\` 
+  The **authProvider** value of the \`MediaClientConfig\` object is a function which returns a Promise which resolves to a type \`Auth\`. The function is passed a single argument of type \`AuthContext\`
   which contains a **collectionName** string property. This can be used to pass to your auth provider for additional context (ie. which collection you need to access).
 
   \`AuthProvider\` type can be described as:
@@ -123,14 +123,14 @@ type AuthProvider = (context?: AuthContext) => Promise<Auth>;`}
   <a name="component-config"></a>
   ### Component Configuration
 
-  Apart from requiring a \`MediaClientConfig\` with an \`AuthProvider\`, each component can be configured for additional component-specific settings. 
-  
+  Apart from requiring a \`MediaClientConfig\` with an \`AuthProvider\`, each component can be configured for additional component-specific settings.
+
   These are the base properties for each component configuration, meaning each component can be configured with these common properties:
 
   * **uploadParams?**: \`object\` - an object containing the following properties:
     * **collection?**: \`string\` - the collection name to upload file(s) to
   * **shouldCopyFileToRecents?**: \`boolean\` - whether or not the file(s) should appear in the clients recents collection
-  
+
   There are additional config properties available for each component, they are described with each component below.
 
   <a name="working-with-components"></a>
@@ -175,7 +175,7 @@ type AuthProvider = (context?: AuthContext) => Promise<Auth>;`}
   Here's an example of using the component.
 
   **NOTE:**
-  
+
   * To cancel the upload take a look at the \`onCancelFn\` prop. You are passed a ref to a function which you can call later by passing an upload id you received before.
 
   ${code`import { Dropzone } from '@atlaskit/media-picker';
@@ -183,7 +183,7 @@ type AuthProvider = (context?: AuthContext) => Promise<Auth>;`}
 const mediaClientConfig = {
   authProvider: myAuthProviderFn
 };
-  
+
 const dropZoneConfig = {
   container: document.getElementById('dropZone'),
   uploadParams: {
@@ -194,7 +194,7 @@ const dropZoneConfig = {
   Here's an example of using the component.
 
   **NOTE:**
-  
+
   * To cancel the upload take a look at the \`onCancelFn\` prop. You are passed a ref to a function which you can call later by passing an upload id you received before.
 
   ${code`function onCancelFn(cancelFn) {
@@ -231,7 +231,7 @@ const dropZoneConfig = {
   const mediaClientConfig = {
     authProvider: myAuthProviderFn
   };
-    
+
   const clipboardConfig = {
     uploadParams: {
       collection: 'some-collection',
@@ -267,7 +267,7 @@ ${code`<Clipboard
 
   * **multiple?**: \`boolean\` - whether or not to allow multiple files during selection
   * **fileExtensions?**: \`Array<string>\` - limit file types to given extensions
-  
+
   Here's an example of using the component.
 
   **NOTE:**
@@ -280,7 +280,7 @@ ${code`<Clipboard
 const mediaClientConfig = {
   authProvider: myAuthProviderFn
 };
-  
+
 const browserConfig = {
   multiple: true,
   fileExtensions: ['image/jpeg', 'image/png', 'video/mp4'],
@@ -329,7 +329,7 @@ function onBrowseFnHandler(browseFn) {
   * **proxyReactContext?**: \`AppProxyReactContext\` - (advanced, not required on average) an object to use when needing React context from a different tree
   * **singleSelect?**: \`boolean\` - whether or not to allow multiple or just single selections
 
-  Import the \`MediaPicker\` factory method and pass a \`MediaClientConfig\` object along with a custom configuration object to it. _NOTE: Since 
+  Import the \`MediaPicker\` factory method and pass a \`MediaClientConfig\` object along with a custom configuration object to it. _NOTE: Since
   the class is code split (will load async on demand) you need to use the \`await\` keyword, or use a promise syntax._
 
   ${code`import { MediaPicker } from '@atlaskit/media-picker';
@@ -355,7 +355,6 @@ You'll then need to subscribe to its events. These events are the same as the Re
 
 ${code`popup.on('uploads-start', onUploadsStartFn);
 popup.on('upload-preview-update', onUploadPreviewHandler);
-popup.on('upload-status-update', onUploadStatusUpdateHandler);
 popup.on('upload-processing', onUploadProcessingHandler);
 popup.on('upload-end', onUploadEndHandler);
 popup.on('upload-error', onUploadErrorHandler);
@@ -383,7 +382,7 @@ The popup provides the following methods:
   <a name="authprovider"></a>
   ### AuthProvider Service Example
 
-  Media Picker requires a signed JWT for uploading files into the Media API. 
+  Media Picker requires a signed JWT for uploading files into the Media API.
   The token is usually created on the backend by your service with a function similar to this:
 
   ${code`function createFileStoreToken() {

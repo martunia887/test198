@@ -11,8 +11,6 @@ import { sendUploadEvent } from '../../../actions/sendUploadEvent';
 describe('handleCloudFetchingEvent', () => {
   const uploadId = 'some-upload-id';
   const fileId = 'file-id';
-  const bytes = 50;
-  const fileSize = 1000;
   const serviceName = 'dropbox';
   const client = { id: 'some-client-id', token: 'some-client-token' };
   const description = 'some-error-description';
@@ -30,38 +28,6 @@ describe('handleCloudFetchingEvent', () => {
       next: jest.fn(),
     };
   };
-
-  it('should report upload-status-update to the parent channel when receives RemoteUploadProgress event', () => {
-    const { store, next } = setup();
-    const action: HandleCloudFetchingEventAction<'RemoteUploadProgress'> = {
-      type: HANDLE_CLOUD_FETCHING_EVENT,
-      file,
-      event: 'RemoteUploadProgress',
-      payload: { uploadId, bytes, fileSize, serviceName },
-    };
-    const portion = 0.05;
-
-    handleCloudFetchingEvent(store)(next)(action);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      sendUploadEvent({
-        event: {
-          name: 'upload-status-update',
-          data: {
-            file,
-            progress: {
-              absolute: file.size * portion,
-              expectedFinishTime: expect.any(Number),
-              max: file.size,
-              overallTime: expect.any(Number),
-              portion,
-              timeLeft: expect.any(Number),
-            },
-          },
-        },
-        uploadId,
-      }),
-    );
-  });
 
   it('should dispatch finalizeUpload and getPreview when receives RemoteUploadEnd event', () => {
     const { store, next } = setup();

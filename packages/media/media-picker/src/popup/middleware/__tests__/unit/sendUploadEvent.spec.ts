@@ -47,39 +47,6 @@ describe('sendUploadEvent middleware', () => {
     expect(next).toBeCalledWith(action);
   });
 
-  it('should emit upload status update event', () => {
-    const { eventEmitter, store, next } = setup();
-    const progress = {
-      absolute: 123,
-      portion: 0.21,
-      max: 256,
-      overallTime: 12323,
-      expectedFinishTime: 23423,
-      timeLeft: 12432,
-    };
-
-    sendUploadEventMiddleware(eventEmitter)(store)(next)(
-      sendUploadEvent({
-        event: {
-          name: 'upload-status-update',
-          data: {
-            file,
-            progress,
-          },
-        },
-        uploadId,
-      }),
-    );
-
-    expect(eventEmitter.emitUploadProgress).toBeCalledWith(
-      {
-        ...file,
-        id: uploadId,
-      },
-      progress,
-    );
-  });
-
   it('should emit upload preview update event', () => {
     const { eventEmitter, store, next } = setup();
     const preview = {

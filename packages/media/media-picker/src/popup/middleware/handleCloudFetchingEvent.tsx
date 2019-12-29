@@ -1,6 +1,5 @@
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 
-import { SmartMediaProgress } from '../../domain/progress';
 import { Action, Dispatch, Store } from 'redux';
 import { finalizeUpload } from '../actions/finalizeUpload';
 import {
@@ -12,7 +11,6 @@ import { State } from '../domain';
 
 import {
   WsUploadEvents,
-  RemoteUploadProgressPayload,
   RemoteUploadEndPayload,
   RemoteUploadFailPayload,
 } from '../tools/websocket/upload/wsUploadEvents';
@@ -27,12 +25,6 @@ const isCloudFetchingEventAction = (
   action: Action,
 ): action is CloudFetchingEventAction => {
   return action.type === HANDLE_CLOUD_FETCHING_EVENT;
-};
-
-const isRemoteUploadProgressAction = (
-  action: CloudFetchingEventAction,
-): action is HandleCloudFetchingEventAction<'RemoteUploadProgress'> => {
-  return action.event === 'RemoteUploadProgress';
 };
 
 const isRemoteUploadEndAction = (
@@ -50,33 +42,6 @@ const isRemoteUploadFailAction = (
 export const handleCloudFetchingEvent = (store: Store<State>) => (
   next: Dispatch<State>,
 ) => (action: Action) => {
-  // Handle cloud upload progress
-  const handleRemoteUploadProgressMessage = (
-    file: MediaFile,
-    data: RemoteUploadProgressPayload,
-  ) => {
-    const portion = data.bytes / data.fileSize;
-    const progress = new SmartMediaProgress(
-      file.size,
-      file.size * portion,
-      file.creationDate,
-      Date.now(),
-    );
-
-    store.dispatch(
-      sendUploadEvent({
-        event: {
-          name: 'upload-status-update',
-          data: {
-            file,
-            progress: progress.toJSON(),
-          },
-        },
-        uploadId: data.uploadId,
-      }),
-    );
-  };
-
   // Handle cloud upload end
   const handleRemoteUploadEndMessage = (
     file: MediaFile,
@@ -119,9 +84,7 @@ export const handleCloudFetchingEvent = (store: Store<State>) => (
   };
 
   if (isCloudFetchingEventAction(action)) {
-    if (isRemoteUploadProgressAction(action)) {
-      handleRemoteUploadProgressMessage(action.file, action.payload);
-    } else if (isRemoteUploadEndAction(action)) {
+    if (isRemoteUploadEndAction(action)) {
       handleRemoteUploadEndMessage(action.file, action.payload);
     } else if (isRemoteUploadFailAction(action)) {
       handleRemoteUploadFailMessage(action.file, action.payload);

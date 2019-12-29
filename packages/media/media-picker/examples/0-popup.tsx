@@ -32,7 +32,6 @@ import {
   UploadPreviewUpdateEventPayload,
   UploadProcessingEventPayload,
   UploadsStartEventPayload,
-  UploadStatusUpdateEventPayload,
   PopupUploadEventPayloadMap,
   Popup,
 } from '../src/types';
@@ -115,7 +114,6 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
 
     newPopup.on('uploads-start', this.onUploadsStart);
     newPopup.on('upload-preview-update', this.onUploadPreview);
-    newPopup.on('upload-status-update', this.onUploadStatusUpdate);
     newPopup.on('upload-processing', this.onUploadProcessing);
     newPopup.on('upload-end', this.onUploadEnd);
     newPopup.on('upload-error', this.onUploadError);
@@ -160,19 +158,6 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
         ...newInflightUploads,
       },
       events: [...this.state.events, { eventName: 'uploads-start', data }],
-    });
-  };
-
-  onUploadStatusUpdate = (data: UploadStatusUpdateEventPayload) => {
-    const { inflightUploads } = this.state;
-    const id = data.file.id;
-    inflightUploads[id] = data.progress;
-    this.setState({
-      inflightUploads,
-      events: [
-        ...this.state.events,
-        { eventName: 'upload-status-update', data },
-      ],
     });
   };
 

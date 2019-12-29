@@ -60,7 +60,6 @@ export type UploadErrorEventPayload = {
 export type UploadEventPayloadMap = {
   readonly 'uploads-start': UploadsStartEventPayload;
   readonly 'upload-preview-update': UploadPreviewUpdateEventPayload;
-  readonly 'upload-status-update': UploadStatusUpdateEventPayload;
   readonly 'upload-processing': UploadProcessingEventPayload;
   readonly 'upload-end': UploadEndEventPayload;
   readonly 'upload-error': UploadErrorEventPayload;

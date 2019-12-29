@@ -24,7 +24,6 @@ import { startApp, StartAppActionPayload } from '../actions/startApp';
 import { hidePopup } from '../actions/hidePopup';
 import { fileUploadsStart } from '../actions/fileUploadsStart';
 import { fileUploadPreviewUpdate } from '../actions/fileUploadPreviewUpdate';
-import { fileUploadProgress } from '../actions/fileUploadProgress';
 import { fileUploadProcessingStart } from '../actions/fileUploadProcessingStart';
 import { fileUploadEnd } from '../actions/fileUploadEnd';
 import { fileUploadError } from '../actions/fileUploadError';
@@ -35,7 +34,6 @@ import PassContext from './passContext';
 import {
   UploadsStartEventPayload,
   UploadPreviewUpdateEventPayload,
-  UploadStatusUpdateEventPayload,
   UploadProcessingEventPayload,
   UploadEndEventPayload,
   UploadErrorEventPayload,
@@ -73,9 +71,6 @@ export interface AppDispatchProps {
   readonly onUploadsStart: (payload: UploadsStartEventPayload) => void;
   readonly onUploadPreviewUpdate: (
     payload: UploadPreviewUpdateEventPayload,
-  ) => void;
-  readonly onUploadStatusUpdate: (
-    payload: UploadStatusUpdateEventPayload,
   ) => void;
   readonly onUploadProcessing: (payload: UploadProcessingEventPayload) => void;
   readonly onUploadEnd: (payload: UploadEndEventPayload) => void;
@@ -115,7 +110,6 @@ export class App extends Component<AppProps, AppState> {
       onStartApp,
       onUploadsStart,
       onUploadPreviewUpdate,
-      onUploadStatusUpdate,
       onUploadProcessing,
       onUploadEnd,
       onUploadError,
@@ -145,7 +139,6 @@ export class App extends Component<AppProps, AppState> {
 
     this.localUploader.on('uploads-start', onUploadsStart);
     this.localUploader.on('upload-preview-update', onUploadPreviewUpdate);
-    this.localUploader.on('upload-status-update', onUploadStatusUpdate);
     this.localUploader.on('upload-processing', onUploadProcessing);
     this.localUploader.on('upload-end', onUploadEnd);
     this.localUploader.on('upload-error', onUploadError);
@@ -244,7 +237,6 @@ export class App extends Component<AppProps, AppState> {
   private renderClipboard = () => {
     const {
       onUploadPreviewUpdate,
-      onUploadStatusUpdate,
       onUploadProcessing,
       onUploadEnd,
       onUploadError,
@@ -262,7 +254,6 @@ export class App extends Component<AppProps, AppState> {
         config={config}
         onUploadsStart={this.onDrop}
         onPreviewUpdate={onUploadPreviewUpdate}
-        onStatusUpdate={onUploadStatusUpdate}
         onProcessing={onUploadProcessing}
         onEnd={onUploadEnd}
         onError={onUploadError}
@@ -275,7 +266,6 @@ export class App extends Component<AppProps, AppState> {
       tenantUploadParams,
       onUploadsStart,
       onUploadPreviewUpdate,
-      onUploadStatusUpdate,
       onUploadProcessing,
       onUploadEnd,
       onUploadError,
@@ -293,7 +283,6 @@ export class App extends Component<AppProps, AppState> {
         config={config}
         onUploadsStart={onUploadsStart}
         onPreviewUpdate={onUploadPreviewUpdate}
-        onStatusUpdate={onUploadStatusUpdate}
         onProcessing={onUploadProcessing}
         onEnd={onUploadEnd}
         onError={onUploadError}
@@ -304,7 +293,6 @@ export class App extends Component<AppProps, AppState> {
   private renderDropzone = () => {
     const {
       onUploadPreviewUpdate,
-      onUploadStatusUpdate,
       onUploadProcessing,
       onUploadEnd,
       onUploadError,
@@ -323,7 +311,6 @@ export class App extends Component<AppProps, AppState> {
         config={config}
         onUploadsStart={this.onDrop}
         onPreviewUpdate={onUploadPreviewUpdate}
-        onStatusUpdate={onUploadStatusUpdate}
         onProcessing={onUploadProcessing}
         onEnd={onUploadEnd}
         onError={onUploadError}
@@ -357,8 +344,6 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): AppDispatchProps => ({
   },
   onUploadPreviewUpdate: (payload: UploadPreviewUpdateEventPayload) =>
     dispatch(fileUploadPreviewUpdate(payload)),
-  onUploadStatusUpdate: (payload: UploadStatusUpdateEventPayload) =>
-    dispatch(fileUploadProgress(payload)),
   onUploadProcessing: (payload: UploadProcessingEventPayload) =>
     dispatch(fileUploadProcessingStart(payload)),
   onUploadEnd: (payload: UploadEndEventPayload) =>

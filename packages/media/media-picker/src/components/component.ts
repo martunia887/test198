@@ -3,13 +3,11 @@ import {
   Preview,
   UploadEventPayloadMap,
   MediaError,
-  MediaProgress,
 } from '../types';
 import { GenericEventEmitter } from '../util/eventEmitter';
 
 export interface UploadEventEmitter {
   emitUploadsStart(files: MediaFile[]): void;
-  emitUploadProgress(file: MediaFile, progress: MediaProgress): void;
   emitUploadPreviewUpdate(file: MediaFile, preview: Preview): void;
   emitUploadProcessing(file: MediaFile): void;
   emitUploadEnd(file: MediaFile): void;
@@ -22,13 +20,6 @@ export class UploadComponent<M extends UploadEventPayloadMap>
   emitUploadsStart(files: MediaFile[]): void {
     this.emit('uploads-start', {
       files,
-    });
-  }
-
-  emitUploadProgress(file: MediaFile, progress: MediaProgress): void {
-    this.emit('upload-status-update', {
-      file,
-      progress,
     });
   }
 
