@@ -1,5 +1,4 @@
 createBranchDeployIntegrator([
-  'sourceRepo',
   'productRepo',
   'productCiPlanUrl',
   'dockerContainer',
