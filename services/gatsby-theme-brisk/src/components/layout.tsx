@@ -2,7 +2,9 @@ import React from 'react';
 import { css, jsx, Global } from '@emotion/core';
 import styled from '@emotion/styled';
 import cssReset from '@atlaskit/css-reset';
-import HeaderContent from '../content/header-content';
+import PageTitle from './page-title';
+import HeaderContent from './../content/header-content';
+import SidebarContent from './../content/sidebar-content';
 
 const Grid = styled.div`
   display: grid;
@@ -20,14 +22,13 @@ const Main = styled.main`
   background-color: blue;
 `;
 
-const Header = styled.header`
+const Header = styled(HeaderContent)`
   grid-area: header;
   background-color: yellow;
 `;
 
 const Sidebar = styled.div`
   grid-area: sidebar;
-  background-color: purple;
 `;
 
 const Footer = styled.footer`
@@ -35,22 +36,39 @@ const Footer = styled.footer`
   background-color: pink;
 `;
 
-const Layout = (props: any) => (
-  <>
-    <Global
-      styles={css`
-        ${cssReset}
-      `}
-    />
-    <Grid>
-      <Header>
-        <HeaderContent />
-      </Header>
-      <Sidebar />
-      <Main>{props.children}</Main>
-      <Footer />
-    </Grid>
-  </>
-);
+type Props = {
+  Sidebar?: React.Component;
+  title?: String;
+  children: any;
+};
+
+const Layout = (props: Props) => {
+  let SidebarComponent;
+
+  if (props.Sidebar) {
+    SidebarComponent = props.Sidebar;
+  } else {
+    SidebarComponent = SidebarContent;
+  }
+
+  return (
+    <>
+      <Global
+        styles={css`
+          ${cssReset}
+        `}
+      />
+      <Grid>
+        <PageTitle />
+        <Header />
+        <Sidebar>
+          <SidebarComponent />
+        </Sidebar>
+        <Main>{props.children}</Main>
+        <Footer />
+      </Grid>
+    </>
+  );
+};
 
 export default Layout;

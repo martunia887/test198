@@ -15,9 +15,9 @@ const NavItem = ({ text, href, to, isSelected = false }: Props) => {
   return (
     <CustomItem
       isSelected={isSelected}
-      component={({ wrapperClass, ...rest }) => (
-        <Link className={wrapperClass} to={href || to} {...rest} />
-      )}
+      component={({ wrapperClass, ...rest }) => {
+        return <Link className={wrapperClass} to={href || to} {...rest} />;
+      }}
     >
       {text}
     </CustomItem>

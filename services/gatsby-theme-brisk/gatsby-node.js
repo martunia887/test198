@@ -64,9 +64,11 @@ exports.onCreateNode = async ({ node, actions }) => {
 
 async function getMdx({ name, packageName, mdxPath }, { actions, graphql }) {
   // get all Mdx for the package
+  const globPath = `${mdxPath}/**`;
+
   const { data } = await graphql(`
     query {
-      allMdx(filter: {fileAbsolutePath: {glob: "${mdxPath + '/**'}"}}) {
+      allMdx(filter: {fileAbsolutePath: {glob: "${globPath}"}}) {
         edges {
           node {
             parent {
@@ -88,7 +90,7 @@ async function getMdx({ name, packageName, mdxPath }, { actions, graphql }) {
   // for each mdx node
   if (data.allMdx.edges.length > 0) {
     data.allMdx.edges.forEach(({ node }) => {
-      let { name: nodeName, dir } = node.parent;
+      const { name: nodeName, dir } = node.parent;
 
       // check if it is a tab
       if (dir.indexOf('index') !== -1) {
@@ -103,7 +105,6 @@ async function getMdx({ name, packageName, mdxPath }, { actions, graphql }) {
       // check if it is a subpage (top-level pages other than index)
       if (dir === mdxPath && nodeName !== 'index') {
         // create the page
-        console.log(`${mdxPath}/${nodeName}.mdx`);
         actions.createPage({
           path: `components/${name}/${nodeName}`,
           component: require.resolve(`./src/templates/component-page.tsx`),
@@ -116,18 +117,15 @@ async function getMdx({ name, packageName, mdxPath }, { actions, graphql }) {
 
   if (hasTabs) {
     // if there's tabs, load mdx for each
-    let context = {};
-    context.name = packageName;
-    context.mdxPath = `${mdxPath}/index/*`;
+    console.log(`${mdxPath}/index/*`);
     actions.createPage({
       path: `components/${name}`,
       component: require.resolve(`./src/templates/component-page.tsx`),
-      context: context,
+      context: { name: packageName, mdxPath: `${mdxPath}/index/*` },
     });
   } else {
     console.log(name, 'loading index');
     // else, only load the index
-    console.log(`${mdxPath}/index.mdx`);
     actions.createPage({
       path: `components/${name}`,
       component: require.resolve(`./src/templates/component-page.tsx`),
@@ -136,9 +134,7 @@ async function getMdx({ name, packageName, mdxPath }, { actions, graphql }) {
   }
 }
 
-exports.createPages = async function({ actions, graphql }, options) {
-  let context = {};
-  const docsFolder = options.docsFolder;
+exports.createPages = async function({ actions, graphql }, { docsFolder }) {
   const { data } = await graphql(`
     query {
       allWorkspaceInfo {
@@ -156,7 +152,7 @@ exports.createPages = async function({ actions, graphql }, options) {
   data.allWorkspaceInfo.edges.forEach(edge => {
     const name = edge.node.docsDisplayName;
     const packageName = edge.node.name;
-    const mdxPath = `${edge.node.dir}/${options.docsFolder}`;
+    const mdxPath = `${edge.node.dir}/${docsFolder}`;
 
     const info = {
       mdxPath,

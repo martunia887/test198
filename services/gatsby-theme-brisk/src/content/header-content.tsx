@@ -1,7 +1,5 @@
 import React from 'react';
 
-export default () => (
-  <>
-    <h1>NOT YOLO</h1>
-  </>
-);
+const Header = () => <></>;
+
+export default Header;
