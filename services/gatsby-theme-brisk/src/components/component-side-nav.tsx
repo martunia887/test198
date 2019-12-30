@@ -21,7 +21,7 @@ const ComponentNavItem = ({
   />
 );
 
-const ComponentNav = ({ components }) => (
+const ComponentNav = ({ components, mdx }) => (
   // BC: location is undefined in SSR calls, so we are defaulting it to an empty object
   <Location>
     {({ location = {} }) => (
@@ -47,70 +47,80 @@ const ComponentNav = ({ components }) => (
 
         <HeadingItem>Core</HeadingItem>
         <NavSection>
-          {components.map(({ docsDisplayName, id }) => (
-            <ComponentNavItem
-              key={id}
-              docsDisplayName={docsDisplayName}
-              location={location}
-            />
-            /*
-              Hi friends, BC here, I am about to do some very hackery stuff so I can
-              get sub-items to be rendering correctly. This is not the intended pattern
-              and shouldn't be taken as such 😅
-            */
-            // docsDisplayName === 'avatar' ? (
-            //   <>
-            //     <ComponentNavItem
-            //       docsDisplayName={docsDisplayName}
-            //       location={location}
-            //     />
-            //     <NavSection>
-            //       <NavItem
-            //         isSelected={
-            //           `/components/${docsDisplayName}/avatar-item` ===
-            //           location.pathname
-            //         }
-            //         key={docsDisplayName}
-            //         text="avatar item"
-            //         to={`/components/${docsDisplayName}/avatar-item`}
-            //       />
-            //       <NavItem
-            //         isSelected={
-            //           `/components/${docsDisplayName}/presence` ===
-            //           location.pathname
-            //         }
-            //         key={docsDisplayName}
-            //         text="presence"
-            //         to={`/components/${docsDisplayName}/presence`}
-            //       />
-            //       <NavItem
-            //         isSelected={
-            //           `/components/${docsDisplayName}/status` ===
-            //           location.pathname
-            //         }
-            //         key={docsDisplayName}
-            //         text="status"
-            //         to={`/components/${docsDisplayName}/status`}
-            //       />
-            //       <NavItem
-            //         isSelected={
-            //           `/components/${docsDisplayName}/skeleton` ===
-            //           location.pathname
-            //         }
-            //         key={docsDisplayName}
-            //         text="skeleton"
-            //         to={`/components/${docsDisplayName}/skeleton`}
-            //       />
-            //     </NavSection>
-            //   </>
-            // ) : (
-            //   <ComponentNavItem
-            //     key={id}
-            //     docsDisplayName={docsDisplayName}
-            //     location={location}
-            //   />
-            // ),
-          ))}
+          {components.map(({ docsDisplayName, id, dir }) => {
+            const subItems = mdx.filter(node => {
+              const mdxPath = node.parent.absolutePath;
+              // if it's part of this package
+              if (mdxPath.indexOf(`${dir}/`) !== -1) {
+                // if its in the index folder or an index.mdx in the root folder, skip
+                let str = mdxPath.split(`${dir}/`)[1].split('/')[1];
+                return str.includes('index') ? false : true;
+              }
+            });
+
+            if (subItems.length > 0) {
+              let folders = {};
+
+              return (
+                <>
+                  <ComponentNavItem
+                    key={id}
+                    docsDisplayName={docsDisplayName}
+                    location={location}
+                  />
+
+                  <NavSection css={{ marginLeft: '20px' }}>
+                    {subItems.map(item => {
+                      const { name, absolutePath } = item.parent;
+                      // get the mdx path relative to the current package
+                      const mdxPath = absolutePath.split(`${dir}/`)[1];
+                      // get everything after the docsFolder (usually after constellation/)
+                      const path = mdxPath.slice(mdxPath.indexOf('/') + 1);
+                      // if it's part of a tabbed page
+
+                      if (path.includes('/')) {
+                        const folderName = path.split('/')[0];
+
+                        if (!folders[folderName]) {
+                          folders[folderName] = folderName;
+                          return (
+                            <NavItem
+                              isSelected={
+                                `/components/${docsDisplayName}/${folderName}` ===
+                                location.pathname
+                              }
+                              key={item.id}
+                              text={folderName}
+                              to={`/components/${docsDisplayName}/${folderName}`}
+                            />
+                          );
+                        }
+                      } else {
+                        return (
+                          <NavItem
+                            isSelected={
+                              `/components/${docsDisplayName}/${name}` ===
+                              location.pathname
+                            }
+                            key={item.id}
+                            text={name}
+                            to={`/components/${docsDisplayName}/${name}`}
+                          />
+                        );
+                      }
+                    })}
+                  </NavSection>
+                </>
+              );
+            }
+            return (
+              <ComponentNavItem
+                key={id}
+                docsDisplayName={docsDisplayName}
+                location={location}
+              />
+            );
+          })}
         </NavSection>
       </>
     )}
@@ -125,10 +135,28 @@ export default () => (
           nodes {
             docsDisplayName
             id
+            dir
+          }
+        }
+        allMdx {
+          nodes {
+            id
+            parent {
+              ... on File {
+                absolutePath
+                name
+                dir
+              }
+            }
           }
         }
       }
     `}
-    render={data => <ComponentNav components={data.allWorkspaceInfo.nodes} />}
+    render={data => (
+      <ComponentNav
+        mdx={data.allMdx.nodes}
+        components={data.allWorkspaceInfo.nodes}
+      />
+    )}
   />
 );

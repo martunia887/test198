@@ -1,5 +1,4 @@
 // @flow
-const path = require('path');
 const constellationInitialPackages = require('./constellation-package-list');
 
 module.exports = {
