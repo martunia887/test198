@@ -8,7 +8,7 @@ import {
   R500,
   P500,
   G500,
-  N80,
+  N200,
   Y400,
   T300,
   R300,
@@ -38,7 +38,7 @@ export interface TextColorMark extends Mark {
 
 /** New borders for colors in the color picker */
 export const borderColorPalette = {
-  [N80]: N90,
+  [N200]: N90,
   [P300]: P500,
   [T300]: T500,
   [G300]: G500,
@@ -59,7 +59,7 @@ export const colorPalette = new Map<string, TextColorKey>();
 
 const colorArrayPalette: Array<[string, TextColorKey]> = [
   // [N800, default],
-  [N80, 'Light gray'],
+  [N200, 'Light gray'],
   [P300, 'Purple'],
   [T300, 'Teal'],
   [G300, 'Green'],
