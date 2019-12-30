@@ -105,7 +105,7 @@ export function isInEmptyLine(state: EditorState) {
     return false;
   }
 
-  const node = $cursor.node();
+  const node = $cursor.nodeBefore;
 
   if (!node) {
     return false;
