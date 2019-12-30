@@ -35,6 +35,7 @@ import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
 import { extensionStyles } from '../../plugins/extension/ui/styles';
 import { expandStyles } from '../../plugins/expand/ui/styles';
+import { ClassNames } from '../../plugins/media/pm-plugins/alt-text/style';
 
 const ContentStyles: ComponentClass<HTMLAttributes<{}> & {
   theme: any;
@@ -175,7 +176,7 @@ const ContentStyles: ComponentClass<HTMLAttributes<{}> & {
     text-align: center;
   }
 
-  .hyperlink-floating-toolbar, .alt-text-floating-toolbar {
+  .hyperlink-floating-toolbar, .${ClassNames.FLOATING_TOOLBAR_COMPONENT} {
     padding: 0;
   }
 
