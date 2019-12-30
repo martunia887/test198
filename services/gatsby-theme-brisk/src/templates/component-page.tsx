@@ -1,17 +1,15 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/layout';
-import PageTitle from '../components/page-title';
 import ComponentContent from '../content/component-content';
 
 export default ({ data }) => {
   console.log(data);
   const { name, docsDisplayName } = data.workspaceInfo;
   return (
-    <Layout>
-      <PageTitle title={docsDisplayName} />
+    <Layout title={docsDisplayName}>
       <h1>{name}</h1>
-      {/* <ComponentContent mdxNodes={data.allMdx.edges} /> */}
+      <ComponentContent mdxNodes={data.allMdx.nodes} />
     </Layout>
   );
 };
@@ -23,18 +21,16 @@ export const query = graphql`
       docsDisplayName
     }
     allMdx(filter: { fileAbsolutePath: { glob: $mdxPath } }) {
-      edges {
-        node {
-          parent {
-            ... on File {
-              absolutePath
-              name
-              dir
-            }
+      nodes {
+        parent {
+          ... on File {
+            absolutePath
+            name
+            dir
           }
-          id
-          body
         }
+        id
+        body
       }
     }
   }

@@ -38,7 +38,7 @@ const Footer = styled.footer`
 
 type Props = {
   Sidebar?: React.Component;
-  title?: String;
+  title?: string;
   children: any;
 };
 
@@ -59,7 +59,7 @@ const Layout = (props: Props) => {
         `}
       />
       <Grid>
-        <PageTitle />
+        <PageTitle title={props.title} />
         <Header />
         <Sidebar>
           <SidebarComponent />

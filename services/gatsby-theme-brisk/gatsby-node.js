@@ -117,14 +117,12 @@ async function getMdx({ name, packageName, mdxPath }, { actions, graphql }) {
 
   if (hasTabs) {
     // if there's tabs, load mdx for each
-    console.log(`${mdxPath}/index/*`);
     actions.createPage({
       path: `components/${name}`,
       component: require.resolve(`./src/templates/component-page.tsx`),
       context: { name: packageName, mdxPath: `${mdxPath}/index/*` },
     });
   } else {
-    console.log(name, 'loading index');
     // else, only load the index
     actions.createPage({
       path: `components/${name}`,
