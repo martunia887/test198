@@ -127,7 +127,6 @@ export function bracketTyped(state: EditorState) {
 
   if (node.type.name === 'text' && node.text === '{') {
     const paragraphNode = $anchor.node();
-    console.log('bracket typed')
     return paragraphNode.marks.length === 0 && hasDocAsParent($anchor);
   }
 
