@@ -6,12 +6,14 @@ import Tooltip from '@atlaskit/tooltip';
 export enum StatusClassNames {
   ASC = 'sorting-icon-svg__asc',
   DESC = 'sorting-icon-svg__desc',
+  NO_ORDER = 'sorting-icon-svg__no_order',
   SORTING_NOT_ALLOWED = 'sorting-icon-svg__not-allowed',
 }
 
 const Wrapper = styled.figure`
   border: 2px solid #fff;
   background-color: #f4f5f7;
+
   align-items: center;
   display: flex;
   height: 23px;
@@ -42,9 +44,9 @@ const getClassName = (status?: SortOrder) => {
       return StatusClassNames.ASC;
     case SortOrder.DESC:
       return StatusClassNames.DESC;
+    default:
+      return StatusClassNames.NO_ORDER;
   }
-
-  return '';
 };
 
 type Props = {
