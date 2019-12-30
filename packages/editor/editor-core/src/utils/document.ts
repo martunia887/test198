@@ -105,7 +105,7 @@ export function isInEmptyLine(state: EditorState) {
     return false;
   }
 
-  const node = $cursor.nodeBefore;
+  const node = $cursor.node();
 
   if (!node) {
     return false;
@@ -114,13 +114,14 @@ export function isInEmptyLine(state: EditorState) {
 }
 
 export function bracketTyped(state: EditorState) {
-  const { doc, selection } = state;
+  const { selection } = state;
   const { $cursor, $anchor } = selection as TextSelection;
 
   if (!$cursor) {
     return false;
   }
-  const node = doc.nodeAt($cursor.pos - 1);
+  const node = $cursor.nodeBefore;
+
   if (!node) {
     return false;
   }
