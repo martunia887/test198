@@ -5,26 +5,13 @@ import PageTitle from '../components/page-title';
 import ComponentContent from '../content/component-content';
 
 export default ({ data }) => {
+  console.log(data);
   const { name, docsDisplayName } = data.workspaceInfo;
-  const mdxNodes = data.allMdx.edges;
-  // if node is in index/ it is a tab
-  // if node is in docsFolder it is a subpage
-  let tabs = [];
-  let subpages = [];
-  mdxNodes.forEach(({ node }) => {
-    if (node.parent.dir.indexOf('index') !== -1) {
-      console.log('tab');
-      tabs.push(node.body);
-    } else {
-      console.log('subpage');
-      subpages.push(node.body);
-    }
-  });
   return (
     <Layout>
       <PageTitle title={docsDisplayName} />
       <h1>{name}</h1>
-      {tabs && tabs.map(mdx => <ComponentContent mdx={mdx} />)}
+      {/* <ComponentContent mdxNodes={data.allMdx.edges} /> */}
     </Layout>
   );
 };
@@ -45,6 +32,7 @@ export const query = graphql`
               dir
             }
           }
+          id
           body
         }
       }

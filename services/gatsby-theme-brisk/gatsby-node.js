@@ -62,10 +62,83 @@ exports.onCreateNode = async ({ node, actions }) => {
   }
 };
 
-// to do: define docsfolder deafult
+async function getMdx({ name, packageName, mdxPath }, { actions, graphql }) {
+  // get all Mdx for the package
+  const { data } = await graphql(`
+    query {
+      allMdx(filter: {fileAbsolutePath: {glob: "${mdxPath + '/**'}"}}) {
+        edges {
+          node {
+            parent {
+               ... on File {
+                absolutePath
+                name
+                dir
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  let hasTabs = false;
+  let hasSubFolders = false;
+
+  // for each mdx node
+  if (data.allMdx.edges.length > 0) {
+    data.allMdx.edges.forEach(({ node }) => {
+      let { name: nodeName, dir } = node.parent;
+
+      // check if it is a tab
+      if (dir.indexOf('index') !== -1) {
+        hasTabs = true;
+      }
+
+      // check if it's inside of a subfolder
+      if (dir !== mdxPath) {
+        hasSubFolders = true;
+      }
+
+      // check if it is a subpage (top-level pages other than index)
+      if (dir === mdxPath && nodeName !== 'index') {
+        // create the page
+        console.log(`${mdxPath}/${nodeName}.mdx`);
+        actions.createPage({
+          path: `components/${name}/${nodeName}`,
+          component: require.resolve(`./src/templates/component-page.tsx`),
+          context: { name: packageName, mdxPath: `${mdxPath}/${nodeName}.mdx` },
+        });
+      }
+    });
+  }
+  // TODO: if there's subFolders, recurse
+
+  if (hasTabs) {
+    // if there's tabs, load mdx for each
+    let context = {};
+    context.name = packageName;
+    context.mdxPath = `${mdxPath}/index/*`;
+    actions.createPage({
+      path: `components/${name}`,
+      component: require.resolve(`./src/templates/component-page.tsx`),
+      context: context,
+    });
+  } else {
+    console.log(name, 'loading index');
+    // else, only load the index
+    console.log(`${mdxPath}/index.mdx`);
+    actions.createPage({
+      path: `components/${name}`,
+      component: require.resolve(`./src/templates/component-page.tsx`),
+      context: { name: packageName, mdxPath: `${mdxPath}/index.mdx` },
+    });
+  }
+}
+
 exports.createPages = async function({ actions, graphql }, options) {
   let context = {};
-  const docsFolder = options.docsFolder || 'constellation';
+  const docsFolder = options.docsFolder;
   const { data } = await graphql(`
     query {
       allWorkspaceInfo {
@@ -81,14 +154,16 @@ exports.createPages = async function({ actions, graphql }, options) {
   `);
 
   data.allWorkspaceInfo.edges.forEach(edge => {
-    const slug = edge.node.docsDisplayName;
-    const name = edge.node.name;
-    const mdxPath = `${edge.node.dir}/${options.docsFolder}/**`;
+    const name = edge.node.docsDisplayName;
+    const packageName = edge.node.name;
+    const mdxPath = `${edge.node.dir}/${options.docsFolder}`;
 
-    actions.createPage({
-      path: `components/${slug}`,
-      component: require.resolve(`./src/templates/component-page.tsx`),
-      context: { name: name, mdxPath: mdxPath },
-    });
+    const info = {
+      mdxPath,
+      name,
+      packageName,
+    };
+
+    getMdx(info, { actions, graphql });
   });
 };

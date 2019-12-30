@@ -2,7 +2,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-module.exports = ({ packages }) => {
+module.exports = ({ packages, docsFolder = 'constellation' }) => {
   return {
     plugins: [
       `gatsby-plugin-typescript`,

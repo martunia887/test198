@@ -7,6 +7,7 @@
         "start": "gatsby develop"
     },
     "dependencies": {
+        "@atlaskit/css-reset": "^5.0.9",
         "@emotion/core": "^10.0.9",
         "@emotion/styled": "^10.0.7",
         "@manypkg/gatsby-source-workspace": "^0.3.0",
