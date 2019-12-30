@@ -17,7 +17,6 @@ import { mapAuthToSourceFileOwner } from '../domain/source-file';
 import { MediaFile } from '../../types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { resetView } from '../actions';
-import { UploadEndEvent } from '../../domain/uploadEvent';
 
 export default function(): Middleware {
   return store => (next: Dispatch<State>) => (action: any) => {
@@ -151,6 +150,7 @@ async function copyFile({
         safeUnsubscribe(subscription);
         // TODO: we need to ensure we don't emit same events twice
         // seems like unsubscribing here is not enough...
+        // Fixed in master :)
         if (fileState.status === 'processing') {
           store.dispatch(
             sendUploadEvent({

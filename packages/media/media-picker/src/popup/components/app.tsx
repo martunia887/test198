@@ -25,7 +25,7 @@ import { hidePopup } from '../actions/hidePopup';
 import { fileUploadsStart } from '../actions/fileUploadsStart';
 import { fileUploadPreviewUpdate } from '../actions/fileUploadPreviewUpdate';
 import { fileUploadProgress } from '../actions/fileUploadProgress';
-import { fileUploadProcessingStart } from '../actions/fileUploadProcessingStart';
+import { fileUploadEnd } from '../actions/fileUploadEnd';
 import { fileUploadError } from '../actions/fileUploadError';
 import { dropzoneDropIn } from '../actions/dropzoneDropIn';
 import { dropzoneDragIn } from '../actions/dropzoneDragIn';
@@ -142,7 +142,6 @@ export class App extends Component<AppProps, AppState> {
     this.localUploader.on('uploads-start', onUploadsStart);
     this.localUploader.on('upload-preview-update', onUploadPreviewUpdate);
     this.localUploader.on('upload-status-update', onUploadStatusUpdate);
-    // this.localUploader.on('upload-processing', onUploadProcessing);
     // TODO: make sure this fires like upload-processing did
     this.localUploader.on('upload-end', onUploadEnd);
     this.localUploader.on('upload-error', onUploadError);
@@ -351,7 +350,7 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): AppDispatchProps => ({
   onUploadStatusUpdate: (payload: UploadStatusUpdateEventPayload) =>
     dispatch(fileUploadProgress(payload)),
   onUploadEnd: (payload: UploadEndEventPayload) =>
-    dispatch(fileUploadProcessingStart(payload)),
+    dispatch(fileUploadEnd(payload)),
   onUploadError: (payload: UploadErrorEventPayload) =>
     dispatch(fileUploadError(payload)),
   onDropzoneDragIn: (fileCount: number) => dispatch(dropzoneDragIn(fileCount)),

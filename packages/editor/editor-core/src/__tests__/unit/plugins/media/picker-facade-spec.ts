@@ -37,7 +37,6 @@ describe('Media PickerFacade', () => {
     emitUploadsStart: jest.fn(),
     emitUploadProgress: jest.fn(),
     emitUploadPreviewUpdate: jest.fn(),
-    emitUploadProcessing: jest.fn(),
     emitUploadEnd: jest.fn(),
     emitUploadError: jest.fn(),
     once: jest.fn(),

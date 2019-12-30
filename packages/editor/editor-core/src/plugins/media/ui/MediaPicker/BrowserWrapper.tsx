@@ -17,7 +17,7 @@ export const BrowserWrapper = ({ mediaState, isOpen, onBrowseFn }: Props) => (
         isOpen={isOpen}
         config={config}
         mediaClientConfig={mediaClientConfig}
-        onProcessing={pickerFacadeInstance.handleReady}
+        onEnd={pickerFacadeInstance.handleReady}
         onError={pickerFacadeInstance.handleUploadError}
         onPreviewUpdate={pickerFacadeInstance.handleUploadPreviewUpdate}
       />

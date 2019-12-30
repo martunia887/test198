@@ -6,7 +6,6 @@ import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
   UploadPreviewUpdateEventPayload,
-  UploadProcessingEventPayload,
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
   UploadEventPayloadMap,
@@ -211,10 +210,11 @@ export class LocalUploadComponentReact<
   };
 
   // TODO: swap events
-  private onFileConverting = ({ file }: UploadProcessingEventPayload): void => {
-    this.uploadComponent.emitUploadProcessing(file);
+  private onFileConverting = ({ file }: UploadEndEventPayload): void => {
+    this.uploadComponent.emitUploadEnd(file);
   };
 
+  // TODO: remove
   private onFileConverted = (payload: UploadEndEventPayload): void => {
     this.uploadComponent.emitUploadEnd(payload.file);
   };

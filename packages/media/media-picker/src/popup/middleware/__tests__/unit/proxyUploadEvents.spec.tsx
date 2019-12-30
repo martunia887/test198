@@ -1,6 +1,6 @@
 import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { mockStore } from '@atlaskit/media-test-helpers';
-import { UploadProcessingEvent } from '../../../../domain/uploadEvent';
+import { UploadEndEvent } from '../../../../domain/uploadEvent';
 import { proxyUploadEvents } from '../../proxyUploadEvents';
 import { FINALIZE_UPLOAD } from '../../../actions/finalizeUpload';
 
@@ -42,16 +42,16 @@ describe('proxyUploadEvents middleware', () => {
     expect(store.dispatch).toHaveBeenCalledTimes(0);
   });
 
-  it('should dispatch FINALIZE_UPLOAD for upload-processing event', () => {
+  it('should dispatch FINALIZE_UPLOAD for upload-end event', () => {
     const { store, next } = setup();
-    const originalEvent: UploadProcessingEvent = {
-      name: 'upload-processing',
+    const originalEvent: UploadEndEvent = {
+      name: 'upload-end',
       data: {
         file,
       },
     };
     const action = {
-      type: 'FILE_UPLOAD_PROCESSING_START',
+      type: 'FILE_UPLOAD_END',
       file,
       originalEvent,
     };

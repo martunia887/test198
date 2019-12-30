@@ -19,7 +19,6 @@ import {
   UploadPreviewUpdateEventPayload,
   MediaFile,
   Popup,
-  UploadProcessingEventPayload,
   UploadEndEventPayload,
 } from '../src/types';
 import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';

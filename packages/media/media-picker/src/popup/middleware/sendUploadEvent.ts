@@ -25,8 +25,6 @@ export default function(eventEmitter: PopupUploadEventEmitter): Middleware {
         }
         case 'upload-end': {
           const file = copyMediaFileForUpload(event.data.file, uploadId);
-          // TODO: leave only one
-          eventEmitter.emitUploadProcessing(file);
           eventEmitter.emitUploadEnd(file);
           break;
         }

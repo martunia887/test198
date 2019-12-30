@@ -20,7 +20,6 @@ export const proxyUploadEvents = (store: Store<State>) => (
     [
       'FILE_PREVIEW_UPDATE',
       'FILE_UPLOAD_PROGRESS',
-      'FILE_UPLOAD_PROCESSING_START', // TODO: remove/rename?
       'FILE_UPLOAD_END',
       'FILE_UPLOAD_ERROR',
     ].indexOf(action.type) > -1

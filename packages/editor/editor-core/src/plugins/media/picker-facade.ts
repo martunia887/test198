@@ -6,7 +6,6 @@ import {
   UploadPreviewUpdateEventPayload,
   UploadParams,
   UploadErrorEventPayload,
-  UploadProcessingEventPayload,
 } from '@atlaskit/media-picker/types';
 import { MediaClientConfig } from '@atlaskit/media-core';
 

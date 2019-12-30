@@ -9,7 +9,6 @@ import {
   UploadEventPayloadMap,
   UploadErrorEventPayload,
   UploadEndEventPayload,
-  UploadProcessingEventPayload,
   UploadStatusUpdateEventPayload,
   UploadPreviewUpdateEventPayload,
   UploadsStartEventPayload,
@@ -44,7 +43,6 @@ describe('LocalUploadReact', () => {
   const onUploadsStart = jest.fn();
   const onPreviewUpdate = jest.fn();
   const onStatusUpdate = jest.fn();
-  const onProcessing = jest.fn();
   const onEnd = jest.fn();
   const onError = jest.fn();
   let uploadComponent: UploadComponent<UploadEventPayloadMap>;
@@ -63,7 +61,6 @@ describe('LocalUploadReact', () => {
         onUploadsStart={onUploadsStart}
         onPreviewUpdate={onPreviewUpdate}
         onStatusUpdate={onStatusUpdate}
-        onProcessing={onProcessing}
         onEnd={onEnd}
         onError={onError}
       />,
@@ -119,16 +116,6 @@ describe('LocalUploadReact', () => {
     expect(uploadComponent.emitUploadProgress).toBeCalledWith(
       progress.file,
       progress.progress,
-    );
-  });
-
-  it('should call uploadComponent.emitUploadProcessing with proper arguments', () => {
-    const processing: UploadProcessingEventPayload = {
-      file: imageFile,
-    };
-    (localUploadComponentInstance as any).onFileConverting(processing);
-    expect(uploadComponent.emitUploadProcessing).toBeCalledWith(
-      processing.file,
     );
   });
 

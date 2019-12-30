@@ -15,7 +15,6 @@ import {
 import fileUploadsAdd from './fileUploadsAdd';
 import filePreviewUpdate from './filePreviewUpdate';
 import fileUploadProgress from './fileUploadProgress';
-import fileUploadProcessingStart from './fileUploadProcessingStart';
 import fileUploadEnd from './fileUploadEnd';
 import setEventProxy from './setEventProxy';
 import removeEventProxy from './removeEventProxy';
@@ -54,7 +53,6 @@ const reducers = combineReducers([
   fileUploadsAdd,
   filePreviewUpdate,
   fileUploadProgress,
-  fileUploadProcessingStart,
   fileUploadEnd,
   setEventProxy,
   removeEventProxy,
