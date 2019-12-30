@@ -104,11 +104,8 @@ function createPlaceHolderStateFrom(
   if (bracketPlaceholderText && bracketTyped(editorState)) {
     const { $from } = editorState.selection;
     // Space is to account for positioning of the bracket
-    const bracketHint = '  ' + bracketPlaceholderText
-    return setPlaceHolderState(
-      bracketHint,
-      $from.pos - 1,
-    );
+    const bracketHint = '  ' + bracketPlaceholderText;
+    return setPlaceHolderState(bracketHint, $from.pos - 1);
   }
   return emptyPlaceholder;
 }

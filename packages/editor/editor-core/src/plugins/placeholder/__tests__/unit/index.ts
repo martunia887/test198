@@ -20,7 +20,7 @@ function expectPlaceHolderWithText(editorView: EditorView, text: string) {
 
 const defaultPlaceholder = 'defaultPlaceholder';
 const slashPlaceholder = "Type '/' to insert content.";
-const bracketPlaceholder = "Did you mean to use '/' to insert content?"
+const bracketPlaceholder = "Did you mean to use '/' to insert content?";
 
 describe('placeholder', () => {
   const createProsemirrorEditor = createProsemirrorEditorFactory();
@@ -90,22 +90,24 @@ describe('placeholder', () => {
     const emptyPlaceholderEditor = (doc: any) =>
       createProsemirrorEditor({
         doc,
-        plugins: [['placeholder', { placeholderBracketHint : bracketPlaceholder }]],
+        plugins: [
+          ['placeholder', { placeholderBracketHint: bracketPlaceholder }],
+        ],
       });
 
     it('renders placeholder when bracket typed in an empty line', async () => {
       const { editorView } = await emptyPlaceholderEditor(doc(p()));
-      expectNoPlaceholder(editorView)
+      expectNoPlaceholder(editorView);
 
       insertText(editorView, '{', 1);
-      const placeholderShown = '  ' + bracketPlaceholder
+      const placeholderShown = '  ' + bracketPlaceholder;
 
       expectPlaceHolderWithText(editorView, placeholderShown);
     });
 
     it('placeholder disappears when content is added to line', async () => {
       const { editorView } = await emptyPlaceholderEditor(doc(p('{')));
-      const placeholderShown = '  ' + bracketPlaceholder
+      const placeholderShown = '  ' + bracketPlaceholder;
 
       expectPlaceHolderWithText(editorView, placeholderShown);
 
@@ -114,8 +116,10 @@ describe('placeholder', () => {
     });
 
     it('placeholder disappears after changing selection to another line', async () => {
-      const { editorView, refs } = await emptyPlaceholderEditor(doc(p('Hello World{noEmptyLine}'), p('{')),);
-      const placeholderShown = '  ' + bracketPlaceholder
+      const { editorView, refs } = await emptyPlaceholderEditor(
+        doc(p('Hello World{noEmptyLine}'), p('{')),
+      );
+      const placeholderShown = '  ' + bracketPlaceholder;
       expectPlaceHolderWithText(editorView, placeholderShown);
 
       editorView.dispatch(
