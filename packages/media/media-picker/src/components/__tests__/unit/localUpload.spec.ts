@@ -81,19 +81,6 @@ describe('MediaLocalUpload', () => {
     });
   });
 
-  it('should only emitUploadEnd when file is converted', () => {
-    const { emitter, emitUploadServiceEvent } = setup();
-
-    emitUploadServiceEvent('file-converted', {
-      file: imageFile,
-    });
-
-    expect(emitter.emit).toHaveBeenCalledTimes(1);
-    expect(emitter.emit).toBeCalledWith('upload-end', {
-      file: { ...imageFile },
-    });
-  });
-
   it('should use shouldCopyFileToRecents as true by default and pass to upload service', () => {
     const { localUpload } = setup();
     const shouldCopyFileToRecents = extractShouldCopyFileToRecents(localUpload);

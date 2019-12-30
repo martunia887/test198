@@ -25,10 +25,3 @@ export interface LocalUpload {
 }
 
 export type LocalUploads = { [uploadId: string]: LocalUpload };
-
-// TODO: rename to hasLocalUploadFinishUpload
-export function hasLocalUploadStartedProcessing(
-  localUpload: LocalUpload,
-): boolean {
-  return localUpload.events.some(event => event.name === 'upload-end');
-}

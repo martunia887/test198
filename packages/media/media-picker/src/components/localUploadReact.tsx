@@ -132,7 +132,6 @@ export class LocalUploadComponentReact<
     this.uploadService.on('file-preview-update', this.onFilePreviewUpdate);
     this.uploadService.on('file-uploading', this.onFileUploading);
     this.uploadService.on('file-converting', this.onFileConverting);
-    this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
   }
 
@@ -209,14 +208,8 @@ export class LocalUploadComponentReact<
     this.uploadComponent.emitUploadProgress(file, progress);
   };
 
-  // TODO: swap events
   private onFileConverting = ({ file }: UploadEndEventPayload): void => {
     this.uploadComponent.emitUploadEnd(file);
-  };
-
-  // TODO: remove
-  private onFileConverted = (payload: UploadEndEventPayload): void => {
-    this.uploadComponent.emitUploadEnd(payload.file);
   };
 
   private onUploadError = ({ file, error }: UploadErrorEventPayload): void => {

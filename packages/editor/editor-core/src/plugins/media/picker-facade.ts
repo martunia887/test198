@@ -8,7 +8,6 @@ import {
   UploadErrorEventPayload,
 } from '@atlaskit/media-picker/types';
 import { MediaClientConfig } from '@atlaskit/media-core';
-
 import { ErrorReportingHandler } from '@atlaskit/editor-common';
 
 import {

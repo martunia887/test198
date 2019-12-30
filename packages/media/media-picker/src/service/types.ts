@@ -12,7 +12,6 @@ export type UploadServiceEventPayloadTypes = {
   readonly 'file-preview-update': UploadPreviewUpdateEventPayload;
   readonly 'file-uploading': UploadStatusUpdateEventPayload;
   readonly 'file-converting': UploadEndEventPayload;
-  readonly 'file-converted': UploadEndEventPayload;
   readonly 'file-upload-error': UploadErrorEventPayload;
   readonly 'file-dropped': DragEvent;
 };

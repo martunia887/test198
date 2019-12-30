@@ -38,7 +38,6 @@ export class LocalUploadComponent<
     this.uploadService.on('file-preview-update', this.onFilePreviewUpdate);
     this.uploadService.on('file-uploading', this.onFileUploading);
     this.uploadService.on('file-converting', this.onFileConverting);
-    this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
   }
 
@@ -70,14 +69,8 @@ export class LocalUploadComponent<
     this.emitUploadProgress(file, progress);
   };
 
-  // TODO: rename to onFileStartConverting or onFileUploaded
   private onFileConverting = ({ file }: UploadEndEventPayload): void => {
     this.emitUploadEnd(file);
-  };
-
-  // TODO: remove this naming and replace usage
-  private onFileConverted = (payload: UploadEndEventPayload): void => {
-    this.emitUploadEnd(payload.file);
   };
 
   private onUploadError = ({ file, error }: UploadErrorEventPayload): void => {
