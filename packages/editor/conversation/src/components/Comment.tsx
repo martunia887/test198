@@ -22,6 +22,7 @@ import { Comment as CommentType, User } from '../model';
 import Editor from './Editor';
 import { SharedProps } from './types';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { isEqual } from 'lodash';
 
 export interface Props extends SharedProps {
   conversationId: string;
@@ -76,33 +77,44 @@ const Reactions: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
 export default class Comment extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-
     this.state = {
       isEditing: false,
     };
+
+    const { comment, renderAdditionalCommentActions } = this.props;
+    if (typeof renderAdditionalCommentActions === 'function') {
+      this.additionalCommentActions =
+        renderAdditionalCommentActions(CommentAction, comment) || [];
+    }
   }
+
+  private additionalCommentActions: JSX.Element[] = [];
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     const { isEditing, isReplying } = this.state;
-    const {
-      isHighlighted,
-      portal,
-      renderAdditionalCommentActions,
-      comment,
-    } = this.props;
+    const { isHighlighted, portal, comment } = this.props;
+
+    let additionalCommentActions: JSX.Element[] = [];
+    let additionalCommentsChanged = false;
+    if (typeof nextProps.renderAdditionalCommentActions === 'function') {
+      additionalCommentActions =
+        nextProps.renderAdditionalCommentActions(
+          CommentAction,
+          nextProps.comment || comment,
+        ) || [];
+    }
+
+    if (!isEqual(additionalCommentActions, this.additionalCommentActions)) {
+      this.additionalCommentActions = additionalCommentActions;
+      additionalCommentsChanged = true;
+    }
+
     if (
       nextState.isEditing !== isEditing ||
       nextState.isReplying !== isReplying ||
       nextProps.isHighlighted !== isHighlighted ||
       nextProps.portal !== portal ||
-      nextProps.renderAdditionalCommentActions !==
-        renderAdditionalCommentActions ||
-      (nextProps.renderAdditionalCommentActions &&
-        renderAdditionalCommentActions &&
-        nextProps.renderAdditionalCommentActions(
-          CommentAction,
-          nextProps.comment,
-        ) !== renderAdditionalCommentActions(CommentAction, comment))
+      additionalCommentsChanged
     ) {
       return true;
     }
@@ -483,7 +495,6 @@ export default class Comment extends React.Component<Props, State> {
       dataProviders,
       objectId,
       canModerateComment,
-      renderAdditionalCommentActions,
     } = this.props;
     const { isEditing } = this.state;
     const canReply = !!user && !isEditing && !comment.deleted;
@@ -515,11 +526,8 @@ export default class Comment extends React.Component<Props, State> {
       actions = [...actions, deleteAction];
     }
 
-    if (typeof renderAdditionalCommentActions === 'function') {
-      actions = [
-        ...actions,
-        ...renderAdditionalCommentActions(CommentAction, comment),
-      ];
+    if (this.additionalCommentActions && this.additionalCommentActions.length) {
+      actions = [...actions, ...this.additionalCommentActions];
     }
 
     if (
