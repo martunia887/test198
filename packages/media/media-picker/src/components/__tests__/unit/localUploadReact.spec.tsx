@@ -8,7 +8,6 @@ import {
   MediaFile,
   UploadEventPayloadMap,
   UploadErrorEventPayload,
-  UploadEndEventPayload,
   UploadStatusUpdateEventPayload,
   UploadPreviewUpdateEventPayload,
   UploadsStartEventPayload,

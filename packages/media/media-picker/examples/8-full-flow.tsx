@@ -97,7 +97,7 @@ export default class Example extends React.Component<{}, State> {
   }
 
   private onUploadEnd = (event: UploadEndEventPayload) => {
-    console.log('onUploadEnd', event.file.id);
+    console.log('PUBLIC: onUploadEnd', event.file.id);
   };
 
   private onUploadPreviewUpdate = async (
