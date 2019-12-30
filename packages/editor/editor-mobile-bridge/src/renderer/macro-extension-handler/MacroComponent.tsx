@@ -297,11 +297,18 @@ export class MacroComponent extends React.Component<
     return { ...cardProps, ...newProps };
   };
 
+  onTapToRefresh = () => {
+    this.setState(this.getInitialState());
+  };
+
   componentDidMount() {
     // Attach a listener to the tapToRefresh event emitted during refresh.
-    eventDispatcher.on('tapToRefresh', () => {
-      this.setState(this.getInitialState());
-    });
+    eventDispatcher.on('tapToRefresh', this.onTapToRefresh);
+  }
+
+  componentWillUnmount() {
+    // Removing the listener to the event before the component is unMounted.
+    eventDispatcher.off('tapToRefresh', this.onTapToRefresh);
   }
 
   render() {
