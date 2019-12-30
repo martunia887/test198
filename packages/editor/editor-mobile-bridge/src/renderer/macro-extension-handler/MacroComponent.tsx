@@ -16,6 +16,7 @@ import {
   FINAL_ERROR_LOADING_TEXT,
   TAP_TO_VIEW_PROMISE,
   TAP_TO_REFRESH_PAGE_PROMISE,
+  TAP_TO_RFRESH_EVENT,
   TAP_TO_LOAD_PROMISE,
 } from './constants';
 
@@ -226,8 +227,8 @@ export class MacroComponent extends React.Component<
   };
 
   tapToRefreshPage = () => {
-    // Emit a refresh event
-    eventDispatcher.emit('tapToRefresh');
+    // Emit a refresh event with no data
+    eventDispatcher.emit(TAP_TO_RFRESH_EVENT, null);
     // on button click
     // do not set state to loading
     createPromise(TAP_TO_REFRESH_PAGE_PROMISE.name)
@@ -297,11 +298,18 @@ export class MacroComponent extends React.Component<
     return { ...cardProps, ...newProps };
   };
 
+  onTapToRefresh = () => {
+    this.setState(this.getInitialState());
+  };
+
   componentDidMount() {
     // Attach a listener to the tapToRefresh event emitted during refresh.
-    eventDispatcher.on('tapToRefresh', () => {
-      this.setState(this.getInitialState());
-    });
+    eventDispatcher.on(TAP_TO_RFRESH_EVENT, this.onTapToRefresh);
+  }
+
+  componentWillUnmount() {
+    // Removing the listener to the event before the component is unMounted.
+    eventDispatcher.off(TAP_TO_RFRESH_EVENT, this.onTapToRefresh);
   }
 
   render() {
