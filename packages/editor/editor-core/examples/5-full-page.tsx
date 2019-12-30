@@ -259,6 +259,7 @@ export class ExampleEditorComponent extends React.Component<
                   "We added more background colors to tables cells. Try it, type '/tables'.",
                   "Do you need more help? Type '/help'",
                 ]}
+                placeholderBracketHint="Did you mean to use '/' to insert content?"
                 shouldFocus={false}
                 disabled={this.state.disabled}
                 defaultValue={
