@@ -62,7 +62,7 @@ const BackButtonWrapper = styled.div`
 `;
 
 const ClearText = styled.span`
-  color: ${colors.N80};
+  color: ${colors.N200};
 `;
 
 type Props = {

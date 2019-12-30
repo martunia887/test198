@@ -23,7 +23,7 @@ import { normalizeUrl } from '../../utils';
 const ClearText = styled.span`
   cursor: pointer;
   padding-right: 8px;
-  color: ${colors.N80};
+  color: ${colors.N200};
 `;
 
 const TextInputWrapper = styled.div`
