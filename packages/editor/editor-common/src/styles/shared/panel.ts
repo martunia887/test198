@@ -94,7 +94,7 @@ const mainDynamicStyles = (panelType: PanelType) => (props: any) => {
 export const panelSharedStyles = css`
   .${PanelSharedCssClassName.PANEL_CONTAINER} {
     border-radius: ${borderRadius()}px;
-    margin: ${blockNodesVerticalMargin}rem 0 0;
+    margin: ${blockNodesVerticalMargin} 0 0;
     padding: ${gridSize()}px;
     min-width: ${akEditorTableCellMinWidth}px;
     display: flex;
