@@ -2,7 +2,7 @@ import * as React from 'react';
 import { KeyboardEvent, PureComponent } from 'react';
 import { Input } from './styles';
 import { FocusEvent } from 'react';
-import browserData from '@atlaskit/editor-common/src/utils/browser';
+import { browser } from '@atlaskit/editor-common';
 
 export interface Props {
   autoFocus?: boolean | FocusOptions;
@@ -131,20 +131,17 @@ export default class PanelTextInput extends PureComponent<Props, State> {
     return (
       event.key === 'z' &&
       // cmd + z for mac
-      ((browserData.mac && event.metaKey && !event.shiftKey) ||
+      ((browser.mac && event.metaKey && !event.shiftKey) ||
         // ctrl + z for non-mac
-        (!browserData.mac && event.ctrlKey))
+        (!browser.mac && event.ctrlKey))
     );
   }
 
   private isRedoEvent(event: KeyboardEvent<any>) {
     return (
-      (browserData.mac &&
-        event.metaKey &&
-        event.shiftKey &&
-        event.key === 'z') ||
+      (browser.mac && event.metaKey && event.shiftKey && event.key === 'z') ||
       // ctrl + y for non-mac
-      (!browserData.mac && event.ctrlKey && event.key === 'y')
+      (!browser.mac && event.ctrlKey && event.key === 'y')
     );
   }
 

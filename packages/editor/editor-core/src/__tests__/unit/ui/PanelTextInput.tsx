@@ -1,6 +1,6 @@
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import browserData from '@atlaskit/editor-common/src/utils/browser';
+import { browser } from '@atlaskit/editor-common';
 import PanelTextInput from '../../../ui/PanelTextInput';
 
 const noop = () => {};
@@ -104,7 +104,7 @@ describe('@atlaskit/editor-core/ui/PanelTextInput', () => {
 
     describe('on mac platform', () => {
       beforeEach(() => {
-        browserData.mac = true;
+        browser.mac = true;
       });
 
       it('on cmd+z calls onUndo handler', () => {
