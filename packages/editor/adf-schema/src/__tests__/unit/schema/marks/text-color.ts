@@ -2,17 +2,17 @@ import { name } from '../../../../version.json';
 import { createSchema } from '../../../../schema/create-schema';
 import { fromHTML, toHTML, textWithMarks } from '../../../../../test-helpers';
 
-const testColorObj1 = { color: '#97a0af' };
-const testColorObj2 = { color: '#97A0AF' };
+const testColorObj1 = { color: '#6b778c' };
+const testColorObj2 = { color: '#6B778C' };
 
 describe(`${name}/schema textColor mark`, () => {
   itMatches(
-    `<span style="color: rgb(151, 160, 175);">text</span>`,
+    `<span style="color: rgb(107, 119, 140);">text</span>`,
     'text',
     testColorObj1,
   );
-  itMatches(`<span style="color: #97a0af;">text</span>`, 'text', testColorObj1);
-  itMatches(`<span style="color: #97A0AF;">text</span>`, 'text', testColorObj1);
+  itMatches(`<span style="color: #6b778c;">text</span>`, 'text', testColorObj1);
+  itMatches(`<span style="color: #6B778C;">text</span>`, 'text', testColorObj1);
 
   it('serializes to <span style="color: ...">', () => {
     const schema = makeSchema();
