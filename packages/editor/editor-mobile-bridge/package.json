@@ -8,7 +8,6 @@
   "atlaskit:src": "src/index.ts",
   "scripts": {
     "start": "webpack --watch",
-    "strt:dev": "webpack-dev-server",
     "debug": "webpack -d --info-verbosity verbose --progress --watch",
     "build:dev": "webpack -d",
     "prebuild": "rm -rf dist && copy-pkg package.json tmp/package.json --only name,version,sideEffects && mv tmp/package.json src/version.json",
