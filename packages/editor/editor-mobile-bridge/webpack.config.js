@@ -25,10 +25,6 @@ module.exports = async function createWebpackConfig(_, args) {
       filename: '[name].js',
       path: path.resolve(__dirname, 'dist/bundle'),
     },
-    devServer: {
-      contentBase: path.join(__dirname, 'dist/bundle'),
-      port: 8081,
-    },
     devtool,
     resolve: {
       mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
