@@ -33,6 +33,7 @@ const rawContentProcessor = (
     TokenType.TRIPLE_DASH_SYMBOL,
     TokenType.QUADRUPLE_DASH_SYMBOL,
     TokenType.ISSUE_KEY,
+    TokenType.TABLE,
   ];
 
   const parsedAttrs = parseAttrs(rawAttrs);
