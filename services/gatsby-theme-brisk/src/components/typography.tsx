@@ -4,18 +4,22 @@ import { N800, N300, B400, B300 } from '@atlaskit/theme/src/colors';
 
 const fonts = css`
   @font-face {
-    font-family: 'Charlie Display Regular';
-    src: url('charliedisplay-regular-webfont.woff2') format('woff2'),
-      url('charliedisplay-regular-webfont.woff') format('woff');
-    font-weight: normal;
+    font-family: 'Charlie Display';
+    src: url('https://wac-cdn.atlassian.com/dam/fonts/charlie-sans/charlie-display/Charlie_Display-Regular.woff2')
+        format('woff2'),
+      url('https://wac-cdn.atlassian.com/dam/fonts/charlie-sans/charlie-display/Charlie_Display-Regular.woff')
+        format('woff');
+    font-weight: 400;
     font-style: normal;
   }
 
   @font-face {
-    font-family: 'Charlie Display Semibold';
-    src: url('charliedisplay-semibold-webfont.woff2') format('woff2'),
-      url('charliedisplay-semibold-webfont.woff') format('woff');
-    font-weight: normal;
+    font-family: 'Charlie Display';
+    src: url('https://wac-cdn.atlassian.com/dam/fonts/charlie-sans/charlie-display/Charlie_Display-Semibold.woff2')
+        format('woff2'),
+      url('https://wac-cdn.atlassian.com/dam/fonts/charlie-sans/charlie-display/Charlie_Display-Semibold.woff')
+        format('woff');
+    font-weight: 500;
     font-style: normal;
   }
 `;
@@ -24,6 +28,37 @@ const systemFontStack = `font-family: -apple-system, BlinkMacSystemFont, 'Segoe 
 const monospaceFontStack = `font-family: 'SFMono-Medium', 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', 'Ubuntu Mono', Menlo, Consolas, Courier, monospace;`;
 
 // todo: change to rem, unpx line height
+const headlines = css`
+  .headline1,
+  .headline2,
+  .headline3,
+  .hero-text {
+    font-family: 'Charlie Display';
+    font-weight: 400;
+  }
+
+  .hero-text {
+    font-size: 52px;
+    line-height: 60px;
+  }
+
+  .headline1 {
+    font-size: 36px;
+    line-height: 44px;
+  }
+
+  .headline2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .headline3 {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+  }
+`;
+
 const headings = css`
   h1,
   .h1,
@@ -35,6 +70,7 @@ const headings = css`
   .h4,
   h5,
   .h5 {
+    ${systemFontStack}
     font-weight: 500;
     color: ${N800};
   }
@@ -78,16 +114,11 @@ const headings = css`
 `;
 
 const paragraphs = css`
-  p,
-  p.sm,
-  p.lg {
-    font-weight: 400;
-  }
-
   p {
     color: ${N800};
     font-size: 14px;
     line-height: 24px;
+    font-weight: 400;
     &.sm {
       color: ${N300};
       font-size: 11px;
@@ -100,6 +131,7 @@ const paragraphs = css`
 
   code,
   .code {
+    ${monospaceFontStack}
     font-weight: 400;
     font-size: 12px;
     line-height: 20px;
@@ -110,22 +142,21 @@ const links = css`
   a,
   .link {
     color: ${B400};
-  }
-
-  a:hover,
-  .link:hover {
-    color: ${B300};
+    &:hover {
+      color: ${B300};
+    }
   }
 `;
 
 const Typography = () => (
   <Global
     styles={css`
-  ${fonts}
-  ${headings}
-  ${paragraphs}
-  ${links}
-`}
+      ${fonts}
+      ${headlines}
+      ${headings}
+      ${paragraphs}
+      ${links}
+    `}
   />
 );
 

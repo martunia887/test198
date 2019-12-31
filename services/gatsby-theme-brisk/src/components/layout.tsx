@@ -65,16 +65,22 @@ const Layout = (props: Props) => {
         `}
       />
       <Typography />
+      <PageTitle title={props.title} />
+
       <Grid>
-        <PageTitle title={props.title} />
         <Header>
           <HeaderContent />
         </Header>
+
         <Sidebar>
           <SidebarComponent />
         </Sidebar>
+
         <Main>{props.children}</Main>
-        <Footer />
+
+        <Footer>
+          <FooterContent />
+        </Footer>
       </Grid>
     </>
   );
