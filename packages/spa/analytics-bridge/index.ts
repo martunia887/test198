@@ -31,7 +31,6 @@ import {
   Props as FireAnalyticsProps,
 } from './src/ui/fire-analytics';
 import { extractAWCDataFromEvent } from './src/utils/extract-awc-data-from-event';
-
 import { AnalyticsEventToProps } from './src/ui/analytics-event-to-props';
 
 export {
@@ -45,6 +44,7 @@ export {
   FireAnalyticsProps,
   MountEvent,
   MountEventProps,
+  AnalyticsEventToProps,
   // utilities
   fireAnalytics,
   fireOperationalAnalytics,
