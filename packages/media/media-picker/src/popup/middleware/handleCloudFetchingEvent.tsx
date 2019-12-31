@@ -11,6 +11,7 @@ import { State } from '../domain';
 
 import {
   WsUploadEvents,
+  RemoteUploadProgressPayload,
   RemoteUploadEndPayload,
   RemoteUploadFailPayload,
 } from '../tools/websocket/upload/wsUploadEvents';
@@ -25,6 +26,12 @@ const isCloudFetchingEventAction = (
   action: Action,
 ): action is CloudFetchingEventAction => {
   return action.type === HANDLE_CLOUD_FETCHING_EVENT;
+};
+
+const isRemoteUploadProgressAction = (
+  action: CloudFetchingEventAction,
+): action is HandleCloudFetchingEventAction<'RemoteUploadProgress'> => {
+  return action.event === 'RemoteUploadProgress';
 };
 
 const isRemoteUploadEndAction = (
@@ -42,6 +49,14 @@ const isRemoteUploadFailAction = (
 export const handleCloudFetchingEvent = (store: Store<State>) => (
   next: Dispatch<State>,
 ) => (action: Action) => {
+  // Handle cloud upload progress
+  const handleRemoteUploadProgressMessage = (
+    file: MediaFile,
+    data: RemoteUploadProgressPayload,
+  ) => {
+    // TODO: Handle this.
+  };
+
   // Handle cloud upload end
   const handleRemoteUploadEndMessage = (
     file: MediaFile,
@@ -84,7 +99,9 @@ export const handleCloudFetchingEvent = (store: Store<State>) => (
   };
 
   if (isCloudFetchingEventAction(action)) {
-    if (isRemoteUploadEndAction(action)) {
+    if (isRemoteUploadProgressAction(action)) {
+      handleRemoteUploadProgressMessage(action.file, action.payload);
+    } else if (isRemoteUploadEndAction(action)) {
       handleRemoteUploadEndMessage(action.file, action.payload);
     } else if (isRemoteUploadFailAction(action)) {
       handleRemoteUploadFailMessage(action.file, action.payload);

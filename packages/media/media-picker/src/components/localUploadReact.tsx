@@ -8,7 +8,6 @@ import {
   UploadPreviewUpdateEventPayload,
   UploadProcessingEventPayload,
   UploadsStartEventPayload,
-  UploadStatusUpdateEventPayload,
   UploadEventPayloadMap,
   UploadParams,
   MediaFile,
@@ -31,7 +30,6 @@ export type LocalUploadComponentBaseProps = {
   config: LocalUploadConfig;
   onUploadsStart?: (payload: UploadsStartEventPayload) => void;
   onPreviewUpdate?: (payload: UploadPreviewUpdateEventPayload) => void;
-  onStatusUpdate?: (payload: UploadStatusUpdateEventPayload) => void;
   onProcessing?: (payload: UploadProcessingEventPayload) => void;
   onEnd?: (payload: UploadEndEventPayload) => void;
   onError?: (payload: UploadErrorEventPayload) => void;

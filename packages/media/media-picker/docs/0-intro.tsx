@@ -149,7 +149,6 @@ type AuthProvider = (context?: AuthContext) => Promise<Auth>;`}
 
   * **onUploadStart?**: \`(payload: UploadsStartEventPayload) => void\` - This event is fired when files begin to upload
   * **onProcessing?**: \`(payload: UploadProcessingEventPayload) => void\` - This event is fired when the file is being processed by the server
-  * **onStatusUpdate?**: \`(payload: UploadStatusUpdateEventPayload) => void\` - This event is fired to update the status of processing
   * **onPreviewUpdate?**: \`(payload: UploadPreviewUpdateEventPayload) => void\` - This event is fired when a preview (image) of the files uploaded is available
   * **onError?**: \`(payload: UploadErrorEventPayload) => void\` - This event is fired when errors occur during upload
   * **onEnd?**: \`(payload: UploadEndEventPayload) => void\` - This event is fired when the upload ends
@@ -211,7 +210,6 @@ const dropZoneConfig = {
   onCancelFn={onCancelFn}
   onUploadsStart={onUploadsStartFn}
   onProcessing={onProcessingFn}
-  onStatusUpdate={onStatusUpdateFn}
   onPreviewUpdate={onPreviewUpdateFn}
   onError={onErrorHandler}
   onEnd={onEndHandler}
@@ -246,7 +244,6 @@ ${code`<Clipboard
   config={clipboardConfig}
   onUploadsStart={onUploadsStartFn}
   onProcessing={onProcessingFn}
-  onStatusUpdate={onStatusUpdateFn}
   onPreviewUpdate={onPreviewUpdateFn}
   onError={onErrorHandler}
   onEnd={onEndHandler}
@@ -307,7 +304,6 @@ function onBrowseFnHandler(browseFn) {
   onCancelFn={onCancelFn}
   onUploadsStart={onUploadsStartFn}
   onProcessing={onProcessingFn}
-  onStatusUpdate={onStatusUpdateFn}
   onPreviewUpdate={onPreviewUpdateFn}
   onError={onErrorHandler}
   onEnd={onEndHandler}

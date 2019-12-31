@@ -42,7 +42,6 @@ describe('LocalUploadReact', () => {
   let localUploadComponentInstance: DummyLocalUploadComponent;
   const onUploadsStart = jest.fn();
   const onPreviewUpdate = jest.fn();
-  const onStatusUpdate = jest.fn();
   const onProcessing = jest.fn();
   const onEnd = jest.fn();
   const onError = jest.fn();
@@ -61,7 +60,6 @@ describe('LocalUploadReact', () => {
         config={config}
         onUploadsStart={onUploadsStart}
         onPreviewUpdate={onPreviewUpdate}
-        onStatusUpdate={onStatusUpdate}
         onProcessing={onProcessing}
         onEnd={onEnd}
         onError={onError}
