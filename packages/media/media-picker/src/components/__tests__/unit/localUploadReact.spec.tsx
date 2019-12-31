@@ -138,7 +138,7 @@ describe('LocalUploadReact', () => {
     const file: UploadEndEventPayload = {
       file: imageFile,
     };
-    (localUploadComponentInstance as any).onFileConverted(file);
+    (localUploadComponentInstance as any).onFileConverting(file);
     expect(emitUploadEnd).toBeCalledWith(file.file);
     expect(onEnd).toBeCalledWith({
       file: file.file,
