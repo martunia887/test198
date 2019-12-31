@@ -1,16 +1,19 @@
 import React from 'react';
-import { css, jsx, Global } from '@emotion/core';
+import { css, Global } from '@emotion/core';
 import styled from '@emotion/styled';
 import cssReset from '@atlaskit/css-reset';
+import { N30 } from '@atlaskit/theme/src/colors';
 import PageTitle from './page-title';
 import HeaderContent from './../content/header-content';
 import SidebarContent from './../content/sidebar-content';
+import FooterContent from './../content/footer-content';
 
 const Grid = styled.div`
   display: grid;
   min-height: 100vh;
-  grid-template-rows: auto 1fr 50px;
-  grid-template-columns: 320px 1fr;
+  position: relative;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 272px 1fr;
   grid-template-areas:
     'header header'
     'sidebar main'
@@ -19,21 +22,23 @@ const Grid = styled.div`
 
 const Main = styled.main`
   grid-area: main;
-  background-color: blue;
 `;
 
-const Header = styled(HeaderContent)`
+const Header = styled.div`
   grid-area: header;
-  background-color: yellow;
+  position: sticky;
+  top: 0;
 `;
 
 const Sidebar = styled.div`
   grid-area: sidebar;
+  border-right: 1px solid ${N30};
+  overflow: auto;
+  max-height: 100vh;
 `;
 
 const Footer = styled.footer`
   grid-area: footer;
-  background-color: pink;
 `;
 
 type Props = {
@@ -60,7 +65,9 @@ const Layout = (props: Props) => {
       />
       <Grid>
         <PageTitle title={props.title} />
-        <Header />
+        <Header>
+          <HeaderContent />
+        </Header>
         <Sidebar>
           <SidebarComponent />
         </Sidebar>

@@ -36,69 +36,57 @@ const TopNav = () => {
 
   return (
     <>
-      <div
-        style={{
-          position: 'fixed',
-          width: '100%',
-        }}
-      >
-        {/* BC: location is undefined in SSR calls, so we are defaulting it to an empty object */}
-        <Location>
-          {({ location = {} }) => (
-            <AtlassianNavigation
-              theme={theme}
-              renderProductHome={() => (
-                <Link to="/">
-                  <img
-                    src="/logo-atlassian-design-white.svg"
-                    alt="Atlassian Design"
-                  />
-                </Link>
-              )}
-              renderSearch={() => (
-                // TODO: Complete search implementation
-                <Search
-                  onClick={() =>
-                    // eslint-disable-next-line no-console
-                    console.error(
-                      'BC: we do not have a working search implementation - talk to me for more details',
-                    )
-                  }
-                  text="Search..."
-                  tooltip="Search"
+      {/* BC: location is undefined in SSR calls, so we are defaulting it to an empty object */}
+      <Location>
+        {({ location = {} }) => (
+          <AtlassianNavigation
+            theme={theme}
+            renderProductHome={() => (
+              <Link to="/">
+                <img
+                  src="/logo-atlassian-design-white.svg"
+                  alt="Atlassian Design"
                 />
-              )}
-              // TODO: BC - this doesn't do anything yet, but can't really until we implement auth. This is on me to be real when I implement auth
-              renderProfile={() => <Profile icon={<Avatar />} />}
-              primaryItems={[
-                <NavItem pathname={location.pathname} href="/brand">
-                  Brand
-                </NavItem>,
-                <NavItem pathname={location.pathname} href="/foundations">
-                  Foundations
-                </NavItem>,
-                <NavItem pathname={location.pathname} href="/content">
-                  Content
-                </NavItem>,
-                <NavItem pathname={location.pathname} href="/components">
-                  Components
-                </NavItem>,
-                <NavItem pathname={location.pathname} href="/patterns">
-                  Patterns
-                </NavItem>,
-                <NavItem pathname={location.pathname} href="/resources">
-                  Resources
-                </NavItem>,
-              ]}
-            />
-          )}
-        </Location>
-      </div>
-      <div
-        style={{
-          height: gridSize() * 7,
-        }}
-      />
+              </Link>
+            )}
+            renderSearch={() => (
+              // TODO: Complete search implementation
+              <Search
+                onClick={() =>
+                  // eslint-disable-next-line no-console
+                  console.error(
+                    'BC: we do not have a working search implementation - talk to me for more details',
+                  )
+                }
+                text="Search..."
+                tooltip="Search"
+              />
+            )}
+            // TODO: BC - this doesn't do anything yet, but can't really until we implement auth. This is on me to be real when I implement auth
+            renderProfile={() => <Profile icon={<Avatar />} />}
+            primaryItems={[
+              <NavItem pathname={location.pathname} href="/brand">
+                Brand
+              </NavItem>,
+              <NavItem pathname={location.pathname} href="/foundations">
+                Foundations
+              </NavItem>,
+              <NavItem pathname={location.pathname} href="/content">
+                Content
+              </NavItem>,
+              <NavItem pathname={location.pathname} href="/components">
+                Components
+              </NavItem>,
+              <NavItem pathname={location.pathname} href="/patterns">
+                Patterns
+              </NavItem>,
+              <NavItem pathname={location.pathname} href="/resources">
+                Resources
+              </NavItem>,
+            ]}
+          />
+        )}
+      </Location>
     </>
   );
 };

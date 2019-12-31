@@ -15,7 +15,7 @@ const itemHeadingCSS = {
   lineHeight: headingSizes.h200.lineHeight / headingSizes.h200.size,
   //   color: subtleHeading(),
   color: N800,
-  marginTop: gridSize,
+  marginTop: `32px`,
   marginBottom: 6,
   padding: `0 ${gridSize * 2.5}px`,
 } as CSSObject;
