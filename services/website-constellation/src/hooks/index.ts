@@ -45,11 +45,15 @@ export function useAuth() {
     })
       .then(res => res.json())
       .then(data => {
+        console.log('### SUCCESS SETTING DATA ###');
         setLoggedIn(true);
         setValidating(false);
       })
       .catch(err => {
-        setLoggedIn(false);
+        console.warn('### CAUGHT ERROR ###', err);
+        if (!abortController.signal.aborted) {
+          setLoggedIn(false);
+        }
         setValidating(false);
       });
     return () => abortController.abort();

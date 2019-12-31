@@ -1,15 +1,22 @@
 // @flow
 const axios = require('axios');
 const { constellationUrl, contentfulUrl } = require('../constants');
-
+function validateRedirect(redirectURI) {
+  if (redirectURI == null) return '/';
+  return redirectURI;
+}
 function api(app, passport) {
-  app.get(
-    '/.netlify/functions/auth/google',
-    passport.authenticate('google', {
+  app.get('/.netlify/functions/auth/google', (req, res, next) => {
+    const redirectURI = validateRedirect(req.query.redirect);
+    console.log(req.query);
+    const authenticator = passport.authenticate('google', {
       scope: ['profile'],
       prompt: 'consent',
-    }),
-  );
+      state: req.query.redirect,
+    });
+
+    authenticator(req, res, next);
+  });
 
   app.get(
     '/.netlify/functions/auth/user',
@@ -53,13 +60,14 @@ function api(app, passport) {
       failureRedirect: constellationUrl,
     }),
     (req, res) => {
+      console.log(req.query.state);
       // take the token from req.user (attached by passport)
       // and store it in a signed http only cookie.
       res.cookie('constellation_token', req.user.token, {
         httpOnly: true,
         signed: true,
       });
-      res.redirect(`${constellationUrl}/contentful`);
+      res.redirect(`${constellationUrl}${req.query.state}`);
     },
   );
 }

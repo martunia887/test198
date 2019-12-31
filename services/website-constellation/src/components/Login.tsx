@@ -1,8 +1,11 @@
 import React from 'react';
-export default function Login() {
+import Button from '@atlaskit/button';
+export default function Login({ location }) {
   return (
-    <div>
-      <a href="/.netlify/functions/auth/google">Log In</a>
-    </div>
+    <Button
+      href={`/.netlify/functions/auth/google?redirect=${location.pathname}`}
+    >
+      Login
+    </Button>
   );
 }
