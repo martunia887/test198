@@ -7,6 +7,7 @@ import PageTitle from './page-title';
 import HeaderContent from './../content/header-content';
 import SidebarContent from './../content/sidebar-content';
 import FooterContent from './../content/footer-content';
+import Typography from './typography';
 
 const Grid = styled.div`
   display: grid;
@@ -63,6 +64,7 @@ const Layout = (props: Props) => {
           ${cssReset}
         `}
       />
+      <Typography />
       <Grid>
         <PageTitle title={props.title} />
         <Header>
