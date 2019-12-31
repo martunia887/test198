@@ -477,9 +477,16 @@ describe('Comment', () => {
   });
 
   describe('more actions', () => {
+    const [user] = MOCK_USERS;
+    let comment: ReactWrapper;
+    afterEach(() => {
+      if (comment && comment.length) {
+        comment.unmount();
+      }
+    });
+
     it('should render additional comment actions when provided', () => {
-      const [user] = MOCK_USERS;
-      const comment = mount(
+      comment = mount(
         <Comment
           {...defaultProps}
           conversationId={mockComment.conversationId}
@@ -492,8 +499,31 @@ describe('Comment', () => {
       );
 
       expect(findAction(comment, 'create-task').length).toEqual(1);
+    });
 
-      comment.unmount();
+    it('updates component with additional comment actions when they change', () => {
+      let actionsResolved = false;
+      const renderCommentAction = (CommentAction: any) => {
+        return actionsResolved
+          ? [<CommentAction key="create-task">Create Task</CommentAction>]
+          : [];
+      };
+
+      comment = mount(
+        <Comment
+          {...defaultProps}
+          conversationId={mockComment.conversationId}
+          comment={mockComment}
+          user={user}
+          renderAdditionalCommentActions={renderCommentAction}
+        />,
+      );
+      expect(findAction(comment, 'create-task').length).toEqual(0);
+      actionsResolved = true;
+
+      // force rerender by re-setting props - comment.update() does not do rerender
+      comment.setProps(comment.props());
+      expect(findAction(comment, 'create-task').length).toEqual(1);
     });
   });
 });
