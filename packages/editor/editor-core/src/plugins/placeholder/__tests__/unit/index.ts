@@ -20,6 +20,7 @@ function expectPlaceHolderWithText(editorView: EditorView, text: string) {
 
 const defaultPlaceholder = 'defaultPlaceholder';
 const slashPlaceholder = "Type '/' to insert content.";
+const bracketPlaceholder = "Did you mean to use '/' to insert content?";
 
 describe('placeholder', () => {
   const createProsemirrorEditor = createProsemirrorEditorFactory();
@@ -81,6 +82,51 @@ describe('placeholder', () => {
         ),
       );
 
+      expectNoPlaceholder(editorView);
+    });
+  });
+
+  describe('Bracket placeholder', () => {
+    const emptyPlaceholderEditor = (doc: any) =>
+      createProsemirrorEditor({
+        doc,
+        plugins: [
+          ['placeholder', { placeholderBracketHint: bracketPlaceholder }],
+        ],
+      });
+
+    it('renders placeholder when bracket typed in an empty line', async () => {
+      const { editorView } = await emptyPlaceholderEditor(doc(p()));
+      expectNoPlaceholder(editorView);
+
+      insertText(editorView, '{', 1);
+      const placeholderShown = '  ' + bracketPlaceholder;
+
+      expectPlaceHolderWithText(editorView, placeholderShown);
+    });
+
+    it('placeholder disappears when content is added to line', async () => {
+      const { editorView } = await emptyPlaceholderEditor(doc(p('{')));
+      const placeholderShown = '  ' + bracketPlaceholder;
+
+      expectPlaceHolderWithText(editorView, placeholderShown);
+
+      insertText(editorView, 'Hello World', 2);
+      expectNoPlaceholder(editorView);
+    });
+
+    it('placeholder disappears after changing selection to another line', async () => {
+      const { editorView, refs } = await emptyPlaceholderEditor(
+        doc(p('Hello World{noEmptyLine}'), p('{')),
+      );
+      const placeholderShown = '  ' + bracketPlaceholder;
+      expectPlaceHolderWithText(editorView, placeholderShown);
+
+      editorView.dispatch(
+        editorView.state.tr.setSelection(
+          TextSelection.create(editorView.state.doc, refs!['noEmptyLine']),
+        ),
+      );
       expectNoPlaceholder(editorView);
     });
   });

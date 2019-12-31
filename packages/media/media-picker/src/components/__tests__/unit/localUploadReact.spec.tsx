@@ -11,10 +11,10 @@ import {
   UploadStatusUpdateEventPayload,
   UploadPreviewUpdateEventPayload,
   UploadsStartEventPayload,
+  UploadEndEventPayload,
 } from '../../../types';
 
 jest.mock('../../../service/uploadServiceImpl');
-jest.mock('../../component');
 
 import { SCALE_FACTOR_DEFAULT } from '../../../util/getPreviewFromImage';
 import { UploadComponent } from '../../component';
@@ -74,14 +74,20 @@ describe('LocalUploadReact', () => {
   });
 
   it('should call uploadComponent.emitUploadsStart with proper arguments', () => {
+    const emitUploadsStart = jest.spyOn(uploadComponent, 'emitUploadsStart');
     const files: UploadsStartEventPayload = {
       files: [imageFile],
     };
     (localUploadComponentInstance as any).onFilesAdded(files);
-    expect(uploadComponent.emitUploadsStart).toBeCalledWith(files.files);
+    expect(emitUploadsStart).toBeCalledWith(files.files);
+    expect(onUploadsStart).toBeCalledWith({ files: files.files });
   });
 
   it('should call uploadComponent.emitUploadPreviewUpdate with proper arguments', () => {
+    const emitUploadPreviewUpdate = jest.spyOn(
+      uploadComponent,
+      'emitUploadPreviewUpdate',
+    );
     const preview: UploadPreviewUpdateEventPayload = {
       file: imageFile,
       preview: {
@@ -93,13 +99,21 @@ describe('LocalUploadReact', () => {
       },
     };
     (localUploadComponentInstance as any).onFilePreviewUpdate(preview);
-    expect(uploadComponent.emitUploadPreviewUpdate).toBeCalledWith(
+    expect(emitUploadPreviewUpdate).toBeCalledWith(
       preview.file,
       preview.preview,
     );
+    expect(onPreviewUpdate).toBeCalledWith({
+      file: preview.file,
+      preview: preview.preview,
+    });
   });
 
   it('should call uploadComponent.emitUploadProgress with proper arguments', () => {
+    const emitUploadProgress = jest.spyOn(
+      uploadComponent,
+      'emitUploadProgress',
+    );
     const progress: UploadStatusUpdateEventPayload = {
       file: imageFile,
       progress: {
@@ -112,13 +126,27 @@ describe('LocalUploadReact', () => {
       },
     };
     (localUploadComponentInstance as any).onFileUploading(progress);
-    expect(uploadComponent.emitUploadProgress).toBeCalledWith(
-      progress.file,
-      progress.progress,
-    );
+    expect(emitUploadProgress).toBeCalledWith(progress.file, progress.progress);
+    expect(onStatusUpdate).toBeCalledWith({
+      file: progress.file,
+      progress: progress.progress,
+    });
+  });
+
+  it('should call uploadComponent.emitUploadEnd with proper arguments', () => {
+    const emitUploadEnd = jest.spyOn(uploadComponent, 'emitUploadEnd');
+    const file: UploadEndEventPayload = {
+      file: imageFile,
+    };
+    (localUploadComponentInstance as any).onFileConverted(file);
+    expect(emitUploadEnd).toBeCalledWith(file.file);
+    expect(onEnd).toBeCalledWith({
+      file: file.file,
+    });
   });
 
   it('should call uploadComponent.emitUploadError with proper arguments', () => {
+    const emitUploadError = jest.spyOn(uploadComponent, 'emitUploadError');
     const file: UploadErrorEventPayload = {
       file: imageFile,
       error: {
@@ -127,9 +155,10 @@ describe('LocalUploadReact', () => {
       },
     };
     (localUploadComponentInstance as any).onUploadError(file);
-    expect(uploadComponent.emitUploadError).toBeCalledWith(
-      file.file,
-      file.error,
-    );
+    expect(emitUploadError).toBeCalledWith(file.file, file.error);
+    expect(onError).toBeCalledWith({
+      file: file.file,
+      error: file.error,
+    });
   });
 });

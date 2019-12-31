@@ -29,8 +29,8 @@ export const messages = defineMessages({
   supportText: {
     id: 'fabric.editor.supportAltText',
     defaultMessage:
-      'Alt text is accessed by screen readers for people who might have trouble seeing your content.',
+      'Alt text is useful for people using screen readers because of visual limitations.',
     description:
-      'Alt text is accessed by screen readers for people who might have trouble seeing your content.',
+      'Alt text is useful for people using screen readers because of visual limitations.',
   },
 });
