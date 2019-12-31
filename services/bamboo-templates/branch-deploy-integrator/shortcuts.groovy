@@ -11,7 +11,7 @@ createBranchDeployIntegrator([
     repository(name:'#sourceRepo')
     repository(name:'#productRepo')
     trigger(type:'polling',enabled:'true',strategy:'periodically',
-        frequency:'180') {
+aas        frequency:'180') {
         repository(name:'#sourceRepo')
     }
     stage(name:'Default Stage') {
