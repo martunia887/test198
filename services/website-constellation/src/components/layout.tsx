@@ -9,8 +9,6 @@ import Example from './example-renderer';
 
 const gridSize = gridSizeFn();
 
-const Thing = () => 'HEY a thing';
-
 const shortcodes = {
   Example,
 };

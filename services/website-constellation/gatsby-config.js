@@ -15,7 +15,10 @@ module.exports = {
         packages: constellationInitialPackages,
       },
     },
-    `gatsby-plugin-mdx`,
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: { remarkPlugins: [require('./some-plugin-pls-tidy')] },
+    },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
