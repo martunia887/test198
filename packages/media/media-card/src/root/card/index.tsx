@@ -326,7 +326,7 @@ export class CardBase extends Component<
             metadata,
           });
 
-          this.notifyStateChange({
+          this.safeSetState({
             metadata,
             status,
             progress,
@@ -340,7 +340,7 @@ export class CardBase extends Component<
             status: 'error',
             error,
           });
-          this.notifyStateChange({ error, status: 'error' });
+          this.safeSetState({ error, status: 'error' });
         },
       });
   }
@@ -403,7 +403,7 @@ export class CardBase extends Component<
     }
   };
 
-  notifyStateChange = (state: Partial<CardState>) => {
+  private safeSetState = (state: Partial<CardState>) => {
     if (this.hasBeenMounted) {
       this.setState(state as Pick<CardState, keyof CardState>);
     }
