@@ -6,7 +6,7 @@ export function useData(url) {
   // we use AbortController to clean up pending requests on unmount
   // so we don't have unresolved promises leaking everywhere.
   const abortController = new AbortController();
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   useEffect(() => {
     fetch(url, {
@@ -15,6 +15,7 @@ export function useData(url) {
     })
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         setData(data);
       })
       .catch(err => {
@@ -26,7 +27,8 @@ export function useData(url) {
       });
     // call abortController.abort() on unmount
     return () => abortController.abort();
-  }, [abortController, url]);
+  }, [url]);
+  console.log('DATA NOW', data);
   return { data, error };
 }
 export function useAuth() {
@@ -57,7 +59,7 @@ export function useAuth() {
         setValidating(false);
       });
     return () => abortController.abort();
-  }, [abortController]);
+  }, []);
 
   return { isLoggedIn, isValidating };
 }

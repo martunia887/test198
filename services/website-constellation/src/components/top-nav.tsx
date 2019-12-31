@@ -11,6 +11,7 @@ import {
 } from '@atlaskit/atlassian-navigation';
 import { N900, B200 } from '@atlaskit/theme/colors';
 import { gridSize } from '@atlaskit/theme';
+import { useData } from '../hooks';
 import Avatar from '@atlaskit/avatar';
 
 const theme = generateTheme({
@@ -31,6 +32,13 @@ const NavItem = ({ href, pathname, ...rest }) => (
   />
 );
 
+const UserProfile = () => {
+  const { data: profile, error } = useData('/.netlify/functions/auth/user');
+  if (profile) {
+    return <Profile icon={<Avatar src={profile.photos[0].value} />} />;
+  }
+  return <Profile icon={<Avatar />} />;
+};
 const TopNav = () => {
   const [searchText, updateSearchText] = useState('');
 
@@ -63,7 +71,7 @@ const TopNav = () => {
               />
             )}
             // TODO: BC - this doesn't do anything yet, but can't really until we implement auth. This is on me to be real when I implement auth
-            renderProfile={() => <Profile icon={<Avatar />} />}
+            renderProfile={UserProfile}
             primaryItems={[
               <NavItem pathname={location.pathname} href="/brand">
                 Brand
