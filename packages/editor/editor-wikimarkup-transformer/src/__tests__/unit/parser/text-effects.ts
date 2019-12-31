@@ -77,6 +77,10 @@ https://app.datadoghq.com/screen/282018/product-fabric-adf-service?tv_mode=true#
       'This is _{color:red}*Strong Red and Italic*{color}_',
     ],
     [
+      '[CS-1817] should allow pipes within color block, but not render as a table',
+      'hello {color:#6554c0}|{color}',
+    ],
+    [
       'should not apply strong when ending line is two strong symbols',
       '*not valid strong **',
     ],
