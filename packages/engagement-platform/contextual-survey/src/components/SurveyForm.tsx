@@ -11,7 +11,7 @@ import Form, {
   CheckboxField,
   OnSubmitHandler,
 } from '@atlaskit/form';
-import { fontSize } from '@atlaskit/theme';
+import { fontSize } from '@atlaskit/theme/constants';
 
 import FeedbackScoreButtons from './FeedbackScoreButtons';
 import { FormValues } from '../types';

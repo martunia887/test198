@@ -5,7 +5,7 @@ import ChevronUpIcon from '@atlaskit/icon/glyph/chevron-up';
 import { Toggle, ItemWrapper } from './themed-top-level-item';
 import SwitcherThemedItem from './themed-item';
 import SwitcherThemedChildItem from './themed-child-item';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import * as colors from '@atlaskit/theme/colors';
 import Tooltip from '@atlaskit/tooltip';
 import Avatar from './avatar';

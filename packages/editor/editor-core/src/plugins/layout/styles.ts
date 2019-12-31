@@ -1,5 +1,6 @@
 import { css } from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N40A, B200, N50A } from '@atlaskit/theme/colors';
 import {
   columnLayoutSharedStyle,
   gridMediumMaxWidth,
@@ -26,7 +27,7 @@ export const layoutStyles = css`
       & > * {
         flex: 1;
         min-width: 0;
-        border: 1px solid ${colors.N40A};
+        border: 1px solid ${N40A};
         border-radius: 4px;
 
         > div {
@@ -78,12 +79,12 @@ export const layoutStyles = css`
         * Helps visualise when 'selectNodeBackwards' selects the node for deletion
         */
       &.ProseMirror-selectednode > * {
-        border-color: ${colors.B200};
+        border-color: ${B200};
       }
       /* Shows the border when cursor is inside a layout */
       &.selected > *,
       &:hover > * {
-        border-color: ${colors.N50A};
+        border-color: ${N50A};
       }
 
       &.selected.danger > [data-layout-column] {

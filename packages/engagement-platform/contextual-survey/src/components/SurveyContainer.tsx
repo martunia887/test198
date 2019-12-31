@@ -1,7 +1,9 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
 import Button from '@atlaskit/button';
-import { elevation, borderRadius, colors, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import { e500 } from '@atlaskit/theme/elevation';
+import { N0, N50 } from '@atlaskit/theme/colors';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import { surveyInnerWidth } from '../constants';
 
@@ -16,10 +18,10 @@ export default ({ children, onDismiss }: Props) => {
   return (
     <div
       css={css`
-        background-color: ${colors.N0};
+        background-color: ${N0};
         border-radius: ${borderRadius()}px;
         padding: ${padding}px;
-        ${elevation.e500()}
+        ${e500()}
         width: ${surveyInnerWidth}px;
       `}
     >
@@ -31,7 +33,7 @@ export default ({ children, onDismiss }: Props) => {
         `}
       >
         <Button
-          iconBefore={<CrossIcon label="" primaryColor={colors.N50} />}
+          iconBefore={<CrossIcon label="" primaryColor={N50} />}
           aria-label="Dismiss"
           appearance="subtle"
           onClick={onDismiss}

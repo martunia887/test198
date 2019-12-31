@@ -1,5 +1,6 @@
 import { css } from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N40A, N50A } from '@atlaskit/theme/colors';
 import {
   akLayoutGutterOffset,
   sharedExpandStyles,
@@ -53,7 +54,7 @@ export const expandStyles = css`
 
   .${expandClassNames.expanded} {
     background: ${EXPAND_SELECTED_BACKGROUND};
-    border-color: ${colors.N40A};
+    border-color: ${N40A};
 
     .${expandClassNames.content} {
       padding-top: ${gridSize}px;
@@ -83,7 +84,7 @@ export const expandStyles = css`
       border-color: transparent;
 
       &:hover {
-        border-color: ${colors.N50A};
+        border-color: ${N50A};
         background: ${EXPAND_SELECTED_BACKGROUND};
       }
     }

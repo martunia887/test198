@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { colors } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 import InfoIcon from '@atlaskit/icon/glyph/editor/info';
 import TipIcon from '@atlaskit/icon/glyph/editor/hint';
 import SuccessIcon from '@atlaskit/icon/glyph/editor/success';

@@ -7,7 +7,8 @@ import {
   akEditorFloatingDialogZIndex,
 } from '@atlaskit/editor-common';
 import Calendar from '@atlaskit/calendar';
-import { colors, borderRadius } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N60A, N0 } from '@atlaskit/theme/colors';
 import withOuterListeners from '../../../../ui/with-outer-listeners';
 import { DateType } from '../../index';
 
@@ -16,8 +17,8 @@ const PopupWithListeners = withOuterListeners(Popup);
 const calendarStyle = {
   padding: borderRadius(),
   borderRadius: borderRadius(),
-  boxShadow: `0 4px 8px -2px ${colors.N60A}, 0 0 1px ${colors.N60A}`,
-  backgroundColor: colors.N0,
+  boxShadow: `0 4px 8px -2px ${N60A}, 0 0 1px ${N60A}`,
+  backgroundColor: N0,
 };
 
 export interface Props {

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { colors, elevation, gridSize, ThemedValue } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { ThemedValue } from '@atlaskit/theme/types';
+import * as colors from '@atlaskit/theme/colors';
+import { e100 } from '@atlaskit/theme/elevation';
 import { ComponentType } from 'react';
 
 interface IconBaseProps {
@@ -58,23 +61,23 @@ export const themes: IconThemeMap = {
   default: {
     backgroundColor: '#fff',
     primaryColor: '#000',
-    iconElevation: elevation.e100,
+    iconElevation: e100,
   },
   product: {
     iconColor: colors.N0,
     backgroundColor: colors.B400,
     primaryColor: colors.N0,
-    iconElevation: elevation.e100,
+    iconElevation: e100,
   },
   admin: {
     backgroundColor: colors.DN70,
     primaryColor: colors.N0,
-    iconElevation: elevation.e100,
+    iconElevation: e100,
   },
   custom: {
     backgroundColor: colors.N0,
     primaryColor: colors.DN70,
-    iconElevation: elevation.e100,
+    iconElevation: e100,
   },
   subtle: {
     backgroundColor: 'transparent',
@@ -85,12 +88,12 @@ export const themes: IconThemeMap = {
     iconColor: colors.B200,
     iconGradientStart: colors.B400,
     iconGradientStop: colors.B200,
-    iconElevation: elevation.e100,
+    iconElevation: e100,
   },
   discover: {
     backgroundColor: colors.N30,
     primaryColor: colors.DN90,
-    iconElevation: elevation.e100,
+    iconElevation: e100,
   },
 };
 

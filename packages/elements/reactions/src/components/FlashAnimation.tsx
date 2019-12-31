@@ -1,4 +1,4 @@
-import { colors } from '@atlaskit/theme';
+import { B75 } from '@atlaskit/theme/colors';
 import cx from 'classnames';
 import * as React from 'react';
 import { keyframes, style } from 'typestyle';
@@ -21,10 +21,10 @@ const flashAnimation = keyframes({
     backgroundColor: 'transparent',
   },
   '20%': {
-    backgroundColor: colors.B75,
+    backgroundColor: B75,
   },
   '75%': {
-    backgroundColor: colors.B75,
+    backgroundColor: B75,
   },
   '100%': {
     backgroundColor: 'transparent',

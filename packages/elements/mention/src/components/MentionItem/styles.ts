@@ -2,7 +2,7 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N900, N100, N30, N500 } from '@atlaskit/theme/colors';
 
 export interface MentionItemStyleProps {
   selected?: boolean;
@@ -53,7 +53,7 @@ export const FullNameStyle: ComponentClass<HTMLAttributes<{}>> = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: ${colors.N900};
+  color: ${N900};
 `;
 
 export const InfoSectionStyle: ComponentClass<HTMLAttributes<{}> &
@@ -75,14 +75,14 @@ export const InfoSectionStyle: ComponentClass<HTMLAttributes<{}> &
 export const TimeStyle: ComponentClass<HTMLAttributes<{}>> = styled.div`
   margin-left: 20px;
   flex: none;
-  color: ${colors.N100};
+  color: ${N100};
   font-size: 12px;
 `;
 
 export const MentionItemStyle: ComponentClass<HTMLAttributes<{}> &
   MentionItemStyleProps> = styled.div`
   background-color: ${(props: MentionItemStyleProps) =>
-    props.selected ? colors.N30 : 'transparent'};
+    props.selected ? N30 : 'transparent'};
   display: block;
   overflow: hidden;
   list-style-type: none;
@@ -93,5 +93,5 @@ export const MentionItemStyle: ComponentClass<HTMLAttributes<{}> &
 
 export const AccessSectionStyle: ComponentClass<HTMLAttributes<{}>> = styled.div`
   padding-left: 5px;
-  color: ${colors.N500};
+  color: ${N500};
 `;

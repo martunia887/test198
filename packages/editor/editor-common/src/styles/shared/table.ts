@@ -4,7 +4,9 @@ import {
   tableCellContentDomSelector,
   tablePrefixSelector,
 } from '@atlaskit/adf-schema';
-import { fontSize, themed, colors } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { fontSize } from '@atlaskit/theme/constants';
+import { N20A, DN700A } from '@atlaskit/theme/colors';
 import {
   akEditorTableBorder,
   akEditorTableBorderDark,
@@ -122,7 +124,7 @@ const tableSharedStyle = css`
             Add a background color tint to code blocks inside a table heading since they both
             share the same background colour. This prevents them visually blending together.
           */
-          background: ${themed({ light: colors.N20A, dark: colors.DN700A })};
+          background: ${themed({ light: N20A, dark: DN700A })};
 
           > span {
             /*

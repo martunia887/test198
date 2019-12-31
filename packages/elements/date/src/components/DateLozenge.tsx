@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { borderRadius, colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N30A, N800, N40, DN70, DN800, DN60 } from '@atlaskit/theme/colors';
 import styled from 'styled-components';
 
 export type Color = 'grey' | 'red' | 'blue' | 'green' | 'purple' | 'yellow';
@@ -16,8 +18,8 @@ export const resolveColors = (
 ): { light: ColoursTuple; dark: ColoursTuple } => {
   if (!color || color === 'grey') {
     return {
-      light: [colors.N30A, colors.N800, colors.N40],
-      dark: [colors.DN70, colors.DN800, colors.DN60],
+      light: [N30A, N800, N40],
+      dark: [DN70, DN800, DN60],
     };
   }
   const anyColors = colors as any;

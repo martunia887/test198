@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { colors, borderRadius, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import { N40 } from '@atlaskit/theme/colors';
 import Toolbar from '../Toolbar';
 import PluginSlot from '../PluginSlot';
 import WithPluginState from '../WithPluginState';
@@ -52,7 +53,7 @@ const CommentEditor: any = styled.div`
     props.maxHeight
       ? 'max-height: ' + props.maxHeight + 'px;'
       : ''} background-color: white;
-  border: 1px solid ${colors.N40};
+  border: 1px solid ${N40};
   box-sizing: border-box;
   border-radius: ${borderRadius()}px;
 

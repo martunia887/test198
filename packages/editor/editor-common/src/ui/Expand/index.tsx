@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
-import { colors, gridSize, fontSize } from '@atlaskit/theme';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 
 import {
   akEditorSelectedBorder,

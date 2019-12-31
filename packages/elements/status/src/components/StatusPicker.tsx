@@ -1,5 +1,5 @@
 import TextField from '@atlaskit/textfield';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import * as React from 'react';
 import { FormEvent, PureComponent } from 'react';
 import styled from 'styled-components';

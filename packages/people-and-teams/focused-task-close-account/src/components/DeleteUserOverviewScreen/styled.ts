@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { colors, typography } from '@atlaskit/theme';
+import { B500, B200 } from '@atlaskit/theme/colors';
+import { h700 } from '@atlaskit/theme/typography';
 import gridSizeTimes from '../../util/gridSizeTimes';
 
 export const Screen = styled.div`
@@ -19,7 +20,7 @@ export const LoadingWrapper = styled.div`
 `;
 
 export const Title = styled.div`
-  ${typography.h700};
+  ${h700};
   margin-bottom: ${gridSizeTimes(3)}px;
   margin-top: 0;
 `;
@@ -38,10 +39,10 @@ export const MainInformationList = styled.ul`
 `;
 
 export const IconHoverWrapper = styled.span`
-  color: ${colors.B500};
+  color: ${B500};
   padding-left: ${gridSizeTimes(0.5)}px;
   &:hover {
-    color: ${colors.B200};
+    color: ${B200};
   }
 `;
 

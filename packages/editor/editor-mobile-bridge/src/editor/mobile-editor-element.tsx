@@ -13,7 +13,7 @@ import {
   GasPurePayload,
   GasPureScreenEventPayload,
 } from '@atlaskit/analytics-gas-types';
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import { toNativeBridge } from './web-to-native';
 import WebBridgeImpl from './native-to-web';
 import MobilePicker from './MobileMediaPicker';

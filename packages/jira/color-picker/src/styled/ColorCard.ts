@@ -1,12 +1,13 @@
 import styled, { css } from 'styled-components';
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { B100, B75 } from '@atlaskit/theme/colors';
 import { COLOR_CARD_SIZE } from '../constants';
 
 type ColorCardProps = {
   focused?: boolean;
 };
 
-const buttonFocusedBorder = `border-color: ${colors.B100};`;
+const buttonFocusedBorder = `border-color: ${B100};`;
 
 const sharedColorContainerStyles = css`
   display: inline-block;
@@ -31,7 +32,7 @@ export const ColorCardOption = styled.div<
 
   ${props => {
     if (props.focused) {
-      return `border-color: ${colors.B75}`;
+      return `border-color: ${B75}`;
     }
   }};
 `;

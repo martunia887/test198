@@ -1,7 +1,7 @@
 import Avatar from '@atlaskit/avatar';
 import LockCircleIcon from '@atlaskit/icon/glyph/lock-circle';
 import Lozenge from '@atlaskit/lozenge';
-import { colors } from '@atlaskit/theme';
+import { N30 } from '@atlaskit/theme/colors';
 import * as React from 'react';
 import {
   isRestricted,
@@ -86,7 +86,7 @@ export default class MentionItem extends React.PureComponent<Props, {}> {
 
     const nameHighlights = highlight && highlight.name;
 
-    const borderColor = selected ? colors.N30 : undefined;
+    const borderColor = selected ? N30 : undefined;
 
     return (
       <MentionItemStyle

@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import { colors, gridSize, typography } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { P50 } from '@atlaskit/theme/colors';
+import { h400 } from '@atlaskit/theme/typography';
 
 export const Actions = styled.div`
   justify-content: flex-end;
@@ -8,7 +10,7 @@ export const Actions = styled.div`
 `;
 
 export const Title = styled.div`
-  ${typography.h400};
+  ${h400};
   margin-top: 0px;
 `;
 
@@ -20,7 +22,7 @@ export const Heading = styled.div`
 export const Card = styled.div`
   display: flex;
   flex-direction: row;
-  background-color: ${colors.P50};
+  background-color: ${P50};
   overflow: hidden;
   line-height: 21px;
   padding-top: ${gridSize() * 2}px;

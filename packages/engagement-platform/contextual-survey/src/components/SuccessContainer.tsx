@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { G300 } from '@atlaskit/theme/colors';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 
 interface Props {
@@ -20,7 +21,7 @@ export default ({ children }: Props) => (
         left: ${gridSize() * 3}px;
       `}
     >
-      <CheckCircleIcon label="" aria-hidden primaryColor={colors.G300} />
+      <CheckCircleIcon label="" aria-hidden primaryColor={G300} />
     </div>
     {children}
   </section>

@@ -10,7 +10,7 @@ import { Option, UserPickerProps } from '../types';
 
 import Tag from '@atlaskit/tag';
 import PeopleIcon from '@atlaskit/icon/glyph/people';
-import { colors } from '@atlaskit/theme';
+import { B100 } from '@atlaskit/theme/colors';
 
 export const scrollToValue = (
   valueContainer: HTMLDivElement,
@@ -29,7 +29,7 @@ export const scrollToValue = (
 const TagContainer = styled.div`
   button {
     &:focus {
-      box-shadow: 0 0 0 2px ${colors.B100};
+      box-shadow: 0 0 0 2px ${B100};
     }
   }
 `;

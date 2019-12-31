@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import { MenuListComponentProps, OptionProps } from '@atlaskit/select';
 import { Color } from '../types';
 import ColorCard from './ColorCard';

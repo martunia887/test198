@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { ThemedValue } from '@atlaskit/theme';
+import { ThemedValue } from '@atlaskit/theme/types';
 import { themed, withTheme } from '@atlaskit/theme/components';
 import { borderRadius, gridSize } from '@atlaskit/theme/constants';
 import {

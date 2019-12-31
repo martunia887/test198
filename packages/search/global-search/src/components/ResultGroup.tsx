@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import { ResultItemGroup, CancelableEvent } from '@atlaskit/quick-search';
 import Badge from '@atlaskit/badge';
 

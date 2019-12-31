@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { gridSize, fontSize, colors } from '@atlaskit/theme';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
+import { N80A } from '@atlaskit/theme/colors';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
 import Tooltip from '@atlaskit/tooltip';
 import {
@@ -118,7 +119,7 @@ function Expand({
       >
         <Tooltip content={label} position="top" tag={ExpandLayoutWrapper}>
           <ExpandIconWrapper expanded={expanded}>
-            <ChevronRightIcon label={label} primaryColor={colors.N80A} />
+            <ChevronRightIcon label={label} primaryColor={N80A} />
           </ExpandIconWrapper>
         </Tooltip>
         <Title>

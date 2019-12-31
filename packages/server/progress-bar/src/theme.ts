@@ -1,4 +1,5 @@
-import { createTheme, colors } from '@atlaskit/theme';
+import { createTheme } from '@atlaskit/theme/components';
+import { N40A, N500 } from '@atlaskit/theme/colors';
 import { keyframes } from '@emotion/core';
 import { ThemeProps, ThemeTokens } from './types';
 
@@ -13,7 +14,7 @@ const decreasingBarAnimation = keyframes`
 
 export const Theme = createTheme<ThemeTokens, ThemeProps>(props => ({
   container: {
-    background: colors.N40A,
+    background: N40A,
     borderRadius: 3,
     height: 6,
     overflow: 'hidden',
@@ -25,7 +26,7 @@ export const Theme = createTheme<ThemeTokens, ThemeProps>(props => ({
     display: 'block',
     height: 6,
     position: 'absolute',
-    background: colors.N500,
+    background: N500,
   },
   determinateBar: {
     transition: 'width 0.2s',

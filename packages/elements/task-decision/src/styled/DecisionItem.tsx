@@ -2,7 +2,9 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import { gridSize, colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N100, G300, G200 } from '@atlaskit/theme/colors';
 
 export interface EditorIconWrapperProps {
   showPlaceholder?: boolean;
@@ -14,9 +16,7 @@ export const EditorIconWrapper: ComponentClass<HTMLAttributes<{}> &
   height: 16px;
   width: 16px;
   color: ${(props: EditorIconWrapperProps) =>
-    props.showPlaceholder
-      ? colors.N100
-      : themed({ light: colors.G300, dark: colors.G200 })};
+    props.showPlaceholder ? N100 : themed({ light: G300, dark: G200 })};
   margin: 4px ${gridSize}px 0 0;
 
   > span {

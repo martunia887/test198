@@ -8,7 +8,7 @@ import {
   akEditorMediaResizeHandlerPaddingWide,
   akEditorMediaResizeHandlerPadding,
 } from '@atlaskit/editor-common';
-import { colors } from '@atlaskit/theme';
+import { N60, B200 } from '@atlaskit/theme/colors';
 
 export const mediaStyles = css`
   .ProseMirror {
@@ -82,7 +82,7 @@ export const mediaStyles = css`
 
   .${mediaSingleClassName}:hover .mediaSingle-resize-handle-left::after,
   .${mediaSingleClassName}:hover .mediaSingle-resize-handle-right::after {
-    background: ${colors.N60};
+    background: ${N60};
   }
 
   .mediaSingle-selected .mediaSingle-resize-handle-right::after,
@@ -91,7 +91,7 @@ export const mediaStyles = css`
   .${mediaSingleClassName} .mediaSingle-resize-handle-left:hover::after,
   .${mediaSingleClassName}.is-resizing .mediaSingle-resize-handle-right::after,
   .${mediaSingleClassName}.is-resizing .mediaSingle-resize-handle-left::after {
-    background: ${colors.B200};
+    background: ${B200};
   }
 
   .__resizable_base__ {

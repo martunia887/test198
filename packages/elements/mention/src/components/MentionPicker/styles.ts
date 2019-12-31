@@ -2,7 +2,7 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N100 } from '@atlaskit/theme/colors';
 
 import {
   mentionListWidth,
@@ -23,7 +23,7 @@ export const MentionPickerStyle: ComponentClass<HTMLAttributes<{}> &
 
 export const MentionPickerInfoStyle: ComponentClass<HTMLAttributes<{}>> = styled.div`
   background: #fff;
-  color: ${colors.N100};
+  color: ${N100};
   border: 1px solid ${noDialogContainerBorderColor};
   border-radius: ${noDialogContainerBorderRadius};
   box-shadow: ${noDialogContainerBoxShadow};

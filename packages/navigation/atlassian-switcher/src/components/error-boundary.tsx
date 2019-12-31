@@ -6,7 +6,7 @@ import {
   UIAnalyticsEvent,
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import Button from '@atlaskit/button';
 import FormattedMessage from '../primitives/formatted-message';
 import {

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { gridSize, math } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { multiply } from '@atlaskit/theme/math';
 import NoResultsImage from '../assets/NoResultsImage';
 
 const NoResultsWrapper = styled.div`
   text-align: center;
-  margin-top: ${math.multiply(gridSize, 15)}px;
+  margin-top: ${multiply(gridSize, 15)}px;
   margin-bottom: 0;
 `;
 

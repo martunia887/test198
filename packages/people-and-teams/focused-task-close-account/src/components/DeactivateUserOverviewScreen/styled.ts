@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { typography } from '@atlaskit/theme';
+import { h700 } from '@atlaskit/theme/typography';
 import gridSizeTimes from '../../util/gridSizeTimes';
 
 export const Screen = styled.div`
@@ -19,7 +19,7 @@ export const LoadingWrapper = styled.div`
 `;
 
 export const Title = styled.div`
-  ${typography.h700};
+  ${h700};
   margin-bottom: ${gridSizeTimes(3)}px;
   margin-top: 0;
 `;

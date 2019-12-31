@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Lozenge from '@atlaskit/lozenge';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 
 export const OuterLozengeContainer = styled.span`
   display: inline-block;

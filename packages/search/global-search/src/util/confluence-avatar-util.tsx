@@ -14,7 +14,7 @@ import PdfDocumentIcon from '@atlaskit/icon-file-type/glyph/pdf-document/24';
 import GenericIcon from '@atlaskit/icon-file-type/glyph/generic/24';
 
 import Avatar from '@atlaskit/avatar';
-import { colors } from '@atlaskit/theme';
+import { B200 } from '@atlaskit/theme/colors';
 
 export interface ExtensionMatcher {
   regexp: RegExp;
@@ -103,13 +103,9 @@ export const getAvatarForConfluenceObjectResult = (
   result: ConfluenceObjectResult,
 ) => {
   if (result.contentType === ContentType.ConfluencePage) {
-    return (
-      <PageIcon size="medium" primaryColor={colors.B200} label={result.name} />
-    );
+    return <PageIcon size="medium" primaryColor={B200} label={result.name} />;
   } else if (result.contentType === ContentType.ConfluenceBlogpost) {
-    return (
-      <BlogIcon label={result.name} size="medium" primaryColor={colors.B200} />
-    );
+    return <BlogIcon label={result.name} size="medium" primaryColor={B200} />;
   } else if (result.contentType === ContentType.ConfluenceAttachment) {
     return getMediaTypeAvatarForResult(result);
   } else {

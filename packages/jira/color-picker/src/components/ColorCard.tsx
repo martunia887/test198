@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
-import { colors } from '@atlaskit/theme';
+import { N0 } from '@atlaskit/theme/colors';
 import { ColorCardOption, ColorCardContent } from '../styled/ColorCard';
 
 export interface Props {
@@ -31,13 +31,7 @@ export default class ColorCard extends PureComponent<Props> {
   ref: React.RefObject<HTMLButtonElement> = React.createRef();
 
   render() {
-    const {
-      value,
-      label,
-      selected,
-      focused,
-      checkMarkColor = colors.N0,
-    } = this.props;
+    const { value, label, selected, focused, checkMarkColor = N0 } = this.props;
 
     return (
       <ColorCardOption

@@ -1,6 +1,6 @@
 import Button from '@atlaskit/button';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
-import { colors } from '@atlaskit/theme';
+import { N500 } from '@atlaskit/theme/colors';
 import Tooltip from '@atlaskit/tooltip';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -245,7 +245,7 @@ const renderAsImage = (props: Props) => {
           iconBefore={
             <CrossCircleIcon
               label={deleteEmojiLabel}
-              primaryColor={colors.N500}
+              primaryColor={N500}
               size="small"
             />
           }

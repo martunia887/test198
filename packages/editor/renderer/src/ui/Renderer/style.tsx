@@ -1,14 +1,14 @@
 import { HTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
+import { themed } from '@atlaskit/theme/components';
 import {
-  colors,
   gridSize,
   fontFamily,
   fontSize,
   borderRadius,
-  themed,
-  typography,
-} from '@atlaskit/theme';
+} from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
+import { headingSizes } from '@atlaskit/theme/typography';
 import {
   tableSharedStyle,
   columnLayoutSharedStyle,
@@ -52,8 +52,7 @@ export type RendererWrapperProps = {
 type HeadingSizes = keyof typeof typography.headingSizes;
 
 const getLineHeight = <T extends HeadingSizes>(fontCode: T): number =>
-  typography.headingSizes[fontCode].lineHeight /
-  typography.headingSizes[fontCode].size;
+  headingSizes[fontCode].lineHeight / headingSizes[fontCode].size;
 
 export const headingSizes: { [key: string]: { [key: string]: number } } = {
   h1: {

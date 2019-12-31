@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { useCallback } from 'react';
 import { jsx } from '@emotion/core';
-import { visuallyHidden } from '@atlaskit/theme';
+import * as visuallyHidden from '@atlaskit/theme/visuallyHidden';
 import Tooltip from '@atlaskit/tooltip';
 import { smallDurationMs, easeInOut } from '@atlaskit/motion';
 import { Fragment, forwardRef } from 'react';

@@ -1,4 +1,4 @@
-import { colors } from '@atlaskit/theme';
+import { N90, B400 } from '@atlaskit/theme/colors';
 import cx from 'classnames';
 import * as React from 'react';
 import { CSSTransition } from 'react-transition-group';
@@ -9,14 +9,14 @@ const animationTime = 300;
 export const countStyle = style({
   fontSize: '12px',
   lineHeight: '24px',
-  color: colors.N90,
+  color: N90,
   overflow: 'hidden',
   height: 24,
   transition: `width ${animationTime}ms ease-in-out`,
 });
 
 export const highlightStyle = style({
-  color: colors.B400,
+  color: B400,
   fontWeight: 600,
 });
 

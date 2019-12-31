@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { N90 } from '@atlaskit/theme/colors';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import {
   ObjectResult as ObjectResultComponent,
@@ -93,7 +93,7 @@ const getI18nJiraContentType = (
 // Being tested as part of the 'complex' experiment, to improve scannability when there
 // is lots of text.
 const LightSubtextWrapper = styled.span`
-  color: ${colors.N90};
+  color: ${N90};
 `;
 
 const getI18nConfluenceContainerSubtext = (

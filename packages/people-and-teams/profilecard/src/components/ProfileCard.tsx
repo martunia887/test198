@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { colors } from '@atlaskit/theme';
+import { N0 } from '@atlaskit/theme/colors';
 import Avatar from '@atlaskit/avatar';
 import Button from '@atlaskit/button';
 import Lozenge from '@atlaskit/lozenge';
@@ -292,7 +292,7 @@ export default class Profilecard extends React.PureComponent<ProfilecardProps> {
                   ? this.props.avatarUrl
                   : undefined
               }
-              borderColor={colors.N0}
+              borderColor={N0}
             />
           </ProfileImage>
           <CardContent>

@@ -1,7 +1,7 @@
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import LinkFilledIcon from '@atlaskit/icon/glyph/link-filled';
 import InlineDialog from '@atlaskit/inline-dialog';
-import { colors } from '@atlaskit/theme';
+import { G300 } from '@atlaskit/theme/colors';
 import * as React from 'react';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
@@ -104,7 +104,7 @@ export class CopyLinkButton extends React.Component<
             <MessageContainer>
               <CheckCircleIcon
                 label={formatMessage(messages.copiedToClipboardIconLabel)}
-                primaryColor={colors.G300}
+                primaryColor={G300}
               />
               <MessageSpan>
                 <FormattedMessage {...messages.copiedToClipboardMessage} />

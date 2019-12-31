@@ -1,5 +1,5 @@
 import { CSSObject } from '@emotion/core';
-import { gridSize as gridSizeFn } from '@atlaskit/theme';
+import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 import { PRODUCT_HOME_BREAKPOINT } from '../../common/constants';
 import { skeletonCSS } from '../../common/styles';
 import { NavigationTheme } from '../../theme';

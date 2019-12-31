@@ -2,7 +2,7 @@ import React from 'react';
 import { KeyboardEvent } from 'react';
 import { EditorView } from 'prosemirror-view';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { N100, N30, N80 } from '@atlaskit/theme/colors';
 import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import { messages } from '../messages';
@@ -30,11 +30,11 @@ export const CONTAINER_WIDTH_IN_PX = RECENT_SEARCH_WIDTH_IN_PX;
 export const MAX_ALT_TEXT_LENGTH = 510; // double tweet length
 
 const SupportText = styled.p`
-  color: ${colors.N100};
+  color: ${N100};
   font-size: 12px;
   padding: 12px 40px;
   line-height: 20px;
-  border-top: 1px solid ${colors.N30};
+  border-top: 1px solid ${N30};
   margin: 0;
 `;
 
@@ -59,7 +59,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const ClearText = styled.span`
-  color: ${colors.N80};
+  color: ${N80};
 `;
 
 type Props = {

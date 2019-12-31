@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { ThemedValue } from '@atlaskit/theme';
+import { ThemedValue } from '@atlaskit/theme/types';
 import { themed } from '@atlaskit/theme/components';
 import { B200, N70A, N200A, DN80A, background } from '@atlaskit/theme/colors';
 import {

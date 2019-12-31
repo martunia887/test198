@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { AtlaskitThemeProps } from '@atlaskit/theme';
+import { AtlaskitThemeProps } from '@atlaskit/theme/types';
 import { borderRadius, gridSize } from '@atlaskit/theme/constants';
 import { multiply } from '@atlaskit/theme/math';
 

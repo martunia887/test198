@@ -1,4 +1,6 @@
-import { colors, gridSize, typography } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N40 } from '@atlaskit/theme/colors';
+import { h600 } from '@atlaskit/theme/typography';
 import evaluateInner from './utils/evaluate-inner';
 
 const tableBorderWdth = 2;
@@ -12,7 +14,7 @@ export default evaluateInner`
   thead,
   tbody,
   tfoot {
-    border-bottom: ${tableBorderWdth}px solid ${colors.N40};
+    border-bottom: ${tableBorderWdth}px solid ${N40};
   }
 
   td,
@@ -37,7 +39,7 @@ export default evaluateInner`
   }
 
   caption {
-    ${typography.h600()}
+    ${h600()}
     margin-bottom: ${gridSize()}px;
     text-align: left;
   }

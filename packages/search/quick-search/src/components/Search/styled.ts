@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N0, N500, B200, placeholderText, N50 } from '@atlaskit/theme/colors';
 
 const inputRightPadding = gridSize() * 2;
 
@@ -7,8 +8,8 @@ export const SearchBox = styled.div`
   position: sticky;
   top: 0;
   z-index: 1; /* required to keep the search box on top of icons in results when sticky */
-  background-color: ${colors.N0};
-  color: ${colors.N500};
+  background-color: ${N0};
+  color: ${N500};
   display: flex;
   height: 36px;
   z-index: 10;
@@ -19,7 +20,7 @@ export const SearchFieldBaseOuter = styled.div`
   flex: 1;
   margin-right: auto;
   padding-bottom: 2px;
-  border-bottom: 2px solid ${colors.B200};
+  border-bottom: 2px solid ${B200};
 `;
 
 export const SearchFieldBaseInner = styled.div`
@@ -57,13 +58,13 @@ export const getPlaceholderStyle = (style: any) => css`
 `;
 
 export const getPlaceholderColor = css`
-  color: ${colors.placeholderText};
+  color: ${placeholderText};
 `;
 
 export const SearchInput = styled.input`
   background-color: transparent;
   border: 0;
-  color: ${colors.N500};
+  color: ${N500};
   flex-grow: 1;
   font-size: 1.4em;
   outline: 0;
@@ -73,7 +74,7 @@ export const SearchInput = styled.input`
 `;
 
 export const SearchInputTypeAhead = styled(SearchInput)`
-  color: ${colors.N50};
+  color: ${N50};
   position: absolute;
   width: calc(100% - ${inputRightPadding}px);
   z-index: -1;

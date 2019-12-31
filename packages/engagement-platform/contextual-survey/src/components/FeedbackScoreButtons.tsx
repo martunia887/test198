@@ -2,7 +2,8 @@
 import { jsx, css } from '@emotion/core';
 import Button from '@atlaskit/button';
 import Tooltip from '@atlaskit/tooltip';
-import { gridSize, colors } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N200 } from '@atlaskit/theme/colors';
 
 interface Props {
   onChange: (value: number) => void;
@@ -63,7 +64,7 @@ export default ({ onChange, value }: Props) => (
       css={css`
         font-size: 12px;
         font-weight: 600;
-        color: ${colors.N200};
+        color: ${N200};
         display: flex;
         margin-top: ${gridSize()}px;
         margin-bottom: ${gridSize() * 3}px;

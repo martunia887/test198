@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
-import { colors } from '@atlaskit/theme';
+import { N800, N0 } from '@atlaskit/theme/colors';
 import { Button, ButtonWrapper } from './styles';
 import Tooltip from '@atlaskit/tooltip';
 import chromatism from 'chromatism';
@@ -45,8 +45,8 @@ class Color extends PureComponent<Props & InjectedIntlProps> {
       value,
       label,
       isSelected,
-      borderColor = setAlpha(colors.N800, 0.12),
-      checkMarkColor = colors.N0,
+      borderColor = setAlpha(N800, 0.12),
+      checkMarkColor = N0,
       intl: { formatMessage },
     } = this.props;
     const borderStyle = `1px solid ${borderColor}`;

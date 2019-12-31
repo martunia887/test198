@@ -1,5 +1,6 @@
 import { css } from 'styled-components';
-import { borderRadius, colors, fontSize } from '@atlaskit/theme';
+import { borderRadius, fontSize } from "@atlaskit/theme/constants";
+import * as colors from "@atlaskit/theme/colors";
 import {
   browser,
   tableMarginTop,

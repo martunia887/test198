@@ -2,7 +2,7 @@ import * as React from 'react';
 import { browser } from '@atlaskit/editor-common';
 import { Command } from '../types';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { N400 } from '@atlaskit/theme/colors';
 
 export const addAltText = makeKeyMapWithCommon('Add Alt Text', 'Mod-Alt-y');
 export const toggleBold = makeKeyMapWithCommon('Bold', 'Mod-b');
@@ -105,7 +105,7 @@ const arrowKeysMap: Record<string, string> = {
 
 export const TooltipShortcut = styled.span`
   border-radius: 2px;
-  background-color: ${colors.N400};
+  background-color: ${N400};
   padding: 0 2px;
 `;
 

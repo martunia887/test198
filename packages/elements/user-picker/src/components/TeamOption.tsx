@@ -1,4 +1,4 @@
-import { colors } from '@atlaskit/theme';
+import { N0, N800, N50, N200 } from '@atlaskit/theme/colors';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Team } from '../types';
@@ -19,10 +19,7 @@ export class TeamOption extends React.PureComponent<TeamOptionProps> {
     } = this.props;
 
     return [
-      <TextWrapper
-        key="name"
-        color={this.props.isSelected ? colors.N0 : colors.N800}
-      >
+      <TextWrapper key="name" color={this.props.isSelected ? N0 : N800}>
         <HighlightText highlights={highlight && highlight.name}>
           {name}
         </HighlightText>
@@ -79,9 +76,7 @@ export class TeamOption extends React.PureComponent<TeamOptionProps> {
   };
 
   private getBylineComponent = (isSelected: boolean, message: JSX.Element) => (
-    <TextWrapper color={isSelected ? colors.N50 : colors.N200}>
-      {message}
-    </TextWrapper>
+    <TextWrapper color={isSelected ? N50 : N200}>{message}</TextWrapper>
   );
 
   private renderAvatar = () => {

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
 import SuccessContainer from './SuccessContainer';
-import { fontSize, gridSize } from '@atlaskit/theme';
+import { fontSize, gridSize } from '@atlaskit/theme/constants';
 
 export default () => (
   <SuccessContainer>

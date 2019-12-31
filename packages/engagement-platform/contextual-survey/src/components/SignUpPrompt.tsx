@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { jsx, css } from '@emotion/core';
 import Button from '@atlaskit/button';
-import { fontSize, gridSize } from '@atlaskit/theme';
+import { fontSize, gridSize } from '@atlaskit/theme/constants';
 
 import SuccessContainer from './SuccessContainer';
 

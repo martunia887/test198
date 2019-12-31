@@ -2,7 +2,7 @@
 import { ReactNode } from 'react';
 import { jsx, css } from '@emotion/core';
 import { Transition } from 'react-transition-group';
-import { layers } from '@atlaskit/theme';
+import { layers } from '@atlaskit/theme/constants';
 import { surveyInnerWidth, surveyOffset } from '../constants';
 
 type TransitionState = 'entering' | 'entered' | 'exiting' | 'exited';

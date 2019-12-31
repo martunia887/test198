@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { colors } from '@atlaskit/theme';
+import { B400, B300 } from '@atlaskit/theme/colors';
 import { EventHandlers, mediaSingleClassName } from '@atlaskit/editor-common';
 import styled from 'styled-components';
 
@@ -18,7 +18,7 @@ const StyledAnchor = styled.a`
          cursor: default;
          display: block;`
       : ''}
-  color: ${colors.B400};
+  color: ${B400};
 
   & > .${mediaSingleClassName} {
     opacity: 1;
@@ -36,7 +36,7 @@ const StyledAnchor = styled.a`
       opacity: ${defaultMediaLinkOpacity};
     }
 
-    color: ${colors.B300};
+    color: ${B300};
     text-decoration: underline;
   }
 `;

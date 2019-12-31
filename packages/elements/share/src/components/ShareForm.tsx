@@ -1,7 +1,8 @@
 import Button from '@atlaskit/button';
 import Form, { FormFooter, FormSection } from '@atlaskit/form';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
-import { colors, typography } from '@atlaskit/theme';
+import { R400 } from '@atlaskit/theme/colors';
+import { h500 } from '@atlaskit/theme/typography';
 import Tooltip from '@atlaskit/tooltip';
 import { LoadOptions, OptionData } from '@atlaskit/user-picker';
 import * as React from 'react';
@@ -38,7 +39,7 @@ const CenterAlignedIconWrapper = styled.div`
 export const FromWrapper = styled.div`
   [class^='FormHeader__FormHeaderWrapper'] {
     h1:first-child {
-      ${typography.h500()}
+      ${h500()}
 
       > span {
         /* jira has a class override font settings on h1 > span in gh-custom-field-pickers.css */
@@ -128,7 +129,7 @@ class InternalForm extends React.PureComponent<InternalFormProps> {
             >
               <ErrorIcon
                 label={formatMessage(messages.shareFailureIconLabel)}
-                primaryColor={colors.R400}
+                primaryColor={R400}
               />
             </Tooltip>
           )}

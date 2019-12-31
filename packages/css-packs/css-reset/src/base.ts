@@ -1,10 +1,10 @@
 import {
-  colors,
-  typography,
   gridSize,
   fontFamily,
   codeFontFamily,
-} from '@atlaskit/theme';
+} from '@atlaskit/theme/constants';
+import { N800, B400, B300, B500, B100 } from '@atlaskit/theme/colors';
+import * as typography from '@atlaskit/theme/typography';
 import evaluateInner from './utils/evaluate-inner';
 
 export default evaluateInner`
@@ -16,7 +16,7 @@ export default evaluateInner`
 
   body {
     background-color: #fff;
-    color: ${colors.N800};
+    color: ${N800};
     font-family: ${fontFamily};
     font-size: 14px;
     font-style: normal;
@@ -46,18 +46,18 @@ export default evaluateInner`
 
   /* Links */
   a {
-    color: ${colors.B400};
+    color: ${B400};
     text-decoration: none;
   }
   a:hover {
-    color: ${colors.B300};
+    color: ${B300};
     text-decoration: underline;
   }
   a:active {
-    color: ${colors.B500};
+    color: ${B500};
   }
   a:focus {
-    outline: 2px solid ${colors.B100};
+    outline: 2px solid ${B100};
     outline-offset: 2px;
   }
 

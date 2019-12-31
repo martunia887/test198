@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import LinkIcon from '@atlaskit/icon/glyph/link';
-import { colors } from '@atlaskit/theme';
+import { N500 } from '@atlaskit/theme/colors';
 import Tooltip from '@atlaskit/tooltip';
 import { InjectedIntlProps, injectIntl } from 'react-intl';
 import { headingAnchorLinkMessages } from '../../messages';
@@ -22,7 +22,7 @@ const CopyAnchor = styled.button`
   outline: none;
   background-color: transparent;
   border: none;
-  color: ${colors.N500};
+  color: ${N500};
   cursor: pointer;
   right: 0;
   height: 100%;

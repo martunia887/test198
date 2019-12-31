@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { N40A } from '@atlaskit/theme/colors';
 import { shadowClassNames } from '../../ui/OverflowShadow';
 import { akEditorSmallZIndex } from '../../styles';
 
@@ -40,11 +40,7 @@ const shadowSharedStyle = css`
   }
 
   & .${shadowClassNames.LEFT_SHADOW}::before {
-    background: linear-gradient(
-      to left,
-      rgba(99, 114, 130, 0) 0,
-      ${colors.N40A} 100%
-    );
+    background: linear-gradient(to left, rgba(99, 114, 130, 0) 0, ${N40A} 100%);
     top: 0px;
     left: 0;
     display: block;
@@ -54,7 +50,7 @@ const shadowSharedStyle = css`
     background: linear-gradient(
       to right,
       rgba(99, 114, 130, 0) 0,
-      ${colors.N40A} 100%
+      ${N40A} 100%
     );
     left: calc(100% - ${shadowWidth}px);
     top: 0px;

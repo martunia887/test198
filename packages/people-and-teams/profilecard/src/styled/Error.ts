@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { gridSize, math } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { multiply } from '@atlaskit/theme/math';
 
 import {
   errorIconColor,
@@ -9,13 +10,13 @@ import {
 
 export const ErrorWrapper = styled.div`
   text-align: center;
-  padding: ${math.multiply(gridSize, 3)}px;
+  padding: ${multiply(gridSize, 3)}px;
   color: ${errorIconColor};
 `;
 
 export const ErrorTitle = styled.p`
   color: ${errorTitleColor};
-  line-height: ${math.multiply(gridSize, 3)}px;
+  line-height: ${multiply(gridSize, 3)}px;
   margin: ${gridSize}px 0;
 `;
 

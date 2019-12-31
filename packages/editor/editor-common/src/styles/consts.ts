@@ -1,10 +1,10 @@
 import {
   codeFontFamily,
   layers,
-  colors,
   fontSize as defaultFontSize,
   gridSize,
-} from '@atlaskit/theme';
+} from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 
 const {
   B100,

@@ -2,7 +2,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N90 } from '@atlaskit/theme/colors';
 import FeedbackIcon from '@atlaskit/icon/glyph/feedback';
 import { messages } from '../../messages';
 
@@ -18,7 +19,7 @@ const FeedbackButtonContainer = styled.div`
 
 const LighterSubtleButton = styled(Button)`
   & {
-    color: ${colors.N90} !important;
+    color: ${N90} !important;
   }
 `;
 

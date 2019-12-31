@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { borderRadius } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
 import {
   akEditorSelectedBorder,
   akEditorSelectedBorderBoldSize,
