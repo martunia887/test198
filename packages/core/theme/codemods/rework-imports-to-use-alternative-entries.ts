@@ -43,6 +43,7 @@ const constants = [
   'noFocusRing',
   'layers',
   'assistive',
+  'visuallyHidden',
 ];
 
 const akTheme = '@atlaskit/theme';
