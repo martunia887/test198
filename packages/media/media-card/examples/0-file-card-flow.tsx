@@ -37,7 +37,6 @@ const mediaClient = new MediaClient(mediaClientConfig);
 export interface ComponentProps {}
 export interface ComponentState {
   fileIds: string[];
-  cardStates: { [name: string]: undefined };
 }
 
 const fileIds = [
@@ -58,7 +57,6 @@ class Example extends Component<ComponentProps, ComponentState> {
   uploadController?: UploadController;
   state: ComponentState = {
     fileIds,
-    cardStates: {},
   };
 
   renderCards() {
