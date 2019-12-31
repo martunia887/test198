@@ -22,6 +22,7 @@ const pluginConfig = (
 
 const textColorPlugin = (
   textColorConfig?: TextColorPluginConfig | boolean,
+  showMoreColorsToggle?: boolean,
 ): EditorPlugin => ({
   name: 'textColor',
 
@@ -59,6 +60,7 @@ const textColorPlugin = (
             popupsMountPoint={popupsMountPoint}
             popupsBoundariesElement={popupsBoundariesElement}
             popupsScrollableElement={popupsScrollableElement}
+            showMoreColorsToggle={showMoreColorsToggle}
           />
         )}
       />
