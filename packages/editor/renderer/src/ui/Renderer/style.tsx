@@ -8,7 +8,7 @@ import {
   borderRadius,
 } from '@atlaskit/theme/constants';
 import * as colors from '@atlaskit/theme/colors';
-import { headingSizes } from '@atlaskit/theme/typography';
+import { headingSizes as themeHeadingSizes } from '@atlaskit/theme/typography';
 import {
   tableSharedStyle,
   columnLayoutSharedStyle,
@@ -49,7 +49,7 @@ export type RendererWrapperProps = {
   theme?: any;
 };
 
-type HeadingSizes = keyof typeof typography.headingSizes;
+type HeadingSizes = keyof typeof themeHeadingSizes;
 
 const getLineHeight = <T extends HeadingSizes>(fontCode: T): number =>
   headingSizes[fontCode].lineHeight / headingSizes[fontCode].size;

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { themed } from '@atlaskit/theme/components';
 import { borderRadius } from '@atlaskit/theme/constants';
-import { N30A, N800, N40, DN70, DN800, DN60 } from '@atlaskit/theme/colors';
+import * as colors from '@atlaskit/theme/colors';
 import styled from 'styled-components';
+
+const { N30A, N800, N40, DN70, DN800, DN60 } = colors;
 
 export type Color = 'grey' | 'red' | 'blue' | 'green' | 'purple' | 'yellow';
 
