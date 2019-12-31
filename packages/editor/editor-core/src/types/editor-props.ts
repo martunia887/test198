@@ -108,6 +108,9 @@ export interface EditorProps {
   // Enables text colour. Ew are you sure you want to enable this?
   allowTextColor?: boolean | TextColorPluginConfig;
 
+  // (Used with allowTextColor) Allow experimental testing for "show more colours" in the text colour picker
+  allowMoreTextColors?: boolean;
+
   // Enables tables. You can enable individual table features like table header rows and cell background colour.
   // You will most likely need backend ADF storage for the advanced table features.
   allowTables?: boolean | TablesPluginConfig;

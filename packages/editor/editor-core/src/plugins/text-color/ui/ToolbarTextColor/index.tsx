@@ -106,6 +106,7 @@ export interface Props {
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
   isReducedSpacing?: boolean;
+  showMoreColorsToggle?: boolean;
 }
 
 class ToolbarTextColor extends React.Component<

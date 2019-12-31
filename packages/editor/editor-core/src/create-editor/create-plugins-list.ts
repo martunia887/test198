@@ -157,7 +157,9 @@ export default function createPluginsList(
   }
 
   if (props.allowTextColor) {
-    plugins.push(textColorPlugin(props.allowTextColor));
+    plugins.push(
+      textColorPlugin(props.allowTextColor, props.allowMoreTextColors),
+    );
   }
 
   // Needs to be after allowTextColor as order of buttons in toolbar depends on it
