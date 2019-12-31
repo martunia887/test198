@@ -6,10 +6,10 @@ import {
   MediaStoreCopyFileWithTokenParams,
   FileState,
   MediaFile as MediaClientFile,
-  safeUnsubscribe,
   getFileStreamsCache,
   ErrorFileState,
   createFileStateSubject,
+  observableToPromise,
 } from '@atlaskit/media-client';
 import {
   FinalizeUploadAction,
@@ -90,34 +90,30 @@ const emitProcessedState = async (
       tenantSubject &&
       tenantSubject.next
     ) {
-      const subscription = tenantSubject.subscribe({
-        next(currentState) {
-          safeUnsubscribe(subscription);
-          setTimeout(() => {
-            const {
-              artifacts,
-              mediaType,
-              mimeType,
-              name,
-              size,
-              representations,
-            } = firstItem.details;
-            // we emit a new state which extends the existing one + the remote fields
-            // fields like "artifacts" will be later on required on MV and we don't have it locally beforehand
-            tenantSubject.next({
-              ...currentState,
-              status: 'processed',
-              artifacts,
-              mediaType,
-              mimeType,
-              name,
-              size,
-              representations,
-            });
-            resolve();
-          }, 0);
-        },
-      });
+      const currentState = await observableToPromise(tenantSubject);
+      setTimeout(() => {
+        const {
+          artifacts,
+          mediaType,
+          mimeType,
+          name,
+          size,
+          representations,
+        } = firstItem.details;
+        // we emit a new state which extends the existing one + the remote fields
+        // fields like "artifacts" will be later on required on MV and we don't have it locally beforehand
+        tenantSubject.next({
+          ...currentState,
+          status: 'processed',
+          artifacts,
+          mediaType,
+          mimeType,
+          name,
+          size,
+          representations,
+        });
+        resolve();
+      }, 0);
     }
   });
 };
@@ -150,55 +146,52 @@ async function copyFile({
     const tenantSubject = tenantMediaClient.file.getFileState(
       destinationFile.data.id,
     );
-    const subscription = tenantSubject.subscribe({
-      next: fileState => {
-        safeUnsubscribe(subscription);
-        if (fileState.status === 'processing') {
-          store.dispatch(
-            sendUploadEvent({
-              event: {
-                name: 'upload-processing',
-                data: {
-                  file,
-                },
+    const fileState = await observableToPromise(tenantSubject);
+
+    if (fileState.status === 'processing') {
+      store.dispatch(
+        sendUploadEvent({
+          event: {
+            name: 'upload-processing',
+            data: {
+              file,
+            },
+          },
+          uploadId,
+        }),
+      );
+    } else if (fileState.status === 'processed') {
+      store.dispatch(
+        sendUploadEvent({
+          event: {
+            name: 'upload-end',
+            data: {
+              file,
+            },
+          } as UploadEndEvent,
+          uploadId,
+        }),
+      );
+    } else if (
+      fileState.status === 'failed-processing' ||
+      fileState.status === 'error'
+    ) {
+      store.dispatch(
+        sendUploadEvent({
+          event: {
+            name: 'upload-error',
+            data: {
+              file,
+              error: {
+                name: 'object_create_fail',
+                description: 'There was an error while uploading a file',
               },
-              uploadId,
-            }),
-          );
-        } else if (fileState.status === 'processed') {
-          store.dispatch(
-            sendUploadEvent({
-              event: {
-                name: 'upload-end',
-                data: {
-                  file,
-                },
-              } as UploadEndEvent,
-              uploadId,
-            }),
-          );
-        } else if (
-          fileState.status === 'failed-processing' ||
-          fileState.status === 'error'
-        ) {
-          store.dispatch(
-            sendUploadEvent({
-              event: {
-                name: 'upload-error',
-                data: {
-                  file,
-                  error: {
-                    name: 'object_create_fail',
-                    description: 'There was an error while uploading a file',
-                  },
-                },
-              },
-              uploadId,
-            }),
-          );
-        }
-      },
-    });
+            },
+          },
+          uploadId,
+        }),
+      );
+    }
   } catch (error) {
     const erroredFileId = resolvedReplaceFileId || file.id;
     const errorState: ErrorFileState = {

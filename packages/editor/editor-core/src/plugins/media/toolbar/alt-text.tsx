@@ -15,6 +15,7 @@ import AltTextEdit from '../pm-plugins/alt-text/ui/AltTextEdit';
 import { CONTAINER_WIDTH_IN_PX } from '../pm-plugins/alt-text/ui/AltTextEdit';
 import { getMediaNodeFromSelection } from '../utils/media-common';
 import { EditorState } from 'prosemirror-state';
+import { ClassNames } from '../pm-plugins/alt-text/style';
 
 export const altTextButton = (
   intl: InjectedIntl,
@@ -59,6 +60,7 @@ export const getAltTextToolbar = (
   return {
     ...toolbarBaseConfig,
     width: CONTAINER_WIDTH_IN_PX,
+    className: ClassNames.FLOATING_TOOLBAR_COMPONENT,
     items: [altTextEditComponent()],
   };
 };

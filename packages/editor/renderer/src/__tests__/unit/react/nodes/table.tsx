@@ -749,4 +749,116 @@ describe('Renderer - React/Nodes/Table', () => {
       );
     });
   });
+
+  describe('sort table by column', () => {
+    const tableDoc = {
+      ...table(
+        tr([th()(p('Header')), th()(p('Header'))]),
+        tr([td()(p('B')), td()(p('B'))]),
+        tr([td()(p('C')), td()(p('C'))]),
+        tr([td()(p('A')), td()(p('A'))]),
+        tr([td()(p('D')), td()(p('D'))]),
+      ),
+      attrs: { isNumberColumnEnabled: false },
+    };
+    const FakeCellA = () => (
+      <td>
+        <p>A</p>
+      </td>
+    );
+    const FakeCellB = () => (
+      <td>
+        <p>B</p>
+      </td>
+    );
+    const FakeCellC = () => (
+      <td>
+        <p>C</p>
+      </td>
+    );
+    const FakeCellD = () => (
+      <td>
+        <p>D</p>
+      </td>
+    );
+    const tableFromSchema = schema.nodeFromJSON(tableDoc);
+
+    const wrap = mount(
+      <Table
+        layout="default"
+        renderWidth={renderWidth}
+        allowColumnSorting={true}
+        isNumberColumnEnabled={false}
+        tableNode={tableFromSchema}
+      >
+        <TableRow>
+          <TableHeader />
+          <TableHeader />
+        </TableRow>
+        <TableRow>
+          <FakeCellB />
+          <FakeCellB />
+        </TableRow>
+        <TableRow>
+          <FakeCellC />
+          <FakeCellC />
+        </TableRow>
+        <TableRow>
+          <FakeCellA />
+          <FakeCellA />
+        </TableRow>
+        <TableRow>
+          <FakeCellD />
+          <FakeCellD />
+        </TableRow>
+      </Table>,
+    );
+    it('should sort table by column A to Z', () => {
+      const tableRowProps = wrap
+        .find(TableRow)
+        .first()
+        .props();
+      tableRowProps.onSorting!(0, SortOrder.ASC);
+      wrap.update();
+
+      const firstCellFromSecondRow = wrap
+        .find(TableRow)
+        .at(1)
+        .find('td')
+        .at(0);
+      expect(firstCellFromSecondRow.text()).toEqual('A');
+    });
+    it('should sort table by column Z to A', () => {
+      const tableRowProps = wrap
+        .find(TableRow)
+        .first()
+        .props();
+      tableRowProps.onSorting!(0, SortOrder.DESC);
+      wrap.update();
+
+      const firstCellFromSecondRow = wrap
+        .find(TableRow)
+        .at(1)
+        .find('td')
+        .at(0);
+
+      expect(firstCellFromSecondRow.text()).toEqual('D');
+    });
+    it('should clear table order', () => {
+      const tableRowProps = wrap
+        .find(TableRow)
+        .first()
+        .props();
+      tableRowProps.onSorting!(0, SortOrder.NO_ORDER);
+      wrap.update();
+
+      const firstCellFromSecondRow = wrap
+        .find(TableRow)
+        .at(1)
+        .find('td')
+        .at(0);
+
+      expect(firstCellFromSecondRow.text()).toEqual('B');
+    });
+  });
 });

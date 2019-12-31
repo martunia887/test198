@@ -6,6 +6,7 @@ import * as tableWithHeaderColumnButWithoutHeaderRow from '../__fixtures__/table
 import * as tableWithHeaderColumnButWithoutHeaderRowWithoutNumberColumn from '../__fixtures__/table-with-header-column-but-without-header-row-without-number-column.adf.json';
 import { RendererCssClassName } from '../../consts';
 import { StatusClassNames } from '../../ui/SortingIcon';
+import { waitForTooltip } from '@atlaskit/visual-regression/helper';
 
 const initRenderer = async (page: Page, adf: any) => {
   await initRendererWithADF(page, {
@@ -33,9 +34,17 @@ describe('Snapshot Test: Table sorting', () => {
 
   it('should sort table in asc on the first click', async () => {
     await initRenderer(page, tableSortable);
-
     await page.waitForSelector(`.${RendererCssClassName.SORTABLE_COLUMN}`);
     await page.click(getSortableColumnSelector(1));
+  });
+
+  it('should show sort A to Z on mouse hover default state', async () => {
+    await initRenderer(page, tableSortable);
+    await page.waitForSelector(`.${RendererCssClassName.SORTABLE_COLUMN}`);
+    await page.hover(
+      `${getSortableColumnSelector(1)} .${StatusClassNames.NO_ORDER}`,
+    );
+    await waitForTooltip(page);
   });
 
   it('should sort table in desc on the second click', async () => {
@@ -47,7 +56,19 @@ describe('Snapshot Test: Table sorting', () => {
     await page.click(getSortableColumnSelector(1));
   });
 
-  it('should back to original table order on the third click', async () => {
+  it('should show sort Z to A on mouse hover after one click', async () => {
+    await initRenderer(page, tableSortable);
+
+    await page.waitForSelector(`.${RendererCssClassName.SORTABLE_COLUMN}`);
+    await page.click(getSortableColumnSelector(1));
+
+    await page.hover(
+      `${getSortableColumnSelector(1)} .${StatusClassNames.ASC}`,
+    );
+    await waitForTooltip(page);
+  });
+
+  it('should revert back to original table order on the third click', async () => {
     await initRenderer(page, tableSortable);
 
     await page.waitForSelector(`.${RendererCssClassName.SORTABLE_COLUMN}`);
@@ -56,6 +77,19 @@ describe('Snapshot Test: Table sorting', () => {
     await page.click(getSortableColumnSelector(1));
     await animationFrame(page);
     await page.click(getSortableColumnSelector(1));
+  });
+
+  it('should show sort clear sorting on mouse hover after two clicks', async () => {
+    await initRenderer(page, tableSortable);
+
+    await page.waitForSelector(`.${RendererCssClassName.SORTABLE_COLUMN}`);
+    await page.click(getSortableColumnSelector(1));
+    await page.click(getSortableColumnSelector(1));
+
+    await page.hover(
+      `${getSortableColumnSelector(1)} .${StatusClassNames.DESC}`,
+    );
+    await waitForTooltip(page);
   });
 
   describe('when there is merged cells', () => {

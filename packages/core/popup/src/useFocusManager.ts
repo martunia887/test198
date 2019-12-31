@@ -22,7 +22,14 @@ export const useFocusManager = ({
     };
 
     const focusTrap = createFocusTrap(popupRef, trapConfig);
-    focusTrap.activate();
+
+    // wait for the popup to reposition itself before we focus
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        // second call needed for IE compatability
+        focusTrap.activate();
+      });
+    });
 
     return () => {
       focusTrap.deactivate();

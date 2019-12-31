@@ -2,6 +2,10 @@ import { fireEvent, render } from '@testing-library/react';
 import React, { Dispatch, forwardRef, SetStateAction } from 'react';
 import { Popup } from '../../Popup';
 import { ContentProps, PopupComponentProps, TriggerProps } from '../../types';
+import { replaceRaf } from 'raf-stub';
+
+// override requestAnimationFrame letting us execute it when we need
+replaceRaf();
 
 describe('Popup', () => {
   const defaultProps = {
@@ -305,6 +309,11 @@ describe('Popup', () => {
       />,
     );
 
+    //@ts-ignore
+    requestAnimationFrame.step();
+    //@ts-ignore
+    requestAnimationFrame.step();
+
     expect(getByText('focused content')).toHaveFocus();
   });
 
@@ -322,6 +331,11 @@ describe('Popup', () => {
     );
 
     rerender(<Popup {...defaultProps} content={content} isOpen />);
+
+    //@ts-ignore
+    requestAnimationFrame.step();
+    //@ts-ignore
+    requestAnimationFrame.step();
 
     expect(getByText('focused content')).toHaveFocus();
   });

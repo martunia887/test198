@@ -52,7 +52,7 @@ import {
   mobileScrollPlugin,
 } from '../../../plugins';
 
-import createPluginsList from '../../../create-editor/create-plugins-list';
+import createPluginsList from '../../create-plugins-list';
 
 describe('createPluginsList', () => {
   afterEach(() => {
@@ -254,6 +254,30 @@ describe('createPluginsList', () => {
     it('should not add plugin if props.autoScrollIntoView === false', () => {
       createPluginsList({ appearance: 'full-page', autoScrollIntoView: false });
       expect(scrollIntoViewPlugin).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('placeholderPlugin', () => {
+    beforeEach(() => {
+      mockPlugins.placeholderPlugin.mockClear();
+    });
+
+    it('should pass placeholder text from editor props', function() {
+      const defaultPlaceholder = 'Hello World!';
+      createPluginsList({ placeholder: defaultPlaceholder });
+
+      expect(mockPlugins.placeholderPlugin).toHaveBeenCalledWith({
+        placeholder: defaultPlaceholder,
+      });
+    });
+
+    it('should pass placeholder hints from editor props', function() {
+      const placeholderHints = ['Hello World!'];
+      createPluginsList({ placeholderHints });
+
+      expect(mockPlugins.placeholderPlugin).toHaveBeenCalledWith({
+        placeholderHints,
+      });
     });
   });
 });
