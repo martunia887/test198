@@ -39,6 +39,7 @@ const UserProfile = () => {
   }
   return <Profile icon={<Avatar />} />;
 };
+
 const TopNav = () => {
   const [searchText, updateSearchText] = useState('');
 

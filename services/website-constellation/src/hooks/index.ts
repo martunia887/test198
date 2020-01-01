@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+// polyfilled abort controller so gatsby runtime doesn't shit the bed
+// also IE
 import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only';
 export function useData(url) {
   // TODO: tidy this up to deal with multiple requests and dynamic references
