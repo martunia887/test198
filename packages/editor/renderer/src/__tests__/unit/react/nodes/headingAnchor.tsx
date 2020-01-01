@@ -20,7 +20,7 @@ describe('HeadingAnchor', () => {
     subject = mountWithIntl(<HeadingAnchor onCopyText={onClick} />);
     expect(subject.find(Tooltip).exists()).toBeTruthy();
     expect(subject.find(Tooltip).props().content).toEqual(
-      'Copy this anchor link',
+      'Copy link to heading',
     );
   });
 
