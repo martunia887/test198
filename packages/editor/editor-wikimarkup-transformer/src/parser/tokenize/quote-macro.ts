@@ -1,5 +1,5 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
-import { Token, TokenParser, Context } from '.';
+import { Token, TokenType, TokenParser, Context } from '.';
 import { commonMacro } from './common-macro';
 import { hasAnyOfMarks } from '../utils/text';
 import { normalizePMNodes } from '../utils/normalize';
@@ -37,7 +37,7 @@ export const rawContentProcessor = (
   const parsedContent = parseString({
     schema,
     context,
-    ignoreTokenTypes: [],
+    ignoreTokenTypes: [TokenType.TABLE],
     input: rawContent,
   });
   const normalizedContent = normalizePMNodes(parsedContent, schema);

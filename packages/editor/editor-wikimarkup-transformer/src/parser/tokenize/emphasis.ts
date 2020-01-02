@@ -14,6 +14,7 @@ export const emphasis: TokenParser = ({ input, position, schema, context }) => {
     TokenType.TRIPLE_DASH_SYMBOL,
     TokenType.QUADRUPLE_DASH_SYMBOL,
     TokenType.ISSUE_KEY,
+    TokenType.TABLE,
   ];
   // Add underline mark to each text
   const contentDecorator = (n: PMNode) => {

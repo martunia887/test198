@@ -22,7 +22,11 @@ export const list: TokenParser = ({ input, position, schema, context }) => {
    * The following token types will be ignored in parsing
    * the content of a listItem
    */
-  const ignoreTokenTypes = [TokenType.QUADRUPLE_DASH_SYMBOL, TokenType.LIST];
+  const ignoreTokenTypes = [
+    TokenType.QUADRUPLE_DASH_SYMBOL,
+    TokenType.LIST,
+    TokenType.TABLE,
+  ];
 
   let index = position;
   let state = processState.NEW_LINE;
