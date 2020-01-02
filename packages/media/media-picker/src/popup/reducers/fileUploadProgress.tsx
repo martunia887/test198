@@ -9,9 +9,6 @@ export default function fileUploadProgress(
 ): State {
   if (isFileUploadProgressAction(action)) {
     const uploads = { ...state.uploads };
-    if (uploads[action.file.id]) {
-      uploads[action.file.id].progress = action.progress;
-    }
     return { ...state, ...{ uploads } };
   } else {
     return state;

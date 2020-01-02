@@ -10,7 +10,6 @@ export default function fileUploadProcessingStart(
   if (isFileUploadProcessingStartAction(action)) {
     const uploads = { ...state.uploads };
     if (uploads[action.file.id]) {
-      uploads[action.file.id].progress = 1; // no specific UI, just setting 100% in progress
       uploads[action.file.id].events.push(action.originalEvent);
     }
     return { ...state, ...{ uploads } };

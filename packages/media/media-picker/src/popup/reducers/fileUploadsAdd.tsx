@@ -23,7 +23,6 @@ export default function fileUploadsAdd(state: State, action: Action): State {
           },
         },
         timeStarted: Date.now(),
-        progress: 0,
         events: [], // uploads-start is not part of events. It will be emitted manually in importFiles.tsx
         index: newLastUploadIndex++, // this index helps to sort upload items, so that latest come first
       };
