@@ -6,13 +6,7 @@ import { createStorybookMediaClientConfig } from '@atlaskit/media-test-helpers';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
 import { SelectableCard } from './selectableCard';
-import {
-  Card,
-  CardAppearance,
-  CardEvent,
-  OnSelectChangeFuncResult,
-  CardAction,
-} from '../src';
+import { Card, CardAppearance, CardEvent, CardAction } from '../src';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 
@@ -24,10 +18,6 @@ export const clickHandler = (result: CardEvent) => {
 export const mouseEnterHandler = (result: CardEvent) => {
   result.event.preventDefault();
   console.log('mouseEnter', result.mediaItemDetails);
-};
-
-export const onSelectChangeHandler = (result: OnSelectChangeFuncResult) => {
-  console.log('selectChanged', result);
 };
 
 export const createApiCards = (
@@ -56,7 +46,6 @@ export const createApiCards = (
       <SelectableCard
         mediaClientConfig={mediaClientConfig}
         identifier={identifier}
-        onSelectChange={onSelectChangeHandler}
       />
     ),
   };

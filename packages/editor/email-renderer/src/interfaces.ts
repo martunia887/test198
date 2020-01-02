@@ -60,6 +60,10 @@ export interface MediaMetaDataContextItem {
   size: number;
 }
 export interface MetaDataContext {
-  mediaMetaData?: { [key: string]: MediaMetaDataContextItem };
-  inlineCardConversion?: { [key: string]: string };
+  conversion?: {
+    inlineCardConversion?: { [key: string]: string };
+  };
+  hydration?: {
+    mediaMetaData?: { [key: string]: MediaMetaDataContextItem };
+  };
 }

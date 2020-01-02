@@ -101,7 +101,7 @@ function getEditorProps(appearance: Appearance) {
       'Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule.',
     shouldFocus: false,
     UNSAFE_cards: true,
-    UNSAFE_allowExpand: { allowInsertion: true },
+    allowExpand: { allowInsertion: true },
     allowHelpDialog: true,
   };
 
@@ -138,6 +138,9 @@ export type MountOptions = {
   mode?: 'light' | 'dark';
   withSidebar?: boolean;
   collab?: CreateCollabProviderOptions;
+  i18n?: {
+    locale: string;
+  };
 };
 
 export async function mountEditor(

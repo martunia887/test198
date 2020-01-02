@@ -44,7 +44,7 @@ const defaultWaitingOptions: WaitingOptions = { timeout: WAIT_TIMEOUT };
 type Done<T> = (result: T) => any;
 
 export default class Page {
-  private browser: BrowserObject;
+  protected browser: BrowserObject;
 
   constructor(browserObject: BrowserObject) {
     this.browser = browserObject;
@@ -549,9 +549,8 @@ export default class Page {
     return this.waitForSelector(selector, options, reverse);
   }
 
-  waitUntil(predicate: () => boolean | Promise<boolean> | Promise<unknown>) {
-    // TODO This is not right. this.browser.waitUntil can't take `() => Promise<boolean>`
-    return this.browser.waitUntil(predicate as any, WAIT_TIMEOUT);
+  waitUntil(predicate: () => Promise<boolean>) {
+    return this.browser.waitUntil(predicate, WAIT_TIMEOUT);
   }
 
   // Window
@@ -559,19 +558,35 @@ export default class Page {
     return this.browser.setWindowSize(width, height);
   }
 
-  mockDate(timestamp: number, timezoneOffset: number) {
+  mockDate({
+    year,
+    monthIndex,
+    day,
+    hour,
+    minute,
+    tz,
+  }: {
+    year: number;
+    monthIndex: number;
+    day: number;
+    hour: number;
+    minute: number;
+    tz: number;
+  }) {
     this.browser.execute(
-      (t, tz) => {
+      (year, monthIndex, day, hour, minute, tz) => {
         const _Date = ((window as any)._Date = window.Date);
         const realDate = (params: any) => new _Date(params);
-        let offset = 0;
 
-        if (tz) {
-          const localDateOffset = new _Date(t).getTimezoneOffset() / 60;
-          offset = (tz + localDateOffset) * 3600000;
-        }
+        const localDateOffset =
+          new _Date(year, monthIndex, day, hour, minute).getTimezoneOffset() /
+          60;
 
-        const mockedDate = new _Date(t + offset);
+        const offset = (tz + localDateOffset) * 3600000;
+
+        const mockedDate = new _Date(
+          _Date.UTC(year, monthIndex, day, hour, minute) + offset,
+        );
 
         (window as any).Date = function(params: any) {
           if (params) {
@@ -579,13 +594,18 @@ export default class Page {
           }
           return mockedDate;
         };
+
         Object.getOwnPropertyNames(_Date).forEach(property => {
           (window as any).Date[property] = (_Date as any)[property];
         });
-        Date.now = () => t;
+        Date.now = () => mockedDate.getTime();
       },
-      timestamp,
-      timezoneOffset,
+      year,
+      monthIndex,
+      day,
+      hour,
+      minute,
+      tz,
     );
     return () => {
       // Teardown function

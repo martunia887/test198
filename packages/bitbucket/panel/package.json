@@ -20,9 +20,9 @@
     "@atlaskit/button": "^13.3.3",
     "@atlaskit/icon": "^19.0.6",
     "@atlaskit/theme": "^9.2.4",
-    "@babel/runtime": "^7.0.0",
     "react-animate-height": "^2.0.5",
-    "react-focus-within": "^2.0.1"
+    "react-focus-within": "^2.0.1",
+    "tslib": "^1.9.3"
   },
   "peerDependencies": {
     "react": "^16.8.0",

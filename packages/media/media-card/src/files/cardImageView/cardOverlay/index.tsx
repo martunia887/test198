@@ -31,6 +31,7 @@ import {
   Subtitle,
   Metadata,
   ErrorWrapper,
+  AltWrapper,
 } from './styled';
 
 type RetryProps = React.HTMLAttributes<HTMLDivElement> &
@@ -58,6 +59,7 @@ export interface CardOverlayProps {
   persistent: boolean;
 
   error?: ReactNode;
+  alt?: string;
   noHover?: boolean;
   onRetry?: () => void;
 
@@ -120,7 +122,13 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
         <TopRow className={'top-row'}>
           {this.errorLine()}
           <TitleWrapper className={'title'}>
-            <Ellipsify text={titleText} lines={2} />
+            {titleText ? (
+              <Ellipsify
+                testId="media-card-file-name"
+                text={titleText}
+                lines={2}
+              />
+            ) : null}
           </TitleWrapper>
           {this.tickBox()}
         </TopRow>
@@ -141,12 +149,19 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
   }
 
   errorLine() {
-    const error = this.props.error;
+    const { error, alt } = this.props;
     return (
       error && (
-        <ErrorLine>
-          <ErrorMessage>{this.props.error}</ErrorMessage>
-        </ErrorLine>
+        <>
+          <ErrorLine>
+            <ErrorMessage>{error}</ErrorMessage>
+          </ErrorLine>
+          {alt && (
+            <ErrorLine>
+              <AltWrapper>{alt}</AltWrapper>
+            </ErrorLine>
+          )}
+        </>
       )
     );
   }

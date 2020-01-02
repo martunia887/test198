@@ -30,7 +30,7 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: fullpage.appearance,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await page.click(fullpage.placeholder);
@@ -55,7 +55,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: JSON.stringify(document),
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: {
         advanced: true,
       },
@@ -84,7 +84,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: JSON.stringify(document),
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: {
         advanced: true,
       },
@@ -114,7 +114,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: JSON.stringify(document),
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: {
         advanced: true,
       },
@@ -142,7 +142,7 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: fullpage.appearance,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await page.click(fullpage.placeholder);
@@ -166,7 +166,7 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: fullpage.appearance,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: true,
     });
 
@@ -191,7 +191,7 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: fullpage.appearance,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: true,
     });
 
@@ -216,7 +216,7 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: fullpage.appearance,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: true,
       defaultValue: JSON.stringify(documentWithExpand),
     });
@@ -242,7 +242,7 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: fullpage.appearance,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: true,
       shouldFocus: true,
       defaultValue: JSON.stringify(documentWithExpandAndTables),
@@ -269,7 +269,7 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: fullpage.appearance,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: true,
       allowPanel: true,
       shouldFocus: true,
@@ -297,7 +297,7 @@ BrowserTestCase(
 
     await mountEditor(page, {
       appearance: fullpage.appearance,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
       allowTables: true,
       allowPanel: true,
       shouldFocus: true,

@@ -25,8 +25,6 @@ export type EditorSharedConfig = {
   popupsScrollableElement: EditorProps['popupsScrollableElement'];
   providerFactory: EditorAppearanceComponentProps['providerFactory'];
 
-  disabled: EditorProps['disabled'];
-
   onChange?: EditorProps['onChange'];
   onDestroy?: EditorProps['onDestroy'];
 };

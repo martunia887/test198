@@ -32,6 +32,7 @@ export type FloatingToolbarButton<T> = {
   target?: string;
   className?: string;
   tooltipContent?: React.ReactNode;
+  testId?: string;
 };
 
 export type FloatingToolbarInput<T> = {

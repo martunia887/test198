@@ -37,7 +37,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await page.click(expandContentSelector);
@@ -57,7 +57,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await collapseExpandThenFocusTitle(page);
@@ -77,7 +77,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await collapseExpandThenFocusTitle(page);
@@ -96,7 +96,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await collapseExpandThenFocusTitle(page);
@@ -117,7 +117,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await focusExpandTitle(page);
@@ -138,7 +138,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await focusExpandTitle(page);
@@ -159,7 +159,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await focusExpandTitle(page);
@@ -180,7 +180,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await focusExpandTitle(page);
@@ -201,7 +201,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await page.click(expandContentSelector);
@@ -223,7 +223,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: twoLineExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await page.click(expandContentSelector);
@@ -245,7 +245,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await collapseExpandThenFocusTitle(page);
@@ -267,7 +267,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await collapseExpandThenFocusTitle(page);
@@ -292,7 +292,7 @@ describe('when there is a expanded followed by another', () => {
           await mountEditor(page, {
             appearance: fullpage.appearance,
             defaultValue: doubleExpand,
-            UNSAFE_allowExpand: true,
+            allowExpand: true,
           });
 
           await page.click(
@@ -318,7 +318,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: emptyExpandAdf,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await collapseExpandThenFocusTitle(page);
@@ -340,7 +340,7 @@ BrowserTestCase(
     await mountEditor(page, {
       appearance: fullpage.appearance,
       defaultValue: doubleExpand,
-      UNSAFE_allowExpand: true,
+      allowExpand: true,
     });
 
     await page.click('.ak-editor-expand__title-input[value="Second title"]');

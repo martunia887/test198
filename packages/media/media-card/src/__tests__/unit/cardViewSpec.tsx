@@ -82,33 +82,6 @@ describe('CardView', () => {
     expect(fileCard.prop('appearance')).toEqual('image');
   });
 
-  it('should NOT fire onSelectChange when card is NOT selectable', () => {
-    const handler = jest.fn();
-    const element = shallowCardViewBaseElement({
-      metadata: file,
-      onSelectChange: handler,
-    });
-    element.setProps({ selected: true });
-
-    expect(handler).not.toHaveBeenCalled();
-  });
-
-  it('should fire onSelectChange when selected state is changed by the consumer and selectable is true', () => {
-    const handler = jest.fn();
-    const element = shallowCardViewBaseElement({
-      metadata: file,
-      onSelectChange: handler,
-      selectable: true,
-    });
-    element.setProps({ selected: true });
-
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler).toHaveBeenCalledWith({
-      selected: true,
-      mediaItemDetails: file,
-    });
-  });
-
   it('should render a cropped image by default', () => {
     const card = mount(
       <CardView status="complete" dataURI="a" metadata={file} />,

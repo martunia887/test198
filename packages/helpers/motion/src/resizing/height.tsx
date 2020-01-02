@@ -4,7 +4,7 @@ import { mediumDurationMs } from '../utils/durations';
 import { easeInOut } from '../utils/curves';
 import { useSnapshotBeforeUpdate } from '../utils/use-snapshot-before-update';
 import { useSetTimeout, useRequestAnimationFrame } from '../utils/timer-hooks';
-import { useElementRef } from '../utils/use-element-ref';
+import { useElementRef, CallbackRef } from '../utils/use-element-ref';
 
 interface ResizingHeightOpts {
   /**
@@ -76,7 +76,7 @@ export const useResizingHeight = ({
       nextDimensions.height,
     );
 
-    const newStyles: Partial<CSSStyleDeclaration> = {
+    const newStyles: React.CSSProperties = {
       height: `${prevDimensions.current.height}px`,
       willChange: 'height',
       transitionProperty: 'height',
@@ -112,6 +112,16 @@ export const useResizingHeight = ({
   });
 
   return { ref: setElementRef };
+};
+
+export const ResizingHeight = ({
+  children,
+  ...props
+}: ResizingHeightOpts & {
+  children: (opts: { ref: CallbackRef }) => React.ReactNode;
+}) => {
+  const resizing = useResizingHeight(props);
+  return children(resizing);
 };
 
 /**

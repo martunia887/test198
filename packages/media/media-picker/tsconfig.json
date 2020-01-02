@@ -9,9 +9,6 @@
     "./example-helpers/*.tsx",
     "./typings/atlaskit.d.ts"
   ],
-  "exclude": [
-    "./src/__tests__/integration/**/*.ts"
-  ],
   "compilerOptions": {
     "baseUrl": "./"
   }

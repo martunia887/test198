@@ -216,6 +216,12 @@ exports[`GoToItemBase should render a ConnectedItem 1`] = `
   }
 }
 
+@-moz-document url-prefix()  {
+  .emotion-0 {
+    line-height: 1.2857142857142858;
+  }
+}
+
 .emotion-2 {
   -webkit-align-items: center;
   -webkit-box-align: center;

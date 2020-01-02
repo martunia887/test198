@@ -184,7 +184,7 @@ export interface EditorProps {
 
   UNSAFE_cards?: CardOptions;
 
-  UNSAFE_allowExpand?:
+  allowExpand?:
     | boolean
     | { allowInsertion?: boolean; allowInteractiveExpand?: boolean };
 
@@ -243,6 +243,12 @@ export interface EditorProps {
 
   // Default placeholder text to be displayed if the content is empty. e.g. 'Add a comment...'
   placeholder?: string;
+
+  // Default placeholder text to be displayed if line is empty but the content is not. e.g. 'Type / to insert content'
+  placeholderHints?: string[];
+
+  // Default placeholder text to be displayed when a bracket is typed and the line is empty e.g. 'Did you mean to use '/' to insert content?'
+  placeholderBracketHint?: string;
 
   // Set the default editor content.
   defaultValue?: Node | string | Object;

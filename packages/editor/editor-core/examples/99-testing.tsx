@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Step } from 'prosemirror-transform';
 import { EditorView } from 'prosemirror-view';
+import { IntlProvider, addLocaleData } from 'react-intl';
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
@@ -89,6 +90,17 @@ function withDarkMode<T>(
   );
 }
 
+function withI18n<T>(
+  locale: string,
+  Wrapper: React.ComponentType<T>,
+): React.ComponentType<T> {
+  return props => (
+    <IntlProvider locale={locale}>
+      <Wrapper {...props} />
+    </IntlProvider>
+  );
+}
+
 function createEditorWindowBindings(win: Window) {
   if ((win as Window & { __mountEditor?: () => void }).__mountEditor) {
     return;
@@ -172,6 +184,23 @@ function createEditorWindowBindings(win: Window) {
     }
   }
 
+  (window as any)['__loadReactIntlLocale'] = (
+    locales: Array<string>,
+    done: (value?: any) => any,
+  ) => {
+    const modulesToLoad = locales.map(locale =>
+      import(`react-intl/locale-data/${locale}`),
+    );
+    Promise.all(modulesToLoad)
+      .then(localeData => {
+        localeData.forEach(data => addLocaleData(data.default));
+        done();
+      })
+      .catch(() => {
+        done();
+      });
+  };
+
   (window as any)['__mountEditor'] = (
     props: EditorProps = {},
     options: MountOptions = {},
@@ -233,6 +262,10 @@ function createEditorWindowBindings(win: Window) {
 
     Wrapper = Editor;
     editorProps = props;
+
+    if (options.i18n && options.i18n.locale) {
+      Wrapper = withI18n<EditorProps>(options.i18n.locale, Wrapper);
+    }
 
     if (mode && mode === 'dark') {
       Wrapper = withDarkMode<EditorProps>(Wrapper);

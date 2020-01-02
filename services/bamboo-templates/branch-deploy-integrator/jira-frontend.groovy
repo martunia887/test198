@@ -8,11 +8,11 @@ plan(key:'ABDIJC',name:'jira-frontend Atlaskit Branch Deploy Integrator',
         productCiPlanUrl: '',
         dockerContainer: 'docker.atl-paas.net/sox/jira/jira-frontend-agent:latest',
         packageEngine: 'yarn',
-        integratorCmd: 'add',
+        integratorCmd: 'upgrade',
         skipIntegrityCheck: true)
 
     branchMonitoring() {
-        createBranch(matchingPattern:'risky-.*|develop|release-candidate.*')
+        createBranch()
         inactiveBranchCleanup(periodInDays:'14')
         deletedBranchCleanup(periodInDays:'7')
     }

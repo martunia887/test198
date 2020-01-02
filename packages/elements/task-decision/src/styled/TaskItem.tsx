@@ -10,7 +10,7 @@ export const CheckBoxWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
   height: 16px;
   position: relative;
   align-self: start;
-  margin: 2px ${gridSize()}px 0 0;
+  margin: 4px ${gridSize()}px 0 0;
 
   & > input[type='checkbox'] {
     position: absolute;

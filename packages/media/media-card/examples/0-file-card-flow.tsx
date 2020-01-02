@@ -17,7 +17,7 @@ import {
   createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
-import { Card, OnLoadingChangeState } from '../src';
+import { Card } from '../src';
 import {
   UploadController,
   FileIdentifier,
@@ -29,7 +29,6 @@ import {
   CardWrapper,
   CardFlowHeader,
   CardsWrapper,
-  CardState,
 } from '../example-helpers/styled';
 
 const mediaClientConfig = createUploadMediaClientConfig();
@@ -38,7 +37,6 @@ const mediaClient = new MediaClient(mediaClientConfig);
 export interface ComponentProps {}
 export interface ComponentState {
   fileIds: string[];
-  cardStates: { [name: string]: OnLoadingChangeState | undefined };
 }
 
 const fileIds = [
@@ -59,13 +57,11 @@ class Example extends Component<ComponentProps, ComponentState> {
   uploadController?: UploadController;
   state: ComponentState = {
     fileIds,
-    cardStates: {},
   };
 
   renderCards() {
-    const { fileIds, cardStates } = this.state;
+    const { fileIds } = this.state;
     const cards = fileIds.map(id => {
-      const state = cardStates[id];
       const identifier: FileIdentifier = {
         id,
         mediaItemType: 'file',
@@ -77,39 +73,14 @@ class Example extends Component<ComponentProps, ComponentState> {
             <Card
               mediaClientConfig={mediaClientConfig}
               identifier={identifier}
-              onLoadingChange={this.updateCardState(id)}
             />
           </div>
-          {this.renderCardState(state)}
         </CardWrapper>
       );
     });
 
     return <CardsWrapper>{cards}</CardsWrapper>;
   }
-
-  renderCardState = (state?: OnLoadingChangeState) => {
-    if (!state) {
-      return;
-    }
-
-    return (
-      <CardState>
-        <div>Type: {state.type}</div>
-        <pre>{JSON.stringify(state.payload, undefined, 2)}</pre>
-      </CardState>
-    );
-  };
-
-  updateCardState = (id: string) => (state: OnLoadingChangeState) => {
-    const { cardStates } = this.state;
-
-    cardStates[id] = state;
-
-    this.setState({
-      cardStates,
-    });
-  };
 
   cancelUpload = () => {
     if (this.uploadController) {

@@ -54,7 +54,7 @@ class RecentLink extends React.Component<
   async componentDidMount() {
     if (this.props.activityProvider) {
       this.activityProvider = await this.props.activityProvider;
-      this.loadRecentItems(this.activityProvider);
+      await this.loadRecentItems(this.activityProvider);
     }
   }
 

@@ -48,11 +48,11 @@ export async function extensionProviderToQuickInsertProvider(
   };
 }
 
-export function combineQuickInsertProviders(
+export async function combineQuickInsertProviders(
   quickInsertProviders: Array<
     QuickInsertProvider | Promise<QuickInsertProvider>
   >,
-): QuickInsertProvider {
+): Promise<QuickInsertProvider> {
   const { invokeList } = combineProviders<QuickInsertProvider>(
     quickInsertProviders,
   );

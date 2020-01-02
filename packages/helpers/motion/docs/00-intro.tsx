@@ -45,14 +45,18 @@ export default md`
 
   Every component in this library will not render markup,
   they will just pass down \`props\` for you to wire up.
-  Because of this the majority of _motion atoms will utilise children as props or hooks.
+  Because of this the majority of _motion atoms_ will utilise children as props or hooks:
 
   <br />
 
   ${code`
-  <FadeIn>
-    {props => <div {...props} />}
-  </FadeIn>
+<div {...useMotion()} />
+  `}
+
+  ${code`
+<FadeIn>
+  {props => <div {...props} />}
+</FadeIn>
   `}
 
   ### Motion abstractions

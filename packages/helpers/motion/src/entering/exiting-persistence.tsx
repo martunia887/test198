@@ -27,7 +27,7 @@ interface ExitingPersistenceProps {
   /**
    * Children can be any valid react node.
    * Either a single element,
-   * multiple elements.
+   * multiple elements,
    * or multiple elements in an array.
    */
   children: ChildNode;

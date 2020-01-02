@@ -8,11 +8,11 @@ plan(key:'ABDITR',name:'trello Atlaskit Branch Deploy Integrator',
         productCiPlanUrl: '',
         dockerContainer: 'atlassianlabs/atlaskit-mk-2:latest',
         packageEngine: 'yarn',
-        integratorCmd: 'add',
+        integratorCmd: 'upgrade',
         skipIntegrityCheck: false)
 
     branchMonitoring() {
-        // createBranch(matchingPattern:'risky-.*|develop|release-candidate.*')
+        // createBranch()
         inactiveBranchCleanup(periodInDays:'14')
         deletedBranchCleanup(periodInDays:'7')
     }

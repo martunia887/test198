@@ -84,7 +84,6 @@ export function createPlugin(
       apply(tr, pluginState, _oldState, state) {
         const meta = tr.getMeta(pluginKey) || {};
         const { action, params } = meta;
-
         switch (action) {
           case ACTIONS.SET_CURRENT_INDEX:
             return setCurrentItemIndex({
@@ -492,8 +491,8 @@ export function itemsListUpdatedActionHandler({
     ...pluginState,
     items,
     itemsLoader: null,
-    currentIndex:
-      pluginState.currentIndex > items.length ? 0 : pluginState.currentIndex,
+    // Set to 0 to always reset the query to the top of the typeahead
+    currentIndex: 0,
   };
   dispatch(pluginKey, newPluginState);
   return newPluginState;

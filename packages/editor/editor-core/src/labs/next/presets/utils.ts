@@ -18,7 +18,7 @@ export const enableExperimental = (
   experimentalPluginMap: ExperimentalPluginMap,
 ) => (plugins: EditorPlugin[]) => {
   if (experimental && experimental.length) {
-    experimental.map(pluginName => {
+    experimental.forEach(pluginName => {
       const plugin = experimentalPluginMap.get(pluginName);
       if (plugin) {
         plugins.push(plugin);

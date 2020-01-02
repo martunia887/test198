@@ -1,7 +1,6 @@
 import { css } from 'styled-components';
 import { colors, gridSize } from '@atlaskit/theme';
 import {
-  blockNodesVerticalMargin,
   akLayoutGutterOffset,
   sharedExpandStyles,
 } from '@atlaskit/editor-common';
@@ -18,7 +17,6 @@ export const expandStyles = css`
 
   .${expandClassNames.prefix} {
     ${sharedExpandStyles.ContainerStyles}
-    margin-top: ${blockNodesVerticalMargin}rem;
     overflow: hidden;
     cursor: pointer;
 

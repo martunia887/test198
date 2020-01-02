@@ -361,7 +361,7 @@ export default class WebBridgeImpl extends WebBridge
           inputMethod as InsertBlockInputMethodToolbar,
           listLocalId,
           itemLocalId,
-        );
+        )(state, dispatch);
         return;
       case 'decision':
         insertTaskDecision(
@@ -370,7 +370,7 @@ export default class WebBridgeImpl extends WebBridge
           inputMethod as InsertBlockInputMethodToolbar,
           listLocalId,
           itemLocalId,
-        );
+        )(state, dispatch);
         return;
       case 'table':
         createTable(state, dispatch);

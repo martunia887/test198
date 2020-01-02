@@ -7,10 +7,10 @@ plan(key:'ABDICC',name:'confluence-frontend Atlaskit Branch Deploy Integrator',
         productCiPlanUrl: 'https://confluence-cloud-bamboo.internal.atlassian.com/rest/api/latest/plan/CONFMICRO-CFCPB',
         dockerContainer: 'docker.atl-paas.net/sox/confluence/confluence-frontend-agent:latest',
         packageEngine: 'bolt',
-        integratorCmd: 'add',
+        integratorCmd: 'upgrade',
         skipIntegrityCheck: false)
     branchMonitoring() {
-        createBranch(matchingPattern:'risky-.*|develop|release-candidate.*')
+        createBranch()
         inactiveBranchCleanup(periodInDays:'14')
         deletedBranchCleanup(periodInDays:'7')
     }

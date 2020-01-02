@@ -149,7 +149,7 @@ describe('lists plugin -> commands', () => {
       const { editorView } = createEditor({
         doc: doc(breakout({ mode: 'wide' })(expand()(p('{<>}')))),
         editorProps: {
-          UNSAFE_allowExpand: true,
+          allowExpand: true,
           allowBreakout: true,
           appearance: 'full-page',
         },

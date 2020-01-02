@@ -8,20 +8,18 @@ import {
 } from '../../__helpers/page-objects/_media';
 import {
   clickEditableContent,
-  clickElementWithText,
   animationFrame,
 } from '../../__helpers/page-objects/_editor';
 import {
   pressKey,
-  pressKeyDown,
-  pressKeyUp,
+  pressKeyCombo,
 } from '../../__helpers/page-objects/_keyboard';
 import { Page } from '../../__helpers/page-objects/_types';
 import { EditorProps } from '../../../types';
 
 describe('Snapshot Test: Media with alt text', () => {
   let page: Page;
-  const initEditor = async (
+  const initEditorWithMedia = async (
     appearance: Appearance,
     viewport: { width: number; height: number },
     editorProps?: Partial<EditorProps>,
@@ -34,6 +32,10 @@ describe('Snapshot Test: Media with alt text', () => {
 
     // click into the editor
     await clickEditableContent(page);
+
+    // insert single media item
+    await insertMedia(page);
+    await waitForMediaToBeLoaded(page);
   };
 
   beforeEach(() => {
@@ -44,10 +46,10 @@ describe('Snapshot Test: Media with alt text', () => {
   describe('in the toolbar', () => {
     describe('when the feature flag is disabled', () => {
       it('should not display the alt text option', async () => {
-        await initEditor(Appearance.fullPage, { width: 800, height: 700 });
-
-        // insert single media item
-        await insertMedia(page);
+        await initEditorWithMedia(Appearance.fullPage, {
+          width: 800,
+          height: 700,
+        });
         await pressKey(page, 'ArrowUp');
         await snapshot(page);
       });
@@ -55,7 +57,7 @@ describe('Snapshot Test: Media with alt text', () => {
 
     describe('when the feature flag is enable', () => {
       beforeEach(async () => {
-        await initEditor(
+        await initEditorWithMedia(
           Appearance.fullPage,
           { width: 800, height: 700 },
           {
@@ -64,13 +66,12 @@ describe('Snapshot Test: Media with alt text', () => {
             },
           },
         );
-
-        // insert single media item
-        await insertMedia(page);
-
-        await waitForMediaToBeLoaded(page);
         await scrollToMedia(page);
         await clickMediaInPosition(page, 0);
+        await page.waitForSelector(
+          '[aria-label="Media floating controls"] [aria-label="Floating Toolbar"]',
+          { visible: true },
+        );
       });
 
       it('should display the alt text option', async () => {
@@ -79,42 +80,45 @@ describe('Snapshot Test: Media with alt text', () => {
 
       describe('when the shortcut is pressed', () => {
         it('should display the alt text description', async () => {
-          await pressKeyDown(page, 'Control');
-          await pressKeyDown(page, 'Alt');
-          await pressKeyDown(page, 'y');
+          await pressKeyCombo(page, ['Control', 'Alt', 'y']);
+          await page.waitForSelector('[data-testid="alt-text-input"]', {
+            visible: true,
+          });
           await snapshot(page);
-          await pressKeyUp(page, 'Control');
-          await pressKeyUp(page, 'Alt');
-          await pressKeyUp(page, 'y');
         });
       });
 
       describe('when the alt text button is clicked', () => {
         it('should display the alt text description', async () => {
-          await clickElementWithText({ page, tag: 'span', text: 'Alt text' });
+          const altTextButton = await page.waitForSelector(
+            '[data-testid="alt-text-edit-button"]',
+            { visible: true },
+          );
+          await altTextButton.click();
           await snapshot(page);
         });
       });
 
       describe('when the user adds an alt text value', () => {
-        it('should display the clear alt text button', async () => {
-          await clickElementWithText({ page, tag: 'span', text: 'Alt text' });
-          await page.waitForSelector(
-            '[aria-label="Media floating controls"] [aria-label="Floating Toolbar"]',
+        beforeEach(async () => {
+          const altTextButton = await page.waitForSelector(
+            '[data-testid="alt-text-edit-button"]',
+            { visible: true },
           );
-          await animationFrame(page);
-          await pressKey(page, 'y');
+          await altTextButton.click();
+
+          const altTextInput = await page.waitForSelector(
+            '[data-testid="alt-text-input"]',
+            { visible: true },
+          );
+          await altTextInput.press('y');
+        });
+
+        it('should display the clear alt text button', async () => {
           await snapshot(page);
         });
 
         it('should clear alt text when the user click the alt text button', async () => {
-          await clickElementWithText({ page, tag: 'span', text: 'Alt text' });
-          await page.waitForSelector(
-            '[aria-label="Media floating controls"] [aria-label="Floating Toolbar"]',
-          );
-          await animationFrame(page);
-          await pressKey(page, 'y');
-
           await page.waitForSelector('button[aria-label="Clear alt text"]');
           await page.click('button[aria-label="Clear alt text"]');
           await animationFrame(page);

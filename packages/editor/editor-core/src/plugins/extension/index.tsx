@@ -5,7 +5,7 @@ import {
 } from '@atlaskit/adf-schema';
 import { ExtensionHandlers } from '@atlaskit/editor-common';
 import { EditorPlugin } from '../../types';
-import createPlugin from './plugin';
+import { createPlugin } from './plugin';
 import { getToolbarConfig } from './toolbar';
 
 interface ExtensionPluginOptions {
@@ -30,8 +30,10 @@ const extensionPlugin = (options?: ExtensionPluginOptions): EditorPlugin => ({
       {
         name: 'extension',
         plugin: ({ dispatch, providerFactory, portalProviderAPI }) => {
-          const allowBreakout = options && options.breakoutEnabled;
-          const stickToolbarToBottom = options && options.stickToolbarToBottom;
+          const allowBreakout = !!(options && options.breakoutEnabled);
+          const stickToolbarToBottom = !!(
+            options && options.stickToolbarToBottom
+          );
           const extensionHandlers = options && options.extensionHandlers;
 
           return createPlugin(

@@ -120,6 +120,7 @@ export class FileCardImageViewBase extends Component<
   private renderErrorContents = (): JSX.Element => {
     const {
       error,
+      alt,
       mediaName,
       mediaType,
       onRetry,
@@ -135,6 +136,7 @@ export class FileCardImageViewBase extends Component<
           mediaName={mediaName}
           mediaType={mediaType}
           error={error}
+          alt={alt}
           onRetry={onRetry}
           actions={actions}
           subtitle={fileSize}
@@ -269,7 +271,11 @@ export class FileCardImageViewBase extends Component<
       <ProgressBarWrapper>
         <Overlay>
           <Title>
-            <Ellipsify text={mediaName || ''} lines={2} />
+            <Ellipsify
+              testId="media-card-file-name"
+              text={mediaName || ''}
+              lines={2}
+            />
           </Title>
           <Body>
             <ProgressWrapper>

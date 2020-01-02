@@ -5,7 +5,6 @@ import {
   akEditorSelectedBorder,
   akEditorSelectedBorderSize,
   akEditorSwoopCubicBezier,
-  blockNodesVerticalMargin,
   akLayoutGutterOffset,
 } from '../../styles';
 
@@ -63,13 +62,14 @@ const ContainerStyles = css<StyleProps>`
   background: ${({ expanded }) =>
     !expanded ? 'transparent' : EXPAND_SELECTED_BACKGROUND};
   margin: ${props =>
-    `${blockNodesVerticalMargin}rem ${
+    `${gridSize() / 2 / fontSize()}rem ${
       // Only only these margins if the expand isn't editable
       // and is the root level expand.
       props['data-node-type'] === 'expand' ? `-${akLayoutGutterOffset}px` : `0`
     } 0`};
 
-  transition: background 0.3s ${akEditorSwoopCubicBezier};
+  transition: background 0.3s ${akEditorSwoopCubicBezier},
+    border-color 0.3s ${akEditorSwoopCubicBezier};
   padding: ${gridSize}px;
 
   &:hover {

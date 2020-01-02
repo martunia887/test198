@@ -53,8 +53,8 @@ import {
   sharedContextPlugin,
   expandPlugin,
   isExpandInsertionEnabled,
-  iOSScrollPlugin,
   scrollIntoViewPlugin,
+  mobileScrollPlugin,
 } from '../plugins';
 import { isFullPage as fullPageCheck } from '../utils/is-full-page';
 import { ScrollGutterPluginOptions } from '../plugins/base/pm-plugins/scroll-gutter';
@@ -63,7 +63,13 @@ import { ScrollGutterPluginOptions } from '../plugins/base/pm-plugins/scroll-gut
  * Returns list of plugins that are absolutely necessary for editor to work
  */
 export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
-  const { appearance, textFormatting, placeholder } = props;
+  const {
+    appearance,
+    textFormatting,
+    placeholder,
+    placeholderHints,
+    placeholderBracketHint,
+  } = props;
   const isFullPage = fullPageCheck(appearance);
 
   return [
@@ -81,7 +87,11 @@ export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
       lastNodeMustBeParagraph: appearance === 'comment',
       allowBlockType: props.allowBlockType,
     }),
-    placeholderPlugin({ placeholder }),
+    placeholderPlugin({
+      placeholder,
+      placeholderHints,
+      placeholderBracketHint,
+    }),
     clearMarksOnChangeToEmptyDocumentPlugin(),
     hyperlinkPlugin(),
     textFormattingPlugin(textFormatting || {}),
@@ -129,7 +139,6 @@ export default function createPluginsList(
   createAnalyticsEvent?: CreateUIAnalyticsEvent,
 ): EditorPlugin[] {
   const isMobile = props.appearance === 'mobile';
-  const isIOS = isMobile && !!(window as any).webkit;
   const isFullPage = fullPageCheck(props.appearance);
   const plugins = getDefaultPluginsList(props);
 
@@ -158,7 +167,7 @@ export default function createPluginsList(
     plugins.push(rulePlugin());
   }
 
-  if (props.UNSAFE_allowExpand) {
+  if (props.allowExpand) {
     plugins.push(
       expandPlugin({ allowInsertion: isExpandInsertionEnabled(props) }),
     );
@@ -357,10 +366,7 @@ export default function createPluginsList(
 
   if (isMobile) {
     plugins.push(historyPlugin());
-  }
-
-  if (isIOS) {
-    plugins.push(iOSScrollPlugin());
+    plugins.push(mobileScrollPlugin());
   }
 
   if (props.autoScrollIntoView !== false) {
