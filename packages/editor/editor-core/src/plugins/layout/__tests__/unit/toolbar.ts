@@ -11,7 +11,7 @@ import {
   FloatingToolbarItem,
 } from '../../../floating-toolbar/types';
 import { Command } from '../../../../types';
-import commonMessages from '@atlaskit/editor-core/messages';
+import commonMessages from '../../../../messages';
 import { buildLayoutForWidths } from './_utils';
 import { LAYOUT_TYPE } from '../../../analytics/types/node-events';
 import {
