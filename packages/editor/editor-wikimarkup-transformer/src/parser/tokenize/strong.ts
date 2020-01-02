@@ -14,6 +14,7 @@ export const strong: TokenParser = ({ input, position, schema, context }) => {
     TokenType.TRIPLE_DASH_SYMBOL,
     TokenType.QUADRUPLE_DASH_SYMBOL,
     TokenType.ISSUE_KEY,
+    TokenType.TABLE,
   ];
   // Adding strong mark to all text
   const contentDecorator = (pmNode: PMNode) => {

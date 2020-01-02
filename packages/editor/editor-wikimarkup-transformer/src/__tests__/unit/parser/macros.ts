@@ -167,6 +167,14 @@ linebreaks{noformat}`,
         System.out.print("test");
      }{code}`,
     ],
+    [
+      'should allow pipes within colour macro, and not render as a table',
+      '{color:#6554c0}|{color}',
+    ],
+    [
+      'should allow pipes within quote block, and not render as a table',
+      '{quote}|{quote}',
+    ],
   ];
 
   const context = {

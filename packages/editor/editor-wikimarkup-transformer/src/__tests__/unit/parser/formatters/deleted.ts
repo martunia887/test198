@@ -91,4 +91,10 @@ another line`;
     const transformer = new WikiMarkupTransformer();
     expect(transformer.parse(wiki)).toMatchSnapshot();
   });
+
+  test('should be a deleted mark and not a table if the character is a pipe', () => {
+    const wiki = '-|-';
+    const transformer = new WikiMarkupTransformer();
+    expect(transformer.parse(wiki)).toMatchSnapshot();
+  });
 });

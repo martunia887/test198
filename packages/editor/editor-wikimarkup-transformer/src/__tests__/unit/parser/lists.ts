@@ -173,6 +173,14 @@ abc
       'should not break {color} macro to differnt lines',
       `* {color:#205081}123{color} {color:#d04437}456{color}`,
     ],
+    [
+      'should allow pipes in a list, and not render as a table',
+      `
+* |
+
+# |
+      `,
+    ],
   ];
 
   const context = {

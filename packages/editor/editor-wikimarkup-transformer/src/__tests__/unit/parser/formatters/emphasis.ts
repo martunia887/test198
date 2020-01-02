@@ -85,4 +85,10 @@ another line`;
     const transformer = new WikiMarkupTransformer();
     expect(transformer.parse(wiki)).toMatchSnapshot();
   });
+
+  test('should be an emphasis mark and not a table if the character is a pipe', () => {
+    const wiki = '_|_';
+    const transformer = new WikiMarkupTransformer();
+    expect(transformer.parse(wiki)).toMatchSnapshot();
+  });
 });
