@@ -16,7 +16,7 @@ export interface BreakoutMarkDefinition {
 
 export const breakout: MarkSpec = {
   spanning: false,
-
+  inclusive: false,
   parseDOM: [
     {
       tag: 'div.fabric-editor-breakout-mark',

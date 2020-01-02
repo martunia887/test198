@@ -7,12 +7,7 @@ import {
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 
-import {
-  SharedCardProps,
-  CardStatus,
-  OnSelectChangeFuncResult,
-  CardDimensionValue,
-} from '../index';
+import { SharedCardProps, CardStatus, CardDimensionValue } from '../index';
 import { FileCard } from '../files';
 import { breakpointSize } from '../utils/breakpoint';
 import {
@@ -36,7 +31,6 @@ export interface CardViewOwnProps extends SharedCardProps {
     analyticsEvent?: UIAnalyticsEvent,
   ) => void;
   readonly onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void;
-  readonly onSelectChange?: (result: OnSelectChangeFuncResult) => void;
   readonly onDisplayImage?: () => void;
 
   // FileCardProps
@@ -70,30 +64,6 @@ export class CardViewBase extends React.Component<
   componentDidMount() {
     this.saveElementWidth();
   }
-
-  UNSAFE_componentWillReceiveProps(nextProps: CardViewProps) {
-    const { selected: currSelected } = this.props;
-    const { selectable: nextSelectable, selected: nextSelected } = nextProps;
-
-    // need to coerce to booleans as both "undefined" and "false" are considered NOT selected
-    const cs: boolean = !!currSelected;
-    const ns: boolean = !!nextSelected;
-
-    if (nextSelectable && cs !== ns) {
-      this.fireOnSelectChangeToConsumer(ns);
-    }
-  }
-
-  private fireOnSelectChangeToConsumer = (newSelectedState: boolean): void => {
-    const { metadata, selectable, onSelectChange } = this.props;
-
-    if (selectable && onSelectChange) {
-      onSelectChange({
-        selected: newSelectedState,
-        mediaItemDetails: metadata,
-      });
-    }
-  };
 
   // This width is only used to calculate breakpoints, dimensions are passed down as
   // integrator pass it to the root component

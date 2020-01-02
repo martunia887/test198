@@ -3,7 +3,7 @@ import { Auth } from '@atlaskit/media-core';
 import {
   getFileStreamsCache,
   ProcessedFileState,
-  FileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 import {
   mockStore,
@@ -19,7 +19,6 @@ import {
   FINALIZE_UPLOAD,
 } from '../../../actions/finalizeUpload';
 import { State } from '../../../domain';
-import { ReplaySubject, Observable } from 'rxjs';
 
 describe('finalizeUploadMiddleware', () => {
   const auth: Auth = {
@@ -70,6 +69,11 @@ describe('finalizeUploadMiddleware', () => {
     };
   };
 
+  beforeEach(() => {
+    getFileStreamsCache().removeAll();
+    return jest.clearAllMocks();
+  });
+
   it('should do nothing given unknown action', () => {
     const { store, next } = setup();
     const action = {
@@ -91,8 +95,7 @@ describe('finalizeUploadMiddleware', () => {
       mimeType: 'image/png',
       status: 'processed',
     };
-    const fileStateObservable = new ReplaySubject(1);
-    fileStateObservable.next(processedFileState);
+    const fileStateObservable = createFileStateSubject(processedFileState);
     // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
     //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
     tenantMediaClient.file.getFileState = jest.fn(() => fileStateObservable);
@@ -182,12 +185,17 @@ describe('finalizeUploadMiddleware', () => {
 
   it('should populate cache with processed state', async () => {
     const { store, action } = setup();
-    const subject = new ReplaySubject<Partial<FileState>>(1);
-    const next = jest.fn();
-    subject.next({
+    const subject = createFileStateSubject({
       id: copiedFile.id,
+      artifacts: {},
+      mediaType: 'image',
+      mimeType: 'image/png',
+      status: 'processed',
+      name: 'a-name',
+      size: 100,
     });
-    getFileStreamsCache().set(copiedFile.id, subject as Observable<FileState>);
+    const next = jest.fn();
+    getFileStreamsCache().set(copiedFile.id, subject);
 
     await finalizeUpload(store, action);
 
@@ -199,6 +207,12 @@ describe('finalizeUploadMiddleware', () => {
 
     expect(next).toBeCalledWith({
       id: 'some-copied-file-id',
+      artifacts: {},
+      mediaType: 'image',
+      mimeType: 'image/png',
+      status: 'processed',
+      name: 'a-name',
+      size: 100,
     });
   });
 
@@ -208,5 +222,56 @@ describe('finalizeUploadMiddleware', () => {
     await finalizeUpload(store, action);
 
     expect(store.dispatch).toHaveBeenCalledWith(resetView());
+  });
+
+  it('should produce an error to cached file subject when copy file with token request fails', async () => {
+    const cache = getFileStreamsCache();
+    const { store, action } = setup({
+      config: { uploadParams: { collection: 'some-tenant-collection' } },
+    });
+    const fileId = action.file.id;
+    const fileSubject = createFileStateSubject();
+    const subjectNextSpy = jest.spyOn(fileSubject, 'next');
+    cache.set(fileId, fileSubject);
+    jest
+      .spyOn(MediaClientModule, 'MediaStore' as any)
+      .mockImplementation(() => ({
+        copyFileWithToken: () =>
+          Promise.reject('copy file with token server error'),
+      }));
+
+    await finalizeUpload(store, action);
+
+    expect(subjectNextSpy).toHaveBeenCalledTimes(1);
+    expect(subjectNextSpy).toHaveBeenCalledWith({
+      id: fileId,
+      status: 'error',
+      message: `error copying file to some-tenant-collection`,
+    });
+  });
+
+  it('should update cache with a new subject with error state when copy file with token request fails', async () => {
+    const { store, action } = setup({
+      config: { uploadParams: { collection: 'some-tenant-collection' } },
+    });
+    const fileId = action.file.id;
+    const next = jest.fn();
+    jest
+      .spyOn(MediaClientModule, 'MediaStore' as any)
+      .mockImplementation(() => ({
+        copyFileWithToken: () =>
+          Promise.reject('copy file with token server error'),
+      }));
+
+    await finalizeUpload(store, action);
+
+    getFileStreamsCache()
+      .get(fileId)!
+      .subscribe({ next });
+    expect(next).toHaveBeenCalledWith({
+      id: fileId,
+      status: 'error',
+      message: `error copying file to some-tenant-collection`,
+    });
   });
 });

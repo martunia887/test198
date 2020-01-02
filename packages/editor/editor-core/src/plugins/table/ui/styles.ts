@@ -505,6 +505,16 @@ export const tableStyles = css`
       }
     }
 
+    > .${ClassName.NODEVIEW_WRAPPER} {
+      /**
+       * Prevent margins collapsing, aids with placing the gap-cursor correctly
+       * @see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing
+       *
+       * TODO: Enable this, many tests will fail!
+       * border-top: 1px solid transparent;
+       */
+    }
+
     /* Breakout only works on top level */
     > .${ClassName.NODEVIEW_WRAPPER} .${ClassName.TABLE_CONTAINER}[data-layout='full-width'],
     > .${ClassName.NODEVIEW_WRAPPER} .${ClassName.TABLE_CONTAINER}[data-layout='wide'] {
