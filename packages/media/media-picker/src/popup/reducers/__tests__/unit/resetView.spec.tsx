@@ -31,7 +31,6 @@ describe('resetView reducer', () => {
           file: {} as any,
           index: 0,
           timeStarted: 0,
-          progress: 1,
           events: [
             {
               name: 'upload-end',
@@ -43,7 +42,6 @@ describe('resetView reducer', () => {
           file: {} as any,
           index: 0,
           timeStarted: 0,
-          progress: 1,
           events: [
             {
               name: 'upload-error',
@@ -55,7 +53,6 @@ describe('resetView reducer', () => {
           file: {} as any,
           index: 0,
           timeStarted: 0,
-          progress: 1,
           events: [
             {
               name: 'upload-preview-update',

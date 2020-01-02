@@ -63,7 +63,6 @@ describe('fileUploadsAdd() reducer', () => {
           occurrenceKey,
         },
       },
-      progress: 0,
       timeStarted: MOCK_TIMESTAMP,
       events: [],
       index: 0,

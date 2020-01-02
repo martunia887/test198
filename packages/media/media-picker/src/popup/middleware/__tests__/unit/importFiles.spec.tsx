@@ -153,7 +153,6 @@ describe('importFiles middleware', () => {
           uploadEndEvent,
         ],
         index,
-        progress: null,
         timeStarted: 0,
       };
     };

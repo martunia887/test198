@@ -419,7 +419,6 @@ describe('<UploadView />', () => {
           },
           index: 0,
           events: [],
-          progress: 0,
           timeStarted: 0,
         },
       },

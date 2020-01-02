@@ -17,7 +17,6 @@ const extraState: Partial<State> = {
       events: [],
       index: 0,
       timeStarted: 42,
-      progress: null,
     },
     'other-upload-id': {
       file: {
@@ -31,7 +30,6 @@ const extraState: Partial<State> = {
       events: [],
       index: 0,
       timeStarted: 42,
-      progress: null,
     },
   },
   recents: {
