@@ -29,7 +29,6 @@ import { colorMacro } from './color-macro';
 import { noformatMacro } from './noformat-macro';
 import { forceLineBreak } from './force-line-break';
 import { issueKey } from './issue-key';
-import { Context } from '../../interfaces';
 
 export enum TokenType {
   ADF_MACRO = 'ADF_MACRO', // {adf}
@@ -78,9 +77,19 @@ export interface PMNodeToken {
   readonly length: number;
 }
 
-export type TokenErrCallback = (err: Error, tokenType: string) => void;
+export interface InlineCardConversion {
+  [key: string]: string;
+}
+
+export interface Context {
+  readonly inlineCardConversion?: InlineCardConversion;
+  readonly issueKeyRegex?: RegExp | undefined;
+  readonly tokenErrCallback?: TokenErrCallback;
+}
 
 export type Token = TextToken | PMNodeToken;
+
+export type TokenErrCallback = (err: Error, tokenType: string) => void;
 
 export type TokenParser = ({
   input,

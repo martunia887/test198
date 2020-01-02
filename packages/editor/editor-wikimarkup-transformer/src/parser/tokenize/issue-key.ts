@@ -1,6 +1,5 @@
 import { Schema, Node as PMNode } from 'prosemirror-model';
-import { Token, TokenParser } from './';
-import { Context, ConversionMap } from '../../interfaces';
+import { Token, TokenParser, Context, InlineCardConversion } from './';
 import { isNotBlank } from '../utils/text';
 
 /**
@@ -60,10 +59,8 @@ const fallback = (input: string, position: number): Token => ({
 });
 
 export const getIssue = (context: Context, key: string): Issue | null =>
-  context.conversion &&
-  context.conversion.inlineCardConversion &&
-  context.conversion.inlineCardConversion[key]
-    ? { key, url: context.conversion.inlineCardConversion[key] }
+  context.inlineCardConversion && context.inlineCardConversion[key]
+    ? { key, url: context.inlineCardConversion[key] }
     : null;
 
 export const buildInlineCard = (schema: Schema, issue: Issue): PMNode[] => {
@@ -83,7 +80,7 @@ const isNotSpaceAndParenthese = (char: string): boolean =>
   !/\s|\(|\)/.test(char);
 
 export const buildIssueKeyRegex = (
-  inlineCardConversion?: ConversionMap,
+  inlineCardConversion?: InlineCardConversion,
 ): RegExp | undefined => {
   if (!inlineCardConversion) {
     return undefined;

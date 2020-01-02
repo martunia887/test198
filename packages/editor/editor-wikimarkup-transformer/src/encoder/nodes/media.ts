@@ -1,10 +1,7 @@
 import { Node as PMNode } from 'prosemirror-model';
-import { NodeEncoder, NodeEncoderOpts } from '..';
+import { NodeEncoder } from '..';
 
-export const media: NodeEncoder = (
-  node: PMNode,
-  { context }: NodeEncoderOpts = {},
-): string => {
+export const media: NodeEncoder = (node: PMNode): string => {
   let wikiAttrs: string[] = [];
   if (node.attrs.width) {
     wikiAttrs.push(`width=${node.attrs.width}`);
@@ -12,20 +9,8 @@ export const media: NodeEncoder = (
   if (node.attrs.height) {
     wikiAttrs.push(`height=${node.attrs.height}`);
   }
-
-  let fileName: string;
-
-  if (node.attrs.type === 'external') {
-    fileName = node.attrs.url;
-  } else {
-    fileName =
-      context &&
-      context.conversion &&
-      context.conversion.mediaConversion &&
-      context.conversion.mediaConversion[node.attrs.id]
-        ? context.conversion.mediaConversion[node.attrs.id]
-        : node.attrs.id;
-  }
+  const fileName =
+    node.attrs.type === 'external' ? node.attrs.url : node.attrs.id;
   if (wikiAttrs.length) {
     return `!${fileName}|${wikiAttrs.join(',')}!`;
   }

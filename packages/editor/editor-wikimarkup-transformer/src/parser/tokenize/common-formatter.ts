@@ -1,6 +1,5 @@
 import { Schema } from 'prosemirror-model';
-import { Token, TokenType } from './';
-import { Context } from '../../interfaces';
+import { Token, TokenType, Context } from './';
 import { linkFormat } from './links/link-format';
 import { parseNewlineOnly } from './whitespace';
 import { parseMacroKeyword } from './keyword';

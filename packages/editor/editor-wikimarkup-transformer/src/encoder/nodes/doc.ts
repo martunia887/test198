@@ -1,14 +1,11 @@
 import { Node as PMNode } from 'prosemirror-model';
-import { encode, NodeEncoder, NodeEncoderOpts } from '../';
+import { encode, NodeEncoder } from '../';
 
-export const doc: NodeEncoder = (
-  node: PMNode,
-  { context }: NodeEncoderOpts = {},
-): string => {
+export const doc: NodeEncoder = (node: PMNode): string => {
   const result: string[] = [];
 
   node.forEach(n => {
-    result.push(encode(n, context));
+    result.push(encode(n));
   });
 
   return result.join('\n\n');

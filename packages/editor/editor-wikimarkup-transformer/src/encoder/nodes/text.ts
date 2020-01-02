@@ -1,5 +1,5 @@
 import { Node as PMNode } from 'prosemirror-model';
-import { NodeEncoder, NodeEncoderOpts } from '..';
+import { NodeEncoder } from '..';
 
 import { code } from '../marks/code';
 import { textColor } from '../marks/color';
@@ -46,10 +46,7 @@ function escapingWikiFormatter(text: string) {
   return text.replace(/[{\\![]/g, '\\$&');
 }
 
-export const text: NodeEncoder = (
-  node: PMNode,
-  { parent }: NodeEncoderOpts = {},
-): string => {
+export const text: NodeEncoder = (node: PMNode, parent?: PMNode): string => {
   let result = isEscapeNeeded(node, parent)
     ? escapingWikiFormatter(node.text!)
     : node.text!;

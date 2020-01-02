@@ -1,6 +1,5 @@
 import { Schema } from 'prosemirror-model';
-import { Token, TokenType, TokenParser } from '.';
-import { Context } from '../../interfaces';
+import { Token, TokenType, TokenParser, Context } from '.';
 import { commonMacro } from './common-macro';
 import { parseAttrs } from '../utils/attrs';
 import { parseString } from '../text';
@@ -33,6 +32,7 @@ const rawContentProcessor = (
     TokenType.TRIPLE_DASH_SYMBOL,
     TokenType.QUADRUPLE_DASH_SYMBOL,
     TokenType.ISSUE_KEY,
+    TokenType.TABLE,
   ];
 
   const parsedAttrs = parseAttrs(rawAttrs);

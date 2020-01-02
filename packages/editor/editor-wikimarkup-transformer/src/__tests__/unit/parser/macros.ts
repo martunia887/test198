@@ -167,31 +167,20 @@ linebreaks{noformat}`,
         System.out.print("test");
      }{code}`,
     ],
+    [
+      'should allow pipes within colour macro, and not render as a table',
+      '{color:#6554c0}|{color}',
+    ],
+    [
+      'should allow pipes within quote block, and not render as a table',
+      '{quote}|{quote}',
+    ],
   ];
-
-  const context = {
-    conversion: {
-      mediaConversion: {
-        'attachment-file11.txt': 'abc-file11',
-        'attachment-file12.txt': 'abc-file12',
-        'attachment-file13.txt': 'abc-file13',
-        'attachment-file21.txt': 'abc-file21',
-        'attachment-file22.txt': 'abc-file22',
-        'attachment-file23.txt': 'abc-file23',
-        'attachment-file31.txt': 'abc-file31',
-        'attachment-file32.txt': 'abc-file32',
-        'attachment-file33.txt': 'abc-file33',
-        'attachment-file41.txt': 'abc-file41',
-        'attachment-file42.txt': 'abc-file42',
-        'attachment-file43.txt': 'abc-file43',
-      },
-    },
-  };
 
   for (const [testCaseDescription, markup] of testCases) {
     it(testCaseDescription, () => {
       const transformer = new WikiMarkupTransformer();
-      expect(transformer.parse(markup, context)).toMatchSnapshot();
+      expect(transformer.parse(markup)).toMatchSnapshot();
     });
   }
 });

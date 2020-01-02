@@ -6,8 +6,7 @@ import {
   parseMacroKeyword,
   parseIssueKeyword,
 } from './tokenize/keyword';
-import { parseToken, TokenType } from './tokenize';
-import { Context } from '../interfaces';
+import { parseToken, TokenType, Context } from './tokenize';
 import { parseWhitespaceOnly } from './tokenize/whitespace';
 import { escapeHandler } from './utils/escape';
 

@@ -12,37 +12,7 @@ Object {
         Object {
           "attrs": Object {
             "accessLevel": "",
-            "id": "78032763-2feb-4f5b-88c0-99b50613d53a",
-            "text": "",
-            "userType": null,
-          },
-          "type": "mention",
-        },
-        Object {
-          "text": ",",
-          "type": "text",
-        },
-      ],
-      "type": "paragraph",
-    },
-  ],
-  "type": "doc",
-}
-`;
-
-exports[`WikiMarkup => ADF Formatters - citation Should convert mention without context 1`] = `
-Object {
-  "content": Array [
-    Object {
-      "content": Array [
-        Object {
-          "text": "Hi ",
-          "type": "text",
-        },
-        Object {
-          "attrs": Object {
-            "accessLevel": "",
-            "id": "accountid:78032763-2feb-4f5b-88c0-99b50613d53a",
+            "id": "qm:78032763-2feb-4f5b-88c0-99b50613d53a:5bce2c0c5b397117c112bc02",
             "text": "",
             "userType": null,
           },

@@ -1,7 +1,7 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
 import { parseString } from './text';
 import { normalizePMNodes } from './utils/normalize';
-import { Context } from '../interfaces';
+import { Context } from './tokenize';
 
 export default class AbstractTree {
   private schema: Schema;

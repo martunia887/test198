@@ -1,5 +1,5 @@
 import { Node as PMNode } from 'prosemirror-model';
-import { NodeEncoder, NodeEncoderOpts } from '..';
+import { NodeEncoder } from '..';
 
 import { emoji } from './emoji';
 import { hardBreak } from './hard-break';
@@ -16,13 +16,10 @@ const inlinesEncoderMapping: { [key: string]: NodeEncoder } = {
   inlineCard,
 };
 
-export const inlines: NodeEncoder = (
-  node: PMNode,
-  opts?: NodeEncoderOpts,
-): string => {
+export const inlines: NodeEncoder = (node: PMNode, parent?: PMNode): string => {
   const encoder = inlinesEncoderMapping[node.type.name];
   if (encoder) {
-    return encoder(node, opts);
+    return encoder(node, parent);
   }
   return unknown(node);
 };

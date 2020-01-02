@@ -1,6 +1,6 @@
 import { ContentLink } from './link-parser';
 import { Schema, Node as PMNode } from 'prosemirror-model';
-import { Context } from '../../../interfaces';
+import { Context } from '..';
 import { Issue, buildInlineCard, getIssue } from '../issue-key';
 
 export function issueLinkResolver(

@@ -1,14 +1,11 @@
 import { Node as PMNode } from 'prosemirror-model';
-import { NodeEncoder, NodeEncoderOpts } from '..';
+import { NodeEncoder } from '..';
 import { media } from './media';
 
-export const mediaGroup: NodeEncoder = (
-  node: PMNode,
-  { context }: NodeEncoderOpts = {},
-): string => {
+export const mediaGroup: NodeEncoder = (node: PMNode): string => {
   const result: string[] = [];
   node.forEach(n => {
-    result.push(media(n, { context }));
+    result.push(media(n));
   });
 
   return result.join('\n');

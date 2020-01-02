@@ -1,6 +1,5 @@
 import { Schema } from 'prosemirror-model';
-import { Token } from './';
-import { Context } from '../../interfaces';
+import { Token, Context } from './';
 
 // TODO: Create a type for rawContentProcessor which will be shared among parsers
 export interface MacroOption {

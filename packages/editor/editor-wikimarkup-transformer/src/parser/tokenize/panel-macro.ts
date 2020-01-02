@@ -1,6 +1,5 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
-import { Token, TokenParser } from '.';
-import { Context } from '../../interfaces';
+import { Token, TokenParser, Context } from '.';
 import { commonMacro } from './common-macro';
 import { parseString } from '../text';
 import { parseAttrs } from '../utils/attrs';

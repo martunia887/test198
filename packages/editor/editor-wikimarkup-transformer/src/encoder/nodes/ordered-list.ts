@@ -1,15 +1,12 @@
 import { Node as PMNode } from 'prosemirror-model';
-import { NodeEncoder, NodeEncoderOpts } from '..';
+import { NodeEncoder } from '..';
 
 import { listItem } from './listItem';
 
-export const orderedList: NodeEncoder = (
-  node: PMNode,
-  { context }: NodeEncoderOpts = {},
-): string => {
+export const orderedList: NodeEncoder = (node: PMNode): string => {
   const result: string[] = [];
   node.forEach(item => {
-    result.push(listItem(item, '#', context));
+    result.push(listItem(item, '#'));
   });
   return result.join('\n');
 };

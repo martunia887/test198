@@ -1,6 +1,5 @@
 import { Schema } from 'prosemirror-model';
-import { Token, TokenParser } from '.';
-import { Context } from '../../interfaces';
+import { Token, TokenParser, Context } from '.';
 import { commonMacro } from './common-macro';
 
 export const anchorMacro: TokenParser = ({

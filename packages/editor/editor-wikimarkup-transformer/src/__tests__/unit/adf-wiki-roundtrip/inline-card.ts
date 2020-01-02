@@ -16,10 +16,8 @@ describe('ADF => WikiMarkup => ADF - Inline Card', () => {
     )(defaultSchema);
     const wiki = transformer.encode(node);
     const context: any = {
-      conversion: {
-        inlineCardConversion: {
-          'EX-522': 'https://product-fabric.atlassian.net/browse/EX-522',
-        },
+      inlineCardConversion: {
+        'EX-522': 'https://product-fabric.atlassian.net/browse/EX-522',
       },
     };
     const adf = transformer.parse(wiki, context).toJSON();
