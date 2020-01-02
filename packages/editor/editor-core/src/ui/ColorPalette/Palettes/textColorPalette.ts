@@ -32,7 +32,13 @@ export default textColorPalette;
 
 export const textColorPaletteExtended: Array<PaletteColor> = [];
 
-textColorPaletteExtended.push({
-  value: '#000',
-  label: 'Black',
-});
+for (let i = 0; i < 7; i++) {
+  textColorPaletteExtended.push({
+    value: '#000',
+    label: 'Black',
+  });
+  textColorPaletteExtended.push({
+    value: '#FFF',
+    label: 'White',
+  });
+}
