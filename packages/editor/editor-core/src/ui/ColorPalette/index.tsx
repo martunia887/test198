@@ -17,6 +17,7 @@ export interface Props {
   className?: string;
   showMoreColorsToggle?: boolean;
   showMoreColors: boolean;
+  onShowMoreToggleClick: () => void;
 }
 
 /**
@@ -44,6 +45,7 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
       selectedColor,
       className,
       intl: { formatMessage },
+      onShowMoreToggleClick,
     } = this.props;
 
     let allColors = palette;
@@ -71,7 +73,7 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
 
         {showMoreColorsToggle && (
           <div>
-            <button type="button">
+            <button type="button" onClick={onShowMoreToggleClick}>
               {showMoreColors ? 'Less colors' : 'More colors'}
             </button>
           </div>

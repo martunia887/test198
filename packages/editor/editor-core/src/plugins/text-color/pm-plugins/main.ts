@@ -16,7 +16,6 @@ export type TextColorPluginState = {
   defaultColor: string;
   disabled?: boolean;
   color: string | null;
-  showMoreColors: boolean;
 };
 
 export type ActionHandlerParams = {
@@ -71,7 +70,6 @@ export function createInitialPluginState(
     disabled: getDisabledState(editorState),
     palette,
     defaultColor: palette[0].value,
-    showMoreColors: false,
     paletteExtended,
   };
 }
@@ -79,7 +77,6 @@ export function createInitialPluginState(
 export enum ACTIONS {
   RESET_COLOR,
   SET_COLOR,
-  TOGGLE_SHOW_MORE_COLORS,
   DISABLE,
 }
 
@@ -106,13 +103,6 @@ export function createPlugin(
 
           case ACTIONS.SET_COLOR:
             nextState = { ...pluginState, color: meta.color, disabled: false };
-            break;
-
-          case ACTIONS.TOGGLE_SHOW_MORE_COLORS:
-            nextState = {
-              ...pluginState,
-              showMoreColors: !pluginState.showMoreColors,
-            };
             break;
 
           case ACTIONS.DISABLE:

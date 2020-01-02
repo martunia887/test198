@@ -97,6 +97,7 @@ const disabledRainbow = createSteppedRainbow([
 
 export interface State {
   isOpen: boolean;
+  isShowingMoreColors: boolean;
 }
 
 export interface Props {
@@ -115,6 +116,7 @@ class ToolbarTextColor extends React.Component<
 > {
   state: State = {
     isOpen: false,
+    isShowingMoreColors: false,
   };
 
   changeColor = (color: string) =>
@@ -124,7 +126,7 @@ class ToolbarTextColor extends React.Component<
     );
 
   render() {
-    const { isOpen } = this.state;
+    const { isOpen, isShowingMoreColors } = this.state;
     const {
       popupsMountPoint,
       popupsBoundariesElement,
@@ -136,7 +138,6 @@ class ToolbarTextColor extends React.Component<
     } = this.props;
 
     const labelTextColor = formatMessage(messages.textColor);
-    const paletteExtended = showMoreColorsToggle ? [] : undefined;
 
     return (
       <MenuWrapper>
@@ -185,7 +186,8 @@ class ToolbarTextColor extends React.Component<
             onClick={color => this.changeTextColor(color, pluginState.disabled)}
             selectedColor={pluginState.color}
             showMoreColorsToggle={showMoreColorsToggle}
-            showMoreColors={pluginState.showMoreColors}
+            showMoreColors={isShowingMoreColors}
+            onShowMoreToggleClick={this.handleShowMoreToggle}
           />
         </Dropdown>
         <Separator />
@@ -217,6 +219,14 @@ class ToolbarTextColor extends React.Component<
     if (this.state.isOpen === true) {
       this.setState({ isOpen: false });
     }
+  };
+
+  private handleShowMoreToggle = () => {
+    this.setState(state => {
+      return {
+        isShowingMoreColors: !state.isShowingMoreColors,
+      };
+    });
   };
 }
 
