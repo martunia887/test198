@@ -2,12 +2,26 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import chromatism from 'chromatism';
 import Color from './Color';
+import { defineMessages } from 'react-intl';
 
 import { ColorPaletteWrapper } from './styles';
 import { PaletteColor } from './Palettes/type';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import * as colors from '@atlaskit/theme/colors';
 import Button from '@atlaskit/button';
+
+export const messages = defineMessages({
+  moreColors: {
+    id: 'fabric.editor.textColor.moreColors',
+    defaultMessage: 'More colors',
+    description: 'More colors',
+  },
+  lessColors: {
+    id: 'fabric.editor.textColor.lessColors',
+    defaultMessage: 'Less colors',
+    description: 'Less colors',
+  },
+});
 
 export interface Props {
   palette: PaletteColor[];
@@ -66,6 +80,7 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
       cols = 7,
       className,
       onShowMoreToggleClick,
+      intl: { formatMessage },
     } = this.props;
 
     return (
@@ -86,7 +101,9 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
               onClick={onShowMoreToggleClick}
               iconBefore={<span>TODO: Fill icon</span>}
             >
-              {showMoreColors ? 'Less colors' : 'More colors'}
+              {formatMessage(
+                showMoreColors ? messages.lessColors : messages.moreColors,
+              )}
             </Button>
           </div>
         )}
