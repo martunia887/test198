@@ -57,8 +57,8 @@ class GenericSwitcherWithJoinExample extends React.Component {
           <AtlassianSwitcher
             product="generic-product"
             cloudId="some-cloud-id"
-            onJoinableSiteClicked={onJoinableSiteClicked}
             joinableSitesDataProvider={joinableSitesDataProvider}
+            onJoinableSiteClicked={onJoinableSiteClicked}
           />
         </Drawer>
         <Button type="button" onClick={this.openDrawer}>
