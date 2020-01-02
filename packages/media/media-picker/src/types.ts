@@ -103,15 +103,6 @@ export type PopupUploadEventPayloadMap = UploadEventPayloadMap & {
   readonly closed: undefined;
 };
 
-export interface MediaProgress {
-  absolute: number;
-  portion: number;
-  max: number;
-  overallTime: number;
-  expectedFinishTime: number;
-  timeLeft: number;
-}
-
 export type MediaErrorName =
   | 'object_create_fail'
   | 'metadata_fetch_fail'

@@ -14,7 +14,6 @@ import {
 } from './getFilesInRecents';
 import fileUploadsAdd from './fileUploadsAdd';
 import filePreviewUpdate from './filePreviewUpdate';
-import fileUploadProgress from './fileUploadProgress';
 import fileUploadProcessingStart from './fileUploadProcessingStart';
 import fileUploadEnd from './fileUploadEnd';
 import setEventProxy from './setEventProxy';
@@ -53,7 +52,6 @@ const reducers = combineReducers([
   updatePopupUrls,
   fileUploadsAdd,
   filePreviewUpdate,
-  fileUploadProgress,
   fileUploadProcessingStart,
   fileUploadEnd,
   setEventProxy,

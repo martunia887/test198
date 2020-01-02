@@ -15,13 +15,10 @@ import {
 import { Card } from '@atlaskit/media-card';
 import Toggle from '@atlaskit/toggle';
 import { MediaPicker } from '../src';
-import { MediaProgress } from '../src/types';
 import {
   PopupContainer,
   PopupHeader,
   PopupEventsWrapper,
-  UploadingFilesWrapper,
-  FileProgress,
   FilesInfoWrapper,
   CardsWrapper,
   CardItemWrapper,
@@ -52,7 +49,6 @@ export interface PopupWrapperState {
   closedTimes: number;
   events: Events;
   authEnvironment: AuthEnvironment;
-  inflightUploads: { [key: string]: MediaProgress };
   publicFiles: { [key: string]: PublicFile };
   isUploadingFilesVisible: boolean;
   singleSelect: boolean;
@@ -66,7 +62,6 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     closedTimes: 0,
     events: [],
     authEnvironment: 'client',
-    inflightUploads: {},
     publicFiles: {},
     isUploadingFilesVisible: true,
     useProxyContext: true,
@@ -147,16 +142,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
   };
 
   onUploadsStart = (data: UploadsStartEventPayload) => {
-    const newInflightUploads = data.files.reduce(
-      (prev, { id }) => ({ ...prev, [id]: {} }),
-      {},
-    );
-
     this.setState({
-      inflightUploads: {
-        ...this.state.inflightUploads,
-        ...newInflightUploads,
-      },
       events: [...this.state.events, { eventName: 'uploads-start', data }],
     });
   };
@@ -289,13 +275,10 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
   };
 
   onCancelUpload = () => {
-    const { inflightUploads, popup } = this.state;
+    const { popup } = this.state;
     if (!popup) {
       return;
     }
-    Object.keys(inflightUploads).forEach(uploadId => popup.cancel(uploadId));
-
-    this.setState({ inflightUploads: {} });
   };
 
   onEvent = (event: any) => {
@@ -304,31 +287,6 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
 
   onSingleSelectChange = () => {
     this.createPopup(!this.state.singleSelect);
-  };
-
-  renderUploadingFiles = () => {
-    const { inflightUploads } = this.state;
-    const keys = Object.keys(inflightUploads);
-    if (!keys.length) {
-      return;
-    }
-
-    const uploadingFiles = keys.map(id => {
-      const progress = inflightUploads[id].portion;
-
-      return (
-        <div key={id}>
-          {id} <FileProgress value={progress || 0} max="1" /> : ({progress})
-        </div>
-      );
-    });
-
-    return (
-      <UploadingFilesWrapper>
-        <h1>Uploading Files</h1>
-        {uploadingFiles}
-      </UploadingFilesWrapper>
-    );
   };
 
   renderCards = () => {
@@ -375,13 +333,11 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
       events,
       authEnvironment,
       collectionName,
-      inflightUploads,
       isUploadingFilesVisible,
       singleSelect,
       popup,
     } = this.state;
     const hasTorndown = !popup;
-    const isCancelButtonDisabled = Object.keys(inflightUploads).length === 0;
 
     return (
       <PopupContainer>
@@ -396,7 +352,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
           <Button
             appearance="warning"
             onClick={this.onCancelUpload}
-            isDisabled={isCancelButtonDisabled || hasTorndown}
+            isDisabled={hasTorndown}
           >
             Cancel uploads
           </Button>
@@ -435,10 +391,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
           Closed times: {closedTimes}
         </PopupHeader>
         {isUploadingFilesVisible ? (
-          <FilesInfoWrapper>
-            {this.renderUploadingFiles()}
-            {this.renderCards()}
-          </FilesInfoWrapper>
+          <FilesInfoWrapper>{this.renderCards()}</FilesInfoWrapper>
         ) : (
           undefined
         )}
