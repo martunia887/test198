@@ -308,7 +308,7 @@ export const fixColumnSizes = (changedTr: Transaction, state: EditorState) => {
   // current position is a layout section
   const $pos = changedTr.doc.resolve(range.to);
   if ($pos.depth > 0) {
-    // Range to could resolve to doc, in this ResolvedPos.after will throws
+    // 'range.to' position could resolve to doc, in this ResolvedPos.after will throws
     const pos = $pos.after();
     const node = changedTr.doc.nodeAt($pos.after());
     if (node && node.type === layoutSection && layoutNeedChanges(node)) {
