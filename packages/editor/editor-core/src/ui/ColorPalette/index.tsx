@@ -34,6 +34,28 @@ export function getContrastColor(color: string, pool: string[]): string {
 }
 
 class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
+  renderSwatch = (swatch: PaletteColor) => {
+    const {
+      onClick,
+      selectedColor,
+      intl: { formatMessage },
+    } = this.props;
+
+    const { value, label, border, message } = swatch;
+
+    return (
+      <Color
+        key={value}
+        value={value}
+        borderColor={border}
+        label={message ? formatMessage(message) : label}
+        onClick={onClick}
+        isSelected={value === selectedColor}
+        checkMarkColor={getContrastColor(value, [colors.N0, colors.N500])}
+      />
+    );
+  };
+
   render() {
     const {
       palette,
@@ -41,35 +63,20 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
       showMoreColorsToggle,
       showMoreColors,
       cols = 7,
-      onClick,
-      selectedColor,
       className,
-      intl: { formatMessage },
       onShowMoreToggleClick,
     } = this.props;
-
-    let allColors = palette;
-
-    if (showMoreColors && paletteExtended) {
-      allColors = allColors.concat(paletteExtended);
-    }
 
     return (
       <ColorPaletteWrapper
         className={className}
         style={{ maxWidth: cols * 32 }}
       >
-        {allColors.map(({ value, label, border, message }) => (
-          <Color
-            key={value}
-            value={value}
-            borderColor={border}
-            label={message ? formatMessage(message) : label}
-            onClick={onClick}
-            isSelected={value === selectedColor}
-            checkMarkColor={getContrastColor(value, [colors.N0, colors.N500])}
-          />
-        ))}
+        {palette.map(swatch => this.renderSwatch(swatch))}
+
+        {showMoreColors &&
+          paletteExtended &&
+          paletteExtended.map(swatch => this.renderSwatch(swatch))}
 
         {showMoreColorsToggle && (
           <div>
