@@ -2,15 +2,15 @@ plan(key:'ABDICC',name:'confluence-frontend Atlaskit Branch Deploy Integrator',
     description:'Creates branches on confluence-frontend pulling in Atlaskit branch deploys to give Atlaskit build results on their PRs. **NOTE**: Master is disabled but every other branch is enabled',
     enabled:'false') {
     createBranchDeployIntegrator(
-        sourceRepo: 'Atlaskit-MK-2', 
-        productRepo: 'confluence-frontend', 
+        sourceRepo: 'Atlaskit-MK-2',
+        productRepo: 'confluence-frontend',
         productCiPlanUrl: 'https://confluence-cloud-bamboo.internal.atlassian.com/rest/api/latest/plan/CONFMICRO-CFCPB',
         dockerContainer: 'docker.atl-paas.net/sox/confluence/confluence-frontend-agent:latest',
-        packageEngine: 'bolt', 
+        packageEngine: 'bolt',
         integratorCmd: 'upgrade',
         skipIntegrityCheck: false)
     branchMonitoring() {
-        createBranch(matchingPattern:'risky-.*|develop|release-candidate.*')
+        createBranch()
         inactiveBranchCleanup(periodInDays:'14')
         deletedBranchCleanup(periodInDays:'7')
     }

@@ -180,18 +180,6 @@ export class CardBase extends Component<
     }
   };
 
-  private onLoadingChangeCallback = () => {
-    const { onLoadingChange } = this.props;
-    if (onLoadingChange) {
-      const { status, error, metadata } = this.state;
-      const state = {
-        type: status,
-        payload: error || metadata,
-      };
-      onLoadingChange(state);
-    }
-  };
-
   subscribe(identifier: Identifier, mediaClient: MediaClient) {
     const { isCardVisible } = this.state;
 
@@ -338,7 +326,7 @@ export class CardBase extends Component<
             metadata,
           });
 
-          this.notifyStateChange({
+          this.safeSetState({
             metadata,
             status,
             progress,
@@ -352,7 +340,7 @@ export class CardBase extends Component<
             status: 'error',
             error,
           });
-          this.notifyStateChange({ error, status: 'error' });
+          this.safeSetState({ error, status: 'error' });
         },
       });
   }
@@ -415,12 +403,9 @@ export class CardBase extends Component<
     }
   };
 
-  notifyStateChange = (state: Partial<CardState>) => {
+  private safeSetState = (state: Partial<CardState>) => {
     if (this.hasBeenMounted) {
-      this.setState(
-        state as Pick<CardState, keyof CardState>,
-        this.onLoadingChangeCallback,
-      );
+      this.setState(state as Pick<CardState, keyof CardState>);
     }
   };
 
@@ -599,7 +584,6 @@ export class CardBase extends Component<
       dimensions,
       selectable,
       selected,
-      onSelectChange,
       disableOverlay,
       alt,
       testId,
@@ -628,7 +612,6 @@ export class CardBase extends Component<
         selected={selected}
         onClick={onCardViewClick}
         onMouseEnter={onMouseEnter}
-        onSelectChange={onSelectChange}
         disableOverlay={disableOverlay}
         progress={progress}
         onRetry={onRetry}
