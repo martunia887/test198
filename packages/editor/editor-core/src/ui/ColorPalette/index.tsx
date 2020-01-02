@@ -7,6 +7,7 @@ import { ColorPaletteWrapper } from './styles';
 import { PaletteColor } from './Palettes/type';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import * as colors from '@atlaskit/theme/colors';
+import Button from '@atlaskit/button';
 
 export interface Props {
   palette: PaletteColor[];
@@ -81,9 +82,12 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
         </ColorPaletteWrapper>
         {showMoreColorsToggle && (
           <div>
-            <button type="button" onClick={onShowMoreToggleClick}>
+            <Button
+              onClick={onShowMoreToggleClick}
+              iconBefore={<span>TODO: Fill icon</span>}
+            >
               {showMoreColors ? 'Less colors' : 'More colors'}
-            </button>
+            </Button>
           </div>
         )}
       </React.Fragment>
