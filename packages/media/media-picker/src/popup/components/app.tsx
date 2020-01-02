@@ -142,7 +142,6 @@ export class App extends Component<AppProps, AppState> {
     this.localUploader.on('uploads-start', onUploadsStart);
     this.localUploader.on('upload-preview-update', onUploadPreviewUpdate);
     this.localUploader.on('upload-status-update', onUploadStatusUpdate);
-    // TODO: make sure this fires like upload-processing did
     this.localUploader.on('upload-end', onUploadEnd);
     this.localUploader.on('upload-error', onUploadError);
 
