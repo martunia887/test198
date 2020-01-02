@@ -460,7 +460,7 @@ describe('layout', () => {
       );
     });
 
-    it.only('ensures layout column width after remove the column in a range selection', function() {
+    it('ensures layout column width after remove the column in a range selection', function() {
       const { editorView, refs } = editor(
         doc(
           p('foo{<}'),
