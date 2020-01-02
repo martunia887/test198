@@ -341,49 +341,6 @@ describe('UploadService', () => {
       });
     });
 
-    it.skip('should call emit "file-uploading" when it receives an onProgress event from MediaClient.file#upload()', () => {
-      const mediaClient = getMediaClient();
-      const { uploadService } = setup(mediaClient, {
-        collection: 'some-collection',
-      });
-
-      jest.spyOn(mediaClient.file, 'upload').mockReturnValue({
-        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
-        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
-        subscribe(subscription: Subscriber<FileState>) {
-          subscription.next({
-            status: 'uploading',
-            id: 'public-file-id',
-            name: 'some-file-name',
-            size: 100,
-            progress: 0.42,
-            mediaType: 'image',
-            mimeType: 'image/png',
-          });
-        },
-      });
-
-      const fileUploadingCallback = jest.fn();
-      uploadService.on('file-uploading', fileUploadingCallback);
-
-      uploadService.addFiles([file]);
-      const expectedMediaFile: MediaFile = {
-        id: expect.any(String),
-        creationDate: expect.any(Number),
-        name: 'some-filename',
-        size: 100,
-        type: 'video/mp4',
-      };
-      expect(fileUploadingCallback).toHaveBeenCalledWith({
-        file: expectedMediaFile,
-        progress: expect.objectContaining({
-          absolute: 42,
-          max: 100,
-          portion: 0.42,
-        }),
-      });
-    });
-
     it.skip('should emit "file-upload-error" when uploadFile fail', () => {
       const mediaClient = getMediaClient();
       const { uploadService } = setup(mediaClient, {

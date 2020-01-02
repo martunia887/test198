@@ -33,11 +33,6 @@ export type UploadsStartEventPayload = {
   readonly files: MediaFile[];
 };
 
-export type UploadStatusUpdateEventPayload = {
-  readonly file: MediaFile;
-  readonly progress: MediaProgress;
-};
-
 export type UploadPreviewUpdateEventPayload = {
   readonly file: MediaFile;
   readonly preview: Preview;

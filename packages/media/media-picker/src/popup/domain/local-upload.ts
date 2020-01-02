@@ -20,7 +20,6 @@ export interface LocalUpload {
   readonly index: number;
   readonly timeStarted: number;
 
-  progress: number | null;
   proxy?: string[];
 }
 

@@ -4,14 +4,12 @@ import {
   UploadPreviewUpdateEventPayload,
   UploadProcessingEventPayload,
   UploadsStartEventPayload,
-  UploadStatusUpdateEventPayload,
   UploadParams,
 } from '../types';
 
 export type UploadServiceEventPayloadTypes = {
   readonly 'files-added': UploadsStartEventPayload;
   readonly 'file-preview-update': UploadPreviewUpdateEventPayload;
-  readonly 'file-uploading': UploadStatusUpdateEventPayload;
   readonly 'file-converting': UploadProcessingEventPayload;
   readonly 'file-converted': UploadEndEventPayload;
   readonly 'file-upload-error': UploadErrorEventPayload;

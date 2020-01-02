@@ -22,7 +22,6 @@ import { MediaFile, UploadParams } from '../types';
 
 import { mapAuthToSourceFileOwner } from '../popup/domain/source-file';
 import { getPreviewFromImage } from '../util/getPreviewFromImage';
-import { SmartMediaProgress } from '../domain/progress';
 import { MediaErrorName } from '../types';
 import {
   UploadService,
@@ -181,10 +180,6 @@ export class UploadServiceImpl implements UploadService {
 
         const subscription = sourceFileObservable.subscribe({
           next: state => {
-            if (state.status === 'uploading') {
-              this.onFileProgress(cancellableFileUpload, state.progress);
-            }
-
             if (state.status === 'processing') {
               safeUnsubscribe(subscription);
               if (shouldCopyFileToRecents) {
@@ -309,24 +304,6 @@ export class UploadServiceImpl implements UploadService {
     cancellableFileUpload.cancel = () => {
       this.releaseCancellableFile(mediaFile);
     };
-  };
-
-  private readonly onFileProgress = (
-    { mediaFile, file }: CancellableFileUpload,
-    portion: number,
-  ) => {
-    const size = file.size;
-    const progress = new SmartMediaProgress(
-      size,
-      size * portion,
-      mediaFile.creationDate,
-      Date.now(),
-    );
-
-    this.emit('file-uploading', {
-      file: mediaFile,
-      progress: progress.toJSON(),
-    });
   };
 
   private readonly onFileError = (
