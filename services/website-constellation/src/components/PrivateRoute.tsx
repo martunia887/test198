@@ -1,7 +1,7 @@
 import React from 'react';
 import { navigate } from 'gatsby';
 import Spinner from '@atlaskit/spinner';
-import Login from './Login';
+import Restricted from './Restricted';
 import { useAuth } from '../hooks';
 
 export default function({ component: Component, location, ...rest }) {
@@ -9,7 +9,7 @@ export default function({ component: Component, location, ...rest }) {
   if (isValidating) {
     return <Spinner />;
   } else if (!isLoggedIn && !isValidating) {
-    return <Login location={location} />;
+    return <Restricted location={location} />;
   } else {
     return <Component />;
   }

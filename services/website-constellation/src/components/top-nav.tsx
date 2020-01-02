@@ -33,6 +33,8 @@ const NavItem = ({ href, pathname, ...rest }) => (
 );
 
 const UserProfile = () => {
+  // currently there's a flash everytime the nav re-renders
+  // we can fix this by caching the result of this auth call
   const { data: profile, error } = useData('/.netlify/functions/auth/user');
   if (profile) {
     return <Profile icon={<Avatar src={profile.photos[0].value} />} />;
