@@ -54,7 +54,7 @@ export const handleCloudFetchingEvent = (store: Store<State>) => (
     file: MediaFile,
     data: RemoteUploadProgressPayload,
   ) => {
-    // TODO: Handle this.
+    // TODO: MS2927 - handle progress for remote uploads
   };
 
   // Handle cloud upload end
