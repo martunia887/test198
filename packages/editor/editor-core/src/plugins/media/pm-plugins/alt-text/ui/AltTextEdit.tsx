@@ -24,17 +24,15 @@ import {
   MediaAltTextActionType,
   FireAnalyticsCallback,
 } from '../../../../analytics';
+import { RECENT_SEARCH_WIDTH_IN_PX } from '../../../../../ui/RecentSearch/ToolbarComponents';
 
-export const CONTAINER_WIDTH_IN_PX = 350;
+export const CONTAINER_WIDTH_IN_PX = RECENT_SEARCH_WIDTH_IN_PX;
 export const MAX_ALT_TEXT_LENGTH = 510; // double tweet length
 
 const SupportText = styled.p`
   color: ${colors.N100};
   font-size: 12px;
-  padding-right: 24px;
-  padding-left: 28px;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 12px 40px;
   line-height: 20px;
   border-top: 1px solid ${colors.N30};
   margin: 0;
@@ -51,14 +49,13 @@ const Container = styled.div`
 const InputWrapper = styled.section`
   display: flex;
   line-height: 0;
-  padding: 0;
+  padding: 5px 0;
   align-items: center;
-  margin-bottom: 4px;
 `;
 
-const BackButtonWrapper = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
-  margin-right: 4px;
+  padding: 4px 8px;
 `;
 
 const ClearText = styled.span`
@@ -127,7 +124,7 @@ export class AltTextEditComponent extends React.Component<
     return (
       <Container>
         <InputWrapper>
-          <BackButtonWrapper>
+          <ButtonWrapper>
             <Button
               title={formatMessage(messages.back)}
               icon={
@@ -136,7 +133,7 @@ export class AltTextEditComponent extends React.Component<
               tooltipContent={backButtonMessageComponent}
               onClick={this.closeMediaAltTextMenu}
             />
-          </BackButtonWrapper>
+          </ButtonWrapper>
           <PanelTextInput
             testId="alt-text-input"
             placeholder={formatMessage(messages.placeholder)}
@@ -149,16 +146,18 @@ export class AltTextEditComponent extends React.Component<
             autoFocus
           />
           {showClearTextButton && (
-            <Button
-              title={formatMessage(messages.clear)}
-              icon={
-                <ClearText>
-                  <CrossCircleIcon label={formatMessage(messages.clear)} />
-                </ClearText>
-              }
-              tooltipContent={formatMessage(messages.clear)}
-              onClick={this.handleClearText}
-            />
+            <ButtonWrapper>
+              <Button
+                title={formatMessage(messages.clear)}
+                icon={
+                  <ClearText>
+                    <CrossCircleIcon label={formatMessage(messages.clear)} />
+                  </ClearText>
+                }
+                tooltipContent={formatMessage(messages.clear)}
+                onClick={this.handleClearText}
+              />
+            </ButtonWrapper>
           )}
         </InputWrapper>
         <SupportText>{formatMessage(messages.supportText)}</SupportText>
