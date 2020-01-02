@@ -4,8 +4,8 @@ import { RadioGroup } from '../src';
 import { OptionsPropType } from '../src/types';
 
 const options: OptionsPropType = [
-  { name: 'color', value: 'red', label: 'Red' },
-  { name: 'color', value: 'blue', label: 'Blue' },
+  { name: 'color', value: 1, label: 'Red' },
+  { name: 'color', value: 2, label: 'Blue' },
   { name: 'color', value: 'yellow', label: 'Yellow' },
   { name: 'color', value: 'green', label: 'Green' },
   { name: 'color', value: 'black', label: 'Black' },

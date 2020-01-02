@@ -17,7 +17,7 @@ export default () => (
       {({ formProps }) => (
         <form {...formProps}>
           <Fieldset legend="Products">
-            <CheckboxField name="product" value="jira">
+            <CheckboxField name="product" value={1}>
               {({ fieldProps }) => <Checkbox {...fieldProps} label="Jira" />}
             </CheckboxField>
             <CheckboxField name="product" value="confluence">
@@ -36,10 +36,10 @@ export default () => (
             {({ fieldProps }) => (
               <RadioGroup
                 options={[
-                  { name: 'permission', value: 'user', label: 'End user' },
+                  { name: 'permission', value: 1, label: 'End user' },
                   {
                     name: 'permission',
-                    value: 'project-admin',
+                    value: 2,
                     label: 'Project admin',
                   },
                   {

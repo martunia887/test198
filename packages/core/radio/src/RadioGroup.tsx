@@ -54,12 +54,18 @@ export default class RadioGroup extends Component<RadioGroupProps, State> {
     return this.props[key] ? this.props[key] : this.state[key];
   };
 
-  onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+  onChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    value?: string | number | null,
+  ) => {
     this.setState({
-      value: event.currentTarget.value,
+      value,
     });
 
-    this.props.onChange!(event);
+    this.props.onChange!({
+      ...event,
+      currentTarget: { ...event.currentTarget, value },
+    });
   };
 
   buildOptions = (): RadioElementArray => {
@@ -79,7 +85,7 @@ export default class RadioGroup extends Component<RadioGroupProps, State> {
           <Radio
             {...optionProps}
             key={index}
-            onChange={this.onChange}
+            onChange={event => this.onChange(event, optionProps.value)}
             onInvalid={onInvalid}
             isRequired={isRequired}
             testId={testId}
