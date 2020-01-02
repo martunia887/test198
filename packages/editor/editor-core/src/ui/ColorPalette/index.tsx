@@ -68,16 +68,17 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
     } = this.props;
 
     return (
-      <ColorPaletteWrapper
-        className={className}
-        style={{ maxWidth: cols * 32 }}
-      >
-        {palette.map(swatch => this.renderSwatch(swatch))}
+      <React.Fragment>
+        <ColorPaletteWrapper
+          className={className}
+          style={{ maxWidth: cols * 32 }}
+        >
+          {palette.map(swatch => this.renderSwatch(swatch))}
 
-        {showMoreColors &&
-          paletteExtended &&
-          paletteExtended.map(swatch => this.renderSwatch(swatch))}
-
+          {showMoreColors &&
+            paletteExtended &&
+            paletteExtended.map(swatch => this.renderSwatch(swatch))}
+        </ColorPaletteWrapper>
         {showMoreColorsToggle && (
           <div>
             <button type="button" onClick={onShowMoreToggleClick}>
@@ -85,7 +86,7 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
             </button>
           </div>
         )}
-      </ColorPaletteWrapper>
+      </React.Fragment>
     );
   }
 }
