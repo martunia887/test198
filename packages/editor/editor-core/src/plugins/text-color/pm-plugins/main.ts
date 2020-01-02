@@ -57,20 +57,12 @@ export function createInitialPluginState(
     ...textColorPalette,
   ];
 
-  const paletteExtended: Array<PaletteColor> = [
-    {
-      value: defaultColor.color,
-      label: defaultColor.label,
-    },
-    ...textColorPaletteExtended,
-  ];
-
   return {
     color: getActiveColor(editorState),
     disabled: getDisabledState(editorState),
     palette,
     defaultColor: palette[0].value,
-    paletteExtended,
+    paletteExtended: textColorPaletteExtended,
   };
 }
 
