@@ -16,12 +16,9 @@ import {
   default as createLayoutPlugin,
   pluginKey,
   LayoutState,
-} from '../../../../../plugins/layout/pm-plugins/main';
-import {
-  forceSectionToPresetLayout,
-  PresetLayout,
-} from '../../../../../plugins/layout/actions';
-import { layouts, buildLayoutForWidths } from '../_utils';
+} from '../../main';
+import { forceSectionToPresetLayout, PresetLayout } from '../../../actions';
+import { layouts, buildLayoutForWidths } from '../../../__tests__/unit/_utils';
 import {
   CreateUIAnalyticsEvent,
   UIAnalyticsEvent,
@@ -458,6 +455,33 @@ describe('layout', () => {
           layoutSection(
             layoutColumn({ width: 33.33 })(p('Left sidebar')),
             layoutColumn({ width: 66.66 })(p('Content')),
+          ),
+        ),
+      );
+    });
+
+    it.only('ensures layout column width after remove the column in a range selection', function() {
+      const { editorView, refs } = editor(
+        doc(
+          p('foo{<}'),
+          p('bar'),
+          layoutSection(
+            layoutColumn({ width: 50 })(p('{>}')),
+            layoutColumn({ width: 50 })(p('')),
+          ),
+        ),
+      );
+
+      // dispatch transaction that removes a column
+      const tr = editorView.state.tr.delete(refs['<'], refs['>']);
+      const newState = editorView.state.apply(tr);
+
+      expect(newState.doc).toEqualDocument(
+        doc(
+          p('foo'),
+          layoutSection(
+            layoutColumn({ width: 50 })(p('')),
+            layoutColumn({ width: 50 })(p('')),
           ),
         ),
       );

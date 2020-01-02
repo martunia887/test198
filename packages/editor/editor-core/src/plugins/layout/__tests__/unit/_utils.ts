@@ -1,5 +1,5 @@
 import { layoutSection, layoutColumn, p } from '@atlaskit/editor-test-helpers';
-import { PresetLayout } from '../../../../plugins/layout/actions';
+import { PresetLayout } from '../../actions';
 
 export const layouts: { name: PresetLayout; widths: number[] }[] = [
   { name: 'two_equal', widths: [50, 50] },

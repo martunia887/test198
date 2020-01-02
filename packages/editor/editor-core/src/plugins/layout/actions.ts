@@ -306,10 +306,14 @@ export const fixColumnSizes = (changedTr: Transaction, state: EditorState) => {
   // By default prosemirror try to recreate the node with the default attributes
   // The default attribute is invalid adf though. when this happen the node after
   // current position is a layout section
-  const pos = changedTr.doc.resolve(range.to).after();
-  const node = changedTr.doc.nodeAt(pos);
-  if (node && node.type === layoutSection && layoutNeedChanges(node)) {
-    change = getLayoutChange(node, pos, state.schema);
+  try {
+    const pos = changedTr.doc.resolve(range.to).after();
+    const node = changedTr.doc.nodeAt(pos);
+    if (node && node.type === layoutSection && layoutNeedChanges(node)) {
+      change = getLayoutChange(node, pos, state.schema);
+    }
+  } catch (e) {
+    // After could not exist and prosemirror throws an error, we catch this at this level
   }
 
   return change;

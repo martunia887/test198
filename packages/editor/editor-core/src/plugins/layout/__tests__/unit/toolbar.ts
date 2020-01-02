@@ -4,17 +4,20 @@ import {
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 import { IntlProvider } from 'react-intl';
-import { buildToolbar, messages } from '../../../../plugins/layout/toolbar';
+import { buildToolbar, messages } from '../../toolbar';
 import { EditorView } from 'prosemirror-view';
 import {
   FloatingToolbarConfig,
   FloatingToolbarItem,
-} from '../../../../plugins/floating-toolbar/types';
+} from '../../../floating-toolbar/types';
 import { Command } from '../../../../types';
-import commonMessages from '../../../../messages';
+import commonMessages from '@atlaskit/editor-core/messages';
 import { buildLayoutForWidths } from './_utils';
-import { LAYOUT_TYPE } from '../../../../plugins/analytics/types/node-events';
-import { getToolbarItems, findToolbarBtn } from '../floating-toolbar/_helpers';
+import { LAYOUT_TYPE } from '../../../analytics/types/node-events';
+import {
+  getToolbarItems,
+  findToolbarBtn,
+} from '../../../../__tests__/unit/plugins/floating-toolbar/_helpers';
 
 describe('layout toolbar', () => {
   let createAnalyticsEvent: CreateUIAnalyticsEvent;

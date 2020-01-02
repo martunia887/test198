@@ -16,9 +16,9 @@ import {
   getPresetLayout,
   PresetLayout,
   insertLayoutColumnsWithAnalytics,
-} from '../../../../plugins/layout/actions';
+} from '../../actions';
 import { layouts, buildLayoutForWidths } from './_utils';
-import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { INPUT_METHOD } from '../../../analytics';
 
 describe('layout actions', () => {
   const createEditor = createEditorFactory();
