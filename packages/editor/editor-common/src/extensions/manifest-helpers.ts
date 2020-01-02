@@ -26,15 +26,15 @@ export const buildExtensionKeyAndNodeKey = (
   return `${extensionKey}:${nodeKey}`;
 };
 
-export const resolveAction = async (
+export const buildAction = (
   action: ExtensionModuleAction,
   manifest: ExtensionManifest,
 ) => {
   if (typeof action === 'function') {
-    return resolveImport(action());
+    return action;
   }
 
-  if (action.type === 'node') {
+  if (action.type === 'node' && manifest.modules.nodes) {
     return buildNode(action, manifest);
   }
 };
@@ -50,7 +50,11 @@ export const resolveImport = async <T>(importPromise: Module<T>) => {
 export const buildNode = (
   action: ExtensionModuleActionObject,
   manifest: ExtensionManifest,
-): ADFEntity => {
+): ADFEntity | undefined => {
+  if (!manifest.modules.nodes) {
+    return;
+  }
+
   const node = manifest.modules.nodes[action.key];
   const extensionKey = buildExtensionKeyAndNodeKey(manifest.key, action.key);
 

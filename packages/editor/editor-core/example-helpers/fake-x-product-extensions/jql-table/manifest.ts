@@ -6,7 +6,7 @@ const manifest: ExtensionManifest = {
   key: 'jql-table',
   description: 'Jira results in a table',
   icons: {
-    '16': () => import('@atlaskit/icon/glyph/editor/code'),
+    '48': () => import('@atlaskit/icon/glyph/editor/code'),
   },
   modules: {
     quickInsert: [

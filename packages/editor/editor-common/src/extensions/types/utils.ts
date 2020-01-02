@@ -1,3 +1,4 @@
+import { ADFEntity } from '@atlaskit/adf-utils';
 import { Icon, MaybeADFEntity } from './extension-manifest';
 
 export type MenuItem = {
@@ -5,7 +6,7 @@ export type MenuItem = {
   title: string;
   description: string;
   icon: Icon;
-  node: MaybeADFEntity;
+  node: ADFEntity | (() => MaybeADFEntity);
 };
 
 export type MenuItemMap = { [key: string]: MenuItem };

@@ -218,6 +218,7 @@ export function createFakeExtensionProvider<T>(
     default: extensionHandler,
   };
 
+  macroManifest.modules.nodes = macroManifest.modules.nodes || {};
   macroManifest.modules.nodes.default.render = () =>
     Promise.resolve(FakeES6Module);
   macroManifest.modules.nodes.default.update = extensionUpdater;

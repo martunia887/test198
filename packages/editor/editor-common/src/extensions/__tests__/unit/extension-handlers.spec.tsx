@@ -115,7 +115,7 @@ describe('extension-handlers', () => {
           'confluence.macro',
           'expand',
         ),
-      ).toEqual(confluenceExpandMacro.modules.nodes['default']);
+      ).toEqual(confluenceExpandMacro.modules.nodes!['default']);
 
       expect(
         await getExtensionModuleNode(
@@ -123,7 +123,7 @@ describe('extension-handlers', () => {
           'confluence.macro',
           'toc',
         ),
-      ).toEqual(confluenceTOCMacro.modules.nodes['default']);
+      ).toEqual(confluenceTOCMacro.modules.nodes!['default']);
 
       expect(
         await getExtensionModuleNode(
@@ -131,7 +131,7 @@ describe('extension-handlers', () => {
           'confluence.macro',
           'toc:zone',
         ),
-      ).toEqual(confluenceTOCMacro.modules.nodes['zone']);
+      ).toEqual(confluenceTOCMacro.modules.nodes!['zone']);
 
       expect(
         await getExtensionModuleNode(
@@ -139,7 +139,7 @@ describe('extension-handlers', () => {
           'atlassian.forge',
           'answer-to-life:fourtyTwo',
         ),
-      ).toEqual(forgeAmazingExtension.modules.nodes['fourtyTwo']);
+      ).toEqual(forgeAmazingExtension.modules.nodes!['fourtyTwo']);
     });
 
     test('should throw if extension type is not found', () => {

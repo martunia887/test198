@@ -4,40 +4,44 @@ import {
   ExtensionProvider,
   combineProviders,
   getItemsFromModule,
+  resolveImport,
 } from '@atlaskit/editor-common';
 import {
   QuickInsertProvider,
   QuickInsertItem,
 } from '../plugins/quick-insert/types';
+import { EditorActions } from '../';
 
 export async function extensionProviderToQuickInsertProvider(
   extensionProvider: ExtensionProvider,
+  editorActions: EditorActions,
 ): Promise<QuickInsertProvider> {
   const extensions = await extensionProvider.getExtensions();
 
   return {
     getItems: () => {
-      const quickInsertItems = getItemsFromModule<Promise<QuickInsertItem>>(
+      const quickInsertItems = getItemsFromModule<QuickInsertItem>(
         extensions,
         'quickInsert',
-        async item => {
+        item => {
           const Icon = Loadable<{ label: string }, any>({
             loader: item.icon,
             loading: () => null,
           });
-
-          const node = await item.node;
 
           return {
             title: item.title,
             description: item.description,
             icon: () => <Icon label={item.title} />,
             action: insert => {
-              if (node) {
-                return insert(node);
+              if (typeof item.node === 'function') {
+                resolveImport(item.node()).then(node => {
+                  editorActions.replaceSelection(node);
+                });
+                return insert('');
+              } else {
+                return insert(item.node);
               }
-
-              return false;
             },
           };
         },

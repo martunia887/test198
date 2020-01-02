@@ -5,7 +5,7 @@ import {
   ExtensionModuleType,
   MenuItemMap,
 } from './types';
-import { resolveAction } from './manifest-helpers';
+import { buildAction } from './manifest-helpers';
 
 export const groupBy = <T>(
   arr: T[],
@@ -23,12 +23,20 @@ export const buildMenuItem = (
   manifest: ExtensionManifest,
   extensionModule: ExtensionModule,
 ): MenuItem => {
+  const title = extensionModule.title || manifest.title;
+  const key = `${manifest.key}:${extensionModule.key}`;
+  const node = buildAction(extensionModule.action, manifest);
+
+  if (!node) {
+    throw new Error(`Couldn't find any action for ${title} (${key})`);
+  }
+
   return {
-    key: `${manifest.key}:${extensionModule.key}`,
-    title: extensionModule.title || manifest.title,
+    key,
+    title,
     description: extensionModule.description || manifest.description,
     icon: extensionModule.icon || manifest.icons['48'],
-    node: resolveAction(extensionModule.action, manifest),
+    node,
   };
 };
 

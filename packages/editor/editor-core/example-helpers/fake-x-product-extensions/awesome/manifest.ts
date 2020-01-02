@@ -8,7 +8,7 @@ const manifest: ExtensionManifest = {
   icons: {
     '16': () => import('@atlaskit/icon/glyph/tray'),
     '24': () => import('@atlaskit/icon/glyph/tray'),
-    '32': () => import('@atlaskit/icon/glyph/tray'),
+    '48': () => import('@atlaskit/icon/glyph/tray'),
   },
   modules: {
     quickInsert: [

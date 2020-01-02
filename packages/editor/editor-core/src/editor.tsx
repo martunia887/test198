@@ -272,7 +272,10 @@ export default class Editor extends React.Component<EditorProps, {}> {
       const quickInsertProvider = extensionProvider
         ? combineQuickInsertProviders([
             quickInsert.provider,
-            extensionProviderToQuickInsertProvider(extensionProvider),
+            extensionProviderToQuickInsertProvider(
+              extensionProvider,
+              this.editorActions,
+            ),
           ])
         : quickInsert.provider;
 

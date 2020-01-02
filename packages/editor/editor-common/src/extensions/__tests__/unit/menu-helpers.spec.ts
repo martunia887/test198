@@ -143,7 +143,14 @@ describe('menu-helpers', () => {
         },
       });
 
-      expect(await quickInsertItems[4].node).toEqual(bodiedExtension);
+      expect(quickInsertItems[4].node).toBeInstanceOf(Function);
+      // TODO: Use assertion type once we upgrade to TypeScript 3.7
+      if (typeof quickInsertItems[4].node === 'function') {
+        expect(await quickInsertItems[4].node()).toEqual({
+          __esModule: true,
+          default: bodiedExtension,
+        });
+      }
     });
   });
 });

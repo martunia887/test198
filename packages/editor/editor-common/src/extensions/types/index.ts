@@ -20,6 +20,7 @@ export {
   ExtensionModuleActionObject,
   ExtensionModuleActionHandler,
   ExtensionModuleAction,
+  MaybeADFEntity,
 } from './extension-manifest';
 
 export { MenuItem, MenuItemMap } from './utils';

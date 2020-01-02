@@ -10,6 +10,7 @@ export type ExtensionModuleKey = string;
 export type Icon = () => Promise<any>;
 
 export type Icons = {
+  '48': Icon;
   [dimensions: string]: Icon;
 };
 
@@ -29,7 +30,7 @@ export type ExtensionManifest = {
 
 export type ExtensionModules = {
   quickInsert?: ExtensionModule[];
-  nodes: ExtensionModuleNodes;
+  nodes?: ExtensionModuleNodes;
 };
 
 export type ExtensionModuleAction =

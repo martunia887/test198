@@ -6,7 +6,7 @@ const manifest: ExtensionManifest = {
   key: 'fake.lorem.ipsum',
   description: 'Extension demo',
   icons: {
-    '16': () => import('@atlaskit/icon/glyph/editor/code'),
+    '48': () => import('@atlaskit/icon/glyph/editor/code'),
   },
   modules: {
     quickInsert: [

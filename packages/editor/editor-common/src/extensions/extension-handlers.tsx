@@ -24,6 +24,12 @@ export async function getExtensionModuleNode(
     );
   }
 
+  if (!manifest.modules.nodes) {
+    throw new Error(
+      `Couldn't find any node for extension type "${extensionType}" and key "${extensionKey}"!`,
+    );
+  }
+
   const node = manifest.modules.nodes[nodeKey];
 
   if (!node) {

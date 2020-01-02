@@ -2,6 +2,7 @@ import { DefaultExtensionProvider } from '@atlaskit/editor-common';
 import { createFakeExtensionManifest } from '@atlaskit/editor-test-helpers/extensions';
 
 import { extensionProviderToQuickInsertProvider } from '../../../utils/extensions';
+import { EditorActions } from '../../../../src';
 
 const dummyExtension1 = createFakeExtensionManifest({
   title: 'First dummy extension',
@@ -24,6 +25,7 @@ describe('#extensionProviderToQuickInsertProvider', () => {
   it('should returns quickInsert items from all extensions', async () => {
     const quickInsertProvider = await extensionProviderToQuickInsertProvider(
       dummyExtensionProvider,
+      {} as EditorActions,
     );
 
     const items = await quickInsertProvider.getItems();
