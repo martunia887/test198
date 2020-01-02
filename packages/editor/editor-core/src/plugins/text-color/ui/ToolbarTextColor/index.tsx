@@ -212,12 +212,17 @@ class ToolbarTextColor extends React.Component<
   };
 
   private handleOpenChange = ({ isOpen }: { isOpen: boolean }) => {
-    this.setState({ isOpen });
+    const { isShowingMoreColors } = this.state;
+
+    this.setState({
+      isOpen,
+      isShowingMoreColors: isOpen ? false : isShowingMoreColors,
+    });
   };
 
   private hide = () => {
     if (this.state.isOpen === true) {
-      this.setState({ isOpen: false });
+      this.setState({ isOpen: false, isShowingMoreColors: false });
     }
   };
 
