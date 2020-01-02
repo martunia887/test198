@@ -45,6 +45,7 @@ export const proxyUploadEvents = (store: Store<State>) => (
               finalizeUpload(localFile, uploadId, source, uploadId),
             );
           } else if (
+            // MS-2865: don't proxy upload-preview-update to prevent race condition causing it to be sent twice
             !['upload-end', 'upload-preview-update'].includes(event.name)
           ) {
             // TODO: MSW-376 upload-status-update events from the user has a public Id that should be sanitized here.
