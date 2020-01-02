@@ -10,10 +10,13 @@ import * as colors from '@atlaskit/theme/colors';
 
 export interface Props {
   palette: PaletteColor[];
+  paletteExtended?: PaletteColor[]; // used with showMoreColorsToggle
   selectedColor: string | null;
   onClick: (value: string) => void;
   cols?: number;
   className?: string;
+  showMoreColorsToggle?: boolean;
+  showMoreColors: boolean;
 }
 
 /**
@@ -33,6 +36,9 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
   render() {
     const {
       palette,
+      paletteExtended,
+      showMoreColorsToggle,
+      showMoreColors,
       cols = 7,
       onClick,
       selectedColor,
@@ -40,12 +46,18 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
       intl: { formatMessage },
     } = this.props;
 
+    let allColors = palette;
+
+    if (showMoreColors && paletteExtended) {
+      allColors = allColors.concat(paletteExtended);
+    }
+
     return (
       <ColorPaletteWrapper
         className={className}
         style={{ maxWidth: cols * 32 }}
       >
-        {palette.map(({ value, label, border, message }) => (
+        {allColors.map(({ value, label, border, message }) => (
           <Color
             key={value}
             value={value}
@@ -56,6 +68,14 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
             checkMarkColor={getContrastColor(value, [colors.N0, colors.N500])}
           />
         ))}
+
+        {showMoreColorsToggle && (
+          <div>
+            <button type="button">
+              {showMoreColors ? 'Less colors' : 'More colors'}
+            </button>
+          </div>
+        )}
       </ColorPaletteWrapper>
     );
   }

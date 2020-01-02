@@ -132,9 +132,12 @@ class ToolbarTextColor extends React.Component<
       isReducedSpacing,
       pluginState,
       intl: { formatMessage },
+      showMoreColorsToggle,
     } = this.props;
 
     const labelTextColor = formatMessage(messages.textColor);
+    const paletteExtended = showMoreColorsToggle ? [] : undefined;
+
     return (
       <MenuWrapper>
         <Dropdown
@@ -178,8 +181,11 @@ class ToolbarTextColor extends React.Component<
         >
           <ColorPalette
             palette={pluginState.palette}
+            paletteExtended={pluginState.paletteExtended}
             onClick={color => this.changeTextColor(color, pluginState.disabled)}
             selectedColor={pluginState.color}
+            showMoreColorsToggle={showMoreColorsToggle}
+            showMoreColors={pluginState.showMoreColors}
           />
         </Dropdown>
         <Separator />

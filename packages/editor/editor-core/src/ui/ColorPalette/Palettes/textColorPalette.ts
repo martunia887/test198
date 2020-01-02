@@ -29,3 +29,10 @@ This could be happen when someone change the colorPalette from 'adf-schema', wit
 });
 
 export default textColorPalette;
+
+export const textColorPaletteExtended: Array<PaletteColor> = [];
+
+textColorPaletteExtended.push({
+  value: '#000',
+  label: 'Black',
+});

@@ -6,13 +6,17 @@ import { Dispatch } from '../../../event-dispatcher';
 import { getActiveColor } from '../utils/color';
 import { getDisabledState } from '../utils/disabled';
 import { PaletteColor } from '../../../ui/ColorPalette/Palettes/type';
-import textColorPalette from '../../../ui/ColorPalette/Palettes/textColorPalette';
+import textColorPalette, {
+  textColorPaletteExtended,
+} from '../../../ui/ColorPalette/Palettes/textColorPalette';
 
 export type TextColorPluginState = {
   palette: Array<PaletteColor>;
+  paletteExtended?: Array<PaletteColor>;
   defaultColor: string;
   disabled?: boolean;
   color: string | null;
+  showMoreColors: boolean;
 };
 
 export type ActionHandlerParams = {
@@ -54,17 +58,28 @@ export function createInitialPluginState(
     ...textColorPalette,
   ];
 
+  const paletteExtended: Array<PaletteColor> = [
+    {
+      value: defaultColor.color,
+      label: defaultColor.label,
+    },
+    ...textColorPaletteExtended,
+  ];
+
   return {
     color: getActiveColor(editorState),
     disabled: getDisabledState(editorState),
     palette,
     defaultColor: palette[0].value,
+    showMoreColors: false,
+    paletteExtended,
   };
 }
 
 export enum ACTIONS {
   RESET_COLOR,
   SET_COLOR,
+  TOGGLE_SHOW_MORE_COLORS,
   DISABLE,
 }
 
@@ -91,6 +106,13 @@ export function createPlugin(
 
           case ACTIONS.SET_COLOR:
             nextState = { ...pluginState, color: meta.color, disabled: false };
+            break;
+
+          case ACTIONS.TOGGLE_SHOW_MORE_COLORS:
+            nextState = {
+              ...pluginState,
+              showMoreColors: !pluginState.showMoreColors,
+            };
             break;
 
           case ACTIONS.DISABLE:
