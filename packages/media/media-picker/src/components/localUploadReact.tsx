@@ -190,6 +190,7 @@ export class LocalUploadComponentReact<
   };
 
   public cancel = (uniqueIdentifier?: string): void => {
+    console.log('Browser cancel', uniqueIdentifier);
     this.uploadService.cancel(uniqueIdentifier);
   };
 

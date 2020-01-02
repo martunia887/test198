@@ -23,7 +23,7 @@ import {
   expectFunctionToHaveBeenCalledWith,
   expectToEqual,
 } from '@atlaskit/media-test-helpers';
-import { Action, Dispatch } from 'redux';
+import { Action } from 'redux';
 
 import {
   importFilesMiddleware,
@@ -43,11 +43,6 @@ import {
   UploadProcessingEvent,
   UploadEventName,
 } from '../../../../domain/uploadEvent';
-import MockContext = jest.MockContext;
-import {
-  setEventProxy,
-  SetEventProxyAction,
-} from '../../../actions/setEventProxy';
 import { getPreview } from '../../../actions/getPreview';
 import { hidePopup } from '../../../actions/hidePopup';
 import { MediaFile } from '../../../../types';
@@ -85,11 +80,6 @@ describe('importFiles middleware', () => {
       .filter(({ payload: { event } }) => event.name === eventName)
       .map(({ payload }) => payload);
   };
-
-  const getDispatchArgs = (store: any, type: string): Action[] =>
-    (store.dispatch.mock as MockContext<Dispatch<any>, any[]>).calls
-      .filter(args => args[0].type === type)
-      .map(args => args[0]);
 
   const setup = (opts: Partial<SetupOptions> = {}) => {
     const { withSelectedItems } = {
@@ -529,24 +519,6 @@ describe('importFiles middleware', () => {
           0,
         );
         expect(getSendUploadEventPayloads(store, 'upload-end')).toHaveLength(0);
-      });
-
-      it('should dispatch SET_EVENT_PROXY action', async () => {
-        const setupResult = setup();
-        await importFilesMiddlewareAndAwait(setupResult);
-        const { store } = setupResult;
-
-        const setEventProxyCalls = getDispatchArgs(
-          store,
-          'SET_EVENT_PROXY',
-        ) as SetEventProxyAction[];
-        expect(setEventProxyCalls).toHaveLength(2);
-        expect(setEventProxyCalls[0]).toEqual(
-          setEventProxy('some-selected-item-id-1', expectUUID),
-        );
-        expect(setEventProxyCalls[1]).toEqual(
-          setEventProxy('some-selected-item-id-3', expectUUID),
-        );
       });
     });
 

@@ -17,8 +17,6 @@ import filePreviewUpdate from './filePreviewUpdate';
 import fileUploadProgress from './fileUploadProgress';
 import fileUploadProcessingStart from './fileUploadProcessingStart';
 import fileUploadEnd from './fileUploadEnd';
-import setEventProxy from './setEventProxy';
-import removeEventProxy from './removeEventProxy';
 import resetView from './resetView';
 import editorClose from './editorClose';
 import editorShowError from './editorShowError';
@@ -56,8 +54,6 @@ const reducers = combineReducers([
   fileUploadProgress,
   fileUploadProcessingStart,
   fileUploadEnd,
-  setEventProxy,
-  removeEventProxy,
   removeFileFromRecents,
   resetView,
   editorClose,

@@ -22,7 +22,6 @@ import { finalizeUpload } from '../actions/finalizeUpload';
 import { remoteUploadStart } from '../actions/remoteUploadStart';
 import { getPreview } from '../actions/getPreview';
 import { handleCloudFetchingEvent } from '../actions/handleCloudFetchingEvent';
-import { setEventProxy } from '../actions/setEventProxy';
 import { hidePopup } from '../actions/hidePopup';
 import { resetView } from '../actions/resetView';
 import { WsProvider } from '../tools/websocket/wsProvider';
@@ -349,13 +348,20 @@ export const importFilesFromLocalUpload = async (
   localUpload: LocalUpload,
   replaceFileId?: string,
 ): Promise<void> => {
-  const {
-    file: { id },
-    touchFileDescriptor,
-  } = selectedUploadFile;
+  const { touchFileDescriptor } = selectedUploadFile;
+  const { tenantMediaClient } = store.getState();
 
-  store.dispatch(setEventProxy(id, uploadId));
   await touchSelectedFile(touchFileDescriptor, store);
+
+  const { fileId } = touchFileDescriptor;
+
+  // TODO: sendUploadEvent here
+  // TODO: remove "localUpload.events"
+  tenantMediaClient.file.getFileState(fileId).subscribe({
+    next(fileState) {
+      console.log('importFiles', fileState);
+    },
+  });
 
   localUpload.events.forEach(originalEvent => {
     const event = { ...originalEvent };

@@ -4,7 +4,6 @@ import * as React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import * as exenv from 'exenv';
 import App, { AppProxyReactContext } from '../popup/components/app';
-import { cancelUpload } from '../popup/actions/cancelUpload';
 import { showPopup } from '../popup/actions/showPopup';
 import { getFilesInRecents } from '../popup/actions/getFilesInRecents';
 import { State } from '../popup/domain';
@@ -85,13 +84,8 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
   public async cancel(
     uniqueIdentifier?: string | Promise<string>,
   ): Promise<void> {
-    if (!uniqueIdentifier) {
-      return;
-    }
-
-    this.store.dispatch(
-      cancelUpload({ tenantUploadId: await uniqueIdentifier }),
-    );
+    // eslint-disable-line no-console
+    console.log('Popup cancel not implemented');
   }
 
   public teardown(): void {

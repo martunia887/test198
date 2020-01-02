@@ -19,8 +19,6 @@ import { getFilesInRecents } from '../popup/middleware/getFilesInRecents';
 import { importFilesMiddleware } from '../popup/middleware/importFiles';
 import { startCloudAccountOAuthFlow } from '../popup/middleware/startAuth';
 import unlinkCloudAccount from '../popup/middleware/unlinkCloudAccount';
-import { proxyUploadEvents } from '../popup/middleware/proxyUploadEvents';
-import cancelUpload from '../popup/middleware/cancelUpload';
 import { editRemoteImageMiddleware } from '../popup/middleware/editRemoteImage';
 import finalizeUploadMiddleware from '../popup/middleware/finalizeUpload';
 import getPreviewMiddleware from '../popup/middleware/getPreview';
@@ -66,12 +64,10 @@ export default (
         startCloudAccountOAuthFlow(fetcher, cloudService) as Middleware,
         unlinkCloudAccount(fetcher) as Middleware,
         getConnectedRemoteAccounts(fetcher) as Middleware,
-        cancelUpload as Middleware,
         importFilesMiddleware(eventEmitter, wsProvider),
         editRemoteImageMiddleware() as Middleware,
         getPreviewMiddleware(),
         finalizeUploadMiddleware(),
-        proxyUploadEvents as Middleware,
         handleCloudFetchingEvent as Middleware,
         searchGiphy(fetcher) as Middleware,
         hidePopupMiddleware(eventEmitter) as Middleware,

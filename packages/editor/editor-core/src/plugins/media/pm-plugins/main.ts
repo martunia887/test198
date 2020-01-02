@@ -435,6 +435,7 @@ export class MediaPluginState {
     if (!getNode) {
       getNode = this.view.state.doc.nodeAt(getPos()) as PMNode;
     }
+
     removeMediaNode(this.view, getNode, getPos);
   };
 

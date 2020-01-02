@@ -21,7 +21,6 @@ export interface LocalUpload {
   readonly timeStarted: number;
 
   progress: number | null;
-  proxy?: string[];
 }
 
 export type LocalUploads = { [uploadId: string]: LocalUpload };

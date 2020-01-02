@@ -169,6 +169,7 @@ export default class PickerFacade {
   public handleUploadPreviewUpdate = (
     event: UploadPreviewUpdateEventPayload,
   ) => {
+    console.log('handleUploadPreviewUpdate', event);
     const { file, preview } = event;
     const { dimensions, scaleFactor } = isImagePreview(preview)
       ? preview
