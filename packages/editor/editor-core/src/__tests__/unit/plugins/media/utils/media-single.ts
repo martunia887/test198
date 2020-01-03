@@ -2,7 +2,7 @@ import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
 import { akEditorBreakoutPadding } from '@atlaskit/editor-common';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import { EditorView } from 'prosemirror-view';
-import { buildLayoutForWidths } from '../../layout/_utils';
+import { buildLayoutForWidths } from '../../../../../plugins/layout/__tests__/unit/_utils';
 import {
   calcMediaPxWidth,
   alignAttributes,

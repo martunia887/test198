@@ -38,10 +38,6 @@ export type UploadPreviewUpdateEventPayload = {
   readonly preview: Preview;
 };
 
-export type UploadProcessingEventPayload = {
-  readonly file: MediaFile;
-};
-
 export type UploadEndEventPayload = {
   readonly file: MediaFile;
 };

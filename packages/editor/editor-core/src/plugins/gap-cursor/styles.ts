@@ -68,6 +68,7 @@ export const gapCursorStyles = `
     }
     &.ProseMirror-focused ${gapCursor} {
       display: block;
+      border-color: transparent;
     }
   }
 

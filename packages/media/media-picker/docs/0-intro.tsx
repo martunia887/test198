@@ -408,9 +408,9 @@ The popup provides the following methods:
 
   ${(
     <Example
-      Component={require('../examples/0-popup').default}
+      Component={require('../examples/8-full-flow').default}
       title="Pop up"
-      source={require('!!raw-loader!../examples/0-popup')}
+      source={require('!!raw-loader!../examples/8-full-flow')}
     />
   )}
 `;

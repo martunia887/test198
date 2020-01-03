@@ -37,6 +37,7 @@ class GenericSwitcherWithJoinExample extends React.Component {
       permitted: 2000,
       appswitcher: 1500,
     });
+
     this.setState({
       isDrawerOpen: true,
     });

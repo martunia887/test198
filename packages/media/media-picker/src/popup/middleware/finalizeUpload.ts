@@ -6,6 +6,9 @@ import {
   MediaStoreCopyFileWithTokenParams,
   FileState,
   MediaFile as MediaClientFile,
+  getFileStreamsCache,
+  ErrorFileState,
+  createFileStateSubject,
   observableToPromise,
 } from '@atlaskit/media-client';
 import {
@@ -17,7 +20,6 @@ import { mapAuthToSourceFileOwner } from '../domain/source-file';
 import { MediaFile } from '../../types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { resetView } from '../actions';
-import { UploadEndEvent } from '../../domain/uploadEvent';
 
 export default function(): Middleware {
   return store => (next: Dispatch<State>) => (action: any) => {
@@ -130,9 +132,10 @@ async function copyFile({
   const body: MediaStoreCopyFileWithTokenBody = {
     sourceFile,
   };
+  const resolvedReplaceFileId = replaceFileId ? await replaceFileId : undefined;
   const params: MediaStoreCopyFileWithTokenParams = {
     collection,
-    replaceFileId: replaceFileId ? await replaceFileId : undefined,
+    replaceFileId: resolvedReplaceFileId,
     occurrenceKey: file.occurrenceKey,
   };
 
@@ -143,20 +146,7 @@ async function copyFile({
       destinationFile.data.id,
     );
     const fileState = await observableToPromise(tenantSubject);
-
-    if (fileState.status === 'processing') {
-      store.dispatch(
-        sendUploadEvent({
-          event: {
-            name: 'upload-processing',
-            data: {
-              file,
-            },
-          },
-          uploadId,
-        }),
-      );
-    } else if (fileState.status === 'processed') {
+    if (fileState.status === 'processing' || fileState.status === 'processed') {
       store.dispatch(
         sendUploadEvent({
           event: {
@@ -164,7 +154,7 @@ async function copyFile({
             data: {
               file,
             },
-          } as UploadEndEvent,
+          },
           uploadId,
         }),
       );
@@ -189,6 +179,26 @@ async function copyFile({
       );
     }
   } catch (error) {
+    const erroredFileId = resolvedReplaceFileId || file.id;
+    const errorState: ErrorFileState = {
+      id: erroredFileId,
+      status: 'error',
+      message: `error copying file to ${collection}`,
+    };
+    const cache = getFileStreamsCache();
+    const fileCache = cache.get(erroredFileId) as
+      | ReplaySubject<FileState>
+      | undefined;
+
+    // We need this check since the return type of getFileStreamsCache().get might not be a ReplaySubject and won't have "next"
+    if (fileCache && fileCache.next) {
+      // This will cause media card to rerender with an error state on existent subscriptions
+      fileCache.next(errorState);
+    }
+
+    // Create a new subject with the error state for new subscriptions
+    cache.set(erroredFileId, createFileStateSubject(errorState));
+
     store.dispatch(
       sendUploadEvent({
         event: {

@@ -18,11 +18,6 @@ export default function(eventEmitter: PopupUploadEventEmitter): Middleware {
           eventEmitter.emitUploadPreviewUpdate(file, preview);
           break;
         }
-        case 'upload-processing': {
-          const file = copyMediaFileForUpload(event.data.file, uploadId);
-          eventEmitter.emitUploadProcessing(file);
-          break;
-        }
         case 'upload-end': {
           const file = copyMediaFileForUpload(event.data.file, uploadId);
           eventEmitter.emitUploadEnd(file);

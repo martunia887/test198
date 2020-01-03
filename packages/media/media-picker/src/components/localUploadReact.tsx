@@ -6,7 +6,6 @@ import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
   UploadPreviewUpdateEventPayload,
-  UploadProcessingEventPayload,
   UploadsStartEventPayload,
   UploadEventPayloadMap,
   UploadParams,
@@ -131,7 +130,6 @@ export class LocalUploadComponentReact<
     this.uploadService.on('files-added', this.onFilesAdded);
     this.uploadService.on('file-preview-update', this.onFilePreviewUpdate);
     this.uploadService.on('file-converting', this.onFileConverting);
-    this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
   }
 

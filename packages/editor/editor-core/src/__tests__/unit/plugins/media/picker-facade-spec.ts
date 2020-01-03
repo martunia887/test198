@@ -36,7 +36,6 @@ describe('Media PickerFacade', () => {
     setUploadParams: jest.fn(),
     emitUploadsStart: jest.fn(),
     emitUploadPreviewUpdate: jest.fn(),
-    emitUploadProcessing: jest.fn(),
     emitUploadEnd: jest.fn(),
     emitUploadError: jest.fn(),
     once: jest.fn(),
@@ -72,13 +71,9 @@ describe('Media PickerFacade', () => {
 
     it('listens to picker events', () => {
       expect(true).toBeTruthy();
-      expect(popupMediaPickerMock.on).toHaveBeenCalledTimes(5);
+      expect(popupMediaPickerMock.on).toHaveBeenCalledTimes(4);
       expect(popupMediaPickerMock.on).toHaveBeenCalledWith(
         'upload-preview-update',
-        expect.any(Function),
-      );
-      expect(popupMediaPickerMock.on).toHaveBeenCalledWith(
-        'upload-processing',
         expect.any(Function),
       );
       expect(popupMediaPickerMock.on).toHaveBeenCalledWith(
@@ -89,12 +84,9 @@ describe('Media PickerFacade', () => {
 
     it('removes listeners on destruction', () => {
       facade.destroy();
-      expect(popupMediaPickerMock.removeAllListeners).toHaveBeenCalledTimes(4);
+      expect(popupMediaPickerMock.removeAllListeners).toHaveBeenCalledTimes(3);
       expect(popupMediaPickerMock.removeAllListeners).toHaveBeenCalledWith(
         'upload-preview-update',
-      );
-      expect(popupMediaPickerMock.removeAllListeners).toHaveBeenCalledWith(
-        'upload-processing',
       );
       expect(popupMediaPickerMock.removeAllListeners).toHaveBeenCalledWith(
         'upload-end',

@@ -9,7 +9,6 @@ import { GenericEventEmitter } from '../util/eventEmitter';
 export interface UploadEventEmitter {
   emitUploadsStart(files: MediaFile[]): void;
   emitUploadPreviewUpdate(file: MediaFile, preview: Preview): void;
-  emitUploadProcessing(file: MediaFile): void;
   emitUploadEnd(file: MediaFile): void;
   emitUploadError(file: MediaFile, error: MediaError): void;
 }
@@ -28,10 +27,6 @@ export class UploadComponent<M extends UploadEventPayloadMap>
       file,
       preview,
     });
-  }
-
-  emitUploadProcessing(file: MediaFile): void {
-    this.emit('upload-processing', { file });
   }
 
   emitUploadEnd(file: MediaFile): void {
