@@ -9,12 +9,14 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { ReactWrapper } from 'enzyme';
+import Button from '@atlaskit/button';
 
 import {
   TextColorPluginState,
   pluginKey,
 } from '../../../../../plugins/text-color/pm-plugins/main';
 import Color from '../../../../../ui/ColorPalette/Color';
+import ColorPalette from '../../../../../ui/ColorPalette';
 import ToolbarButton from '../../../../../ui/ToolbarButton';
 import ToolbarTextColor, {
   Props as ToolbarTextColorProps,
@@ -186,6 +188,92 @@ describe('ToolbarTextColor', () => {
 
     it('should render disabled ToolbarButton', () => {
       expect(toolbarTextColor.find(ToolbarButton).prop('disabled')).toBe(true);
+    });
+  });
+
+  describe('show more colors disabled', () => {
+    let pluginState: TextColorPluginState;
+
+    beforeEach(() => {
+      const { editorView } = editor(doc(p('text')));
+      pluginState = pluginKey.getState(editorView.state);
+      toolbarTextColor = mountWithIntl(
+        <ToolbarTextColor
+          pluginState={pluginState}
+          editorView={editorView}
+          showMoreColorsToggle={false}
+        />,
+      );
+    });
+
+    it('should not show "more colors" button', () => {
+      toolbarTextColor.find('button').simulate('click');
+
+      expect(toolbarTextColor.find(ColorPalette).find(Button).length).toBe(0);
+    });
+  });
+
+  describe('show more colors enabled', () => {
+    let pluginState: TextColorPluginState;
+
+    beforeEach(() => {
+      const { editorView } = editor(doc(p('text')));
+      pluginState = pluginKey.getState(editorView.state);
+      toolbarTextColor = mountWithIntl(
+        <ToolbarTextColor
+          pluginState={pluginState}
+          editorView={editorView}
+          showMoreColorsToggle
+        />,
+      );
+    });
+
+    it('should show "more colors" button', () => {
+      toolbarTextColor.find('button').simulate('click');
+
+      expect(toolbarTextColor.find(ColorPalette).find(Button).length).toBe(1);
+    });
+
+    it('should show more colors when expanded', () => {
+      toolbarTextColor.find('button').simulate('click');
+
+      const collapsedColorCount = toolbarTextColor
+        .find(ColorPalette)
+        .find(Color).length;
+      toolbarTextColor
+        .find(ColorPalette)
+        .find(Button)
+        .simulate('click');
+
+      expect(
+        toolbarTextColor.find(ColorPalette).find(Color).length,
+      ).toBeGreaterThan(collapsedColorCount);
+    });
+
+    it('should show less colors when collapsed again', () => {
+      toolbarTextColor.find('button').simulate('click');
+
+      const collapsedColorCount = toolbarTextColor
+        .find(ColorPalette)
+        .find(Color).length;
+      toolbarTextColor
+        .find(ColorPalette)
+        .find(Button)
+        .simulate('click');
+
+      const expandedColorCount = toolbarTextColor.find(ColorPalette).find(Color)
+        .length;
+      toolbarTextColor
+        .find(ColorPalette)
+        .find(Button)
+        .simulate('click');
+
+      expect(toolbarTextColor.find(ColorPalette).find(Color).length).toBe(
+        collapsedColorCount,
+      );
+      expect(
+        toolbarTextColor.find(ColorPalette).find(Color).length,
+      ).toBeLessThan(expandedColorCount);
     });
   });
 });
