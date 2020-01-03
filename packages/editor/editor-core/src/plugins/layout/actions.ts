@@ -247,6 +247,41 @@ export const setPresetLayout = (layout: PresetLayout): Command => (
 
   return false;
 };
+interface Change {
+  from: number;
+  to: number;
+  slice: Slice;
+}
+
+function layoutNeedChanges(node: Node): boolean {
+  return !getPresetLayout(node);
+}
+
+function getLayoutChange(
+  node: Node,
+  pos: number,
+  schema: Schema,
+): Change | undefined {
+  if (node.type === schema.nodes.layoutSection) {
+    if (!layoutNeedChanges(node)) {
+      return;
+    }
+
+    const presetLayout = node.childCount === 2 ? 'two_equal' : 'three_equal';
+
+    const fixedColumns = columnWidth(
+      node,
+      schema,
+      getWidthsForPreset(presetLayout),
+    );
+
+    return {
+      from: pos + 1,
+      to: pos + node.nodeSize - 1,
+      slice: new Slice(fixedColumns, 0, 0),
+    };
+  }
+}
 
 export const fixColumnSizes = (changedTr: Transaction, state: EditorState) => {
   const { layoutSection } = state.schema.nodes;
@@ -257,29 +292,29 @@ export const fixColumnSizes = (changedTr: Transaction, state: EditorState) => {
   }
 
   changedTr.doc.nodesBetween(range.from, range.to, (node, pos) => {
-    if (node.type === layoutSection) {
-      if (getPresetLayout(node)) {
-        return false;
-      }
-
-      const presetLayout = node.childCount === 2 ? 'two_equal' : 'three_equal';
-
-      const fixedColumns = columnWidth(
-        node,
-        state.schema,
-        getWidthsForPreset(presetLayout),
-      );
-      change = {
-        from: pos + 1,
-        to: pos + node.nodeSize - 1,
-        slice: new Slice(fixedColumns, 0, 0),
-      };
-
-      return false;
-    } else {
-      return true;
+    if (node.type !== layoutSection) {
+      return true; // Check all internal nodes expect for layout section
     }
+    // Node is a section
+    if (layoutNeedChanges(node)) {
+      change = getLayoutChange(node, pos, state.schema);
+    }
+    return false; // We dont go deep, We dont accept nested layouts
   });
+
+  // Hack to prevent: https://product-fabric.atlassian.net/browse/ED-7523
+  // By default prosemirror try to recreate the node with the default attributes
+  // The default attribute is invalid adf though. when this happen the node after
+  // current position is a layout section
+  const $pos = changedTr.doc.resolve(range.to);
+  if ($pos.depth > 0) {
+    // 'range.to' position could resolve to doc, in this ResolvedPos.after will throws
+    const pos = $pos.after();
+    const node = changedTr.doc.nodeAt(pos);
+    if (node && node.type === layoutSection && layoutNeedChanges(node)) {
+      change = getLayoutChange(node, pos, state.schema);
+    }
+  }
 
   return change;
 };

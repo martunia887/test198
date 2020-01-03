@@ -110,8 +110,28 @@ export function isInEmptyLine(state: EditorState) {
   if (!node) {
     return false;
   }
-
   return isEmptyParagraph(node) && hasDocAsParent($anchor);
+}
+
+export function bracketTyped(state: EditorState) {
+  const { selection } = state;
+  const { $cursor, $anchor } = selection as TextSelection;
+
+  if (!$cursor) {
+    return false;
+  }
+  const node = $cursor.nodeBefore;
+
+  if (!node) {
+    return false;
+  }
+
+  if (node.type.name === 'text' && node.text === '{') {
+    const paragraphNode = $anchor.node();
+    return paragraphNode.marks.length === 0 && hasDocAsParent($anchor);
+  }
+
+  return false;
 }
 
 function wrapWithUnsupported(

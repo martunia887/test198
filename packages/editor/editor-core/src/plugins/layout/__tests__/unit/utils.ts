@@ -11,7 +11,7 @@ import {
   removeLayoutFromFirstChild,
   removeLayoutFromLastChild,
   transformSliceToRemoveOpenLayoutNodes,
-} from '../../../../plugins/layout/utils';
+} from '../../utils';
 import { flatmap } from '../../../../utils/slice';
 
 const removeRef = (node: Node) => Node.fromJSON(defaultSchema, node.toJSON());

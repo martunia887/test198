@@ -15,7 +15,7 @@ export const ClipboardWrapper = ({ mediaState }: Props) => (
         config={config}
         onError={pickerFacadeInstance.handleUploadError}
         onPreviewUpdate={pickerFacadeInstance.handleUploadPreviewUpdate}
-        onProcessing={pickerFacadeInstance.handleReady}
+        onEnd={pickerFacadeInstance.handleReady}
       />
     )}
   </PickerFacadeProvider>

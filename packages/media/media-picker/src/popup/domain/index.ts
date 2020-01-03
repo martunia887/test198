@@ -15,7 +15,6 @@ export {
   LocalUploads,
   LocalUploadFile,
   LocalUploadFileMetadata,
-  hasLocalUploadStartedProcessing,
 } from './local-upload';
 
 import { ImageCardModel } from '../tools/fetcher/fetcher';

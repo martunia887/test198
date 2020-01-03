@@ -40,7 +40,6 @@ describe('sendUploadEvent middleware', () => {
     expect(eventEmitter.emitUploadsStart).not.toBeCalled();
     expect(eventEmitter.emitUploadProgress).not.toBeCalled();
     expect(eventEmitter.emitUploadPreviewUpdate).not.toBeCalled();
-    expect(eventEmitter.emitUploadProcessing).not.toBeCalled();
     expect(eventEmitter.emitUploadEnd).not.toBeCalled();
     expect(eventEmitter.emitUploadError).not.toBeCalled();
 
@@ -110,27 +109,6 @@ describe('sendUploadEvent middleware', () => {
       },
       preview,
     );
-  });
-
-  it('should emit upload processing event', () => {
-    const { eventEmitter, store, next } = setup();
-
-    sendUploadEventMiddleware(eventEmitter)(store)(next)(
-      sendUploadEvent({
-        event: {
-          name: 'upload-processing',
-          data: {
-            file,
-          },
-        },
-        uploadId,
-      }),
-    );
-
-    expect(eventEmitter.emitUploadProcessing).toBeCalledWith({
-      ...file,
-      id: uploadId,
-    });
   });
 
   it('should emit upload end event', () => {

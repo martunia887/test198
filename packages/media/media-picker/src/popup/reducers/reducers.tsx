@@ -15,7 +15,6 @@ import {
 import fileUploadsAdd from './fileUploadsAdd';
 import filePreviewUpdate from './filePreviewUpdate';
 import fileUploadProgress from './fileUploadProgress';
-import fileUploadProcessingStart from './fileUploadProcessingStart';
 import fileUploadEnd from './fileUploadEnd';
 import resetView from './resetView';
 import editorClose from './editorClose';
@@ -52,7 +51,6 @@ const reducers = combineReducers([
   fileUploadsAdd,
   filePreviewUpdate,
   fileUploadProgress,
-  fileUploadProcessingStart,
   fileUploadEnd,
   removeFileFromRecents,
   resetView,

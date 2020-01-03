@@ -43,10 +43,6 @@ export type UploadPreviewUpdateEventPayload = {
   readonly preview: Preview;
 };
 
-export type UploadProcessingEventPayload = {
-  readonly file: MediaFile;
-};
-
 export type UploadEndEventPayload = {
   readonly file: MediaFile;
 };
@@ -61,7 +57,6 @@ export type UploadEventPayloadMap = {
   readonly 'uploads-start': UploadsStartEventPayload;
   readonly 'upload-preview-update': UploadPreviewUpdateEventPayload;
   readonly 'upload-status-update': UploadStatusUpdateEventPayload;
-  readonly 'upload-processing': UploadProcessingEventPayload;
   readonly 'upload-end': UploadEndEventPayload;
   readonly 'upload-error': UploadErrorEventPayload;
 };

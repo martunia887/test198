@@ -28,7 +28,7 @@ BrowserTestCase(
       payload: { files: [{ name: filename }] },
     });
 
-    expect(await page.getEvent('upload-processing')).toMatchObject({
+    expect(await page.getEvent('upload-end')).toMatchObject({
       payload: { file: { name: filename } },
     });
   },
@@ -73,7 +73,7 @@ BrowserTestCase(
       payload: { files: [{ name: filename }] },
     });
 
-    expect(await page.getEvent('upload-processing')).toMatchObject({
+    expect(await page.getEvent('upload-end')).toMatchObject({
       payload: { file: { name: filename } },
     });
 

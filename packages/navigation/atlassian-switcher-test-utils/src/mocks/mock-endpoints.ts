@@ -149,7 +149,6 @@ export const mockJoinableSitesEndpoint = (
   loadTimes: LoadTimes = {},
 ) => {
   const mockData = getMockData(transformer);
-
   const { JOINABLE_SITES_DATA } = mockData;
   fetchMock.post(
     endpoint,

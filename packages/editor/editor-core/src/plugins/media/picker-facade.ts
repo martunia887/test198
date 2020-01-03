@@ -6,10 +6,9 @@ import {
   UploadPreviewUpdateEventPayload,
   UploadParams,
   UploadErrorEventPayload,
-  UploadProcessingEventPayload,
+  UploadEndEventPayload,
 } from '@atlaskit/media-picker/types';
 import { MediaClientConfig } from '@atlaskit/media-core';
-
 import { ErrorReportingHandler } from '@atlaskit/editor-common';
 
 import {
@@ -73,6 +72,7 @@ export default class PickerFacade {
 
   async init(): Promise<PickerFacade> {
     let picker;
+
     if (this.pickerType === 'customMediaPicker') {
       picker = this.picker = this.pickerConfig as CustomMediaPicker;
     } else if (this.pickerType === 'popup') {
@@ -82,12 +82,17 @@ export default class PickerFacade {
       );
     }
 
-    (picker as any).on('upload-preview-update', this.handleUploadPreviewUpdate);
-    (picker as any).on('upload-processing', this.handleReady);
-    // media picker not always fires upload-processing but always fires upload-end, and since handleReady() is idempotent it can be treated the same
-    (picker as any).on('upload-end', this.handleReady);
-    (picker as any).on('upload-error', this.handleUploadError);
-    (picker as any).on('mobile-upload-end', this.handleMobileUploadEnd);
+    if (!picker) {
+      return this;
+    }
+
+    picker.on('upload-preview-update', this.handleUploadPreviewUpdate);
+    picker.on('upload-end', this.handleReady);
+    picker.on('upload-error', this.handleUploadError);
+    (picker as CustomMediaPicker).on(
+      'mobile-upload-end',
+      this.handleMobileUploadEnd,
+    );
 
     return this;
   }
@@ -107,10 +112,9 @@ export default class PickerFacade {
       return;
     }
 
-    (picker as any).removeAllListeners('upload-preview-update');
-    (picker as any).removeAllListeners('upload-processing');
-    (picker as any).removeAllListeners('upload-end');
-    (picker as any).removeAllListeners('upload-error');
+    picker.removeAllListeners('upload-preview-update');
+    picker.removeAllListeners('upload-end');
+    picker.removeAllListeners('upload-error');
 
     this.onStartListeners = [];
     this.onDragListeners = [];
@@ -252,7 +256,7 @@ export default class PickerFacade {
     );
   };
 
-  public handleReady = (event: UploadProcessingEventPayload) => {
+  public handleReady = (event: UploadEndEventPayload) => {
     const { file } = event;
 
     const listeners = this.eventListeners[file.id];

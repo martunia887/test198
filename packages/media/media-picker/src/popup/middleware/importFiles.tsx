@@ -366,7 +366,7 @@ export const importFilesFromLocalUpload = async (
   localUpload.events.forEach(originalEvent => {
     const event = { ...originalEvent };
 
-    if (event.name === 'upload-processing') {
+    if (event.name === 'upload-end') {
       const { file } = event.data;
       const source = {
         id: file.id,
@@ -374,7 +374,7 @@ export const importFilesFromLocalUpload = async (
       };
 
       store.dispatch(finalizeUpload(file, uploadId, source, replaceFileId));
-    } else if (event.name !== 'upload-end') {
+    } else {
       store.dispatch(sendUploadEvent({ event, uploadId }));
     }
   });

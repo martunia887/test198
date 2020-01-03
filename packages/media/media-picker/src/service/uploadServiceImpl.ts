@@ -302,10 +302,6 @@ export class UploadServiceImpl implements UploadService {
       file: mediaFile,
     });
 
-    this.emit('file-converted', {
-      file: mediaFile,
-    });
-
     cancellableFileUpload.cancel = () => {
       this.releaseCancellableFile(mediaFile);
     };

@@ -40,7 +40,6 @@ import { resetView } from '../../../actions/resetView';
 import {
   UploadEndEvent,
   UploadPreviewUpdateEvent,
-  UploadProcessingEvent,
   UploadEventName,
 } from '../../../../domain/uploadEvent';
 import { getPreview } from '../../../actions/getPreview';
@@ -100,15 +99,6 @@ describe('importFiles middleware', () => {
         creationDate: todayDate,
         occurrenceKey,
       };
-
-      const fileWithPublicId = { ...file, publicId: `publicId-${index}` };
-      const uploadProcessingEvent: UploadProcessingEvent = {
-        name: 'upload-processing',
-        data: {
-          file: fileWithPublicId,
-        },
-      };
-
       const uploadPreviewUpdateEvent: UploadPreviewUpdateEvent = {
         name: 'upload-preview-update',
         data: {
@@ -139,7 +129,6 @@ describe('importFiles middleware', () => {
         events: [
           // uploads-event won't be part of events list. See fileUploadsAdd.tsx
           uploadPreviewUpdateEvent,
-          uploadProcessingEvent,
           uploadEndEvent,
         ],
         index,

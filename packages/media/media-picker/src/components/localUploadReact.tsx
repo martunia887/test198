@@ -6,7 +6,6 @@ import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
   UploadPreviewUpdateEventPayload,
-  UploadProcessingEventPayload,
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
   UploadEventPayloadMap,
@@ -32,7 +31,6 @@ export type LocalUploadComponentBaseProps = {
   onUploadsStart?: (payload: UploadsStartEventPayload) => void;
   onPreviewUpdate?: (payload: UploadPreviewUpdateEventPayload) => void;
   onStatusUpdate?: (payload: UploadStatusUpdateEventPayload) => void;
-  onProcessing?: (payload: UploadProcessingEventPayload) => void;
   onEnd?: (payload: UploadEndEventPayload) => void;
   onError?: (payload: UploadErrorEventPayload) => void;
 } & WithAnalyticsEventsProps;
@@ -100,7 +98,6 @@ export class LocalUploadComponentReact<
       onUploadsStart,
       onPreviewUpdate,
       onStatusUpdate,
-      onProcessing,
       onEnd,
       onError,
     } = this.props;
@@ -119,9 +116,6 @@ export class LocalUploadComponentReact<
     if (onStatusUpdate) {
       this.uploadComponent.on('upload-status-update', onStatusUpdate!);
     }
-    if (onProcessing) {
-      this.uploadComponent.on('upload-processing', onProcessing!);
-    }
     if (onEnd) {
       this.uploadComponent.on('upload-end', onEnd!);
     }
@@ -138,7 +132,6 @@ export class LocalUploadComponentReact<
     this.uploadService.on('file-preview-update', this.onFilePreviewUpdate);
     this.uploadService.on('file-uploading', this.onFileUploading);
     this.uploadService.on('file-converting', this.onFileConverting);
-    this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
   }
 
@@ -216,12 +209,8 @@ export class LocalUploadComponentReact<
     this.uploadComponent.emitUploadProgress(file, progress);
   };
 
-  private onFileConverting = ({ file }: UploadProcessingEventPayload): void => {
-    this.uploadComponent.emitUploadProcessing(file);
-  };
-
-  private onFileConverted = (payload: UploadEndEventPayload): void => {
-    this.uploadComponent.emitUploadEnd(payload.file);
+  private onFileConverting = ({ file }: UploadEndEventPayload): void => {
+    this.uploadComponent.emitUploadEnd(file);
   };
 
   private onUploadError = ({ file, error }: UploadErrorEventPayload): void => {
