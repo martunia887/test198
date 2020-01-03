@@ -26,7 +26,7 @@ export const messages = defineMessages({
 
 export interface Props {
   palette: PaletteColor[];
-  paletteExtended?: PaletteColor[]; // used with showMoreColorsToggle
+  paletteExtended?: PaletteColor[]; // only used with showMoreColorsToggle
   selectedColor: string | null;
   onClick: (value: string) => void;
   cols?: number;

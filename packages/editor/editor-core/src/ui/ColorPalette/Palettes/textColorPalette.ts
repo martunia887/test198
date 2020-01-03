@@ -30,6 +30,7 @@ This could be happen when someone change the colorPalette from 'adf-schema', wit
 
 export default textColorPalette;
 
+// TODO: get proper colours
 export const textColorPaletteExtended: Array<PaletteColor> = [];
 
 for (let i = 0; i < 7; i++) {
