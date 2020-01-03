@@ -26,6 +26,7 @@ const isClickable = <
 ): props is T => !!props.onClick;
 
 export class Date extends React.Component<Props> {
+  static displayName = 'Date';
   static defaultProps: Partial<Props> = {
     format: 'DD/MM/YYYY',
     color: 'grey',

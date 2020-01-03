@@ -13,6 +13,8 @@ type State = {
 };
 
 export class MediaPickerComponents extends React.Component<Props, State> {
+  static displayName = 'MediaPickerComponents';
+
   state = {
     isPopupOpened: false,
   };

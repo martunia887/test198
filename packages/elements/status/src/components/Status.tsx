@@ -37,6 +37,8 @@ export interface OwnProps {
 export type Props = OwnProps & WithAnalyticsEventsProps;
 
 class StatusInternal extends PureComponent<Props, any> {
+  static displayName = 'StatusInternal';
+
   private hoverStartTime: number = 0;
 
   private handleMouseEnter = (_e: React.MouseEvent<HTMLSpanElement>) => {

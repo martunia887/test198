@@ -33,6 +33,8 @@ class FloatingInsertButton extends React.Component<
   Props & InjectedIntlProps,
   any
 > {
+  static displayName = 'FloatingInsertButton';
+
   constructor(props: Props & InjectedIntlProps) {
     super(props);
     this.insertColumn = this.insertColumn.bind(this);

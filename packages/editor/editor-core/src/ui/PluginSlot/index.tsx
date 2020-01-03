@@ -29,6 +29,8 @@ export interface Props {
 }
 
 export default class PluginSlot extends React.Component<Props, any> {
+  static displayName = 'PluginSlot';
+
   transitionEvent = whichTransitionEvent<'transitionend'>();
 
   shouldComponentUpdate(nextProps: Props) {

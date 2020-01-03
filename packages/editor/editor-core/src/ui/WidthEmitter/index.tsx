@@ -10,6 +10,8 @@ export interface Props {
 }
 
 export default class WidthEmitter extends Component<Props> {
+  static displayName = 'WidthEmitter';
+
   private width?: number;
   private debounce: number | null = null;
 

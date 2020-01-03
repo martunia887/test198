@@ -53,6 +53,8 @@ export default class MediaGroup extends React.Component<
   MediaGroupProps,
   MediaGroupState
 > {
+  static displayName = 'MediaGroup';
+
   private mediaPluginState: MediaPluginState;
   private mediaNodes: PMNode[];
 

@@ -34,6 +34,8 @@ export type TypeAheadProps = {
 };
 
 export class TypeAhead extends React.Component<TypeAheadProps> {
+  static displayName = 'TypeAhead';
+
   composing: boolean = false;
 
   handleKeyPress = () => {

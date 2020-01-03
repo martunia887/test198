@@ -40,6 +40,8 @@ export interface Props {
  * renderComponent: ({ hyperlink }) => React.Component;
  */
 export default class WithPluginState extends React.Component<Props, State> {
+  static displayName = 'WithPluginState';
+
   private listeners = {};
   private debounce: number | null = null;
   private notAppliedState = {};

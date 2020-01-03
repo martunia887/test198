@@ -53,6 +53,7 @@ export default class MediaSingleNode extends Component<
   static defaultProps: Partial<MediaSingleNodeProps> = {
     mediaOptions: {},
   };
+  static displayName = 'MediaSingleNode';
 
   state: MediaSingleNodeState = {
     width: undefined,

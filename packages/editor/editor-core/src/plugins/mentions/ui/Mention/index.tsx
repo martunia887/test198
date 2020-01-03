@@ -18,6 +18,8 @@ export interface MentionProps {
 }
 
 export default class Mention extends PureComponent<MentionProps, {}> {
+  static displayName = 'Mention';
+
   private providerFactory: ProviderFactory;
 
   constructor(props: MentionProps) {

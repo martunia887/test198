@@ -465,6 +465,8 @@ const ModalFooter = ({ showKeyline }: { showKeyline: boolean }) => (
 );
 
 class HelpDialog extends React.Component<Props & InjectedIntlProps> {
+  static displayName = 'HelpDialog';
+
   private formatting: Format[] = [];
 
   closeDialog = () => {

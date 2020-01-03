@@ -25,6 +25,8 @@ export interface State {
 }
 
 export default class TaskItemWithProviders extends Component<Props, State> {
+  static displayName = 'TaskItemWithProviders';
+
   state: State = { resolvedContextProvider: undefined };
 
   // Storing the mounted state is an anti-pattern, however the asynchronous state

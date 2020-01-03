@@ -30,4 +30,6 @@ const InlineNodeWrapper: React.StatelessComponent<{
     <>{children}</>
   );
 
+InlineNodeWrapper.displayName = 'InlineNodeWrapper';
+
 export default InlineNodeWrapper;

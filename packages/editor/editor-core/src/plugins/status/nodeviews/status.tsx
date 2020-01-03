@@ -75,6 +75,8 @@ class StatusContainerView extends React.Component<
   ContainerProps & InjectedIntlProps,
   {}
 > {
+  static displayName = 'StatusContainerView';
+
   constructor(props: ContainerProps & InjectedIntlProps) {
     super(props);
   }

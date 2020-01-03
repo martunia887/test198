@@ -68,6 +68,8 @@ const getTitle = (layout?: BreakoutMode) => {
 };
 
 class LayoutButton extends React.Component<Props & InjectedIntlProps, {}> {
+  static displayName = 'LayoutButton';
+
   private handleClick = (breakoutMode: BreakoutMode) => () => {
     const { state, dispatch } = this.props.editorView;
     if (

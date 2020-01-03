@@ -118,4 +118,6 @@ const FloatingContextualMenu = ({
   );
 };
 
+FloatingContextualMenu.displayName = 'FloatingContextualMenu';
+
 export default FloatingContextualMenu;

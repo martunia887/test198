@@ -27,6 +27,8 @@ export interface Props {
 }
 
 export default class TableFloatingControls extends Component<Props> {
+  static displayName = 'TableFloatingControls';
+
   shouldComponentUpdate(nextProps: Props) {
     const {
       tableRef,

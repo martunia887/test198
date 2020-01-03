@@ -57,6 +57,8 @@ interface TableState {
 }
 
 class TableComponent extends React.Component<ComponentProps, TableState> {
+  static displayName = 'TableComponent';
+
   state = {
     scroll: 0,
     tableContainerWidth: 'inherit',

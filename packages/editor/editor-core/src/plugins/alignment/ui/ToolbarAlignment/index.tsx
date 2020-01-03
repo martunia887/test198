@@ -45,6 +45,8 @@ export interface Props {
 }
 
 class AlignmentToolbar extends React.Component<Props, State> {
+  static displayName = 'AlignmentToolbar';
+
   state: State = {
     isOpen: false,
   };

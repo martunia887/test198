@@ -9,6 +9,8 @@ export interface Props {
 }
 
 export class WithProviders extends PureComponent<Props, { providers: any }> {
+  static displayName = 'WithProviders';
+
   constructor(props: Props) {
     super(props);
 

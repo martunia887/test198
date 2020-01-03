@@ -13,6 +13,8 @@ type Props = {
 };
 
 export default class MediaEditor extends React.PureComponent<Props> {
+  static displayName = 'MediaEditor';
+
   private onUploadStart = (
     newFileIdentifier: FileIdentifier,
     dimensions: Dimensions,

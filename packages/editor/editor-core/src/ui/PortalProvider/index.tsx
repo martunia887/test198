@@ -68,6 +68,8 @@ export class PortalProviderAPI extends EventDispatcher {
 }
 
 export class PortalProvider extends React.Component<PortalProviderProps> {
+  static displayName = 'PortalProvider';
+
   portalProviderAPI: PortalProviderAPI;
 
   constructor(props: PortalProviderProps) {

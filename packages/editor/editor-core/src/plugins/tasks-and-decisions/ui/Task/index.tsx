@@ -30,6 +30,8 @@ export interface TaskProps {
 }
 
 export class TaskItem extends PureComponent<TaskProps & InjectedIntlProps, {}> {
+  static displayName = 'TaskItem';
+
   private providerFactory: ProviderFactory;
 
   constructor(props: TaskProps & InjectedIntlProps) {

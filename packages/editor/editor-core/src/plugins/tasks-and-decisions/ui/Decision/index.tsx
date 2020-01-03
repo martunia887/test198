@@ -16,6 +16,8 @@ interface Props {
 }
 
 export class Decision extends React.Component<Props & InjectedIntlProps, {}> {
+  static displayName = 'Decision';
+
   render() {
     const {
       contentRef,

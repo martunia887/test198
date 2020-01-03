@@ -56,6 +56,8 @@ export function getSelectionType(
 }
 
 class FloatingDeleteButton extends Component<Props, State> {
+  static displayName = 'FloatingDeleteButton';
+
   constructor(props: Props) {
     super(props);
 

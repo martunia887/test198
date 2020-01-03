@@ -19,6 +19,8 @@ export interface Props {
 }
 
 export default class Extension extends Component<Props, any> {
+  static displayName = 'Extension';
+
   private providerFactory: ProviderFactory;
 
   constructor(props: Props) {

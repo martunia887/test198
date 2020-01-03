@@ -32,6 +32,8 @@ class FloatingContextualButton extends React.Component<
   Props & InjectedIntlProps,
   any
 > {
+  static displayName = 'FloatingContextualButton';
+
   render() {
     const {
       mountPoint,

@@ -41,6 +41,8 @@ const getTitle = (layout: TableLayout) => {
 };
 
 class LayoutButton extends React.Component<Props & InjectedIntlProps, any> {
+  static displayName = 'LayoutButton';
+
   render() {
     const {
       intl: { formatMessage },
