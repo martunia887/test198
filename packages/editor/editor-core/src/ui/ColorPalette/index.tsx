@@ -32,8 +32,8 @@ export interface Props {
   cols?: number;
   className?: string;
   showMoreColorsToggle?: boolean;
-  showMoreColors: boolean;
-  onShowMoreToggleClick: () => void;
+  showMoreColors?: boolean;
+  onShowMoreToggleClick?: () => void;
 }
 
 /**
@@ -50,6 +50,13 @@ export function getContrastColor(color: string, pool: string[]): string {
 }
 
 class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
+  static defaultProps: Props = {
+    paletteExtended: [],
+    showMoreColorsToggle: false,
+    showMoreColors: false,
+    onShowMoreToggleClick: undefined,
+  };
+
   renderSwatch = (swatch: PaletteColor) => {
     const {
       onClick,
@@ -93,7 +100,6 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
           {palette.map(swatch => this.renderSwatch(swatch))}
 
           {showMoreColors &&
-            paletteExtended &&
             paletteExtended.map(swatch => this.renderSwatch(swatch))}
         </ColorPaletteWrapper>
         {showMoreColorsToggle && (
