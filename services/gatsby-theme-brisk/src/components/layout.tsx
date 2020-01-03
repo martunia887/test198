@@ -3,11 +3,13 @@ import { css, Global } from '@emotion/core';
 import styled from '@emotion/styled';
 import cssReset from '@atlaskit/css-reset';
 import { N30 } from '@atlaskit/theme/src/colors';
+import { MDXProvider } from '@mdx-js/react';
 import PageTitle from './page-title';
 import HeaderContent from './../content/header-content';
 import SidebarContent from './../content/sidebar-content';
 import FooterContent from './../content/footer-content';
 import Typography from './typography';
+import Example from './example';
 
 const Grid = styled.div`
   display: grid;
@@ -57,31 +59,37 @@ const Layout = (props: Props) => {
     SidebarComponent = SidebarContent;
   }
 
+  const shortcodes = {
+    Example,
+  };
+
   return (
     <>
-      <Global
-        styles={css`
-          ${cssReset}
-        `}
-      />
-      <Typography />
-      <PageTitle title={props.title} />
+      <MDXProvider components={shortcodes}>
+        <Global
+          styles={css`
+            ${cssReset}
+          `}
+        />
+        <Typography />
+        <PageTitle title={props.title} />
 
-      <Grid>
-        <Header>
-          <HeaderContent />
-        </Header>
+        <Grid>
+          <Header>
+            <HeaderContent />
+          </Header>
 
-        <Sidebar>
-          <SidebarComponent />
-        </Sidebar>
+          <Sidebar>
+            <SidebarComponent />
+          </Sidebar>
 
-        <Main>{props.children}</Main>
+          <Main>{props.children}</Main>
 
-        <Footer>
-          <FooterContent />
-        </Footer>
-      </Grid>
+          <Footer>
+            <FooterContent />
+          </Footer>
+        </Grid>
+      </MDXProvider>
     </>
   );
 };

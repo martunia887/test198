@@ -8,7 +8,13 @@ module.exports = ({ packages, docsFolder = 'constellation' }) => {
       `gatsby-plugin-typescript`,
       `gatsby-plugin-emotion`,
       `gatsby-plugin-react-helmet`,
-      `gatsby-plugin-mdx`,
+      {
+        resolve: `gatsby-plugin-mdx`,
+        // eslint-disable-next-line global-require
+        options: {
+          remarkPlugins: [require('./plugins/remark/add-raw-to-imports')],
+        },
+      },
       {
         resolve: `gatsby-source-filesystem`,
         options: {

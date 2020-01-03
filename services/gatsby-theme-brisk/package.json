@@ -10,6 +10,7 @@
         "@atlaskit/css-reset": "^5.0.9",
         "@atlaskit/menu": "^0.1.1",
         "@atlaskit/theme": "^9.3.0",
+        "@atlaskit/docs": "^8.1.8",
         "@emotion/core": "^10.0.9",
         "@emotion/styled": "^10.0.7",
         "@manypkg/gatsby-source-workspace": "^0.3.0",
@@ -23,7 +24,8 @@
         "gatsby-plugin-react-helmet": "^3.1.16",
         "gatsby-plugin-typescript": "^2.1.20",
         "gatsby-source-filesystem": "^2.1.42",
-        "react-helmet": "^5.2.0"
+        "react-helmet": "^5.2.0",
+        "unist-util-visit": "^2.0.1"
     },
     "peerDependencies": {
         "gatsby": "^2.17.10",

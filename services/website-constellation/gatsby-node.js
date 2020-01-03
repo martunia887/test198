@@ -1,9 +1,6 @@
 // @flow
 let MultiEntrypointAliases;
 
-const path = require('path');
-const filterTopages = require('./helpers/filter-to-pages');
-
 try {
   // eslint-disable-next-line
   MultiEntrypointAliases = require('./aliases-written-map.json');
@@ -12,63 +9,6 @@ try {
     'ERROR - Local aliases have not been written. Please write aliases before continuing by running `yarn constellation:aliases`',
   );
 }
-
-// function createDocsPages(graphql, createPage) {
-//   return new Promise((resolve, reject) => {
-//     resolve(
-//       graphql(
-//         `
-//           {
-//             allWorkspaceInfo {
-//               nodes {
-//                 dir
-//                 docsDisplayName
-//                 name
-//               }
-//             }
-// allMdx {
-//   nodes {
-//     id
-//     tableOfContents
-//     parent {
-//       ... on File {
-//         absolutePath
-//         name
-//         sourceInstanceName
-//       }
-//     }
-//   }
-// }
-//           }
-//         `,
-//       ).then(result => {
-//         if (result.errors) {
-//           console.log(result.errors); // eslint-disable-line no-console
-//           reject(result.errors);
-//         }
-
-//         // BC: I am unsure if I want this info to be queriable or not. I've assumed not, but if you
-//         // want to change this, move this you will need to add this as nodes
-//         const pagesToMake = filterTopages(result.data);
-
-//         pagesToMake.forEach(({ url, template, context }) => {
-//           createPage({
-//             path: url,
-//             context,
-//             component: path.resolve(
-//               path.join(__dirname, 'src', 'templates', template),
-//             ),
-//           });
-//         });
-//       }),
-//     );
-//   });
-// }
-
-// exports.createPages = ({ graphql, actions }) => {
-//   const { createPage } = actions;
-//   return createDocsPages(graphql, createPage);
-// };
 
 exports.onCreateWebpackConfig = ({ actions, loaders, getConfig }) => {
   actions.setWebpackConfig({

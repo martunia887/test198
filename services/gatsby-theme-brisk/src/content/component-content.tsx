@@ -1,4 +1,3 @@
-import { graphql } from 'gatsby';
 import React from 'react';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 

@@ -10,7 +10,6 @@ import {
   Profile,
 } from '@atlaskit/atlassian-navigation';
 import { N900, B200 } from '@atlaskit/theme/colors';
-import { gridSize } from '@atlaskit/theme';
 import Avatar from '@atlaskit/avatar';
 
 const theme = generateTheme({
