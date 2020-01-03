@@ -3,11 +3,10 @@ import { SimpleGit } from 'simple-git/promise';
 
 // Returns a boolean indicating if it committed or not
 // Returns false when there are no changes to commit
-export async function commitAndPush(
+export async function commit(
   git: SimpleGit,
   commitMessage: string,
   authorEmail: string,
-  branchName: string,
 ): Promise<boolean> {
   await git.add(['./']);
 
@@ -21,9 +20,8 @@ export async function commitAndPush(
     '--author',
     `BOT Atlaskit branch deploy integrator <${authorEmail}>`,
   ]);
-  await git.push('origin', branchName);
 
-  console.log('Committed and pushed changes');
+  console.log(`Committed changes`);
 
   return true;
 }

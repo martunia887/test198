@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import simpleGit, { SimpleGit } from 'simple-git/promise';
 import util from 'util';
 import childProcess from 'child_process';
+import spawn from 'projector-spawn';
 import { debugMock, Default } from '../lib/util';
 
 //@ts-ignore
@@ -11,7 +12,7 @@ import installFromCommit from '@atlaskit/branch-installer';
 import fetch from 'node-fetch';
 import { triggerProductBuild } from '../lib/ci';
 import {
-  commitAndPush,
+  commit,
   checkoutOrCreate,
   isInsideRepo,
   mergeAndReApply,
@@ -27,6 +28,7 @@ const defaultFlags = {
   // Need to tighten default string type to 'upgrade'
   cmd: 'upgrade' as 'upgrade',
   dedupe: false,
+  dedupeStrategy: 'fewer' as 'fewer',
   dryRun: false,
   packageEngine: 'yarn',
   packages: 'all',
@@ -36,6 +38,7 @@ type Flags = {
   branchPrefix: string;
   cmd: 'add' | 'upgrade';
   dedupe: boolean;
+  dedupeStrategy: 'fewer' | 'highest';
   dryRun: boolean;
   packageEngine: string;
   packages: string;
@@ -60,6 +63,7 @@ export const HELP_MSG = `
      ${chalk.yellow('--branchPrefix')} Prefix for the generated branch [default=atlaskit-branch-deploy/]
      ${chalk.yellow('--cmd')} the command to use can be add or upgrade [default=upgrade]
      ${chalk.yellow('--dedupe')} run yarn deduplicate at the end to deduplicate the lock file
+     ${chalk.yellow('--dedupeStrategy')} the strategy to run yarn deduplicate with [default=fewer]
      ${chalk.yellow('--dryRun')} Log out commands that would be run instead of running them
      ${chalk.yellow('--packageEngine')} The package manager to use, currently only tested with Bolt and yarn [default=yarn]
      ${chalk.yellow('--packages')} comma delimited list of packages to install branch deploy of
@@ -94,6 +98,7 @@ function validateArgs(
     packageEngine,
     packages,
     dedupe,
+    dedupeStrategy,
     cmd,
     dryRun,
     productCiPlanUrl,
@@ -128,6 +133,7 @@ export async function push(
     packageEngine,
     packages,
     dedupe,
+    dedupeStrategy,
     cmd,
     dryRun,
     productCiPlanUrl,
@@ -194,31 +200,28 @@ atlaskit-commit-hash: ${atlaskitCommitHash}
 
   await createVersionFile(atlaskitCommitHash);
 
-  console.log('Pushing branch deployed versions');
-  const didCommit = await commitAndPush(
-    git,
-    commitMessage,
-    authorEmail,
-    branchName,
-  );
+  const commits = [];
+  commits.push(await commit(git, commitMessage, authorEmail));
 
-  // Only run the following steps if we actually committed and pushed something
+  if (dedupe) {
+    console.log(chalk.yellow('Running yarn-deduplicate'));
+    await spawn(`npx yarn-deduplicate@1.1.1 -s ${dedupeStrategy}`);
+    // Re-run bolt/yarn to sort any integrity hash problems and dedupe branch installed s3 versions of packages
+    await spawn(packageEngine);
+
+    console.log('Pushing deduped yarn.lock');
+    commits.push(await commit(git, 'Deduplicated yarn.lock file', authorEmail));
+  }
+
+  const didCommit = commits.filter(didCommit => didCommit === true).length > 0;
+
+  // Only run the following steps if we actually committed something
   if (!didCommit) {
     return;
   }
 
-  if (dedupe) {
-    console.log(chalk.yellow('Running yarn-deduplicate'));
-    await exec('yarn yarn-deduplicate yarn.lock');
-
-    console.log('Pushing deduped yarn.lock');
-    await commitAndPush(
-      git,
-      'Deduplicated yarn.lock file',
-      authorEmail,
-      branchName,
-    );
-  }
+  console.log('Pushing branch deployed versions');
+  await git.push('origin', branchName);
 
   if (!productCiPlanUrl) {
     return;
