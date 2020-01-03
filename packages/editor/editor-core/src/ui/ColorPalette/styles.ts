@@ -18,6 +18,5 @@ export const ShowMoreWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
 
   > button {
     flex-grow: 1;
-    background: transparent;
   }
 `;

@@ -99,6 +99,7 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
         {showMoreColorsToggle && (
           <ShowMoreWrapper>
             <Button
+              appearance="subtle"
               onClick={onShowMoreToggleClick}
               iconBefore={
                 <IconFill label="TODO: replace with actual fill icon" />
