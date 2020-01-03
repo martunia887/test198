@@ -2,23 +2,27 @@
 '@atlaskit/media-picker': major
 ---
 
-1. Removed `upload-status-update` and `onStatusUpdate` from the Media Picker public API as it is not used. You should now use `getFileState()`:
+Removed the following from the Media Picker public API:
+
+1.`upload-status-update`  
+ 2.`onStatusUpdate`  
+ 3.`UploadStatusUploadEventPayload`  
+ 4.`MediaProgress`
+
+This functionality is now achieved through `getFileState()`:
 
 ```
 import {getMediaClient} from '@atlaskit/media-client'
 
 const mediaClient = getMediaClient({
-	mediaClientConfig: {
-		authProvider: () => Promise.resolve()
-	}
+  mediaClientConfig: {
+    authProvider: () => Promise.resolve()
+  }
 })
 
 mediaClient.file.getFileState('file-id', {
-	next(state) {
-		console.log(state)
-	}
+  next(state) {
+    console.log(state)
+  }
 })
 ```
-
-2. Removed `MediaProgress` class
-3. Removed unused `progress` property from `local-upload`
