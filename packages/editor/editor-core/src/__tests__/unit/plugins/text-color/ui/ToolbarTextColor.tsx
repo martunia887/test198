@@ -191,7 +191,7 @@ describe('ToolbarTextColor', () => {
     });
   });
 
-  describe('show more colors disabled', () => {
+  describe('when showMoreColorsToggle is disabled', () => {
     let pluginState: TextColorPluginState;
 
     beforeEach(() => {
@@ -213,7 +213,7 @@ describe('ToolbarTextColor', () => {
     });
   });
 
-  describe('show more colors enabled', () => {
+  describe('when showMoreColorsToggle is enabled', () => {
     let pluginState: TextColorPluginState;
 
     beforeEach(() => {
