@@ -275,5 +275,29 @@ describe('ToolbarTextColor', () => {
         toolbarTextColor.find(ColorPalette).find(Color).length,
       ).toBeLessThan(expandedColorCount);
     });
+
+    it('should reset isShowingMoreColors when toolbar is closed by clicking toolbar button', () => {
+      expect(toolbarTextColor.state('isShowingMoreColors')).toBe(false);
+      // open toolbar
+      toolbarTextColor.find('button').simulate('click');
+      expect(toolbarTextColor.state('isShowingMoreColors')).toBe(false);
+
+      // expand more colours
+      toolbarTextColor
+        .find(ColorPalette)
+        .find(Button)
+        .simulate('click');
+      expect(toolbarTextColor.state('isShowingMoreColors')).toBe(true);
+
+      // close toolbar
+      toolbarTextColor
+        .find('button')
+        .at(0)
+        .simulate('click');
+
+      // open toolbar
+      toolbarTextColor.find('button').simulate('click');
+      expect(toolbarTextColor.state('isShowingMoreColors')).toBe(false);
+    });
   });
 });
