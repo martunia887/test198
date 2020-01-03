@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
+import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 import { PortalRenderer, PortalProvider } from '../../ui/PortalProvider';
 import { EditorInternal } from './internal/components/EditorInternal';
 import {
@@ -28,12 +29,13 @@ import { EditorProps } from './internal/editor-props-type';
  * </Preset>
  * ```
  */
-function Editor(props: EditorProps) {
+function Editor(props: EditorProps & WithAnalyticsEventsProps) {
   const plugins = usePresetContext();
 
   return (
     <IntlProvider locale="en">
       <PortalProvider
+        createAnalyticsEvent={props.createAnalyticsEvent}
         render={portalProviderAPI => (
           <>
             <EditorInternal

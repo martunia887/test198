@@ -19,6 +19,7 @@ class PortalProviderMock extends EventDispatcher implements PortalProviderAPI {
   context: any;
 
   setContext = () => {};
+  fireAnalyticsEvent = () => {};
   render() {}
   forceUpdate() {}
   remove() {}

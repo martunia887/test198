@@ -1,15 +1,25 @@
 import * as React from 'react';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next/types';
 import {
   createPortal,
   unstable_renderSubtreeIntoContainer,
   unmountComponentAtNode,
 } from 'react-dom';
 import { EventDispatcher } from '../../event-dispatcher';
+import {
+  fireAnalyticsEvent,
+  FireAnalyticsCallback,
+  ACTION,
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+  EVENT_TYPE,
+} from '../../plugins/analytics';
 
 export type PortalProviderProps = {
   render: (
     portalProviderAPI: PortalProviderAPI,
   ) => React.ReactChild | JSX.Element | null;
+  createAnalyticsEvent?: CreateUIAnalyticsEvent;
 };
 
 export type Portals = Map<HTMLElement, React.ReactChild>;
@@ -26,6 +36,12 @@ type MountedPortal = {
 export class PortalProviderAPI extends EventDispatcher {
   portals: Map<HTMLElement, MountedPortal> = new Map();
   context: any;
+  fireAnalyticsEvent: FireAnalyticsCallback;
+
+  constructor(createAnalyticsEvent?: CreateUIAnalyticsEvent) {
+    super();
+    this.fireAnalyticsEvent = fireAnalyticsEvent(createAnalyticsEvent);
+  }
 
   setContext = (context: any) => {
     this.context = context;
@@ -63,7 +79,34 @@ export class PortalProviderAPI extends EventDispatcher {
 
   remove(container: HTMLElement) {
     this.portals.delete(container);
-    unmountComponentAtNode(container);
+
+    // There is a race condition that can happen caused by Prosemirror vs React,
+    // where Prosemirror removes the container from the DOM before React gets
+    // around to removing the child from the container
+    // This will throw a NotFoundError: The node to be removed is not a child of this node
+    // Both Prosemirror and React remove the elements asynchronously, and in edge
+    // cases Prosemirror beats React
+    try {
+      unmountComponentAtNode(container);
+    } catch (error) {
+      this.fireAnalyticsEvent({
+        payload: {
+          action: ACTION.FAILED_TO_UNMOUNT,
+          actionSubject: ACTION_SUBJECT.EDITOR,
+          actionSubjectId: ACTION_SUBJECT_ID.REACT_NODE_VIEW,
+          attributes: {
+            error,
+            domNodes: {
+              container: container ? container.className : undefined,
+              child: container.firstElementChild
+                ? container.firstElementChild.className
+                : undefined,
+            },
+          },
+          eventType: EVENT_TYPE.OPERATIONAL,
+        },
+      });
+    }
   }
 }
 
@@ -72,7 +115,7 @@ export class PortalProvider extends React.Component<PortalProviderProps> {
 
   constructor(props: PortalProviderProps) {
     super(props);
-    this.portalProviderAPI = new PortalProviderAPI();
+    this.portalProviderAPI = new PortalProviderAPI(props.createAnalyticsEvent);
   }
 
   render() {

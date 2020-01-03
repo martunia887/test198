@@ -332,6 +332,7 @@ export default class Editor extends React.Component<EditorProps, {}> {
                   <EditorContext editorActions={this.editorActions}>
                     <ContextAdapter>
                       <PortalProvider
+                        createAnalyticsEvent={createAnalyticsEvent}
                         render={portalProviderAPI => (
                           <>
                             <ReactEditorView

@@ -1,5 +1,5 @@
 import { OperationalAEP, AnalyticsEventPayloadWithChannel } from './events';
-import { ACTION, ACTION_SUBJECT } from './enums';
+import { ACTION, ACTION_SUBJECT, ACTION_SUBJECT_ID } from './enums';
 import { SimplifiedNode } from '../../../utils/document-logger';
 
 type InvalidTransactionErrorAEP = OperationalAEP<
@@ -13,4 +13,20 @@ type InvalidTransactionErrorAEP = OperationalAEP<
   undefined
 >;
 
-export type ErrorEventPayload = InvalidTransactionErrorAEP;
+type FailedToUnmountErrorAEP = OperationalAEP<
+  ACTION.FAILED_TO_UNMOUNT,
+  ACTION_SUBJECT.EDITOR,
+  ACTION_SUBJECT_ID.REACT_NODE_VIEW,
+  {
+    error: Error;
+    domNodes: {
+      container?: string;
+      child?: string;
+    };
+  },
+  undefined
+>;
+
+export type ErrorEventPayload =
+  | InvalidTransactionErrorAEP
+  | FailedToUnmountErrorAEP;
