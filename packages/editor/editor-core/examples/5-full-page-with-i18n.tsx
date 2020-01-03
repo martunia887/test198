@@ -18,7 +18,10 @@ export default class ExampleEditor extends React.Component<Props, State> {
   render() {
     const { locale, messages } = this.state;
     return (
-      <IntlProvider locale={this.getLocalTag(locale)} messages={messages}>
+      <IntlProvider
+        locale={this.getProperLanguageKey(locale)}
+        messages={messages}
+      >
         <FullPageExample
           allowHelpDialog
           primaryToolbarComponents={
@@ -58,4 +61,5 @@ export default class ExampleEditor extends React.Component<Props, State> {
   };
 
   private getLocalTag = (locale: string) => locale.substring(0, 2);
+  private getProperLanguageKey = (locale: string) => locale.replace('_', '-');
 }

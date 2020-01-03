@@ -133,7 +133,7 @@ export default class MediaSingleNode extends Component<
     const hasDifferentContextId = await mediaNodeUpdater.hasDifferentContextId();
 
     if (hasDifferentContextId) {
-      mediaNodeUpdater.copyNode();
+      await mediaNodeUpdater.copyNode();
     }
   };
 

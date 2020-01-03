@@ -3,8 +3,8 @@ import { jsx } from '@emotion/core';
 import { useState } from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { Block, RetryContainer, Centered } from '../examples-utils';
-import { From } from '../src/entering/slide-in';
 import { SlideIn, ExitingPersistence } from '../src';
+import { From } from '../src/entering/types';
 
 const froms: From[] = ['top', 'right', 'bottom', 'left'];
 
@@ -44,6 +44,7 @@ export default () => {
                       height: '95%',
                       width: '95%',
                       position: 'absolute',
+                      margin: 'auto',
                     }}
                   />
                 )}

@@ -201,6 +201,7 @@ export default class Toolbar extends Component<Props> {
                       selected={item.selected}
                       disabled={item.disabled}
                       tooltipContent={item.tooltipContent}
+                      testId={item.testId}
                     >
                       {item.showTitle && item.title}
                     </Button>

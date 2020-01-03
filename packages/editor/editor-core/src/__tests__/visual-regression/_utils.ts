@@ -138,6 +138,9 @@ export type MountOptions = {
   mode?: 'light' | 'dark';
   withSidebar?: boolean;
   collab?: CreateCollabProviderOptions;
+  i18n?: {
+    locale: string;
+  };
 };
 
 export async function mountEditor(

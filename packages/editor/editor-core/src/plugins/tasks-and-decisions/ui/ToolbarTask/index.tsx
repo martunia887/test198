@@ -52,7 +52,10 @@ export class ToolbarTask extends PureComponent<
       if (!editorView) {
         return false;
       }
-      insertTaskDecision(editorView, 'taskList');
+      insertTaskDecision(editorView, 'taskList')(
+        editorView.state,
+        editorView.dispatch,
+      );
       return true;
     },
   );

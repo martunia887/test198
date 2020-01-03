@@ -5,8 +5,6 @@ import {
   CardAction,
   CardOnClickCallback,
   CardEvent,
-  OnSelectChangeFunc,
-  OnLoadingChangeFunc,
   defaultImageCardDimensions,
   CardLoading,
 } from '@atlaskit/media-card';
@@ -22,8 +20,6 @@ export interface FilmstripItem {
   readonly selected?: boolean;
   readonly onClick?: CardOnClickCallback;
   readonly onMouseEnter?: (result: CardEvent) => void;
-  readonly onSelectChange?: OnSelectChangeFunc;
-  readonly onLoadingChange?: OnLoadingChangeFunc;
 }
 
 export type FilmstripProps = {

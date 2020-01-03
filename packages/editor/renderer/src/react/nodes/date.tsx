@@ -6,15 +6,16 @@ import {
   timestampToTaskContext,
   DateSharedCssClassName,
 } from '@atlaskit/editor-common';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 export interface Props {
   timestamp: string;
   parentIsIncompleteTask?: boolean;
 }
 
-export default class Date extends PureComponent<Props, {}> {
+class Date extends PureComponent<Props & InjectedIntlProps, {}> {
   render() {
-    const { timestamp, parentIsIncompleteTask } = this.props;
+    const { timestamp, parentIsIncompleteTask, intl } = this.props;
     const className =
       !!parentIsIncompleteTask && isPastDate(timestamp)
         ? 'date-node date-node-highlighted'
@@ -27,10 +28,12 @@ export default class Date extends PureComponent<Props, {}> {
           data-timestamp={timestamp}
         >
           {parentIsIncompleteTask
-            ? timestampToTaskContext(timestamp)
-            : timestampToString(timestamp)}
+            ? timestampToTaskContext(timestamp, intl)
+            : timestampToString(timestamp, intl)}
         </span>
       </span>
     );
   }
 }
+
+export default injectIntl(Date);

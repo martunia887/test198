@@ -18,6 +18,14 @@ const targetEdgeAndIE11 = styles => {
     '@supports (-ms-ime-align:auto)': styles,
   };
 };
+
+const targetFirefox = styles => {
+  // From https://stackoverflow.com/a/953491
+  return {
+    '@-moz-document url-prefix()': styles,
+  };
+};
+
 const gridSize = gridSizeFn();
 
 /**
@@ -72,6 +80,9 @@ const baseStyles = {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     ...targetEdgeAndIE11({
+      lineHeight: 18 / fontSize(),
+    }),
+    ...targetFirefox({
       lineHeight: 18 / fontSize(),
     }),
     lineHeight: 16 / fontSize(),

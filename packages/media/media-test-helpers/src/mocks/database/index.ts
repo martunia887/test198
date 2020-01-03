@@ -7,7 +7,7 @@ import { MediaCollection } from '@atlaskit/media-client';
 import { createCollection } from './collection';
 import { CollectionItem, createCollectionItem } from './collection-item';
 import { createUpload, Upload } from './upload';
-import { Chunk } from './chunk';
+import { Chunk, createChunk } from './chunk';
 import { defaultBaseUrl } from '../../mediaClientProvider';
 import { MockCollections } from '../media-mock';
 import { defaultCollectionName } from '../../collectionNames';
@@ -31,7 +31,7 @@ export const userAuth: ClientBasedAuth = {
 export const userAuthProvider = () => Promise.resolve(userAuth);
 export const tenantAuthProvider = () => Promise.resolve(tenantAuth);
 
-export type DatabaseSchema = {
+export type MediaDatabaseSchema = {
   collection: MediaCollection;
   collectionItem: CollectionItem;
   upload: Upload;
@@ -40,13 +40,13 @@ export type DatabaseSchema = {
 
 export function createDatabase(
   collections: MockCollections = {},
-): Database<DatabaseSchema> {
-  const database = new Database<DatabaseSchema>();
+): Database<MediaDatabaseSchema> {
+  const database = new Database<MediaDatabaseSchema>();
 
   database.register('collectionItem', createCollectionItem);
   database.register('collection', createCollection);
   database.register('upload', createUpload);
-  database.register('chunk');
+  database.register('chunk', createChunk);
 
   if (Object.keys(collections).length > 0) {
     Object.keys(collections).forEach(collectionName => {

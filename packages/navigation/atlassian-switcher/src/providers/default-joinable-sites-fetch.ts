@@ -44,6 +44,7 @@ export const transformExperimentSitesToSwitcherSites = (
       relevance,
     }),
   );
+
   const result = { sites: transformedSites };
   return result;
 };

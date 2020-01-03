@@ -94,7 +94,9 @@ export const Popup: FC<PopupProps> = memo(
                         setPopupRef(node);
                       }}
                       style={style}
-                      tabIndex={-1}
+                      // using tabIndex={-1} would cause a bug where Safari focuses
+                      // first on the browser address bar when using keyboard
+                      tabIndex={0}
                     >
                       <RepositionOnUpdate
                         content={Content}

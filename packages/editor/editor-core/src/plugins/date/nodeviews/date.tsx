@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { borderRadius, colors } from '@atlaskit/theme';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 import {
   timestampToString,
   timestampToTaskContext,
@@ -37,7 +38,7 @@ export interface Props {
   node: PMNode;
 }
 
-export default class DateNodeView extends React.Component<Props> {
+class DateNodeView extends React.Component<Props & InjectedIntlProps> {
   render() {
     const {
       node: {
@@ -46,6 +47,7 @@ export default class DateNodeView extends React.Component<Props> {
       view: {
         state: { schema, selection },
       },
+      intl,
     } = this.props;
 
     const parent = selection.$from.parent;
@@ -62,8 +64,8 @@ export default class DateNodeView extends React.Component<Props> {
       >
         <SelectableDate color={color} value={timestamp}>
           {withinIncompleteTask
-            ? timestampToTaskContext(timestamp)
-            : timestampToString(timestamp)}
+            ? timestampToTaskContext(timestamp, intl)
+            : timestampToString(timestamp, intl)}
         </SelectableDate>
       </span>
     );
@@ -75,3 +77,5 @@ export default class DateNodeView extends React.Component<Props> {
     setDatePickerAt(state.selection.from)(state, dispatch);
   };
 }
+
+export default injectIntl(DateNodeView);

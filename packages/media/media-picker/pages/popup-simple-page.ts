@@ -1,6 +1,7 @@
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
 import { PopupUploadEventPayloadMap } from '../src/types';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+import { CardStatus } from '@atlaskit/media-card';
 
 export type Event = {
   readonly name: string;
@@ -9,43 +10,46 @@ export type Event = {
 
 export type RecentUploadCard = {
   readonly filename: string;
+  readonly status: string;
 };
 
+interface RecentCardFilter {
+  status?: CardStatus;
+  filename?: string;
+}
 /**
  * Popup Simple Example Page Object
  * @see https://www.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern
  */
 export class PopupSimplePage extends Page {
-  async clickUploadButton(): Promise<void> {
-    const selector = '[data-testid="media-picker-upload-button"]';
-    await this.waitForSelector(selector);
-    await this.click(selector);
-  }
-
   async getRecentUploadCards(): Promise<RecentUploadCard[]> {
-    const selector =
-      '[data-testid="media-picker-uploading-media-card"] [data-testid="media-card-file-name"], ' +
-      '[data-testid="media-picker-recent-media-card"] [data-testid="media-card-file-name"]';
+    const selector = '[data-testid="media-file-card-view"]';
     const result = await this.$$(selector);
     return Promise.all(
-      result.map(async (element: any) => {
-        const filename = await element.getHTML(false);
-        return {
+      result.map(async element => {
+        const nameElement = await element.$(
+          '[data-testid="media-card-file-name"]',
+        );
+        const filename = await nameElement.getHTML(false);
+        const status = await element.getAttribute('data-test-status');
+        const recentUploadCard: RecentUploadCard = {
           filename: filename,
+          status,
         };
+        return recentUploadCard;
       }),
     );
   }
 
   async getRecentUploadCard(
-    filename: string,
+    filter: RecentCardFilter,
   ): Promise<RecentUploadCard | undefined> {
-    const targetCard = cardWithFilename(filename);
+    const cardFilterPredicate = createCardFilterPredicate(filter);
     await this.waitUntil(async () => {
       const cards = await this.getRecentUploadCards();
-      return cards.some(targetCard);
+      return cards.some(cardFilterPredicate);
     });
-    return (await this.getRecentUploadCards()).find(targetCard);
+    return (await this.getRecentUploadCards()).find(cardFilterPredicate);
   }
 
   async clickInsertButton(): Promise<void> {
@@ -104,6 +108,7 @@ export async function gotoPopupSimplePage(
   const page = new PopupSimplePage(client);
   const url = getExampleUrl('media', 'media-picker', 'popup-simple');
   await page.goto(url);
+  await page.isVisible('[data-testid="media-picker-popup"]');
   return page;
 }
 
@@ -111,6 +116,8 @@ function eventWithName(name: string) {
   return (event: Event) => event.name === name;
 }
 
-function cardWithFilename(filename: string) {
-  return (card: RecentUploadCard) => card.filename === filename;
+function createCardFilterPredicate(filter: RecentCardFilter) {
+  return (card: RecentUploadCard) =>
+    (filter.filename === undefined || card.filename === filter.filename) &&
+    (filter.status === undefined || card.status === filter.status);
 }

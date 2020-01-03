@@ -20,6 +20,7 @@ describe('default-joinable-sites-fetch', () => {
       },
     ],
   };
+
   const expectedTransformation = {
     sites: [
       {

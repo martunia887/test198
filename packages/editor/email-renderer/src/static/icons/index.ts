@@ -16,6 +16,7 @@ export * from './audioAttachment';
 export * from './videoAttachment';
 export * from './archiveAttachment';
 export * from './documentAttachment';
+export * from './expand';
 
 export enum IconName {
   info = 'info',
@@ -32,6 +33,7 @@ export enum IconName {
   videoAttachment = 'videoAttachment',
   archiveAttachment = 'archiveAttachment',
   documentAttachment = 'documentAttachment',
+  expand = 'expand',
 }
 
 export type IconString =
@@ -48,4 +50,5 @@ export type IconString =
   | 'audioAttachment'
   | 'videoAttachment'
   | 'archiveAttachment'
-  | 'documentAttachment';
+  | 'documentAttachment'
+  | 'expand';

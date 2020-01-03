@@ -4,6 +4,11 @@
 export type Direction = 'entering' | 'exiting';
 
 /**
+ * Direction an element can appear from
+ */
+export type From = 'top' | 'right' | 'bottom' | 'left';
+
+/**
  * Common props all entering motions should make available for consumers.
  */
 export interface MotionProps<TProps extends {}> {
