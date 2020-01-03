@@ -133,7 +133,11 @@ export const createPlugin = (
 
       // Don't allow transactions that modifies the document before
       // collab-plugin is ready.
-      if (!!collabInitialiseTr && !pluginState.isReady && tr.docChanged) {
+      if (collabInitialiseTr) {
+        return true;
+      }
+
+      if (!pluginState.isReady && tr.docChanged) {
         return false;
       }
 

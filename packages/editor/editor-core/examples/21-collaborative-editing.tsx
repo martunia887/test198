@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import PubSubClient from '@atlaskit/pubsub';
+// import PubSubClient from '@atlaskit/pubsub';
 
 import Editor from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
@@ -16,8 +16,10 @@ import {
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
-import { CollabProvider } from '../src/plugins/collab-edit';
+// import { CollabProvider } from '../src/plugins/collab-edit';
 import { EditorActions } from '../src';
+
+import { Provider } from '@atlaskit/collab-provider';
 
 export const getRandomUser = () => {
   return Math.floor(Math.random() * 10000).toString();
@@ -27,17 +29,17 @@ const userId = `ari:cloud:identity::user/${getRandomUser()}`;
 const asapToken =
   'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im1pY3Jvcy9lZGdlLWF1dGhlbnRpY2F0b3Ivc29tZXRoaW5nIn0.eyJqdGkiOiI5Mjc4MDA4Yi0wNWQwLTRkNjEtOGVhYS0yOWUwODYxZTU3OGEiLCJpYXQiOjE1MTk2MTQwMDcsImV4cCI6MTUxOTYxNDEzNywiYWNjb3VudElkIjoiNjY5IiwiaXNzIjoibWljcm9zL2VkZ2UtYXV0aGVudGljYXRvciIsInN1YiI6Im1pY3Jvcy9lZGdlLWF1dGhlbnRpY2F0b3IiLCJhdWQiOlsicGYtZnJvbnRlbmRwdWJzdWItc2VydmljZSJdfQ.oDHU6Ofn07ujTKYNsmnjdSyIQy8m1yvhMcP0Zr-jS1Yw3AR4AqIONB-H7i1bABIzlHvu5nILJWrmQkAZH-hWk5f4N4nQBtYhkjod_rM5-BhN79NIqNLTwheY8PbYMOtfiCQ0_xQThJCWsLR1iCNbj1oeHmMP7jNfl4j_TqabOZNVsCCzOx6nXGuhm-9U8AX8X9NyNPv3aYxRmPDth1ZdoGuJw9QrLrITGPw0KjitPIrqi_4pPfUZWTxYYEknJ9Qolf5fZqjnycoBiEpvMuyk_uU6uj8Xr62dUBCMhV6CggcDeona1d2TRx4f1BROskLYLWG0eZQaZPD1adPVByW0Pw';
 
-const pubSubClient = new PubSubClient({
-  product: 'TEST',
-  url: 'https://pf-frontendpubsub-service.dev.atl-paas.net',
-  securityProvider: () => {
-    return {
-      headers: {
-        Authorization: asapToken,
-      },
-    };
-  },
-});
+// const pubSubClient = new PubSubClient({
+//   product: 'TEST',
+//   url: 'https://pf-frontendpubsub-service.dev.atl-paas.net',
+//   securityProvider: () => {
+//     return {
+//       headers: {
+//         Authorization: asapToken,
+//       },
+//     };
+//   },
+// });
 
 export const Content: any = styled.div`
   padding: 0 20px;
@@ -194,21 +196,11 @@ export default class Example extends React.Component<Props, State> {
                 collabEdit={{
                   useNativePlugin: true,
                   provider: Promise.resolve(
-                    new CollabProvider(
-                      {
-                        url: 'http://localhost:8080',
-                        securityProvider: () => ({
-                          headers: {
-                            Authorization: asapToken,
-                            'user-ari': userId,
-                          },
-                          omitCredentials: true,
-                        }),
-                        docId: documentId!,
-                        userId,
-                      },
-                      pubSubClient,
-                    ),
+                    new Provider({
+                      url: 'http://localhost:8080',
+                      documentAri: `ari:cloud:demo::document/${documentId}`,
+                      userId,
+                    }),
                   ),
                   inviteToEditHandler: this.inviteToEditHandler,
                   isInviteToEditButtonSelected: this.state
