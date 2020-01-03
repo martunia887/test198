@@ -3,7 +3,6 @@ import { Auth } from '@atlaskit/media-core';
 import {
   getFileStreamsCache,
   ProcessedFileState,
-  ProcessingFileState,
   createFileStateSubject,
 } from '@atlaskit/media-client';
 import {
@@ -113,35 +112,6 @@ describe('finalizeUploadMiddleware', () => {
         uploadId,
       }),
     );
-  });
-
-  it('should send upload processing event with metadata', () => {
-    const { store, action, tenantMediaClient } = setup();
-    const processingFileState: ProcessingFileState = {
-      ...copiedFile,
-      artifacts: {},
-      mediaType: 'image',
-      mimeType: 'image/png',
-      status: 'processing',
-    };
-    const fileStateObservable = createFileStateSubject(processingFileState);
-    // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
-    //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
-    tenantMediaClient.file.getFileState = jest.fn(() => fileStateObservable);
-
-    return finalizeUpload(store, action).then(() => {
-      expect(store.dispatch).toBeCalledWith(
-        sendUploadEvent({
-          event: {
-            name: 'upload-processing',
-            data: {
-              file,
-            },
-          },
-          uploadId,
-        }),
-      );
-    });
   });
 
   it('should send upload error event given some error happens', () => {

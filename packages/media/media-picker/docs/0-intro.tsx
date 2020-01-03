@@ -148,7 +148,6 @@ type AuthProvider = (context?: AuthContext) => Promise<Auth>;`}
   Each React component has the following standard props, which allow you to receive events about the uploads.
 
   * **onUploadStart?**: \`(payload: UploadsStartEventPayload) => void\` - This event is fired when files begin to upload
-  * **onProcessing?**: \`(payload: UploadProcessingEventPayload) => void\` - This event is fired when the file is being processed by the server
   * **onStatusUpdate?**: \`(payload: UploadStatusUpdateEventPayload) => void\` - This event is fired to update the status of processing
   * **onPreviewUpdate?**: \`(payload: UploadPreviewUpdateEventPayload) => void\` - This event is fired when a preview (image) of the files uploaded is available
   * **onError?**: \`(payload: UploadErrorEventPayload) => void\` - This event is fired when errors occur during upload
@@ -210,7 +209,6 @@ const dropZoneConfig = {
   onDrop={onDropFn}
   onCancelFn={onCancelFn}
   onUploadsStart={onUploadsStartFn}
-  onProcessing={onProcessingFn}
   onStatusUpdate={onStatusUpdateFn}
   onPreviewUpdate={onPreviewUpdateFn}
   onError={onErrorHandler}
@@ -245,7 +243,6 @@ ${code`<Clipboard
   mediaClientConfig={mediaClientConfig}
   config={clipboardConfig}
   onUploadsStart={onUploadsStartFn}
-  onProcessing={onProcessingFn}
   onStatusUpdate={onStatusUpdateFn}
   onPreviewUpdate={onPreviewUpdateFn}
   onError={onErrorHandler}
@@ -306,7 +303,6 @@ function onBrowseFnHandler(browseFn) {
   onBrowseFn={onBrowseFnHandler}
   onCancelFn={onCancelFn}
   onUploadsStart={onUploadsStartFn}
-  onProcessing={onProcessingFn}
   onStatusUpdate={onStatusUpdateFn}
   onPreviewUpdate={onPreviewUpdateFn}
   onError={onErrorHandler}
@@ -356,7 +352,6 @@ You'll then need to subscribe to its events. These events are the same as the Re
 ${code`popup.on('uploads-start', onUploadsStartFn);
 popup.on('upload-preview-update', onUploadPreviewHandler);
 popup.on('upload-status-update', onUploadStatusUpdateHandler);
-popup.on('upload-processing', onUploadProcessingHandler);
 popup.on('upload-end', onUploadEndHandler);
 popup.on('upload-error', onUploadErrorHandler);
 popup.on('closed', onClosedHandler);`}
@@ -413,9 +408,9 @@ The popup provides the following methods:
 
   ${(
     <Example
-      Component={require('../examples/0-popup').default}
+      Component={require('../examples/8-full-flow').default}
       title="Pop up"
-      source={require('!!raw-loader!../examples/0-popup')}
+      source={require('!!raw-loader!../examples/8-full-flow')}
     />
   )}
 `;

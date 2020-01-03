@@ -5,7 +5,6 @@ import {
   UploadErrorEventPayload,
   UploadEventPayloadMap,
   UploadPreviewUpdateEventPayload,
-  UploadProcessingEventPayload,
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
   UploadParams,
@@ -39,7 +38,6 @@ export class LocalUploadComponent<
     this.uploadService.on('file-preview-update', this.onFilePreviewUpdate);
     this.uploadService.on('file-uploading', this.onFileUploading);
     this.uploadService.on('file-converting', this.onFileConverting);
-    this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
   }
 
@@ -71,12 +69,8 @@ export class LocalUploadComponent<
     this.emitUploadProgress(file, progress);
   };
 
-  private onFileConverting = ({ file }: UploadProcessingEventPayload): void => {
-    this.emitUploadProcessing(file);
-  };
-
-  private onFileConverted = (payload: UploadEndEventPayload): void => {
-    this.emitUploadEnd(payload.file);
+  private onFileConverting = ({ file }: UploadEndEventPayload): void => {
+    this.emitUploadEnd(file);
   };
 
   private onUploadError = ({ file, error }: UploadErrorEventPayload): void => {

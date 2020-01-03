@@ -2,7 +2,6 @@ import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
   UploadPreviewUpdateEventPayload,
-  UploadProcessingEventPayload,
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
   UploadParams,
@@ -12,8 +11,7 @@ export type UploadServiceEventPayloadTypes = {
   readonly 'files-added': UploadsStartEventPayload;
   readonly 'file-preview-update': UploadPreviewUpdateEventPayload;
   readonly 'file-uploading': UploadStatusUpdateEventPayload;
-  readonly 'file-converting': UploadProcessingEventPayload;
-  readonly 'file-converted': UploadEndEventPayload;
+  readonly 'file-converting': UploadEndEventPayload;
   readonly 'file-upload-error': UploadErrorEventPayload;
   readonly 'file-dropped': DragEvent;
 };

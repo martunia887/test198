@@ -27,7 +27,7 @@ export const DropzoneWrapper = ({ mediaState, isActive }: Props) => (
           config={dropzoneConfig}
           onError={pickerFacadeInstance.handleUploadError}
           onPreviewUpdate={pickerFacadeInstance.handleUploadPreviewUpdate}
-          onProcessing={pickerFacadeInstance.handleReady}
+          onEnd={pickerFacadeInstance.handleReady}
           onDragEnter={() => handleDrag('enter')}
           onDragLeave={() => handleDrag('leave')}
         />

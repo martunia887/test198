@@ -20,7 +20,6 @@ import { mapAuthToSourceFileOwner } from '../domain/source-file';
 import { MediaFile } from '../../types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { resetView } from '../actions';
-import { UploadEndEvent } from '../../domain/uploadEvent';
 
 export default function(): Middleware {
   return store => (next: Dispatch<State>) => (action: any) => {
@@ -147,20 +146,7 @@ async function copyFile({
       destinationFile.data.id,
     );
     const fileState = await observableToPromise(tenantSubject);
-
-    if (fileState.status === 'processing') {
-      store.dispatch(
-        sendUploadEvent({
-          event: {
-            name: 'upload-processing',
-            data: {
-              file,
-            },
-          },
-          uploadId,
-        }),
-      );
-    } else if (fileState.status === 'processed') {
+    if (fileState.status === 'processing' || fileState.status === 'processed') {
       store.dispatch(
         sendUploadEvent({
           event: {
@@ -168,7 +154,7 @@ async function copyFile({
             data: {
               file,
             },
-          } as UploadEndEvent,
+          },
           uploadId,
         }),
       );

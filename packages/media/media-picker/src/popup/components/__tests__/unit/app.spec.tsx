@@ -61,7 +61,6 @@ describe('App', () => {
         onUploadsStart: jest.fn(),
         onUploadPreviewUpdate: jest.fn(),
         onUploadStatusUpdate: jest.fn(),
-        onUploadProcessing: jest.fn(),
         onUploadEnd: jest.fn(),
         onUploadError: jest.fn(),
         onDropzoneDragIn: jest.fn(),
