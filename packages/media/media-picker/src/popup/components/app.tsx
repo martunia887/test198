@@ -23,9 +23,7 @@ import MainEditorView from './views/editor/mainEditorView';
 import { startApp, StartAppActionPayload } from '../actions/startApp';
 import { hidePopup } from '../actions/hidePopup';
 import { fileUploadsStart } from '../actions/fileUploadsStart';
-import { fileUploadPreviewUpdate } from '../actions/fileUploadPreviewUpdate';
 import { fileUploadProgress } from '../actions/fileUploadProgress';
-import { fileUploadEnd } from '../actions/fileUploadEnd';
 import { fileUploadError } from '../actions/fileUploadError';
 import { dropzoneDropIn } from '../actions/dropzoneDropIn';
 import { dropzoneDragIn } from '../actions/dropzoneDragIn';
@@ -33,9 +31,7 @@ import { dropzoneDragOut } from '../actions/dropzoneDragOut';
 import PassContext from './passContext';
 import {
   UploadsStartEventPayload,
-  UploadPreviewUpdateEventPayload,
   UploadStatusUpdateEventPayload,
-  UploadEndEventPayload,
   UploadErrorEventPayload,
   ClipboardConfig,
   DropzoneConfig,
@@ -69,13 +65,9 @@ export interface AppDispatchProps {
   readonly onStartApp: (payload: StartAppActionPayload) => void;
   readonly onClose: () => void;
   readonly onUploadsStart: (payload: UploadsStartEventPayload) => void;
-  readonly onUploadPreviewUpdate: (
-    payload: UploadPreviewUpdateEventPayload,
-  ) => void;
   readonly onUploadStatusUpdate: (
     payload: UploadStatusUpdateEventPayload,
   ) => void;
-  readonly onUploadEnd: (payload: UploadEndEventPayload) => void;
   readonly onUploadError: (payload: UploadErrorEventPayload) => void;
   readonly onDropzoneDragIn: (fileCount: number) => void;
   readonly onDropzoneDragOut: (fileCount: number) => void;
@@ -111,9 +103,7 @@ export class App extends Component<AppProps, AppState> {
     const {
       onStartApp,
       onUploadsStart,
-      onUploadPreviewUpdate,
       onUploadStatusUpdate,
-      onUploadEnd,
       onUploadError,
       tenantMediaClient,
       userMediaClient,
@@ -140,9 +130,7 @@ export class App extends Component<AppProps, AppState> {
     });
 
     this.localUploader.on('uploads-start', onUploadsStart);
-    this.localUploader.on('upload-preview-update', onUploadPreviewUpdate);
     this.localUploader.on('upload-status-update', onUploadStatusUpdate);
-    this.localUploader.on('upload-end', onUploadEnd);
     this.localUploader.on('upload-error', onUploadError);
 
     onStartApp({
@@ -238,9 +226,7 @@ export class App extends Component<AppProps, AppState> {
 
   private renderClipboard = () => {
     const {
-      onUploadPreviewUpdate,
       onUploadStatusUpdate,
-      onUploadEnd,
       onUploadError,
       tenantUploadParams,
     } = this.props;
@@ -255,9 +241,7 @@ export class App extends Component<AppProps, AppState> {
         mediaClient={this.componentMediaClient}
         config={config}
         onUploadsStart={this.onDrop}
-        onPreviewUpdate={onUploadPreviewUpdate}
         onStatusUpdate={onUploadStatusUpdate}
-        onEnd={onUploadEnd}
         onError={onUploadError}
       />
     );
@@ -267,9 +251,7 @@ export class App extends Component<AppProps, AppState> {
     const {
       tenantUploadParams,
       onUploadsStart,
-      onUploadPreviewUpdate,
       onUploadStatusUpdate,
-      onUploadEnd,
       onUploadError,
     } = this.props;
     const config = {
@@ -284,9 +266,7 @@ export class App extends Component<AppProps, AppState> {
         mediaClient={this.componentMediaClient}
         config={config}
         onUploadsStart={onUploadsStart}
-        onPreviewUpdate={onUploadPreviewUpdate}
         onStatusUpdate={onUploadStatusUpdate}
-        onEnd={onUploadEnd}
         onError={onUploadError}
       />
     );
@@ -294,9 +274,7 @@ export class App extends Component<AppProps, AppState> {
 
   private renderDropzone = () => {
     const {
-      onUploadPreviewUpdate,
       onUploadStatusUpdate,
-      onUploadEnd,
       onUploadError,
       tenantUploadParams,
     } = this.props;
@@ -312,9 +290,7 @@ export class App extends Component<AppProps, AppState> {
         mediaClient={this.componentMediaClient}
         config={config}
         onUploadsStart={this.onDrop}
-        onPreviewUpdate={onUploadPreviewUpdate}
         onStatusUpdate={onUploadStatusUpdate}
-        onEnd={onUploadEnd}
         onError={onUploadError}
         onDragEnter={this.onDragEnter}
         onDragLeave={this.onDragLeave}
@@ -344,12 +320,8 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): AppDispatchProps => ({
     dispatch(resetView());
     dispatch(hidePopup());
   },
-  onUploadPreviewUpdate: (payload: UploadPreviewUpdateEventPayload) =>
-    dispatch(fileUploadPreviewUpdate(payload)),
   onUploadStatusUpdate: (payload: UploadStatusUpdateEventPayload) =>
     dispatch(fileUploadProgress(payload)),
-  onUploadEnd: (payload: UploadEndEventPayload) =>
-    dispatch(fileUploadEnd(payload)),
   onUploadError: (payload: UploadErrorEventPayload) =>
     dispatch(fileUploadError(payload)),
   onDropzoneDragIn: (fileCount: number) => dispatch(dropzoneDragIn(fileCount)),

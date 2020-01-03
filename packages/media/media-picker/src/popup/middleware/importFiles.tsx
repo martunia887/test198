@@ -33,6 +33,8 @@ import { PopupUploadEventEmitter } from '../../components/types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { getPreviewFromMetadata } from '../../domain/preview';
 import { NotifyMetadataPayload } from '../tools/websocket/upload/wsUploadEvents';
+import { UploadEvent } from '../../domain/uploadEvent';
+import { getPreviewFromBlob } from '../../util/getPreviewFromBlob';
 
 export interface RemoteFileItem extends SelectedItem {
   accountId: string;
@@ -313,18 +315,11 @@ export async function importFiles(
   // TODO here we don't have actually guarantee that empty file was created.
   // https://product-fabric.atlassian.net/browse/MS-2165
   selectedUploadFiles.forEach(selectedUploadFile => {
-    const { file, serviceName, touchFileDescriptor } = selectedUploadFile;
+    const { file, serviceName } = selectedUploadFile;
     const selectedItemId = file.id;
     if (serviceName === 'upload') {
       const localUpload: LocalUpload = uploads[selectedItemId];
-      const { fileId } = touchFileDescriptor;
-      importFilesFromLocalUpload(
-        selectedUploadFile,
-        fileId,
-        store,
-        localUpload,
-        fileId,
-      );
+      importFilesFromLocalUpload(selectedUploadFile, store, localUpload);
     } else if (serviceName === 'recent_files') {
       importFilesFromRecentFiles(selectedUploadFile, store);
     } else if (isRemoteService(serviceName)) {
@@ -341,12 +336,32 @@ export async function importFiles(
   store.dispatch(resetView());
 }
 
+const fileStateToMediaFile = (fileState: FileState): MediaFile => {
+  const { id } = fileState;
+  if (fileState.status === 'error') {
+    // TODO: do we care about those props for error case?
+    return {
+      id,
+      creationDate: 1,
+      name: '',
+      size: 0,
+      type: '',
+    };
+  }
+  const { name, size, mimeType } = fileState;
+  return {
+    id,
+    creationDate: 1, // TODO: do we care about this?
+    name,
+    size,
+    type: mimeType,
+  };
+};
+
 export const importFilesFromLocalUpload = async (
   selectedUploadFile: SelectedUploadFile,
-  uploadId: string,
   store: Store<State>,
   localUpload: LocalUpload,
-  replaceFileId?: string,
 ): Promise<void> => {
   const { touchFileDescriptor } = selectedUploadFile;
   const { tenantMediaClient } = store.getState();
@@ -357,26 +372,81 @@ export const importFilesFromLocalUpload = async (
 
   // TODO: sendUploadEvent here
   // TODO: remove "localUpload.events"
+  // TODO: move into new method -> emitPublicEvents()
+  /**
+    'uploads-start': UploadsStartEventPayload; --> how can we trigger this one from here?
+   */
+  const publicEventsToEmit = {
+    'upload-preview-update': false,
+    'upload-error': false,
+    'upload-end': false,
+  };
+
   tenantMediaClient.file.getFileState(fileId).subscribe({
-    next(fileState) {
-      console.log('importFiles', fileState);
+    async next(fileState) {
+      // TODO: unsubscribe when all events are triggered
+      const file = fileStateToMediaFile(fileState);
+      if (fileState.status === 'error') {
+        if (publicEventsToEmit['upload-error']) {
+          return;
+        }
+        const { id, message = '' } = fileState;
+        const event: UploadEvent = {
+          name: 'upload-error',
+          data: {
+            error: {
+              fileId: id,
+              description: message,
+              name: 'upload_fail',
+            },
+            file,
+          },
+        };
+
+        publicEventsToEmit['upload-error'] = true;
+        store.dispatch(sendUploadEvent({ event, uploadId: fileId }));
+        return;
+      }
+      const { preview, mediaType } = fileState;
+
+      // TODO: explore if this is being emitted later than usual
+      if (preview && !publicEventsToEmit['upload-preview-update']) {
+        const { value } = await preview;
+        if (value instanceof Blob) {
+          const eventPreview = await getPreviewFromBlob(value, mediaType);
+          const event: UploadEvent = {
+            name: 'upload-preview-update',
+            data: {
+              file,
+              preview: eventPreview,
+            },
+          };
+
+          publicEventsToEmit['upload-preview-update'] = true;
+          // TODO: rename uploadId to fileId in sendUploadEvent
+          store.dispatch(sendUploadEvent({ event, uploadId: fileId }));
+        }
+      }
+
+      if (
+        (fileState.status === 'processing' ||
+          fileState.status === 'processed') &&
+        !publicEventsToEmit['upload-end']
+      ) {
+        publicEventsToEmit['upload-end'] = true;
+        // File to copy from
+        const source = {
+          id: localUpload.file.metadata.id,
+          collection: RECENTS_COLLECTION,
+        };
+
+        publicEventsToEmit['upload-end'] = true;
+        store.dispatch(finalizeUpload(file, fileId, source, fileId));
+      }
+
+      // Can we just emit event-name + fileState ?
+      // Or should we transform fileState into event?
     },
-  });
-
-  localUpload.events.forEach(originalEvent => {
-    const event = { ...originalEvent };
-
-    if (event.name === 'upload-end') {
-      const { file } = event.data;
-      const source = {
-        id: file.id,
-        collection: RECENTS_COLLECTION,
-      };
-
-      store.dispatch(finalizeUpload(file, uploadId, source, replaceFileId));
-    } else {
-      store.dispatch(sendUploadEvent({ event, uploadId }));
-    }
   });
 };
 

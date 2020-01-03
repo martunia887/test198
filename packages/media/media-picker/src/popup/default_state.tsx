@@ -1,26 +1,9 @@
 import { State } from './domain';
 
-// Hardcoded list of keys we want to fill in default state. These are the fields that are not filled,
-// and needs to be provided when final state is constructed:
-// 'mediaClient' | 'userMediaClient' | 'redirectUrl' | 'config'
-export type DefaultStateKeys =
-  | 'uploads'
-  | 'remoteUploads'
-  | 'recents'
-  | 'view'
-  | 'accounts'
-  | 'selectedItems'
-  | 'isUploading'
-  | 'isCancelling'
-  | 'lastUploadIndex'
-  | 'giphy'
-  | 'onCancelUpload';
-
-// TODO when AK moves to Typescript 3 please replace above hardcoded list with this:
-// export type DefaultStateKeys = Exclude<
-//   keyof State,
-//   'mediaClient' | 'userMediaClient' | 'redirectUrl' | 'config'
-// >;
+export type DefaultStateKeys = Exclude<
+  keyof State,
+  'tenantMediaClient' | 'userMediaClient' | 'redirectUrl' | 'config'
+>;
 
 export type DefaultState = Pick<State, DefaultStateKeys>;
 const defaultState: DefaultState = {

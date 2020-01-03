@@ -11,7 +11,7 @@ export type UploadEventName = keyof UploadEventMap;
 export type UploadEvent = UploadEventMap[UploadEventName];
 
 export type UploadsStartEvent = UploadEventMap['uploads-start'];
-export type UploadPreviewUpdateEvent = UploadEventMap['upload-preview-update'];
+export type UploadPreviewUpdateEvent = UploadEventMap['upload-preview-update']; // TODO: remove?
 export type UploadStatusUpdateEvent = UploadEventMap['upload-status-update'];
-export type UploadEndEvent = UploadEventMap['upload-end'];
+export type UploadEndEvent = UploadEventMap['upload-end']; // TODO: remove?
 export type UploadErrorEvent = UploadEventMap['upload-error'];

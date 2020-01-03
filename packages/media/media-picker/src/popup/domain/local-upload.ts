@@ -9,9 +9,7 @@ export interface LocalUploadFileMetadata {
 }
 
 export interface LocalUploadFile {
-  readonly metadata: LocalUploadFileMetadata;
-
-  blob?: Blob;
+  readonly metadata: LocalUploadFileMetadata; // TODO: is this used?
 }
 
 export interface LocalUpload {

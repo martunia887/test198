@@ -5,7 +5,7 @@ export const SEND_UPLOAD_EVENT = 'SEND_UPLOAD_EVENT';
 
 export type SendUploadEventActionPayload = {
   readonly event: UploadEvent;
-  readonly uploadId: string;
+  readonly uploadId: string; // TODO: is this the fileId actually?
 };
 
 export type SendUploadEventAction = {

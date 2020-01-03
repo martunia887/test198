@@ -103,7 +103,7 @@ export default class Example extends React.Component<{}, State> {
   private onUploadPreviewUpdate = async (
     event: UploadPreviewUpdateEventPayload,
   ) => {
-    console.log('PUBLIC: upload-preview-update', event.file.id);
+    console.log('PUBLIC: upload-preview-update', event);
   };
 
   private getMediaViewerDataSource = (): MediaViewerDataSource => {

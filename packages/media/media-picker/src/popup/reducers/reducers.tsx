@@ -13,9 +13,7 @@ import {
   getRecentFilesFailed,
 } from './getFilesInRecents';
 import fileUploadsAdd from './fileUploadsAdd';
-import filePreviewUpdate from './filePreviewUpdate';
 import fileUploadProgress from './fileUploadProgress';
-import fileUploadEnd from './fileUploadEnd';
 import resetView from './resetView';
 import editorClose from './editorClose';
 import editorShowError from './editorShowError';
@@ -49,9 +47,7 @@ const reducers = combineReducers([
   getRecentFilesFailed,
   updatePopupUrls,
   fileUploadsAdd,
-  filePreviewUpdate,
   fileUploadProgress,
-  fileUploadEnd,
   removeFileFromRecents,
   resetView,
   editorClose,
