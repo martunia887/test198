@@ -3,6 +3,6 @@ import Layout from './layout';
 import { useData } from '../hooks';
 
 export default ({ location }) => {
-  const content = 'poop';
+  const content = 'PROTECTED BRAND CONTENT HERE';
   return content;
 };
