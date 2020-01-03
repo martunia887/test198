@@ -16,23 +16,17 @@ describe(name, () => {
 
   describe('WidthBroadcaster', () => {
     const fakeWidth = 500;
+    let mockOffsetWidth: jest.SpyInstance;
 
     beforeEach(() => {
-      /**
-       * JSDOM doesn't support offsetWidth. Also we can't set it directly, it will throw with
-       * TypeError: Cannot set property offsetWidth of [object Object] which has only a getter
-       */
-      Object.defineProperties(window.HTMLElement.prototype, {
-        offsetWidth: {
-          get: function() {
-            return (
-              parseFloat(window.getComputedStyle(this).width || '') || fakeWidth
-            );
-          },
-        },
-      });
-
+      mockOffsetWidth = jest
+        .spyOn(window.HTMLElement.prototype, 'offsetWidth', 'get')
+        .mockImplementation(() => fakeWidth);
       jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      mockOffsetWidth.mockClear();
     });
 
     it('should trigger a meta transaction with width', () => {
@@ -77,7 +71,7 @@ describe(name, () => {
 
       jest.runOnlyPendingTimers();
 
-      expect(width).toBe(fakeWidth);
+      expect(width).toEqual(fakeWidth);
       wrapper.unmount();
       editorView.destroy();
     });
