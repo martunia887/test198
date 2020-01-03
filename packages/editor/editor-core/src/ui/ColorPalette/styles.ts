@@ -8,3 +8,16 @@ export const ColorPaletteWrapper: ComponentClass<HTMLAttributes<{}>> = styled.di
   display: flex;
   flex-wrap: wrap;
 `;
+
+export const ShowMoreWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
+  display: flex;
+  margin-top: 4px;
+  padding: 4px;
+  padding-bottom: 0;
+  border-top: 1px solid #dfe1e6;
+
+  > button {
+    flex-grow: 1;
+    background: transparent;
+  }
+`;

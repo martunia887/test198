@@ -4,7 +4,7 @@ import chromatism from 'chromatism';
 import Color from './Color';
 import { defineMessages } from 'react-intl';
 
-import { ColorPaletteWrapper } from './styles';
+import { ColorPaletteWrapper, ShowMoreWrapper } from './styles';
 import { PaletteColor } from './Palettes/type';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import * as colors from '@atlaskit/theme/colors';
@@ -97,7 +97,7 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
             paletteExtended.map(swatch => this.renderSwatch(swatch))}
         </ColorPaletteWrapper>
         {showMoreColorsToggle && (
-          <div>
+          <ShowMoreWrapper>
             <Button
               onClick={onShowMoreToggleClick}
               iconBefore={
@@ -108,7 +108,7 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
                 showMoreColors ? messages.lessColors : messages.moreColors,
               )}
             </Button>
-          </div>
+          </ShowMoreWrapper>
         )}
       </React.Fragment>
     );
