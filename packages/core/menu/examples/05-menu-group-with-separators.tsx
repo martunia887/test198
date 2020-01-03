@@ -27,7 +27,7 @@ export default () => {
       }}
     >
       <MenuGroup maxHeight={800}>
-        <Section>
+        <Section hasBottomSeparator>
           <HeadingItem>Actions</HeadingItem>
           <LinkItem
             elemBefore={<EditorSearchIcon label="Search Icon" />}
@@ -59,7 +59,7 @@ export default () => {
             Archived items
           </LinkItem>
         </Section>
-        <Section isScrollable hasSeparator>
+        <Section isScrollable hasBottomSeparator>
           <HeadingItem>Favourite articles</HeadingItem>
           <ButtonItem elemBefore={<Blog24Icon label="Quote icon" />}>
             Untitled
@@ -103,7 +103,7 @@ export default () => {
             Lessons on Living a Meaningful Life from Nichelle Nichols
           </ButtonItem>
         </Section>
-        <Section hasSeparator>
+        <Section>
           <SkeletonHeadingItem />
           <SkeletonItem hasAvatar />
           <SkeletonItem hasAvatar />

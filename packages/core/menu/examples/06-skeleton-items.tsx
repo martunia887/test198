@@ -80,7 +80,7 @@ export default () => {
           }}
         >
           <MenuGroup maxHeight={300} testId="left-menu">
-            <Section>
+            <Section hasBottomSeparator>
               <Heading isLoading={isLoading} />
               {Array(3)
                 .fill(undefined)
@@ -88,7 +88,7 @@ export default () => {
                   <Item isLoading={isLoading} key={index} hasAvatar />
                 ))}
             </Section>
-            <Section hasSeparator>
+            <Section>
               <Heading isLoading={isLoading} />
               {Array(1)
                 .fill(undefined)
@@ -103,21 +103,21 @@ export default () => {
             width: '200px',
             border: '1px solid #EFEFEF',
             margin: '10px auto',
-            borderRadius: '4px',
+            borderRadius: '3px',
           }}
         >
           <MenuGroup maxHeight={300} testId="right-menu">
-            <Section>
+            <Section hasBottomSeparator>
               <Heading isLoading={isLoading} />
             </Section>
-            <Section isScrollable hasSeparator>
+            <Section isScrollable hasBottomSeparator>
               {Array(5)
                 .fill(undefined)
                 .map((_, index) => (
                   <Item isLoading={isLoading} key={index} hasIcon />
                 ))}
             </Section>
-            <Section hasSeparator>
+            <Section>
               {Array(2)
                 .fill(undefined)
                 .map((_, index) => (

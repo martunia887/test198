@@ -13,19 +13,19 @@ export const menuGroupCSS = (maxHeight?: string | number): CSSObject => ({
 
 export const sectionCSS = (
   isScrollable?: boolean,
-  hasSeparator?: boolean,
+  hasBottomSeparator?: boolean,
 ): CSSObject => {
   const topBottomPadding = gridSize * 1.5;
 
   return {
     paddingTop: topBottomPadding,
+    ...(hasBottomSeparator && { borderBottom: `2px solid ${N30}` }),
     ...(isScrollable
       ? {
           flexShrink: 1,
           overflow: 'auto',
         }
       : { flexShrink: 0 }),
-    ...(hasSeparator && { borderTop: `2px solid ${N30}` }),
     '&:focus': {
       // NOTE: Firefox allows elements that have "overflow: auto" to gain focus (as if it had tab-index="0")
       // We have made a deliberate choice to leave this behaviour as is.
@@ -40,7 +40,23 @@ export const sectionCSS = (
       // for more information about this problem.
       content: "''",
       display: 'block',
+      height: 0,
+    },
+    '&[data-bottom-separator="true"]::after': {
       height: topBottomPadding,
+    },
+    '&[data-bottom-separator="false"] + [data-bottom-separator="false"]': {
+      paddingTop: 0,
+    },
+    '&[data-bottom-separator="false"] + [data-bottom-separator="true"]': {
+      paddingTop: 0,
+    },
+    ':last-child': {
+      borderBottom: 0,
+
+      '&::after': {
+        height: topBottomPadding,
+      },
     },
   };
 };

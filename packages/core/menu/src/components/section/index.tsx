@@ -9,15 +9,16 @@ export const MenuGroup = ({ maxHeight, testId, ...rest }: MenuGroupProps) => (
 
 export const Section = ({
   isScrollable,
-  hasSeparator,
+  hasBottomSeparator,
   testId,
   ...rest
 }: SectionProps) => (
   <div
     // NOTE: Firefox allows elements that have "overflow: auto" to gain focus (as if it had tab-index="0")
     // We have made a deliberate choice to leave this behaviour as is.
-    css={sectionCSS(isScrollable, hasSeparator)}
+    css={sectionCSS(isScrollable, hasBottomSeparator)}
     data-testid={testId}
+    data-bottom-separator={!!hasBottomSeparator}
     {...rest}
   />
 );
