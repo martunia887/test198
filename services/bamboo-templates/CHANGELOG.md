@@ -1,5 +1,21 @@
 # @atlaskit/branch-deploy-integrators-plan-template
 
+## 0.0.6
+
+### Patch Changes
+
+- [patch][348b0b23c5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/348b0b23c5):
+
+  Increase product CI integration rollout to all newly created branches
+
+## 0.0.5
+
+### Patch Changes
+
+- [patch][2b5f2b6825](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2b5f2b6825):
+
+  Change upgrade command of all product plan templates to 'add'
+
 ## 0.0.4
 
 ### Patch Changes

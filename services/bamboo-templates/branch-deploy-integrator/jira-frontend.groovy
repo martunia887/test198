@@ -8,7 +8,7 @@ plan(key:'ABDIJC',name:'jira-frontend Atlaskit Branch Deploy Integrator',
         productCiPlanUrl: '',
         dockerContainer: 'docker.atl-paas.net/sox/jira/jira-frontend-agent:latest',
         packageEngine: 'yarn',
-        integratorCmd: 'upgrade',
+        integratorCmd: 'add',
         skipIntegrityCheck: true)
 
     branchMonitoring() {
