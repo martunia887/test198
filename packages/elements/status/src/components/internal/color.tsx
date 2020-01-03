@@ -23,6 +23,7 @@ const Button: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`
   cursor: pointer;
   display: block;
   box-sizing: border-box;
+  overflow: hidden;
 `;
 
 const ButtonWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
