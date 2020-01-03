@@ -325,4 +325,27 @@ describe('Popup', () => {
 
     expect(getByText('focused content')).toHaveFocus();
   });
+
+  it('popup stays open if propagation is stopped on an event before it reaches window', async () => {
+    const content = () => (
+      <button
+        onClick={event => {
+          event.stopPropagation();
+        }}
+      >
+        Popup content
+      </button>
+    );
+
+    const { findAllByText } = render(
+      <div>
+        <Popup {...defaultProps} content={content} isOpen />
+        <Popup {...defaultProps} content={content} isOpen />
+      </div>,
+    );
+
+    fireEvent.click((await findAllByText('Popup content'))[0]);
+
+    expect((await findAllByText('Popup content'))[1]).toBeDefined();
+  });
 });

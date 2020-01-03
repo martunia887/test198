@@ -32,13 +32,13 @@ export const useCloseManager = ({
     };
 
     if (isOpen && popupRef) {
-      document.addEventListener('click', onClick, true);
-      document.addEventListener('keydown', onKeyDown);
+      window.addEventListener('click', onClick);
+      window.addEventListener('keydown', onKeyDown);
     }
 
     return () => {
-      document.removeEventListener('click', onClick, true);
-      document.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('click', onClick);
+      window.removeEventListener('keydown', onKeyDown);
     };
   }, [isOpen, onClose, popupRef, triggerRef]);
 };
