@@ -34,11 +34,13 @@ export const textColorPaletteExtended: Array<PaletteColor> = [];
 
 for (let i = 0; i < 7; i++) {
   textColorPaletteExtended.push({
-    value: '#000',
-    label: 'Black',
+    value: `#${i}${i}${i}`,
+    label: `Dark ${i}`,
   });
+
+  const hexCode = Number(15 - i).toString(16);
   textColorPaletteExtended.push({
-    value: '#FFF',
-    label: 'White',
+    value: `#${hexCode}${hexCode}${hexCode}`,
+    label: `Light ${i}`,
   });
 }
